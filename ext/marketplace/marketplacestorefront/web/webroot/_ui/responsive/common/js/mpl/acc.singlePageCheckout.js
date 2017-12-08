@@ -3212,7 +3212,7 @@ ACC.singlePageCheckout = {
 
 		//ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffers";
-		var data = null;
+		var data = {isResposive:ACC.singlePageCheckout.getIsResponsive()};
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -3220,9 +3220,15 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
-      
+        	
+        	if(ACC.singlePageCheckout.getIsResponsive()) {
+            	$('.offer_section_responsive').css("display","block");
+            	$('.offer_section_responsive').html(response);
+        	} else {
             	$('.offers_section_paymentpage').css("display","block");
             	$('.offers_section_paymentpage').html(response);
+        	}
+
             	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
             	
 		}); 
@@ -3236,7 +3242,7 @@ ACC.singlePageCheckout = {
 
 		//ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffersTerms";
-		var data = null;
+		var data = {isResposive:ACC.singlePageCheckout.getIsResponsive()};
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {

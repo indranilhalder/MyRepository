@@ -68,7 +68,6 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -2716,7 +2715,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERS, method = RequestMethod.GET)
-	public String getPaymentRelatedOffers(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	public String getPaymentRelatedOffers(
+			@RequestParam(value = "isResposive", required = false, defaultValue = "false") final String isResponsive,
+			final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 
 		try
@@ -2727,7 +2728,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			/*
 			 * for (final Map<VoucherModel, String> offer : allOffersData) { for (final Map.Entry<VoucherModel, String>
 			 * entry : offer.entrySet()) {
-			 * 
+			 *
 			 * System.out.println(entry.getKey().getDescription()); System.out.println(entry.getValue()); final } }
 			 */
 
@@ -2743,6 +2744,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			model.addAttribute("offer_page_contain", "offers");
+			model.addAttribute("responsive_view", isResponsive);
 
 			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
 		}
@@ -2769,7 +2771,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERSTERMS, method = RequestMethod.GET)
-	public String getPaymentRelatedOffersTerms(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	public String getPaymentRelatedOffersTerms(
+			@RequestParam(value = "isResposive", required = false, defaultValue = "false") final String isResponsive,
+			final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 
 		try
@@ -2788,6 +2792,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute("total_offerPage", Integer.valueOf(0));
 			}
 			model.addAttribute("offer_page_contain", "terms");
+			model.addAttribute("responsive_view", isResponsive);
 
 			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
 		}
@@ -5065,7 +5070,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5123,7 +5128,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
