@@ -13973,7 +13973,7 @@
 	<!-- TPR-5954 || Category specific return reason ||End -->	
 	
 	<!-- SDI-2813 || OMS Order Sync ||Start -->
-     <typegroup name="OrderSyncLog&Intelligence">
+     <typegroup name="OrderSyncLog_Intelligence">
 	<itemtype code="OrderSyncLog" autocreate="true"
 			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.OrderSyncLog">
 			<deployment table="MplOrderSyncLog" typecode="25128" />
