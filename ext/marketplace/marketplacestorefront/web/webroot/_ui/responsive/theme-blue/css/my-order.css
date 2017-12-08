@@ -1082,11 +1082,12 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
 }
 .confirmation .right-block .block .totals li.shippingthanks span:first-child {
     display: inline-block;
+    width: 89%;	/* TISCSS-57 */
 }
 /* start for TISCSS-57 */
 .confirmation .right-block .block .totals li.shippingthanks>span.amt {
 	display: table-cell;
-    float: none;
+    float: right;
     text-align: right;
 }
 /* end for TISCSS-57 */
