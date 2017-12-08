@@ -2021,21 +2021,7 @@ function savedDebitCardRadioChange(radioId){
 				//TPR-7448 Starts here
 			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
 		    	{
-			    	var arr=response.split("|");
-			    	switch(arr[1]){
-			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
-			    	}
-			    	$("#juspayconnErrorDiv").css("display","block");
-					$(".pay .loaderDiv").remove();
-					$(".pay .spinner").remove();
-					$("#no-click,.loaderDiv").remove();
-					$("#no-click,.spinner").remove();
+			    	showCardPerOfferFailureMsg(response);			    	
 		    	}
 				//TPR-7448 Ends here
 				else{
@@ -2224,21 +2210,7 @@ function savedDebitCardRadioChange(radioId){
 				//TPR-7448 Starts here
 			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
 		    	{
-			    	var arr=response.split("|");
-			    	switch(arr[1]){
-			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
-			    	}
-			    	$("#juspayconnErrorDiv").css("display","block");
-					$(".pay .loaderDiv").remove();
-					$(".pay .spinner").remove();
-					$("#no-click,.loaderDiv").remove();
-					$("#no-click,.spinner").remove();
+			    	showCardPerOfferFailureMsg(response);
 		    	}
 				//TPR-7448 Ends here
 				else{
@@ -2451,21 +2423,7 @@ function savedDebitCardRadioChange(radioId){
 				//TPR-7448 Starts here
 			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
 		    	{
-			    	var arr=response.split("|");
-			    	switch(arr[1]){
-			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
-			    	}
-			    	$("#juspayconnErrorDiv").css("display","block");
-					$(".pay .loaderDiv").remove();
-					$(".pay .spinner").remove();
-					$("#no-click,.loaderDiv").remove();
-					$("#no-click,.spinner").remove();
+			    	showCardPerOfferFailureMsg(response);
 		    	}
 				//TPR-7448 Ends here
 				else{	
@@ -2689,21 +2647,7 @@ function savedDebitCardRadioChange(radioId){
 				//TPR-7448 Starts here
 			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
 		    	{
-			    	var arr=response.split("|");
-			    	switch(arr[1]){
-			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
-					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
-			    	}
-			    	$("#juspayconnErrorDiv").css("display","block");
-					$(".pay .loaderDiv").remove();
-					$(".pay .spinner").remove();
-					$("#no-click,.loaderDiv").remove();
-					$("#no-click,.spinner").remove();
+			    	showCardPerOfferFailureMsg(response);
 		    	}
 				//TPR-7448 Ends here
 				else{		
@@ -10926,5 +10870,22 @@ function tokenizeJuspayCard(paymentMode)
 	});
 	return token;
 }
-
+function showCardPerOfferFailureMsg(response)
+{
+	var arr=response.split("|");
+	switch(arr[1]){
+	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+	case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+	case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+	case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+	case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+	case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+	default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
+	}
+	$("#juspayconnErrorDiv").css("display","block");
+	$(".pay .loaderDiv").remove();
+	$(".pay .spinner").remove();
+	$("#no-click,.loaderDiv").remove();
+	$("#no-click,.spinner").remove();
+}
 //TPR-7448 Ends here

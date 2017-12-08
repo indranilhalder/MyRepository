@@ -4303,7 +4303,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TPR-7448 Starts here
 				final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved, cardRefNo,
 						cardToken);
-				if (!((Boolean) tuple3.getFirst()).booleanValue())
+				if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 				{
 					final String failureCode = (String) tuple3.getSecond();
 					final Double priceDiff = (Double) tuple3.getThird();

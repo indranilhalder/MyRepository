@@ -1057,8 +1057,10 @@ public class PaymentService
 		//params.put(MarketplaceJuspayServicesConstants.NAMEONCARD,addCardRequest.getNameOnCard() != null ? addCardRequest.getNameOnCard() : "");
 		params.put("card_token", addCardRequest.getToken());
 
+		final String addCardUri = getConfigurationService().getConfiguration().getString(
+				MarketplaceJuspayServicesConstants.JUSPAYADDCARDURI, "/cards");
 		final String serializedParams = serializeParams(params);
-		final String url = baseUrl + "/cards";
+		final String url = baseUrl + addCardUri;
 
 		final String response = makeServiceCall(url, serializedParams);
 		final JSONObject json = (JSONObject) JSONValue.parse(response);

@@ -1895,7 +1895,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					}
 					if (priceDiff.doubleValue() > 0.0)
 					{
-						updateVoucherPriceAbstractOrderModel(abstractOrderModel, priceDiff);
+						updateVoucherPriceAbstractOrderModel(abstractOrderModel, promotionVoucherModel, priceDiff);
 					}
 				}
 			}
@@ -1911,12 +1911,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param priceDiff
 	 * @throws CalculationException
 	 */
-	private void updateVoucherPriceAbstractOrderModel(final AbstractOrderModel abstractOrderModel, final Double priceDiff)
-			throws CalculationException
+	private void updateVoucherPriceAbstractOrderModel(final AbstractOrderModel abstractOrderModel,
+			final VoucherModel promotionVoucherModel, final Double priceDiff) throws CalculationException
 	{
 		List<DiscountValue> discountList = abstractOrderModel.getGlobalDiscountValues(); //Discount values against the cart
-		final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts(); //List of discounts against the cart
-		discountList = setGlobalDiscount(discountList, voucherList, 0.0, 0.0, null, priceDiff.doubleValue());
+		//final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts(); //List of discounts against the cart
+		discountList = setGlobalDiscount(discountList, promotionVoucherModel, priceDiff.doubleValue());
 		abstractOrderModel.setGlobalDiscountValues(discountList);
 		getMplDefaultCalculationService().calculateTotals(abstractOrderModel, false);
 		getModelService().save(abstractOrderModel);

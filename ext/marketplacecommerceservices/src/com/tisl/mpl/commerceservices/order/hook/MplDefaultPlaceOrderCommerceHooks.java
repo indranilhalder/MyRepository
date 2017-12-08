@@ -3482,8 +3482,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private void cardPerOfferVoucherExists(final OrderModel orderModel)
 	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-				getVoucherService().getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -3506,24 +3506,25 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
 							{
-								final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
-										? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
-								final double maxAmountPerMonth = ((PaymentModeRestrictionModel) restrictionModel)
-										.getMaxAmountPerMonth() != null
-												? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerMonth().doubleValue()
-												: 0.0D;
-								if (restrictionModel instanceof PaymentModeRestrictionModel
-										&& (maxAvailCount > 0 || maxAmountPerMonth > 0.0))
+								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
-									LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
-									if (StringUtils.isNotEmpty(discount.getCode()))
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
+									final double maxAmountPerMonth = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerMonth() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerMonth().doubleValue() : 0.0D;
+									if (maxAvailCount > 0 || maxAmountPerMonth > 0.0)
 									{
-										voucherInvalidationModel.setVoucher(promotionVoucherModel);
-										voucherInvalidationModel.setGuid(orderModel.getGuid());
-										voucherInvalidationModel.setCardRefNo(cardReferenceNo);
-										voucherInvalidationModel.setDiscount(discount.getValue());
-										getModelService().save(voucherInvalidationModel);
+										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+										LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+										if (StringUtils.isNotEmpty(discount.getCode()))
+										{
+											voucherInvalidationModel.setVoucher(promotionVoucherModel);
+											voucherInvalidationModel.setGuid(orderModel.getGuid());
+											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											voucherInvalidationModel.setDiscount(discount.getValue());
+											getModelService().save(voucherInvalidationModel);
+										}
 									}
 								}
 
