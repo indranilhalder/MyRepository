@@ -48,11 +48,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
-import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.web.forms.TicketWebForm;
 
@@ -158,7 +158,8 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		String fileUploadLocation = null, nowDate = null;
 		Path path = null;
 		final List<String> fileUploadLocations = new ArrayList<String>();
-		fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
+		fileUploadLocation = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.CRM_FILE_UPLOAD_PATH);
 		if (StringUtils.isNotEmpty(fileUploadLocation))
 		{
 			try
