@@ -1583,13 +1583,23 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 }
 @media (max-width: 1019px){
 	.pickUpName {
-	    width: 100%;
+	    width: 171%;		/* change for TISCSS-49 */
 	    margin-top: 5px;
 	}
 	.savebtnOther {
 	    margin: 5px 0 0 45px !important;
 	    height: 34px !important;
 	    padding-top: 9px;
+	}
+	.pickup_mob {
+		width: 100%;
+	    margin-left: 15px;
+	    margin-top: 5px;
+	}
+	.pickMobileNo {
+		width: 94%;
+		margin-left: 15px;
+	    margin-top: 5px;
 	}
 }
 @media (max-width: 790px){
@@ -1619,4 +1629,17 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
     border: none;
     position: absolute;
     line-height: 1.5;
+}
+/* start of TISCSS-49 */
+@media (max-width: 1019px) {
+	.pickup_mob {
+		width: 100%;
+	    margin-left: 15px;
+	    margin-top: 5px;
+	}
+	.pickMobileNo {
+		width: 94%;
+		margin-left: 15px;
+	    margin-top: 5px;
+	}
 }
