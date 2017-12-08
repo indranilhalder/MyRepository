@@ -18,7 +18,6 @@ public class OneTouchCancelReturnCrmRequestDTO
 
 	private String OrderRefNum;
 	private String subOrderNum;
-	@XmlElement(name = "UploadImage")
 	private String USSID;
 	private String ticketType;
 	private String TicketSubType;
