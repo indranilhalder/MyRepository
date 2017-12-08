@@ -952,7 +952,14 @@
 	    <enumtype code="CreditCardType" autocreate="false" generate="false">
 			<value code="jcb"/>
 			<value code="discover"/>
-		</enumtype>	   
+		</enumtype>	 
+
+		<!--  added to check refund status h2refund -->
+		<enumtype code="refundFomType" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="Automatic"></value>
+			<value code="Manual"></value>		
+		</enumtype>		
 		 		
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true"
 			generate="true" dynamic="true">
@@ -3215,7 +3222,7 @@
 			<itemtype code="AbstractOrderEntry" autocreate="false"
 				generate="false">
 
-`				<attributes>
+				<attributes>
 					<attribute autocreate="true" qualifier="convenienceChargeApportion"
 						type="java.lang.Double">
 						<persistence type="property" qualifier="convenienceChargeApportion">
@@ -3228,7 +3235,6 @@
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 					</attribute>
 				</attributes>
-				
 			</itemtype>
 			<!-- Status Update -->
 
@@ -3314,36 +3320,45 @@
 			<!-- PaymentTransactionEntry ends -->
 			
 			<!-- New table for PR-4 :: START -->
-			<itemtype code="RefundTransactionEntry" autocreate="true"
-				generate="true">
+			<itemtype code="RefundTransactionEntry" autocreate="true" generate="true"
+				 jaloclass="com.tisl.mpl.core.jalo.RefundTransactionEntry">
+		     <description>Utr and ARN no againt transaction ids </description>
+			<deployment table="RefundTransactionEntry" typecode="19999" />
 				<!-- New table for PR-4 -->
 				<attributes>
 					<attribute qualifier="transactionId" autocreate="true"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" removable="false" initial="true" private="false"
+							optional="false" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 					<attribute qualifier="amount" autocreate="true"
 						type="java.lang.Double">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" removable="false" initial="true" private="false"
+							optional="false" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 					<attribute qualifier="arnNumber" autocreate="true"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="true" removable="false" initial="true" private="false"
+							optional="true" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 					<attribute qualifier="utrNumber" autocreate="true"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="true" removable="false" initial="true" private="false"
+							optional="true" removable="true" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute qualifier="status" autocreate="true"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 				</attributes>
@@ -3592,15 +3607,6 @@
 							unique="false" optional="false" removable="false" initial="true"
 							private="false" partof="false" />
 					</attribute>
-					<!-- TPR-7486 -->
-					<attribute qualifier="cardBinNumber" autocreate="true"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							unique="false" optional="false" removable="false" initial="true"
-							private="false" partof="false" />
-					</attribute>
-					
 
 					<attribute qualifier="billingAddress" autocreate="true"
 						type="Address">
@@ -8249,6 +8255,19 @@
 						  </persistence>
 					</attribute>
 					<!-- changes for jewellery Cs-Cockpit end -->
+					
+					<!--  added to check refund status h2refund -->
+					<attribute qualifier="refundDetails" type="refundFomType">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property'>
+							<columntype database='oracle'>
+								<value>VARCHAR2(40)</value>
+							</columntype>
+						</persistence>					
+					</attribute>
+					<!-- changes for jewellery Cs-Cockpit end -->
+					
 				</attributes>
 
 				<!-- CAR-274 -->
@@ -10262,7 +10281,6 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-					
 					<attribute qualifier="cartCouponCode" autocreate="true"
 						type="java.lang.String">
 						<description>Cart Coupon Code</description>
@@ -10278,7 +10296,6 @@
 							optional="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
-
 				</attributes>
 			</itemtype>
 

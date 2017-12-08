@@ -118,7 +118,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 	}
 
 	@Override
-	public void deleteRows(final String str) throws Exception
+	public List<RefundTransactionEntryModel> getModelForChangeStaus(final String str) throws Exception
 	{
 		final StringBuilder query = new StringBuilder();
 		try
@@ -130,7 +130,8 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
 			final List<RefundTransactionEntryModel> refundSmsPkList = flexibleSearchService.<RefundTransactionEntryModel> search(
 					fQuery).getResult();
-			modelService.removeAll(refundSmsPkList);
+			//modelService.removeAll(refundSmsPkList);
+			return refundSmsPkList;
 		}
 		catch (final Exception ex)
 		{
@@ -145,7 +146,9 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 	{
 		try
 		{
-			final String queryString = "select {transactionId} from {RefundTransactionEntry}";
+			final String queryString = "select {transactionId} from {RefundTransactionEntry} WHERE {status}='"
+					+ MarketplacecommerceservicesConstants.RECEIVED + "'";
+
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 			fQuery.setResultClassList(Arrays.asList(String.class));
 			final SearchResult<String> rows = search(fQuery);

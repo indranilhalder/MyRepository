@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceCancellationController;
-
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.RefundFomType;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
@@ -55,11 +55,13 @@ import de.hybris.platform.ordercancel.OrderCancelRequest;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.type.TypeService;
 
@@ -250,12 +252,32 @@ public class MarketPlaceDefaultCancellationController extends
 										/*&& CollectionUtils
 												.isNotEmpty(orderEntry
 														.getConsignmentEntries())*/) {
+									
+									//h2refund Added to know the refund type from CSCOCKPIT
+									
+									try{
+										
+										if(CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries())){
+											
+											ConsignmentModel consignmentModel = orderEntry.getConsignmentEntries().iterator().next().getConsignment();
+											consignmentModel.setRefundDetails(RefundFomType.AUTOMATIC);
+											getModelService().save(consignmentModel);
+											
+										}
+										
+									}catch(Exception e ){
+										LOG.error("Refund updation data failed");
+									}
+																		
 									/*
 									 * ConsignmentModel consignmentModel =
 									 * orderEntry
 									 * .getConsignmentEntries().iterator()
 									 * .next().getConsignment();
 									 */
+									
+									
+									
 									if (StringUtils
 											.equalsIgnoreCase(
 													paymentTransactionModel

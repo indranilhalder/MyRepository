@@ -9,6 +9,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -200,6 +201,60 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	}
 
+	@Override
+	public MarketplaceDelistModel fetchDelistDetails(final String ussid)
+	{
+		try
+		{
+			final String queryString = SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE
+					+ " AS c} WHERE " + C + MarketplaceDelistModel.DELISTUSSID + "}=?ussid";
+
+			LOG.debug(QUERY + queryString);
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("ussid", ussid);
+
+			final List<MarketplaceDelistModel> resultList = flexibleSearchService.<MarketplaceDelistModel> search(query).getResult();
+			if (CollectionUtils.isNotEmpty(resultList))
+			{
+				return resultList.get(0);
+			}
+			return null;
+		}
+
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
+	@Override
+	public List<MarketplaceDelistModel> fetchDataForUssid(final String sellerVarb)
+	{
+		final String priceQueryString = "select {c.pk} from {MarketplaceDelist as c} where {c.delistUssid} in (" + sellerVarb + ")";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
+
+		return flexibleSearchService.<MarketplaceDelistModel> search(query).getResult();
+	}
+
+	@Override
+	public SellerInformationModel getSellerModel(final String ussid, final CatalogVersionModel catalogVersion)
+	{
+		LOG.debug("calling db for ussid : " + ussid + " and catalogversion : " + catalogVersion);
+		final String priceQueryString = "select {c.pk} from {SellerInformation as c} where {c.sellerArticleSKU} =?ussid and {c.catalogVersion}=?catalogVersion";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
+		query.addQueryParameter("catalogVersion", catalogVersion);
+		query.addQueryParameter("ussid", ussid);
+
+		final List<SellerInformationModel> sellerL = flexibleSearchService.<SellerInformationModel> search(query).getResult();
+		if (CollectionUtils.isNotEmpty(sellerL))
+		{
+			return sellerL.get(0);
+		}
+
+		return null;
+
+	}
 
 
 }

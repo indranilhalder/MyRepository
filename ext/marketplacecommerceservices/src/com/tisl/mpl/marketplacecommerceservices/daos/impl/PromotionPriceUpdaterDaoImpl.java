@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.promotions.model.ProductPromotionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -15,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.PromotionPriceUpdaterDao;
 
 
@@ -33,9 +33,32 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+	//TPR-7408 starts here
+	@Autowired
+	private ConfigurationService configurationService;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	//TPR-7408 ends here
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.PromotionPriceUpdaterDao#getRequiredPromotionList()
 	 */
 	@Override
@@ -43,16 +66,28 @@ public class PromotionPriceUpdaterDaoImpl implements PromotionPriceUpdaterDao
 	{
 		LOG.debug("Fetching promotion Details");
 		List<ProductPromotionModel> PromotionResult = new ArrayList<ProductPromotionModel>();
-		final String queryString = "SELECT {" + ProductPromotionModel.PK + "} " + MarketplacecommerceservicesConstants.QUERYFROM
-				+ ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE" + "({pr." + ProductPromotionModel.MODIFIEDTIME
-				+ "} >= ?earlierDate  " + " OR ({pr." + ProductPromotionModel.STARTDATE + "} >= ?earlierDate AND {pr."
-				+ ProductPromotionModel.STARTDATE + "} <= sysdate ) " + ") AND {pr: " + ProductPromotionModel.IMMUTABLEKEYHASH
-				+ "} IS NULL " + " ORDER BY {pr:" + ProductPromotionModel.PRIORITY + "} ASC";
+		//SDI-2817 starts here
+		final String queryString = configurationService.getConfiguration().getString("promotional.pricerow.update.query");
+		LOG.debug("The queryString is " + queryString);
 
-		LOG.debug("QUERY>>>>>>" + queryString);
+		/*
+		 * final String queryString = "SELECT {" + ProductPromotionModel.PK + "} " +
+		 * MarketplacecommerceservicesConstants.QUERYFROM + ProductPromotionModel._TYPECODE + " AS pr} " + " WHERE" +
+		 * "({pr." + ProductPromotionModel.MODIFIEDTIME + "} >= ?earlierDate  " + " OR ({pr." +
+		 * ProductPromotionModel.STARTDATE + "} >= ?earlierDate AND {pr." + ProductPromotionModel.STARTDATE +
+		 * "} <= sysdate ) " + ") AND {pr: " + ProductPromotionModel.IMMUTABLEKEYHASH + "} IS NULL " + " ORDER BY {pr:" +
+		 * ProductPromotionModel.PRIORITY + "} ASC";
+		 */
+
+		//select {pk} from {ProductPromotion AS pr} WHERE ({pr.modifiedtime} >= '2017-12-16 11:34:15.832' OR ({pr.startDate} >= '2017-12-16 11:34:15.832' AND {pr.startDate} <= sysdate ) OR {pr.endDate} >= sysdate) AND {pr.immutableKeyHash} IS NULL ORDER BY {pr.priority} ASC
+
+		//SDI-2817 ends here
+
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 		query.addQueryParameter("earlierDate", mplConfigDate);
+
+		LOG.debug("QUERY>>>>>>" + query);
 		//return
 		// YTODO Auto-generated method stub
 

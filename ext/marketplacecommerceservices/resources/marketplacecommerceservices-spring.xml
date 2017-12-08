@@ -2417,6 +2417,28 @@
 	
 	<!--  End TPR-6945 -->
 
-    
+ 
+
+	
+	<bean id="refundClearPerformableDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
+
+	<bean id="refundClearPerformableService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultRefundClearPerformableServiceImpl">
+			<property name="modelService" ref="modelService" />
+	</bean>
+
+  <!-- TPR-7412 start -->   
+  <alias name="mplUtrNoArnNoService" alias="mplUtrNoArnNoService" />
+	<bean id="mplUtrNoArnNoService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplUtrNoArnNoSeviceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplUtrNoArnNoDao" alias="mplUtrNoArnNoDao" />
+	<bean id="mplUtrNoArnNoDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplUtrNoArnNoDaoImpl"
+			autowire="byName">
+	</bean>
+	<!--  TPR-7412 end -->
 </beans>
 
