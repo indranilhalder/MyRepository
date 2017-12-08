@@ -116,6 +116,7 @@
  	<c:set var="defaultCategory" value="all"/>
  	<c:if test="${categories[0].code ne null }">
  	<c:set var="defaultCategory" value="${categories[0].code}"/>
+ 	<input id="selectedCategoryName" value="${categories[0].name}" type="hidden"/>
  	</c:if>
 	<li id="${defaultCategory}" class="selected" hidden="true"></li>
 </ul>
@@ -146,7 +147,7 @@
 			  </c:forEach>
 	      </div> 
 	      <div class="search-items">
-                <span>Selecting one of the suggestions will take you to results within INDIE LUXE.</span>
+                <span id="suggestionText" style="display:none">Selecting one of the suggestions will take you to results within <span id="displayCategory"></span>.</span>
                 </div>
 	      </div>
 	</form>
