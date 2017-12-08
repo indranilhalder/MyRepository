@@ -1864,8 +1864,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao
 							.findInvalidationMaxAmtPMnth(promotionVoucherModel, addCardResponse.getCardReference());
-					tuple3Resp = checkCardPerOfferMaxAmtPMonthValidation(voucherInvalidationModel, maxAmountPerMonth,
-							Double.parseDouble(discount.getDiscountString()));
+					tuple3Resp = checkCardPerOfferMaxAmtPMonthValidation(voucherInvalidationModel, maxAmountPerMonth, discount
+							.getValue().doubleValue());
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
 					{
@@ -1878,7 +1878,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao
 							.findInvalidationMaxAmtPMnth(promotionVoucherModel, addCardResponse.getCardReference());
 					tuple3Resp = checkCardPerOfferMaxCntAmtPMonthValidation(voucherInvalidationModel, maxAvailCount,
-							maxAmountPerMonth, Double.parseDouble(discount.getDiscountString()));
+							maxAmountPerMonth, discount.getValue().doubleValue());
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
 					{

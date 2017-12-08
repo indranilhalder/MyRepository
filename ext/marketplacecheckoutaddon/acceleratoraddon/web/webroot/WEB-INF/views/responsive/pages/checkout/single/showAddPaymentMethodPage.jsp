@@ -961,7 +961,8 @@
 					                           		</fieldset>
 					                            </div> 
 					                            <div class="controls remember">
-					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card" name="save-card" /><label for="save-card"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
+					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
+					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card" name="save-card" style="display:none"/><label for="save-card" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
 			            					</div>
@@ -1222,7 +1223,8 @@
 										    	</c:forEach>
 					                            </div> --%> 
 					                            <div class="controls remember">
-					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-dc" name="save-card" /><label for="save-card-dc"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
+					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
+					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-dc" name="save-card"  style="display:none"/><label for="save-card-dc"  style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
 			            					</div>
@@ -1489,7 +1491,8 @@
 					                           		</fieldset>
 					                            </div> 
 					                            <div class="controls remember">
-					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-emi" name="save-card-emi" /><label for="save-card-emi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
+					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
+					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-emi" name="save-card-emi"  style="display:none"/><label for="save-card-emi"  style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
 			            					</div>
