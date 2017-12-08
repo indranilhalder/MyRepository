@@ -43,7 +43,9 @@
 			elementtype="City" autocreate="true" generate="false"
 			type="list" />
 		<!-- TPR-970	ends --> 
-					
+		<collectiontype code="validUssidList"
+			elementtype="AbstractOrderEntry" autocreate="true" generate="true"
+			type="list" />			
 				
 	</collectiontypes>
 
@@ -2556,6 +2558,12 @@
 				<attribute qualifier="orderEntryNumber" autocreate="true"
 					type="java.lang.Integer">
 					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="validProductUssidList" autocreate="true"
+					type="validUssidList">
+					<description>The validProductUssidList in the order</description>
 					<modifiers read="true" write="true" optional="true" />
 					<persistence type="property" />
 				</attribute>

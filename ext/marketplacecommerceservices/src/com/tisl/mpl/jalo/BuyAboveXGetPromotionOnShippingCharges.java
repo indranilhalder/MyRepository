@@ -225,25 +225,25 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 									//arg1.startLoggingConsumed(this);
 									final int validProductUssidMapSize = validProductUssidMap.size();
 									final String validProdUssid = mapEntry.getKey();
-									final AbstractOrderEntry entry = mapEntry.getValue();
+									//final AbstractOrderEntry entry = mapEntry.getValue();
 									final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProdUssid);
 									if ((isTShipAsPrimitive() && isSShipAsPrimitive())
 											|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
 													.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 									{
-										arg1.startLoggingConsumed(this);
+										//arg1.startLoggingConsumed(this);
 										apportionedProdDelChargeMap.putAll(getDefaultPromotionsManager().calcForcedDeliveryCharges(
 												isDeliveryFreeFlag, adjustedDeliveryCharge, validProdUssid, order,
 												isProdShippingPromoAppliedMap, validProductUssidMapSize));
 
-										final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
-												arg1.getOrder(), 1.0F);
-										final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
-												.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
-										final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
-										result.setConsumedEntries(arg0, consumed);
-										result.addAction(arg0, poeac);
-										promotionResults.add(result);
+										//										final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+										//												arg1.getOrder(), 1.0F);
+										//										final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
+										//												.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
+										//										final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
+										//										result.setConsumedEntries(arg0, consumed);
+										//										result.addAction(arg0, poeac);
+										//										promotionResults.add(result);
 									}
 								}
 
@@ -258,29 +258,41 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 								{
 									//arg1.startLoggingConsumed(this);
 									final String validProdUssid = mapEntry.getKey();
-									final AbstractOrderEntry entry = mapEntry.getValue();
+									//final AbstractOrderEntry entry = mapEntry.getValue();
 									final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProdUssid);
 									if ((isTShipAsPrimitive() && isSShipAsPrimitive())
 											|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
 													.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 									{
-										arg1.startLoggingConsumed(this);
+										//arg1.startLoggingConsumed(this);
 										apportionedProdDelChargeMap.putAll(getDefaultPromotionsManager().calcDeliveryCharges(
 												isDeliveryFreeFlag, adjustedDeliveryCharge, validProdUssid, order,
 												isProdShippingPromoAppliedMap));
 
-										final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
-												arg1.getOrder(), 1.0F);
-										final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
-												.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
-										final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
-										result.setConsumedEntries(arg0, consumed);
-										result.addAction(arg0, poeac);
-										promotionResults.add(result);
+										//										final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+										//												arg1.getOrder(), 1.0F);
+										//										final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
+										//												.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
+										//										final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
+										//										result.setConsumedEntries(arg0, consumed);
+										//										result.addAction(arg0, poeac);
+										//										promotionResults.add(result);
 									}
 								}
 							}
-							arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+
+							/////////////////////////////////////////////
+							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+									arg1.getOrder(), 1.0F);
+							final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
+									.createCustomShippingChargesPromotionAdjustAction(arg0, null, 0.0D,
+											new ArrayList<AbstractOrderEntry>(validProductUssidMap.values()));
+							//final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
+							//result.setConsumedEntries(arg0, consumed);
+							result.addAction(arg0, poeac);
+							promotionResults.add(result);
+							/////////////////////////////////////////////
+							//arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 							arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
 							arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE, String.valueOf(this.getCode()));
 							arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP, apportionedProdDelChargeMap);

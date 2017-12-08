@@ -2124,6 +2124,7 @@ public class DefaultPromotionManager extends PromotionsManager
 				{
 					prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel.getValue());
 				}
+				break;
 			}
 		}
 
@@ -2470,15 +2471,21 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 
 	public CustomShippingChargesPromotionAdjustAction createCustomShippingChargesPromotionAdjustAction(final SessionContext ctx,
-			final AbstractOrderEntry entry, final double adjustment)
+			final AbstractOrderEntry entry, final double adjustment, final List<AbstractOrderEntry> validProductUssidList)
 	{
 		final Map parameters = new HashMap();
 		parameters.put(MarketplacecommerceservicesConstants.GUID, makeActionGUID());
 		parameters.put(MarketplacecommerceservicesConstants.AMOUNT, Double.valueOf(adjustment));
-		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
-		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
-		parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, entry.getQuantity(ctx));
-
+		if (entry != null)
+		{
+			parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_PRODUCT, entry.getProduct(ctx));
+			parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_NUMBER, entry.getEntryNumber());
+			parameters.put(MarketplacecommerceservicesConstants.ORDERENTRY_QUANTITY, entry.getQuantity(ctx));
+		}
+		else if (CollectionUtils.isNotEmpty(validProductUssidList))
+		{
+			parameters.put("validProductUssidList", validProductUssidList);
+		}
 
 		if (isCachingAllowed(ctx).booleanValue())
 		{

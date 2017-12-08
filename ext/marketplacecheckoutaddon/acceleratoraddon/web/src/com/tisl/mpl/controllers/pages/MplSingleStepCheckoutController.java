@@ -2767,10 +2767,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-			if (isDelModeRestrictedPromoPresent)
-			{
-				applyPromotions();
-			}
+			//			if (isDelModeRestrictedPromoPresent)
+			//			{
+			//				applyPromotions();
+			//			}
 			getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 			//populate freebie data
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
@@ -3493,7 +3493,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation starts here
 			mplCouponFacade.releaseVoucherInCheckout(cartModel);
 			commerceCartService.recalculateCart(cartModel);
-			modelService.refresh(cartModel);
+
 			//Fix starts for - Order cant be placed with freebie
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
@@ -4887,17 +4887,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						final DeliveryMethodForm deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
 						Double finalDeliveryCost = Double.valueOf(0.0);
 						//Re-populating delivery modes after recalculation of cart
-						{
-							finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
-							final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-							getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
-							//session.removeAttribute("deliveryMethodForm");
-						}
+
+						finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+						final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+						//TIS 400
+						//session.removeAttribute("deliveryMethodForm");
+
 						final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 						final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-						applyPromotions();
-
+						//	applyPromotions();
+						getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel);
 						//populate freebie data
 						populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 						//Re-populating delivery address after recalculation of cart
@@ -4961,7 +4961,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5019,7 +5019,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

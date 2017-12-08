@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -44,7 +45,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -52,17 +53,35 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 	{
 		boolean needsCalc = false;
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
-		final Integer orderEntryNumber = getOrderEntryNumber(ctx);
-		final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
+
+		final boolean isShippingCartPromo = (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? true
+				: false;
+		if (isShippingCartPromo)
+		{
+			//			final Map<String, AbstractOrderEntry> validProductUssidMap = ctx.getAttributes().get(
+			//					MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
+			final List<AbstractOrderEntry> validProductUssidList = getValidProductUssidList();
+
+			for (final AbstractOrderEntry entry : validProductUssidList)
+			{
+				calculateApportionedDiscount(entry, ctx);
+			}
+		}
+		else
+		{
+			final Integer orderEntryNumber = getOrderEntryNumber(ctx);
+			final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
+			if (orderEntry != null)
+			{
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx);
+			}
+		}
+
 
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("(" + getPK() + ") apply: Applying OrderEntry adjustment action for order [" + order.getPK() + "]");
-		}
-
-		if (orderEntry != null)
-		{
-			needsCalc = calculateApportionedDiscount(orderEntry, ctx);
 		}
 
 		return needsCalc;
@@ -70,8 +89,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : This method is called when promotional products are removed from cart and cart is recalculated.
-	 * @param :
-	 *           ctx
+	 * @param : ctx
 	 * @return : true/false
 	 */
 	@Override
@@ -81,31 +99,41 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
 		final Integer orderEntryNumber = getOrderEntryNumber(ctx);
-		final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
-
-		if (order != null)
+		if (orderEntryNumber != null)
 		{
-			//final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = null;
+			final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
 			if (ctx.getAttributes() != null)
 			{
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
 
-
-				calculate = true;
-
-				//				prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
-				//						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
-				//				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
-				//				{
-				//					getDefaultPromotionsManager().undoDeliveryCharges(order, prodPrevCurrDelChargeMap, ctx);
-				//					calculate = true;
-				//				}
-
-
 				calculate = true;
 			}
 		}
+		else
+		{
+			final List<AbstractOrderEntry> validProductUssidList = getValidProductUssidList();
+
+			if (CollectionUtils.isNotEmpty(validProductUssidList))
+			{
+				for (final AbstractOrderEntry entry : validProductUssidList)
+				{
+					entry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
+					entry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
+
+				}
+			}
+			//			if (order != null)
+			//			{
+			//				for (final AbstractOrderEntry oe : order.getEntries())
+			//				{
+			//					oe.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
+			//					oe.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
+			//				}
+			//			}
+
+		}
+
 		setMarkedApplied(ctx, false);
 
 		return calculate;
@@ -113,8 +141,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : OOB method
-	 * @param :
-	 *           ctx
+	 * @param : ctx
 	 * @return : double
 	 */
 	@Override
@@ -125,10 +152,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : OOB method
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           values
+	 * @param : ctx
+	 * @param : values
 	 */
 	@Override
 	protected void deepCloneAttributes(final SessionContext ctx, final Map values)
@@ -138,12 +163,9 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : Find Order Entry
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           order
-	 * @param :
-	 *           orderEntryNumber
+	 * @param : ctx
+	 * @param : order
+	 * @param : orderEntryNumber
 	 * @return : AbstractOrderEntry
 	 */
 	private AbstractOrderEntry findOrderEntry(final AbstractOrder order, final SessionContext ctx, final Integer orderEntryNumber)
@@ -174,8 +196,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : OOB method
-	 * @param :
-	 *           ctx
+	 * @param : ctx
 	 * @return : true/false
 	 */
 	@Override
@@ -199,18 +220,16 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 		{
 			//				validProductList = ctx.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
 			//						.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
-			cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null
-					? (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
-			productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null
-					? (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) : null;
-			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null
-					? (Map<String, Integer>) ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
-			productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
-					? (Map<String, List<String>>) ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
-			prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null
-					? (Map<String, Map<String, Double>>) ctx.getAttributes()
-							.get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP)
-					: null;
+			cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? (String) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
+			productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null ? (String) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) : null;
+			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
+			productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (Map<String, List<String>>) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+			prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
+					.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
 		}
 
 		try
@@ -223,8 +242,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 				associatedItemsList = productAssociatedItemsMap.get(validProdUSSID);
 			}
 
-			final int qualifyingCount = (null != qualifyingCountMap && !qualifyingCountMap.isEmpty())
-					? (qualifyingCountMap.get(validProdUSSID) != null ? qualifyingCountMap.get(validProdUSSID).intValue() : 0) : 0;
+			final int qualifyingCount = (null != qualifyingCountMap && !qualifyingCountMap.isEmpty()) ? (qualifyingCountMap
+					.get(validProdUSSID) != null ? qualifyingCountMap.get(validProdUSSID).intValue() : 0) : 0;
 
 			double prevDelCharge = 0.00D;
 			double currDelCharge = 0.00D;
@@ -245,8 +264,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			if (null != orderEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
 					&& !((String) orderEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
 			{
-				totalProdLevelDisc = ((Double) orderEntry.getProperty(ctx,
-						MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue();
+				totalProdLevelDisc = ((Double) orderEntry
+						.getProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue();
 				productPromoCode = (String) orderEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE);
 			}
 
@@ -262,9 +281,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 			final double netAmountAfterAllDisc = netSellingPrice - totalCartLevelDisc;
 
-			final List<String> prevAssociatedItemList = orderEntry
-					.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
-							? (List<String>) orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+			final List<String> prevAssociatedItemList = orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) orderEntry
+					.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
 
 			if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
 			{
