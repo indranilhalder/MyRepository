@@ -5679,3 +5679,13 @@ transform-origin:0 0;
 .retail-bag {
 	padding-bottom: 5px;	/* add for TISCSS-63 */
 }
+/* start for TISCSS-72 */
+.error_txt {
+color: red;
+font-size: 10px;
+font-weight: bold;
+}
+.pickupPersonNameError, .pickupPersonMobileError  {
+margin-top: 3px; 
+}
+/* end for TISCSS-72 */
