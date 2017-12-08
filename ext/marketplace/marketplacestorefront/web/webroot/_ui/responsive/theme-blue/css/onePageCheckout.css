@@ -4764,7 +4764,9 @@ div.radio.creditDebitLabelRadio {
     font-weight: normal;
     letter-spacing: normal;
 }
-
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
+	text-align: left!important;		/* add for TISCSS-75 */
+}
 .cart.wrapper .right-block.billing .checkout-order-summary {
     padding: 0px;
 }
@@ -5689,3 +5691,6 @@ font-weight: bold;
 margin-top: 3px; 
 }
 /* end for TISCSS-72 */
+.cart.wrapper .right-block .checkout-order-summary .subtotals.top.block h2, .cart.wrapper .right-block .block.top h2 {
+	display: none;		/* add for TISCSS-75 */
+}
