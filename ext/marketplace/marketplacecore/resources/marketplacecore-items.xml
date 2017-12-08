@@ -14060,7 +14060,61 @@
 		</typegroup>
 		<!-- Size Guide Changes ends -->								 
 			
-			
+		<!-- gigya data pulling -->
+	<typegroup name="Gigya_Data_Pulling">
+		<itemtype code="GigyaResponseCapture" autocreate="true" generate="true">
+			<deployment table="GigyaResponseCapture" typecode="25300" />
+			<attributes>
+				<attribute autocreate="true" qualifier="listingId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute qualifier="reviewSummaryResponse" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+				<attribute qualifier="reviewDetailResponse" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
 			
   </itemtypes>
 </items>
