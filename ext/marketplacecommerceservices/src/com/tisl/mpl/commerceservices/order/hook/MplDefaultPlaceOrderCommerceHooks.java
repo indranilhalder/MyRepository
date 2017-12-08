@@ -1077,6 +1077,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				double totalProductDiscount = 0D;
 				double totalConvChargeForCOD = 0D;
 				double totalCouponDiscount = 0D;
+				double totalCartCouponDiscount = 0D;
+
 				for (final AbstractOrderEntryModel entryModelList : sellerOrderList.getEntries())
 				{
 					if (null != entryModelList.getTotalProductLevelDisc()
@@ -1088,6 +1090,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != entryModelList.getCouponValue() && entryModelList.getCouponValue().doubleValue() > 0D)
 					{
 						totalCouponDiscount += entryModelList.getCouponValue().doubleValue();
+					}
+
+					if (null != entryModelList.getCartCouponValue() && entryModelList.getCartCouponValue().doubleValue() > 0D)
+					{
+						totalCartCouponDiscount += entryModelList.getCartCouponValue().doubleValue();
 					}
 
 
@@ -1248,7 +1255,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				totalPrice = BigDecimal.valueOf(totalPriceForSubTotal)/* .add(BigDecimal.valueOf(totalConvChargeForCOD)) */
 						.add(BigDecimal.valueOf(totalDeliveryPrice))/* .subtract(BigDecimal.valueOf(totalDeliveryDiscount)) */
 						.subtract(BigDecimal.valueOf(totalCartLevelDiscount)).subtract(BigDecimal.valueOf(totalProductDiscount))
-						.subtract(BigDecimal.valueOf(totalCouponDiscount));
+						.subtract(BigDecimal.valueOf(totalCouponDiscount)).subtract(BigDecimal.valueOf(totalCartCouponDiscount));
+
 				totalPriceWithConv = totalPrice.add(BigDecimal.valueOf(totalConvChargeForCOD));
 
 				final DecimalFormat decimalFormat = new DecimalFormat("#.00");
@@ -2699,6 +2707,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setSellerForCoupon(abstractOrderEntryModel.getSellerForCoupon());
 			}
 
+			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getCartCouponCode()))
+			{
+				orderEntryModel.setCartCouponCode(abstractOrderEntryModel.getCartCouponCode());
+			}
+
 
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
@@ -3482,8 +3495,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private void cardPerOfferVoucherExists(final OrderModel orderModel)
 	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
-				.getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+				getVoucherService().getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -3508,11 +3521,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
+											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerMonth = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerMonth() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerMonth().doubleValue() : 0.0D;
+											.getMaxAmountPerMonth() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerMonth().doubleValue()
+													: 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerMonth > 0.0)
 									{
 										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
