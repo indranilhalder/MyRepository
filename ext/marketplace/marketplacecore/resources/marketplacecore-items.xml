@@ -3607,7 +3607,14 @@
 							unique="false" optional="false" removable="false" initial="true"
 							private="false" partof="false" />
 					</attribute>
-
+	               <!-- TPR-7486 -->
+ 				   <attribute qualifier="cardBinNumber" autocreate="true"
+ 					type="java.lang.String">
+ 					   <persistence type="property" />
+ 					    <modifiers read="true" write="true" search="true"
+						unique="false" optional="false" removable="false" initial="true"
+							private="false" partof="false" />
+				   </attribute>
 					<attribute qualifier="billingAddress" autocreate="true"
 						type="Address">
 						<persistence type="property" />
