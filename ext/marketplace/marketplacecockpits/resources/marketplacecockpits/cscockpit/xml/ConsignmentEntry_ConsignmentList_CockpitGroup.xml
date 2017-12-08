@@ -20,5 +20,7 @@
 			visible="true" /> -->
 		<property qualifier="ConsignmentEntry.Consignment.shipmentStatus"
 			visible="true" />
+			
+		<property qualifier="ConsignmentEntry.consignment.refundDetails" name="Refund Type" visible="true"/>
 	</group>
 </list-view>

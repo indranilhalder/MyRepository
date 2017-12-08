@@ -480,9 +480,10 @@ public interface MplPaymentFacade
 	 * @param refNo
 	 */
 	String getWalletAuditEntries(String refNo);
+
 	/***
 	 * cscockpit specific order payment status call
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -492,13 +493,16 @@ public interface MplPaymentFacade
 
 	/**
 	 * Added for TPR-4461
-	 * 
+	 *
 	 * @param banklist
 	 * @param bank
 	 * @param boolean
 	 */
 	public boolean validateBank(final List<BankModel> bankList, final String bank);
 
+	//TPR-7486
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer);
 
+	public String fetchBanknameFromBin(final String cardBinNo);//TPR-7486
 
 }

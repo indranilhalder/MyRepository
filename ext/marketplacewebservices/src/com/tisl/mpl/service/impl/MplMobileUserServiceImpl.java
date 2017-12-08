@@ -388,7 +388,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplUserResultWsDto registerNewUserSocial(final String login, final String socialMediaType,
-			final boolean tataTreatsEnable) throws EtailNonBusinessExceptions, EtailNonBusinessExceptions
+			final boolean tataTreatsEnable, final int platformNumber) throws EtailNonBusinessExceptions, EtailNonBusinessExceptions //SDI-639
 	{
 		final MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -418,7 +418,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			{
 				//Register user.Password will be auto generated.
 				final boolean isMobile = true;
-				registration = registerCustomerFacade.registerSocial(registration, isMobile);
+				registration = registerCustomerFacade.registerSocial(registration, isMobile, platformNumber); //SDI-639
 				saveSocialMediaIndicatorForUser(registration.getLogin());
 				//Set Success Flag to true
 				successFlag = true;
@@ -956,7 +956,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@Override
 	public MplUserResultWsDto socialMediaRegistration(final String emailId, final String socialMedia,
-			final boolean tataTreatsEnable)
+			final boolean tataTreatsEnable, final int platformNumber) //SDI-639
 	{
 		boolean successflag = false;
 		MplUserResultWsDto socialRegister = new MplUserResultWsDto();
@@ -968,7 +968,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		try
 		{
-			socialRegister = registerNewUserSocial(emailId, socialMedia, tataTreatsEnable);
+			socialRegister = registerNewUserSocial(emailId, socialMedia, tataTreatsEnable, platformNumber);
 			if (!StringUtils.isEmpty(socialRegister.getStatus())
 					&& socialRegister.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS_FLAG))
 			{

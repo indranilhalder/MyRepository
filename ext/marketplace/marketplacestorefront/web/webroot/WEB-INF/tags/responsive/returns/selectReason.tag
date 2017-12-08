@@ -120,7 +120,7 @@
 							
 							
 							
-							<form:select name="reasonList" class="reasonSelectBox" path="returnReason">
+							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" onchange="fetchCatSpecificReason(this)">
 								    <option selected='selected' value="NA"><spring:theme code="text.requestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
@@ -128,6 +128,51 @@
 									</c:forEach>									
 							</form:select>
 						</div>
+						
+						<br/><br/>
+						<br/><br/>
+						<br/><br/>
+						
+						<!-- TPR-5954 || start -->
+						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
+							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason">
+								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
+									<c:forEach items="${reasonDataList}" var="reason"
+										varStatus="reasonStatus">
+										<form:option value="${reason.code}">${reason.reasonDescription}</form:option>	
+									</c:forEach>									
+							</form:select>	
+							
+							<br/><br/>
+										
+								<div>
+						
+						<form:textarea maxlength="250"  rows="3" cols="45" path="comments" name="returnComments" placeholder="Comments" />
+
+					    			<!-- <span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
+					    			<br/>
+					    			<label>(Accpeted format JPEG,PNG,PDF & Max file size 5MB)</label>
+									<input type="file" name="photo" id="upload-photo" multiple="multiple" />
+									<div class="button_holder">
+											<button onclick="checkReturnSelected()" type="button" class="light-blue submit-request">Upload Image</button>
+									</div> -->
+									<%-- <form name="imageUpload" enctype="multipart/form-data" method="POST">
+									<br/><br/>
+									<input type="file" name="files[]" multiple id="upload-files">
+									<br/>
+									<label>	*Accpeted format JPEG,PNG,PDF & Max file size 5MB</label>
+									<br/>
+										<div class="button_holder" style="text-align: left;">
+											<button onclick="uploadImage()" type="button" class="light-blue submit-request">Upload Image</button>
+										</div> 
+									</form> --%>
+									
+									</div>
+									
+						<!-- TPR-5954 || end -->			
+											
+						</div>
+					
 						
 						<!-- TPR-4134 -->
 						<input type="hidden" id="ifShowReverseSeal" value="${showReverseSeal}">
@@ -150,4 +195,20 @@
 						</div>
 					</div>
 				</div>
-			
+				<!-- <style>
+				.upload-image-title {
+				    cursor: pointer;
+					margin: 10px 18px;
+					color: #a9143c;
+				}
+				#upload-photo {
+				   opacity: 0;
+				   position: absolute;
+				   z-index: -1;
+				}
+				.add-comment-title{
+					color: #a9143c;
+				    font-size: 14px;
+				    margin: 10px 0;
+				}
+				</style> -->

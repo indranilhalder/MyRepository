@@ -2000,6 +2000,20 @@
  	</bean>
  	<!-- Bean for Promotion Job ends-->
 
+
+	<!-- Bean for Indexing timestamp update in MplConfiguration  Starts -->
+	
+	<bean id="mplLastIndexTimeService" 
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplLastIndexTimeServiceImpl"/>
+		
+	<bean id="mplLastIndexTimeDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplLastIndexTimeDaoImpl"/>
+		
+	<bean id="updateLastRunTimeJob" class="com.tisl.mpl.marketplacecommerceservices.jobs.UpdateLastRunTimeJob" autowire="byName"/>
+	
+	<!-- Bean for Indexing timestamp update in MplConfiguration  ends  -->
+	
+	
 	<!-- LW-245 -->
 	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
 		parent="abstractJobPerformable"
@@ -2180,7 +2194,14 @@
 	</bean>
 <!-- TPR-1984 END -->
 
+<!-- Size Guide Upload starts -->
+<bean id="sizeGuideUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.SizeGuideUploadPrepareInterceptor" autowire="byName"></bean>
+<bean id="sizeGuideUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+	<property name="interceptor" ref="sizeGuideUploadPrepareInterceptor"></property>
+	<property name="typeCode" value="SizeGuideUpload"></property>
+</bean>
 
+<!-- Size Guide Upload ends -->
 
 
 	<!-- Jewellery Changes Start --> 
@@ -2410,6 +2431,28 @@
 	
 	<!--  End TPR-6945 -->
 
-    
+ 
+
+	
+	<bean id="refundClearPerformableDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
+
+	<bean id="refundClearPerformableService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultRefundClearPerformableServiceImpl">
+			<property name="modelService" ref="modelService" />
+	</bean>
+
+  <!-- TPR-7412 start -->   
+  <alias name="mplUtrNoArnNoService" alias="mplUtrNoArnNoService" />
+	<bean id="mplUtrNoArnNoService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplUtrNoArnNoSeviceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplUtrNoArnNoDao" alias="mplUtrNoArnNoDao" />
+	<bean id="mplUtrNoArnNoDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplUtrNoArnNoDaoImpl"
+			autowire="byName">
+	</bean>
+	<!--  TPR-7412 end -->
 </beans>
 

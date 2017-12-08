@@ -53,7 +53,6 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -130,6 +129,7 @@ import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -181,6 +181,7 @@ import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
+import com.tisl.mpl.wsdto.OfferListWsData;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
@@ -231,13 +232,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -264,7 +265,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -342,6 +343,9 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
+
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 
 
 
@@ -716,9 +720,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1443,7 +1447,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1456,11 +1460,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1572,6 +1576,132 @@ public class MiscsController extends BaseController
 
 		return aboutUsBannerData;
 	}
+
+
+	/**
+	 * Display OFFERS IN PAYMENT PAGE
+	 *
+	 * @param fields
+	 * @return aboutUsBannerData
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/paymentSpecificOffers", method = RequestMethod.GET)
+	@ResponseBody
+	public OfferListWsData getPaymentSpecificOffers(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			throws CMSItemNotFoundException
+	{
+		OfferListWsData offersData = new OfferListWsData();
+		try
+		{
+			offersData = mplCouponFacade.getAllOffersForMobile();
+			if (offersData != null)
+			{
+				offersData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			offersData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			offersData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return offersData;
+	}
+
+	/**
+	 * Display OFFERS TERMS AND CONDITIONS IN PAYMENT PAGE
+	 *
+	 * @param fields
+	 * @return aboutUsBannerData
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/paymentSpecificOffersTermsAndCondition", method = RequestMethod.GET)
+	@ResponseBody
+	public OfferListWsData getPaymentSpecificOffersTermsAndCondition(
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws CMSItemNotFoundException
+	{
+		OfferListWsData offersData = new OfferListWsData();
+		try
+		{
+			offersData = mplCouponFacade.getAllOffersTermsAndConditionForMobile();
+			if (offersData != null)
+			{
+				offersData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			offersData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			offersData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return offersData;
+	}
+
 
 	/**
 	 * Display Hel and Services Page
@@ -1853,9 +1983,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2039,7 +2169,9 @@ public class MiscsController extends BaseController
 		String delayValue = "0";
 		long delay = 0;
 		List<AbstractOrderEntryModel> orderEntriesModel = null;
-
+		Map<String, String> dataMap = null;//Added for TPR-5954
+		StringBuilder imgUrl = null;//Added for TPR-5954
+		final String subQuery = null;//Added for TPR-5954
 		try
 		{
 			//Converting XML to JAVA Object
@@ -2077,6 +2209,18 @@ public class MiscsController extends BaseController
 					}
 					try
 					{
+						//TPR-5954 || Start
+						dataMap = new HashMap<String, String>();
+						dataMap.put("comments", oneTouchCrmObj.getComments());
+						dataMap.put("subreasoncode", oneTouchCrmObj.getSubReturnReasonCode());
+						imgUrl = new StringBuilder();
+						/*
+						 * if (null != oneTouchCrmObj.getUploadImage()) { for (final String up :
+						 * oneTouchCrmObj.getUploadImage()) { imgUrl.append(up); imgUrl.append(","); } subQuery =
+						 * imgUrl.substring(0, imgUrl.length() - 1); dataMap.put("imgurl", subQuery);
+						 * imgUrl.setLength(0);//Emptying the image path string }
+						 */
+						//TPR-5954 || End
 						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());//Sub order model
 						final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data
 						orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel, oneTouchCrmObj.getTransactionId());//associated order entries
@@ -2278,7 +2422,7 @@ public class MiscsController extends BaseController
 									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
 											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
 											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
-											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
+											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId(), dataMap);
 									//Return is successfull
 									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 									{
@@ -2413,8 +2557,10 @@ public class MiscsController extends BaseController
 			output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
 			output.setRemarks(MarketplacewebservicesConstants.FORMAT_MISMATCH);
 			outputList.add(output);
+			dataMap = null;
 		}
 		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
+		dataMap = null;
 		return oneTouchReturnDTOList;
 	}
 

@@ -197,10 +197,10 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderUpdateProcessModel.getOrder().getCode();
 		 * put(TRACK_ORDER_URL, trackOrderUrl);
 		 */
-
+		//SDI-2038
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ orderReferenceNumber;
+				+ "/" + orderReferenceNumber;
 		/* Added in R2.3 for shortUrl START */
 		//	final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
 		final String shortUrl = orderUpdateProcessModel.getOrderTrackUrl();

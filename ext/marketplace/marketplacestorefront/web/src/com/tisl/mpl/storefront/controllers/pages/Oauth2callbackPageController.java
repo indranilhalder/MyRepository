@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -481,6 +482,66 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	{
 		try
 		{
+			boolean isExist = false; //SDI-639
+			
+			//SDI-639 starts here
+			int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+			//added for IQA starts here
+			final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+			String userAgent = null;
+
+			if (StringUtils.isNotEmpty(userAgentHeader))
+			{
+				userAgent = request.getHeader(userAgentHeader);
+
+				if (StringUtils.isNotEmpty(userAgent))
+				{
+					userAgent = userAgent.toLowerCase();
+				}
+			}
+			//added for IQA ends here
+			if (StringUtils.isNotEmpty(userAgent))
+			{
+				String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+				//added for IQA starts here
+				if (StringUtils.isNotEmpty(mobileDevices))
+				{
+					mobileDevices = mobileDevices.toLowerCase();
+				}
+				//added for IQA ends here
+
+				if (StringUtils.isNotEmpty(mobileDevices))
+				{
+					final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+							.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+					if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
+					{
+						for (final String mobDevice : mobileDeviceArray)
+						{
+							if (userAgent.contains(mobDevice))
+							{
+								isExist = true;
+								break;
+							}
+						}
+					}
+				}
+				if (isExist)
+				{
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
+				}
+				else
+				{
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+				}
+			}
+			else
+			{
+				platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+			}
+			LOG.debug("The platform number is " + platformNumber);
+			//SDI-639 ends here
 			if (bindingResult.hasErrors())
 			{
 				model.addAttribute(form);
@@ -511,7 +572,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			LOG.debug("Method processRegisterUserRequestForOAuth2, EMAIL " + form.getEmail());
 			LOG.debug("Method processRegisterUserRequestForOAuth2, PASSWORD  " + data.getPassword());
 
-			data = registerCustomerFacade.registerSocial(data, isMobile);
+			data = registerCustomerFacade.registerSocial(data, isMobile, platformNumber);
 
 			if (null != data)
 			{

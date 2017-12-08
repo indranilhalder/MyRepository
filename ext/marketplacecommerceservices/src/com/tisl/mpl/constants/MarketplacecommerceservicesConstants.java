@@ -1,8 +1,8 @@
 /*
 
  *
- * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
+ * Copyright (c) 2000-2013 hybris AG
  *
  * This software is the confidential and proprietary information of hybris
  * ("Confidential Information"). You shall not disclose such Confidential
@@ -386,6 +386,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String articleSKUID = "articleSKUID";
 
 	public static final String USER_NOT_FOUND = "No user found for the current Email ID";
+
+	public static final String OFFER_NOT_FOUND = "No offer found in the system";
+
 	public static final String WISHLIST_NOT_FOUND = "No wishlist found for the current User";
 	public static final String PRODUCT_NOT_FOUND = "Product not found in the wishlist";
 	public static final String WISHLIST_FOUND_EMPTY = "Wishlist is Empty";
@@ -1906,6 +1909,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
 
+	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
 	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
@@ -2135,6 +2140,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
 
 	//Agent specific order search query
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
@@ -2189,8 +2195,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
-	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
-			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type and {b:VersionID} is null"//SDI-2553
+	.intern();
 	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
 			.intern();
 
@@ -2296,4 +2302,44 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
+
+
+
+	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
+
+	public static final String REFUNDCLEARORDERQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.creationtime} >= ?startTime and {o.status}={os.pk} and {os.code} IN (?statusOne, ?statusTwo) and {o.type}=?type"
+			.intern();
+	public static final String ORDERSTATUSONE = "statusOne".intern();
+	public static final String ORDERSTATUSTWO = "statusTwo".intern();
+	public static final String REFUNDCLEARWEBHHOKQUERY = "select {js.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId and {js.status}='CHARGED' order by {js.creationtime} desc"
+			.intern();
+
+	public static final String REFUNDEVENTSTAUSJUSPAY = "webhook.refund.eventname";
+
+	public static final String ORDERFETCH_STARTTIME = "marketplace.refundorder.fetchStartTime".intern();
+
+	public static final String STARTTIME = "startTime".intern();
+	public static final String FINISHED = "FINISHED";
+
+	//PR-4 || Refund sms cron job
+	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
+	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
+	public static final String BULK_CUSTOMER_SMS_3 = " to your bank account against Tata CLiQ order no ";
+	public static final String BULK_CUSTOMER_SMS_4 = " For delay over 5 days please contact your bank with ref number ";
+	public static final String BULK_CUSTOMER_SMS_5 = ".For few banks, It may take up to 10-15 days to reflect in your account.";
+	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
+
+
+	//TPR-7448
+	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String JUSPAYCARDSTATUSQRY = "select {pk} from {JuspayCardStatus} where {guid}=?guid and {customerId}=?customerId order by {creationtime} desc";
+	public static final String CARDREFERENCENO = "cardRefNo".intern();
+
+
+
+	public static final String RECEIVED = "RECEIVED";
+	public static final String SENT = "SENT";
+
+
 }

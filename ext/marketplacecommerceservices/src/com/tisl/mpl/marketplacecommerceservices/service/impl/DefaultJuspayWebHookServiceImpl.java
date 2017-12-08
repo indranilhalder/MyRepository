@@ -24,7 +24,9 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -129,7 +131,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
-			validateWebHookData(webHookDetailList, true);
+			//SDI-2922
+			validateWebHookData(webHookDetailList);
 		}
 	}
 
@@ -137,13 +140,15 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @Description : Fetch From Audit based on Web Hook Details
 	 * @param webHookDetailList
 	 */
-	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList, final boolean flag)
+	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList)
 			throws EtailNonBusinessExceptions
 	{
 
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
-			final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
+			//SDI-2922
+			final Set<String> uniqueList = new HashSet<String>();
+			//final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
 
 			/*
 			 * if (flag) {//check only if call is coming from method fetchWebHookData for (final JuspayWebhookModel oModel
@@ -171,6 +176,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				 */
 				//iterating through the new list against the whole webhook data list
 				boolean duplicateFound = false;
+				
+				//SDI-2922
+				if(hook.getOrderStatus() != null){
+					duplicateFound = !uniqueList.add(hook.getOrderStatus().getOrderId()+"_"+hook.getEventName());
+				}
+				/*
 				for (final JuspayWebhookModel unique : uniqueList)
 				{
 					//if there is duplicate order id which is not expired(N) then setting it to Y
@@ -183,16 +194,18 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						break;
 					}
 				}
+				*/
 				if (duplicateFound)
 				{
 					hook.setIsExpired(Boolean.TRUE);
 					getModelService().save(hook);
 				}
 				else
-				{
-					processWebhook(hook, webHookDetailList);
+				{	
+					//SDI-2922
+					processWebhook(hook);
 					//TISSIT-1811:the processed hook in the uniqueList
-					uniqueList.add(hook);
+					//uniqueList.add(hook);
 				}
 				/*
 				 * } else { processWebhook(hook, webHookDetailList); //TISSIT-1811:the processed hook in the uniqueList
@@ -206,9 +219,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * WebHook Data Processing
 	 *
 	 * @param hook
-	 * @param webHookDetailList
 	 */
-	private void processWebhook(final JuspayWebhookModel hook, final List<JuspayWebhookModel> webHookDetailList)
+	private void processWebhook(final JuspayWebhookModel hook) //SDI-2922
 	{
 
 		final JuspayOrderStatusModel juspayOrderStatus = hook.getOrderStatus();
@@ -236,7 +248,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			else
 			{
 				//Action for refund scenarios
-				performActionForRefund(webHookDetailList);
+				//SDI-2922
+				performActionForRefund(hook);
 				//Processed in Webhook
 				updateWebHookExpired(hook);
 			}
@@ -247,14 +260,16 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	/**
 	 * This method performs all the functions based on combinations of scenarios for Refund
 	 *
-	 * @param webHookList
+	 * @param hook
 	 */
-	private void performActionForRefund(final List<JuspayWebhookModel> webHookList)
+	@SuppressWarnings("deprecation")
+	private void performActionForRefund(final JuspayWebhookModel hook) //SDI-2922
 	{
 		//TISPRO-607
 		boolean isError = false;
 		final List<String> errorList = new ArrayList<String>();
-		for (final JuspayWebhookModel hook : webHookList)
+		//SDI-2922
+		if (hook != null)
 		{
 			if (null != hook.getOrderStatus() && CollectionUtils.isNotEmpty(hook.getOrderStatus().getRefunds()))
 			{
@@ -1250,8 +1265,19 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 							updateWebHookExpired(oModel);
 
 						}
+						//SDI-2922
+						else if (OrderStatus.PAYMENT_SUCCESSFUL.toString().equals(orderStatus))
+						{
+							updateWebHookExpired(oModel);
+						}
 					}
 				}
+			}
+			//SDI-2922
+			else if (status.equalsIgnoreCase(MarketplacecommerceservicesConstants.AUTHORIZATION_FAILED)
+					|| status.equalsIgnoreCase(MarketplacecommerceservicesConstants.AUTHENTICATION_FAILED))
+			{
+				updateWebHookExpired(oModel);
 			}
 
 
@@ -1425,7 +1451,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		webHookDetailList = juspayWebHookDao.fetchSpecificWebHookData(mplConfigDate, startTime);
 		if (null != webHookDetailList && !webHookDetailList.isEmpty())
 		{
-			validateWebHookData(webHookDetailList, false);
+			//SDI-2922
+			validateWebHookData(webHookDetailList);
 		}
 	}
 

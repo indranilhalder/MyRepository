@@ -9,7 +9,6 @@ import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
-import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.returns.model.RefundEntryModel;
@@ -19,13 +18,18 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
+import com.tisl.mpl.core.enums.RefundFomType;
+import com.tisl.mpl.core.model.InitiateRefundProcessModel;
 
 import com.tisl.mpl.marketplacecommerceservices.service.MplNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
@@ -35,7 +39,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
  * @author TCS
  *
  */
-public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProcessModel>
+public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateRefundProcessModel> //SDI-2788
 {
 	private static final Logger LOG = Logger.getLogger(AutoRefundInitiateAction.class);
 	private static final String REFUND_MODE_C = "C";
@@ -52,7 +56,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 
 
 	@Override
-	public void executeAction(final OrderProcessModel process)
+	public void executeAction(final InitiateRefundProcessModel process) //SDI-2788
 	{
 		LOG.error("Inside AutoRefundInitiateAction");
 		boolean refundedAtRts = false;
@@ -60,9 +64,12 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		boolean refundedByWallet = false;
 
 		//Changed for SDI-930
-		final List<OrderEntryModel> refundList = Collections.synchronizedList(new ArrayList<OrderEntryModel>());
-		final List<ReturnEntryModel> returnList = Collections.synchronizedList(new ArrayList<ReturnEntryModel>());
+		final List<OrderEntryModel> refundList = new ArrayList<OrderEntryModel>();
+		final List<ReturnEntryModel> returnList = new ArrayList<ReturnEntryModel>();
 
+		//SDI-2788
+		final String refundTransactionId = process.getRefundTransactionId();
+		
 		final OrderModel orderModel = process.getOrder();
 		LOG.error("Inside AutoRefundInitiateAction for Order #" + orderModel.getCode());
 		if (orderModel != null) //Changed for SDI-930
@@ -78,7 +85,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 						{
 							if (returnEntry instanceof RefundEntryModel)
 							{
-								if (returnEntry.getOrderEntry() != null
+								//SDI-2788
+								if (returnEntry.getOrderEntry() != null && returnEntry.getOrderEntry().getOrderLineId().equals(refundTransactionId)
 										&& CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries()))
 								{
 									refundedAtRts = false;
@@ -108,7 +116,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundedByWallet
 											&& !refundReasonSiteError)
 									{
-										populateRefundList(orderModel, refundList, returnList); //Changed for SDI-930
+										//SDI-2788
+										populateRefundList(orderModel, refundList, returnList, refundTransactionId); //Changed for SDI-930
 
 										if (CollectionUtils.isNotEmpty(refundList))
 										{
@@ -119,6 +128,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													final ConsignmentModel consignment = orderEntry.getConsignmentEntries().iterator().next()
 															.getConsignment();
 													consignment.setStatus(ConsignmentStatus.REFUND_INITIATED);
+													//h2refund Added to know the refund type
+													consignment.setRefundDetails(RefundFomType.AUTOMATIC);
 													modelService.save(consignment);
 													final OrderHistoryEntryModel historyEntry = modelService
 															.create(OrderHistoryEntryModel.class);
@@ -155,7 +166,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 														try
 														{
 															//send Notification
-															final int noOfItems = returnList.size();
+															//SDI-2788 changed to refundlist to resolve duplicate returnrequest
+															final int noOfItems = refundList.size();
 															mplNotificationSaveService.sendRefundInitiatedNotification(noOfItems,
 																	returnEntryTmp, orderModel);
 															LOG.error("AutoRefundInitiateAction: mplNotificationSaveService.sendRefundInitiatedNotification( for Order #"
@@ -190,10 +202,6 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 										}
 									}
 								}
-								else
-								{
-									LOG.error("No Order Entry or No Consignment for automatic Refund");
-								}
 							}
 						}
 					}
@@ -207,10 +215,11 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	}
 
 
-	protected void populateRefundList(final OrderModel orderModel, final List refundList, final List returnList) //Changed for SDI-930
+	protected void populateRefundList(final OrderModel orderModel, final List refundList, final List returnList, final String refundTransactionId) //Changed for SDI-930
 	{
 		boolean refundedAtRts = false;
 		boolean refundedByWallet = false;
+		Set<String> uniqueTransactionSet = new HashSet<String>();
 
 		if (orderModel != null)
 		{
@@ -236,7 +245,9 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 						{
 							if (returnEntry instanceof RefundEntryModel)
 							{
-								if (returnEntry.getOrderEntry() != null
+								//SDI-2788
+								if (returnEntry.getOrderEntry() != null && null != returnEntry.getOrderEntry().getOrderLineId()
+										&& returnEntry.getOrderEntry().getOrderLineId().equals(refundTransactionId)
 										&& CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries()))
 								{
 									final ConsignmentStatus status = returnEntry.getOrderEntry().getConsignmentEntries().iterator().next()
@@ -260,10 +271,14 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 
 									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundedByWallet)
 									{
+										boolean isUnique = true;
 										final ReturnEntryModel returnEntryModel = returnEntry;
 										final OrderEntryModel orderEntryModel = (OrderEntryModel) returnEntryModel.getOrderEntry();
-
-										refundList.add(orderEntryModel);
+										isUnique = uniqueTransactionSet.add(orderEntryModel.getOrderLineId());
+										if(isUnique)
+										{
+											refundList.add(orderEntryModel);
+										}
 										returnList.add(returnEntryModel);
 									}
 								}

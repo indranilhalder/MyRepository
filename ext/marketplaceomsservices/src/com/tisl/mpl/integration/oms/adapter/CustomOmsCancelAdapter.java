@@ -2,6 +2,7 @@
  *
  */
 package com.tisl.mpl.integration.oms.adapter;
+
 import de.hybris.platform.basecommerce.enums.CancelReason;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.enums.OrderCancelEntryStatus;
@@ -60,6 +61,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
+import com.tisl.mpl.core.enums.RefundFomType;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.data.SendTicketLineItemData;
@@ -96,7 +98,7 @@ public class CustomOmsCancelAdapter implements Serializable
 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService;
-	
+
 
 	private ModelChangeNotifier<ConsignmentModel> consignmentProcessNotifier;
 	private TimeService timeService;
@@ -107,10 +109,11 @@ public class CustomOmsCancelAdapter implements Serializable
 	private OrderCancelDao orderCancelDao;
 	private OrderHistoryService orderHistoryService;
 	private UserService userService;
-	public static final String TICKET_SUB_TYPE_CODE_ARR="ARR";
+	public static final String TICKET_SUB_TYPE_CODE_ARR = "ARR";
 
 	public boolean createTicketInCRM(final String subOrderEntryTransactionId, final String ticketTypeCode,
-			final String reasonCode, final String refundType, final OrderModel subOrderModel,boolean isSsb,boolean isSdb,boolean isEdtoHd)
+			final String reasonCode, final String refundType, final OrderModel subOrderModel, final boolean isSsb,
+			final boolean isSdb, final boolean isEdtoHd)
 	{
 		boolean ticketCreationStatus = false;
 		try
@@ -126,19 +129,25 @@ public class CustomOmsCancelAdapter implements Serializable
 				sendTicketLineItemData.setLineItemId(abstractOrderEntryModel.getOrderLineId());
 				if (ticketTypeCode.equalsIgnoreCase("C"))
 				{
-					if(isSsb){
+					if (isSsb)
+					{
 						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE_SSB);
 						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
-					}else{
-   					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
-   					sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
 					}
-				}else if(ticketTypeCode.equalsIgnoreCase("A")){
-					
-					   if(isSdb || isEdtoHd){
+					else
+					{
+						sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
+						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
+					}
+				}
+				else if (ticketTypeCode.equalsIgnoreCase("A"))
+				{
+
+					if (isSdb || isEdtoHd)
+					{
 						sendTicketRequestData.setTicketSubType(TICKET_SUB_TYPE_CODE_ARR);
 						sendTicketLineItemData.setCancelReasonCode(MarketplaceomsordersConstants.CRM_SSB_REASON_CODE);
-					   }
+					}
 				}
 				lineItemDataList.add(sendTicketLineItemData);
 			}
@@ -172,7 +181,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation"+subOrderModel.getParentReference().getCode(), ex);
+			LOG.error(" >> Exception occured while CRM ticket creation" + subOrderModel.getParentReference().getCode(), ex);
 		}
 
 		return ticketCreationStatus;
@@ -221,6 +230,7 @@ public class CustomOmsCancelAdapter implements Serializable
 
 		return orderEntries;
 	}
+
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
 	{
 		String crmRequest = null;
@@ -272,8 +282,8 @@ public class CustomOmsCancelAdapter implements Serializable
 		modelService.save(ticket);
 	}
 
-	public boolean initiateCancellation(final String ticketTypeCode, final String subOrderEntryTrnxId, final OrderModel subOrderModel,
-			final String reasonCode, final ConsignmentModel consignmentModel)
+	public boolean initiateCancellation(final String ticketTypeCode, final String subOrderEntryTrnxId,
+			final OrderModel subOrderModel, final String reasonCode, final ConsignmentModel consignmentModel)
 	{
 		boolean cancellationInitiated = false;
 
@@ -282,14 +292,14 @@ public class CustomOmsCancelAdapter implements Serializable
 			if ("C".equalsIgnoreCase(ticketTypeCode))
 			{
 				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel, subOrderEntryTrnxId);
-				LOG.debug("orderCancelRequest refund Amount :"+orderCancelRequest.getAmountToRefund());
+				LOG.debug("orderCancelRequest refund Amount :" + orderCancelRequest.getAmountToRefund());
 				requestOrderCancel(subOrderModel, orderCancelRequest, consignmentModel);
 			}
 			cancellationInitiated = true;
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(" initiateCancellation Exception:"+subOrderModel.getParentReference().getCode() + e.getMessage());
+			LOG.error(" initiateCancellation Exception:" + subOrderModel.getParentReference().getCode() + e.getMessage());
 		}
 		catch (final Exception ex)
 		{
@@ -343,7 +353,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			double deliveryCost = 0D;
 			if (orderEntry.getCurrDelCharge() != null)
 			{
-				deliveryCost = orderEntry.getCurrDelCharge().doubleValue()+orderEntry.getScheduledDeliveryCharge().doubleValue();
+				deliveryCost = orderEntry.getCurrDelCharge().doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
 			}
 
 
@@ -361,8 +371,8 @@ public class CustomOmsCancelAdapter implements Serializable
 	private void requestOrderCancel(final OrderModel subOrderModel, final MplOrderCancelRequest orderCancelRequest,
 			final ConsignmentModel consignmentModel) throws OrderCancelException
 	{
-		final OrderCancelRecordEntryModel orderRequestRecord =requestOrderCancel(orderCancelRequest,subOrderModel.getUser());
-		LOG.debug("orderRequestRecord**********:"+orderRequestRecord.getCancelResult());
+		final OrderCancelRecordEntryModel orderRequestRecord = requestOrderCancel(orderCancelRequest, subOrderModel.getUser());
+		LOG.debug("orderRequestRecord**********:" + orderRequestRecord.getCancelResult());
 		if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
 		{
 			final String orderCode = subOrderModel.getCode();
@@ -385,126 +395,132 @@ public class CustomOmsCancelAdapter implements Serializable
 		}
 	}
 
-	
-	public OrderCancelRecordEntryModel requestOrderCancel(
-			MplOrderCancelRequest orderCancelRequest, PrincipalModel requestor)
-			throws OrderCancelException {
-		
-		OrderCancelRecordEntryModel result;
-		CancelDecision cancelDecision = isCancelPossible(
-				orderCancelRequest.getOrder(), requestor,
-				orderCancelRequest.isPartialCancel(),
-				orderCancelRequest.isPartialEntryCancel());
-		if (cancelDecision.isAllowed()) {
-			 result =createRecordEntry(orderCancelRequest, requestor);
-			OrderCancelState currentCancelState = this.stateMappingStrategy
-					.getOrderCancelState(orderCancelRequest.getOrder());
-			
-			OrderCancelRequestExecutor ocre = this.requestExecutorsMap.get(currentCancelState);
 
-			if (ocre == null) {
-				throw new IllegalStateException(
-						"Cannot find request executor for cancel state: "
-								+ currentCancelState.name());
+	public OrderCancelRecordEntryModel requestOrderCancel(final MplOrderCancelRequest orderCancelRequest,
+			final PrincipalModel requestor) throws OrderCancelException
+	{
+
+		OrderCancelRecordEntryModel result;
+		final CancelDecision cancelDecision = isCancelPossible(orderCancelRequest.getOrder(), requestor,
+				orderCancelRequest.isPartialCancel(), orderCancelRequest.isPartialEntryCancel());
+		if (cancelDecision.isAllowed())
+		{
+			result = createRecordEntry(orderCancelRequest, requestor);
+			final OrderCancelState currentCancelState = this.stateMappingStrategy.getOrderCancelState(orderCancelRequest.getOrder());
+
+			final OrderCancelRequestExecutor ocre = this.requestExecutorsMap.get(currentCancelState);
+
+			if (ocre == null)
+			{
+				throw new IllegalStateException("Cannot find request executor for cancel state: " + currentCancelState.name());
 			}
-          /*ocre.processCancelRequest(orderCancelRequest, result);
-           * For Multiple Orderlies cancel getting  OrderCancel Denied Exception
-           * processCancelRequest method will check for duplicated orderline id
-           */
+			/*
+			 * ocre.processCancelRequest(orderCancelRequest, result); For Multiple Orderlies cancel getting OrderCancel
+			 * Denied Exception processCancelRequest method will check for duplicated orderline id
+			 */
 			//ocre.processCancelRequest(orderCancelRequest, result);
-		} else {
-			throw new OrderCancelDeniedException(orderCancelRequest.getOrder()
-					.getCode(), cancelDecision);
 		}
-		
+		else
+		{
+			throw new OrderCancelDeniedException(orderCancelRequest.getOrder().getCode(), cancelDecision);
+		}
+
 		return result;
 	}
-	private CancelDecision isCancelPossible(OrderModel order,
-			PrincipalModel requestor, boolean partialCancel,
-			boolean partialEntryCancel) {
-		OrderCancelConfigModel configuration = getConfiguration();
-		List reasons = new ArrayList();
-		for (OrderCancelDenialStrategy ocas : this.cancelDenialStrategies) {
-			OrderCancelDenialReason result = ocas.getCancelDenialReason(
-					configuration, order, requestor, partialCancel,
+
+	private CancelDecision isCancelPossible(final OrderModel order, final PrincipalModel requestor, final boolean partialCancel,
+			final boolean partialEntryCancel)
+	{
+		final OrderCancelConfigModel configuration = getConfiguration();
+		final List reasons = new ArrayList();
+		for (final OrderCancelDenialStrategy ocas : this.cancelDenialStrategies)
+		{
+			final OrderCancelDenialReason result = ocas.getCancelDenialReason(configuration, order, requestor, partialCancel,
 					partialEntryCancel);
 			if (result == null)
+			{
 				continue;
+			}
 			reasons.add(result);
 		}
 		return new CancelDecision(true, reasons);
 	}
-	
-	public OrderCancelConfigModel getConfiguration() {
+
+	public OrderCancelConfigModel getConfiguration()
+	{
 		return this.orderCancelDao.getOrderCancelConfiguration();
 	}
-	
-	private OrderCancelRecordEntryModel createRecordEntry(
-			MplOrderCancelRequest request, PrincipalModel requestor)
-			throws OrderCancelRecordsHandlerException {
-		
-		if (request == null) {
-			throw new OrderCancelRecordsHandlerException(null,
-					"Cancel request cannot be null");
+
+	private OrderCancelRecordEntryModel createRecordEntry(final MplOrderCancelRequest request, final PrincipalModel requestor)
+			throws OrderCancelRecordsHandlerException
+	{
+
+		if (request == null)
+		{
+			throw new OrderCancelRecordsHandlerException(null, "Cancel request cannot be null");
 		}
-		if (request.getOrder() == null) {
-			throw new OrderCancelRecordsHandlerException(null,
-					"Cancel request contains no order reference");
+		if (request.getOrder() == null)
+		{
+			throw new OrderCancelRecordsHandlerException(null, "Cancel request contains no order reference");
 		}
 
-		OrderModel order = request.getOrder();
+		final OrderModel order = request.getOrder();
 
-		OrderModel version = this.orderHistoryService
-				.createHistorySnapshot(order);
-		Map originalOrderEntriesMapping = storeOriginalOrderEntriesMapping(version);
+		final OrderModel version = this.orderHistoryService.createHistorySnapshot(order);
+		final Map originalOrderEntriesMapping = storeOriginalOrderEntriesMapping(version);
 
-		String description = ((!(request.isPartialCancel())) ? "Full c"
-				: "Partial c") + "ancel request for order: " + order.getCode();
-		OrderHistoryEntryModel snapshot = createSnaphot(order, version,
-				description, requestor);
-		try {
-			OrderCancelRecordModel cancelRecord = getOrCreateCancelRecord(order);
+		final String description = ((!(request.isPartialCancel())) ? "Full c" : "Partial c") + "ancel request for order: "
+				+ order.getCode();
+		final OrderHistoryEntryModel snapshot = createSnaphot(order, version, description, requestor);
+		try
+		{
+			final OrderCancelRecordModel cancelRecord = getOrCreateCancelRecord(order);
 			cancelRecord.setInProgress(true);
 			getModelService().save(cancelRecord);
-			return createCancelRecordEntry(request, cancelRecord,
-					snapshot, originalOrderEntriesMapping);
-		} catch (OrderCancelDaoException e) {
+			return createCancelRecordEntry(request, cancelRecord, snapshot, originalOrderEntriesMapping);
+		}
+		catch (final OrderCancelDaoException e)
+		{
 			throw new OrderCancelRecordsHandlerException(order.getCode(), e);
 		}
 	}
-	private Map<Integer, AbstractOrderEntryModel> storeOriginalOrderEntriesMapping(
-			OrderModel order) {
-		Map mapping = new HashMap(order.getEntries().size());
-		for (AbstractOrderEntryModel currentEntry : order.getEntries()) {
+
+	private Map<Integer, AbstractOrderEntryModel> storeOriginalOrderEntriesMapping(final OrderModel order)
+	{
+		final Map mapping = new HashMap(order.getEntries().size());
+		for (final AbstractOrderEntryModel currentEntry : order.getEntries())
+		{
 			mapping.put(currentEntry.getEntryNumber(), currentEntry);
 		}
 		return mapping;
 	}
-	protected OrderCancelRecordModel getOrCreateCancelRecord(OrderModel order)
-			throws OrderCancelDaoException {
-		OrderCancelRecordModel cancelRecord = this.orderCancelDao
-				.getOrderCancelRecord(order);
-		if (cancelRecord == null) {
+
+	protected OrderCancelRecordModel getOrCreateCancelRecord(final OrderModel order) throws OrderCancelDaoException
+	{
+		OrderCancelRecordModel cancelRecord = this.orderCancelDao.getOrderCancelRecord(order);
+		if (cancelRecord == null)
+		{
 			cancelRecord = createCancelRecord(order);
 		}
 		return cancelRecord;
 	}
-	protected OrderCancelRecordModel createCancelRecord(OrderModel order) {
-		OrderCancelRecordModel cancelRecord = (OrderCancelRecordModel) getModelService()
-				.create(OrderCancelRecordModel.class);
+
+	protected OrderCancelRecordModel createCancelRecord(final OrderModel order)
+	{
+		final OrderCancelRecordModel cancelRecord = (OrderCancelRecordModel) getModelService().create(OrderCancelRecordModel.class);
 		cancelRecord.setOrder(order);
 		cancelRecord.setOwner(order);
 		cancelRecord.setInProgress(false);
 		getModelService().save(cancelRecord);
 		return cancelRecord;
 	}
-	protected OrderCancelRecordEntryModel createCancelRecordEntry(
-			MplOrderCancelRequest request, OrderCancelRecordModel cancelRecord,
-			OrderHistoryEntryModel snapshot,
-			Map<Integer, AbstractOrderEntryModel> originalOrderEntriesMapping)
-			throws OrderCancelRecordsHandlerException {
-		OrderCancelRecordEntryModel cancelRecordEntry = (OrderCancelRecordEntryModel) getModelService()
-				.create(OrderCancelRecordEntryModel.class);
+
+	protected OrderCancelRecordEntryModel createCancelRecordEntry(final MplOrderCancelRequest request,
+			final OrderCancelRecordModel cancelRecord, final OrderHistoryEntryModel snapshot,
+			final Map<Integer, AbstractOrderEntryModel> originalOrderEntriesMapping) throws OrderCancelRecordsHandlerException
+	{
+		final OrderCancelRecordEntryModel cancelRecordEntry = (OrderCancelRecordEntryModel) getModelService().create(
+				OrderCancelRecordEntryModel.class);
 		cancelRecordEntry.setRefundableAmount(request.getAmountToRefund());
 		cancelRecordEntry.setTimestamp(new Date());
 		cancelRecordEntry.setCode(generateEntryCode(snapshot));
@@ -513,76 +529,72 @@ public class CustomOmsCancelAdapter implements Serializable
 		cancelRecordEntry.setPrincipal(this.userService.getCurrentUser());
 		cancelRecordEntry.setOwner(cancelRecord);
 		cancelRecordEntry.setStatus(OrderModificationEntryStatus.INPROGRESS);
-		cancelRecordEntry
-				.setCancelResult((request.isPartialCancel()) ? OrderCancelEntryStatus.PARTIAL
-						: OrderCancelEntryStatus.FULL);
+		cancelRecordEntry.setCancelResult((request.isPartialCancel()) ? OrderCancelEntryStatus.PARTIAL
+				: OrderCancelEntryStatus.FULL);
 		cancelRecordEntry.setCancelReason(request.getCancelReason());
 		cancelRecordEntry.setNotes(request.getNotes());
-		
+
 		getModelService().save(cancelRecordEntry);
 
-		List orderEntriesRecords = new ArrayList();
-		for (OrderCancelEntry cancelRequestEntry : request.getEntriesToCancel()) {
-			OrderEntryCancelRecordEntryModel orderEntryRecordEntry = (OrderEntryCancelRecordEntryModel) getModelService()
+		final List orderEntriesRecords = new ArrayList();
+		for (final OrderCancelEntry cancelRequestEntry : request.getEntriesToCancel())
+		{
+			final OrderEntryCancelRecordEntryModel orderEntryRecordEntry = (OrderEntryCancelRecordEntryModel) getModelService()
 					.create(OrderEntryCancelRecordEntryModel.class);
-			orderEntryRecordEntry.setCode(cancelRequestEntry.getOrderEntry()
-					.getPk().toString());
-			orderEntryRecordEntry.setCancelRequestQuantity(Integer
-					.valueOf((int) cancelRequestEntry.getCancelQuantity()));
+			orderEntryRecordEntry.setCode(cancelRequestEntry.getOrderEntry().getPk().toString());
+			orderEntryRecordEntry.setCancelRequestQuantity(Integer.valueOf((int) cancelRequestEntry.getCancelQuantity()));
 			orderEntryRecordEntry.setModificationRecordEntry(cancelRecordEntry);
-			orderEntryRecordEntry
-					.setOrderEntry((OrderEntryModel) cancelRequestEntry
-							.getOrderEntry());
-			orderEntryRecordEntry.setOriginalOrderEntry(getOriginalOrderEntry(
-					originalOrderEntriesMapping, cancelRequestEntry));
+			orderEntryRecordEntry.setOrderEntry((OrderEntryModel) cancelRequestEntry.getOrderEntry());
+			orderEntryRecordEntry.setOriginalOrderEntry(getOriginalOrderEntry(originalOrderEntriesMapping, cancelRequestEntry));
 			orderEntryRecordEntry.setNotes(cancelRequestEntry.getNotes());
-			orderEntryRecordEntry.setCancelReason(cancelRequestEntry
-					.getCancelReason());
+			orderEntryRecordEntry.setCancelReason(cancelRequestEntry.getCancelReason());
 			getModelService().save(orderEntryRecordEntry);
 			orderEntriesRecords.add(orderEntryRecordEntry);
 		}
-		cancelRecordEntry
-				.setOrderEntriesModificationEntries(orderEntriesRecords);
+		cancelRecordEntry.setOrderEntriesModificationEntries(orderEntriesRecords);
 		getModelService().save(cancelRecordEntry);
 
 		return cancelRecordEntry;
 	}
-	protected OrderHistoryEntryModel createSnaphot(OrderModel order,
-			OrderModel version, String description, PrincipalModel requestor) {
+
+	protected OrderHistoryEntryModel createSnaphot(final OrderModel order, final OrderModel version, final String description,
+			final PrincipalModel requestor)
+	{
 		this.orderHistoryService.saveHistorySnapshot(version);
 
-		OrderHistoryEntryModel historyEntry = (OrderHistoryEntryModel) getModelService()
-				.create(OrderHistoryEntryModel.class);
+		final OrderHistoryEntryModel historyEntry = (OrderHistoryEntryModel) getModelService().create(OrderHistoryEntryModel.class);
 		historyEntry.setOrder(order);
 		historyEntry.setPreviousOrderVersion(version);
 		historyEntry.setDescription(description);
 		historyEntry.setTimestamp(new Date());
-		if (requestor instanceof EmployeeModel) {
+		if (requestor instanceof EmployeeModel)
+		{
 			historyEntry.setEmployee((EmployeeModel) requestor);
 		}
 		getModelService().save(historyEntry);
 		return historyEntry;
 	}
-	protected String generateEntryCode(OrderHistoryEntryModel snapshot) {
-		return snapshot.getOrder().getCode() + "_v"
-				+ snapshot.getPreviousOrderVersion().getVersionID() + "_c";
+
+	protected String generateEntryCode(final OrderHistoryEntryModel snapshot)
+	{
+		return snapshot.getOrder().getCode() + "_v" + snapshot.getPreviousOrderVersion().getVersionID() + "_c";
 	}
-	
-	protected OrderEntryModel getOriginalOrderEntry(
-			Map<Integer, AbstractOrderEntryModel> originalOrderEntriesMapping,
-			OrderCancelEntry cancelRequestEntry)
-			throws OrderCancelRecordsHandlerException {
-		try {
-			int entryPos = cancelRequestEntry.getOrderEntry().getEntryNumber()
-					.intValue();
-			return ((OrderEntryModel) originalOrderEntriesMapping.get(Integer
-					.valueOf(entryPos)));
-		} catch (IndexOutOfBoundsException localIndexOutOfBoundsException) {
-			throw new IllegalStateException(
-					"Cloned and original order have different number of entries");
-		} catch (Exception e) {
-			throw new OrderCancelRecordsHandlerException(cancelRequestEntry
-					.getOrderEntry().getOrder().getCode(),
+
+	protected OrderEntryModel getOriginalOrderEntry(final Map<Integer, AbstractOrderEntryModel> originalOrderEntriesMapping,
+			final OrderCancelEntry cancelRequestEntry) throws OrderCancelRecordsHandlerException
+	{
+		try
+		{
+			final int entryPos = cancelRequestEntry.getOrderEntry().getEntryNumber().intValue();
+			return ((OrderEntryModel) originalOrderEntriesMapping.get(Integer.valueOf(entryPos)));
+		}
+		catch (final IndexOutOfBoundsException localIndexOutOfBoundsException)
+		{
+			throw new IllegalStateException("Cloned and original order have different number of entries");
+		}
+		catch (final Exception e)
+		{
+			throw new OrderCancelRecordsHandlerException(cancelRequestEntry.getOrderEntry().getOrder().getCode(),
 					"Error during getting historical orderEntry", e);
 		}
 	}
@@ -592,7 +604,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	{
 
 		PaymentTransactionModel paymentTransactionModel = null;
-		
+
 		updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
 		if (orderRequestRecord.getRefundableAmount() != null
 				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
@@ -641,21 +653,25 @@ public class CustomOmsCancelAdapter implements Serializable
 								}
 								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
-								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge()
-										: NumberUtils.DOUBLE_ZERO;
+								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+										.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
-								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
-									double hdDeliveryCharges=0.0D;
-									if(null !=orderEntry.getHdDeliveryCharge()) {
+								if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+										&& null != orderEntry.getRefundedEdChargeAmt()
+										&& orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D)
+								{
+									double hdDeliveryCharges = 0.0D;
+									if (null != orderEntry.getHdDeliveryCharge())
+									{
 										hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
 									}
-									orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost.doubleValue()-hdDeliveryCharges));
+									orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost.doubleValue() - hdDeliveryCharges));
 								}
 								orderEntry.setCurrDelCharge(new Double(0D));
-								// Added in R2.3 START 
+								// Added in R2.3 START
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
 								orderEntry.setScheduledDeliveryCharge(new Double(0D));
-							   // Added in R2.3 END 
+								// Added in R2.3 END
 								if (newStatus.equals(ConsignmentStatus.ORDER_CANCELLED))
 								{
 									orderEntry.setJuspayRequestId(uniqueRequestId);
@@ -665,9 +681,9 @@ public class CustomOmsCancelAdapter implements Serializable
 										+ newStatus.getCode());
 
 								final double refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-										+ deliveryCost.doubleValue()+scheduleDeliveryCost.doubleValue();
+										+ deliveryCost.doubleValue() + scheduleDeliveryCost.doubleValue();
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-										Double.valueOf(refundAmount), newStatus,null);
+										Double.valueOf(refundAmount), newStatus, null);
 							}
 						}
 					}
@@ -694,6 +710,8 @@ public class CustomOmsCancelAdapter implements Serializable
 			final ConsignmentStatus consignmentStatus)
 	{
 		consignmentModel.setStatus(consignmentStatus);
+		//h2refund Added to know the refund type
+		consignmentModel.setRefundDetails(RefundFomType.AUTOMATIC);
 		saveAndNotifyConsignment(consignmentModel);
 		modelService.save(createHistoryLog(consignmentStatus.toString(), subOrderModel, consignmentModel.getCode()));
 		LOG.info("Order History entry created for" + subOrderModel.getCode() + "Line ID :" + consignmentModel.getCode());
@@ -705,7 +723,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		getConsignmentProcessNotifier().notify(consignmentModel);
 		LOG.info("Consignment updated with::" + consignmentModel.getStatus());
 	}
-	
+
 	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{
 		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
@@ -715,6 +733,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		historyEntry.setDescription(description);
 		return historyEntry;
 	}
+
 	/**
 	 * @return the modelService
 	 */
@@ -731,6 +750,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	{
 		this.modelService = modelService;
 	}
+
 	private ModelChangeNotifier<ConsignmentModel> getConsignmentProcessNotifier()
 	{
 		return this.consignmentProcessNotifier;
@@ -769,9 +789,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param stateMappingStrategy the stateMappingStrategy to set
+	 * @param stateMappingStrategy
+	 *           the stateMappingStrategy to set
 	 */
-	public void setStateMappingStrategy(OrderCancelStateMappingStrategy stateMappingStrategy)
+	public void setStateMappingStrategy(final OrderCancelStateMappingStrategy stateMappingStrategy)
 	{
 		this.stateMappingStrategy = stateMappingStrategy;
 	}
@@ -785,9 +806,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param orderCancelRecordsHandler the orderCancelRecordsHandler to set
+	 * @param orderCancelRecordsHandler
+	 *           the orderCancelRecordsHandler to set
 	 */
-	public void setOrderCancelRecordsHandler(OrderCancelRecordsHandler orderCancelRecordsHandler)
+	public void setOrderCancelRecordsHandler(final OrderCancelRecordsHandler orderCancelRecordsHandler)
 	{
 		this.orderCancelRecordsHandler = orderCancelRecordsHandler;
 	}
@@ -801,9 +823,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param cancelDenialStrategies the cancelDenialStrategies to set
+	 * @param cancelDenialStrategies
+	 *           the cancelDenialStrategies to set
 	 */
-	public void setCancelDenialStrategies(List<OrderCancelDenialStrategy> cancelDenialStrategies)
+	public void setCancelDenialStrategies(final List<OrderCancelDenialStrategy> cancelDenialStrategies)
 	{
 		this.cancelDenialStrategies = cancelDenialStrategies;
 	}
@@ -817,9 +840,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param orderCancelDao the orderCancelDao to set
+	 * @param orderCancelDao
+	 *           the orderCancelDao to set
 	 */
-	public void setOrderCancelDao(OrderCancelDao orderCancelDao)
+	public void setOrderCancelDao(final OrderCancelDao orderCancelDao)
 	{
 		this.orderCancelDao = orderCancelDao;
 	}
@@ -833,9 +857,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param orderHistoryService the orderHistoryService to set
+	 * @param orderHistoryService
+	 *           the orderHistoryService to set
 	 */
-	public void setOrderHistoryService(OrderHistoryService orderHistoryService)
+	public void setOrderHistoryService(final OrderHistoryService orderHistoryService)
 	{
 		this.orderHistoryService = orderHistoryService;
 	}
@@ -849,9 +874,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param userService the userService to set
+	 * @param userService
+	 *           the userService to set
 	 */
-	public void setUserService(UserService userService)
+	public void setUserService(final UserService userService)
 	{
 		this.userService = userService;
 	}
@@ -865,9 +891,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param requestExecutorsMap the requestExecutorsMap to set
+	 * @param requestExecutorsMap
+	 *           the requestExecutorsMap to set
 	 */
-	public void setRequestExecutorsMap(Map<OrderCancelState, OrderCancelRequestExecutor> requestExecutorsMap)
+	public void setRequestExecutorsMap(final Map<OrderCancelState, OrderCancelRequestExecutor> requestExecutorsMap)
 	{
 		this.requestExecutorsMap = requestExecutorsMap;
 	}
