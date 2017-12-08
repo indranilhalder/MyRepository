@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+﻿/* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -76951,14 +76951,15 @@ body .account .right-account form label.invite-text-lbl{
 /* TISSPTEN-120 start */
 
 @media (max-width: 768px){
-	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
     margin-left: -3px;
     margin-top: 0px;
 }
 .page-returnSubmit .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
     margin: 10px auto 15px auto ! important;
 }
-.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor {
+.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor,
+.selectReturnMethod.self.col-md-12.col-sm-12.greyColor {
     float: left;
     margin-bottom: 25px;
 }
@@ -76968,7 +76969,6 @@ body .account .right-account form label.invite-text-lbl{
 .thirdTataCliq .col-md-9.scheduledPickup + .col-md-9.selfCourier b {
     display: inline-block;
 }
-
 }
 
 /* TISSPTEN-120 END */
@@ -77602,6 +77602,166 @@ background: url(../images/search_image.png) no-repeat;}
 .page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
     z-index: 2;
 }
+/* SDI-1393 End */
+
+/*paytm integration start*/
+label[for='priority_paytm'] img{
+	height: 70px;
+    margin-top: -29px;
+    margin-left: 10px;
+}
+/*paytm integration end*/
+
+/* Pagination link */
+.bottom-pagination.pagination-search{
+	display: inline-block;
+    position: relative;
+    float: right;
+    width: 80.16%;
+    padding: 0 0 0 20px;
+    text-align: center;
+}
+li.pageNoLi {
+    display: inline-block;
+}
+a.pageNo {
+    display: inline-block;
+    padding: 7px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+}
+.prev-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    color:#a9133d;
+}
+.pagination-block{
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+}
+.next-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    color:#a9133d;
+}
+a.pageNo.active{
+    display: inline-block;
+    background: #a9133d;
+    padding: 12px 25px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 9px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    color: #fff;
+}
+.next-page span,
+.next-block a span
+{
+	color:#a9133d;
+	/* font-weight: bold; */
+}
+.prev-page{
+	color:#a9133d;
+	/* font-weight: bold; */
+}
+.total-pagecount{
+	position: absolute;
+    left: 2%;
+    top: 27px;
+    float: left;
+    top: 7px;
+    font-size: 14px
+}
+@media (max-width: 767px){
+.bottom-pagination.pagination-search{
+    width: 100%;
+    padding: 0;
+}
+.total-pagecount{
+	top: 8px;
+    margin-right: 8%;
+}
+.pagination li {
+    font-size: 12px;
+}
+.total-pagecount{
+	font-size: 12px
+}
+.bottom-pagination.pagination-search>span {
+    display: inline-block;
+    margin-right: 10%;
+}
+}
+/* Pagination link */
+
+/* TISPRNXIII-14 start */
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
+    text-align: left ! important;
+}
+/* TISPRNXIII-14 end */
+
+/*Paytm changes*/
+@media (max-width: 768px){
+
+label[for='priority_paytm'] img {
+    margin-left: 30px;
+}
+}
+
+/* TISPRNXIII-34 start */
+@media (max-width: 768px){				
+button#saveBlockData {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+}
+/* TISPRNXIII-34 end */ 
+/* TISPRNXIII-38 */
+@media (max-width: 720px)
+{
+.removeModalAfterLoad .changeAdddd {
+    height: auto ! important;
+}
+}
+/* TISPRNXIII-38 */
+/* TPR-7078 */
+.listing.wrapper .bottom-pagination.pagination-search .pagination li.active a {
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    background: #a9133d;
+    color: white;
+    border-radius: 50%;
+    width: 29px;
+    height: 29px;
+    text-align: center;
+}
+.listing.wrapper .bottom-pagination.pagination-search .pagination li a{
+    display: inline-block;
+    width: 29px;
+    height: 29px;
+    text-align: center
+} 
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.last {
+    display: none;
+}
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.first {
+    display: none;
+}
+.bottom-pagination.pagination-search .pagination li.prev.disabled a, .pagination li.next.disabled a {
+    cursor: not-allowed;
+}
 
 .error_msg_backfrom_payment{
     line-height: normal;
@@ -77619,8 +77779,6 @@ background: url(../images/search_image.png) no-repeat;}
 	top: 1px !important;
 }
 /* end change for TISUAT-6116 */
-
-/* SDI-1393 End */
 
 /* HOME-210 start */
 .homefurnishing-overview:nth-child(2) {
@@ -77740,7 +77898,7 @@ p.sizetext.size {
 }
 /* HOME-227 End */
 /* HOME-239 start */
-	@media (max-width: 767px){
+@media (max-width: 767px){
 .product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
     clear: both;
 }
@@ -77765,3 +77923,32 @@ p.sizetext.size {
     position: relative;
 }
 /* HOME-239 End */
+/* TISPRNXIII-53 start */
+@media (max-width: 767px){
+.col-md-9.selfCourier {
+    clear: both;
+}
+.selectReturnMethod.scheduled.col-md-12.col-sm-12.greyColor {
+    float: left;
+} 
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3{
+	padding: 0px ! important;
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 {
+    width: 23.666667%;
+    padding: 0px ! important;
+}
+.col-md-9.quickDrop {
+    clear: both;
+}
+}
+/* TISPRNXIII-53 end */
+.cart.wrapper .right-block.billing .block.bottom.order-details>ul li.item .product {
+    width: 68% ! important;
+    float: right;
+}
+/* TISPRNXIII-74 Start */
+.selectRadio.col-md-2.col-sm-2.col-xs-2 {
+    clear: both;
+}
+/* TISPRNXIII-74 End */

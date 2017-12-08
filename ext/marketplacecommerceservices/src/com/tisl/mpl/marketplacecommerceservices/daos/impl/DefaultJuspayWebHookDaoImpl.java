@@ -3,8 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -35,6 +35,9 @@ import com.tisl.mpl.model.MplConfigurationModel;
 @Component(value = "juspayWebHookDao")
 public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 {
+	private final static String EXPIRED_DATA = "expiredData";
+	private final static String OM = "{om.";
+
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultJuspayWebHookDaoImpl.class.getName());
 
@@ -58,7 +61,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 					+ JuspayWebhookModel.ISEXPIRED + "} = ?expiredData";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("expiredData", MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
+			query.addQueryParameter(EXPIRED_DATA, MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
 			return getFlexibleSearchService().<JuspayWebhookModel> search(query).getResult();
 		}
 		catch (final FlexibleSearchException e)
@@ -161,7 +164,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		LOG.debug("earlierDate" + mplConfigDate);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("earlierDate", mplConfigDate);
-		query.addQueryParameter("expiredData", MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
+		query.addQueryParameter(EXPIRED_DATA, MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
 		return getFlexibleSearchService().<JuspayWebhookModel> search(query).getResult();
 	}
 
@@ -211,7 +214,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		LOG.debug("status" + ebsStatusReview);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("status", ebsStatusReview);
-		query.addQueryParameter("expiredData", MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
+		query.addQueryParameter(EXPIRED_DATA, MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
 		return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
 	}
 
@@ -228,8 +231,8 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		final String queryString = //
 		"SELECT {om:" + OrderModel.PK
 				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om } where" + "{om." + OrderModel.GUID
-				+ "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type";
+				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om } where" + OM + OrderModel.GUID
+				+ "} = ?code and " + OM + OrderModel.TYPE + "} = ?type";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
@@ -257,9 +260,9 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 				+ EnumerationValueModel.PK
 				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om },{"
-				+ EnumerationValueModel._TYPECODE + " AS ev} where " + "{om." + OrderModel.GUID + "} = ?code and " + "{om."
-				+ OrderModel.TYPE + "} = ?type and {om." + OrderModel.STATUS + "} = {ev." + EnumerationValueModel.PK + "}";
-				
+				+ EnumerationValueModel._TYPECODE + " AS ev} where " + OM + OrderModel.GUID + "} = ?code and " + OM + OrderModel.TYPE
+				+ "} = ?type and {om." + OrderModel.STATUS + "} = {ev." + EnumerationValueModel.PK + "}";
+
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
@@ -270,12 +273,14 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		{
 			status = statusList.get(0);
 		}
-		if(status!=null){
+		if (status != null)
+		{
 			LOG.debug("Order Status for guid:" + guid + " is " + status.getCode());
 
 			return status.getCode();
 		}
-		else{
+		else
+		{
 			return null;
 		}
 	}
@@ -312,7 +317,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		LOG.debug("ebsRiskPercentage" + ebsRiskPercentage);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("ebsRiskPercentage", ebsRiskPercentage);
-		query.addQueryParameter("expiredData", MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
+		query.addQueryParameter(EXPIRED_DATA, MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
 		return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
 	}
 

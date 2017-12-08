@@ -1355,7 +1355,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					final Date da = format1.parse(strDate);
 					final String date = format2.format(da);
-					System.out.println("date" + date);
+					//	System.out.println("date" + date);
 					final String timeSlotFrom = date.concat(" " + returnInfoData.getTimeSlotFrom());
 					final SimpleDateFormat format3 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -1382,7 +1382,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					final Date da = format1.parse(strDate);
 					final String date = format2.format(da);
-					System.out.println("date" + date);
+					//	System.out.println("date" + date);
 					final String timeSlotTo = date.concat(" " + returnInfoData.getTimeSlotTo());
 					final SimpleDateFormat format3 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -3076,9 +3076,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
 		if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
-
-
-
 			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 		}
 
@@ -4717,7 +4714,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogRespDTO
 								.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
 					}
-					returnLogRespDTO.setTransactionId(transactionId);
+					returnLogRespDTO.setTransactionId(returntransactionId);//Rectify mock
 					//returnLogRespData.setTransactionId(transactionId);
 					returnLogRespDTOList.add(returnLogRespDTO);
 					returnPincodeDTO.setReturnLogisticsResponseDTO(returnLogRespDTOList);

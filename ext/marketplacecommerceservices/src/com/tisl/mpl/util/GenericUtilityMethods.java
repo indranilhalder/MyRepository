@@ -18,7 +18,6 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -749,11 +748,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1447,6 +1446,17 @@ public class GenericUtilityMethods
 				orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
 				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
 			}
+			//Paytm related changes
+			else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYTM))
+			{
+				if (StringUtils.isNotEmpty(paymentInfo.getCardAccountHolderName()))
+				{
+					orderWsDTO.setCardholdername(paymentInfo.getCardAccountHolderName());
+					orderWsDTO.setIsWalletPay(true);
+				}
+				orderWsDTO.setPaymentCardDigit(MarketplacecommerceservicesConstants.NA);
+				orderWsDTO.setPaymentCardExpire(MarketplacecommerceservicesConstants.NA);
+			}
 		}
 		else
 		{
@@ -1704,7 +1714,7 @@ public class GenericUtilityMethods
 		//SDI-2156
 		//if (abstractOrderModel instanceof CartModel)
 		//{
-			//couponDiscount = 0.0D;
+		//couponDiscount = 0.0D;
 		//}
 
 		final BigDecimal totalDiscount = new BigDecimal(cartTotalMrp.longValue() - cartTotalNetSelPrice - couponDiscount);

@@ -479,7 +479,7 @@
 									
 
 
-									<div class="half no-display" id="stateListDropDown">
+									<div class="half no-display">
 										<div class="mainDrop">
 										<label><spring:theme code="text.addressBook.State" text="State *" /></label>
 
@@ -569,4 +569,18 @@
 			</div>
 		</div>
 		</div>
+		<script>
+		$(document).ready(function(){
+			$('#mobileNo').on('keyup', function(ev) {
+				var regex = /^[1-9]\d{0,9}$/g;
+				var data= $.trim($(this).val());
+				if(!regex.test(data))
+				{
+					event.preventDefault();	
+				    $(this).val(data.slice(1));					                
+				}
+				});
+
+		});
+		</script>
 	</template:page>

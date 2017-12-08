@@ -135,23 +135,30 @@
 <%-- <span class="or"><spring:theme code="text.or"/></span> --%>
 <div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
 <!-- For  Gigya and API Social Login -->
-<c:choose>
-<c:when test="${isGigyaEnabled=='Y'}">
-<ul class="social-connect" id="gSignInWrapper">
- <li>
-    <br />
-   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
-    <div id="loginDivCheckout"></div>
+<%-- <c:choose> --%>
+<%-- <c:when test="${isGigyaEnabled=='Y'}"> --%>
+<!-- <ul class="social-connect" id="gSignInWrapper"> -->
+<!--  <li> -->
+<!--     <br /> -->
+<!--    <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
+<!--     <div id="loginDivCheckout"></div> -->
   
-    </li>
-</ul>
-</c:when>
-<c:otherwise>
-<ul class="social-connect" id="gSignInWrapper">
-  <li><a class="fb" href="${urlVisitForFacebook}"><spring:theme code="register.new.facebook" text="Connect with Facebook" /></a></li>
-  <li class="customGPlusSignIn"><a class="go" href="${urlVisit}"><spring:theme code="register.new.google" text="Connect with Google" /></a></li>
-</ul>
-</c:otherwise>
-</c:choose>
+<!--     </li> -->
+<!-- </ul> -->
+<%-- </c:when> --%>
+<%-- <c:otherwise> --%>
+<!-- <ul class="social-connect" id="gSignInWrapper"> -->
+<!--   	<li class="social_login_content" style="clear:both;"> -->
+
+<!-- 				<div class="social-login-btn-container"> -->
+<!-- 			    	<button class="fb-sign-btn" onclick="ACC.socialLogin.facebookSocialLogin()"></button> -->
+<!-- 			    </div> -->
+<!-- 			    <div class="social-login-btn-container"> -->
+<!-- 					<button id="customBtn" class="google-sign-btn"></button> -->
+<!-- 				</div> -->
+<!-- 			</li> -->
+<!-- </ul> -->
+<%-- </c:otherwise> --%>
+<%-- </c:choose> --%>
 <!-- End  Gigya and API Social Login -->
 </div>

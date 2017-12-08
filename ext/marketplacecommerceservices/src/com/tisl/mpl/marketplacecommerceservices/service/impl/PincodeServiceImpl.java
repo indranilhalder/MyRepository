@@ -44,7 +44,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
 	 * storelocator.GPS, double)
 	 */
@@ -54,7 +54,9 @@ public class PincodeServiceImpl implements PincodeService
 		try
 		{
 			final List result = new ArrayList();
-			for (final PointOfServiceModel posModel : this.pincodeDao.getAllGeocodedPOS(gps, distance, sellerId))
+			//EQA
+			final Collection<PointOfServiceModel> pinModels = pincodeDao.getAllGeocodedPOS(gps, distance, sellerId);
+			for (final PointOfServiceModel posModel : pinModels)
 			{
 				final double dist = calculateDistance(gps, posModel);
 				//result.add(new DefaultLocation(posModel, Double.valueOf(dist)));
@@ -217,7 +219,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
 	 * storelocator.GPS, double)
 	 */
@@ -250,6 +252,21 @@ public class PincodeServiceImpl implements PincodeService
 		catch (final GeoLocatorException e)
 		{
 			throw new LocationServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<PointOfServiceModel> findPOSBySellerAndSlave(final List<String> slaveIds)
+	{
+		LOG.debug("in service of findPOSBySellerAndSlave  ");
+		try
+		{
+			return pincodeDao.findPOSForSellerAndSlave(slaveIds);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Exception when retriving POS with sellerId and slaveId" + e.getMessage());
+			return null;
 		}
 	}
 

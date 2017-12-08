@@ -17,6 +17,7 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -765,7 +766,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
-					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
+					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet())
+					|| orderModel.getPaymentInfo() instanceof ThirdPartyWalletInfoModel)
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 			}

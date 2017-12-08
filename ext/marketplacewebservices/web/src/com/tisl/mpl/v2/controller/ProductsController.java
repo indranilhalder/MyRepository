@@ -150,6 +150,7 @@ public class ProductsController extends BaseController
 	private static final Logger LOG = Logger.getLogger(ProductsController.class);
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
+	private static final String BACKSLASH_S = "\\s+";
 	/* SONAR FIX */
 	//private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 
@@ -983,7 +984,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)
@@ -1012,7 +1013,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)
@@ -1064,7 +1065,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)
@@ -1096,7 +1097,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)

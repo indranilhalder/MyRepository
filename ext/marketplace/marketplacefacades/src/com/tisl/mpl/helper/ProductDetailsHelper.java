@@ -48,6 +48,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1597,7 +1598,360 @@ public class ProductDetailsHelper
 		return buyBox;
 	}
 
+	/*
+	 *
+	 * Added For Home Furnishing
+	 */
+	public Map<String, List<String>> displayConfigurableAttributeForHF(final ProductData productData)
+	{
 
+		final Map<String, List<String>> mapConfigurableAttributes = new LinkedHashMap<String, List<String>>();
+
+		try
+		{
+			/* Checking the presence of classification attributes */
+			if (null != productData.getClassifications())
+			{
+
+				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+						productData.getClassifications());
+
+				String keyProdptsHeaderName = null;
+				final String prodDimension = "Product Dimensions";
+				String prodDimensionValue = "";
+				boolean islengthAvailable = false;
+				boolean iswidthAvailable = false;
+				boolean isheightAvailable = false;
+				String length = "";
+				String width = "";
+				String height = "";
+
+				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+				{
+					keyProdptsHeaderName = configurableAttributData.getName();
+					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+					final List<String> productFeatureDataList = new ArrayList<String>();
+					if (configurationService
+							.getConfiguration()
+							.getString(
+									(MarketplaceFacadesConstants.CONFIGURABLE_ATTRIBUTE + MarketplaceFacadesConstants.HOME_FURNISHING))
+							.contains(configurableAttributData.getName()))
+					{
+						boolean setInfoFlag = false;
+						boolean isetInfoComputed = false;
+						for (final FeatureData featureData : featureDataList)
+						{
+							final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+									featureData.getFeatureValues());
+
+							if (null != productData.getRootCategory())
+							{
+								final FeatureValueData featureValueData = featureValueList.get(0);
+
+								if (featureData.getFeatureValues().iterator().hasNext()
+										&& configurationService
+												.getConfiguration()
+												.getString(
+														MarketplaceFacadesConstants.CLASSIFICATION_ATTR
+																+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_HF
+																+ configurableAttributData.getName().replaceAll(
+																		MarketplaceFacadesConstants.SPACE_REGEX,
+																		MarketplaceFacadesConstants.NO_SPACE)).contains(featureData.getName()))
+								{
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade
+											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
+									String unit = MarketplaceFacadesConstants.NO_SPACE;
+
+									if (productFeature.getUnit() != null && !productFeature.getUnit().getSymbol().isEmpty())
+									{
+										unit = productFeature.getUnit().getSymbol();
+									}
+
+									if (configurableAttributData.getName()
+											.replaceAll(MarketplaceFacadesConstants.SPACE_REGEX, MarketplaceFacadesConstants.NO_SPACE)
+											.equals(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_PF))
+									{
+										keyProdptsHeaderName = MarketplaceFacadesConstants.KEY_PROD_PTS;
+										productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
+									}
+									else if (configurableAttributData.getName()
+											.replaceAll(MarketplaceFacadesConstants.SPACE_REGEX, MarketplaceFacadesConstants.NO_SPACE)
+											.equals(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_WASHCARE))
+									{
+										for (final FeatureValueData data : featureData.getFeatureValues())
+										{
+											productFeatureDataList.add(data.getValue());
+										}
+									}
+									else if (configurableAttributData.getName()
+											.replaceAll(MarketplaceFacadesConstants.SPACE_REGEX, MarketplaceFacadesConstants.NO_SPACE)
+											.equals(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_CAINS))
+									{
+										for (final FeatureValueData data : featureData.getFeatureValues())
+										{
+											productFeatureDataList.add(data.getValue());
+										}
+									}
+									else if (configurableAttributData.getName().equals(
+											MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI_SPACE))
+									{
+
+										if (featureData.getName().equalsIgnoreCase(MarketplaceFacadesConstants.SET))
+										{
+											setInfoFlag = featureData.getFeatureValues().iterator().next().getValue()
+													.equalsIgnoreCase(MarketplaceFacadesConstants.YES);
+										}
+										if (setInfoFlag && !featureData.getName().equalsIgnoreCase(MarketplaceFacadesConstants.SET)
+												&& !isetInfoComputed)
+										{
+
+											productFeatureDataList.addAll(Arrays.asList(groupSetInfoHF(
+													configurableAttributData,
+													configurationService
+															.getConfiguration()
+															.getInteger(
+																	MarketplaceFacadesConstants.CONFIGURABLE_ATTRIBUTE
+																			+ MarketplaceFacadesConstants.HOME_FURNISHING
+																			+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI + "."
+																			+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI_SPACE,
+																	new Integer(10)).intValue()).split(MarketplaceFacadesConstants.PIPE_REGEX)));
+											isetInfoComputed = true;
+
+										}
+									}
+									else
+
+									{
+										if (featureData.getName().equals("Length") || featureData.getName().equals("Width")
+												|| featureData.getName().equals("Height"))
+										{
+
+											if (featureData.getName().equals("Length"))
+											{
+												length = featureValueData.getValue() + unit;
+												islengthAvailable = true;
+												if (!productFeatureDataList.contains(prodDimension))
+												{
+													productFeatureDataList.add(prodDimension);
+												}
+											}
+											if (featureData.getName().equals("Width"))
+											{
+												width = featureValueData.getValue() + unit;
+												iswidthAvailable = true;
+												if (!productFeatureDataList.contains(prodDimension))
+												{
+													productFeatureDataList.add(prodDimension);
+												}
+											}
+											if (featureData.getName().equals("Height"))
+											{
+												height = featureValueData.getValue() + unit;
+												isheightAvailable = true;
+												if (!productFeatureDataList.contains(prodDimension))
+												{
+													productFeatureDataList.add(prodDimension);
+												}
+											}
+
+
+										}
+										else
+										{
+											final StringBuffer multivalue = new StringBuffer(600);
+											for (final FeatureValueData data : featureData.getFeatureValues())
+											{
+												if (StringUtils.isNotEmpty(data.getValue()))
+												{
+													if (StringUtils.isEmpty(multivalue.toString()))
+													{
+														multivalue.append(data.getValue());
+														multivalue.append(unit);
+													}
+													else
+													{
+														multivalue.append(MarketplacecommerceservicesConstants.COMMA
+																+ MarketplacecommerceservicesConstants.SPACE);
+														multivalue.append(data.getValue());
+													}
+
+												}
+
+											}
+											if (StringUtils.isNotEmpty(multivalue.toString()))
+											{
+
+												productFeatureDataList.add(featureData.getName() + MarketplacecommerceservicesConstants.SPACE
+														+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+														+ multivalue.toString());
+											}
+
+										}
+									}
+
+
+								}
+							}
+						}
+
+
+					}
+					else
+					{
+						continue;
+					}
+					List tempList;
+					if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
+					{
+						tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
+
+						if (productFeatureDataList.contains(prodDimension))
+						{
+							if (islengthAvailable && iswidthAvailable && isheightAvailable)
+							{
+								prodDimensionValue = length + " X " + width + " X " + height;
+								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+										+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+										+ prodDimensionValue);
+								productFeatureDataList.remove(prodDimension);
+							}
+							else if (islengthAvailable && iswidthAvailable)
+							{
+								prodDimensionValue = length + " X " + width;
+								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+										+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+										+ prodDimensionValue);
+								productFeatureDataList.remove(prodDimension);
+							}
+						}
+						tempList.addAll(productFeatureDataList);
+						mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
+						tempList = null;
+					}
+					else if (mapConfigurableAttributes.containsKey(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_CARE_INS)
+							&& configurableAttributData.getName().equals(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_WASH_CARE))
+					{
+						tempList = mapConfigurableAttributes.get(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_CARE_INS);
+						tempList.addAll(productFeatureDataList);
+						Collections.reverse(tempList);
+						mapConfigurableAttributes.put(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+						tempList = null;
+					}
+					else if (mapConfigurableAttributes.containsKey(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_WASH_CARE)
+							&& configurableAttributData.getName().equals(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_CARE_INS))
+					{
+						tempList = mapConfigurableAttributes.get(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_WASH_CARE);
+						tempList.addAll(productFeatureDataList);
+						Collections.reverse(tempList);
+						mapConfigurableAttributes.put(MarketplaceFacadesConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+						tempList = null;
+						removeKeyfromMap(mapConfigurableAttributes, MarketplaceFacadesConstants.CLASSIFICATION_ATTR_WASH_CARE);
+					}
+					else if (!productFeatureDataList.isEmpty())
+					{
+						{
+							if (productFeatureDataList.contains(prodDimension))
+
+							{
+								if (islengthAvailable && iswidthAvailable && isheightAvailable)
+								{
+									prodDimensionValue = length + " X " + width + " X " + height;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
+								else if (islengthAvailable && iswidthAvailable)
+								{
+									prodDimensionValue = length + " X " + width;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
+							}
+							mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
+						}
+
+					}
+				}
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.E0000);
+		}
+
+		return mapConfigurableAttributes;
+	}
+
+	private String groupSetInfoHF(final ClassificationData configurableAttributData, final int setCount)
+	{
+		final StringBuffer groupedString = new StringBuffer(5000);
+
+		final Collection<FeatureData> featureColletion = configurableAttributData.getFeatures();
+		for (int i = 1; i <= setCount; i++)
+		{
+			//for Quantity
+			final String featureQty = MarketplaceFacadesConstants.SET_COMPONENT + MarketplaceFacadesConstants.SINGLE_SPACE + i
+					+ MarketplaceFacadesConstants.SINGLE_SPACE + MarketplaceFacadesConstants.QTY;
+			final Collection<FeatureValueData> featureValueQty = featureColletion.stream()
+					.filter(x -> featureQty.equals(x.getName())).map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+
+			if (CollectionUtils.isNotEmpty(featureValueQty) && StringUtils.isNotEmpty(featureValueQty.iterator().next().getValue()))
+			{
+				groupedString.append(featureValueQty.iterator().next().getValue() + MarketplaceFacadesConstants.SINGLE_SPACE);
+			}
+
+			//for Name
+			final String featureName = MarketplaceFacadesConstants.SET_COMPONENT + MarketplaceFacadesConstants.SINGLE_SPACE + i
+					+ MarketplaceFacadesConstants.SINGLE_SPACE + MarketplaceFacadesConstants.NAME;
+			final Collection<FeatureValueData> featureValue = featureColletion.stream().filter(x -> featureName.equals(x.getName()))
+					.map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+			if (CollectionUtils.isNotEmpty(featureValue) && StringUtils.isNotEmpty(featureValue.iterator().next().getValue()))
+			{
+				groupedString.append(featureValue.iterator().next().getValue() + MarketplaceFacadesConstants.SINGLE_SPACE);
+			}
+
+			//for Details
+			final String featureDesc = MarketplaceFacadesConstants.SET_COMPONENT_DETAILS + MarketplaceFacadesConstants.SINGLE_SPACE
+					+ i + MarketplaceFacadesConstants.SINGLE_SPACE + MarketplaceFacadesConstants.DETAILS;
+			final Collection<FeatureValueData> featureValuedetails = featureColletion.stream()
+					.filter(x -> featureDesc.equals(x.getName())).map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+			if (CollectionUtils.isNotEmpty(featureValuedetails)
+					&& StringUtils.isNotEmpty(featureValuedetails.iterator().next().getValue()))
+			{
+				groupedString.append(MarketplaceFacadesConstants.COLON + featureValuedetails.iterator().next().getValue()
+						+ MarketplaceFacadesConstants.PIPE);
+			}
+
+
+		}
+
+		return groupedString.toString().substring(0, groupedString.toString().lastIndexOf('|') - 1);
+	}
+
+
+	/**
+	 * @param mapConfigurableAttributes
+	 * @param classKey
+	 */
+	private void removeKeyfromMap(final Map<String, List<String>> mapConfigurableAttributes, final String classKey)
+	{
+		for (final Iterator<Map.Entry<String, List<String>>> it = mapConfigurableAttributes.entrySet().iterator(); it.hasNext();)
+		{
+			final Entry<String, List<String>> entry = it.next();
+			if (entry.getKey().equals(classKey))
+			{
+				it.remove();
+			}
+		}
+	}
 
 	@Required
 	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)

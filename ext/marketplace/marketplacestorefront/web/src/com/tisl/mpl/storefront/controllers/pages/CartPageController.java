@@ -2177,6 +2177,7 @@ public class CartPageController extends AbstractPageController
 		if (StringUtils.isNotEmpty(pdpPinCode))
 		{
 			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_PDP);
+			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP);
 			selectedPincode = pdpPinCode;
 		}
 		else if (StringUtils.isNotEmpty(cartPincodeId))
