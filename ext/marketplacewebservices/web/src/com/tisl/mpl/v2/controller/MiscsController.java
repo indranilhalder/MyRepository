@@ -2171,7 +2171,7 @@ public class MiscsController extends BaseController
 		List<AbstractOrderEntryModel> orderEntriesModel = null;
 		Map<String, String> dataMap = null;//Added for TPR-5954
 		StringBuilder imgUrl = null;//Added for TPR-5954
-		String subQuery = null;//Added for TPR-5954
+		final String subQuery = null;//Added for TPR-5954
 		try
 		{
 			//Converting XML to JAVA Object
@@ -2214,17 +2214,12 @@ public class MiscsController extends BaseController
 						dataMap.put("comments", oneTouchCrmObj.getComments());
 						dataMap.put("subreasoncode", oneTouchCrmObj.getSubReturnReasonCode());
 						imgUrl = new StringBuilder();
-						if (null != oneTouchCrmObj.getUploadImage())
-						{
-							for (final String up : oneTouchCrmObj.getUploadImage().getImagePath())
-							{
-								imgUrl.append(up);
-								imgUrl.append(",");
-							}
-							subQuery = imgUrl.substring(0, imgUrl.length() - 1);
-							dataMap.put("imgurl", subQuery);
-							imgUrl.setLength(0);//Emptying the image path string
-						}
+						/*
+						 * if (null != oneTouchCrmObj.getUploadImage()) { for (final String up :
+						 * oneTouchCrmObj.getUploadImage()) { imgUrl.append(up); imgUrl.append(","); } subQuery =
+						 * imgUrl.substring(0, imgUrl.length() - 1); dataMap.put("imgurl", subQuery);
+						 * imgUrl.setLength(0);//Emptying the image path string }
+						 */
 						//TPR-5954 || End
 						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());//Sub order model
 						final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data

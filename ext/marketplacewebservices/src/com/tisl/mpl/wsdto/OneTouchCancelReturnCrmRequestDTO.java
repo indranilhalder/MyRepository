@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.wsdto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 
 
@@ -16,6 +18,7 @@ public class OneTouchCancelReturnCrmRequestDTO
 
 	private String OrderRefNum;
 	private String subOrderNum;
+	@XmlElement(name = "UploadImage")
 	private String USSID;
 	private String ticketType;
 	private String TicketSubType;
@@ -40,7 +43,8 @@ public class OneTouchCancelReturnCrmRequestDTO
 	//Added for TPR-5954
 	private String subReturnReasonCode;
 	private String comments;
-	private UploadImage UploadImage;
+	private List<UploadImage> UploadImage;
+
 
 
 
@@ -500,7 +504,7 @@ public class OneTouchCancelReturnCrmRequestDTO
 	 * @return the uploadImage
 	 */
 	@XmlElement(name = "UploadImage")
-	public UploadImage getUploadImage()
+	public List<UploadImage> getUploadImage()
 	{
 		return UploadImage;
 	}
@@ -509,9 +513,11 @@ public class OneTouchCancelReturnCrmRequestDTO
 	 * @param uploadImage
 	 *           the uploadImage to set
 	 */
-	public void setUploadImage(final UploadImage uploadImage)
+	public void setUploadImage(final List<UploadImage> uploadImage)
 	{
 		UploadImage = uploadImage;
 	}
+
+
 
 }
