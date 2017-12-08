@@ -18,7 +18,7 @@ $pickupInStoreMode=BUY_AND_COLLECT
 $customerAllowedToIgnoreSuggestions=true
 $paymentProvider=Mockup
 $promoGrp=luxPromoGrp
-$checkoutFlowGroup=marketplaceMultiPathCheckoutGroup
+$checkoutFlowGroup=luxuryMultiPathCheckoutGroup
 $classificationCatalog=pcmClassification
 
 INSERT_UPDATE PromotionGroup;Identifier[unique=true];
