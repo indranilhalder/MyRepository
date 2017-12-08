@@ -2112,8 +2112,13 @@ public class DefaultPromotionManager extends PromotionsManager
 			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
 			ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 			ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
+			MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 					selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entryModel.getFulfillmentType());
+			if (null == mplZoneDeliveryModeValueModel)
+			{
+				mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(selectedDeliveryModeCode,
+						MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+			}
 
 			if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
 					&& isProdShippingPromoAppliedMap.get(selectedUSSID).booleanValue())
@@ -2161,13 +2166,13 @@ public class DefaultPromotionManager extends PromotionsManager
 			final AbstractOrderEntryModel entry = (AbstractOrderEntryModel) orderEntry.getKey();
 			final Map<String, Double> prevCurrDeliveryChargeMap = new HashMap<String, Double>();
 
-			if (entryLevelDelCharge.doubleValue() == 0.00D)
-			{
-				prevCurrDeliveryChargeMap.put(MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, entryLevelDelCharge);
-				prevCurrDeliveryChargeMap.put(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, entryLevelDelCharge);
-				prodPrevCurrDelChargeMap.put(entry.getSelectedUSSID(), prevCurrDeliveryChargeMap);
-			}
-			else
+			//			if (entryLevelDelCharge.doubleValue() == 0.00D)
+			//			{
+			//				prevCurrDeliveryChargeMap.put(MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, entryLevelDelCharge);
+			//				prevCurrDeliveryChargeMap.put(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, entryLevelDelCharge);
+			//				prodPrevCurrDelChargeMap.put(entry.getSelectedUSSID(), prevCurrDeliveryChargeMap);
+			//			}
+			//			else
 			{
 				final double deliveryChargeAfterPromotion = (adjustedDeliveryCharge / totalValidCount)
 						* entry.getQuantity().intValue();

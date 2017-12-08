@@ -501,7 +501,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -617,9 +617,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param sellerArticleSKUID
 	 */
 	@Override
@@ -912,6 +912,14 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
 						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
 								MarketplacecommerceservicesConstants.INR, sellerArticleSKU, fulfillmentType);
+
+
+						if (null == mplZoneDeliveryModeValueModel)
+						{
+							mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+									MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+						}
+
 					}
 					Collection<RichAttributeModel> richAttributeModelList = null;
 					if (null != sellerInfoModel)
@@ -935,15 +943,15 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 * 
-						 * 
-						 * 
+						 *
+						 *
+						 *
 						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
 						 * which check configuration from HAC // if
 						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
 						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
-						 * 
+						 *
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
 					}
@@ -1139,7 +1147,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
 	 * .data.AddressData)
