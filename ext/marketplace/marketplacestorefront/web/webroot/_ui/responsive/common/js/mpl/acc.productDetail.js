@@ -3157,8 +3157,10 @@ function loadDefaultWishListName_SizeGuide() {
 			e.preventDefault();
 			
 			/*TPR-694*/
-			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
-			
+			//TISPRNXIII-25 fix
+			if(typeof(utag) !="undefined"){
+				utag.link({"link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
+			}
 			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});

@@ -464,7 +464,11 @@ function displayCODForm()
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success :function(response,textStatus, jqXHR) {
+
+			//console.log(response); CAR-334
+
 			//console.log(response);
+
 			//UF-281/282:Starts
 			if (jqXHR.responseJSON && response.displaymessage=="codNotallowed") {
 				$("#codNotAllowedMessage").css("display","block");
@@ -545,7 +549,6 @@ function displayCODForm()
 						data: { 'paymentMode' : paymentMode , 'guid' : guid },
 						cache: false,
 						success : function(response) {
-							//console.log(response); commented for SDI-1732
 							if(response==null){
 								$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
 							}
@@ -3527,6 +3530,7 @@ function validateCVV() {
 		var number = handle[0].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
+			cvvErrorCapture("credit_card");
 			return false;
 		} else {
 			var count = 0;
@@ -3535,12 +3539,14 @@ function validateCVV() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
+				cvvErrorCapture("credit_card");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
+						cvvErrorCapture("credit_card");
 						return false;
 					}
 			}
@@ -3565,6 +3571,7 @@ function validateCVVDc() {
 		var number = handle[1].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
+			cvvErrorCapture("debit_card");
 			return false;
 		} else {
 			var count = 0;
@@ -3573,12 +3580,14 @@ function validateCVVDc() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
+				cvvErrorCapture("debit_card");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
+						cvvErrorCapture("debit_card");
 						return false;
 					}
 			}
@@ -3603,6 +3612,7 @@ function validateCVVEmi() {
 		var number = handle[2].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
+			cvvErrorCapture("emi");
 			return false;
 		} else {
 			var count = 0;
@@ -3611,12 +3621,14 @@ function validateCVVEmi() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
+				cvvErrorCapture("emi");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
+						cvvErrorCapture("emi");
 						return false;
 					}
 			}
@@ -3629,6 +3641,13 @@ function validateCVVEmi() {
 		errorHandle.innerHTML = "";
 		return true;
 	}
+}
+
+//TPR-5277 Starts
+function cvvErrorCapture(paymentType){
+	if(typeof utag !="undefined"){
+		   utag.link({error_type : paymentType+'_cvv_error'});
+		}
 }
 
 function validateCardNo(formSubmit) {
@@ -5331,7 +5350,149 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 		}
 	});
 }
+/*paytm changes*/
+function submitPaytmForm(){
+	var staticHost = $('#staticHost').val();
+		$(".pay button, .make_paytm_payment_up").prop("disabled",true);
+		$(".pay button, .make_paytm_payment_up").css("opacity","0.5");
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+		var firstName=null;
+		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
+		var cardSaved=false;
+		var guid=$("#guid").val();
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : null, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
+			type: "GET",
+			cache: false,
+			success : function(response) {
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}
+				//TPR:3780:jewellery
+				else if(response=='redirect'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
+				}
+				//TPR-629
+				else if(response=='redirect_to_payment'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TIS 404
+				}
+				else if(response=='redirect_with_details'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
+				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay button, .make_payment_top_nb").prop("disabled",false);
+					$(".pay button, .make_payment_top_nb").css("opacity","1");	
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+				}
+				//TPR-4461 ENDS HERE
+				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, .make_payment_top_nb").prop("disabled",false);
+					$(".pay button, .make_payment_top_nb").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.loaderDiv").remove();
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
 
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else if(response=='redirect_with_details'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TIS 404
+				}
+				else{
+					//TISSTRT-1391 
+					window.sessionStorage.removeItem("header");
+					//TISPRO-153
+					sendTealiumData();
+					var values=response.split("|"); 
+					$("#juspayOrderId").val(values[0]);
+					var juspayOrderId=$("#juspayOrderId").val();
+					$.ajax({
+						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/submitPaytmForm",
+						data: {'juspayOrderId' : values[0] },
+						dataType: "json",
+						contentType : "application/json; charset=utf-8",
+						type: "GET",
+						cache: false,
+						success : function(response) {
+								if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+									/*TPR-4776*/
+									paymentErrorTrack("juspay_unavailable");
+									document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
+									$("#juspayconnErrorDiv").css("display","block");
+									$(".pay button, .make_payment_top_nb").prop("disabled",false);
+									$(".pay button, .make_payment_top_nb").css("opacity","1");
+									$(".pay .loaderDiv").remove();
+									$("#no-click,.loaderDiv").remove();
+								}
+
+								else{
+									var juspayResponse = JSON.parse(response);
+									// console.log(juspayResponse);
+									var url = juspayResponse.payment.authentication.url;
+									var method = juspayResponse.payment.authentication.method;
+	
+									if(method === "POST") {
+										var frm = document.createElement("form")
+										frm.style.display = "none"; // ensure that the form is hidden from the user
+										frm.setAttribute("method", method);
+										frm.setAttribute("action", url);
+	
+										var params = juspayResponse.payment.authentication.params;
+										for(var key in params) {
+									    var value = params[key];
+									    var field = document.createElement("input");
+									    field.setAttribute("type", "hidden");
+									    field.setAttribute("name", key);
+									    field.setAttribute("value", value);
+									    frm.appendChild(field);
+									  }
+										document.body.appendChild(frm)
+										// form is now ready
+										frm.submit();
+									}
+									
+									 if(method == "GET") {
+									    window.location.href = url;
+									    return;
+									 }
+								}
+							},
+						error : function(resp) {
+							$("#netbankingIssueError").css("display","block");
+							$(".pay button, .make_payment_top_nb").prop("disabled",false);
+							$(".pay button, .make_payment_top_nb").css("opacity","1");
+							$(".pay .loaderDiv").remove();
+							$("#no-click,.loaderDiv").remove();
+							paymentErrorTrack("juspay_unavailable");
+						}
+					});		
+				}
+			},
+			error : function(resp) {
+			}
+		});
+}
+
+/*paytm changes*/
 
 function submitNBForm(){
 	$("#netbankingIssueError").css("display","none");
@@ -9228,12 +9389,29 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 				});
 		}
 })
+
+
+$("#make_paytm_payment").click(function(){
+	 if(isSessionActive()==false){
+		 redirectToCheckoutLogin();
+		}
+		else{
+			submitPaytmForm();
+		}
+})
+
 function displayThrdPrtyWlt(){
 	$("#make_mrupee_payment_up").show();
 	$("li#MRUPEE").css("display","block");
 	applyPromotion(null,"none","none");
 }
-//$("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
+/*paytm changes start*/
+function displayPaytm(){
+	$("#make_paytm_payment").show();
+	$("li#PAYTM").css("display","block");
+	applyPromotion(null,"none","none");
+}
+/*paytm changes end*/
 function viewPaymentMRupee()
 {
 	refresh();
@@ -9243,8 +9421,19 @@ function viewPaymentMRupee()
 		$("#paymentModeValue").val("MRUPEE");
 		displayThrdPrtyWlt();
 	}
-//})
 }
+/*paytm changes start*/
+function viewPaymentPaytm()
+{
+	refresh();
+	if($('#radioButton_Paytm').is(':checked')) 
+	{
+		$("#paymentMode").val("PAYTM");
+		$("#paymentModeValue").val("PAYTM");
+		displayPaytm();
+	}
+}
+/*paytm changes end*/
 
 /*$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 	

@@ -12,28 +12,19 @@
 
 <h2 class="mb-20"><spring:theme code="luxury.header.link.register" /> </h2>
 
-	<!-- For  Gigya and API Social Login -->
-<c:choose> 
-  <c:when test="${isGigyaEnabled=='Y'}">
-   <ul class="social-connect" id="gSignInWrapper">
-<li>
-   <!--  <br /> -->
-   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
-    <div id="loginDivReg"></div>
-    
-    </li>
-</ul>
-  </c:when>
-  <c:otherwise>
- 
-<div class="header-soc-login mb-20">
-	<a class="fb-login btn btn-fb" href="${urlVisitForFacebook}">FACEBOOK</a>
-	<a class="g-login btn btn-default btn-gp" href="${urlVisit}">GOOGLE</a>
-</div>
-  </c:otherwise>
-</c:choose>
+<c:if test="${useNativeSocial=='Y'}">
+	<ul class="social-connect" id="gSignInWrapper">
+		<div class="header-soc-login mb-20 ">
+			<button class="fb-login btn btn-fb" onclick="ACC.socialLogin.facebookSocialLogin();">FACEBOOK</button>
+			<button id="customBtndropSignUp" class="g-login btn btn-default btn-gp" >GOOGLE</button>
+			<script type="text/javascript">
+				ACC.socialLogin.attachSignin( document.getElementById('customBtndropSignUp'));
+			</script>
+		</div>
+	</ul>
+</c:if>
 
-<!-- End  Gigya and API Social Login -->
+
 <c:set var="hasErrors" value="false"/>
   <c:if test="${not empty formErrorReg}">
 	<c:forEach var="formError" items="${formErrorReg}">

@@ -1436,14 +1436,14 @@ ReturnRequestCreateWidgetRenderer {
 		}
 
 		public void onEvent(Event event) throws Exception {
-			System.out.println("Inside Event");
+		//	System.out.println("Inside Event"); // SISA, CAR -339
 			if(null != deliveryAddressList.getSelectedItem() && null != deliveryAddressList.getSelectedItem().getValue()) {
 				Object selectedItem=deliveryAddressList.getSelectedItem().getValue();
 				TypedObject address= ( (TypedObject) selectedItem);
 				final AddressModel returnAddress =  TypeUtils.unwrapItem(address, AddressModel.class);
-				if(null != returnAddress) {
-					System.out.println(returnAddress.getAddressLine3()+""+returnAddress.getCity()+""+returnAddress.getFirstname()+""+returnAddress.getLastname()+""+returnAddress.getLandmark()+""+returnAddress.getPhone1());
-				}
+//		SISA, CAR -339		if(null != returnAddress) {
+//					System.out.println(returnAddress.getAddressLine3()+""+returnAddress.getCity()+""+returnAddress.getFirstname()+""+returnAddress.getLastname()+""+returnAddress.getLandmark()+""+returnAddress.getPhone1());
+//				}
 				String pinCode = null;		
 				if(null !=returnAddress) {
 					pinCode = returnAddress.getPostalcode();

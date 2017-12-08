@@ -35,6 +35,8 @@
 	</c:if>
 </c:forEach>
 
+<input type="hidden" id="pdp_product_code" name="pdp_product_code" value="${fn:toUpperCase(productCode)}">
+
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>

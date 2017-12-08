@@ -42,7 +42,6 @@ import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
@@ -78,8 +77,9 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 	private MplJusPayRefundService mplJusPayRefundService;
 	@Autowired
 	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
-	@Autowired
-	private MplCommerceCartService mplCommerceCartService;
+
+	//	@Autowired
+	//	private MplCommerceCartService mplCommerceCartService;
 
 	protected CatalogVersionService getCatalogVersionService()
 	{

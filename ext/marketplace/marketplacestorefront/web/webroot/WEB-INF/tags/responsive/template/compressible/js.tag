@@ -58,6 +58,13 @@ if(loginStatus){
 	<script type="text/javascript" src="${commonResourcePath}/js/moment.min.js"></script>
 	<script type="text/javascript" src="${commonResourcePath}/js/pikaday.min.js"></script>
 </c:if>
+
+	<!-- Start Added for new Social Login Changes -->
+	<script src="https://connect.facebook.net/en_US/sdk.js" ></script>
+	<script src="https://apis.google.com/js/platform.js" ></script>
+	<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.socialLogin.js"></script>
+	
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
 <c:choose>

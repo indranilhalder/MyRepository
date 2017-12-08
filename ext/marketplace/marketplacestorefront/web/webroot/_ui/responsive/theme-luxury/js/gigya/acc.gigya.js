@@ -89,8 +89,6 @@ function registerUserGigya(eventObject)
     			onAddReviewClicked:reviewClick,
     		}
     		
-    		gigya.comments.showRatingUI(ratingsParams);
-
     		var params = {
     			categoryID : $('input[name=gigya_product_root_category]').val(),
     			streamID : $('input[name=gigya_product_code]').val(),
@@ -111,7 +109,6 @@ function registerUserGigya(eventObject)
     			onError: onErrorHandler
     			// userAction: shareUserAction
     		}
-    		gigya.comments.showCommentsUI(params);	
     		
     		//TISPRD-3152 FIX
     		var pageName = $('#pageName').val();
@@ -255,28 +252,6 @@ function registerUserGigya(eventObject)
     				
     		
     		  }  
-    		  
-    		  gigya.comments.showRatingUI(ratingsParams);
-//    		$.getJSON("https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=hello",
-//    		         function(data) {
-//    			
-//    			$(".rate-details .after").each(function(count){
-//    				var totalCount=data.streamInfo.ratingCount;
-//    				var countIndiv=data.streamInfo.ratingDetails._overall.ratings[count];
-//    				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100});
-//    				$(".rate-details .after").eq(count).text(data.streamInfo.ratingDetails._overall.ratings[count]);
-//    				
-//    			})
-//    			
-//    			var avgreview=data.streamInfo.avgRatings._overall;
-//    			var raingcount=data.streamInfo.ratingCount;
-//    			
-//    			rating(avgreview,raingcount);
-//    			
-//    			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-//    			
-//    		          });
-    		
 
     	});
     }
@@ -290,63 +265,7 @@ function registerUserGigya(eventObject)
     			gotoLogin();
     		}
     	}
-    	/*$(function(){*/
-    		if(typeof($('#loginDiv').html())!= undefined){
-    			gigya.socialize.showLoginUI({
-    	            height: 100
-    	            ,width: 330
-    	            ,showTermsLink:false // remove 'Terms' link
-    	            ,hideGigyaLink:true // remove 'Gigya' link
-    	            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
-    	            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
-    	            ,containerID: 'loginDiv' // The component will embed itself inside the loginDiv Div
-    	            ,cid:''
-    	            ,enabledProviders : 'facebook,google'
-    	            });	
-    		}
-    		
-    		if(typeof($('#loginDivReg').html())!= undefined){
-    			gigya.socialize.showLoginUI({
-    	            height: 100
-    	            ,width: 330
-    	            ,showTermsLink:false // remove 'Terms' link
-    	            ,hideGigyaLink:true // remove 'Gigya' link
-    	            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
-    	            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
-    	            ,containerID: 'loginDivReg' // The component will embed itself inside the loginDiv Div
-    	            ,cid:''
-    	            ,enabledProviders : 'facebook,google'
-    	            });
-    		}
-    		
-    		if(typeof($('#loginDivCheckout').html())!= undefined){
-    			gigya.socialize.showLoginUI({
-    	            height: 100
-    	            ,width: 330
-    	            ,showTermsLink:false // remove 'Terms' link
-    	            ,hideGigyaLink:true // remove 'Gigya' link
-    	            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
-    	            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
-    	            ,containerID: 'loginDivCheckout' // The component will embed itself inside the loginDiv Div
-    	            ,cid:''
-    	            ,enabledProviders : 'facebook,google'
-    	            });	
-    		}
-    		
-    		if(typeof($('#loginDivsiginflyout').html())!= undefined){
-    			 gigya.socialize.showLoginUI({
-    		            height: 100
-    		            ,width: 330
-    		            ,showTermsLink:false // remove 'Terms' link
-    		            ,hideGigyaLink:true // remove 'Gigya' link
-    		            ,buttonsStyle: 'signInWith' // Change the default buttons design to "Full Logos" design
-    		            //,showWhatsThis: true // Pop-up a hint describing the Login Plugin, when the user rolls over the Gigya link.
-    		            ,containerID: 'loginDivsiginflyout' // The component will embed itself inside the loginDiv Div
-    		            ,cid:''
-    		            ,enabledProviders : 'facebook,google'
-    		            });
-    		}
- 
+    	
     
     	function getPdpRatingOnSizeSelect(key,productCode,category)//UF-60
     	{
@@ -384,7 +303,6 @@ function registerUserGigya(eventObject)
     	    	    			onError: onErrorHandler
     	    	    			// userAction: shareUserAction
     	    	    		}
-	    	    	    gigya.comments.showCommentsUI(params);
     	            }
     	        }
     		}

@@ -256,7 +256,7 @@ public class BuyAAboveXGetPercentageOrAmountOffTest extends MplServicelayerTest
 	@After
 	public void tearDown()
 	{
-		System.out.println("Tear Down Method");
+		//System.out.println("Tear Down Method");
 		final FlexibleSearchService flexibleSearchService = (FlexibleSearchService) Registry.getApplicationContext().getBean(
 				"flexibleSearchService");
 		final ModelService modelService = (ModelService) Registry.getApplicationContext().getBean("modelService");

@@ -506,7 +506,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 							ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG, null);
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
-
+					model.addAttribute("disableRsp", Boolean.TRUE);
 					return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
 				}
 
@@ -1076,6 +1076,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			if (!returnLogisticsCheck)
 			{
 				errorAddress.setTitle(ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
+
 				return errorAddress;
 			}
 
