@@ -406,7 +406,9 @@ header .content nav > ul > li > ul > li > ul > li.images > a .multibrand-logo {
     width: 100%;
     margin-bottom: 10px;
 }
-
+.totalPayable {
+	text-transform: capitalize;		/* add for TISCSS-73 */
+}
 #loginDiv, #loginDivReg, #loginDivCheckout, #loginDivRegisterCheckOut, #loginDivsiginflyout {
     margin: 0px auto;
 } 
