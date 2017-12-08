@@ -120,16 +120,9 @@ ACC.productDetail = {
 			}
 		});
 
-		$("#variant").change(function() {
-			var url = "";
-			var selectedIndex = 0;
-			$("#variant option:selected").each(function() {
-				url = $(this).attr('value');
-				selectedIndex = $(this).attr("index");
-			});
-			if (selectedIndex != 0) {
-				window.location.href = url;
-			}
+		$("#hfvariant > #variant_dropdown").change(function() {
+			var productCode=$("#variant_dropdown option:selected").attr("data-productCode");
+			loadVariant(productCode);
 		});
 		
 		// added for jewellery PDP size dropdown 		
@@ -3024,7 +3017,7 @@ function loadDefaultWishListName_SizeGuide() {
 	$(document).on('click','#buyNow .js-add-to-cart',function(event){
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
-		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
+		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='HomeFurnishing' && isShowSize=='true'){
 			$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
 			//alert('here');
 			$("#addToCartFormTitle").show();
@@ -3724,7 +3717,29 @@ if (width > winWidth){
 ////Start of UF-60 changes
 $(document).ready(function(){
 	onSizeSelectPopulateDOM();
+	
+	//Home Furnishing Start
+	
+	onSizeSelectDropDownPopulateDOM();
+	onQuantitySelectDropDown();
+	
+	//Home Furnishing End
+	
 });
+
+
+function onQuantitySelectDropDown()
+{
+	$("select#quantity_dropdown.variant-select").on('change',function(e){
+		//console.log("================>called while size is selected================>");
+		$(".qty").val(this.value);
+
+	});
+}
+
+
+
+
 function onSizeSelectPopulateDOM()//First Method to be called in size select ajax call
 {	//Attaching click event on size variant <li>
 	$("ul#variant.variant-select li a").on('click',function(e){
@@ -3807,7 +3822,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						var responseProductUrl=jsonData['url'];
 						var responseProductArticleDescription=jsonData['articleDescription'];
 						var responsePdpSellerIds=jsonData['pdpSellerIDs'];
-						//var responseMsdRESTURL=jsonData['msdRESTURL'];
+						var responseMsdRESTURL=jsonData['msdRESTURL'];
 						if(typeof(jsonData['productSize'])!='undefined')
 						{
 							var responseProductSize=jsonData['productSize'];
@@ -4082,6 +4097,354 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 	$("#no-click,.loaderDiv").remove(); //UF-263
 
 }//End onSizeSelect function
+
+//Added for Home Furnishing
+function onSizeSelectDropDownPopulateDOM()//First Method to be called in size select ajax call
+{	//Attaching click event on size variant <li>
+	$("select#variant_dropdown.variant-select").on('change',function(e){
+		//console.log("================>called while size is selected================>");
+		
+		var currentSelectedElement=this;
+		var productCode="";
+		productCode=$(currentSelectedElement).find(':selected').attr('data-productCode');
+		
+		//console.log("================>data-productCode================>"+productCode);
+		
+		if(typeof(productCode)!='undefined' && productCode!="" && $('#pageType').val()=='product')
+		{//console.log("================>data-productCode in here================>"+productCode);
+			e.preventDefault();
+			
+			var href = this.value;
+			var params=getParamsFromUrl(href);
+			
+			
+			var prvsProductCode = $("#product").val();
+			
+			var staticHost = $('#staticHost').val();
+			//Below 2 lines for adding spinner
+			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'); //UF-263
+			//$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			
+			if($('#promolist').val()!='')
+			{	//If promotion exist for the existing product
+				$("#promolist").val("");//Set it empty as we are not sure if the new selected product has promotion yet
+			}
+			
+			//To get product code from URL
+			//productCode=getProductCodeFromPdpUrl(href);
+			//To get original URL
+			//var a = $('<a>', { href:href } )[0];
+			if(window.location.port!="")
+			{
+				var port= ":"+window.location.port;
+			}
+			else
+			{
+				var port= "";
+			}
+			var hostName = window.location.hostname;
+			var baseUrl="//"+hostName+port;
+			//var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
+			//TISPRDT-781 issue fix
+			var originalUrl=baseUrl+href;
+			$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
+			
+			
+			//Ajax call happening here
+			var xhrAjaxProductData=getProductDetailOnSizeChange(productCode);
+			//On ajax call failure
+			xhrAjaxProductData.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				window.location.href=originalUrl;
+			});
+			//On ajax call success
+			xhrAjaxProductData.done(function(data) {
+				try{
+					//Populating productPromotionSection.tag
+					$('#productPromotionSection').html(data);
+					var jsonData= JSON.parse($('#sizeSelectAjaxData').text());
+					$('#sizeSelectAjaxData').remove();
+					if(typeof(jsonData['error'])=='undefined')
+					{
+						//UF-33 starts//   //TISSTRT-1587//
+						//Update Page Title
+						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];
+						//UF-33 ends//
+						//If no server side error occured the below code executes
+						var responseProductCode=jsonData['code'];
+						var responseProductUrl=jsonData['url'];
+						var responseProductArticleDescription=jsonData['articleDescription'];
+						var responsePdpSellerIds=jsonData['pdpSellerIDs'];
+						var responseMsdRESTURL=jsonData['msdRESTURL'];
+						if(typeof(jsonData['productSize'])!='undefined')
+						{
+							var responseProductSize=jsonData['productSize'];
+						}
+						else
+						{
+							var responseProductSize="";
+						}
+						if(typeof(jsonData['potentialPromotions'])!='undefined')
+						{
+							var responsePotentialPromotions=jsonData['potentialPromotions'];
+						}
+						else{
+							var responsePotentialPromotions=[];
+						}
+						
+						
+						$('#selectedSize').val("true");
+						
+						$("input[name=productCodeMSD]").val(responseProductCode);
+						$("#product").val(responseProductCode);
+						$('#pdpSellerIDs').val('['+responsePdpSellerIds+']');// needed in differentiateSeller() method
+						$('meta[itemprop="sku"]').attr('content', responseProductCode);
+						$('a.size-guide').attr('href','/p-sizeGuide?productCode='+responseProductCode+'&sizeSelected=true');
+						$('a.size-guide').data("productcode",responseProductCode);
+						$('a.size-guide').data("sizeSelected",'true');
+						$('#pdpPincodeCheck').data('clicked', false);
+						$('#ia_product_code').val(responseProductCode);
+						$("#dListedErrorMsg").hide();//TISSTRT-1469
+						$(".reviews").show();
+						$(".fullfilled-by").show();
+						//CKD:TPR-250 :Start
+						var msiteSeller = $("#msiteBuyBoxSellerId").val(); 
+						var msiteSellerQueryString = '';
+						if (!$.isEmptyObject(msiteSeller)){
+							msiteSellerQueryString='?sellerId='+msiteSeller;
+						}
+						
+						/*$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");*/
+						
+						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						
+						//CKD:TPR-250 :End
+						//Deselect the previously selected li and highlight the current li
+						$('ul#variant.variant-select li').each(function (index, value) { 
+							if($(this).hasClass("selected"))
+							{
+								$(this).removeClass("selected");
+							}
+						});
+						$(currentSelectedElement).parent("li").addClass("selected"); //adding selected class to the selected li
+						
+						productSizeVar=responseProductSize;//productSizeVar is an existing Global Variable used at multiple places
+						
+						$('#productCodePost').val(responseProductCode);
+						$('#selectedSizeVariant').val(responseProductCode);
+						
+						//Populate tealium data part-1 / part-2 is populated through data obtained during in buybox call /part-3 in populatePromotionsInProductDetailsPanel  
+						$('#product_sku').val(responseProductCode);
+						$('#product_id').val(responseProductCode);
+						
+						//Remove highlighted pincode error/success messages
+						$("#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin,#serviceablePin").hide();
+						$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options  ");
+						$("#pdpPinCodeAvailable").show();
+						//Populating productStyleNotesTab.tag,productDescriptionTab.tag with articleDescription
+						if(responseProductArticleDescription !="" && typeof($('.tab-details span:eq(0)').text())!='undefined')
+						{
+							$('.tab-details span:eq(0)').text(responseProductArticleDescription);
+						}
+						if(typeof($('.tab-details li.stylenote').text())!='undefined')
+						{
+							$('.tab-details li.stylenote').text(responseProductArticleDescription);
+						}
+						
+						//Social Sharing
+						$('#productUrl').text(responseProductUrl);				// social sharing product url
+						$(".g-interactivepost").attr("data-contenturl",window.location.host+responseProductUrl);
+						$(".g-interactivepost").attr("data-calltoactionurl",window.location.host+responseProductUrl);
+						$('div#emailSend #pId').val(responseProductCode);// Needed in social share tag
+						
+							
+						//Gigya data
+						if(typeof($('#rating_review'))!='undefined') // To check if gigya is enabled
+						{
+							$('#rating_review').val(responseProductCode);
+							$('input[name=gigya_product_code]').val(responseProductCode);
+						}
+						
+						
+						//Promotions handled here
+						//populateProductPromotionsData(potentialPromotions)
+						populatePromotionsInProductDetailsPanel(responsePotentialPromotions);
+						
+						//Used to re-write the browser URL so that onReload the user stays on the same page
+					    changeBrowserUrl(originalUrl);
+						
+						
+						//Calling to check if the product already exists in the wishlist,If so fill/unfill heart icon
+						//getLastModifiedWishlistForPLP(responseProductCode);//CALL FROM BUYBOX..TPR-5787
+						
+						//Prepare data for buybox call
+						var variantCodes = $("#product_allVariantsListingId").val();
+						var variantCodesJson = "";
+						var currentProductCode=responseProductCode;
+						
+						//Fix for TISSIT-2200
+//						if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
+//							variantCodes = variantCodes.split(",");
+//						}
+						if(typeof(prvsProductCode)!='undefined' && currentProductCode!="")
+						{
+							//Fix for TISSIT-2200
+							if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
+								variantCodes = variantCodes.split(",");
+								
+								variantCodes.push(prvsProductCode);
+								var index = variantCodes.indexOf(currentProductCode);
+								variantCodes.splice(index, 1);
+								variantCodesJson = JSON.stringify(variantCodes);
+								$("#product_allVariantsListingId").val(variantCodes.join());
+							}	
+							//Calling buybox
+							var xhrBuyBox=getBuyBoxDataAjax(currentProductCode,variantCodesJson);
+							//On buybox failure
+							xhrBuyBox.fail(function(xhr, textStatus, errorThrown) {
+								console.log("ERROR:"+textStatus + ': ' + errorThrown);
+								window.location.href=originalUrl;
+							});
+							//On buybox success
+							xhrBuyBox.done(function(data){
+								//START:Populate tealium data part-2, If size is selected UF-60		
+								var spPrice = typeof(data['specialPrice'])!='undefined'?data['specialPrice']:null;
+								var mrpPrice =typeof(data['mrp'])!='undefined'?data['mrp']:null;
+								var mop = typeof(data['price'])!='undefined'?data['price']:null;
+								if(mrpPrice!=null)
+								{
+									$('#product_unit_price').val(mrpPrice.doubleValue.toFixed(2));
+								}
+								if (spPrice != null)
+								{
+									$('#product_list_price').val(spPrice.doubleValue.toFixed(2));
+								}
+								else if (null != mop)
+								{
+									$('#product_list_price').val(mop.doubleValue.toFixed(2));
+								}
+								if(typeof(data['availablestock'])!='undefined')
+								{
+									$('#product_stock_count').val(parseInt(data['availablestock']));
+								}
+								var savingPriceCal;
+								var savingPriceCalPer;
+								var savingsOnProduct;
+								if(null!=mrpPrice && null!=spPrice){
+									savingPriceCal=(mrpPrice.doubleValue-spPrice.doubleValue);
+									savingPriceCalPer=(savingPriceCal/mrpPrice.doubleValue)*100;
+									savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+								}
+								else if(null!=mrpPrice && null!=mop){
+									savingPriceCal=(mrpPrice.doubleValue-mop.doubleValue);
+									savingPriceCalPer=(savingPriceCal/mrpPrice.doubleValue)*100;
+									savingsOnProduct=Math.round((savingPriceCalPer*100)/100);
+								}
+								$('#product_discount').val(Math.round((savingPriceCal*100)/100));
+								$('#product_discount_percentage').val(savingsOnProduct);
+								//END:Populate tealium data part-2, If size is selected UF-60
+							});
+							//On buybox complete
+							xhrBuyBox.always(function(){
+								//showing/hiding buttons on page change
+								//$('#pin').val("");
+								//$("#addToCartButton").show(); // commented for TPR-250 :was overriding
+
+								$('#addToCartButton-wrong').hide();
+								$('#buyNowButton').attr("disabled",false);
+								//$("#buyNowButton").show();  // commented for TPR-250 :was overriding
+
+								//Hiding fullfilled by as they will be populated during richAttribute population
+								$('#fulFilledByTship').hide();
+								$('#fulFilledBySship').hide();
+								//hiding badges on page change
+								$('.online-exclusive').hide();
+								$('#newProduct').hide();
+								$(".picZoomer-pic-wp #codId").css("top", "");
+								
+								
+								//Removing spinner as tealium/Classattributes/giggya call can continue in backend
+									//$("#no-click,.spinner").remove();
+
+								$("#no-click,.loaderDiv").remove(); //UF-263
+								
+								//Start classification attributes
+								xhrClassAttrib=getClassificationAttributes(responseProductCode);
+								xhrClassAttrib.done(function(data){
+									jsonData=$.parseJSON(data);
+									if(typeof(jsonData['error'])=='undefined')
+									{
+										//Used to populate tabs in productPageTabs.tag using data obtained by an ajax call
+										populateProductPageTabs(jsonData);
+									}
+									else
+									{
+										console.log("ERROR:Server side error occured while fetching classification attributes.")
+									}
+								});
+								xhrClassAttrib.fail(function(xhr, textStatus, errorThrown) {
+									console.log("ERROR:"+textStatus + ': ' + errorThrown);
+									window.location.href=originalUrl;
+								});
+								//End classification attributes
+								
+								//Calling Gigya
+								if(typeof($('input[name=isGigyaEnabled]').val())!='undefined' && $('input[name=isGigyaEnabled]').val()=="Y")
+								{
+									//Gigya call after 200 milisec
+									setTimeout(function(){getPdpRatingOnSizeSelect($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());},200);
+									$('#ReviewSecion .commentcontent').attr('loaded', false);
+									$('#ReviewSecion ul#commentsDiv').empty();
+									attachOnScrollEventForPdpOnSizeSelect();
+								}
+								
+								//Calling Tealium after 500 milisec //TPR-5251
+								setTimeout(function(){
+	 								//tealiumCallOnPageLoad();
+	 								populateSizeSelectUtagObject();
+	 							}, 500)
+								
+								//Calling MSD if MSD is enabled
+//								if(typeof($('input[name=isMSDEnabled]').val())!='undefined' && $('input[name=isMSDEnabled]').val()=="true")
+//								{
+//									//Calling MSD on size select after 3000 milisec
+//									setTimeout(callMSDOnLoad(),3000); 
+//								}
+							});//End of buybox and tealium call
+						}
+						
+					}//End of server side error check if
+					else
+					{	
+						//Removing spinner as tealium/Classattributes/giggya call can continue in backend
+						//$("#no-click,.spinner").remove();
+						$("#no-click,.loaderDiv").remove(); //UF-263
+
+						console.log("ERROR:Server side exception thrown while changing size using ajax:"+jsonData['error']);
+						console.log("ERROR:Resorting to page load as fall back");
+						window.location.href=originalUrl;
+					}//End of server side error check else
+				}//End of try
+				catch(e)
+				{
+					console.log("ERROR:Client side error occured while fetching product data for size select using ajax:"+e);
+					console.log("ERROR:Resorting to page load as fall back.");
+					window.location.href=originalUrl;
+				}//End of catch
+			});//End of sizeChange ajax call done method
+			
+		}
+	});
+	//Removing spinner incase it was not removed earlier due to some exception
+	//$("#no-click,.spinner").remove();
+	$("#no-click,.loaderDiv").remove(); //UF-263
+
+}
+//End Home Furnishing Changes
+
     
 //Ajax call to get classification attributes
 function getClassificationAttributes(productCode)
@@ -4509,6 +4872,15 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				 }
 				 //INC144316346
 			}
+			
+			if(data['sellerMessage'] != undefined)
+			{
+				$(".sellerMonogramming").text(data['sellerMessage']);
+			}
+			else
+			{
+				$(".sellerMonogramming").text('');
+			}
 		},
 		// For buybox seller and other seller in PDP
 		//TPR-429
@@ -4596,6 +4968,35 @@ function populateProductWarrantyTab(jsonData)
 		htmlCode=htmlCode+'<li>'+value+'</li>';
 		htmlCode=htmlCode+'</ul>';
 	});
+	htmlCode=htmlCode+'</div>';
+	return htmlCode;
+}
+//Used to populate productOverviewTab.tag by ajax //HOME-244
+function populateProductOverviewTab(jsonData)
+{
+	var htmlCode="";
+	htmlCode=htmlCode+'<div class="product-desc">';
+	htmlCode=htmlCode+'<span class="key-label">';
+	//htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
+	$.each(jsonData['mapConfigurableAttributes'],function(key,value){
+		//htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+' - '+value+'</li>';
+		if(value!="")
+		{	htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
+			htmlCode=htmlCode+'<li class="homefurnishing-overview-title">'+ key+'</li>';
+			$.each(value,function(key1,value1){
+				htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+value1+'</li>';
+			});
+			htmlCode=htmlCode+'</ul>';
+		}
+		else
+		{	htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
+			htmlCode=htmlCode+'<li class="homefurnishing-overview-title">'+ key+'</li>';
+			htmlCode=htmlCode+'</ul>';
+		}
+	});
+	
+	htmlCode=htmlCode+'</ul>';
+	htmlCode=htmlCode+'</span>';
 	htmlCode=htmlCode+'</div>';
 	return htmlCode;
 }
@@ -4696,6 +5097,18 @@ function populateProductPageTabs(jsonData)
 			$(selector).html(populateProductWarrantyTab(jsonData));
 			//UF-377
 			$("#warrantyAccordion").html(populateProductDetailsTab(jsonData));
+		}
+	}
+	//HOME-244
+	if(jsonData['validTabs'].includes('overview'))
+	{
+		var index=$('ul.nav.pdp>li').index($('#tabs_productOverview'));
+		if(index!=-1)
+		{
+			var selector='ul.tabs.pdp>li:eq('+index+')';
+			$(selector).html(populateProductOverviewTab(jsonData));
+			//UF-377
+			$("#overviewAccordion").html(populateProductOverviewTab(jsonData));
 		}
 	}
 	
@@ -5178,3 +5591,31 @@ function readCookiewithName(name) {
 	}
 	return null;
 }
+
+function selectProductSize()
+{	
+	var productCode=$("#variant_dropdown option:selected" ).attr("data-productCode");	
+	console.log("productCode"+productCode);
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+"/"+productCode+"/viewSellers";
+	console.log("requiredUrl"+requiredUrl);
+	
+	if(requiredUrl=="#"){
+		return false;
+	}
+	 $("#sizevariantForm").attr("action",requiredUrl);
+	 //$("#sizevariantForm").submit();   
+}
+
+function loadVariant(x){
+	
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+"/"+x+"/viewSellers";
+
+	 $('#variantForm').attr('action',requiredUrl);
+	 $("#variantForm").submit();
+}
+
+function redirectURL(val){
+	//console.log(val);
+	window.open(val,'_blank');
+}
+

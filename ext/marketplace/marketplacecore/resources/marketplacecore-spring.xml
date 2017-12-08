@@ -1570,6 +1570,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- Job to Process a Payment Pending Order -->
 	<bean id="mplProcessOrderJob" class="com.tisl.mpl.core.payment.cronjob.MplProcessOrderJob"
 		autowire="byName" />
+		
+		
+	<bean id="refundClearPerformableJob" class="com.tisl.mpl.core.payment.cronjob.RefundClearPerformableJob"
+		autowire="byName">
+	</bean>
 
 
 	<alias name="defaultSolrAutoSuggestService" alias="solrAutoSuggestService" />
