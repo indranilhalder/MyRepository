@@ -8,9 +8,9 @@
 .compare {
 	margin-top: 10px;
 }
-.comparison-table:first-child {
+/* .comparison-table:first-child {
 	margin-top: 30px;
-}
+} */
 .comparison-table {
 	width: 100%;
     margin-bottom: 15px;
@@ -56,6 +56,9 @@
     float: left;
 }
 /* end CMR-11 */
+.comparison-table.active .jump, .comparison-table.active .image {
+    display: none;
+}
 /* start CMR-45 */
 @media (max-width: 650px) {
 	.page-header h2 {
