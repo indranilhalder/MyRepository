@@ -4,7 +4,6 @@
 package com.tisl.mpl.service;
 
 import com.tisl.mpl.facades.data.MSDRequestdata;
-import com.tisl.mpl.facades.data.MSDResponsedata;
 
 
 
@@ -15,5 +14,5 @@ import com.tisl.mpl.facades.data.MSDResponsedata;
  */
 public interface MSDService
 {
-	public MSDResponsedata checkMSDServiceResponse(final MSDRequestdata msdRequest);
+	public String checkMSDServiceResponse(final MSDRequestdata msdRequest);
 }

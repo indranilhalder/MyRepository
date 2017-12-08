@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%-- plugins --%>
+
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/enquire.min.js"></script>
 <script type="text/javascript"
@@ -167,6 +168,7 @@
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/tealium.js"></script>
 	
+
 	<%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.dtm.js"></script> --%>
 

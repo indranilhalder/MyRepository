@@ -73,6 +73,16 @@
 				$(".thirdTataCliq .returnMethod .self").removeClass("blackColor").addClass("greyColor");
 				$(".thirdTataCliq .returnMethod .quickDrop").show(); 
 				$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+				
+				if($(".quickDropArea .checkButton:checked").length < 1){
+					
+					
+					$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
+					$('#saveBlockData').prop('disabled', true);
+				}else{
+					$('.quickDrop .quickDropArea .error_text').hide();
+					$('#saveBlockData').prop('disabled', false);
+				}
 			} else if(type == "scheduled") {
 				$(".thirdTataCliq .returnMethod .quick").removeClass("blackColor").addClass("greyColor");
 				$(".thirdTataCliq .returnMethod .scheduled").addClass("blackColor").removeClass("greyColor");
@@ -81,6 +91,7 @@
 				$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .quickDrop").hide();
 				showPickupTimeDate('address1');
 				$(".scheduledPickupArea .address1 input, .selectRadioDate0, .scheduledPickup #scheduleReturnTime1").prop("checked", true);
+				$('#saveBlockData').prop('disabled', false);
 				
 			} else if(type == "self") {
 				$(".thirdTataCliq .returnMethod .quick").removeClass("blackColor").addClass("greyColor");
@@ -88,6 +99,7 @@
 				$(".thirdTataCliq .returnMethod .self").addClass("blackColor").removeClass("greyColor");
 				$(".thirdTataCliq .returnMethod .selfCourier").show(); 
 				$(".thirdTataCliq .returnMethod .quickDrop, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+				$('#saveBlockData').prop('disabled', false);
 			} 
 		}
 		
@@ -236,6 +248,8 @@
 				$(".thirdTataCliq .returnMethod .selectReturnMethod").addClass("greyColor");
 			} else if(selection == "R") {
 				console.log(returnMethod);
+				try
+				{
 				if(returnMethod == "COD")  {
 					checkCODValidations();
 					if(checkCODValidations() == true){
@@ -303,7 +317,13 @@
 								getScheduledPikupData();
 							}
 						/*}*/
-					}  
+					}
+				}
+				catch(e)
+				{
+					console.log(e);
+				}
+				hideRspShowRss();
 				} else {
 				$(".secondTataCliq .accContents").append("<div class='errorTextSelection'>Please select atleast one Return Type.</div>");
 			}
@@ -454,6 +474,7 @@
 				$("#changeAddressPopup, .changeAdddd").css("z-index", "999999");
 				$(".wrapBG").css("z-index", "99");
 				$(".changeAdddd").css("overflow-y", "hidden");
+				
 				var className = $(this).attr("data-class");
 				//alert(className);
 				//alert("Test"+($("."+className+" .addressline1").text())+($("."+className+" .addressline2").text()+$("."+className+" .addressline3").text()));
@@ -523,6 +544,39 @@
 			$("#saveBlockData").click(function(event){
 				$("#changeAddressPopup").hide();
 				$(".wrapBG").hide();
+				//TPR-5273 starts
+				 var returnMethod =	 $('input[name="returnMethod"]:checked').parents('.selectReturnMethod').find("div > b").text();
+				 
+				 if(returnMethod == 'Return to Store'){
+					 if(typeof(utag) != "undefined"){
+							utag.link({
+								link_text: "quick_drop_selected",
+								event_type : "quick_drop_selected",
+								pin_quick_drop : $('#pin').val()
+							});
+						}
+				 }
+				 else if(returnMethod == 'Schedule Pickup'){
+						 var scheduleReturnDate =	 $('input[name="scheduleReturnDate"]:checked').val();
+						 var scheduleReturnTime =	 $('input[name="scheduleReturnTime"]:checked').val();
+						 if(typeof(utag) != "undefined"){
+							 utag.link({
+								 link_text: "schedule_pickup_selected",
+								 event_type : "schedule_pickup_selected",
+								 preferred_dop : scheduleReturnDate,
+								 preferred_top : scheduleReturnTime
+							 });
+						 }
+				 }
+				 else{
+					 if(typeof(utag) != "undefined"){
+						 utag.link({
+							 link_text: "self_courier_selected",
+							 event_type : "self_courier_selected",
+						 });
+					 } 
+				 }
+				//TPR-5273 ends
 			});
 			
 			$(".addNewAddressPopup").click(function(){
@@ -930,7 +984,7 @@
 							{
 							$('.errorCodemessage').show(); 
 							$(".errorCodemessage").text(data.title);
-							 
+							 $("#hideRsp").text("true");//TPR-7140
 							}
 							
 							//$("#changeAddressPopup, .wrapBG").fadeOut(300);
@@ -1064,4 +1118,15 @@ $(document).ready(function(){
 	}
 	
 });	
-		
+//TPR-7140		
+function hideRspShowRss(){
+	var hideRsp=$("#hideRsp").text();
+	if(hideRsp=="true")
+	{
+		$(".scheduled").hide();
+		changeRadioColor('self');
+		$("input[name='returnMethod']").prop( "checked", false );
+		$(".selectReturnMethod.self").show();
+		$(".selectReturnMethod.self input[name='returnMethod']").prop( "checked", true );
+	}
+}

@@ -77,7 +77,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -148,7 +147,6 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
-import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.msd.MSDWidgetFacade;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
@@ -159,7 +157,6 @@ import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.MSDRequestdata;
 import com.tisl.mpl.facades.data.MSDResponsedata;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
@@ -274,6 +271,8 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	private static final String PRODUCTCODE = "productCode";
+
 	//TPR-3736
 	private static final String IA_USS_IDS = "iaUssIds";
 
@@ -287,8 +286,6 @@ public class ProductPageController extends MidPageController
 	private static final String NEW_LINE = "\n";//Sonar Fix
 
 	private static final String MPH = "MPH".intern();
-
-
 
 	//TPR-6405
 	private static final String SAMSUNG = "Samsung";
@@ -365,9 +362,6 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
-	@Autowired
-	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
-
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
 
@@ -387,8 +381,7 @@ public class ProductPageController extends MidPageController
 	private BuyBoxService buyBoxService;
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
-	@Resource(name = "mplStoreLocatorFacade")
-	private MplStoreLocatorFacade mplStoreLocatorFacade;
+
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
@@ -510,27 +503,7 @@ public class ProductPageController extends MidPageController
 			final String isStwheaderforPDP = configurationService.getConfiguration().getString("isStwheaderforPDP.name", "");
 			// TPR- 4389 STARTS FROM HERE
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			//TPR-6655
-			final boolean isGigyaforPdpEnabled = configurationService.getConfiguration().getBoolean("gigya.pdpCall");
-			if (isGigyaforPdpEnabled)
-			{
-				final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
-						productModel.getProductCategoryType(), productCode);
 
-				if (reviewAndRating != null)
-				{
-					for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
-					{
-						final String commentCount = entry.getKey();
-						final String ratingCount = entry.getValue();
-						model.addAttribute("commentCount", commentCount);
-						model.addAttribute("averageRating", ratingCount);
-
-					}
-				}
-				//   TPR-4389 ENDS HERE
-			}
-			model.addAttribute("isGigyaforPdpEnabled", isGigyaforPdpEnabled);
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
 					&& !isLuxurySite())
@@ -818,7 +791,7 @@ public class ProductPageController extends MidPageController
 	//		final List<MetaElementData> metadata = new LinkedList<>();
 	//		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
 	//		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-	//		metadata.add(createMetaElement("productCode", pdCode));
+	//		metadata.add(createMetaElement(PRODUCTCODE, pdCode));
 	//		//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 	//		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 	//		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
@@ -1518,6 +1491,7 @@ public class ProductPageController extends MidPageController
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_PDP, pincodeResponse);
+						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP, pinCodeModelObj);
 						return pincodeResponse;
 					}
 					catch (final Exception e)
@@ -2318,24 +2292,7 @@ public class ProductPageController extends MidPageController
 				}
 			}
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
-			//For Gigya
-			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-			final String siteId = getSiteConfigService().getProperty("luxury.site.id");
-			final String gigyaAPIKey;
-			final String gigyaRatingURL;
-			if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
-			{
-
-				gigyaAPIKey = configurationService.getConfiguration().getString("luxury.gigya.apikey");
-				gigyaRatingURL = configurationService.getConfiguration().getString("luxury.gigya.rating.url");
-			}
-			else
-			{
-				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
-				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
-			}
 			LOG.debug("===========After step2 block=================");
-			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
@@ -2383,13 +2340,6 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.IS_LARGE_APPLIANCE, isLargeApplnc);
 			//UF-160 ends
 
-			//For Gigya
-			model.addAttribute(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
-			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
-			model.addAttribute(ModelAttributetConstants.RATING_REVIEW_URL, gigyaRatingURL);
-			//End Gigya
-
-
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.CLIQCARENUMBER,
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
@@ -2417,7 +2367,7 @@ public class ProductPageController extends MidPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)
@@ -2550,14 +2500,14 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords); //PRDI-422
 		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-		metadata.add(createMetaElement("productCode", productCode));
+		metadata.add(createMetaElement(PRODUCTCODE, productCode));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
 		//Added for UF-33
 		model.addAttribute(CMS_PAGE_TITLE, metaTitle);
 	}
 
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private void displayConfigurableAttributeForHF(final ProductData productData, final Model model)
 	{
 		{
@@ -2578,16 +2528,15 @@ public class ProductPageController extends MidPageController
 							productData.getClassifications());
 
 					String keyProdptsHeaderName = null;
-					final StringBuffer groupString = new StringBuffer();
 					final String prodDimension = "Product Dimensions";
 					String prodDimensionValue = "";
 					boolean islengthAvailable = false;
 					boolean iswidthAvailable = false;
-					boolean isheightAvailable=false;
-
+					boolean isheightAvailable = false;
 					String length = "";
 					String width = "";
-					String height="";
+					String height = "";
+
 					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 					{
 						keyProdptsHeaderName = configurableAttributData.getName();
@@ -2641,7 +2590,7 @@ public class ProductPageController extends MidPageController
 										{
 											for (final FeatureValueData data : featureData.getFeatureValues())
 											{
-												productFeatureDataList.add( data.getValue());
+												productFeatureDataList.add(data.getValue());
 											}
 										}
 										else if (configurableAttributData.getName()
@@ -2683,38 +2632,39 @@ public class ProductPageController extends MidPageController
 										else
 
 										{
-											if (featureData.getName().equals("Length") || featureData.getName().equals("Width") || featureData.getName().equals("Height"))
+											if (featureData.getName().equals("Length") || featureData.getName().equals("Width")
+													|| featureData.getName().equals("Height"))
 											{
 
 												if (featureData.getName().equals("Length"))
 												{
 													length = featureValueData.getValue() + unit;
 													islengthAvailable = true;
-													if(!productFeatureDataList.contains(prodDimension))
+													if (!productFeatureDataList.contains(prodDimension))
 													{
-													productFeatureDataList.add(prodDimension);
+														productFeatureDataList.add(prodDimension);
 													}
 												}
 												if (featureData.getName().equals("Width"))
 												{
 													width = featureValueData.getValue() + unit;
 													iswidthAvailable = true;
-													if(!productFeatureDataList.contains(prodDimension))
+													if (!productFeatureDataList.contains(prodDimension))
 													{
-													productFeatureDataList.add(prodDimension);
+														productFeatureDataList.add(prodDimension);
 													}
 												}
 												if (featureData.getName().equals("Height"))
 												{
 													height = featureValueData.getValue() + unit;
 													isheightAvailable = true;
-													if(!productFeatureDataList.contains(prodDimension))
+													if (!productFeatureDataList.contains(prodDimension))
 													{
-													productFeatureDataList.add(prodDimension);
+														productFeatureDataList.add(prodDimension);
 													}
 												}
 
-												
+
 											}
 											else
 											{
@@ -2785,25 +2735,25 @@ public class ProductPageController extends MidPageController
 						if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
 						{
 							tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
-							
-							if(productFeatureDataList.contains(prodDimension))
+
+							if (productFeatureDataList.contains(prodDimension))
 							{
-							if (islengthAvailable && iswidthAvailable && isheightAvailable)
-							{
-								prodDimensionValue = length + " X " + width + " X " + height;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
-							else if (islengthAvailable && iswidthAvailable)
-							{
-								prodDimensionValue = length + " X " + width;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
+								if (islengthAvailable && iswidthAvailable && isheightAvailable)
+								{
+									prodDimensionValue = length + " X " + width + " X " + height;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
+								else if (islengthAvailable && iswidthAvailable)
+								{
+									prodDimensionValue = length + " X " + width;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
 							}
 							tempList.addAll(productFeatureDataList);
 							mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
@@ -2831,26 +2781,26 @@ public class ProductPageController extends MidPageController
 						else if (!productFeatureDataList.isEmpty())
 						{
 							{
-								if(productFeatureDataList.contains(prodDimension))
-							
-							{
-							if (islengthAvailable && iswidthAvailable && isheightAvailable)
-							{
-								prodDimensionValue = length + " X " + width + " X " + height;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
-							else if (islengthAvailable && iswidthAvailable)
-							{
-								prodDimensionValue = length + " X " + width;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
-							}
+								if (productFeatureDataList.contains(prodDimension))
+
+								{
+									if (islengthAvailable && iswidthAvailable && isheightAvailable)
+									{
+										prodDimensionValue = length + " X " + width + " X " + height;
+										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+												+ prodDimensionValue);
+										productFeatureDataList.remove(prodDimension);
+									}
+									else if (islengthAvailable && iswidthAvailable)
+									{
+										prodDimensionValue = length + " X " + width;
+										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+												+ prodDimensionValue);
+										productFeatureDataList.remove(prodDimension);
+									}
+								}
 								mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
 							}
 
@@ -3927,7 +3877,7 @@ public class ProductPageController extends MidPageController
 	 * @param buyboxJson
 	 * @throws com.granule.json.JSONException
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private JSONObject getPopulatedBuyBoxJson(final Map<String, Object> buydata, final JSONObject buyboxJson)
 			throws com.granule.json.JSONException
 	{
@@ -4037,7 +3987,7 @@ public class ProductPageController extends MidPageController
 
 	//TPR-978
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
-	public String fetchPageContents(@RequestParam(value = "productCode") String productCode, final Model model)
+	public String fetchPageContents(@RequestParam(value = PRODUCTCODE) String productCode, final Model model)
 			throws com.granule.json.JSONException
 	{
 
@@ -4217,7 +4167,7 @@ public class ProductPageController extends MidPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)
@@ -4535,7 +4485,6 @@ public class ProductPageController extends MidPageController
 	{
 		LOG.debug("***************************productClassAttribs call for*************" + productCode);
 		String returnStatement = null;
-		final Gson gson = new Gson();
 		MplAjaxProductData mplAjaxProductData = null;
 		LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		try
@@ -4759,35 +4708,40 @@ public class ProductPageController extends MidPageController
 		List<PointOfServiceData> posDatas = new ArrayList<>();
 		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
 		List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+		Boolean active = null;
 		try
 		{
-			//call service to get list of ATS and ussid
-			try
+			active = configurationService.getConfiguration().getBoolean(MarketplacecommerceservicesConstants.STORE_DISPLAY_PDP,
+					Boolean.FALSE);
+			if (active)
 			{
-				omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
-				if (omsResponse.size() > 0)
+				//call service to get list of ATS and ussid
+				try
 				{
-					posDatas = getProductWdPos(omsResponse, pincode);
-					//mplProductFacade.storeLocatorFilterdPDP(pincode, ussId);
-				}
-			}
-			catch (final ClientEtailNonBusinessExceptions e)
-			{
-				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
-				if (null != e.getErrorCode()
-						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
-								.equalsIgnoreCase(e.getErrorCode())))
-				{
-					storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
-					if (storeLocationRequestDataList.size() > 0)
+					omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
+					if (CollectionUtils.isNotEmpty(omsResponse))
 					{
-						//populates oms response to data object
-						posDatas = getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+						posDatas = pincodeServiceFacade.getProductWdPos(omsResponse, pincode);
 					}
 				}
+				catch (final ClientEtailNonBusinessExceptions e)
+				{
+					LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+					if (null != e.getErrorCode()
+							&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+									.equalsIgnoreCase(e.getErrorCode())))
+					{
+						storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
+						if (CollectionUtils.isNotEmpty(storeLocationRequestDataList))
+						{
+							//populates commerce response to data object
+							posDatas = pincodeServiceFacade.getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+						}
+					}
+				}
+				//sorting posdata
+				Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
 			}
-			//sorting posdata
-			Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, posDatas);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -4802,201 +4756,56 @@ public class ProductPageController extends MidPageController
 		return ControllerConstants.Views.Fragments.Product.StoreLocatorPopup;
 	}
 
-	/**
-	 * @author TCS This method populates List of Ats and ussid to the data object.
-	 * @param response
-	 * @return list of pos with product.
-	 */
-	@SuppressWarnings("boxing")
-	private List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode)
-	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getProductWdPos method which gets product with pos");
-		}
-		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		//iterate over oms response
-		Double distance = 0d;
-		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
-		try
-		{
-			for (final StoreLocationResponseData storeLocationResponseData : response)
-			{
-				final String ussId = storeLocationResponseData.getUssId();
-				final String pincodeSellerId = ussId.substring(0, 6);
-				//get stores from commerce
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("Get stores from commerce");
-				}
-				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
-				{
-					PointOfServiceModel posModel = null;
-					final int availableQty = atsResponseData.getQuantity();
-					if (availableQty >= 1)
-					{
-						posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
-						if (null != posModel)
-						{
-							posModelList.add(posModel);
-						}
-					}
-				}
-			}
-			//get stores from commerce from ats response
-			if (CollectionUtils.isNotEmpty(posModelList))
-			{
-				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
-				final LocationDTO dto = new LocationDTO();
-				Location myLocation = null;
-				if (null != pinCodeModelObj)
-				{
-					try
-					{
-						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-						myLocation = new LocationDtoWrapper(dto);
-						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						//populate model to data
-						for (final PointOfServiceModel pointOfServiceModel : posModelList)
-						{
-							PointOfServiceData posData = new PointOfServiceData();
-							if (null != pointOfServiceModel)
-							{
-								posData = pointOfServiceConverter.convert(pointOfServiceModel);
-								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
-								posData.setStatus(MarketplacecommerceservicesConstants.KM);
-								posDataList.add(posData);
-							}
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error(e);
-					}
-				}
-
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-		return posDataList;
-	}
-
-	/**
-	 * @author TECH This method populates List of stores and product to the data object if oms is down.
-	 * @param storeLocationRequestDataList
-	 * @return list of product with stores
-	 */
-	@SuppressWarnings("boxing")
-	private List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
-			final String pincode)
-	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getProductWdPos method if oms is down which gets product with pos");
-		}
-		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
-		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		Double distance = 0d;
-		try
-		{
-			for (final StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
-			{
-
-				final String ussId = storeLocationRequestData.getUssId();
-				final String pincodeSellerId = ussId.substring(0, 6);
-				if (null != storeLocationRequestData.getStoreId())
-				{
-					for (int i = 0; i < storeLocationRequestData.getStoreId().size(); i++)
-					{
-						final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId,
-								storeLocationRequestData.getStoreId().get(i));
-						posModelList.add(posModel);
-					}
-				}
-			}
-			//get stores from commerce from ats response
-			if (CollectionUtils.isNotEmpty(posModelList))
-			{
-				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
-				final LocationDTO dto = new LocationDTO();
-				Location myLocation = null;
-				if (null != pinCodeModelObj)
-				{
-					try
-					{
-						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-						myLocation = new LocationDtoWrapper(dto);
-						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						for (final PointOfServiceModel pointOfServiceModel : posModelList)
-						{
-							//prepare pos data objects
-							PointOfServiceData posData = new PointOfServiceData();
-							if (null != pointOfServiceModel)
-							{
-								posData = pointOfServiceConverter.convert(pointOfServiceModel);
-								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
-								posData.setStatus(MarketplacecommerceservicesConstants.KM);
-								posDataList.add(posData);
-							}
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error(e);
-					}
-				}
-			}
-
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-		return posDataList;
-	}
-
-	//MSD
-	public MSDResponsedata getMSDWidgetData(final HttpServletRequest request)
+	//MSD FOR HOME FURNISHING PDP
+	@ResponseBody
+	@RequestMapping(value = "/getMSDWidgets", method = RequestMethod.GET)
+	public JSONObject getMSDWidgetData(final HttpServletRequest request)
 	{
 
 		final JSONObject MSDJObject = new JSONObject();
 		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
-		MSDResponsedata msdRecData = null;
+		String msdRecData = null;
 		String productCode = null;
-		if (msdUse.equalsIgnoreCase("true"))
+		try
 		{
-			final MSDRequestdata msdRequest = new MSDRequestdata();
-
-
-			final String msdApiKey = configurationService.getConfiguration().getString("api.key");
-			final String msdDetails = configurationService.getConfiguration().getString("details.key");
-			final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
-			final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
-			final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
-			if (request.getParameterMap().containsKey("productCode"))
+			if (msdUse.equalsIgnoreCase("true"))
 			{
-				productCode = request.getParameter("productCode").toString();
+				final MSDRequestdata msdRequest = new MSDRequestdata();
+
+
+				final String msdApiKey = configurationService.getConfiguration().getString("api.key");
+				final String msdDetails = configurationService.getConfiguration().getString("details.key");
+				final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
+				final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
+				final String num_results = configurationService.getConfiguration().getString("num_results.key");
+				final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
+				if (request.getParameterMap().containsKey("productCode"))
+				{
+					productCode = request.getParameter("productCode").toString();
+				}
+				msdRequest.setProduct_id(productCode);
+				msdRequest.setApi_key(msdApiKey);
+				msdRequest.setDetails(msdDetails);
+				msdRequest.setMad_uuid(msdMad_Uid);
+				msdRequest.setWidget_list(widget_list);
+				msdRequest.setNum_results(num_results);
+				msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
+				MSDJObject.put("responsedata", msdRecData);
+
+
 			}
-			msdRequest.setProduct_id(productCode);
-			msdRequest.setApi_key(msdApiKey);
-			msdRequest.setDetails(msdDetails);
-			msdRequest.setMad_uuid(msdMad_Uid);
-			msdRequest.setWidget_list(widget_list);
-			msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
 
 		}
-		return msdRecData;
-	}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error during populating MSD >> for Home Furnishing >>" + "Error>>" + e);
+		}
 
+
+		return MSDJObject;
+	}
 }

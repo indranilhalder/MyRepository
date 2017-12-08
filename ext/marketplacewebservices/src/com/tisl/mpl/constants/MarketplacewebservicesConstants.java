@@ -625,4 +625,6 @@ public class MarketplacewebservicesConstants
 	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
 	public static final String E0000 = "E0000";
 	public static final String DESC_PDP_PROPERTIES = "pdp.desc.tab.";
+
+	public static final String PAYTM = "PAYTM".intern();
 }

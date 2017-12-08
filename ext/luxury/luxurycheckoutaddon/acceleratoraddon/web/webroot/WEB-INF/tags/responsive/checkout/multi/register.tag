@@ -75,23 +75,16 @@
 
 <%-- <span class="or"><spring:theme code="text.or"/></span> --%>
 <div class="else-sec"><span class="else-brdrtp"></span><span class="else">or </span> <span class="else-brdrbtm"></span></div>
-<!-- For  Gigya and API Social Login -->
-<c:choose>
-<c:when test="${isGigyaEnabled=='Y'}">
+
+<c:if test="${useNativeSocial=='Y'}">
 <ul class="social-connect" id="gSignInWrapper">
- <li>
-   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
-    <div id="loginDivRegisterCheckOut"></div>
-    </li>
+  <li><button class="fb" onclick="ACC.socialLogin.facebookSocialLogin();"><spring:theme code="register.new.facebook" text="Connect with Facebook" /></button></li>
+  <li><button class="go customGPlusSignIn" id="customBtndropSignInCheckout"><spring:theme code="register.new.google" text="Connect with Google" /></button></li>
+  <script type="text/javascript">
+	ACC.socialLogin.attachSignin( document.getElementById('customBtndropSignInCheckout'));
+  </script>
+  
 </ul>
-</c:when>
-<c:otherwise>
-<ul class="social-connect" id="gSignInWrapper">
-  <li><a class="fb" href="${urlVisitForFacebook}"><spring:theme code="register.new.facebook" text="Connect with Facebook" /></a></li>
-  <li class="customGPlusSignIn"><a class="go" href="${urlVisit}"><spring:theme code="register.new.google" text="Connect with Google" /></a></li>
-</ul>
-</c:otherwise>
-</c:choose>
-<!-- End  Gigya and API Social Login -->
+</c:if>
 
 </div>

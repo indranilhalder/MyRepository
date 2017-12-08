@@ -200,7 +200,8 @@
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-
+					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_paytm_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
@@ -288,7 +289,7 @@
 										</c:if>
 									</c:forEach>
 									
-									<c:forEach var="map" items="${paymentModes}">
+									<%-- <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 			    							<c:when test="${map.key eq 'TW'}">
@@ -302,7 +303,26 @@
 													</c:when>
 											</c:choose>
 										</c:if>
+									</c:forEach> --%>
+									
+									<!-- New addition for paytm integration  -->
+									<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'TW'}">
+			    								<input type="hidden" id="TW" value="${map.value}" />
+			       								<li>
+				       								<span id="viewPaymentPaytm" onclick="viewPaymentPaytm();">
+				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+				       								</span>
+			       								</li>
+												
+													</c:when>
+											</c:choose>
+										</c:if>
 									</c:forEach>
+									<!-- New addition for paytm integration  -->
+									
 					</ul>
 					</c:if>
 					<c:if test="${is_responsive}">
@@ -1634,7 +1654,7 @@
 						 <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-											<c:when test="${map.key eq 'TW'}">
+											<c:when test="${map.key eq 'MRUPEE'}">
 												<input type="hidden" id="TW" value="${map.value}" />
 	
 												<li class="paymentModeMobile">
@@ -1647,7 +1667,61 @@
 										</c:if>
 									</c:forEach>
 						</c:if>
-					
+						<c:if test="${is_responsive}">
+						<!-- Paytm Changes -->
+						 <c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'PAYTM'}">
+												<input type="hidden" id="TW" value="${map.value}" />
+	
+												<li class="paymentModeMobile">
+													<span id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('PAYTM','newCard','','false');">
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+						</c:if>
+						
+						
+					<!-- PayTM Changes -->	
+					<li id="PAYTM">
+						<ul class="product-block blocks">
+						 <c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'PAYTM'}">
+												<input type="hidden" id="PAYTM" value="${map.value}" />
+												
+												<div class="radio">
+													 <input type="radio" name="priority_paytm" id="radioButton_Paytm" value="paytm" checked/>
+													 <label for="priority_paytm"  class="numbers creditLabel"><img src="${commonResourcePath}/images/paytm.png" alt=""></label>
+									   			<%-- <span id="paytmInfo" style="display:none">
+														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
+													</span> --%>
+									   			</div>
+	
+												<li>
+													<span id="viewPaymentPaytm"  onclick="viewPaymentPaytm();">
+														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+						</c:forEach>
+						
+						<div class="pay newCardPaymentCC">
+									
+									<button type="submit" class="make_payment button btn-block payment-button" id="make_paytm_payment" onclick="submitPaytmForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+								</div>
+						</ul>
+						</li>
+						<!-- PayTM Changes -->
+						
 							 <li id="MRUPEE">
 							<ul class="product-block blocks">
 							<c:forEach var="map" items="${paymentModes}">

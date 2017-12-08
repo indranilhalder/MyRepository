@@ -16,6 +16,9 @@
 			<cms:component component="${feature}"/>
 		</cms:pageSlot>
 
+		<cms:pageSlot position="SeoFooter" var="feature">
+			<cms:component component="${feature}"/>
+		</cms:pageSlot>
 
 	</div>
 
