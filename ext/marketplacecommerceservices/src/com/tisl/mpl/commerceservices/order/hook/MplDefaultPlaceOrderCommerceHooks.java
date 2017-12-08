@@ -14,10 +14,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -228,107 +225,114 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//
 			//			}
 
-
-			//TPR -965 + TPR-4579 starts
-			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
-					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
+			try
 			{
-				final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
-				boolean isCategoryLevelPromo = false;
-
-				final Tuple2<?, ?> promoDetails = validateForProductPromotion(orderModel.getAllPromotionResults());
-
-				final List<String> productPromotionList = (List<String>) promoDetails.getFirst();
-				final List<String> cartPromotionList = (List<String>) promoDetails.getSecond();
-
-				if (CollectionUtils.isNotEmpty(productPromotionList))
+				//TPR -965 + TPR-4579 starts
+				if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
+						&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
 				{
-					for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+					final List<LimitedStockPromoInvalidationModel> orderInvalidationList = new ArrayList<LimitedStockPromoInvalidationModel>();
+					boolean isCategoryLevelPromo = false;
+
+					final Tuple2<?, ?> promoDetails = validateForProductPromotion(orderModel.getAllPromotionResults());
+
+					final List<String> productPromotionList = (List<String>) promoDetails.getFirst();
+					final List<String> cartPromotionList = (List<String>) promoDetails.getSecond();
+
+					if (CollectionUtils.isNotEmpty(productPromotionList))
 					{
-						if (orderEntry.getQualifyingCount().intValue() > 0
-								&& (null != orderEntry.getGiveAway() && !orderEntry.getGiveAway().booleanValue()))
+						for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 						{
-							isCategoryLevelPromo = validateCategorySetPromo(orderModel.getAllPromotionResults(),
-									orderEntry.getProductPromoCode());
-
-							final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
-									.create(LimitedStockPromoInvalidationModel.class);
-
-							if (isCategoryLevelPromo)
+							if (orderEntry.getQualifyingCount().intValue() > 0
+									&& (null != orderEntry.getGiveAway() && !orderEntry.getGiveAway().booleanValue()))
 							{
-								final String categoryCode = getCatgoryCode(orderModel.getAllPromotionResults(),
-										orderEntry.getProductPromoCode(), orderEntry.getProduct());
+								isCategoryLevelPromo = validateCategorySetPromo(orderModel.getAllPromotionResults(),
+										orderEntry.getProductPromoCode());
 
-								promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
-								promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
-								promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
-								promoInvalidationModel.setGuid(orderModel.getGuid());
-								promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
-								promoInvalidationModel.setOrder(orderModel);
-								if (StringUtils.isNotEmpty(categoryCode))
-								{
-									promoInvalidationModel.setCategoryCode(categoryCode);
-								}
+								final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
+										.create(LimitedStockPromoInvalidationModel.class);
 
-								if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+								if (isCategoryLevelPromo)
 								{
-									final CustomerModel customer = (CustomerModel) orderModel.getUser();
-									if (null != customer && null != customer.getOriginalUid())
+									final String categoryCode = getCatgoryCode(orderModel.getAllPromotionResults(),
+											orderEntry.getProductPromoCode(), orderEntry.getProduct());
+
+									promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+									promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+									promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+									promoInvalidationModel.setGuid(orderModel.getGuid());
+									promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+									promoInvalidationModel.setOrder(orderModel);
+									if (StringUtils.isNotEmpty(categoryCode))
 									{
-										promoInvalidationModel.setCustomerID(customer.getOriginalUid());
-	
+										promoInvalidationModel.setCategoryCode(categoryCode);
 									}
-								}
-								orderInvalidationList.add(promoInvalidationModel);
-							}
-							else
-							{
-								promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
-								promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
-								promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
-								promoInvalidationModel.setGuid(orderModel.getGuid());
-								promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
-								promoInvalidationModel.setOrder(orderModel);
 
-								if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
-								{
-									final CustomerModel customer = (CustomerModel) orderModel.getUser();
-									if (null != customer && null != customer.getOriginalUid())
+									if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
 									{
-										promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+										final CustomerModel customer = (CustomerModel) orderModel.getUser();
+										if (null != customer && null != customer.getOriginalUid())
+										{
+											promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+
+										}
 									}
+									orderInvalidationList.add(promoInvalidationModel);
 								}
-								orderInvalidationList.add(promoInvalidationModel);
+								else
+								{
+									promoInvalidationModel.setProductCode(orderEntry.getProduct().getCode());
+									promoInvalidationModel.setUssid(orderEntry.getSelectedUSSID());
+									promoInvalidationModel.setPromoCode(orderEntry.getProductPromoCode());
+									promoInvalidationModel.setGuid(orderModel.getGuid());
+									promoInvalidationModel.setUsedUpCount(Integer.valueOf(orderEntry.getQualifyingCount().intValue()));
+									promoInvalidationModel.setOrder(orderModel);
+
+									if (null != orderModel.getUser()) // Added for TPR-4331: Customer Count Configuration
+									{
+										final CustomerModel customer = (CustomerModel) orderModel.getUser();
+										if (null != customer && null != customer.getOriginalUid())
+										{
+											promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+										}
+									}
+									orderInvalidationList.add(promoInvalidationModel);
+								}
 							}
 						}
-					}
 
-				}// End of Product Promotion Code
+					} // End of Product Promotion Code
 
-				//TPR-7445 Starts here
-				if (CollectionUtils.isNotEmpty(cartPromotionList))
-				{
-					final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
-							.create(LimitedStockPromoInvalidationModel.class);
-
-					promoInvalidationModel.setOrder(orderModel);
-					promoInvalidationModel.setGuid(orderModel.getGuid());
-					promoInvalidationModel.setPromoCode(cartPromotionList.get(0));
-					if (null != orderModel.getUser())
+					//TPR-7445 Starts here
+					if (CollectionUtils.isNotEmpty(cartPromotionList))
 					{
-						final CustomerModel customer = (CustomerModel) orderModel.getUser();
-						if (null != customer && null != customer.getOriginalUid())
-						{
-							promoInvalidationModel.setCustomerID(customer.getOriginalUid());
-						}
-					}
+						final LimitedStockPromoInvalidationModel promoInvalidationModel = (LimitedStockPromoInvalidationModel) getModelService()
+								.create(LimitedStockPromoInvalidationModel.class);
 
-					orderInvalidationList.add(promoInvalidationModel);
+						promoInvalidationModel.setOrder(orderModel);
+						promoInvalidationModel.setGuid(orderModel.getGuid());
+						promoInvalidationModel.setPromoCode(cartPromotionList.get(0));
+						if (null != orderModel.getUser())
+						{
+							final CustomerModel customer = (CustomerModel) orderModel.getUser();
+							if (null != customer && null != customer.getOriginalUid())
+							{
+								promoInvalidationModel.setCustomerID(customer.getOriginalUid());
+							}
+						}
+
+						orderInvalidationList.add(promoInvalidationModel);
+					}
+					//TPR-7445 Ends here
+
+
+					getModelService().saveAll(orderInvalidationList);
 				}
-				//TPR-7445 Ends here
 
-
-				getModelService().saveAll(orderInvalidationList);
+			}
+			catch (final Exception exception)
+			{
+				LOG.error("Exception in Limited Offer Promotion Invalidation Save >>>" + exception.getMessage());
 			}
 
 
@@ -352,33 +356,36 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
 
-				orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				try
 				{
-					LOG.debug("Payment Info and Status saving COD");
-					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
+					orderModel.setType("Parent");
+					if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+					{
+						LOG.debug("Payment Info and Status saving COD");
+						orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
+						getModelService().save(orderModel);
+					}
+					else
+					{
+						LOG.debug("Payment Info Prepaid");
+
+						final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
+						if (realEbs.equalsIgnoreCase("Y"))
+						{
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
+						}
+					}
+
 					getModelService().save(orderModel);
 				}
-				//				else if (orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
-				//				{
-				//					LOG.debug("Payment Info for juspay");
-				//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				//				}
-				else
+				catch (final Exception exception)
 				{
-					LOG.debug("Payment Info Prepaid");
-
-					final String realEbs = getConfigurationService().getConfiguration().getString("payment.ebs.chek.realtimecall");
-					if (realEbs.equalsIgnoreCase("Y"))
-					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
-					}
+					LOG.error("Exception in Setting Mode of Payment >>>" + exception.getMessage());
 				}
 
-				getModelService().save(orderModel);
+
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 
-				//final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
 						getVoucherService().getAppliedVouchers(orderModel));
 				if (CollectionUtils.isNotEmpty(voucherList))
@@ -415,12 +422,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							}
 						}
 					}
-
 					catch (final Exception e)
 					{
 						//discountUtility.releaseVoucherAndInvalidation(orderModel);
-						LOG.error("Exception Trace>>>" + e.getMessage());
-						throw e;
+						LOG.error("Exception Trace while configuring Invalidation>>>" + e.getMessage());
 					}
 				}
 			}
@@ -2352,6 +2357,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						couponApportionValue = couponDiscount / quantity;
 					}
 
+					//Added for Cart Coupon
+					double cartcouponApportionValue = 0;
+
+					if (null != abstractOrderEntryModel.getCartCouponValue()
+							&& abstractOrderEntryModel.getCartCouponValue().doubleValue() > 0)
+					{
+						cartcouponApportionValue = (abstractOrderEntryModel.getCartCouponValue().doubleValue()) / quantity;
+					}
+
 
 					// Looping through the order Model for single line single quantity at entry level
 
@@ -2371,6 +2385,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						}
 						double bogoCartApportion = cartApportionValue;
 						double bogoCouponApportion = couponApportionValue;
+						double bogoCartCouponApportion = cartcouponApportionValue;
+
+
 						if (StringUtil.isNotEmpty(abstractOrderEntryModel.getProductPromoCode())
 								&& StringUtil.isNotEmpty(abstractOrderEntryModel.getQualifyingCount().toString()))
 						{
@@ -2414,15 +2431,21 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue()
 										* abstractOrderEntryModel.getQualifyingCount().intValue();
 								qualifyingCount = qualifyingCount - bogoCount;
+								bogoCartCouponApportion = (cartcouponApportionValue * qualifyingCount)
+										/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
+
 								createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue,
 										productApportionvalue, price, true, qualifyingCount, deliveryCharge, hdDeliveryCharge,
-										scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
+										scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0,
+										cartcouponApportionValue, 0);
 								productApportionvalue = 0;
+
+
 							}
 							createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
 									productApportionvalue, price, false, 0, deliveryCharge, hdDeliveryCharge, scheduleDeliveryCharge,
 									cachedSellerInfoMap, bogoCODPrice, bogoCartApportion, prevDelCharge, couponApportionValue,
-									bogoCouponApportion);
+									bogoCouponApportion, cartcouponApportionValue, bogoCartCouponApportion);
 
 
 						}
@@ -2467,7 +2490,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
 
 								deliveryCharge, hdDeliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge,
-								couponApportionValue, 0);
+								couponApportionValue, 0, cartcouponApportionValue, 0);
 
 					}
 					else
@@ -2476,7 +2499,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0,
 								abstractOrderEntryModel.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge,
 								hdDeliveryCharge, scheduleDeliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue,
-								0);
+								0, cartcouponApportionValue, 0);
 
 					}
 				}
@@ -2541,6 +2564,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param bogoCODPrice
 	 * @param bogoCartApportion
 	 * @param prevDelCharge
+	 * @param bogoCartCouponApportion
+	 * @param cartcouponApportionValue
 	 * @throws Exception
 	 */
 	@SuppressWarnings("javadoc")
@@ -2550,7 +2575,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying, final Double deliveryCharge,
 			final Double hdDeliveryCharge, final Double scheduleDeliveryCharge,
 			final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice, final double bogoCartApportion,
-			final Double prevDelCharge, final double couponApportionValue, final double bogoCouponApportion)
+			final Double prevDelCharge, final double couponApportionValue, final double bogoCouponApportion,
+			final double cartcouponApportionValue, final double bogoCartCouponApportion)
 
 	{
 
@@ -2665,9 +2691,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
-			final double netAmountAfterAllDisc = Double
-					.parseDouble(df.format(price - cartApportionValue - productApportionvalue - couponApportionValue));
+			final double netAmountAfterAllDisc = Double.parseDouble(
+					df.format(price - cartApportionValue - productApportionvalue - couponApportionValue - cartcouponApportionValue));
+
 			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
+			orderEntryModel.setCartCouponValue(Double.valueOf(cartcouponApportionValue));
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setTotalPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(netAmountAfterAllDisc));
@@ -2714,8 +2742,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						Double.valueOf(bogoCODPrice / orderEntryModel.getQualifyingCount().doubleValue()));
 				orderEntryModel.setCartLevelDisc(Double.valueOf(bogoCartApportion));
 				orderEntryModel.setCouponValue(Double.valueOf(bogoCouponApportion));
-				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(
-						Double.parseDouble(df.format(price - bogoCartApportion - productApportionvalue - bogoCouponApportion))));
+				orderEntryModel.setCartCouponValue(Double.valueOf(bogoCartCouponApportion));
+				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(Double.parseDouble(
+						df.format(price - bogoCartApportion - productApportionvalue - bogoCouponApportion - bogoCartCouponApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 				orderEntryModel.setHdDeliveryCharge(hdDeliveryCharge);
 				orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
