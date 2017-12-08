@@ -6287,6 +6287,14 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="chargeback" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>CHARGEBACK AMOUNT(tax inclusive) after all disc. in Rs.</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" />
+						<persistence type="property" />
+					</attribute>
 					<attribute qualifier="isBOGOapplied" autocreate="true"
 						type="java.lang.Boolean">
 						<description>Flag for whether BOGO promotion is applied or not</description>
