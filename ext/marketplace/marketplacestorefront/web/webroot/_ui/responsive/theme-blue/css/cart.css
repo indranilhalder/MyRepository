@@ -1487,7 +1487,9 @@
 	font-size: 14px;
 	margin: 5px 0 20px 0;
 }
-
+.cart.wrapper .product-block li.item>ul>li:first-child div.product .product-name {
+    margin-bottom: 0 !important;	/* add for TISCSS-77 */
+}
 .cart.wrapper .product-block li.item.has-promo .promo-block,
 	.confirmation .product-block li.item.has-promo .promo-block {
 	display: inline-block;
