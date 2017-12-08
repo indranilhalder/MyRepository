@@ -808,6 +808,7 @@
 			<value code="ReturnToOrigin" />
 			<value code="ISEDTOHD" />
 			<value code="ISSDB" />
+			<value code="NA" /> <!-- Added for TPR-5954 -->
 		</enumtype>
 
 

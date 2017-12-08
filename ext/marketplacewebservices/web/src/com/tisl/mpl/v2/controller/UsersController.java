@@ -9699,4 +9699,170 @@ public class UsersController extends BaseCommerceController
 		return toSortList;
 	}
 
+	/**
+	 * TPR-5954 Category specific return reason
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/newReturnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnRequestDTO newReturnProductDetails(@RequestParam final String orderCode, @RequestParam final String transactionId)
+			throws EtailNonBusinessExceptions
+	{
+		final String returnCancelFlag = "R";
+		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
+		ReturnReasonDetails returnReasonData = null;
+		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
+				"finejewellery.reverseseal.sellername");
+		boolean isFineJew = false;
+		boolean showRevSeal = false;
+		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		try
+		{
+			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
+					returnCancelFlag);
+
+
+			if (orderproductWsDto.size() > 0)
+			{
+
+				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+
+				//TPR-4134 starts
+				returnModes.setSelfCourier(true);
+				returnModes.setSchedulePickup(true);
+				returnModes.setQuickDrop(true);
+				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
+
+				if (StringUtils.isNotEmpty(revSealSellerList))
+				{
+					final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+					for (final OrderProductWsDTO orderEntry : orderproductWsDto)
+					{
+						if (sellerList.contains(orderEntry.getSellerName()))
+						{
+							showRevSeal = true;
+							revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
+							revSealFrJwlry.setYes("Y");
+							revSealFrJwlry.setNo("N");
+							LOG.debug("Reverse seal section will be shown");
+							break;
+						}
+					}
+				}
+				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
+				{
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+					if (null != productModel
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
+									.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						isFineJew = true;
+						if (showRevSeal)
+						{
+							returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+						}
+						returnModes.setSelfCourier(false);
+						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+						break;
+					}
+				}
+				returnRequestDTO.setReturnModes(returnModes);
+				//TPR-4134 ends
+			}
+
+			//			//TPR-5954 || Category specific return reason || Start
+			//			//final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+			//			Collection<CategoryModel> superCategories = productModel.getSupercategories();
+			//
+			//			outer: for (final CategoryModel category : superCategories)
+			//			{
+			//				if (category.getCode().startsWith("MPH"))
+			//				{
+			//					superCategories = category.getSupercategories();
+			//					for (final CategoryModel category1 : superCategories)
+			//					{
+			//						if (category1.getCode().startsWith("MPH"))
+			//						{
+			//							superCategories = category1.getSupercategories();
+			//							for (final CategoryModel category2 : superCategories)
+			//							{
+			//								if (category2.getCode().startsWith("MPH"))
+			//								{
+			//									//L2Cat = category2.getCode();
+			//									break outer;
+			//								}
+			//							}
+			//						}
+			//					}
+			//
+			//				}
+			//			}
+			//			//TPR-5954 || Category specific return reason || End
+			//TPR-5954
+			final Map<String, List<String>> dummyObj = new HashMap<String, List<String>>();
+			final List<String> sub1 = new ArrayList<String>();
+			final List<String> sub2 = new ArrayList<String>();
+			sub1.add("test1");
+			sub1.add("test2");
+			sub1.add("test3");
+			sub2.add("test1");
+			sub2.add("test2");
+			sub2.add("test3");
+			sub2.add("test4");
+			dummyObj.put("Parent_reason_1", sub1);
+			dummyObj.put("Parent_reason_2", sub2);
+
+
+			returnRequestDTO.setReturnReasonMap(dummyObj);
+
+
+
+			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
+			{
+				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+				{
+					if (!isFineJew
+							&& MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(entry.getReasonDescription()))
+					{
+						continue;
+					}
+					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
+					returnReasondtolist.add(reasonDto);
+
+				}
+				returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
+			}
+
+			else
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+				returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9076));
+			}
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return returnRequestDTO;
+	}
+
 }
