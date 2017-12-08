@@ -35,4 +35,10 @@ public interface MplDelistingDao
 	//TISPRD-207 Changes
 	public List<MarketplaceDelistModel> findUnprocessedRecord();
 
+	public MarketplaceDelistModel fetchDelistDetails(String ussid);
+
+	public List<MarketplaceDelistModel> fetchDataForUssid(final String sellerVarb);
+
+	public SellerInformationModel getSellerModel(final String ussid, final CatalogVersionModel catalogVersion);
+
 }
