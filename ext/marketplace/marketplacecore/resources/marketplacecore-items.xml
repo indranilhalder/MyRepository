@@ -13970,6 +13970,55 @@
 			</attributes>
 		</itemtype>
 	</typegroup>
-	<!-- TPR-5954 || Category specific return reason ||End -->			
+	<!-- TPR-5954 || Category specific return reason ||End -->	
+	
+	<!-- SDI-2813 || OMS Order Sync ||Start -->
+     <typegroup name="OrderSyncLog&Intelligence">
+	<itemtype code="OrderSyncLog" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.OrderSyncLog">
+			<deployment table="MplOrderSyncLog" typecode="25128" />
+			<attributes>
+				<attribute qualifier="transactionId" type="java.lang.String">
+					<description>This is the reason codes</description>
+					<modifiers optional="false" unique="true" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="ErrorLog" type="java.lang.String">
+					<description>The reason descriptions</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="orderStatus" type="java.lang.String">
+					<description>The parent child relation</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="StatusUpdateXML" type="java.lang.String">
+							  
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>		
   </itemtypes>
 </items>
