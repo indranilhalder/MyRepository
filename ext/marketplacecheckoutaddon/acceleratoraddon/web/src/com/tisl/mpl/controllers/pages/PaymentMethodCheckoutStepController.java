@@ -3919,16 +3919,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 
 		final long startTime = System.currentTimeMillis();
-		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
+		LOG.debug("Entering Controller validateBankAndPaymentModePromotions()=====" + System.currentTimeMillis());
 		List<String> paymentModeinfo = new ArrayList<String>();
 
 
 		//Payment Soln changes
 		OrderModel orderModel = null;
-		MplPromoPriceData responseData = new MplPromoPriceData();
-		String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
-		CartData cartData = null;
-		OrderData orderData = null;
+		final MplPromoPriceData responseData = new MplPromoPriceData();
+		//final String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+
 
 		String paymentMode = MarketplacecommerceservicesConstants.EMPTY; //Mode of payment
 		//String cardType = MarketplacecommerceservicesConstants.EMPTY;
@@ -3959,23 +3958,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
-				//TISEE-510 ,TISEE-5555
 
-
-				//TISPT-29
-				if (null != cart
-						&& StringUtils.isNotEmpty(paymentMode)
-						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
-				{
-					//setting in cartmodel
-					cart.setConvenienceCharges(Double.valueOf(0));
-					//saving cartmodel
-					getMplPaymentFacade().saveCart(cart);
-				}
 
 				if (!getMplCheckoutFacade().isPromotionValid(cart))
 				{
@@ -3986,34 +3969,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-
-					//	if (!isNewCard)
-					//{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankNameAsperCard);
-					//}
 
-
-
-					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-					if (cart != null && cart.getEntries() != null)
-					{
-						for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
-						{
-							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
-									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
-							{
-								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-							}
-						}
-					}
-
-					cartData = getMplCartFacade().getCartDataFromCartModel(cart, false);
-					responseData = getMplPaymentFacade().applyPromotions(cartData, null, cart, null, responseData);
-
-
-					getMplPaymentFacade().populateDelvPOSForFreebie(cart, freebieModelMap, freebieParentQtyMap);
 
 					//Wallet amount assigned. Will be changed after release1
 					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
@@ -4062,21 +4019,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getModelService().save(cart);
 					}
 
-					//TISST-7955
-					final Map<String, String> ussidPricemap = new HashMap<String, String>();
-					if (cartData != null)
-					{
-						for (final OrderEntryData entryData : cartData.getEntries())
-						{
-							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
-									.getFormattedValue());
-						}
-					}
-					final ObjectMapper objectMapper = new ObjectMapper();
-					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
-
-					//UF-260
-					GenericUtilityMethods.getCartPriceDetails(null, cart, responseData);
 				}
 
 			}
@@ -4092,18 +4034,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getMplPaymentFacade().setBankForSavedCard(bankNameAsperCard);
 					}
 
-					//TISPT-29
-					if (StringUtils.isNotEmpty(paymentMode)
-							&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
-									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
-					{
-						//setting in orderModel
-						orderModel.setConvenienceCharges(Double.valueOf(0));
-						getModelService().save(orderModel);
-					}
 
 					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 					{
@@ -4112,31 +4042,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
 
-
-					//if (!isNewCard)
-					//{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankNameAsperCard);
-					//}
-
-					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-					if (orderModel.getEntries() != null)
-					{
-						for (final AbstractOrderEntryModel cartEntryModel : orderModel.getEntries())
-						{
-							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
-									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
-							{
-								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-							}
-						}
-					}
-
-					orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
-					responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel, responseData);
-
-					getMplPaymentFacade().populateDelvPOSForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
 
 					//Wallet amount assigned. Will be changed after release1
 					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
@@ -4185,31 +4091,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getModelService().save(orderModel);
 					}
 
-					//TISST-7955
-					final Map<String, String> ussidPricemap = new HashMap<String, String>();
-					if (orderData != null)
-					{
-						for (final OrderEntryData entryData : orderData.getEntries())
-						{
-							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
-									.getFormattedValue());
-						}
-					}
-					final ObjectMapper objectMapper = new ObjectMapper();
-					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
-
-					//UF-260
-					GenericUtilityMethods.getCartPriceDetails(null, orderModel, responseData);
 				}
 			}
-		}
-		catch (final JsonGenerationException e)
-		{
-			LOG.error("Error while generating JSON ", e);
-		}
-		catch (final JsonMappingException e)
-		{
-			LOG.error("Error while generating JSON ", e);
 		}
 		catch (final IOException e)
 		{
@@ -4217,7 +4100,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Error while saving model in applyPromotion ", e);
+			LOG.error("Error while saving model in validateBankAndPaymentModePromotions ", e);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4228,11 +4111,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error("Error while generating JSON ", e);
 		}
-		responseData.setUssidPriceDetails(jsonResponse);
+		//responseData.setUssidPriceDetails(jsonResponse);
 
 
 		final long endTime = System.currentTimeMillis();
-		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
+		LOG.debug("Time taken within Controller validateBankAndPaymentModePromotions()=====" + (endTime - startTime));
 		return responseData;
 
 	}
@@ -5583,8 +5466,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
