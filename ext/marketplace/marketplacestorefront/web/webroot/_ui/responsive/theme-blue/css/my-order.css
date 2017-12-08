@@ -261,8 +261,6 @@ body .account .right-account .order-history.order-details li.header {
     padding: 28px 21px;
     padding-bottom: 0;
     margin-bottom: 32px;
-}
-body .account .right-account .order-history.order-details li.header {
     background-image: linear-gradient(to bottom,#f9f9f9,#fff);
 }
 body .account .right-account .order-history.order-details li.header * {
@@ -1595,6 +1593,9 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 		border-top: 1px solid #eee;
 	}
 	/* end change for  TISCSS-53 */
+	body .account .right-account .order-history.order-details li.header {
+		background-image: linear-gradient(to bottom,#fff,#fff); 	/* add for TISCSS-60 */
+	}
 }
 .savebtn.savebtnOther{
 	margin-left: -159px;
