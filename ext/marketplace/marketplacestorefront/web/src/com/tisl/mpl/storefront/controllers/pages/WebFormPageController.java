@@ -121,7 +121,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			//uploading file if any
 			if (CollectionUtils.isNotEmpty(webForm.getAttachmentFiles()))
 			{
-				formData.setAttachments(webForm.getAttachmentFiles());
+				formData.setAttachments(String.join(",", webForm.getAttachmentFiles()));
 			}
 			ticketRefId = mplWebFormFacade.sendWebformTicket(formData);
 			model.addAttribute("ticketRefId", ticketRefId);

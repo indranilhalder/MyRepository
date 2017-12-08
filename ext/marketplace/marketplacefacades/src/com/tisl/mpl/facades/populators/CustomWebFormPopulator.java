@@ -41,7 +41,7 @@ public class CustomWebFormPopulator<SOURCE extends WebFormData, TARGET extends M
 		webCrmTicketModel.setL2code(webFormData.getL2code());
 		webCrmTicketModel.setL3code(webFormData.getL3code());
 		webCrmTicketModel.setL4code(webFormData.getL4code());
-		webCrmTicketModel.setAttachments(String.join(",", webFormData.getAttachments()));
+		webCrmTicketModel.setAttachments(webFormData.getAttachments());
 		webCrmTicketModel.setComment(webFormData.getComment());
 		webCrmTicketModel.setOrderCode(webFormData.getOrderCode());
 		webCrmTicketModel.setSubOrderCode(webFormData.getSubOrderCode());
