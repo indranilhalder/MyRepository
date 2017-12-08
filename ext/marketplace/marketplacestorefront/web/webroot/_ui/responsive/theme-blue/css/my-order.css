@@ -1585,9 +1585,15 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 	body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
 	    padding-left: 15.5%;
 	}
+	/* start change for  TISCSS-53 */
 	.editIconCSS a#changeAddressLink {
-		margin-left: -15px;		/* add for TISCSS-53 */
+		margin-left: -15px;		
 	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.header div.payment-method {
+		padding-top: 30px;
+		border-top: 1px solid #eee;
+	}
+	/* end change for  TISCSS-53 */
 }
 .savebtn.savebtnOther{
 	margin-left: -159px;
