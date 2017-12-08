@@ -92,6 +92,7 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
+
 /**
  * @author TCS
  *
@@ -1662,11 +1663,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1717,9 +1718,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -2993,7 +2994,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		return sb.toString();
 	}
 
+	//TPR-7486
+	@Override
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer)
+	{
+		return getBinService().fetchBankFromCustomerSavedCard(cardRefNum, Customer);
+	}
 
+	//TPR-7486
+	@Override
+	public String fetchBanknameFromBin(final String cardBinNo)
+	{
+		return getBinService().fetchBanknameFromBin(cardBinNo);
+	}
 
 	//TPR-4461 BANK RESTRICTION CHECK STARTS HERE
 	/**

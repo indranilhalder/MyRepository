@@ -3608,7 +3608,14 @@
 							unique="false" optional="false" removable="false" initial="true"
 							private="false" partof="false" />
 					</attribute>
-
+	               <!-- TPR-7486 -->
+ 				   <attribute qualifier="cardBinNumber" autocreate="true"
+ 					type="java.lang.String">
+ 					   <persistence type="property" />
+ 					    <modifiers read="true" write="true" search="true"
+						unique="false" optional="false" removable="false" initial="true"
+							private="false" partof="false" />
+				   </attribute>
 					<attribute qualifier="billingAddress" autocreate="true"
 						type="Address">
 						<persistence type="property" />
@@ -10299,7 +10306,21 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-
+					<attribute qualifier="cartCouponCode" autocreate="true"
+						type="java.lang.String">
+						<description>Cart Coupon Code</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cartCouponValue" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description> Cart Coupon Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 

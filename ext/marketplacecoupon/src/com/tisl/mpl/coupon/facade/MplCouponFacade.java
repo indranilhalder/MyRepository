@@ -24,6 +24,8 @@ import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.wsdto.OfferListWsData;
 
 
 /**
@@ -140,6 +142,19 @@ public interface MplCouponFacade
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
 
+	/**
+	 *
+	 * TPR-7486
+	 */
+	List<MplCartOfferVoucherModel> getAllPaymentModeSpecificOffers();
+
+	Map<String, Double> getPaymentModerelatedVoucherswithTotal();
+
+	OfferListWsData getAllOffersForMobile();
+
+	OfferListWsData getAllOffersTermsAndConditionForMobile();
+
+
 
 	/**
 	 * @param customer
@@ -168,11 +183,49 @@ public interface MplCouponFacade
 
 	/**
 	 * Added for TPR-4461
-	 * 
+	 *
 	 * @param orderModel
 	 * @return String
 	 */
 	public String getCouponMessageInfo(final AbstractOrderModel orderModel);
+
+
+	/**
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @return boolean
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 */
+	boolean applyCartVoucher(String voucherCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, EtailNonBusinessExceptions;
+
+
+	/**
+	 * The Method displays Coupon Data on Payment Page
+	 *
+	 * @param orderModel
+	 * @param cartModel
+	 * @param couponRedStatus
+	 * @param couponCode
+	 * @return VoucherDiscountData
+	 */
+	VoucherDiscountData populateCartVoucherData(OrderModel orderModel, CartModel cartModel, boolean couponRedStatus,
+			boolean isRedeemed, String couponCode);
+
+
+	/**
+	 * Get Voucher Coupon Code
+	 *
+	 * @param manuallyselectedvoucher
+	 * @return String
+	 */
+	String getCouponCode(String manuallyselectedvoucher);
+
+
+	AbstractOrderModel removeLastCartCoupon(AbstractOrderModel oModel);
 
 
 }

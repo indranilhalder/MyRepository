@@ -65278,6 +65278,7 @@ li#savedCardDebit + li, li#savedCard + li {
     position: relative;
     width: 216px;
 }
+/*
 .cart.wrapper.checkout-payment .blocks .error-message.card_cvvErrorSavedCard_popup{
 	width: 206px;
     height: 43px;
@@ -65354,6 +65355,7 @@ li#savedCardDebit + li:hover > .card_cvvErrorSavedCard_popup , li#savedCard + li
 li#savedCardDebit + li:hover > .card_nochooseErrorSavedCard_popup , li#savedCard + li:hover > .card_nochooseErrorSavedCard_popup {
     opacity:1;
 }
+*/
 li#savedCardDebit , li#savedCard{
 	margin: 0;
 }
