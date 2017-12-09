@@ -645,11 +645,18 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									deliveryMode = MarketplacecommerceservicesConstants.CLICK_COLLECT;
 								}
 
-								final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-										deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
+								MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(deliveryMode,
+										MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid(),
+										deliveryData.getFulfilmentType());
 								DeliveryModeModel deliveryModeModel = null;
 								if (null != deliveryModel)
 								{
+									deliveryModeModel = deliveryModel.getDeliveryMode();
+								}
+								if (null == deliveryModel)
+								{
+									deliveryModel = getMplDeliveryCostService().getDeliveryCost(deliveryMode,
+											MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
 									deliveryModeModel = deliveryModel.getDeliveryMode();
 								}
 								if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModeModel != null)
@@ -6407,7 +6414,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				}
 			}
 			return responseList;
-
 		}
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
@@ -6753,6 +6759,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
+
 				final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
 				final String selectedUssid = entry.getSelectedUssid();
 				//deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
@@ -6797,27 +6804,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								if (deliveryData.getType() != null && deliveryModeFromResponseData.equalsIgnoreCase(deliveryMode))
 								{
 
-									final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-											deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
+									MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
+											deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid(),
+											deliveryData.getFulfilmentType());
+									if (null == deliveryModel)
+									{
+										deliveryModel = getMplDeliveryCostService().getDeliveryCost(deliveryMode,
+												MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+									}
 
 									if (deliveryModel != null && deliveryModel.getValue() != null
 											&& deliveryModel.getDeliveryMode() != null)
 									{
 										PriceData priceData = null;
-										if (entry.isIsBOGOapplied()
-												&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
-														.getDeliveryFulfillModes().getCode(), sellerInformationData))
-										{
-											priceData = formPriceData(
-													Double.valueOf(deliveryModel.getValue().doubleValue()
-															* entry.getQualifyingCount().intValue()), cartData);
-										}
-										else if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
+										//										if (entry.isIsBOGOapplied()
+										//												&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
+										//														.getDeliveryFulfillModes().getCode(), sellerInformationData))
+										//										{
+										//											priceData = formPriceData(
+										//													Double.valueOf(deliveryModel.getValue().doubleValue()
+										//															* entry.getQualifyingCount().intValue()), cartData);
+										//										}
+										//										else
+										if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 												.getDeliveryFulfillModes().getCode(), sellerInformationData))
 										{
-											priceData = formPriceData(
-													Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
-													cartData);
+											//											priceData = formPriceData(
+											//													Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
+											//													cartData);
+											priceData = entry.getCurrDelCharge();
 										}
 										else
 										{

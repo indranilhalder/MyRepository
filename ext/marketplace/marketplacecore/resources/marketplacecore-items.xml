@@ -7513,6 +7513,11 @@
 						<key attribute="sellerArticleSKU" />
 						<key attribute="currency" />
 					</index>
+					<index name="MPLZONEENTRYVALIDX" unique="true">
+						<key attribute="deliveryMode" />
+						<key attribute="sellerArticleSKU" />
+						<key attribute="deliveryFulfillModes" />
+					</index>
 				</indexes>
 			</itemtype>
 

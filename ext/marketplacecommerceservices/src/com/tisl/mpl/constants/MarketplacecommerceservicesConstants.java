@@ -1189,6 +1189,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CODE = "code".intern();
 	public static final String MPL = "mpl".intern();
 	public static final String FREE = "Free".intern();
+	public static final String FORCED = "Forced".intern();
 	public static final String JUSPAYMERCHANTKEYNOTFOUND = "No juspay MerchantKey is defined in local properties";
 	public static final String JUSPAYMERCHANTIDNOTFOUND = "No juspay MerchantId is defined in local properties";
 	public static final String FACEBOOK = "Facebook";

@@ -2401,7 +2401,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			if (null != cartModel)
 			{
 				//When customer has cartModel
-				final Double deliveryCost = cartModel.getDeliveryCost();
+
+				//	Double deliveryCost = cartModel.getDeliveryCost();
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
@@ -2409,10 +2410,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				final Double subTotal = cartModel.getSubtotal();
 				final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
-				final Double totalPriceAfterDeliveryCost = Double
-						.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue() - cartDiscount.doubleValue());
 
-				cartModel.setDeliveryCost(deliveryCost);
+				final double deliveryCost = calculateDeliveryChargeForShipping(cartModel);
+
+				cartModel.setDeliveryCost(Double.valueOf(deliveryCost));
+
+				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost
+						- cartDiscount.doubleValue());
 
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
@@ -2457,6 +2461,29 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting calculatePromotion()========" + (endTime - startTime));
+	}
+
+	/**
+	 * @param cartModel
+	 */
+	private double calculateDeliveryChargeForShipping(final AbstractOrderModel cartModel)
+	{
+		// YTODO Auto-generated method stub
+		/**********
+		 * This is required for calculating tship and ship del charge separately
+		 *
+		 * ***********/
+		double deliveryCost = 0.0d;
+
+		for (final AbstractOrderEntryModel cartentrymodel : cartModel.getEntries())
+		{
+			if (null != cartentrymodel.getCurrDelCharge() && cartentrymodel.getCurrDelCharge().doubleValue() > 0.0d)
+			{
+				deliveryCost += cartentrymodel.getCurrDelCharge().doubleValue();
+			}
+		}
+		return deliveryCost;
+
 	}
 
 
