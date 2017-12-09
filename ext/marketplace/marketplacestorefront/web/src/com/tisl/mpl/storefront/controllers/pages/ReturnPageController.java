@@ -1536,16 +1536,16 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = "/fetchSubReason", method = RequestMethod.GET)
 	public List<ReturnReasonData> fetchSubReturnReason(@RequestParam final String parentReasonCode)
 	{
-		List<ReturnReasonData> returnableStores = null;
+		List<ReturnReasonData> returnReasonData = null;
 		try
 		{
-			returnableStores = mplOrderFacade.getSubReasonCode(parentReasonCode);
+			returnReasonData = mplOrderFacade.getSubReasonCode(parentReasonCode);
 		}
 		catch (final Exception ex)
 		{
-			returnableStores = new ArrayList<ReturnReasonData>();
+			returnReasonData = new ArrayList<ReturnReasonData>();
 		}
-		return returnableStores;
+		return returnReasonData;
 	}
 
 	//TPR-5954

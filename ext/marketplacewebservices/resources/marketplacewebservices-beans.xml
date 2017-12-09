@@ -3132,7 +3132,7 @@
 		<property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
 		<!-- Added for TPR-5954 -->
 		<property name="returnReasonMap"
-			type="java.util.Map&lt;String,java.util.List&lt;java.lang.String>>" />
+			type="java.util.List&lt;ParentChildReason>" />
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3483,4 +3483,15 @@
 		<property name="offerMinCartValue" type="String" />
 		<property name="offerTermsConditions" type="String" />
 	</bean>
+	<!-- Added for TPR-5954 || Start -->
+	<bean class="com.tisl.mpl.wsdto.ParentChildReason">
+		<property name="parentReturnReason" type="java.lang.String" />
+		<property name="parentReasonCode" type="java.lang.String" />
+		<property name="subReasons" type="java.util.List&lt;SubReasonsMap>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.SubReasonsMap">
+		<property name="subReasonCode" type="java.lang.String" />
+		<property name="subReturnReason" type="java.lang.String" />
+	</bean>
+	<!-- Added for TPR-5954 || End -->
 </beans>
