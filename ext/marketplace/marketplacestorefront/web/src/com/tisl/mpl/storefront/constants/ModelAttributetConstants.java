@@ -969,10 +969,14 @@ public final class ModelAttributetConstants
 	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
 	//UF-422
 	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
+
 	//For New Social Login
 	public static final String FB_API_KEY = "mplfbid";
 	public static final String GOOGLE_API_KEY = "mplgoogleid";
+	public static final String FB_API_KEY_LUXURY = "luxfbid";
+	public static final String GOOGLE_API_KEY_LUXURY = "luxgoogleid";
 	public static final String USE_NATIVE_API_SOCIAL = "useNativeSocial";
+
 	// TPR-3878 START
 	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
 	public static final String MOVEMENT = "Movement";
@@ -981,4 +985,5 @@ public final class ModelAttributetConstants
 	public static final String SPECIAL_FEATURES = "special Features";
 	public static final String FEATURES = "Features";
 	// TPR-3878 END
+
 }

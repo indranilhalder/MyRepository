@@ -359,6 +359,7 @@ public interface ControllerConstants
 
 				String SellerView = "pages/layout/sellersDetailPage";
 				String QuickViewPopup = "fragments/product/quickViewPopup";
+				String QuickViewLayOutPopup = "fragments/product/quickViewLayout"; //Added for TPR-7417
 				String ZoomImagesPopup = "fragments/product/zoomImagesPopup";
 				String SizeGuidePopup = "fragments/product/sizeGuidePopup";
 				String ReviewsTab = "fragments/product/reviewsTab";
@@ -378,7 +379,14 @@ public interface ControllerConstants
 				public static final String N = "N";
 				public static final String OTHERSELLERS_PAGE_LIMIT = "othersellers.pageLimit";
 				public static final String VIEW_SELLERS = "viewSellers";
+				public static final String QUICK_VIEW = "quickView"; //Added for TPR-7417
 				public static final String PRODUCT_CODE = "productCode";
+
+				//CAR-327 starts here
+				public static final String SELLERID = "sellerId";
+				public static final String PRIMARYOFFERMESSAGEMAP = "primaryOfferMessageMap";
+				//CAR-327 ends here
+
 				public static final String SIZESELECTED = "sizeSelected";
 				public static final String BUYBOXUSSID = "buyboxussid";
 				public static final String ALLSELLERS = "allsellers";

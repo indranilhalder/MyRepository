@@ -27,32 +27,32 @@
  
     <!-- General setup -->
  		
- 		 <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+ 		<!--  <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
 		<property name="prefixPriority">
 			<map>
-				<!-- default priority is 0 -->
+				default priority is 0
 				<entry key="delist-seller" value="1" />		
 				<entry key="ussid-delist" value="2" />			
 			</map>
 		</property>
-	</bean>
+	</bean> -->
  
-    <bean id="baseDirectoryMarketplaceDelist" class="java.lang.String">
+    <!-- <bean id="baseDirectoryMarketplaceDelist" class="java.lang.String">
         <constructor-arg value="#{configurationService.configuration.getProperty('etail.delist.directory')}/marketplace-delisting" />
     </bean>
  
-    <!-- 1) Scan for files -->
+    1) Scan for files
     <file:inbound-channel-adapter id="batchFilesMarketplaceDelist" directory="#{baseDirectoryMarketplaceDelist}"
         filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
-    <!-- 2) move the file to processing and setup header -->
+    2) move the file to processing and setup header
     <file:outbound-gateway request-channel="batchFilesMarketplaceDelist" reply-channel="batchFilesMarketplaceDelistProc"
         directory="#{baseDirectoryMarketplaceDelist}/processing" delete-source-files="true" />
 
  
-  <!-- 3) transform csv to impex file -->
+  3) transform csv to impex file
  <int:service-activator input-channel="batchFilesHeader" output-channel="batchFilesTran" ref="batchTransformerTask"
 		method="execute" />
 	<bean id="batchTransformerTask" 
@@ -74,9 +74,9 @@
     </bean>   
  
    
-     <!-- Transformer converters mappings -->
+     Transformer converters mappings
     
-     <!-- Transformer for Seller Dlist Import -->
+     Transformer for Seller Dlist Import
     <bean id="batchMplDelistSellerConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="delist-seller"
@@ -87,9 +87,9 @@
     p:mapping="delist-seller"
     p:converter-ref="batchMplSellerInfoDelistSellerConverter"/>  
     
- 	 <!-- Converters -->
+ 	 Converters
  	
- 	<!-- Converter for Seller Delist Import --> 
+ 	Converter for Seller Delist Import 
        <bean id="batchMplDelistSellerConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}            	    
@@ -98,10 +98,10 @@
             </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{1};{2};1</value> <!-- TISSTRT-1609-Fix-->
+            <value>;{+0};{1};{2};1</value> TISSTRT-1609-Fix
         </property>	
         </bean>
-       <!-- CAR-292 starts Converter for SellerInfoModel of Seller Delist Import -->  
+       CAR-292 starts Converter for SellerInfoModel of Seller Delist Import  
        <bean id="batchMplSellerInfoDelistSellerConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.SellerDelistConverter">
        <property name="header">
             <value> 
@@ -115,19 +115,19 @@
             <value>;{+0};{+1};{2};{3};{4}</value>
         </property>	
         </bean>             
-        <!-- CAR-292 ends Converter for sellerinfomodel of Seller Delist Import -->   
+        CAR-292 ends Converter for sellerinfomodel of Seller Delist Import   
         
         
            
-         <!-- Transformer for Seller Dlist Import -->
+         Transformer for Seller Dlist Import
     <bean id="batchMplDelistUssidConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="ussid-delist"
     p:converter-ref="batchMplDelistUssidConverter"/>  
     
- 	 <!-- Converters -->
+ 	 Converters
  	
- 	<!-- Converter for Seller Delist Import --> 
+ 	Converter for Seller Delist Import 
        <bean id="batchMplDelistUssidConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.USSIDDelistConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}            	    
@@ -139,6 +139,6 @@
             <value>;{+0};{1};{2};{3}</value>
         </property>
         </bean>  
-     
+      -->
      
       </beans>

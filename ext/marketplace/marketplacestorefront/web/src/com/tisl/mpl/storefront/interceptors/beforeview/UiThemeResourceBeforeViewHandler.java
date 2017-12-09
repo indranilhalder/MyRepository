@@ -152,13 +152,9 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String useSocialLoginNative = configurationService.getConfiguration().getString("mpl.use.NativeSocialLogin", "N");
 		final String facebookAppId = configurationService.getConfiguration().getString("mpl.fb.appid", "NA");
 		final String googleAppId = configurationService.getConfiguration().getString("mpl.google.appid", "NA");
+		final String luxfacebookAppId = configurationService.getConfiguration().getString("lux.fb.appid", "NA");
+		final String luxgoogleAppId = configurationService.getConfiguration().getString("lux.google.appid", "NA");
 
-		//for New Social Login Stop
-		//For Luxury Gigya
-		final String luxuryGigyaAPIKey = configurationService.getConfiguration().getString(MessageConstants.LUXURY_GIGYA_APIKEY);
-		final String luxuryGigyaSocialLoginURL = configurationService.getConfiguration().getString(
-				MessageConstants.LUXURY_GIGYA_SOCIALLOGIN_URL);
-		final String isLuxuryGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_LUXURY_GIGYA);
 		//FOR Feedback survey
 		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
 		//for izooto |TPR-5812
@@ -216,15 +212,13 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.USE_NATIVE_API_SOCIAL, useSocialLoginNative);
 		modelAndView.addObject(ModelAttributetConstants.FB_API_KEY, facebookAppId);
 		modelAndView.addObject(ModelAttributetConstants.GOOGLE_API_KEY, googleAppId);
+		modelAndView.addObject(ModelAttributetConstants.FB_API_KEY_LUXURY, luxfacebookAppId);
+		modelAndView.addObject(ModelAttributetConstants.GOOGLE_API_KEY_LUXURY, luxgoogleAppId);
 		//for New Social Login Stop
 
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
-		//For Luxury Site
-		modelAndView.addObject(ModelAttributetConstants.LUXURY_GIGYA_API_KEY, luxuryGigyaAPIKey);
-		modelAndView.addObject(ModelAttributetConstants.LUXURY_GIGYA_SOCIAL_LOGIN_URL, luxuryGigyaSocialLoginURL);
-		modelAndView.addObject(ModelAttributetConstants.IS_LUXURY_GIGYA_ENABLED, isLuxuryGigyaEnabled);
 		//HTML minification toggle
 		modelAndView.addObject("minificationHTML", configurationService.getConfiguration().getString("minification.html"));
 		modelAndView.addObject(ModelAttributetConstants.FEED_BACK_SURVEY_URL, feedbackSurveyUrl);

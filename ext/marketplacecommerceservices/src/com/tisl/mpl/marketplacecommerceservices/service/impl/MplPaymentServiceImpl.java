@@ -47,6 +47,7 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.I18NService;
@@ -76,6 +77,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -94,6 +96,7 @@ import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
+import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
@@ -107,7 +110,9 @@ import com.tisl.mpl.data.MplPromotionData;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.PaymentService;
+import com.tisl.mpl.juspay.request.AddCardRequest;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
+import com.tisl.mpl.juspay.response.AddCardResponse;
 import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
@@ -318,8 +323,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		//getting the banks related to EMI
 		List<EMIBankModel> emiBankList = new ArrayList<EMIBankModel>();
-		final String emiCuttOffAmount = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.EMI_CUTOFF);
+		final String emiCuttOffAmount = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.EMI_CUTOFF);
 		Double emiThreshold = new Double(0.0);
 		if (null != emiCuttOffAmount)
 		{
@@ -366,14 +371,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						final EMITermRateData termDatas = new EMITermRateData();
 						termDatas.setTerm(termRate.getTermInMonths().toString());
-						termDatas.setInterestRate(String.format(MarketplacecommerceservicesConstants.FORMATONE,
-								termRate.getInterestRate()));
+						termDatas.setInterestRate(
+								String.format(MarketplacecommerceservicesConstants.FORMATONE, termRate.getInterestRate()));
 						final Double termInMonths = Double.valueOf(termRate.getTermInMonths().doubleValue());
 
 						//For Future: The below piece of code is written which may be used in the future
 						//termRate.getInterestRate().doubleValue() gives the interest rate percent. To get the interest rate per month, we divide by 1200
-						final Double interestRatePerMonth = Double.valueOf((termRate.getInterestRate().doubleValue())
-								/ MarketplacecommerceservicesConstants.MONTHDENO);
+						final Double interestRatePerMonth = Double
+								.valueOf((termRate.getInterestRate().doubleValue()) / MarketplacecommerceservicesConstants.MONTHDENO);
 						final Double emi = MplEMICalculator.emiCalculator(termInMonths, interestRatePerMonth, totalAmount);
 
 						final PriceData formattedEmi = getDiscountUtility().createPrice(cartModel, emi);
@@ -457,8 +462,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				//				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
-				//						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+
+				//Added for paytm integration
+				else if (StringUtils.isNotEmpty(orderStatusResponse.getPaymentMethodType())
+						&& orderStatusResponse.getPaymentMethodType().equalsIgnoreCase("WALLET"))
+				{
+					//saving the cartmodel for paytm
+					getModelService().save(setValueInPaytmPaymentInfo(cart, orderStatusResponse));
+					//						break;
+				}
 				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(orderStatusResponse.getBankEmi()))
 				{
 					//saving the cartmodel for EMI
@@ -533,8 +545,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//Setting fields of paymentTransactionEntry with Payment Gateway Responses for Wallet
 				if (MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey()))
 				{
-					final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
-							PaymentTransactionEntryModel.class);
+					final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+							.create(PaymentTransactionEntryModel.class);
 					//TODO:Change required when Order Ref No. is ready
 					if (StringUtils.isNotEmpty(orderStatusResponse.getOrderId()))
 					{
@@ -600,8 +612,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			//Check handled to remove concurrent scenario - TPR-629
 			getModelService().save(order);
-			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
-					&& null != orderStatusResponse.getCardResponse()
+			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) && null != orderStatusResponse.getCardResponse()
 					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
 			{
 				//setting as saved card
@@ -653,8 +664,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				final Date date = new Date();
 				final String codCode = getCodCodeGenerator().generate().toString();
 
-				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
-						PaymentTransactionEntryModel.class);
+				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+						.create(PaymentTransactionEntryModel.class);
 
 				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 				paymentTransactionEntry
@@ -685,7 +696,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 				else
 				{
-					LOG.error("PaymentInfo already available or order is Payment_Timeout.....not saving any more paymentTransactionEntry model");
+					LOG.error(
+							"PaymentInfo already available or order is Payment_Timeout.....not saving any more paymentTransactionEntry model");
 				}
 
 				if (null != abstractOrderModel.getPaymentInfo())
@@ -708,8 +720,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				if (null != abstractOrderModel.getTotalPriceWithConv()
 						&& abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 				{
-					paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv()
-							.doubleValue()));
+					paymentTransactionModel
+							.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
 					//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
 				}
 				//COD Payment transaction check
@@ -736,8 +748,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 				else if (null != abstractOrderModel.getPaymentInfo())
 				{
-					LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
-							+ abstractOrderModel.getPaymentInfo().getCode());
+					LOG.error(
+							"PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
+									+ abstractOrderModel.getPaymentInfo().getCode());
 				}
 				else
 				{
@@ -830,8 +843,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 				}
-				else if ((MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand()) || MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
-						.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())))
+				else if ((MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand())
+						|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
+								.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())))
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.AMEX);
 				}
@@ -885,8 +899,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else if (null != cart.getPaymentInfo())
 			{
-				LOG.error("Order already has payment info -- not saving debitCardPaymentInfoModel>>>"
-						+ cart.getPaymentInfo().getCode());
+				LOG.error(
+						"Order already has payment info -- not saving debitCardPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
 			}
 			else
 			{
@@ -1120,8 +1134,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else if (null != cart.getPaymentInfo())
 			{
-				LOG.error("Order already has payment info -- not saving creditCardPaymentInfoModel>>>"
-						+ cart.getPaymentInfo().getCode());
+				LOG.error(
+						"Order already has payment info -- not saving creditCardPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
 			}
 			else
 			{
@@ -1401,7 +1415,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param response
 	 * @return CartModel
 	 */
-	private AbstractOrderModel setValueInNetbankingPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response) //Changed to abstractOrderModel for TPR-629
+	private AbstractOrderModel setValueInNetbankingPaymentInfo(final AbstractOrderModel cart,
+			final GetOrderStatusResponse response) //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -1553,8 +1568,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					//calculating ratio of convenience charge for cart entry
 					final Double jusPayChargePercent = Double.valueOf(entryTotals / totalPrice);
 					final Double jusPayChargePerEntry = Double.valueOf(totalCharge.doubleValue() * jusPayChargePercent.doubleValue());
-					final Double formattedJusPayCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
-							jusPayChargePerEntry));
+					final Double formattedJusPayCharge = Double
+							.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT, jusPayChargePerEntry));
 					double appJusPayChargeForEachItem = 0.00D;
 					if (quantity > 0)
 					{
@@ -1624,8 +1639,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		else if (null != abstractOrderModel.getPaymentInfo())
 		{
-			LOG.error("Order already has payment info -- not saving juspayPaymentInfoModel and not attaching to abstractOrderModel>>>"
-					+ abstractOrderModel.getPaymentInfo().getCode());
+			LOG.error(
+					"Order already has payment info -- not saving juspayPaymentInfoModel and not attaching to abstractOrderModel>>>"
+							+ abstractOrderModel.getPaymentInfo().getCode());
 		}
 		else
 		{
@@ -1696,8 +1712,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					//calculating ratio of convenience charge for cart entry
 					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
 					final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
-					final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
-							codChargePerEntry));
+					final Double formattedCODCharge = Double
+							.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT, codChargePerEntry));
 					double appCODChargeForEachItem = 0.00D;
 					if (quantity > 0)
 					{
@@ -1816,6 +1832,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					final SavedCardModel saveNewCard = new SavedCardModel();
 					saveNewCard.setCardReferenceNumber(response.getCardResponse().getCardReference());
+					saveNewCard.setCardBinNumber(response.getCardResponse().getCardISIN());//TPR-7486
 					saveNewCard.setBillingAddress(address);
 					getModelService().save(saveNewCard);
 					savedCardList.add(saveNewCard);
@@ -1827,6 +1844,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				final Collection<SavedCardModel> saveNewCardList = new ArrayList<SavedCardModel>();
 				final SavedCardModel saveNewCard = getModelService().create(SavedCardModel.class);
 				saveNewCard.setCardReferenceNumber(response.getCardResponse().getCardReference());
+				saveNewCard.setCardBinNumber(response.getCardResponse().getCardISIN()); //TPR-7486
 				saveNewCard.setBillingAddress(address);
 				getModelService().save(saveNewCard);
 				saveNewCardList.add(saveNewCard);
@@ -1880,6 +1898,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					final SavedCardModel saveNewCard = new SavedCardModel();
 					saveNewCard.setCardReferenceNumber(response.getCardResponse().getCardReference());
+					saveNewCard.setCardBinNumber(response.getCardResponse().getCardISIN()); //TPR-7486
 					getModelService().save(saveNewCard);
 					savedCardList.add(saveNewCard);
 					customer.setSavedCard(savedCardList);
@@ -1890,6 +1909,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				final Collection<SavedCardModel> saveNewCardList = new ArrayList<SavedCardModel>();
 				final SavedCardModel saveNewCard = getModelService().create(SavedCardModel.class);
 				saveNewCard.setCardReferenceNumber(response.getCardResponse().getCardReference());
+				saveNewCard.setCardBinNumber(response.getCardResponse().getCardISIN()); //TPR-7486
 				getModelService().save(saveNewCard);
 				saveNewCardList.add(saveNewCard);
 				customer.setSavedCard(saveNewCardList);
@@ -1950,8 +1970,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 									final Double modeAmount = Double.valueOf(tranasctionEntry.getAmount().doubleValue());
 									final Double percentApportion = Double.valueOf((modeAmount.doubleValue() / totalAmount.doubleValue())
 											* MarketplacecommerceservicesConstants.PERCENTVALUE);
-									final Double formattedPercentApportion = Double.valueOf(String.format(
-											MarketplacecommerceservicesConstants.FORMAT, percentApportion));
+									final Double formattedPercentApportion = Double
+											.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT, percentApportion));
 									paymentModeApportionModel.setPaymentMode(paymentType);
 									paymentModeApportionModel.setApportionPercent(formattedPercentApportion);
 									percentTobeDeducted += formattedPercentApportion.doubleValue();
@@ -1967,10 +1987,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								}
 								else
 								{
-									final Double percentApportion = Double.valueOf(MarketplacecommerceservicesConstants.PERCENTVALUE
-											- percentTobeDeducted);
-									final Double formattedPercentApportion = Double.valueOf(String.format(
-											MarketplacecommerceservicesConstants.FORMAT, percentApportion));
+									final Double percentApportion = Double
+											.valueOf(MarketplacecommerceservicesConstants.PERCENTVALUE - percentTobeDeducted);
+									final Double formattedPercentApportion = Double
+											.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT, percentApportion));
 									paymentModeApportionModel.setPaymentMode(paymentType);
 									paymentModeApportionModel.setApportionPercent(formattedPercentApportion);
 									//try
@@ -2092,9 +2112,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, EtailNonBusinessExceptions //Additional parameters added for TPR-629
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData)
+			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions //Additional parameters added for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		//final MplPromoPriceData promoPriceData = new MplPromoPriceData();
@@ -2104,8 +2124,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//Reset Voucher Apportion
 			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()) && null != cartModel.getDiscounts().get(0)) //IQA for TPR-629
 			{
-				final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
-						(VoucherModel) cartModel.getDiscounts().get(0), cartModel); //Since only 1 voucher is applied to the cart and
+				final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
+						.getOrderEntryModelFromVouEntries((VoucherModel) cartModel.getDiscounts().get(0), cartModel); //Since only 1 voucher is applied to the cart and
 				//before promotion calculation only 1 discount will be present
 
 				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
@@ -2115,6 +2135,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+
 						//getModelService().save(entry);
 					}
 					getModelService().saveAll(entryList);
@@ -2139,8 +2166,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				if (CollectionUtils.isEmpty(emiBankList))
 				{
 					calculatePromotion(cartModel, null, cartData, null);
-					promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
+					promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
 				}
 			}
 
@@ -2175,9 +2202,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				promoPriceData.setCurrency(cartModel.getCurrency().getSymbol());
 				promoPriceData.setTotalPrice(cartData.getTotalPriceWithConvCharge());
 				promoPriceData.setConvCharge(cartData.getConvenienceChargeForCOD());
-				final PriceData totalvalExcConv = discountUtility.createPrice(cartModel, Double.valueOf(((cartData
-						.getTotalPriceWithConvCharge().getValue()).subtract(cartData.getConvenienceChargeForCOD().getValue()))
-						.toString()));
+				final PriceData totalvalExcConv = discountUtility.createPrice(cartModel, Double.valueOf(
+						((cartData.getTotalPriceWithConvCharge().getValue()).subtract(cartData.getConvenienceChargeForCOD().getValue()))
+								.toString()));
 
 				if (null != totalvalExcConv && null != totalvalExcConv.getFormattedValue())
 				{
@@ -2194,8 +2221,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//Reset Voucher Apportion
 			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) && null != orderModel.getDiscounts().get(0)) //IQA for TPR-629
 			{
-				final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
-						(VoucherModel) orderModel.getDiscounts().get(0), orderModel); //Since only 1 voucher is applied to the cart and
+				final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
+						.getOrderEntryModelFromVouEntries((VoucherModel) orderModel.getDiscounts().get(0), orderModel); //Since only 1 voucher is applied to the cart and
 				//before promotion calculation only 1 discount will be present
 
 				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
@@ -2205,6 +2232,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+
 						//getModelService().save(entry);
 					}
 					getModelService().saveAll(entryList);
@@ -2229,8 +2263,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				if (CollectionUtils.isEmpty(emiBankList))
 				{
 					calculatePromotion(null, orderModel, null, orderData);
-					promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
+					promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
 				}
 			}
 
@@ -2266,9 +2300,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				promoPriceData.setCurrency(orderModel.getCurrency().getSymbol());
 				promoPriceData.setTotalPrice(orderData.getTotalPriceWithConvCharge());
 				promoPriceData.setConvCharge(orderData.getConvenienceChargeForCOD());
-				final PriceData totalvalExcConv = discountUtility.createPrice(orderModel, Double.valueOf(((orderData
-						.getTotalPriceWithConvCharge().getValue()).subtract(orderData.getConvenienceChargeForCOD().getValue()))
-						.toString()));
+				final PriceData totalvalExcConv = discountUtility.createPrice(orderModel,
+						Double.valueOf(((orderData.getTotalPriceWithConvCharge().getValue())
+								.subtract(orderData.getConvenienceChargeForCOD().getValue())).toString()));
 
 				if (null != totalvalExcConv && null != totalvalExcConv.getFormattedValue())
 				{
@@ -2367,7 +2401,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			if (null != cartModel)
 			{
 				//When customer has cartModel
-				final Double deliveryCost = cartModel.getDeliveryCost();
+
+				//	Double deliveryCost = cartModel.getDeliveryCost();
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
@@ -2375,10 +2410,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				final Double subTotal = cartModel.getSubtotal();
 				final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
-				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
-						- cartDiscount.doubleValue());
 
-				cartModel.setDeliveryCost(deliveryCost);
+				final double deliveryCost = calculateDeliveryChargeForShipping(cartModel);
+
+				cartModel.setDeliveryCost(Double.valueOf(deliveryCost));
+
+				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost
+						- cartDiscount.doubleValue());
 
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
@@ -2398,8 +2436,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				final Double subTotal = orderModel.getSubtotal();
 				final Double orderDiscount = populateCartDiscountPrice(null, orderModel);
-				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
-						- orderDiscount.doubleValue());
+				final Double totalPriceAfterDeliveryCost = Double
+						.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue() - orderDiscount.doubleValue());
 
 				orderModel.setDeliveryCost(deliveryCost);
 
@@ -2423,6 +2461,29 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting calculatePromotion()========" + (endTime - startTime));
+	}
+
+	/**
+	 * @param cartModel
+	 */
+	private double calculateDeliveryChargeForShipping(final AbstractOrderModel cartModel)
+	{
+		// YTODO Auto-generated method stub
+		/**********
+		 * This is required for calculating tship and ship del charge separately
+		 *
+		 * ***********/
+		double deliveryCost = 0.0d;
+
+		for (final AbstractOrderEntryModel cartentrymodel : cartModel.getEntries())
+		{
+			if (null != cartentrymodel.getCurrDelCharge() && cartentrymodel.getCurrDelCharge().doubleValue() > 0.0d)
+			{
+				deliveryCost += cartentrymodel.getCurrDelCharge().doubleValue();
+			}
+		}
+		return deliveryCost;
+
 	}
 
 
@@ -2465,8 +2526,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			//					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
 		}
 
-		return getDiscountUtility()
-				.createPrice(abstractOrderModel, Double.valueOf(discount != null ? discount.doubleValue() : 0.0));
+		return getDiscountUtility().createPrice(abstractOrderModel,
+				Double.valueOf(discount != null ? discount.doubleValue() : 0.0));
 	}
 
 	/**
@@ -2665,8 +2726,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final ArrayList<JuspayEBSResponseDataModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseDataModel>();
 			final JuspayEBSResponseDataModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseDataModel.class);
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
-			final Map<String, Double> paymentMode = getSessionService().getAttribute(
-					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			final Map<String, Double> paymentMode = getSessionService()
+					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
 			if (null != paymentMode)
 			{
 				LOG.debug("updateAuditEntry method" + paymentMode);
@@ -2772,23 +2833,22 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						}
 						if (null != orderStatusResponse.getRiskResponse().getEbsRiskPercentage())
 						{
-							final Double scoreDouble = Double.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage()
-									.doubleValue());
+							final Double scoreDouble = Double
+									.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage().doubleValue());
 							juspayEBSResponseModel.setEbsRiskPercentage(scoreDouble.toString());
 						}
 						else
 						{
 							juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 						}
-						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-								&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus()) && !orderStatusResponse
+								.getRiskResponse().getEbsPaymentStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
 						{
 							setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
 						}
 						else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-								&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
-										MarketplacecommerceservicesConstants.DEFAULT_RISK))
+								&& !juspayEBSResponseModel.getEbsRiskPercentage()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEFAULT_RISK))
 						{
 							if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
 							{
@@ -3324,11 +3384,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3340,9 +3400,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3508,23 +3568,22 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						}
 						if (null != orderStatusResponse.getRiskResponse().getEbsRiskPercentage())
 						{
-							final Double scoreDouble = Double.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage()
-									.doubleValue());
+							final Double scoreDouble = Double
+									.valueOf(orderStatusResponse.getRiskResponse().getEbsRiskPercentage().doubleValue());
 							juspayEBSResponseModel.setEbsRiskPercentage(scoreDouble.toString());
 						}
 						else
 						{
 							juspayEBSResponseModel.setEbsRiskPercentage(MarketplacecommerceservicesConstants.DEFAULT_RISK);
 						}
-						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-								&& !orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
+						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus()) && !orderStatusResponse
+								.getRiskResponse().getEbsPaymentStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAID))
 						{
 							setEBSRiskStatus(orderStatusResponse.getRiskResponse().getEbsPaymentStatus(), juspayEBSResponseModel);
 						}
 						else if (StringUtils.isEmpty(orderStatusResponse.getRiskResponse().getEbsPaymentStatus())
-								&& !juspayEBSResponseModel.getEbsRiskPercentage().equalsIgnoreCase(
-										MarketplacecommerceservicesConstants.DEFAULT_RISK))
+								&& !juspayEBSResponseModel.getEbsRiskPercentage()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEFAULT_RISK))
 						{
 							if (MplPaymentAuditStatusEnum.PENDING.equals(auditEntry.getStatus()))
 							{
@@ -3719,7 +3778,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3754,7 +3813,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment :- " + paymentMode + " For Order ID:- "
 					+ orderModel.getCode());
 
-			if (!paymentModeFromInfo.equalsIgnoreCase("COD"))
+			if (!paymentModeFromInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
 			{
 				LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment Prepaid" + " For Order ID:- "
 						+ orderModel.getCode());
@@ -3773,12 +3832,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					LOG.info("Audit ID:- :- " + auditModel.getAuditId() + "for Order ID:- " + orderModel.getCode());
 					final PaymentService juspayService = new PaymentService();
 
-					juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-					juspayService.withKey(
-							getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
-							getConfigurationService().getConfiguration()
+					juspayService.setBaseUrl(
+							getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+					juspayService
+							.withKey(getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+							.withMerchantId(getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 					final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
@@ -3869,7 +3928,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3879,7 +3938,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			if (payInfo instanceof CODPaymentInfoModel)
 			{
-				return "COD";
+				return MarketplacecommerceservicesConstants.COD;
 			}
 			else if (payInfo instanceof CreditCardPaymentInfoModel)
 			{
@@ -3897,6 +3956,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				return "EMI";
 			}
+			//Paytm Changes
+			else if (payInfo instanceof ThirdPartyWalletInfoModel)
+			{
+				if (StringUtils.isNotEmpty(((ThirdPartyWalletInfoModel) payInfo).getProviderName())
+						&& "PAYTM".equalsIgnoreCase(((ThirdPartyWalletInfoModel) payInfo).getProviderName()))
+				{
+					return "PAYTM";
+				}
+				else
+				{
+					return "CC";
+				}
+			}
 			else
 			{
 				return "CC";
@@ -3910,7 +3982,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3943,8 +4015,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 				for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
 				{
-					paymentTransactionEntryList = getMplPaymentTransactionService().createPaymentTranEntryFromSubmitOrderJob(
-							orderStatusResponse, order, entry, paymentTransactionEntryList);
+					paymentTransactionEntryList = getMplPaymentTransactionService()
+							.createPaymentTranEntryFromSubmitOrderJob(orderStatusResponse, order, entry, paymentTransactionEntryList);
 				}
 				payTranModel = getMplPaymentTransactionService().createPaymentTranFromSubmitOrderJob(order, orderStatusResponse,
 						paymentTransactionEntryList);
@@ -3953,8 +4025,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			order.setPaymentTransactions(paymentTransactionList);
 			getModelService().save(order);
-			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE)
-					&& null != orderStatusResponse.getCardResponse()
+			if (saveCard.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE) && null != orderStatusResponse.getCardResponse()
 					&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardReference()))
 			{
 				//setting as saved card
@@ -3974,7 +4045,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -3994,8 +4065,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				final Date date = new Date();
 				final String codCode = getCodCodeGenerator().generate().toString();
 
-				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
-						PaymentTransactionEntryModel.class);
+				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+						.create(PaymentTransactionEntryModel.class);
 
 				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 				paymentTransactionEntry
@@ -4041,9 +4112,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
 				}
 
-				if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
-						&& paymentTransactionEntryList.get(0).getTransactionStatus()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus()) && paymentTransactionEntryList
+						.get(0).getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
 					paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 				}
@@ -4682,8 +4752,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
 					.create(PaymentTransactionEntryModel.class);
-			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-"
-					+ System.currentTimeMillis());
+			paymentTransactionEntry
+					.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-" + System.currentTimeMillis());
 			paymentTransactionEntry.setAmount(BigDecimal.valueOf(transactionAmount.doubleValue()));
 			paymentTransactionEntry.setTime(date);
 			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
@@ -4713,8 +4783,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				paymentTransactionModel.setInfo(abstractOrderModel.getPaymentInfo());
 			}
 
-			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-"
-					+ System.currentTimeMillis());
+			paymentTransactionModel
+					.setCode(MarketplacecommerceservicesConstants.MRUPEE + "-" + refernceCode + "-" + System.currentTimeMillis());
 
 			paymentTransactionModel.setRequestToken(refernceCode);
 
@@ -4726,9 +4796,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(transactionAmount.doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
 
-			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
-					&& paymentTransactionEntryList.get(0).getTransactionStatus()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus()) && paymentTransactionEntryList
+					.get(0).getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 			{
 				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
@@ -4747,8 +4816,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			else if (null != abstractOrderModel.getPaymentInfo())
 			{
-				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
-						+ abstractOrderModel.getPaymentInfo().getCode());
+				LOG.error(
+						"PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
+								+ abstractOrderModel.getPaymentInfo().getCode());
 			}
 			else
 			{
@@ -4849,11 +4919,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Override
 	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel)
 	{
-		Double totalRefundAmount = 0d;
+		Double totalRefundAmount = Double.valueOf(0.0);
 		PaymentTransactionModel paymentTransactionModel = null;
 		for (final OrderEntryModel orderEntry : orderEntryModel)
 		{
-			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
+			//H2 Priority Sprint1
+			final Double chargeBack = orderEntry.getChargeback() != null ? orderEntry.getChargeback() : NumberUtils.DOUBLE_ZERO;
+			totalRefundAmount = Double.valueOf((orderEntry.getNetAmountAfterAllDisc().doubleValue() - chargeBack.doubleValue()));
 		}
 
 
@@ -4867,74 +4939,99 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				try
 				{
-					paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
-							PaymentTransactionType.RETURN, uniqueRequestId);
-					if (null != paymentTransactionModel)
+					if (totalRefundAmount.doubleValue() > 0)
 					{
-						mplJusPayRefundService
-								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-						for (final OrderEntryModel orderEntry : orderEntryModel)
+						paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
+								PaymentTransactionType.RETURN, uniqueRequestId);
+						if (null != paymentTransactionModel)
 						{
-
-							// If CosignmentEnteries are present then update OMS with
-							// the state.
-							ConsignmentStatus newStatus = null;
-							if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+							mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
+									paymentTransactionModel);
+							for (final OrderEntryModel orderEntry : orderEntryModel)
 							{
-								// ConsignmentModel consignmentModel = orderEntry
-								// .getConsignmentEntries().iterator().next()
-								// .getConsignment();
-								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
-								{
-									newStatus = ConsignmentStatus.RETURN_COMPLETED;
-								}
-								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
-								{
-									newStatus = ConsignmentStatus.REFUND_INITIATED;
-									final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
-											RefundTransactionMappingModel.class);
-									refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-									refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
-									refundTransactionMappingModel.setCreationtime(new Date());
-									refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
-									refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
-									getModelService().save(refundTransactionMappingModel);
-								}
-								else
-								{
-									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-								}
-								// getModelService().save(consignmentModel);
-								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-										orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
+								//H2 Priority Sprint1
+								final Double chargeBack = orderEntry.getChargeback() != null ? orderEntry.getChargeback()
+										: NumberUtils.DOUBLE_ZERO;
 
-								//Start TISPRD-871
-								if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+								// If CosignmentEnteries are present then update OMS with
+								// the state.
+								ConsignmentStatus newStatus = null;
+								if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
 								{
-									orderEntry.setJuspayRequestId(uniqueRequestId);
-									getModelService().save(orderEntry);
+									// ConsignmentModel consignmentModel = orderEntry
+									// .getConsignmentEntries().iterator().next()
+									// .getConsignment();
+									if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+									{
+										newStatus = ConsignmentStatus.RETURN_COMPLETED;
+									}
+									else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+									{
+										newStatus = ConsignmentStatus.REFUND_INITIATED;
+										final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+												.create(RefundTransactionMappingModel.class);
+										refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+										refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+										refundTransactionMappingModel.setCreationtime(new Date());
+										refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+										refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+										getModelService().save(refundTransactionMappingModel);
+									}
+									else
+									{
+										newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+									}
+									// getModelService().save(consignmentModel);
+									mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+											orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
+
+									//Start TISPRD-871
+									if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+									{
+										orderEntry.setJuspayRequestId(uniqueRequestId);
+										getModelService().save(orderEntry);
+									}
 								}
 							}
+						}
+						else
+						{
+
+							//TISSIT-1801
+							LOG.error("Manual Refund Failed");
+							for (final OrderEntryModel orderEntry : orderEntryModel)
+							{
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+							}
+
+							paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(
+									orderEntryModel.get(0).getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN,
+									"NO Response FROM PG", uniqueRequestId);
+							mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
+									paymentTransactionModel);
+							//TISSIT-1801
+
 						}
 					}
 					else
 					{
-
-						//TISSIT-1801
-						LOG.error("Manual Refund Failed");
 						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
-							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-									orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+							final ConsignmentStatus conStatus = orderEntry.getConsignmentEntries().iterator().next().getConsignment()
+									.getStatus();
+							if (conStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
+							{
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.CLOSED_ON_CANCELLATION, null);
+							}
+							else
+							{
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.RETURN_COMPLETED, null);
+							}
+
 						}
-
-						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
-								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
-								uniqueRequestId);
-						mplJusPayRefundService
-								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-						//TISSIT-1801
-
 					}
 				}
 				catch (final Exception e)
@@ -4948,8 +5045,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
 
 						// Making RTM entry to be picked up by webhook job
-						final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
-								RefundTransactionMappingModel.class);
+						final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+								.create(RefundTransactionMappingModel.class);
 						refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
 						refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 						refundTransactionMappingModel.setCreationtime(new Date());
@@ -4974,8 +5071,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							PaymentTransactionType.RETURN, uniqueRequestId1);
 					if (null != paymentTransactionModel)
 					{
-						mplJusPayRefundService
-								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
+								paymentTransactionModel);
 						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
 							// If CosignmentEnteries are present then update OMS with
@@ -5024,11 +5121,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 									orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 						}
-						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
-								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
-								uniqueRequestId);
-						mplJusPayRefundService
-								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(
+								orderEntryModel.get(0).getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN,
+								"NO Response FROM PG", uniqueRequestId);
+						mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
+								paymentTransactionModel);
 					}
 				}
 				catch (final Exception e)
@@ -5150,9 +5247,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		if (null != baseStoreService.getCurrentBaseStore())
 		{
-			orderModel.setConvenienceCharges(Double.valueOf(null != baseStoreService.getCurrentBaseStore()
-					.getConvenienceChargeForCOD() ? baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD().longValue()
-					: 0.0));
+			orderModel
+					.setConvenienceCharges(Double.valueOf(null != baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD()
+							? baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
 		}
 		else
 		{
@@ -5160,9 +5257,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-		paymentInfo.put("COD", orderModel.getConvenienceCharges());
+		paymentInfo.put(MarketplacecommerceservicesConstants.COD, orderModel.getConvenienceCharges());
 		sessionService.setAttribute("paymentModes", paymentInfo);
-		sessionService.setAttribute("paymentModeForPromotion", "COD");
+		sessionService.setAttribute("paymentModeForPromotion", MarketplacecommerceservicesConstants.COD);
 		getModelService().save(codPaymentInfoModel);
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
@@ -5179,5 +5276,151 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
 
+	}
+
+	//TPR-7448
+	@Override
+	public AddCardResponse saveAndGetCardReferenceNo(final AddCardRequest addCardRequest) throws Exception
+	{
+		final PaymentService juspayService = new PaymentService();
+
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				.withMerchantId(
+						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+		return juspayService.saveAndGetCardReferenceNo(addCardRequest);
+	}
+
+	//TPR-7448
+	@Override
+	public AddCardResponse getCurrentCardReferenceNo(final String cardToken, final String email, final String customerId)
+			throws Exception
+	{
+		final AddCardRequest addCardRequest = new AddCardRequest();
+		addCardRequest.setCustomerEmail(email);
+		addCardRequest.setCustomerId(customerId);
+		addCardRequest.setToken(cardToken);
+		final AddCardResponse addCardResponse = saveAndGetCardReferenceNo(addCardRequest);
+		return addCardResponse;
+	}
+
+	//TPR-7448
+	@Override
+	public void rmvJuspayCardStatusForCustomer(final String customerId)
+	{
+		try
+		{
+			//Removing card reference on completion
+			final JuspayCardStatusModel juspayCardStatusModel = new JuspayCardStatusModel();
+			juspayCardStatusModel.setCustomerId(customerId);
+			final List<JuspayCardStatusModel> juspayCardStatusModelList = flexibleSearchService
+					.getModelsByExample(juspayCardStatusModel);
+			modelService.removeAll(juspayCardStatusModelList);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			LOG.error("In rmvJuspayCardStatusForCustomer nothing to remove for the customer:" + customerId);
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			LOG.error("In rmvJuspayCardStatusForCustomer some issue occured customer:" + customerId);
+		}
+	}
+
+	//TPR-7448
+	@Override
+	public JuspayCardStatusModel getJuspayCardStatusForCustomer(final String customerId)
+	{
+		JuspayCardStatusModel juspayCardStatusModel = null;
+		try
+		{
+			//Removing card reference on completion
+			final JuspayCardStatusModel juspayCardStatusModelNew = new JuspayCardStatusModel();
+			juspayCardStatusModelNew.setCustomerId(customerId);
+			juspayCardStatusModel = flexibleSearchService.getModelByExample(juspayCardStatusModelNew);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			juspayCardStatusModel = new JuspayCardStatusModel();
+			LOG.error("In rmvJuspayCardStatusForCustomer nothing to remove for the customer:" + customerId);
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			rmvJuspayCardStatusForCustomer(customerId);
+			juspayCardStatusModel = new JuspayCardStatusModel();
+			LOG.error("In rmvJuspayCardStatusForCustomer some issue occured customer:" + customerId);
+		}
+		return juspayCardStatusModel;
+		
+	}	
+	/**
+	 * Added for paytm integration
+	 *
+	 * @param cart
+	 * @param response
+	 * @return CartModel
+	 */
+	private AbstractOrderModel setValueInPaytmPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
+	{
+		try
+		{
+			//creating NetbankingPaymentInfoModel
+			final ThirdPartyWalletInfoModel nbPaymentInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
+
+			if (StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				nbPaymentInfoModel.setCode("PAYTM_" + cart.getGuid());//TODO::Setting like this until it is finalized
+			}
+			else
+			{
+				//nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());		//Erroneous code fixed
+				nbPaymentInfoModel.setCode("DUMMY_PAYTM_" + System.currentTimeMillis());
+			}
+			final UserModel user = cart.getUser();
+			if (null != user)
+			{
+				nbPaymentInfoModel.setUser(user);
+				if (StringUtils.isNotEmpty(user.getName()))
+				{
+					nbPaymentInfoModel.setWalletOwner(user.getName());
+				}
+				else
+				{
+					nbPaymentInfoModel.setWalletOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
+				}
+			}
+			nbPaymentInfoModel.setProviderName("PAYTM");
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
+			{
+				//saving the nbPaymentInfoModel
+				getModelService().save(nbPaymentInfoModel);
+
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(nbPaymentInfoModel);
+				cart.setPaymentAddress(cart.getDeliveryAddress());
+			}
+			else if (null != cart.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info -- not saving nbPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error(ERROR_PAYMENT + cart.getCode());
+			}
+
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Exception while saving netbanking payment info with " + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//returning the cart
+		return cart;
 	}
 }

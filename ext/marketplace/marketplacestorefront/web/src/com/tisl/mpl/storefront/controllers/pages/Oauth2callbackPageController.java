@@ -64,7 +64,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
-import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -101,66 +100,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private static final String OAuth_2_CMS_PAGE = "oauth2callback";
 	private HttpSessionRequestCache httpSessionRequestCache;
 
-	@Resource(name = "GigyaService")
-	private GigyaService gigyaservice;
-
-	@Resource(name = "configurationService")
-	private ConfigurationService configurationService;
-
 	@Autowired
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
-	private String gigyaUID;
-	private String signature;
-	private String timestamp;
-
-
-	public GigyaService getGigyaservice()
-	{
-		return gigyaservice;
-	}
-
-	public void setGigyaservice(final GigyaService gigyaservice)
-	{
-		this.gigyaservice = gigyaservice;
-	}
-
-
-	/**
-	 * @return the gigyaUID
-	 */
-	public String getGigyaUID()
-	{
-		return gigyaUID;
-	}
-
-	/**
-	 * @param gigyaUID
-	 *           the gigyaUID to set
-	 */
-	public void setGigyaUID(final String gigyaUID)
-	{
-		this.gigyaUID = gigyaUID;
-	}
-
-	public String getSignature()
-	{
-		return signature;
-	}
-
-	public void setSignature(final String signature)
-	{
-		this.signature = signature;
-	}
-
-	public String getTimestamp()
-	{
-		return timestamp;
-	}
-
-	public void setTimestamp(final String timestamp)
-	{
-		this.timestamp = timestamp;
-	}
 
 	@Resource(name = ModelAttributetConstants.HTTP_SESSION_REQUEST_CACHE)
 	public void setHttpSessionRequestCache(final HttpSessionRequestCache accHttpSessionRequestCache)
@@ -170,6 +111,9 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	@Autowired
 	private CartFacade cartFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	protected static final String REDIRECT_URL_CHOOSE_DELIVERY_METHOD = "/checkout/multi/delivery-method/choose";
 
@@ -334,30 +278,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				form.setLastName(lName);
 			}
 
-			if (StringUtils.isNotEmpty(uid))
-			{
-
-
-				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
-
-
-				setGigyaUID(decodedUid);
-			}
-			if (StringUtils.isNotEmpty(signature))
-			{
-
-				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
-
-
-				setSignature(decodedSignature);
-			}
-			if (StringUtils.isNotEmpty(timestamp))
-			{
-
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
-
-				setTimestamp(decodedTimestamp);
-			}
 			if (StringUtils.isNotEmpty(gender))
 			{
 				form.setGender(gender);
@@ -382,12 +302,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				storeReferer(referer, request, response);
 			}
 
-			if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
-			{
-				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
-			}
-
-			return "Invalid Signature";
+			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -683,15 +598,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	{
 
-		/*
-		 * Closed as it was needed for Gigya Authentication
-		 *
-		 * @RequestParam(ModelAttributetConstants.UID) final String uid,
-		 *
-		 * @RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
-		 *
-		 * @RequestParam(ModelAttributetConstants.SIGNATURE) final String signature
-		 */
 		try
 		{
 			LOG.debug("Method socialLogin, REFERER " + referer);
@@ -723,20 +629,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			{
 				form.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 			}
-			//Closed as it was needed for Gigya Authentication
-			/*
-			 * if (StringUtils.isNotEmpty(uid)) { final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
-			 * setGigyaUID(decodedUid); } if (StringUtils.isNotEmpty(signature)) {
-			 * 
-			 * final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
-			 * 
-			 * 
-			 * setSignature(decodedSignature); } if (StringUtils.isNotEmpty(timestamp)) {
-			 * 
-			 * final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
-			 * 
-			 * setTimestamp(decodedTimestamp); }
-			 */
 
 
 			String socialLogin = "";
@@ -756,13 +648,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			{
 				storeReferer(referer, request, response);
 			}
-			//Closed as it was needed for Gigya Authentication
-			//if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
-			//	{
 			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
-			//	}
-
-			//	return "Invalid Signature";
 		}
 		catch (final EtailBusinessExceptions e)
 		{

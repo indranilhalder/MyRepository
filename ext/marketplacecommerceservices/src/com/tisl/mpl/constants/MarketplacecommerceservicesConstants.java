@@ -1,8 +1,8 @@
 /*
 
  *
- * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
+ * Copyright (c) 2000-2013 hybris AG
  *
  * This software is the confidential and proprietary information of hybris
  * ("Confidential Information"). You shall not disclose such Confidential
@@ -35,6 +35,20 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 { "PMD", "deprecation" })
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
+
+	//TPR-7408 starts here
+	public static final String COSTCENTREONE = "promoCostCentreOnePercentage".intern();
+	public static final String COSTCENTRETWO = "promoCostCentreTwoPercentage".intern();
+	public static final String COSTCENTRETHREE = "promoCostCentreThreePercentage".intern();
+
+	public static final String PRODUCTPROMOCOSTCENTREONE = "promoProductCostCentreOnePercentage".intern();
+	public static final String PRODUCTPROMOCOSTCENTRETWO = "promoProductCostCentreTwoPercentage".intern();
+	public static final String PRODUCTPROMOCOSTCENTRETHREE = "promoProductCostCentreThreePercentage".intern();
+	public static final String CARTPROMOCOSTCENTREONE = "promoCartCostCentreOnePercentage".intern();
+	public static final String CARTPROMOCOSTCENTRETWO = "promoCartCostCentreTwoPercentage".intern();
+	public static final String CARTPROMOCOSTCENTRETHREE = "promoCartCostCentreThreePercentage".intern();
+	//TPR-7408 ends here
+
 
 	//TPR-6272 starts here IQA
 	public static final String COMMACONSTANT = ",";
@@ -386,6 +400,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String articleSKUID = "articleSKUID";
 
 	public static final String USER_NOT_FOUND = "No user found for the current Email ID";
+
+	public static final String OFFER_NOT_FOUND = "No offer found in the system";
+
 	public static final String WISHLIST_NOT_FOUND = "No wishlist found for the current User";
 	public static final String PRODUCT_NOT_FOUND = "Product not found in the wishlist";
 	public static final String WISHLIST_FOUND_EMPTY = "Wishlist is Empty";
@@ -1172,6 +1189,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CODE = "code".intern();
 	public static final String MPL = "mpl".intern();
 	public static final String FREE = "Free".intern();
+	public static final String FORCED = "Forced".intern();
 	public static final String JUSPAYMERCHANTKEYNOTFOUND = "No juspay MerchantKey is defined in local properties";
 	public static final String JUSPAYMERCHANTIDNOTFOUND = "No juspay MerchantId is defined in local properties";
 	public static final String FACEBOOK = "Facebook";
@@ -1905,6 +1923,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
 
+	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+	public static final String PROMOURL = "promoUrl".intern();
+	public static final String BUNDLEPROMOLINKTEXT = "bundlePromoLinkText".intern();
+
+
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
 	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
@@ -2279,8 +2302,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PR-15 (Rainbow)
 	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
 
-	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
-	public static final String KM = "km";
+	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP".intern();
+	public static final String KM = "km".intern();
+	public final static String PINCODE_MODEL_PDP = "PincodeModelPDP".intern();
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId} in ("
+			.intern();
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE2 = ") and {pos.active}=?active".intern();
+	public static final String POS_SLAVEID = "slaveId".intern();
+	public static final String POS_ACTIVE = "active".intern();
+	public static final String STORE_DISPLAY_PDP = "pdp.store.display".intern();
+
+	public static final String PAYTM = "Paytm".intern();//Paytm
 
 	//Return Window Increase
 	public static final String FetchConsignmentList = "SELECT {c.pk} FROM {Order as o}, {Consignment as c}, {EnumerationValue as en} WHERE {c.order} ={o.pk} and {c.status} = {en.pk} and {en.code}='DELIVERED' and {o.versionid} IS NULL AND {o.type}  ='SubOrder' AND {c.code} IN (?code)";
@@ -2297,6 +2329,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
+
+	public static final String REFUNDCLEARORDERQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.creationtime} >= ?startTime and {o.status}={os.pk} and {os.code} IN (?statusOne, ?statusTwo) and {o.type}=?type"
+			.intern();
+	public static final String ORDERSTATUSONE = "statusOne".intern();
+	public static final String ORDERSTATUSTWO = "statusTwo".intern();
+	public static final String REFUNDCLEARWEBHHOKQUERY = "select {js.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId and {js.status}='CHARGED' order by {js.creationtime} desc"
+			.intern();
+
+	public static final String REFUNDEVENTSTAUSJUSPAY = "webhook.refund.eventname";
+
+	public static final String ORDERFETCH_STARTTIME = "marketplace.refundorder.fetchStartTime".intern();
+
+	public static final String STARTTIME = "startTime".intern();
+	public static final String FINISHED = "FINISHED";
+	//SDI-2924
+	public static final String FPC_DURATION_SKIP = "mpl.forwardpaymentcleanup.duration.skip";
+	public static final String FPC_DURATION_THRESHOLD = "mpl.forwardpaymentcleanup.duration.threshold";
+	public static final String FPC_DURATION_OVERLAP = "mpl.forwardpaymentcleanup.duration.overlap";
 	//PR-4 || Refund sms cron job
 	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
 	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
@@ -2307,4 +2358,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CRM_LO = "L0C1".intern();
 	public static final String CRM_FILE_UPLOAD_PATH = "crm.fileupload.path";
+
+	//TPR-7448
+	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String JUSPAYCARDSTATUSQRY = "select {pk} from {JuspayCardStatus} where {guid}=?guid and {customerId}=?customerId order by {creationtime} desc";
+	public static final String CARDREFERENCENO = "cardRefNo".intern();
+
+
+
+	public static final String RECEIVED = "RECEIVED";
+	public static final String SENT = "SENT";
+
 }

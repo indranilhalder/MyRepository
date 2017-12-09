@@ -50,7 +50,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -107,7 +107,8 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 						.getString("mpl.homefurnishing.category.volume", "").split(","));
 
 				final Collection<CategoryModel> superCategories = pcmVariantModel.getSupercategories();
-				if (CollectionUtils.isNotEmpty(superCategories) && CollectionUtils.isNotEmpty(lengthCategoryList))
+				if (CollectionUtils.isNotEmpty(superCategories) && CollectionUtils.isNotEmpty(lengthCategoryList)
+						&& CollectionUtils.isNotEmpty(weightCategoryList) && CollectionUtils.isNotEmpty(volumeCategoryList))
 				{
 					for (final CategoryModel primaryCategory : superCategories)
 					{

@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.basecommerce.constants.GeneratedBasecommerceConstants;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.jalo.flexiblesearch.FlexibleSearchException;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
@@ -18,6 +19,7 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -40,7 +42,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String ACTIVE = "active";
 
@@ -48,7 +50,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String WHERE = "} WHERE {";
 
@@ -56,7 +58,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String SELECT_PK_FROM = "SELECT {PK} FROM {";
 
@@ -83,7 +85,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao#getAllGeocodedPOS(de.hybris.platform.storelocator.GPS,
 	 * double)
@@ -101,7 +103,7 @@ public class PincodeDaoImpl implements PincodeDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao#getAllGeocodedPOS(de.hybris.platform.storelocator.GPS,
 	 * double)
@@ -120,8 +122,9 @@ public class PincodeDaoImpl implements PincodeDao
 	@Override
 	public PincodeModel getLatAndLongForPincode(final String pincode)
 	{
-/*		PincodeModel pincodeModel = null;
-*/	//Sonar Issue 
+		/*
+		 * PincodeModel pincodeModel = null;
+		 *///Sonar Issue
 		try
 		{
 			final StringBuilder query = new StringBuilder(50);
@@ -208,9 +211,9 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(200);
 			query.append(SELECT_PK_FROM.intern()).append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append(WHERE.intern())
-					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL)
-					.append(LATITUDE).append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {")
-					.append(LONGITUDE).append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ");
+					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
+					.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
+					.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ");
 			//
 			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -225,10 +228,10 @@ public class PincodeDaoImpl implements PincodeDao
 			throw new PointOfServiceDaoException("Could not fetch locations from database, due to :" + e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * Get the Details of the given pincode
-	 * 
+	 *
 	 * @param pincode
 	 * @return PincodeModel
 	 */
@@ -242,7 +245,7 @@ public class PincodeDaoImpl implements PincodeDao
 			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
 			flexQuery.addQueryParameter("pincode", pincode);
 			flexQuery.addQueryParameter(ACTIVE.intern(), "Y");
-			if(LOG.isDebugEnabled())
+			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Pincode Query String ::::::::: " + query);
 			}
@@ -251,7 +254,7 @@ public class PincodeDaoImpl implements PincodeDao
 			{
 				return result.getResult();
 			}
-		
+
 		}
 		catch (final FlexibleSearchException exception)
 		{
@@ -288,10 +291,11 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
 			final StringBuilder query = new StringBuilder(280);
 			query.append(SELECT_PK_FROM.intern()).append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append(WHERE.intern())
-			.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
-			.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
-			.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
-			.append("} = ?sellerId AND {").append(ACTIVE.intern()).append("} = ?active AND {isReturnable}=?isReturnToStoreAllowed");
+					.append(LATITUDE).append(IS_NOT_NULL).append(LONGITUDE).append(IS_NOT_NULL).append(LATITUDE)
+					.append("} >= ?latMin AND {").append(LATITUDE).append("} <= ?latMax AND {").append(LONGITUDE)
+					.append("} >= ?lonMin AND {").append(LONGITUDE).append("} <= ?lonMax ").append(" AND {sellerid")
+					.append("} = ?sellerId AND {").append(ACTIVE.intern())
+					.append("} = ?active AND {isReturnable}=?isReturnToStoreAllowed");
 			//
 			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -301,7 +305,7 @@ public class PincodeDaoImpl implements PincodeDao
 			fQuery.addQueryParameter("lonMin", lonMin);
 			fQuery.addQueryParameter("sellerId", sellerId);
 			fQuery.addQueryParameter("isReturnToStoreAllowed", MarketplacecommerceservicesConstants.RETURNABLE);
-			/*fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT);*/
+			/* fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT); */
 			fQuery.addQueryParameter(ACTIVE.intern(), MarketplacecommerceservicesConstants.ACTIVE);
 			return fQuery;
 		}
@@ -345,7 +349,42 @@ public class PincodeDaoImpl implements PincodeDao
 
 	}
 
+	/**
+	 * This method wrapped POS data for given selllerId and SlaveId
+	 *
+	 * @return POS object
+	 */
+	@Override
+	public List<PointOfServiceModel> findPOSForSellerAndSlave(final List<String> slaveIds)
+	{
+		LOG.debug("in dao findPOSForSellerAndSlave ");
+		final StringBuilder query = new StringBuilder();
+		try
+		{
+			LOG.debug("call to commerse db search for stores given sellerId and SlaveId ");
+			final String slaveStrings = slaveIds.stream().map((s) -> "'" + s + "'").collect(Collectors.joining(", "));
+			//create the flexible search query
+			query.append(MarketplacecommerceservicesConstants.POS_QUERY_FOR_SELLER_AND_SLAVE.toString());
+			query.append(slaveStrings);
+			query.append(MarketplacecommerceservicesConstants.POS_QUERY_FOR_SELLER_AND_SLAVE2.toString());
 
+			final FlexibleSearchQuery posQuery = new FlexibleSearchQuery(query);
+			posQuery.addQueryParameter(MarketplacecommerceservicesConstants.POS_ACTIVE, MarketplacecommerceservicesConstants.ACTIVE);
+			return flexibleSearchService.<PointOfServiceModel> search(posQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 * @return the flexibleSearchService

@@ -123,6 +123,10 @@ ACC.singlePageCheckout = {
 	},
 	//Function used to fetch edit address form. 
 	getEditAddress:function(element,event){
+		/*TISPRNXIII-54*/
+    	if(typeof utag !="undefined"){
+			utag.link({ link_text : 'edit_address' ,event_type : 'edit_address_clicked'});
+		}
 		event.preventDefault();
 		//The ajax loader is loaded here and hidden in last line of showEditAddressDetails.jsp
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -134,6 +138,10 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.hideAjaxLoader();
 			data={displaymessage:"Network error occured",type:"error"};
 			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
+			/*TISPRNXIII-57*/
+        	if(typeof utag !="undefined"){
+				utag.link({ error_type : 'address_error'});
+			}
 		});
         
         xhrResponse.done(function(data) {
@@ -172,12 +180,20 @@ ACC.singlePageCheckout = {
 	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				/*TISPRNXIII-57*/
+	        	if(typeof utag !="undefined"){
+					utag.link({ error_type : 'address_error'});
+				}
 			});
 	        
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
 	            if (jqXHR.responseJSON) {
 	                if(data.type!="response" && data.type!="confirm")
 	                {
+	                	/*TISPRNXIII-57*/
+	    	        	if(typeof utag !="undefined"){
+	    					utag.link({ error_type : 'address_error'});
+	    				}
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
 	                else if(data.type=="confirm")
@@ -197,9 +213,9 @@ ACC.singlePageCheckout = {
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
 		        	$("#selectedAddressMessage").hide();
 		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
-		        	//TISPRDT-2353
+		        	/*TISPRNXIII-55*/
 		        	if(typeof utag !="undefined"){
-						utag.link({ link_text : 'edit_address_saved' ,event_type : 'edit_address_saved'});
+						utag.link({ link_text : 'save_edited_address' ,event_type : 'save_edited_address_clicked'});
 					}
 		        	//calling tealium 
 		            $("#checkoutPageName").val("Choose Your Delivery Options");
@@ -1891,6 +1907,7 @@ ACC.singlePageCheckout = {
 	    	      	}*/
         			//If data.validation=="success" set prePaymentValidationDone to true
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
+        			recalculateCart();
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
 //        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
@@ -1914,8 +1931,20 @@ ACC.singlePageCheckout = {
 //    	        		}
 //        	        });
         			
-        			//Populating sub-total which is subject to change on order item removal
-        			$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+        			//CAR-343 Starts
+        			try {
+    					var subTotalPrice=jQuery.parseJSON(data.subTotalPrice);
+    					//Populating sub-total which is subject to change on order item removal
+        				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(subTotalPrice.formattedValue);
+    				}
+    				catch(e) 
+    				{
+    					console.log("Subtotal JS Exception="+e);
+    				}
+    				//Populating sub-total which is subject to change on order item removal
+        			//$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+    				//CAR-343 Ends
+        			
         			//alert("Saved or New"+savedOrNew);
         			if(savedOrNew=="savedCard")
         			{
@@ -2010,11 +2039,39 @@ ACC.singlePageCheckout = {
         			$("#selectedReviewOrderDivId").show();
     				callOnReady();//This method is in showAddPaymentMethod.jsp
         			
+    				//CAR-343 Starts
+    				try {
+    					var subTotalPrice=jQuery.parseJSON(data.subTotalPrice);
+    					//Populating sub-total which is subject to change on order item removal
+        				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(subTotalPrice.formattedValue);
+    				}
+    				catch(e) 
+    				{
+    					console.log("Subtotal JS Exception="+e);
+    				}
     				//Populating sub-total which is subject to change on order item removal
-    				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+        			//$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+    				//CAR-343 Ends
         			/*//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);*/
-    	        	
+    				
+    				// TPR-7486 start
+    				//if(data.totalDiscount.value != 0){
+						//$("#promotionApplied").css("display","block");
+						//document.getElementById("promotion").innerHTML=data.totalDiscount.formattedValue;
+					//}
+    				//document.getElementById("totalWithConvField").innerHTML=data.totalPrice;
+    				//if(document.getElementById("outstanding-amount")!=null)
+    				//document.getElementById("outstanding-amount").innerHTML=data.totalPrice;
+    				//document.getElementById("outstanding-amount-mobile").innerHTML=data.totalPrice;
+    				//$("#codAmount").text(data.totalPrice);
+    				
+    				recalculateCart();
+
+    				// TPR-7486 end 
+    				
+    				//$("#totalPriceConvChargeId span#totalWithConvField span.priceFormat").html(data.totalPrice); // TPR-7486
+    				//$("#discountApplied span#promotion span.priceFormat").html(data.totalDiscount.formattedValue); // TPR-7486
     	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 //	    	        populateAddress();
@@ -2905,6 +2962,27 @@ ACC.singlePageCheckout = {
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
+		//TPR-7486
+		if(savedOrNew=="savedCard")
+		{
+			$("#paymentMode_newcard_savedcard").val("savedCard"); //for responsive
+		}
+		else
+		{
+			$("#paymentMode_newcard_savedcard").val("newCard");  //for responsive
+		}
+		//TPR-7486
+		if(ACC.singlePageCheckout.getIsResponsive()) {
+			$('#continue_payment_after_validate_responsive').show();
+		} else {
+			$('#continue_payment_after_validate').show();
+		}	
+		
+		//TPR-7486 //REMOVE CONV CHARGE 				
+		if(paymentMode != 'COD') {
+			resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
+		}
+		
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
 		{
@@ -3000,6 +3078,7 @@ ACC.singlePageCheckout = {
 	                	{
 	                		//Validate payment in responsive
 	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive(paymentMode,savedOrNew,radioId,callFromCvv);
+	                		
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{	                		
@@ -3137,6 +3216,10 @@ ACC.singlePageCheckout = {
 		{
 			viewPaymentMRupee();
 		}
+		if(paymentMode=="PAYTM")
+		{
+			viewPaymentPaytm();
+		}
 	},
 	//Function called when a saved card is selected.
 	paymentOnSavedCardSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
@@ -3167,7 +3250,181 @@ ACC.singlePageCheckout = {
 				savedDebitCardRadioChange(radioId);
 			}
 		}
+	},
+	populatePaymentSpecificOffers:function(){
+
+		//ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffers";
+		var data = {isResposive:ACC.singlePageCheckout.getIsResponsive()};
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+        	
+        	if(ACC.singlePageCheckout.getIsResponsive()) {
+            	$('.offer_section_responsive').css("display","block");
+            	$('.offer_section_responsive').html(response);
+        	} else {
+            	$('.offers_section_paymentpage').css("display","block");
+            	$('.offers_section_paymentpage').html(response);
+        	}
+
+            	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	//ACC.singlePageCheckout.hideAjaxLoader();
+		});
+	
+	},
+	populatePaymentSpecificOffersTermsConditions:function(){
+
+		//ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffersTerms";
+		var data = {isResposive:ACC.singlePageCheckout.getIsResponsive()};
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+      
+            	$('.offer_terms_container_poppup').html(response);	
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	//ACC.singlePageCheckout.hideAjaxLoader();
+		});
+	
+	},	
+	
+	chooseOffer:function(offerID,radioId){
+		//alert(offerID);
+		//$('input[name=offer_name]:checked+label::before').css("background", "black");
+		
+		$("#"+radioId).addClass("promoapplied");
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/usevoucher";
+		var guid = $('#guid').val();
+		var data= {manuallyselectedvoucher:offerID,guid:guid};
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+        	$("#paymentoffersPopup").modal('hide'); //for poppup
+        	
+        	if(response.couponRedeemed != false && response.redeemErrorMsg == null) { //coupon applied successfully
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			}
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
+	 			
+	 			if(response.couponDiscount.value != 0){
+					$("#promotionApplied").css("display","block");
+					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				}
+	 			
+        	} else { // not applied
+        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+				$("#juspayconnErrorDiv").css("display","block");
+        	}
+        	
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+		});
+        
+        $('.promoapplied').click(function() {
+        	var releaseCode = $('.promoapplied').val();
+        	if(releaseCode != undefined && releaseCode != "") {
+        		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
+        	}
+        	
+        	
+    	})
+		
+	},
+	releasePromoVoucher:function(offerID){		
+    	$('.promoapplied').prop('checked', false);
+    	$('.promoapplied').removeClass("promoapplied"); 
+    	//release voucher ajax call
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";
+		var guid = $('#guid').val();
+		var data= {manuallyselectedvoucher:offerID,guid:guid};
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+            $("#paymentoffersPopup").modal('hide'); //for poppup
+        	
+        	if(response.couponRedeemed == false) { //coupon released successfully
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			}
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
+	 			
+	 			if(response.couponDiscount.value != 0){
+					$("#promotionApplied").css("display","block");
+					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				}
+	 			
+        	} else { // not applied
+        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+				$("#juspayconnErrorDiv").css("display","block");
+        	}
+        	
+        	
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+		});
+	},
+	showAllOffers:function(){
+		//$(".offer_container_poppup").show();
+		ACC.singlePageCheckout.paymentOffersPopup($(".offer_container_poppup").html());
+		$(".offer_container_poppup").remove();
+	},	
+	paymentOffersPopup:function(data){		
+     	   $("body").append('<div class="modal fade" id="paymentoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+
+		   $("#paymentoffersPopup").modal('show');
+	},
+	showPaymentSpecificOffersTermsConditions:function(){	
+		if($("#offer_terms_container_poppup").html() != "") {
+	    	ACC.singlePageCheckout.paymentTermsConditionsOffersPopup($(".offer_terms_container_poppup").html());
+		}
+	},
+	paymentTermsConditionsOffersPopup:function(data){		
+  	   $("body").append('<div class="modal fade" id="paymenttermsoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+       $("#paymenttermsoffersPopup").modal('show');
 	}
+	
+	
+	
+	
 /****************MOBILE ENDS HERE************************/
 }
 //Calls to be made on dom ready.
@@ -3231,11 +3488,20 @@ $(document).ready(function(){
 			
 			//Fetch CNC stores in responsive if CNC is selected on page load
 			ACC.singlePageCheckout.fetchStoresResponsive();
+			//TPR-7486
+			$('#continue_payment_after_validate_responsive').show();
+			$('#continue_payment_after_validate').hide();
+			ACC.singlePageCheckout.populatePaymentSpecificOffers();
 		}
 		else
 		{
 			//For web site we are removing payment page laoded for responsive view inorder to keep unique id's in the view
 			$("#makePaymentDivMobile").html("");
+			//TPR-7486
+			$('#continue_payment_after_validate_responsive').hide();
+			$('#continue_payment_after_validate').show();
+			
+			
 		}
 		//Preventing auto complete of forms in single page
 //		$( document ).on( 'focus', ':input', function(){
@@ -3243,4 +3509,13 @@ $(document).ready(function(){
 //	        $( this ).attr( 'autocomplete', 'false' );
 //	    });
 	}
+	
+	
 });
+
+
+
+
+
+
+

@@ -86,12 +86,12 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	
-	<div class="accordion-title review-accordion">	
+	<!-- <div class="accordion-title review-accordion">	
 			<h4>Rating & Reviews</h4> - <div id="ratingDiv"></div><i class="accordion-icon"></i>
 	</div>					
 	<div class="accordion-content full-box review-accordion-content">
 		<div id='commentsDiv'></div>
-	</div>
+	</div> -->
 	
 		<c:if test="${fn:contains(validTabs, 'warranty')}">
 			<div class="accordion-title">	

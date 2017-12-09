@@ -5,6 +5,7 @@ package com.tisl.mpl.refunds.dao;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.RefundTransactionEntryModel;
 import com.tisl.mpl.wsdto.BulkSmsPerBatch;
 
 
@@ -18,7 +19,7 @@ public interface RefundSmsDao
 
 	public String getAllTransactionsForSms(String query) throws Exception;
 
-	public void deleteRows(final String str) throws Exception;
+	public List<RefundTransactionEntryModel> getModelForChangeStaus(final String str) throws Exception;
 
 	public int eligibleSmsCount() throws Exception;
 }

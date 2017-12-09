@@ -167,7 +167,7 @@ public class CoreSystemSetup extends AbstractSystemSetup
 			{
 				if (getBooleanSystemSetupParameter(context, rel))
 				{
-					System.out.println("Executing" + rel + "impexex");
+					//		System.out.println("Executing" + rel + "impexex");
 					importImpexFile(context, "/marketplacecore/import/release/" + rel + ".impex");
 				}
 			}

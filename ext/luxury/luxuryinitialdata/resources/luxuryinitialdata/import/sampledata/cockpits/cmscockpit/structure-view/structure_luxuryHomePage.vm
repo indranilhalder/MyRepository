@@ -51,6 +51,10 @@
 						code="WhyShopOnLuxury" /></td>
 			</tr>
 			<tr>
+				<td style="width: 960px; height: 64px;" colspan="3"><cockpit
+						code="SeoFooter" /></td>
+			</tr>
+			<tr>
 				<td style="width: 960px; height: 174px;" colspan="3"><cockpit
 						code="EmailFooterHomePage" /></td>
 			</tr>

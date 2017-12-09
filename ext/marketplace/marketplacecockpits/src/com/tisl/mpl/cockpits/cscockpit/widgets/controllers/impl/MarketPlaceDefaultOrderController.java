@@ -184,7 +184,10 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		Double totalRefundAmount = 0d;
 		PaymentTransactionModel paymentTransactionModel = null;
 		for (OrderEntryModel orderEntry : orderEntryModel) {
-			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
+			//H2 Priority Sprint1
+			final Double chargeBack = orderEntry.getChargeback() != null ? orderEntry.getChargeback() : NumberUtils.DOUBLE_ZERO;
+
+			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc() -chargeBack;
 		}
 //		Mrupee implementation 
 		// final OrderModel order=orderEntryModel.get(0).getOrder();
