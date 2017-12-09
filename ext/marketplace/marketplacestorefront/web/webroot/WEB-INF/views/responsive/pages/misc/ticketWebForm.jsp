@@ -12,8 +12,6 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<spring:url value="/ticketForm" var="ticketUrl" />
-
 <template:page pageTitle="${pageTitle}">
 
 	<div class="customer-service">
@@ -46,7 +44,7 @@
 
 				<div class="custmCareQrySec">
 					<form name="customerWebForm" id="customerWebForm"
-						action="${ticketUrl}" method="POST" >
+						action="#" method="POST" >
 
 						<input type="hidden" name="nodeL0" value="L0C1" /> 
 						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> 
@@ -88,6 +86,7 @@
 								             <div class="selectedProduct">
 								               Select order from your previous orders
 								             </div>
+								             
 											<ul class="orderDrop">
 
 												<c:if test="${fn:length(formFields.orderDatas) gt 0}">
@@ -152,34 +151,30 @@
 							</sec:authorize>
 							<div class="formGroup">
 								<h3 class="secLabel">What is the issue?</h3>
-								<span class="customSelectWrap"> <select
-									class="node formControl customSelect" name="nodeL2">
+								<select class="node formControl customSelect" name="nodeL2">
 										<option>Select Your issue</option>
 										<c:forEach items="${formFields.nodes}" var="l2Node">
 											<c:if test="${l2Node.nodeType eq 'L2'}">
-												<option value="${l2Node.nodeCode}" nodeText="${l2Node.nodeDesc}" nodeText="${l3Node.nodeDesc}">${l2Node.nodeDesc}</option>
+												<option value="${l2Node.nodeCode}" nodeText="${l2Node.nodeDesc}" displayAllow="${l2Node.nodeDisplayAllowed}">${l2Node.nodeDesc}</option>
 											</c:if>
 										</c:forEach>
-								</select> <span class="holder active">....</span></span>
+								</select>
 							</div>
 							<div class="formGroup">
 								<h3 class="secLabel">Select a sub-issue.</h3>
-								<span class="customSelectWrap"> <select
-									class="node formControl customSelect" name="nodeL3">
+								<select class="node formControl customSelect" name="nodeL3">
 										<option>Select your exact problem</option>
 										<c:forEach items="${formFields.nodes}" var="l3Node">
 											<c:if test="${l3Node.nodeType eq 'L3'}">
-												<option value="${l3Node.nodeCode}" nodeText="${l3Node.nodeDesc}" nodeText="${l3Node.nodeDesc}">${l3Node.nodeDesc}</option>
+												<option value="${l3Node.nodeCode}" nodeText="${l3Node.nodeDesc}" displayAllow="${l3Node.nodeDisplayAllowed}">${l3Node.nodeDesc}</option>
 											</c:if>
 										</c:forEach>
-								</select> <span class="holder active">....</span></span>
+								</select>
 							</div>
 							<div class="formGroup">
 								<h3 class="secLabel">Name</h3>
-								<input type="text" class="formControl"
-									placeholder="Enter Your Name" name="contactName"
-									value="${formFields.name}" />
-								<p class="errorTxt"></p>
+								<input type="text" class="formControl" placeholder="Enter Your Name" 
+								name="contactName" value="${formFields.name}" />
 							</div>
 							<div class="emalIdMobileFeild">
 								<div class="feildCols">
@@ -209,9 +204,8 @@
 								<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 									upload size 5MB)</p>
 								<div class="uploadFile">
-									<span>Upload File</span> <input id="attachmentFile" type="file"
-										name="uploadFile[]" multiple
-										fileInput="JPEG,PNG,GIF,BMP,PDF,JPG" />
+									<span>Upload File</span> 
+									<input id="attachmentFile" type="file" name="uploadFile" fileInput="JPEG,PNG,GIF,BMP,PDF,JPG" />
 									<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 								</div>
 								<!-- The global progress bar -->

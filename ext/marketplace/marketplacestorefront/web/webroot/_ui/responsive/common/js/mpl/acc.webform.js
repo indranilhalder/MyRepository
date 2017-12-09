@@ -1,7 +1,8 @@
 ACC.WebForm = {
 
 	sendTicket : function(){
-		$(".webfromTicketSubmit").on("click",function(e){
+		$(".webfromTicketSubmit").click(function(e){
+			e.preventDefault();
 			
 			if(ACC.WebForm.validateCRMForm()){
 				
@@ -12,7 +13,7 @@ ACC.WebForm = {
 					type: 'POST',
 					success: function (data)
 					{
-						ACC.colorbox.open(title,{
+						ACC.colorbox.open("",{
 							html: data,
 							width:"500px"
 						});
@@ -34,8 +35,43 @@ ACC.WebForm = {
 		
 		var isValid = true;
 		  $('.formControl').each(function() {
-		    if ( $(this).val() === '' )
-		        isValid = false;
+			    if ( $(this).val() === '' && $(this).attr("displayAllow")===true){
+			        isValid = false;
+			    }
+			    //mobiel validation
+			    if ( $(this).attr("name") == 'contactMobile' ){
+			    	var mobNum = $(this).val();
+			    	var filter = /^\d*(?:\.\d{1,2})?$/;
+			        if (filter.test(mobNum)) {
+			            if(mobNum.length==10){
+			            	$(this).removeClass("feildError");
+			            	$(this).addClass("feildSuccess");
+			             } else {
+			            	 $(this).removeClass("feildSuccess");
+			            	 $(this).addClass("feildError");
+			            	 isValid=false;
+			             }
+			        }
+			        else {
+			        	$(this).removeClass("feildSuccess");
+			        	$(this).addClass("feildError");
+			        	isValid= false;
+			        }
+			    }
+			    //email validation
+			    if ( $(this).attr("name") == 'contactEmail' ){
+			    	var email = $(this).val();
+			    	var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+			    	if(emailReg.test(email)){
+			    		$(this).removeClass("feildError");
+		            	$(this).addClass("feildSuccess");
+			    	}else{
+			    		$(this).removeClass("feildSuccess");
+		            	$(this).addClass("feildError");
+		            	isValid=false;
+			    	}
+			    }
+			    
 		  });
 		  return isValid;
 	},
@@ -58,9 +94,10 @@ ACC.WebForm = {
 				{
 					if (nodeType.startsWith("nodeL1")) {
 						$.each(data.nodes, function (index, data) {
-					        htmlOption+="<option value='"+data.nodeCode+"'>"+data.nodeDesc + "</option>";
+					        htmlOption+="<option value='"+data.nodeCode+"' nodeText='"+data.nodeDesc+"' displayAllow='"+data.nodeDisplayAllowed+"'>"+data.nodeDesc + "</option>";
 					    });
 					    $("select[name=nodeL2]").html(htmlOption);
+					    $("select[name=nodeL3]").show();
 					}
 					if (nodeType.startsWith("nodeL2")) {
 						var check=false;
@@ -68,27 +105,32 @@ ACC.WebForm = {
 						$.each(data.nodes, function (index, data) {
 							
 							if(data.nodeDisplayAllowed==true){	
-								htmlOption+="<option value='"+data.nodeCode+"'>"+data.nodeDesc + "</option>";
+								htmlOption+="<option value='"+data.nodeCode+"' nodeText='"+data.nodeDesc+"' displayAllow='"+data.nodeDisplayAllowed+"'>"+data.nodeDesc + "</option>";
 							}else{
 								check=true;
 								answer=data.ticketAnswer;
+								htmlOption+="<option value='"+data.nodeCode+"' nodeText='"+data.nodeDesc+"' displayAllow='"+data.nodeDisplayAllowed+"' selected>"+data.nodeDesc + "</option>";
 							}
 					    });
+						
 						if(check==false){
 							$("select[name=nodeL3]").html(htmlOption);
+							$("select[name=nodeL3]").show();
 						}else{
-							$("select[name=nodeL3]").hide();
-							$("select[name=nodeL3]").parent(".customSelectWrap").append("<p>"+answer+"</p>");
+							$("select[name=nodeL3]").html(htmlOption);
+							$("select[name=nodeL3]").parent(".customSelectWrap").hide();
+							$("select[name=nodeL3]").parent(".formGroup").append("<p>"+answer+"</p>");
 						}
 						
 					    $("#nodeL2Text").val(nodeText);
 					}
 					if (nodeType.startsWith("nodeL3")) {
-						var val="";
+						var l4val="";
 						$.each(data.nodes, function (index, data) {
-					        val=data.nodeCode;
+							l4val=data.nodeCode;
 					    });
-					    $("#nodeL4").val(val);
+						console.log(l4val);
+					    $("#nodeL4").val(l4val);
 					    $("#nodeL3Text").val(nodeText);
 					}
 				},
@@ -105,37 +147,47 @@ ACC.WebForm = {
 		var allowedTypes = ['png', 'jpg', 'jpeg', 'gif'];   
 		
 		$("#attachmentFile").on("change",function(e){
-				  var file = this.files[0];
-				  var fd = new FormData();
-				  fd.append("uploadFile", file);
-				  // These extra params aren't necessary but show that you can include other data.
-				  //fd.append("username", "Groucho");
-				  //fd.append("accountnum", 123456);
-				  var xhr = new XMLHttpRequest();
-				  xhr.open('POST', url, true);
-				  
-				  xhr.upload.onprogress = function(e) {
-				    if (e.lengthComputable) {
-				      var percentComplete = (e.loaded / e.total) * 100;
-				      console.log(percentComplete + '% uploaded');
-				    }
-				  };
-				  xhr.onload = function() {
-				    if (this.status == 200) {
-				      var resp = JSON.parse(this.response);
-				      console.log('Server got:', resp);
-				      //var image = document.createElement('img');
-				     // image.src = resp.dataUrl;
-				      //document.body.appendChild(image);
-				    };
-				  };
-				  xhr.send(fd);
+			
+			if(this.files.length === 0){
+		        return;
+		    }
+
+		    var data = new FormData();
+		    data.append('uploadFile', this.files[0]);
+
+		    var request = new XMLHttpRequest();
+		    request.onreadystatechange = function(){
+		        if(request.readyState == 4){
+		            try {
+		                var resp = JSON.parse(request.response);
+		            } catch (e){
+		                var resp = {
+		                    status: 'error',
+		                    data: 'Unknown error occurred: [' + request.responseText + ']'
+		                };
+		            }
+		            console.log(resp.status + ': ' + resp.data);
+		        }
+		    };
+
+		    request.upload.addEventListener('progress', function(e){
+		    	$('#progress').width(Math.ceil(e.loaded/e.total) * 100 + '%');
+		    }, false);
+		    
+		    // Create the form with appropriate header
+		    request.open('POST', url);
+		    request.setRequestHeader("Content-Type", "multipart/form-data; boundary=----12345678wertysdfg");
+		    //request.setRequestHeader("Content-Length", data.length);
+		    request.setRequestHeader("CelerFT-Encoded", "base64");
+		    request.send(data); 
 		});
 		
 	},
 	
+};  
 	
-};
+	
+
 
 $(function() {
 	

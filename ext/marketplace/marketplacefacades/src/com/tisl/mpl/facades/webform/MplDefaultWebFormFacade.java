@@ -12,6 +12,7 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
@@ -61,12 +62,14 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
+	@Resource
+	private ModelService modelService;
 	@Resource(name = "webFormDataConverter")
 	private Converter<WebFormData, MplWebCrmTicketModel> webFormDataConverter;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -155,7 +158,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -214,6 +217,8 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		if (checkDuplicateWebCRMTickets(formData))
 		{
 			webFormModel = webFormDataConverter.convert(ticketData, webFormModel);
+			//save Ticket in Commerce
+			modelService.save(webFormModel);
 			mplWebFormService.sendWebFormTicket(webFormModel);
 		}
 		return commerceTicketId;
@@ -222,7 +227,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -236,7 +241,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -376,7 +381,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getTicketSubmitForm()
 	 */
 	@Override
