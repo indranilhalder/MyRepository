@@ -569,6 +569,7 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
+						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
 												</fieldset>
 		            							<div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
@@ -651,7 +652,6 @@
 					                           		</fieldset>
 					                            </div> 
 					                            <div class="controls remember">
-					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card" name="save-card" style="display:none"/><label for="save-card" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
@@ -896,6 +896,7 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorDc"></span> 
 						                            </div>
+						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
 												</fieldset>
 		            							<%-- <div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
@@ -907,7 +908,6 @@
 										    	</c:forEach>
 					                            </div> --%> 
 					                            <div class="controls remember">
-					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-dc" name="save-card" style="display:none" /><label for="save-card-dc" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
@@ -1096,6 +1096,7 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
 						                            </div>
+						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
 												</fieldset>
 		            							<div class="controls remember" id="billingAddressEmi">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
@@ -1171,7 +1172,6 @@
 					                           		</fieldset>
 					                            </div> 
 					                            <div class="controls remember">
-					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-emi" name="save-card-emi" style="display:none"/><label for="save-card-emi" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
