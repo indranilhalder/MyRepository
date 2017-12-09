@@ -231,20 +231,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
-	public List<WebFormData> getCrmParentChildNodes(final String nodeParent)
-	{
-		// YTODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
-	 */
-	@Override
 	public List<CRMWsData> getAllWebCRMTreedata()
 	{
 		final List<CRMWsData> crmL1Data = new ArrayList<CRMWsData>();
@@ -255,8 +241,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		try
 		{
 			final List<MplWebCrmModel> webCrmL1Models = mplWebFormService.getWebCRMParentNodes();
-
-
 			for (final MplWebCrmModel crmModel : webCrmL1Models)
 			{
 				//L1
@@ -282,7 +266,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 					nodeL2.setNodeDisplayAllowed(crmL2Model.isNodeDisplayAllowed());
 
 					//L3
-
 					final List<MplWebCrmModel> webCrmL3Models = mplWebFormService.getWebCRMByNodes(crmL2Model.getNodeCrmCode());
 					crmL3Data = new ArrayList<CRMWsData>();
 					for (final MplWebCrmModel crmL3Model : webCrmL3Models)
@@ -294,8 +277,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 						nodeL3.setTicketAnswer((crmL3Model.getTicketAnswer()));
 						nodeL3.setCreateTicketAllowed(crmL3Model.isCreateTicketAllowed());
 						nodeL3.setNodeDisplayAllowed(crmL3Model.isNodeDisplayAllowed());
-
-
 
 						//L4
 						final List<MplWebCrmModel> webCrmL4Models = mplWebFormService.getWebCRMByNodes(crmL3Model.getNodeCrmCode());
@@ -322,22 +303,13 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				}
 				nodeL1.setChildren(crmL2Data);
 				crmL1Data.add(nodeL1);
-
-
 			}
-
-
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e);
-
-
 		}
-
 		return crmL1Data;
-
-
 	}
 
 	@Override
@@ -379,16 +351,5 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		return mplCRMWebFormResponseData;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getTicketSubmitForm()
-	 */
-	@Override
-	public List<CRMWebFormDataRequest> getTicketSubmitForm()
-	{
-		// YTODO Auto-generated method stub
-		return null;
-	}
 
 }

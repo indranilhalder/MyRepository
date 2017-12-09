@@ -48,23 +48,9 @@ public interface MplWebFormFacade
 	public String sendWebformTicket(final WebFormData formData) throws Exception;
 
 	/**
-	 * This method converts the hierachical data model to pojo
-	 *
-	 * @param nodeParent
-	 * @return List<WebFormData>
-	 */
-	public List<WebFormData> getCrmParentChildNodes(final String nodeParent);
-
-	/**
 	 * @return
-	 * @throws Exception
 	 */
 	public List<CRMWsData> getAllWebCRMTreedata();
-
-	/**
-	 * @return
-	 */
-	public List<CRMWebFormDataRequest> getTicketSubmitForm();
 
 	/**
 	 * @param crmTicket
