@@ -625,4 +625,43 @@ public class MarketplacewebservicesConstants
 	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
 	public static final String E0000 = "E0000";
 	public static final String DESC_PDP_PROPERTIES = "pdp.desc.tab.";
+
+	public static final String EXTENSIONNAME = "marketplaceomsservices";
+
+	public static final String UnitCode_Pieces = "pieces";
+	public static final String UnitCode_Pieces_Value = "1";
+
+	public static final String ORDER_TYPE_NEW_CONSTANTS = "NEW";
+	public static final String DEFAULT_CHANNEL_CONSTANTS = "WEB";
+	public static final String SUCCESS = "SUCCESS";
+
+	public static final String QUERYPART = "{p:";
+
+	public static final String CNC = "CNC";
+	public static final String HOTCOURI = "HOTCOURI";
+	public static final String OTFRDLVY = "OTFRDLVY";
+	public static final String DELIVERD = "DELIVERD";
+	public static final String RETTOORG = "RETTOORG";
+	public static final String LOSTINTT = "LOSTINTT";
+	public static final String UNDLVERD = "UNDLVERD";
+	public static final String TAX_CATEGORY = "N/A";
+	public static final String Y = "Y";
+
+
+	public static final String BOTH = "BOTH".intern();
+	public static final String TSHIP = "TSHIP".intern();
+	public static final String SSHIP = "SSHIP".intern();
+
+	public static final String N = "N".intern();
+
+
+	//TPR-5667
+	public static final String FAILURE = "FAILURE";
+	public static final String SAMSUNG = "samsung";
+
+
+	//added for TPR-1348
+	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
+
+	public static final String PAYTM = "PAYTM".intern();
 }

@@ -38,10 +38,10 @@
 			data-href="account-addresses.php"><spring:theme
 				code="header.flyout.address" />
 		</option>
-		<option value=/store/mpl/en/my-account/reviews?isLux=${isLuxVal}
+<%-- 		<option value=/store/mpl/en/my-account/reviews?isLux=${isLuxVal}
 						data-href="account-addresses.php"><spring:theme
 							code="header.flyout.review" />
-		</option>
+		</option> --%> <!-- closed as per sprint 13 requirement -->
 		<%-- <option value=/store/mpl/en/my-account/myInterest?isLux=${isLuxVal}
 			data-href="account-addresses.php"><spring:theme
 				code="header.flyout.recommendations" />

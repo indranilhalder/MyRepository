@@ -245,6 +245,7 @@ import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
+import com.tisl.mpl.wsdto.ParentChildReason;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
@@ -255,6 +256,7 @@ import com.tisl.mpl.wsdto.ReturnReasonDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
+import com.tisl.mpl.wsdto.SubReasonsMap;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
@@ -698,7 +700,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
-			@RequestParam(required = false) final boolean tataTreatsEnable, @RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			@RequestParam(required = false) final boolean tataTreatsEnable,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -717,7 +720,7 @@ public class UsersController extends BaseCommerceController
 			}
 			LOG.debug("The platform number is " + platformDecider);
 			//SDI-639 ends here
-			
+
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
@@ -7347,14 +7350,82 @@ public class UsersController extends BaseCommerceController
 	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String pincode, @RequestParam final String orderCode,
 			@RequestParam final String transactionId) throws EtailNonBusinessExceptions
 	{
-
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		OrderEntryData orderEntry = new OrderEntryData();
 		final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
+		String sellerRichAttrOfQuickDrop = "";
+		String productRichAttrOfQuickDrop = "";
+		String ussid = "";
+		boolean isFineJew = false;
 
 		ReturnPincodeDTO returnPincodeAvailDTO = null;
-
+		final ReturnModesWsDTO returnmodes = new ReturnModesWsDTO();
 		try
 		{
 
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					orderEntry = entry;
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if (null != productModel && productModel.getRichAttribute() != null)
+					{
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						isFineJew = true;
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = orderEntry.getSelectedUssid();
+					}
+
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
+
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null)
+							{
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null
+										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+					}
+					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+					{
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						{
+							returnmodes.setQuickDrop(true);
+						}
+					}
+					break;
+
+				}
+			}
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
 
 			boolean returnLogisticsCheck = true;
@@ -7377,7 +7448,13 @@ public class UsersController extends BaseCommerceController
 				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
 				{
 					returnLogisticsCheck = false;
-
+					returnmodes.setSchedulePickup(false);
+					returnmodes.setSelfCourier(true);
+					if (isFineJew)
+					{
+						returnmodes.setSelfCourier(false);
+					}
+					returnPincodeDTO.setReturnModes(returnmodes);
 				}
 
 				if (!returnLogisticsCheck)
@@ -7402,6 +7479,7 @@ public class UsersController extends BaseCommerceController
 
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("in EtailNonBusinessExceptions");
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
@@ -7416,6 +7494,7 @@ public class UsersController extends BaseCommerceController
 
 		catch (final EtailBusinessExceptions e)
 		{
+			LOG.error("in EtailBusinessExceptions");
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
@@ -7459,8 +7538,33 @@ public class UsersController extends BaseCommerceController
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		String sellerRichAttrOfQuickDrop = "";
+		String productRichAttrOfQuickDrop = "";
 		try
 		{
+			//TPR-7140
+			//Initial on load conditons
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(entry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					break;
+				}
+			}
+
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
 					returnCancelFlag);
 			if (orderproductWsDto.size() > 0)
@@ -7470,9 +7574,13 @@ public class UsersController extends BaseCommerceController
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
-				returnModes.setSelfCourier(true);
-				returnModes.setSchedulePickup(true);
-				returnModes.setQuickDrop(true);
+				if (null != returnReasonData)
+				{
+					LOG.info("list size primary" + returnReasonData.getReturnReasonDetailsList().size());
+				}
+
+
+				//	returnModes.setQuickDrop(true);
 				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
 
 				if (StringUtils.isNotEmpty(revSealSellerList))
@@ -7491,20 +7599,70 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 				}
+
 				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
 				{
-					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
-					if (null != productModel
-							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
-									.equalsIgnoreCase(productModel.getProductCategoryType()))
+
+					if (orderEntryDto.getTransactionId().equalsIgnoreCase(transactionId.trim()))
 					{
-						isFineJew = true;
-						if (showRevSeal)
+						final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+						List<RichAttributeModel> productRichAttributeModel = null;
+						if (null != productModel && productModel.getRichAttribute() != null)
 						{
-							returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+							if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+							{
+								productRichAttrOfQuickDrop = (productRichAttributeModel.get(0).getReturnAtStoreEligible().toString());
+								LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
+							}
 						}
-						returnModes.setSelfCourier(false);
-						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						for (final SellerInformationModel sellerInformationModel : sellerInfo)
+						{
+							/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntryDto.getUSSID()))
+							{
+								List<RichAttributeModel> sellerRichAttributeModel = null;
+								if (sellerInformationModel.getRichAttribute() != null)
+								{
+									sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+									if (sellerRichAttributeModel != null
+											&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+									{
+										sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+										LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
+									}
+								}
+							}
+							if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+							{
+								if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop
+										.equalsIgnoreCase("yes")))
+								{
+									returnModes.setQuickDrop(true);
+								}
+								else
+								{
+									returnModes.setQuickDrop(false);
+								}
+							}
+
+						}
+						//break;
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							isFineJew = true;
+
+							if (showRevSeal)
+							{
+								returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							}
+							returnModes.setSelfCourier(false);
+							returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+							break;
+						}
 						break;
 					}
 				}
@@ -7513,6 +7671,7 @@ public class UsersController extends BaseCommerceController
 			}
 			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
 			{
+				LOG.info("list size>>>>" + returnReasonData.getReturnReasonDetailsList().size());
 				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
 				{
 					if (!isFineJew
@@ -7581,6 +7740,7 @@ public class UsersController extends BaseCommerceController
 			OrderEntryData orderEntry = new OrderEntryData();
 			List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
 			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
+
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
@@ -7598,6 +7758,7 @@ public class UsersController extends BaseCommerceController
 						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
 						}
 					}
 
@@ -7632,6 +7793,7 @@ public class UsersController extends BaseCommerceController
 										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 								{
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+									LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
 								}
 							}
 						}
@@ -7776,7 +7938,14 @@ public class UsersController extends BaseCommerceController
 		final ReturnInfoData returnInfoData = new ReturnInfoData();
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		String productRichAttrOfQuickDrop = "";
+		String sellerRichAttrOfQuickDrop = "";
+		//Default values
+		returnModes.setSchedulePickup(true);
+		returnModes.setSelfCourier(true);
 		boolean isFineJwlry = false;
+		String ussid = "";
 		try
 		{
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -7789,8 +7958,66 @@ public class UsersController extends BaseCommerceController
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
 				{
 					subOrderEntry = entry;
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(subOrderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if (null != productModel && productModel.getRichAttribute() != null)
+					{
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(subOrderEntry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + subOrderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = subOrderEntry.getSelectedUssid();
+					}
+
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
+
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null)
+							{
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null
+										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+
+					}
+					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+					{
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						{
+							returnModes.setQuickDrop(true);
+						}
+						else
+						{
+							returnModes.setQuickDrop(false);
+						}
+					}
 					break;
 				}
+
 			}
 			if (null != subOrderEntry.getProduct()
 					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(subOrderEntry.getProduct()
@@ -7841,6 +8068,10 @@ public class UsersController extends BaseCommerceController
 						{
 							returnLogisticsCheck = false;
 							output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							returnModes.setSelfCourier(true);//TPR-7140
+							returnModes.setSchedulePickup(false);
+
+
 						}
 						else if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 						{
@@ -7851,6 +8082,7 @@ public class UsersController extends BaseCommerceController
 				}
 				if (!returnLogisticsCheck)
 				{
+					output.setReturnModes(returnModes);
 					return output;
 				}
 				final String returnPickupDate = returnData.getScheduleReturnDate();
@@ -7925,6 +8157,10 @@ public class UsersController extends BaseCommerceController
 				if (!cancellationStatus)
 				{
 					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					LOG.error("*****implementReturnItem status error*****");
+					returnModes.setSchedulePickup(true);
+					returnModes.setSelfCourier(false);
+					output.setReturnModes(returnModes);
 					return output;
 				}
 				else
@@ -7960,6 +8196,19 @@ public class UsersController extends BaseCommerceController
 					LOG.error("Eception occurred while doing return in quickDrop Mehod for order " + orderCode + " exception is "
 							+ e.getMessage());
 					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(subOrderEntry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					returnModes.setQuickDrop(true);
+					output.setReturnModes(returnModes);//TPR-7140
 					return output;
 				}
 			}
@@ -8067,11 +8316,14 @@ public class UsersController extends BaseCommerceController
 				if (!cancellationStatusForSelfShip)
 				{
 					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					returnModes.setSelfCourier(true);
+					returnModes.setSchedulePickup(false);
 				}
 				else
 				{
 					output.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
+				output.setReturnModes(returnModes);//TPR-7140
 				return output;
 			}
 		}
@@ -9725,15 +9977,16 @@ public class UsersController extends BaseCommerceController
 	{
 		final String returnCancelFlag = "R";
 		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
-		ReturnReasonDetails returnReasonData = null;
-		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
-		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
 		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
 				"finejewellery.reverseseal.sellername");
 		boolean isFineJew = false;
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		ProductModel productModel = null;
+		String L2Cat = null;
+		List<SubReasonsMap> subReasonList = null;
+		ParentChildReason parentChildReason = null;
 		try
 		{
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
@@ -9744,7 +9997,7 @@ public class UsersController extends BaseCommerceController
 			{
 
 				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
-				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+				//returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
 				returnModes.setSelfCourier(true);
@@ -9770,7 +10023,7 @@ public class UsersController extends BaseCommerceController
 				}
 				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
 				{
-					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+					productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
 					if (null != productModel
 							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
 									.equalsIgnoreCase(productModel.getProductCategoryType()))
@@ -9787,71 +10040,64 @@ public class UsersController extends BaseCommerceController
 				}
 				returnRequestDTO.setReturnModes(returnModes);
 				//TPR-4134 ends
-			}
-
-			//			//TPR-5954 || Category specific return reason || Start
-			//			//final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
-			//			Collection<CategoryModel> superCategories = productModel.getSupercategories();
-			//
-			//			outer: for (final CategoryModel category : superCategories)
-			//			{
-			//				if (category.getCode().startsWith("MPH"))
-			//				{
-			//					superCategories = category.getSupercategories();
-			//					for (final CategoryModel category1 : superCategories)
-			//					{
-			//						if (category1.getCode().startsWith("MPH"))
-			//						{
-			//							superCategories = category1.getSupercategories();
-			//							for (final CategoryModel category2 : superCategories)
-			//							{
-			//								if (category2.getCode().startsWith("MPH"))
-			//								{
-			//									//L2Cat = category2.getCode();
-			//									break outer;
-			//								}
-			//							}
-			//						}
-			//					}
-			//
-			//				}
-			//			}
-			//			//TPR-5954 || Category specific return reason || End
-			//TPR-5954
-			final Map<String, List<String>> dummyObj = new HashMap<String, List<String>>();
-			final List<String> sub1 = new ArrayList<String>();
-			final List<String> sub2 = new ArrayList<String>();
-			sub1.add("test1");
-			sub1.add("test2");
-			sub1.add("test3");
-			sub2.add("test1");
-			sub2.add("test2");
-			sub2.add("test3");
-			sub2.add("test4");
-			dummyObj.put("Parent_reason_1", sub1);
-			dummyObj.put("Parent_reason_2", sub2);
 
 
-			returnRequestDTO.setReturnReasonMap(dummyObj);
+				//TPR-5954 || Category specific return reason || Start
+				//final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+				Collection<CategoryModel> superCategories = productModel.getSupercategories();
 
-
-
-			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
-			{
-				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
+				outer: for (final CategoryModel category : superCategories)
 				{
-					if (!isFineJew
-							&& MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(entry.getReasonDescription()))
+					if (category.getCode().startsWith("MPH"))
 					{
-						continue;
+						superCategories = category.getSupercategories();
+						for (final CategoryModel category1 : superCategories)
+						{
+							if (category1.getCode().startsWith("MPH"))
+							{
+								superCategories = category1.getSupercategories();
+								for (final CategoryModel category2 : superCategories)
+								{
+									if (category2.getCode().startsWith("MPH"))
+									{
+										L2Cat = category2.getCode();
+										break outer;
+									}
+								}
+							}
+						}
+
 					}
-					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
-					returnReasondtolist.add(reasonDto);
-
 				}
-				returnRequestDTO.setReturnReasonDetailsWsDTO(returnReasondtolist);
+				List<ReturnReasonData> reasonDataList = getMplOrderFacade().getCatSpecificRetReason(L2Cat);
+				if (null == reasonDataList || reasonDataList.isEmpty())
+				{
+					reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+				}
+				final List<ParentChildReason> ParentChildReasonList = new ArrayList<ParentChildReason>();
+				for (final ReturnReasonData data : reasonDataList)
+				{
+					parentChildReason = new ParentChildReason();
+					parentChildReason.setParentReturnReason(data.getReasonDescription());
+					parentChildReason.setParentReasonCode(data.getCode());
+					final List<ReturnReasonData> subReturnReasonData = mplOrderFacade.getSubReasonCode(data.getCode());
+					if (null != subReturnReasonData && !subReturnReasonData.isEmpty())
+					{
+						subReasonList = new ArrayList<SubReasonsMap>();
+						for (final ReturnReasonData subData : subReturnReasonData)
+						{
+							final SubReasonsMap subReasonsMap = new SubReasonsMap();
+							subReasonsMap.setSubReasonCode(subData.getCode());
+							subReasonsMap.setSubReturnReason(subData.getReasonDescription());
+							subReasonList.add(subReasonsMap);
+						}
+						parentChildReason.setSubReasons(subReasonList);
+					}
+					ParentChildReasonList.add(parentChildReason);
+				}
+				returnRequestDTO.setReturnReasonMap(ParentChildReasonList);
+				//TPR-5954 || Category specific return reason || End
 			}
-
 			else
 			{
 				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
@@ -9878,5 +10124,4 @@ public class UsersController extends BaseCommerceController
 		}
 		return returnRequestDTO;
 	}
-
 }

@@ -69,8 +69,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Buy Product A and B to get Percentage/Amount Discount on shipping charges or Free Shipping
-	 * @param :
-	 *           SessionContext ctx ,PromotionEvaluationContext evaluationContext
+	 * @param : SessionContext ctx ,PromotionEvaluationContext evaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -106,15 +105,16 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 			//changes end for omni cart fix @atmaram
 			final List<String> eligibleProductList = eligibleForPromotion(cart, ctx); // Gets the Eligible Product List
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty()))
-					&& checkChannelFlag && GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx,
-							evaluationContext, this, restrictionList)
-					&& !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap)) // Validates the Restriction :Allows only if Valid and Valid Channel
+			if ((rsr.isAllowedToContinue())
+					&& (!(rsr.getAllowedProducts().isEmpty()))
+					&& checkChannelFlag
+					&& GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, ctx, evaluationContext, this,
+							restrictionList) && !getDefaultPromotionsManager().promotionAlreadyFired(ctx, validProductUssidMap)) // Validates the Restriction :Allows only if Valid and Valid Channel
 			{
 				final Map<String, Map<String, Double>> finalDelChrgMap = new HashMap<String, Map<String, Double>>();
 
-				final Map<String, Integer> qCount = getDefaultPromotionsManager()
-						.getQualifyingCountForABPromotion(eligibleProductList, totalFactorCount);
+				final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+						eligibleProductList, totalFactorCount);
 				final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 						.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
 
@@ -133,8 +133,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 						//								eligibleProductList, totalFactorCount);
 						//						final Map<String, List<String>> productAssociatedItemsMap = getDefaultPromotionsManager()
 						//								.getAssociatedItemsForABorFreebiePromotions(validProductListA, validProductListB, null);
-						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager()
-								.fetchProductRichAttribute(qCount, order);
+						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
+								qCount, order);
 
 						final EnumerationValue discountType = getDiscTypesOnShippingCharges();
 						double adjustedDeliveryCharge = 0.00D;
@@ -152,8 +152,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 						{
 							final double amount = getPriceForOrder(ctx, getDiscountPrices(ctx), order,
 									MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
-							final double totalDelCostForValidProds = getDefaultPromotionsManager()
-									.getTotalDelCostForValidProds(validProductUssidMap, qCount);
+							final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
+									validProductUssidMap, qCount);
 							adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
 						}
 						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
@@ -168,10 +168,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 							final AbstractOrderEntry entry = mapEntry.getValue();
 							final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProductUSSID);
 							if ((isTShipAsPrimitive() && isSShipAsPrimitive())
-									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)
-											&& isTShipAsPrimitive())
-											|| (fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP)
-													&& isSShipAsPrimitive())))
+									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 							{
 								finalDelChrgMap.putAll(getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
 										adjustedDeliveryCharge, validProductUSSID, order, null));
@@ -185,7 +183,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
 										evaluationContext.getOrder(), 1.0F);
 								final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
-										.createCustomShippingChargesPromotionAdjustAction(ctx, entry, adjustment);
+										.createCustomShippingChargesPromotionAdjustAction(ctx, entry, adjustment, null);
 								//final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
 								result.setConsumedEntries(ctx, consumed);
 								result.addAction(ctx, poeac);
@@ -252,8 +250,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext ctx ,PromotionResult promotionResult ,Locale locale
+	 * @param : SessionContext ctx ,PromotionResult promotionResult ,Locale locale
 	 * @return : String
 	 */
 	@Override
@@ -283,8 +280,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 				discPerOrAmtStr.append(String.valueOf(adjustedDeliveryCharge));
 				discPerOrAmtStr.append('%');
 			}
-			else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT) && (getPriceForOrder(ctx,
-					getDiscountPrices(ctx), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+			else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
+					&& (getPriceForOrder(ctx, getDiscountPrices(ctx), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
 			{
 				adjustedDeliveryCharge = getPriceForOrder(ctx, getDiscountPrices(ctx), order,
 						MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
@@ -456,8 +453,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Verify Channel Data
-	 * @param :
-	 *           SessionContext arg0
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
 	//	private boolean verifyChannelData(final SessionContext arg0)
@@ -488,8 +484,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Provides List of Products eligible for Promotion
-	 * @param :
-	 *           SessionContext paramSessionContext ,AbstractOrder cart
+	 * @param : SessionContext paramSessionContext ,AbstractOrder cart
 	 * @return : List<Product> validProductListFinal
 	 */
 	private List<String> eligibleForPromotion(final AbstractOrder cart, final SessionContext paramSessionContext)
@@ -574,8 +569,8 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 				}
 			}
 
-			totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size()
-					: validProductListB.size();
+			totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
+					.size();
 			if (totalFactorCount > 0)
 			{
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
@@ -743,8 +738,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Reset Flag Variables
-	 * @param :
-	 *           no
+	 * @param : no
 	 * @return: void
 	 */
 	private void resetFlag()
@@ -755,8 +749,7 @@ public class BuyAandBGetPromotionOnShippingCharges extends GeneratedBuyAandBGetP
 
 	/**
 	 * @Description : Returns Minimum Category Amount
-	 * @param :
-	 *           SessionContext arg0
+	 * @param : SessionContext arg0
 	 * @return : minimumCategoryValue
 	 */
 	private double calculateMinCategoryAmnt(final SessionContext ctx)

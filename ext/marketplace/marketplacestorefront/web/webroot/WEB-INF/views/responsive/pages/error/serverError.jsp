@@ -21,12 +21,9 @@
 						<div class="image"></div>
 						<ul class="major-promos">
 							<li data-bannerid="8797960930364"><span
-								class="major-promo-header-italic">We're overwhelmed by
-									the response to our first 10-on-10 Sale.</span> <span
-								class="major-promo-description"><p>A surge in traffic
-										has caused a temporary server overload, and we are fixing the
-										issues as we speak.</p>
-									<p>We'll be back soon, please check back in a few minutes!</p></span>
+								class="major-promo-header-italic">Ooops!</span> <span
+								class="major-promo-description"><p>We're experiencing a temporary glitch and are fixing the issues as we speak.</p>
+									<p>We'll be back soon, and look forward to having you again!</p></span>
 							</li>
 						</ul>
 					</div>
@@ -592,7 +589,7 @@ body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-prom
 }
 
 body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child
-	{
+{
 	color: #a9143c;
 	font-size: 20px;
 	padding: 20px 0px
@@ -694,9 +691,12 @@ body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncompone
 		margin-top: 7px;
 	}
 	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child
-		{
+	{
 		color: #a9143c;
-		font-size: 15.31px;
+	    font-size: 15.31px;
+	    margin: 0 10px;
+	    padding: 20px 10px;
+	    line-height: 1.4;
 	}
 	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child
 		{

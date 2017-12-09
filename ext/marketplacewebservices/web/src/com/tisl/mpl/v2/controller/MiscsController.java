@@ -2673,6 +2673,7 @@ public class MiscsController extends BaseController
 
 			case "CNCL_INIT":
 				output.setRemarks("Order is not eligible for cancellation in commerce system");
+			default:
 		}
 		return output;
 	}

@@ -144,7 +144,7 @@ public class MplServicelayerTest extends ServicelayerBaseTest
 		final ProductModel product = (ProductModel) flexibleSearchService
 				.search("SELECT {PK} FROM {Product} WHERE {code}='MP000000000009962'").getResult().get(0);
 		junit.framework.Assert.assertNotNull(product);
-		System.out.println("Product>>>>>>>>>>>" + product.getArticleDescription());
+		//	System.out.println("Product>>>>>>>>>>>" + product.getArticleDescription());
 
 	}
 

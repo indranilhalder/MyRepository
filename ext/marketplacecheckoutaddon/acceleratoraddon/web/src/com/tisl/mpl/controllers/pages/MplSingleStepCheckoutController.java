@@ -118,6 +118,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import reactor.function.support.UriUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -2861,24 +2862,24 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			Double finalDeliveryCost = Double.valueOf(0.0);
 
-			{
-				//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
-				session.setAttribute("deliveryMethodForm", deliveryMethodForm);
-				//TISPT-400
-				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
-				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 
-			}
+			//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
+			session.setAttribute("deliveryMethodForm", deliveryMethodForm);
+			//TISPT-400
+			finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+			final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+
+
+
 
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-			if (isDelModeRestrictedPromoPresent)
-			{
-				applyPromotions();
-			}
-
+			//			if (isDelModeRestrictedPromoPresent)
+			//			{
+			//				applyPromotions();
+			//			}
+			getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 			//populate freebie data
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 
@@ -3606,7 +3607,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 			//Fix ends for - Order cant be placed with freebie
-
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
@@ -3944,7 +3944,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("error in validate payment", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
@@ -4996,17 +4996,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						final DeliveryMethodForm deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
 						Double finalDeliveryCost = Double.valueOf(0.0);
 						//Re-populating delivery modes after recalculation of cart
-						{
-							finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
-							final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-							getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
-							//session.removeAttribute("deliveryMethodForm");
-						}
+
+						finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+						final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+						//TIS 400
+						//session.removeAttribute("deliveryMethodForm");
+
 						final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 						final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-						applyPromotions();
-
+						//	applyPromotions();
+						getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel);
 						//populate freebie data
 						populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 						//Re-populating delivery address after recalculation of cart

@@ -145,29 +145,9 @@
 							
 							<br/><br/>
 										
-								<div>
-						
-						<form:textarea maxlength="250"  rows="3" cols="45" path="comments" name="returnComments" placeholder="Comments" />
-
-					    			<!-- <span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
-					    			<br/>
-					    			<label>(Accpeted format JPEG,PNG,PDF & Max file size 5MB)</label>
-									<input type="file" name="photo" id="upload-photo" multiple="multiple" />
-									<div class="button_holder">
-											<button onclick="checkReturnSelected()" type="button" class="light-blue submit-request">Upload Image</button>
-									</div> -->
-									<%-- <form name="imageUpload" enctype="multipart/form-data" method="POST">
-									<br/><br/>
-									<input type="file" name="files[]" multiple id="upload-files">
-									<br/>
-									<label>	*Accpeted format JPEG,PNG,PDF & Max file size 5MB</label>
-									<br/>
-										<div class="button_holder" style="text-align: left;">
-											<button onclick="uploadImage()" type="button" class="light-blue submit-request">Upload Image</button>
-										</div> 
-									</form> --%>
-									
-									</div>
+							<div>
+								<form:textarea maxlength="250"  rows="3" cols="45" path="comments" name="returnComments" placeholder="Comments" />
+							</div>
 									
 						<!-- TPR-5954 || end -->			
 											

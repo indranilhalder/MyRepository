@@ -1071,6 +1071,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (orderModel != null)
 			{
 				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+
+				//Paytm Change..
+				String paytmTransactionId = null;
+				if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions())
+						&& null != orderModel.getPaymentTransactions().get(0)
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions().get(0).getEntries())
+						&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
+				{
+					paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
+				}
+
+				model.addAttribute("paytmTransactionId", paytmTransactionId);
+
 				final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 				final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
 				final List<OrderEntryData> orderList = orderDetail.getEntries();
@@ -1977,10 +1991,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 					}
 					//TPR-5954 || Category specific return reason || End
-
-
-
-
 					//TPR-4134 starts
 					if (StringUtils.isNotEmpty(revSealSellerList))
 					{
@@ -2052,6 +2062,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			}
+
+
+			//final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			if (!isFineJew)
 			{
 				for (final Iterator<ReturnReasonData> iterator = reasonDataList.iterator(); iterator.hasNext();)
@@ -2171,7 +2184,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						scheduleDatesEmpty = true;
 					}
 				}
-
+				model.addAttribute("disableRsp", Boolean.FALSE);
 				model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
 				model.addAttribute(ModelAttributetConstants.RETURN_DATES, returnableDates);
 				model.addAttribute(ModelAttributetConstants.RETURN_SCHEDULE_INFO, scheduleDatesEmpty);

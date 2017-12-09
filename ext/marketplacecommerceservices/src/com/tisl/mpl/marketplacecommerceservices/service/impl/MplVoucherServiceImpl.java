@@ -716,6 +716,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					entry.setCouponCode("");
 					entry.setCouponValue(Double.valueOf(0.00D));
+
+					//TPR-7408 starts here
+					entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+					entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+					entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+					//TPR-7408 ends here
+
 				}
 				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
 				{
@@ -740,6 +747,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+
 					}
 					if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
 					{
@@ -877,6 +891,25 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 					entry.setCouponCode(null == voucherCode ? voucher.getCode() : voucherCode);
 					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
+
+
+					//TPR-7408 starts here
+					if (null != voucher)
+					{
+						if (StringUtils.isNotEmpty(String.valueOf(voucher.getCouponCostCentreOnePercentage())))
+						{
+							entry.setCouponCostCentreOnePercentage(voucher.getCouponCostCentreOnePercentage());
+						}
+						if (StringUtils.isNotEmpty(String.valueOf(voucher.getCouponCostCentreTwoPercentage())))
+						{
+							entry.setCouponCostCentreTwoPercentage(voucher.getCouponCostCentreTwoPercentage());
+						}
+						if (StringUtils.isNotEmpty(String.valueOf(voucher.getCouponCostCentreThreePercentage())))
+						{
+							entry.setCouponCostCentreThreePercentage(voucher.getCouponCostCentreThreePercentage());
+						}
+					}
+					//TPR-7408 ends here
 
 					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 					{

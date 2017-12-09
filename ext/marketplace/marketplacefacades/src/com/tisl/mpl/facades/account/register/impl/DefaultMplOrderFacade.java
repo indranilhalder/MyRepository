@@ -77,7 +77,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.service.MplAwbStatusService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
@@ -134,8 +133,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
-	@Autowired
-	private MplAwbStatusService mplAwbStatusService;
+	//SONAR fix
+	//	@Autowired
+	//	private MplAwbStatusService mplAwbStatusService;
 
 	/* sonar fix */
 	/* private final int queryCount = 0; */
@@ -427,7 +427,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -478,9 +478,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -517,11 +517,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -555,11 +555,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -914,7 +914,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
