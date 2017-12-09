@@ -32,26 +32,64 @@ ACC.WebForm = {
 	},
 	validateCRMForm : function () {
 		
-		return true;
+		var isValid = true;
+		  $('.formControl').each(function() {
+		    if ( $(this).val() === '' )
+		        isValid = false;
+		  });
+		  return isValid;
 	},
 	issueDropDown : function(){
 		
 		$(".node").on("change",function(e){
-			var nodeParent=$(this).is(":selected").val();
+			//for select dropdown 
+			var nodeValue=$("option:selected", this).val();
+			var nodeText=$("option:selected", this).attr("nodeText");
 			var nodeType=$(this).attr("name");
-			var htmlOption="";
+			//for radio 
+			if(nodeValue==undefined){
+				nodeValue=$(this).val();
+			}
+			var htmlOption="<option value=''>Select</option>";
 			$.ajax({
-				url: ACC.config.encodedContextPath + "/crmChildrenNodes",
-				data: {"nodeParent": nodeParent },
+				url: ACC.config.encodedContextPath + "/ticketForm/crmChildrenNodes?nodeParent="+nodeValue,
 				type: 'GET',
 				success: function (data)
 				{
 					if (nodeType.startsWith("nodeL1")) {
-						$.each(data.nodes.nodes, function (index, data) {
+						$.each(data.nodes, function (index, data) {
 					        htmlOption+="<option value='"+data.nodeCode+"'>"+data.nodeDesc + "</option>";
 					    });
+					    $("select[name=nodeL2]").html(htmlOption);
+					}
+					if (nodeType.startsWith("nodeL2")) {
+						var check=false;
+						var answer="";
+						$.each(data.nodes, function (index, data) {
+							
+							if(data.nodeDisplayAllowed==true){	
+								htmlOption+="<option value='"+data.nodeCode+"'>"+data.nodeDesc + "</option>";
+							}else{
+								check=true;
+								answer=data.ticketAnswer;
+							}
+					    });
+						if(check==false){
+							$("select[name=nodeL3]").html(htmlOption);
+						}else{
+							$("select[name=nodeL3]").hide();
+							$("select[name=nodeL3]").parent(".customSelectWrap").append("<p>"+answer+"</p>");
+						}
 						
-					    $("nodeL2").html(htmlOption);
+					    $("#nodeL2Text").val(nodeText);
+					}
+					if (nodeType.startsWith("nodeL3")) {
+						var val="";
+						$.each(data.nodes, function (index, data) {
+					        val=data.nodeCode;
+					    });
+					    $("#nodeL4").val(val);
+					    $("#nodeL3Text").val(nodeText);
 					}
 				},
 				 error : function(resp) { 
@@ -63,33 +101,35 @@ ACC.WebForm = {
 	},
 	xhrFileUpload : function () {
 		
-		var url="ticketForm/fileUpload";
+		var url=ACC.config.encodedContextPath + "/ticketForm/fileUpload";
 		var allowedTypes = ['png', 'jpg', 'jpeg', 'gif'];   
 		
 		$("#attachmentFile").on("change",function(e){
-			
-			$('input[type="file"]').on('ajax', function(){
-				  var $this = $(this);
-				  $.ajax({
-				    'type':'POST',
-				    'data': (new FormData()).append('file', this.files[0]),
-				    'contentType': false,
-				    'processData': false,
-				    'xhr': function() {  
-				       var xhr = $.ajaxSettings.xhr();
-				       if(xhr.upload){ 
-				         xhr.upload.addEventListener('progress', progressbar, false);
-				       }
-				       return xhr;
-				     },
-				    'success': function(data){
-				    	console.log(data);
-				    	$this.siblings('#attachmentFile').trigger('ajax');
-				    	$this.remove(); // remove the field so the next call won't resend the same field
+				  var file = this.files[0];
+				  var fd = new FormData();
+				  fd.append("uploadFile", file);
+				  // These extra params aren't necessary but show that you can include other data.
+				  //fd.append("username", "Groucho");
+				  //fd.append("accountnum", 123456);
+				  var xhr = new XMLHttpRequest();
+				  xhr.open('POST', url, true);
+				  
+				  xhr.upload.onprogress = function(e) {
+				    if (e.lengthComputable) {
+				      var percentComplete = (e.loaded / e.total) * 100;
+				      console.log(percentComplete + '% uploaded');
 				    }
-				  });
-				}).trigger('ajax');  // Execute only the first input[multiple] AJAX, we aren't using $.each
-			
+				  };
+				  xhr.onload = function() {
+				    if (this.status == 200) {
+				      var resp = JSON.parse(this.response);
+				      console.log('Server got:', resp);
+				      //var image = document.createElement('img');
+				     // image.src = resp.dataUrl;
+				      //document.body.appendChild(image);
+				    };
+				  };
+				  xhr.send(fd);
 		});
 		
 	},
@@ -113,6 +153,37 @@ $(function() {
 		$('.custmCareQrySec').slideToggle();
 		$('.contCustCareBtn').removeClass('dActive');
 	});
+	$('#closeCustCarePopBox').click(function(){
+		$(this).parent().parent('.issueQuryPopUp').hide();
+	});
+    $('.selectedProduct').click(function(){
+    	$(this).next('.orderDrop').toggle();
+    });
+	$('.selectOrders .orderDrop li').each(function(){
+		$(this).click(function(){
+          var prodHtml = $(this).html();
+          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
+          $('.orderDrop').toggle();
+          //set value 
+          $('#orderCode').val($(this).attr("data-orderCode"));
+          $('#subOrderCode').val($(this).attr("data-subOrderCode"));
+          $('#transactionId').val($(this).attr("data-transactionId"));
+          
+		});
+
+	});
+	/*custum selecbox*/
+	 $(".customSelect").each(function(){
+            $(this).wrap("<span class='customSelectWrap'></span>");
+            $(this).after("<span class='holder'></span>");
+            $(".holder").removeClass('active');
+        });
+        $(".customSelect").change(function(){
+            var selectedOption = $(this).find(":selected").text();
+            $(this).next(".holder").addClass('active');
+            $(this).next(".holder").text(selectedOption);
+        }).trigger('change');
+         $(".holder").removeClass('active');
 });
 
 

@@ -66,7 +66,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -86,7 +86,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				form.setMobile(currentUser.getMobileNumber());
 				form.setName(currentUser.getName());
 			}
-
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = mplOrderFacade
 					.getPagedFilteredParentOrderHistory(pageableData);
 			for (final OrderHistoryData orderHistoryData : searchPageDataParentOrder.getResults())
@@ -130,17 +129,8 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		final WebForm form = new WebForm();
 		List<MplWebCrmModel> webCrmModels = new ArrayList<>();
 		final List<NodeFormData> nodes = new ArrayList<>();
-		CustomerModel currentUser = null;
 		try
 		{
-			currentUser = (CustomerModel) userService.getCurrentUser();
-			if (currentUser != null)
-			{
-				form.setEmailId(currentUser.getOriginalUid());
-				form.setMobile(currentUser.getMobileNumber());
-				form.setName(currentUser.getName());
-			}
-
 			webCrmModels = mplWebFormService.getWebCRMByNodes(nodeParent);
 			for (final MplWebCrmModel crmModel : webCrmModels)
 			{
@@ -165,7 +155,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -232,7 +222,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -246,7 +236,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -386,7 +376,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getTicketSubmitForm()
 	 */
 	@Override

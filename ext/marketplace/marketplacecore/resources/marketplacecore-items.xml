@@ -13663,6 +13663,10 @@
 						<persistence type="property" />
 						<modifiers optional="false" />
 					</attribute>
+					<attribute qualifier="customerEmail" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
 					<attribute qualifier="customerMobile" type="java.lang.String">				
 						<persistence type="property" />
 						<modifiers optional="false" />

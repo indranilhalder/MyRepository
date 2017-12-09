@@ -68,7 +68,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMParentNodes()
 	 */
 	@Override
@@ -82,7 +82,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
@@ -95,7 +95,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -108,7 +108,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -117,9 +117,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Override
 	public boolean checkDuplicateWebCRMTickets(final WebFormData formData)
 	{
-		return mplWebFormDao.checkDuplicateWebCRMTickets(formData.getTicketType(), formData.getOrderCode(),
-				formData.getSubOrderCode(), formData.getTransactionId(), formData.getL0code(), formData.getL1code(),
-				formData.getL2code(), formData.getL3code(), formData.getL4code(), formData.getCustomerId());
+		return mplWebFormDao.checkDuplicateWebCRMTickets(formData);
 	}
 
 	/**
@@ -172,7 +170,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#webformTicketStatusUpdate(com.tis.mpl.facade
 	 * .data.TicketStatusUpdate)

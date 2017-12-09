@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.facades.cms.data.WebFormData;
 
 
 /**
@@ -21,8 +22,6 @@ public interface MplWebFormDao
 
 	public MplWebCrmTicketModel getWebCRMTicket(String commerceTicketId);
 
-	public boolean checkDuplicateWebCRMTickets(String ticketType, String orderCode, String subOrderCode, String transactionId,
-			String L0code, String L1code, String L2code, String L3code, String L4code, String customerId);
+	public boolean checkDuplicateWebCRMTickets(WebFormData formData);
 
-	public List<MplWebCrmModel> getCrmParentChildNodes(String nodeParent);
 }

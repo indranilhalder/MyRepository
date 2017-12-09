@@ -32,6 +32,8 @@ public class TicketWebForm
 	private String comment;
 	private List<MultipartFile> attachments;
 	private List<String> attachmentFiles;
+	private String nodeL2Text;
+	private String nodeL3Text;
 
 	/**
 	 * @return the ticketType
@@ -297,11 +299,46 @@ public class TicketWebForm
 	}
 
 	/**
-	 * @param nodeL0 the nodeL0 to set
+	 * @param nodeL0
+	 *           the nodeL0 to set
 	 */
-	public void setNodeL0(String nodeL0)
+	public void setNodeL0(final String nodeL0)
 	{
 		this.nodeL0 = nodeL0;
+	}
+
+	/**
+	 * @return the nodeL2Text
+	 */
+	public String getNodeL2Text()
+	{
+		return nodeL2Text;
+	}
+
+	/**
+	 * @param nodeL2Text
+	 *           the nodeL2Text to set
+	 */
+	public void setNodeL2Text(final String nodeL2Text)
+	{
+		this.nodeL2Text = nodeL2Text;
+	}
+
+	/**
+	 * @return the nodeL3Text
+	 */
+	public String getNodeL3Text()
+	{
+		return nodeL3Text;
+	}
+
+	/**
+	 * @param nodeL3Text
+	 *           the nodeL3Text to set
+	 */
+	public void setNodeL3Text(final String nodeL3Text)
+	{
+		this.nodeL3Text = nodeL3Text;
 	}
 
 

@@ -46,9 +46,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.granule.json.JSONException;
-import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
@@ -116,7 +115,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			formData.setL2code(webForm.getNodeL2());
 			formData.setL3code(webForm.getNodeL3());
 			formData.setL4code(webForm.getNodeL4());
-			formData.setTicketType(webForm.getTicketType());
+			//formData.setTicketType(webForm.getTicketType());
 
 			//uploading file if any
 			if (CollectionUtils.isNotEmpty(webForm.getAttachmentFiles()))
@@ -126,6 +125,8 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			ticketRefId = mplWebFormFacade.sendWebformTicket(formData);
 			model.addAttribute("ticketRefId", ticketRefId);
 			model.addAttribute("ticketForm", webForm);
+			model.addAttribute("issue", webForm.getNodeL2Text());
+			model.addAttribute("subIssue", webForm.getNodeL3Text());
 		}
 		catch (final Exception e)
 		{
@@ -135,15 +136,15 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	}
 
 	@RequestMapping(value = "/crmChildrenNodes", method = RequestMethod.GET)
-	public @ResponseBody JSONObject getChildrens(@RequestParam(value = "nodeParent") final String nodeParent)
+	public @ResponseBody WebForm getChildrens(@RequestParam(value = "nodeParent") final String nodeParent)
 			throws CMSItemNotFoundException
 	{
-		final JSONObject jsonObj = new JSONObject();
+		WebForm jsonObj = new WebForm();
 		try
 		{
-			jsonObj.put("nodes", mplWebFormFacade.getWebCRMChildren(nodeParent));
+			jsonObj = mplWebFormFacade.getWebCRMChildren(nodeParent);
 		}
-		catch (final JSONException e)
+		catch (final Exception e)
 		{
 			LOG.error("getChildrens" + e);
 		}
@@ -152,7 +153,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	}
 
 	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
-	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final List<MultipartFile> uploadFile)
+	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final MultipartFile uploadFile)
 			throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
@@ -164,33 +165,31 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		{
 			try
 			{
-				for (final MultipartFile filename : uploadFile)
+
+				final byte barr[] = uploadFile.getBytes();
+				final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+				nowDate = sdf.format(new Date());
+				path = Paths.get(fileUploadLocation + File.separator + nowDate);
+				//if directory exists?
+				if (!Files.exists(path))
 				{
-					final byte barr[] = filename.getBytes();
-					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-					nowDate = sdf.format(new Date());
-					path = Paths.get(fileUploadLocation + File.separator + nowDate);
-					//if directory exists?
-					if (!Files.exists(path))
+					try
 					{
-						try
-						{
-							Files.createDirectories(path);
-						}
-						catch (final IOException e)
-						{
-							//fail to create directory
-							LOG.error("Exception ,While creating the Directory " + e.getMessage());
-						}
+						Files.createDirectories(path);
 					}
-					final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
-							+ filename.getOriginalFilename()));
-					bout.write(barr);
-					bout.flush();
-					bout.close();
-					LOG.debug("FileUploadLocation   :" + fileUploadLocation);
-					fileUploadLocations.add(fileUploadLocation);
+					catch (final IOException e)
+					{
+						//fail to create directory
+						LOG.error("Exception ,While creating the Directory " + e.getMessage());
+					}
 				}
+				final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
+						+ uploadFile.getOriginalFilename()));
+				bout.write(barr);
+				bout.flush();
+				bout.close();
+				LOG.debug("FileUploadLocation   :" + fileUploadLocation);
+				fileUploadLocations.add(fileUploadLocation);
 			}
 			catch (final Exception e)
 			{

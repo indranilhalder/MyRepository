@@ -1338,6 +1338,7 @@
 		<property name="customerId" type="String" />
 		<property name="customerName" type="String" />
 		<property name="customerEmail" type="String" />
+		<property name="customerMobile" type="String" />
 		<property name="status" type="String" />
 		<property name="attachments" type="String" />
 	</bean>
