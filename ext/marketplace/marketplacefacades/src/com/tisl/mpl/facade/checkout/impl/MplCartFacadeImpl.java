@@ -3064,16 +3064,32 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * this method calls service to get inventories for stores.
 	 *
 	 *
-	 * @param storeLocationRequestDataList
+	 * @param sellerUssId
 	 * @return returns Stores with inventories.
 	 */
 	@Override
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId)
 	{
 
 		LOG.debug("from getStoreLocationforCnC PDP");
-		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList, sellerUssId);
+	}
+
+	/**
+	 * this method calls service to get inventories for stores.
+	 *
+	 *
+	 * @param sellerUssId
+	 * @return returns Stores with inventories.
+	 */
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnCMobile(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId, final CartModel cartModel)
+	{
+
+		LOG.debug("from getStoreLocationforCnC PDP");
+		return mplCommerceCartService.getStoreLocationsforCnCMobile(storeLocationRequestDataList, sellerUssId, cartModel);
 	}
 
 	@Override

@@ -504,5 +504,18 @@ public interface MplPaymentFacade
 	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer);
 
 	public String fetchBanknameFromBin(final String cardBinNo);//TPR-7486
+	/**
+	 * Added for paytm integration
+	 * 
+	 * @param juspayOrderId
+	 * @param paymentMethodType
+	 * @param paymentMethod
+	 * @param redirectAfterPayment
+	 * @param format
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public String getPaytmOrderStatus(String juspayOrderId, String paymentMethodType, String paymentMethod,
+			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
 
 }

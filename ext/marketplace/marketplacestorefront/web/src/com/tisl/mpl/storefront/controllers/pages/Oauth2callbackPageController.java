@@ -55,13 +55,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import atg.taglib.json.util.JSONException;
+import atg.taglib.json.util.JSONObject;
+
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
-import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -73,10 +75,6 @@ import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.util.ExceptionUtil;
-
-import atg.taglib.json.util.JSONException;
-import atg.taglib.json.util.JSONObject;
-
 
 
 /**
@@ -102,68 +100,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private static final String OAuth_2_CMS_PAGE = "oauth2callback";
 	private HttpSessionRequestCache httpSessionRequestCache;
 
-	@Resource(name = "GigyaService")
-	private GigyaService gigyaservice;
-
 	@Autowired
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
-	private String gigyaUID;
-	private String signature;
-	private String timestamp;
-
-	@Autowired
-	private ConfigurationService configurationService;
-
-	private static final String GIGYA_USER_VALIDATION_ENABLED = "gigya.validateuser.enabled";
-	private static final String TRUE_STATUS = "true";
-
-	public GigyaService getGigyaservice()
-	{
-		return gigyaservice;
-	}
-
-	public void setGigyaservice(final GigyaService gigyaservice)
-	{
-		this.gigyaservice = gigyaservice;
-	}
-
-
-	/**
-	 * @return the gigyaUID
-	 */
-	public String getGigyaUID()
-	{
-		return gigyaUID;
-	}
-
-	/**
-	 * @param gigyaUID
-	 *           the gigyaUID to set
-	 */
-	public void setGigyaUID(final String gigyaUID)
-	{
-		this.gigyaUID = gigyaUID;
-	}
-
-	public String getSignature()
-	{
-		return signature;
-	}
-
-	public void setSignature(final String signature)
-	{
-		this.signature = signature;
-	}
-
-	public String getTimestamp()
-	{
-		return timestamp;
-	}
-
-	public void setTimestamp(final String timestamp)
-	{
-		this.timestamp = timestamp;
-	}
 
 	@Resource(name = ModelAttributetConstants.HTTP_SESSION_REQUEST_CACHE)
 	public void setHttpSessionRequestCache(final HttpSessionRequestCache accHttpSessionRequestCache)
@@ -173,6 +111,9 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	@Autowired
 	private CartFacade cartFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	protected static final String REDIRECT_URL_CHOOSE_DELIVERY_METHOD = "/checkout/multi/delivery-method/choose";
 
@@ -196,8 +137,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String oauth2callback(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel)
-			throws CMSItemNotFoundException, IOException, JSONException
+			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException,
+			IOException, JSONException
 	{
 		try
 		{
@@ -220,8 +161,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			}
 			else if (request.getParameter(ModelAttributetConstants.CODE) != null
 					&& request.getParameter(ModelAttributetConstants.STATE) != null
-					&& request.getParameter(ModelAttributetConstants.STATE)
-							.equals(request.getSession().getAttribute(ModelAttributetConstants.STATE)))
+					&& request.getParameter(ModelAttributetConstants.STATE).equals(
+							request.getSession().getAttribute(ModelAttributetConstants.STATE)))
 			{
 				//Google code
 				request.getSession().removeAttribute(ModelAttributetConstants.STATE);
@@ -267,8 +208,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		}
 		catch (final IllegalArgumentException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0012));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0012));
 			session.removeAttribute(ModelAttributetConstants.SOCIAL_LOGIN);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -302,8 +243,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			@RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
 			@RequestParam(ModelAttributetConstants.SIGNATURE) final String signature,
 			@RequestParam(ModelAttributetConstants.PROVIDER) final String provider,
-			@RequestParam(value = ModelAttributetConstants.GENDER, required = false) final String gender, final ExtRegisterForm form,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
+			@RequestParam(value = ModelAttributetConstants.GENDER, required = false) final String gender,
+			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException, IOException
 
 	{
@@ -319,6 +260,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			LOG.debug("Method socialLogin, SIGNATURE " + signature);
 			LOG.debug("Method socialLogin,PROVIDER " + provider);
 			LOG.debug("Method socialLogin, GENDER " + gender);
+
 
 			final String fbEmail = emailId;
 
@@ -336,30 +278,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				form.setLastName(lName);
 			}
 
-			if (StringUtils.isNotEmpty(uid))
-			{
-
-
-				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
-
-
-				setGigyaUID(decodedUid);
-			}
-			if (StringUtils.isNotEmpty(signature))
-			{
-
-				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
-
-
-				setSignature(decodedSignature);
-			}
-			if (StringUtils.isNotEmpty(timestamp))
-			{
-
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
-
-				setTimestamp(decodedTimestamp);
-			}
 			if (StringUtils.isNotEmpty(gender))
 			{
 				form.setGender(gender);
@@ -384,23 +302,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				storeReferer(referer, request, response);
 			}
 
-			//INC144319511
-
-			final String isUserValidationEnabled = configurationService.getConfiguration().getString(GIGYA_USER_VALIDATION_ENABLED);
-			if (null != isUserValidationEnabled && isUserValidationEnabled.equalsIgnoreCase(TRUE_STATUS))
-			{
-				if(!gigyaservice.validateUser(getGigyaUID(), emailId))
-				{
-					return ModelAttributetConstants.LOGIN;
-				}
-			}
-
-			if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
-			{
-				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
-			}
-
-			return "Invalid Signature";
+			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -483,7 +385,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		try
 		{
 			boolean isExist = false; //SDI-639
-			
+
 			//SDI-639 starts here
 			int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
 			//added for IQA starts here
@@ -565,7 +467,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				data.setSocialMediaType(ModelAttributetConstants.GOOGLE);
 			}
 
-			data.setUid(getGigyaUID());
+			//data.setUid(getGigyaUID());//to-do
 			final boolean isMobile = false;
 
 			LOG.debug("Method processRegisterUserRequestForOAuth2, isMobile " + isMobile);
@@ -682,6 +584,83 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		{
 			httpSessionRequestCache.saveRequest(request, response);
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/socialLoginAjax", method = RequestMethod.GET)
+	public String socialLoginNew(@RequestParam(ModelAttributetConstants.REFERER) final String referer,
+			@RequestParam(ModelAttributetConstants.EMAIL_ID) final String emailId,
+			@RequestParam(ModelAttributetConstants.F_NAME) final String fName,
+			@RequestParam(ModelAttributetConstants.L_NAME) final String lName, @RequestParam("token") final String token,
+			@RequestParam(ModelAttributetConstants.PROVIDER) final String provider, final ExtRegisterForm form,
+			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException, IOException
+
+	{
+
+		try
+		{
+			LOG.debug("Method socialLogin, REFERER " + referer);
+			LOG.debug("Method socialLogin, EMAIL ID " + emailId);
+			LOG.debug("Method socialLogin, FIRST NAME " + fName);
+			LOG.debug("Method socialLogin,LAST NAME " + lName);
+			LOG.debug("Method socialLogin, TOKEN " + token);
+			LOG.debug("Method socialLogin,PROVIDER " + provider);
+
+
+			if (StringUtils.isNotEmpty(emailId))
+			{
+				model.addAttribute(ModelAttributetConstants.ID, emailId);
+				form.setEmail(emailId);
+			}
+			if (StringUtils.isNotEmpty(fName))
+			{
+				form.setFirstName(fName);
+			}
+			else
+			{
+				form.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+			}
+			if (StringUtils.isNotEmpty(lName))
+			{
+				form.setLastName(lName);
+			}
+			else
+			{
+				form.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+			}
+
+
+			String socialLogin = "";
+
+			if (provider.equalsIgnoreCase("googleplus"))
+			{
+				socialLogin = ModelAttributetConstants.GOOGLE;
+			}
+			else if (provider.equalsIgnoreCase("facebook"))
+			{
+				socialLogin = ModelAttributetConstants.FACEBOOK;
+			}
+
+			session.setAttribute(ModelAttributetConstants.SOCIAL_LOGIN, ModelAttributetConstants.SOCIAL_LOGIN);
+
+			if (referer != null)
+			{
+				storeReferer(referer, request, response);
+			}
+			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+
+
+		return ControllerConstants.Views.Pages.Oauth2callback.oauth2callback;
 	}
 
 }

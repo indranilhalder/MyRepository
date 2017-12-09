@@ -117,10 +117,10 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 						{
 							for (final BulkSmsPerBatch obj : result1)
 							{
-								deleteDynamicQuery.append("'");
+								deleteDynamicQuery.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
 								deleteDynamicQuery.append(obj.getTxnId());
-								deleteDynamicQuery.append("'");
-								deleteDynamicQuery.append(",");
+								deleteDynamicQuery.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+								deleteDynamicQuery.append(MarketplacecommerceservicesConstants.COMMA_CONSTANT);
 							}
 						}
 						a += batch;

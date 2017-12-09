@@ -15,22 +15,18 @@ import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
-import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
 import de.hybris.platform.servicelayer.session.SessionService;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -102,12 +98,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
 
-	@Resource(name = "priceDataFactory")
-	private PriceDataFactory priceDataFactory;
-
-	@Resource(name = "commonI18NService")
-	private CommonI18NService commonI18NService;
-
 	private MplCMSPageServiceImpl mplCMSPageService;
 
 
@@ -164,8 +154,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
-		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService
-				.evaluateCMSComponents(contentSlot.getCmsComponents(), null);
+		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService.evaluateCMSComponents(
+				contentSlot.getCmsComponents(), null);
 		LuxuryComponentsListWsDTO luxuryComponentsList = luxuryComponentsListWsDTO;
 
 		if (null != abstractCMSComponentModelList)
@@ -433,7 +423,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 		return luxuryComponent;
 	}
-
 
 	private LuxuryComponentsListWsDTO getLuxCMSImagesComponentWsDTO(final CMSImageComponentModel CMSImageComponent,
 			final LuxuryComponentsListWsDTO luxuryComponent)

@@ -6077,8 +6077,7 @@
 						<description>Attribute contains transaction ID to be refunded</description>
 					</attribute>
 				</attributes>
-			</itemtype>	
-
+			</itemtype>
 		</typegroup>
 		<!-- Blacklist Model -->
 		<typegroup name="Marketplace">
@@ -6271,6 +6270,86 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					
+					<!-- TPR-7408 starts here -->
+					
+					<attribute qualifier="promoProductCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoProductCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoProductCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+										
+					<!-- TPR-7408 ends here -->
+					
+					
 					<attribute qualifier="totalProductLevelDisc" autocreate="true"
 						type="java.lang.Double">
 						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
@@ -6293,6 +6372,14 @@
 						<description>NET AMOUNT(tax inclusive) after all disc. in Rs.</description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="chargeback" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>CHARGEBACK AMOUNT(tax inclusive) after all disc. in Rs.</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="isBOGOapplied" autocreate="true"
@@ -8125,7 +8212,7 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Added for TPR-5954 || Start -->
-					<attribute qualifier="subReason" type="java.lang.String">
+					<!-- <attribute qualifier="subReason" type="java.lang.String">
 						<description>Sub reason value</description>
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
@@ -8139,7 +8226,7 @@
 						<description>url of the uploaded image</description>
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 					<!-- Added for TPR-5954 || End -->
 				</attributes>
 			</itemtype>
@@ -11442,8 +11529,8 @@
 			</itemtype>
 		</typegroup>
 		<!-- Size Guide Changes ends -->
-
-		<!-- A+ Content TPR-978 -->
+					
+	<!-- A+ Content TPR-978 -->
 		<typegroup name="APlusContentGroup">
 			<itemtype code="APlusContent" generate="true" extends="GenericItem"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.APlusContentGroup">
@@ -13934,8 +14021,9 @@
 		</itemtype>
 	</typegroup>
 	<!-- Car-Changes-End-CAR-331 -->	
+	
 	<!-- TPR-5954 || Category specific return reason ||Start -->
-     <typegroup name="ReturnCat">
+    <typegroup name="ReturnCat">
 	<itemtype code="ReturnReasonCatChild" autocreate="true"
 			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.ReturnReasonCatChild">
 			<deployment table="MplRetReasonCat" typecode="25126" />
@@ -13984,7 +14072,7 @@
 	<!-- TPR-5954 || Category specific return reason ||End -->	
 	
 	<!-- SDI-2813 || OMS Order Sync ||Start -->
-     <typegroup name="OrderSyncLog&Intelligence">
+     <typegroup name="OrderSyncLog_Intelligence">
 	<itemtype code="OrderSyncLog" autocreate="true"
 			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.OrderSyncLog">
 			<deployment table="MplOrderSyncLog" typecode="25128" />
@@ -14030,6 +14118,64 @@
 					</attribute>
 			</attributes>
 		</itemtype>
-	</typegroup>		
+	</typegroup>
+			
+		<!-- gigya data pulling -->
+	<typegroup name="Gigya_Data_Pulling">
+		<itemtype code="GigyaResponseCapture" autocreate="true" generate="true">
+			<deployment table="GigyaResponseCapture" typecode="25300" />
+			<attributes>
+				<attribute autocreate="true" qualifier="listingId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute qualifier="reviewSummaryResponse" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+				<attribute qualifier="reviewDetailResponse" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
+			
   </itemtypes>
+
 </items>

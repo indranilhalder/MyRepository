@@ -2430,10 +2430,6 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
-
- 
-
-	
 	<bean id="refundClearPerformableDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
 
@@ -2454,5 +2450,18 @@
 			autowire="byName">
 	</bean>
 	<!--  TPR-7412 end -->
+
+	<!-- SDI-2924 -->
+	<bean id="forwardPaymentCleanUpService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ForwardPaymentCleanUpServiceImpl" />
+	<bean id="forwardPaymentCleanUpDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ForwardPaymentCleanUpDaoImpl">
+	</bean>
+	<!-- TPR-7415 -->
+    <bean id="omsSubmissionPendingReportJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.OmsSubmissionPendingReportJob"
+		autowire="byName">
+	</bean>
+    
 </beans>
 

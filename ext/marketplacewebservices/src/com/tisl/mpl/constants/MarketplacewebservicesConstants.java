@@ -663,5 +663,5 @@ public class MarketplacewebservicesConstants
 	//added for TPR-1348
 	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
 
-
+	public static final String PAYTM = "PAYTM".intern();
 }

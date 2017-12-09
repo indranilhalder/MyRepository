@@ -370,6 +370,34 @@
 						<property name="hmcIndexField"><value>"thefield"</value></property>
 					</custom-properties>
 				</attribute>
+				<!-- TPR-7408 starts here -->
+				<attribute qualifier="couponCostCentreOnePercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre One Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+
+                 <attribute qualifier="couponCostCentreTwoPercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre Two Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+
+				 <attribute qualifier="couponCostCentreThreePercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre Three Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+                 <!-- TPR-7408 ends here -->
 			</attributes>
 		</itemtype>
 		

@@ -280,6 +280,15 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 		double percentageDiscount = 0.00D;
 		//Map<String, Integer> qualifyingCountMap = null;
 		String productPromoCode = null;
+
+		//TPR-7408 starts here
+		Double promoCostCentreOnePercentage = null;
+		Double promoCostCentreTwoPercentage = null;
+		Double promoCostCentreThreePercentage = null;
+		//TPR-7408 ends here
+
+
+
 		Map<String, List<String>> productAssociatedItemsMap = null;
 		boolean isPercentageDisc = false;
 
@@ -295,6 +304,42 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 					.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
 			isPercentageDisc = ctx.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC) != null ? ((Boolean) ctx
 					.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC)).booleanValue() : false;
+
+			//TPR-7408 starts here
+			//			promoCostCentreOnePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) : null;
+			//
+			//			promoCostCentreTwoPercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) : null;
+			//
+			//			promoCostCentreThreePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) : null;
+
+			try
+			{
+				promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTREONE);
+				promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETWO);
+
+				promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+
+			}
+			catch (final JaloInvalidParameterException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (final JaloSecurityException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			//TPR-7408 ends here
+
+
 		}
 
 		//String validProductUSSID = null;
@@ -346,6 +391,16 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			//****New Code Added for TISPRO-670 ends*******
 
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+
+			//TPR-7408 starts here
+			orderEntry
+					.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE, promoCostCentreOnePercentage);
+			orderEntry
+					.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO, promoCostCentreTwoPercentage);
+			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
+					promoCostCentreThreePercentage);
+			//TPR-7408 ends here
+
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
 					Double.valueOf(amtTobeDeductedAtlineItemLevel));

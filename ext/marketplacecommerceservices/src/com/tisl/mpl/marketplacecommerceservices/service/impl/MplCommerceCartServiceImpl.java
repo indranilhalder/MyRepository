@@ -6273,97 +6273,146 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	@Override
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId)
 	{
 		LOG.debug("from getStoreLocationsforCnC method in serice PDP");
 		final List<StoreLocationResponseData> responseList = new ArrayList<StoreLocationResponseData>();
 		try
 		{
-			// Commented to stop Store ATS Call
-
-			//calls service with stores
-
-			//			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
-			//					.prepStoreLocationsToOMS(storeLocationRequestDataList);
-
+			//fetch oms response from session added when pincode servicebility happens
 			final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_PDP);
 			LOG.debug("******responceData******** " + pincoderesponseDataList);
 			if (null != pincoderesponseDataList)
 			{
-				for (final StoreLocationRequestData storeLocationResponseData : storeLocationRequestDataList)
+				for (final PinCodeResponseData pinCodeResponseData : pincoderesponseDataList)
 				{
-
-					for (final PinCodeResponseData pinCodeResponseData : pincoderesponseDataList)
+					if (pinCodeResponseData.getUssid().equalsIgnoreCase(sellerUssId))
 					{
-						if (pinCodeResponseData.getUssid().equalsIgnoreCase(storeLocationResponseData.getUssId()))
+						final StoreLocationResponseData responseData = new StoreLocationResponseData();
+						List<ATSResponseData> atsResponseDataList = null;
+						for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
 						{
-							final StoreLocationResponseData responseData = new StoreLocationResponseData();
-							List<ATSResponseData> atsResponseDataList = null;
-							for (final DeliveryDetailsData deliveryDetailsData : pinCodeResponseData.getValidDeliveryModes())
+							if (deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
 							{
-								if (deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+								atsResponseDataList = new ArrayList<ATSResponseData>();
+								if (CollectionUtils.isNotEmpty(deliveryDetailsData.getCNCServiceableSlavesData()))
 								{
-									atsResponseDataList = new ArrayList<ATSResponseData>();
-									if (null != deliveryDetailsData.getCNCServiceableSlavesData()
-											&& !deliveryDetailsData.getCNCServiceableSlavesData().isEmpty())
+									for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
+											.getCNCServiceableSlavesData())
 									{
-										for (final CNCServiceableSlavesData cncServiceableSlavesData : deliveryDetailsData
-												.getCNCServiceableSlavesData())
-										{
-											final ATSResponseData data = new ATSResponseData();
+										final ATSResponseData data = new ATSResponseData();
 
-											data.setStoreId(cncServiceableSlavesData.getStoreId());
-											data.setQuantity(cncServiceableSlavesData.getQty().intValue());
+										data.setStoreId(cncServiceableSlavesData.getStoreId());
+										data.setQuantity(cncServiceableSlavesData.getQty().intValue());
 
-											atsResponseDataList.add(data);
-										}
-									}
-									else
-									{
-
-										final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
-												.prepStoreLocationsToOMS(storeLocationRequestDataList, null);
-										if (null != responseObject && null != responseObject.getItem()
-												&& !responseObject.getItem().isEmpty())
-										{
-											for (final StoreLocationRequestData storeLocationResponse : storeLocationRequestDataList)
-											{
-												for (final StoreLocatorResponseItem item : responseObject.getItem())
-												{
-													if (item.getUssId().equalsIgnoreCase(storeLocationResponse.getUssId()))
-													{
-														for (final StoreLocatorAtsResponse res : item.getATS())
-														{
-															final ATSResponseData data = new ATSResponseData();
-
-															data.setStoreId(res.getStoreId());
-															if (null != res.getQuantity())
-															{
-																data.setQuantity(res.getQuantity().intValue());
-															}
-															atsResponseDataList.add(data);
-														}
-													}
-												}
-												responseData.setUssId(pinCodeResponseData.getUssid());
-												responseData.setAts(atsResponseDataList);
-												responseList.add(responseData);
-
-											}
-										}
-										return responseList;
+										atsResponseDataList.add(data);
 									}
 								}
+								else
+								{
+									final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
+											.prepStoreLocationsToOMS(storeLocationRequestDataList, null);
+									if (null != responseObject && null != responseObject.getItem() && !responseObject.getItem().isEmpty())
+									{
+
+										for (final StoreLocatorResponseItem item : responseObject.getItem())
+										{
+											if (item.getUssId().equalsIgnoreCase(sellerUssId))
+											{
+												for (final StoreLocatorAtsResponse res : item.getATS())
+												{
+													final ATSResponseData data = new ATSResponseData();
+
+													data.setStoreId(res.getStoreId());
+													if (null != res.getQuantity())
+													{
+														data.setQuantity(res.getQuantity().intValue());
+													}
+													atsResponseDataList.add(data);
+												}
+											}
+
+											responseData.setUssId(pinCodeResponseData.getUssid());
+											responseData.setAts(atsResponseDataList);
+											responseList.add(responseData);
+
+										}
+									}
+									return responseList;
+								}
 							}
-							responseData.setUssId(pinCodeResponseData.getUssid());
-							responseData.setAts(atsResponseDataList);
-							responseList.add(responseData);
 						}
+						responseData.setUssId(pinCodeResponseData.getUssid());
+						responseData.setAts(atsResponseDataList);
+						responseList.add(responseData);
 					}
 				}
 			}
+			return responseList;
+		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("********* Pincode serviceability exception :" + ex);
+			if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0001"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			else if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0002"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
+			else
+			{
+				throw new ClientEtailNonBusinessExceptions(ex);
+			}
 
+
+		}
+	}
+
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnCMobile(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId, final CartModel cartModel)
+	{
+		LOG.debug("from getStoreLocationsforCnC method in serice");
+		final List<StoreLocationResponseData> responseList = new ArrayList<StoreLocationResponseData>();
+		try
+		{
+			// Commented to stop Store ATS Call
+			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService.prepStoreLocationsToOMS(
+					storeLocationRequestDataList, cartModel);
+			if (null != responseObject && null != responseObject.getItem() && !responseObject.getItem().isEmpty())
+			{
+				List<ATSResponseData> atsResponseDataList = null;
+				for (final StoreLocationRequestData storeLocationResponse : storeLocationRequestDataList)
+				{
+					final StoreLocationResponseData responseData = new StoreLocationResponseData();
+
+					for (final StoreLocatorResponseItem item : responseObject.getItem())
+					{
+						if (item.getUssId().equalsIgnoreCase(storeLocationResponse.getUssId()))
+						{
+							atsResponseDataList = new ArrayList<ATSResponseData>();
+							for (final StoreLocatorAtsResponse res : item.getATS())
+							{
+								final ATSResponseData data = new ATSResponseData();
+
+								data.setStoreId(res.getStoreId());
+								if (null != res.getQuantity())
+								{
+									data.setQuantity(res.getQuantity().intValue());
+								}
+								atsResponseDataList.add(data);
+							}
+						}
+					}
+					responseData.setUssId(storeLocationResponse.getUssId());
+					responseData.setAts(atsResponseDataList);
+					responseList.add(responseData);
+
+				}
+			}
 			return responseList;
 		}
 		catch (final ClientEtailNonBusinessExceptions ex)
