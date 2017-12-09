@@ -458,7 +458,8 @@
  					&& $("#pageType").val() != "productsearch" 
  					&& $("input[name=productGrid]").length == 0
  					&& $("input[name=apparelCategoryLandingPage]").length == 0
-					&& $("input[name=BrandLayoutPage]").length == 0){
+					&& $("input[name=BrandLayoutPage]").length == 0
+					&& $("#pageType").val() != "/faq"){
  			callGigya();
  			}
  		});

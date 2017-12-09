@@ -2430,6 +2430,15 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
+	
+	<bean id="mplWebFormDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplWebFormDaoImpl" >
+	</bean>
+	
+	<bean id="mplWebFormService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplWebFormServiceImpl" >
+	</bean>
+
 	<bean id="refundClearPerformableDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
 
