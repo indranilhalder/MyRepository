@@ -3468,7 +3468,69 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.LuxurySimpleBannerComponentWsDTO>" />
 
 	</bean>
-
+	
+	<bean class="com.tisl.mpl.wsdto.CRMWsData">
+		<property name="nodeCode" type="String"></property>
+		<property name="nodeDesc" type="String"></property>
+		<property name="ticketType" type="String"></property>
+		<property name="nodeType" type="String" />
+		<property name="ticketAnswer" type="String" />
+		<property name="createTicketAllowed" type="boolean" />
+		<property name="nodeDisplayAllowed" type="boolean" />
+		<property name="children" type="java.util.List&lt;com.tisl.mpl.wsdto.CRMWsData>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CRMWsDataParent">
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />
+	<property name="nodes" type="java.util.List&lt;com.tisl.mpl.wsdto.CRMWsData>" />
+	</bean>
+	
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CRMWebFormDataRequest">
+		<property name="L0code" type="String"></property>
+		<property name="L1code" type="String"></property>
+		<property name="L2code" type="String"></property>
+		<property name="L3code" type="String" />
+		<property name="L4code" type="String" />
+		<property name="attachments" type="String" />
+		<property name="ticketType" type="String" />
+		<property name="crmTicketRef" type="String" />
+		<property name="ticketSubType" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="commerceTicketId" type="String" />
+		<property name="subOrderCode" type="String" />
+		<property name="customerId" type="String" />
+		<property name="orderCode" type="String" />
+		<property name="comment" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CRMWebFormDataResponse">
+		<property name="status" type="String" />
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="referenceNum" type="String" />
+		<property name="successText" type="String" />
+		<property name="issue" type="String" />
+		<property name="subIssue" type="String" />
+		<property name="comment" type="String" />
+		<property name="emailId" type="String" />
+		<property name="contatcNum" type="String" />
+	</bean>
+		
+	<bean class="com.tisl.mpl.wsdto.FileUploadResponseData">
+	<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />
+		<property name="fileURL" type="String" />
+		<property name="uploadReferenceNumber" type="String" />
+	</bean>
+	
 	<!-- TPR-7486 -->
 	<bean class="com.tisl.mpl.wsdto.OfferListWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="totalOffers" type="String" />

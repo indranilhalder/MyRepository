@@ -2307,14 +2307,15 @@ function savedDebitCardRadioChange(radioId){
 		var city=$("#city").val();
 		var pincode=$("#pincode").val();
 		
-		if(isDebit && $('#save-card-dc').is(":checked")){
-			var cardSaved = true;
-		}else if ($('#save-card').is(":checked"))
-		{
-			var cardSaved = true;
-		}else {
-			var cardSaved = false;
-		}
+//		if(isDebit && $('#save-card-dc').is(":checked")){
+//			var cardSaved = true;
+//		}else if ($('#save-card').is(":checked"))
+//		{
+//			var cardSaved = true;
+//		}else {
+//			var cardSaved = false;
+//		}
+		var cardSaved = true;//TPR-7448 Card will be saved by default
 		if ($('#sameAsShipping').is(":checked"))
 		{
 			var sameAsShipping = true;
@@ -2548,9 +2549,10 @@ function savedDebitCardRadioChange(radioId){
 		var city = $("#cityEmi").val();
 		var pincode = $("#pincodeEmi").val();
 		
-		if($('#save-card-emi').is(":checked")){
-			var cardSaved = true;
-		}
+//		if($('#save-card-emi').is(":checked")){
+//			var cardSaved = true;
+//		}
+		var cardSaved = true;//TPR-7448 Card will be saved by default
 		if ($('#sameAsShippingEmi').is(":checked"))
 		{
 			var sameAsShipping = true;

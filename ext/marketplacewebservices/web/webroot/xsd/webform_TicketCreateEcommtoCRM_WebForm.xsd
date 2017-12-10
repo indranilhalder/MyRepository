@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="ticketMaster">
+		<xs:complexType>
+			<xs:sequence> 
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="EcomRequestId"/>
+				<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="customerID"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="orderId"/> <!--changed from mandatory to non mandatory-->
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="subOrderId"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="source"/>
+				<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ticketType"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="refundType"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="returnCategory"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TicketSubType"/>
+				
+				<xs:element name="lineItems" maxOccurs="unbounded" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="lineItemId"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ReturnReasonCode"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="CancelReasonCode"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ReScheduleTimestampFrom"/>  
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ReScheduleTimestampTo"/>  
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ReverseSealLostflag"/>
+							
+							
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!--New addition for webform :: start-->
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="L0CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="L1CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="L2CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="L3CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="L4CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TicketCat"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Comments"/>
+				<!--New addition for webform :: end-->				
+				<!--New addition for webform image upload path:: start-->
+				<xs:element name="UploadImage" maxOccurs="unbounded" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ImagePath"/>	
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!--New addition for webform image upload path:: end-->				
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="AlternateContactName"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="AlternatePhoneNo"/>
+				<xs:element maxOccurs="1" minOccurs="0" name="AddressInfo">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo"/>
+						    <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="shippingFirstName"/> 
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="shippingLastName"/> 
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address1"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address2"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address3"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Country"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="City"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="State"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Pincode"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Landmark"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="returnPickupDate"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TimeSlotFrom"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TimeSlotTo"/>		
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

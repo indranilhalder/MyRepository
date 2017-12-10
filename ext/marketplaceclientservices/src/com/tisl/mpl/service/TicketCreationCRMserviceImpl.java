@@ -3,10 +3,14 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -26,11 +30,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.data.DuplicateTicketRequestData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.wsdto.AddressInfoDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketlineItemsXMLData;
+import com.tisl.mpl.wsdto.UploadImage;
 
 
 
@@ -49,6 +56,10 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+	@Resource(name = "clientIntegration")
+	private ClientIntegration clientIntegration;
+
+
 
 	@Override
 	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData) throws JAXBException
@@ -249,7 +260,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -362,7 +373,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -584,4 +595,189 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		LOG.info("Finished executing overloaded method ticketCreationModeltoWsDTO....");
 	}
 
+	/**
+	 * This method is created to send the web form tickets to CRM via PI ( TPR-5989 )
+	 *
+	 * @return String message success or failure
+	 * @param mplWebCrmTicketModel
+	 * @throws JAXBException
+	 */
+	private DuplicateTicketRequestData populateDuplicateReq(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	{
+		final DuplicateTicketRequestData duplicateTicketRequestData = new DuplicateTicketRequestData();
+		if (null != mplWebCrmTicketModel.getTicketSubType() && mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase("NO"))
+		{
+			duplicateTicketRequestData.setCustomerId(mplWebCrmTicketModel.getCustomerId());
+		}
+		if (null != mplWebCrmTicketModel.getL0code())
+		{
+			duplicateTicketRequestData.setL0CatCode(mplWebCrmTicketModel.getL0code());
+		}
+		if (null != mplWebCrmTicketModel.getL1code())
+		{
+			duplicateTicketRequestData.setL1CatCode(mplWebCrmTicketModel.getL1code());
+		}
+		if (null != mplWebCrmTicketModel.getL2code())
+		{
+			duplicateTicketRequestData.setL2CatCode(mplWebCrmTicketModel.getL2code());
+		}
+		if (null != mplWebCrmTicketModel.getL3code())
+		{
+			duplicateTicketRequestData.setL3CatCode(mplWebCrmTicketModel.getL3code());
+		}
+		if (null != mplWebCrmTicketModel.getOrderCode())
+		{
+			duplicateTicketRequestData.setParentOrderId(mplWebCrmTicketModel.getOrderCode());
+		}
+		if (null != mplWebCrmTicketModel.getSubOrderCode())
+		{
+			duplicateTicketRequestData.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
+		}
+		if (null != mplWebCrmTicketModel.getTransactionId())
+		{
+			duplicateTicketRequestData.setTransactionId(mplWebCrmTicketModel.getTransactionId());
+		}
+		return duplicateTicketRequestData;
+	}
+
+	/**
+	 * This method is created to check the duplicate web from ticket ( TPR-5989 )
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @return String message success or failure
+	 * @throws JAXBException
+	 */
+	@Override
+	public String checkDuplicateWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	{
+		LOG.info("Starting to execute checkDuplicateWebFormTicket method....");
+		String result = null;
+		DuplicateTicketRequestData duplicateReq = null;
+		final StringWriter duplicateXmlString = new StringWriter();
+		try
+		{
+			duplicateReq = populateDuplicateReq(mplWebCrmTicketModel);
+			final JAXBContext context = JAXBContext.newInstance(DuplicateTicketRequestData.class);
+			final Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.marshal(duplicateReq, duplicateXmlString);
+
+			LOG.debug(" CRM Duplicate Ticket Xml File >>>>>>>>>>>>>>>> " + duplicateXmlString);
+			result = clientIntegration.checkDuplicateWebFormTicket(duplicateXmlString.toString());
+
+			LOG.info("Finished to execute checkDuplicateWebFormTicket method....");
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex);
+			throw ex;
+		}
+		return result;
+	}
+
+	/**
+	 * This method is created to populate the data for crm ticket
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @param subOrderModel
+	 * @param orderData
+	 * @param orderEntry
+	 * @return TicketMasterXMLData
+	 * @throws Exception
+	 */
+	@Override
+	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
+			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception
+	{
+		final AddressInfoDTO addressInfo = new AddressInfoDTO();
+		final TicketMasterXMLData ticket = new TicketMasterXMLData();
+		final UploadImage uploadImage = new UploadImage();
+		final List<UploadImage> uploadImageList = new ArrayList<UploadImage>();
+
+		try
+		{
+			if (null != mplWebCrmTicketModel.getCustomerId())
+			{
+				ticket.setCustomerID(mplWebCrmTicketModel.getCustomerId());
+			}
+			if (null != mplWebCrmTicketModel.getOrderCode())
+			{
+				ticket.setOrderId(mplWebCrmTicketModel.getOrderCode());
+			}
+			if (null != mplWebCrmTicketModel.getSubOrderCode())
+			{
+				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
+			}
+			ticket.setTicketType("W");
+			if (null != mplWebCrmTicketModel.getTicketSubType())
+			{
+				ticket.setTicketSubType(mplWebCrmTicketModel.getTicketSubType());
+			}
+			if (StringUtils.isNotBlank(mplWebCrmTicketModel.getCommerceTicketId())) //to-do
+			{
+				ticket.setEcomRequestId(mplWebCrmTicketModel.getCommerceTicketId());
+			}
+			if (null != mplWebCrmTicketModel.getL0code())
+			{
+				ticket.setL0CatCode(mplWebCrmTicketModel.getL0code());
+			}
+			if (null != mplWebCrmTicketModel.getL1code())
+			{
+				ticket.setL1CatCode(mplWebCrmTicketModel.getL1code());
+			}
+			if (null != mplWebCrmTicketModel.getL2code())
+			{
+				ticket.setL2CatCode(mplWebCrmTicketModel.getL2code());
+			}
+			if (null != mplWebCrmTicketModel.getL3code())
+			{
+				ticket.setL3CatCode(mplWebCrmTicketModel.getL3code());
+			}
+			if (null != mplWebCrmTicketModel.getL4code())
+			{
+				ticket.setL4CatCode(mplWebCrmTicketModel.getL4code());
+			}
+			if (null != mplWebCrmTicketModel.getTicketType())
+			{
+				ticket.setTicketCat(mplWebCrmTicketModel.getTicketType());
+			}
+			if (null != mplWebCrmTicketModel.getComment())
+			{
+				ticket.setComments(mplWebCrmTicketModel.getComment());
+			}
+			if (null != mplWebCrmTicketModel.getAttachments())
+			{
+				final List<String> items = Arrays.asList(mplWebCrmTicketModel.getAttachments().split(","));
+				for (final String path : items)
+				{
+					uploadImage.setImagePath(path);
+					uploadImageList.add(uploadImage);
+				}
+				ticket.setUploadImage(uploadImageList);
+			}
+			if (null != mplWebCrmTicketModel.getCustomerMobile())// to -do
+			{
+				addressInfo.setPhoneNo(mplWebCrmTicketModel.getCustomerMobile());
+			}
+			ticket.setAddressInfo(addressInfo);
+			//Line item details loop
+			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
+			final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();
+			if (null != mplWebCrmTicketModel.getTransactionId())
+			{
+				ticketLineObj.setLineItemId(mplWebCrmTicketModel.getTransactionId());
+			}
+			ticketlineItemsXMLDataList.add(ticketLineObj);
+			ticket.setLineItemDataList(ticketlineItemsXMLDataList);
+
+			//call for sending it to PI
+			//ticketCreationCRM(ticket);
+		}
+		catch (final Exception ex)
+		{
+			LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
+			throw ex;
+		}
+		return ticket;
+	}
 }

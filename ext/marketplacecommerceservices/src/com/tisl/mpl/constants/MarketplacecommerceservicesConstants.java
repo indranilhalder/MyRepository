@@ -2356,6 +2356,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_CUSTOMER_SMS_5 = ".For few banks, It may take up to 10-15 days to reflect in your account.";
 	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
 
+	public static final String CRM_LO = "L0C1".intern();
+	public static final String CRM_FILE_UPLOAD_PATH = "crm.fileupload.path";
 
 	//TPR-7448
 	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {cardRefNo}=?cardRefNo and {voucher}=?voucher ";

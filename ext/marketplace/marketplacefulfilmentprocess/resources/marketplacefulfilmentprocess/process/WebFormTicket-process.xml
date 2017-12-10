@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="WebFormTicketAction" name="WebFormTicket-process" processClass="de.hybris.platform.webform.model.WebFormTicketProcessModel">
+
+	<action id="WebFormTicketAction" bean="WebFormTicketAction">
+		<transition name="NOK" to="failed"/>
+		<transition name="OK" to="success"/>
+	</action>
+
+
+	<end id="error" state="ERROR">All went wrong.</end>
+	<end id="failed" state="FAILED">Ticket not sent</end>
+	<end id="success" state="SUCCEEDED">Ticket sent</end>
+</process>
