@@ -217,6 +217,7 @@
 		<property name="type" type="String"/>
 		<property name="customerData" type="de.hybris.platform.commercefacades.user.data.CustomerData"/>
 		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="cartCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<!-- TPR-774 -->
 		<property name="subTotalDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="discountDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
