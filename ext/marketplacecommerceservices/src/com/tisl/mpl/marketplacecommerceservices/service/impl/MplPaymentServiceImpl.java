@@ -127,6 +127,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
@@ -2219,29 +2220,48 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		else if (null != orderModel)
 		{
 			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) && null != orderModel.getDiscounts().get(0)) //IQA for TPR-629
+			final List<DiscountModel> voucherDiscountList = orderModel.getDiscounts();
+			if (CollectionUtils.isNotEmpty(voucherDiscountList)) //IQA for TPR-629
 			{
-				final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
-						.getOrderEntryModelFromVouEntries((VoucherModel) orderModel.getDiscounts().get(0), orderModel); //Since only 1 voucher is applied to the cart and
-				//before promotion calculation only 1 discount will be present
-
-				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
+				for (final DiscountModel discount : voucherDiscountList)
 				{
-					for (final AbstractOrderEntryModel entry : entryList)
+					boolean isCartVoucher = false;
+					boolean isUserCoupon = false;
 
+					if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
 					{
-						entry.setCouponCode("");
-						entry.setCouponValue(Double.valueOf(0.00D));
-
-						//TPR-7408 starts here
-						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
-						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
-						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
-						//TPR-7408 ends here
-
-						//getModelService().save(entry);
+						isUserCoupon = true;
 					}
-					getModelService().saveAll(entryList);
+					else if (discount instanceof MplCartOfferVoucherModel)
+					{
+						isCartVoucher = true;
+					}
+
+					final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
+							.getOrderEntryModelFromVouEntries((VoucherModel) discount, orderModel);
+					if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
+					{
+						for (final AbstractOrderEntryModel entry : entryList)
+						{
+							if (isUserCoupon)
+							{
+								entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCouponValue(Double.valueOf(0.00D));
+
+								//TPR-7408 starts here
+								entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+								entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+								entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+							}
+							//TPR-7408 ends here
+							else if (isCartVoucher)
+							{
+								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+						}
+						getModelService().saveAll(entryList);
+					}
 				}
 			}
 
@@ -2415,8 +2435,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				cartModel.setDeliveryCost(Double.valueOf(deliveryCost));
 
-				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost
-						- cartDiscount.doubleValue());
+				final Double totalPriceAfterDeliveryCost = Double
+						.valueOf(subTotal.doubleValue() + deliveryCost - cartDiscount.doubleValue());
 
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
@@ -2472,7 +2492,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		/**********
 		 * This is required for calculating tship and ship del charge separately
 		 *
-		 * ***********/
+		 ***********/
 		double deliveryCost = 0.0d;
 
 		for (final AbstractOrderEntryModel cartentrymodel : cartModel.getEntries())
@@ -2565,6 +2585,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			if (null != orderData.getCouponDiscount() && null != orderData.getCouponDiscount().getValue())
 			{
 				value = Double.valueOf(value.doubleValue() + orderData.getCouponDiscount().getValue().doubleValue());
+			}
+
+			if (null != orderData.getCartCouponDiscount() && null != orderData.getCartCouponDiscount().getValue())
+			{
+				value = Double.valueOf(value.doubleValue() + orderData.getCartCouponDiscount().getValue().doubleValue());
 			}
 		}
 
@@ -3384,11 +3409,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3400,9 +3425,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3928,7 +3953,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3982,7 +4007,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -4045,7 +4070,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -5284,10 +5309,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		final PaymentService juspayService = new PaymentService();
 
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService
+				.withKey(getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 		return juspayService.saveAndGetCardReferenceNo(addCardRequest);
@@ -5353,8 +5379,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("In rmvJuspayCardStatusForCustomer some issue occured customer:" + customerId);
 		}
 		return juspayCardStatusModel;
-		
-	}	
+
+	}
+
 	/**
 	 * Added for paytm integration
 	 *
