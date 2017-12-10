@@ -4,6 +4,7 @@
 package com.tisl.mpl.integration.oms.order.populators;
 
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.Registry;
@@ -21,6 +22,7 @@ import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,8 +144,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (null != prodModel
 					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(prodModel.getProductCategoryType()))
 			{
-				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
-						.getJewelleryInfoByUssid(source.getSelectedUSSID());
+				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+						.getSelectedUSSID());
 				if (CollectionUtils.isNotEmpty(jewelleryInfo))
 				{
 					ussid = jewelleryInfo.get(0).getPCMUSSID();
@@ -298,42 +300,42 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setCategoryName(source.getProductRootCatCode());
 			}
 
-						//product Category code
-						//Setting the version of sessioncatalog
-						catalogVersionService.setSessionCatalogVersion(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-								MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
-						//TPR-5954 || Category specific return reason || Start
-						Collection<CategoryModel> superCategories = prodModel.getSupercategories();
-			
-						outer: for (final CategoryModel category : superCategories)
+			//product Category code
+			//Setting the version of sessioncatalog
+			catalogVersionService.setSessionCatalogVersion(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+					MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+			//TPR-5954 || Category specific return reason || Start
+			Collection<CategoryModel> superCategories = prodModel.getSupercategories();
+
+			outer: for (final CategoryModel category : superCategories)
+			{
+				if (null != category.getCode() && category.getCode().startsWith("MPH"))
+				{
+					//L4 cat code
+					target.setCatL4(category.getCode());
+					superCategories = category.getSupercategories();
+					for (final CategoryModel category1 : superCategories)
+					{
+						if (category1.getCode().startsWith("MPH"))
 						{
-							if (null != category.getCode() && category.getCode().startsWith("MPH"))
+							//L3 cat code
+							target.setCatL3(category1.getCode());
+							superCategories = category1.getSupercategories();
+							for (final CategoryModel category2 : superCategories)
 							{
-								//L4 cat code
-								target.setCatL4(category.getCode());
-								superCategories = category.getSupercategories();
-								for (final CategoryModel category1 : superCategories)
+								if (category2.getCode().startsWith("MPH"))
 								{
-									if (category1.getCode().startsWith("MPH"))
-									{
-										//L3 cat code
-										target.setCatL3(category1.getCode());
-										superCategories = category1.getSupercategories();
-										for (final CategoryModel category2 : superCategories)
-										{
-											if (category2.getCode().startsWith("MPH"))
-											{
-												//L2 cat code
-												target.setCatL2(category2.getCode());
-												break outer;
-											}
-										}
-									}
+									//L2 cat code
+									target.setCatL2(category2.getCode());
+									break outer;
 								}
-			
 							}
 						}
-						//TPR-5954 || Category specific return reason || End
+					}
+
+				}
+			}
+			//TPR-5954 || Category specific return reason || End
 
 
 
@@ -450,8 +452,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 
 			target.setPromotion(promotions);
-			target.setApprotionedPrice(
-					source.getNetAmountAfterAllDisc().doubleValue() > 0 ? source.getNetAmountAfterAllDisc().doubleValue() : 2.0);
+			target.setApprotionedPrice(source.getNetAmountAfterAllDisc().doubleValue() > 0 ? source.getNetAmountAfterAllDisc()
+					.doubleValue() : 2.0);
 			//Code Blocked since coupon has been out of scope for Release2
 
 			final ArrayList<CouponDto> couponList = new ArrayList<>();
@@ -584,14 +586,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 *
+			 * 
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -725,8 +727,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 			{
 
-				target.setTransportMode(
-						MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0).getShippingModes().getCode().toUpperCase()));
+				target.setTransportMode(MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0).getShippingModes().getCode()
+						.toUpperCase()));
 			}
 			else
 			{
@@ -795,7 +797,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * }
 	 */
 
