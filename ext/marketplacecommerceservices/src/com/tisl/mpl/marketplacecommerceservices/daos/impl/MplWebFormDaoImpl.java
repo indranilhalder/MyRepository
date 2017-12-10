@@ -97,23 +97,21 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 		boolean returnResult = false;
 		final String queryString = "SELECT {form: " + MplWebCrmTicketModel.PK + " } " 
 				+ " FROM { " + MplWebCrmTicketModel._TYPECODE + " AS form } "
-				+ " where { form." + MplWebCrmTicketModel.TICKETTYPE + " }  = ?ticketType "
-				+ " AND { form." + MplWebCrmTicketModel.L0CODE + " }  = ?L0code "
+				+ " where { form." + MplWebCrmTicketModel.L0CODE + " }  = ?L0code "
 				+ " AND { form."+ MplWebCrmTicketModel.L1CODE + " }  = ?L1code "
 				+ " AND { form." + MplWebCrmTicketModel.L2CODE + " }  = ?L2code "
 				+ " AND { form." + MplWebCrmTicketModel.L3CODE + " }  = ?L3code "
 				+ " AND { form." + MplWebCrmTicketModel.L4CODE+ " }  = ?L4code "
+				+ " AND { form." + MplWebCrmTicketModel.CUSTOMERNAME + " }  = ?customerName "
+				+ " AND { form." + MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail "
 				+ " OR ( { form."+ MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode "
 				+ " AND { form." + MplWebCrmTicketModel.SUBORDERCODE+ " }  = ?subOrderCode "
-				+ " AND { form." + MplWebCrmTicketModel.TRANSACTIONID + " }  = ?transactionId )"
-				+ " OR ({ form." + MplWebCrmTicketModel.CUSTOMERNAME + " }  = ?customerName "
-				+ " AND { form." + MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail ) ";
+				+ " AND { form." + MplWebCrmTicketModel.TRANSACTIONID + " }  = ?transactionId )";
 
 
 
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("ticketType", formData.getTicketType());
 		query.addQueryParameter("orderCode", formData.getOrderCode());
 		query.addQueryParameter("subOrderCode", formData.getSubOrderCode());
 		query.addQueryParameter("transactionId", formData.getTransactionId());
