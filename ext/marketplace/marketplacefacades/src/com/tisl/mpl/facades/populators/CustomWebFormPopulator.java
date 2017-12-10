@@ -48,15 +48,16 @@ public class CustomWebFormPopulator<SOURCE extends WebFormData, TARGET extends M
 		webCrmTicketModel.setTransactionId(webFormData.getTransactionId());
 		webCrmTicketModel.setTicketSubType(webFormData.getTicketSubType());
 		webCrmTicketModel.setTicketType(webFormData.getTicketType());
-		webCrmTicketModel.setStatus(MarketplacecommerceservicesConstants.SUBMITTED);
+		webCrmTicketModel.setStatus(MarketplacecommerceservicesConstants.OPEN);
 
 		final CustomerData currentUser = customerFacade.getCurrentCustomer();
 		if (currentUser != null)
 		{
 			webCrmTicketModel.setCustomerId(currentUser.getUid());
 		}
-		webCrmTicketModel.setCustomerName(currentUser.getName());
-		webCrmTicketModel.setCustomerId(webFormData.getCustomerId());
+		webCrmTicketModel.setCustomerName(webFormData.getCustomerName());
+		webCrmTicketModel.setCustomerEmail(webFormData.getCustomerEmail());
+		webCrmTicketModel.setCustomerMobile(webFormData.getCustomerMobile());
 
 	}
 

@@ -8,7 +8,7 @@
 <div class="custmCareHelp">
 	<div class="issueQuryPopUp">
 		<div class="issueQuryPopBox">
-			<!-- <button class="closeBtn" id="closeCustCarePopBox">X</button> -->
+			<button class="closeBtn" id="closeCustCarePopBox">X</button>
 			<div class="headingSec">
 				<div class="querySubmitIcon"></div>
 				<div class="querySubmitInfo">

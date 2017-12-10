@@ -69,7 +69,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -207,18 +207,19 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	@Override
 	public String sendWebformTicket(final WebFormData formData) throws Exception
 	{
-		MplWebCrmTicketModel webFormModel = new MplWebCrmTicketModel();
-		final WebFormData ticketData = new WebFormData();
-		//Setting ECOM request prefix as E to for COMM triggered Ticket
-		prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
-		final String commerceTicketId = prefixableKeyGenerator.generate().toString();
-		formData.setCommerceTicketId(commerceTicketId);
+		MplWebCrmTicketModel webFormModel = modelService.create(MplWebCrmTicketModel.class);
+		String commerceTicketId = null;
 		//checking ticket is duplicate or not in Commerce
 		if (checkDuplicateWebCRMTickets(formData))
 		{
-			webFormModel = webFormDataConverter.convert(ticketData, webFormModel);
+			//Setting ECOM request prefix as E to for COMM triggered Ticket
+			prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
+			commerceTicketId = prefixableKeyGenerator.generate().toString();
+			formData.setCommerceTicketId(commerceTicketId);
+			webFormModel = webFormDataConverter.convert(formData, webFormModel);
 			//save Ticket in Commerce
 			modelService.save(webFormModel);
+			//send Ticket to CRM/PI
 			mplWebFormService.sendWebFormTicket(webFormModel);
 		}
 		return commerceTicketId;
@@ -227,7 +228,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
