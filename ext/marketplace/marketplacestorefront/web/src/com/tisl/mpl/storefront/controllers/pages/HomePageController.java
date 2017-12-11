@@ -84,7 +84,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
-import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.cms.data.FooterLinkData;
@@ -167,10 +166,6 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
-
-	//TPR-6740
-	@Resource(name = "mplProductFacade")
-	private MplProductFacade mplProductFacade;
 
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
@@ -1600,9 +1595,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 * 
+			 *
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 * 
+			 *
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1706,7 +1701,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 

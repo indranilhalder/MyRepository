@@ -190,13 +190,6 @@
 				
 				<!-- TISCR-305 starts -->	
 
-
-
-
-
-
-
-
 				<!--TPR-7486  -->
 				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive">
 				      <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
@@ -308,7 +301,7 @@
 										</c:if>
 									</c:forEach>
 									
-									<c:forEach var="map" items="${paymentModes}">
+									<%-- <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 			    							<c:when test="${map.key eq 'TW'}">
@@ -322,7 +315,27 @@
 													</c:when>
 											</c:choose>
 										</c:if>
+									</c:forEach> --%>
+									
+									<!-- Newly addded for paytm integration -->
+										<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'TW'}">
+			    								<input type="hidden" id="TW" value="${map.value}" />
+			       								<li>
+				       								<span id="viewPaymentPaytm" onclick="viewPaymentPaytm();">
+				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+				       								</span>
+			       								</li>
+												
+													</c:when>
+											</c:choose>
+										</c:if>
 									</c:forEach>
+									<!-- Newly addded for paytm integration -->
+									
+									
 					</ul>
 					<input type="hidden" id="paymentMode" name="paymentMode"/>
 					<!-- TPR-7486 -->
@@ -556,6 +569,7 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
+						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
 												</fieldset>
 		            							<div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
@@ -638,7 +652,6 @@
 					                           		</fieldset>
 					                            </div> 
 					                            <div class="controls remember">
-					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card" name="save-card" style="display:none"/><label for="save-card" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
@@ -883,6 +896,7 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorDc"></span> 
 						                            </div>
+						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
 												</fieldset>
 		            							<%-- <div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
@@ -894,7 +908,6 @@
 										    	</c:forEach>
 					                            </div> --%> 
 					                            <div class="controls remember">
-					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-dc" name="save-card" style="display:none" /><label for="save-card-dc" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
@@ -1083,6 +1096,7 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
 						                            </div>
+						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
 												</fieldset>
 		            							<div class="controls remember" id="billingAddressEmi">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
@@ -1158,7 +1172,6 @@
 					                           		</fieldset>
 					                            </div> 
 					                            <div class="controls remember">
-					                            	<span><spring:theme code="checkout.payment.savecard.disclaimer" /></span><!-- TPR-7448 -->
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-emi" name="save-card-emi" style="display:none"/><label for="save-card-emi" style="display:none"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label><!-- TPR-7448 -->		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
@@ -1336,7 +1349,7 @@
 						</ycommerce:testId>
 						
 						<!-- MRupee Changes -->
-						 <c:forEach var="map" items="${paymentModes}">
+						<%--  <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 											<c:when test="${map.key eq 'TW'}">
@@ -1350,8 +1363,58 @@
 												</c:when>
 											</c:choose>
 										</c:if>
-									</c:forEach>
-					
+									</c:forEach> --%>
+									
+						<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'PAYTM'}">
+												<input type="hidden" id="TW" value="${map.value}" />
+	
+												<li class="paymentModeMobile">
+													<span id="viewPaymentMRupeeMobile"  onclick="viewPaymentPaytm();">
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+						</c:forEach>
+									
+						<!-- paytm Changes -->
+						<li id="PAYTM">
+						<ul class="product-block blocks">
+						 <c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'PAYTM'}">
+												<input type="hidden" id="PAYTM" value="${map.value}" />
+												
+												<div class="radio">
+													 <input type="radio" name="priority_paytm" id="radioButton_Paytm" value="paytm" checked/>
+													 <label for="priority_paytm" class="numbers creditLabel"> <span><img src="${commonResourcePath}/images/paytm.png" alt=""></span></label>
+									   			<span id="paytmInfo" style="display:none">
+														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
+													</span>
+									   			</div>
+	
+												<li>
+													<span id="viewPaymentPaytm"  onclick="viewPaymentPaytm();">
+														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+						</c:forEach>
+						
+						<div class="pay newCardPaymentCC">
+									<button type="submit" class="make_payment button btn-block payment-button" id="make_paytm_payment" onclick="submitPaytmForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+						</div>
+						</ul>
+						</li>		
+						<!-- paytm Changes -->		
+									
 							 <li id="MRUPEE">
 							<ul class="product-block blocks">
 							<c:forEach var="map" items="${paymentModes}">

@@ -882,6 +882,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			cartEntry.setIsPercentageDisc(Boolean.FALSE);
 			cartEntry.setTotalProductLevelDisc(Double.valueOf(0.00D));
 
+			//TPR-7408 starts here
+			cartEntry.setPromoProductCostCentreOnePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoProductCostCentreTwoPercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoProductCostCentreThreePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreOnePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreTwoPercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreThreePercentage(Double.valueOf(0.00D));
+			//TPR-7408 ends here
+
 			cartEntryList.add(cartEntry);
 		}
 
@@ -929,6 +938,22 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							//appliedCouponCode = cartEntry.getCouponCode();
 							orderEntry.setCouponCode(cartEntry.getCouponCode());
 							orderEntry.setCouponValue(cartEntry.getCouponValue());
+
+							//TPR-7408 starts here
+							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreOnePercentage())))
+							{
+								orderEntry.setCouponCostCentreOnePercentage(cartEntry.getCouponCostCentreOnePercentage());
+							}
+							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreTwoPercentage())))
+							{
+								orderEntry.setCouponCostCentreTwoPercentage(cartEntry.getCouponCostCentreTwoPercentage());
+							}
+							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreThreePercentage())))
+							{
+								orderEntry.setCouponCostCentreThreePercentage(cartEntry.getCouponCostCentreThreePercentage());
+							}
+							//TPR-7408 ends here
+
 						}
 					}
 				}

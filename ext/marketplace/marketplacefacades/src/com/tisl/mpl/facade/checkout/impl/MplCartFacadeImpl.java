@@ -845,6 +845,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		double subtotal = 0.0;
 		double totalPrice = 0.0;
 		Double discountValue = Double.valueOf(0.0);
+		double delCharge = 0.0;
 		final boolean cartSaveRequired = false; //TISPT 80
 		if (cartModel != null)
 		{
@@ -861,6 +862,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				//					entry.setCurrDelCharge(Double.valueOf(0));
 				//				}
 				//getModelService().save(entry); //TISPT 80
+				delCharge += entry.getCurrDelCharge().doubleValue();
 			}
 			if (cartSaveRequired)
 			{
@@ -878,12 +880,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 			}
 
-			totalPrice = subtotal - discountValue.doubleValue();
+			totalPrice = subtotal + delCharge - discountValue.doubleValue();
 
+			cartModel.setDeliveryCost(Double.valueOf(delCharge));
 			cartModel.setSubtotal(Double.valueOf(subtotal));
 			cartModel.setTotalPrice(Double.valueOf(totalPrice));
 			cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
-			getModelService().save(cartModel);
+			getModelService().saveAll(cartModel);
 		}
 	}
 
@@ -2002,7 +2005,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				modelService.saveAll(entryList);
 			}
-
 			//TISPT-104
 			//call recalculate on cart, only if there's a change in deliverymode.
 			//			if (hasDeliveryMode)
@@ -3061,16 +3063,32 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * this method calls service to get inventories for stores.
 	 *
 	 *
-	 * @param storeLocationRequestDataList
+	 * @param sellerUssId
 	 * @return returns Stores with inventories.
 	 */
 	@Override
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList)
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId)
 	{
 
 		LOG.debug("from getStoreLocationforCnC PDP");
-		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList, sellerUssId);
+	}
+
+	/**
+	 * this method calls service to get inventories for stores.
+	 *
+	 *
+	 * @param sellerUssId
+	 * @return returns Stores with inventories.
+	 */
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnCMobile(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId, final CartModel cartModel)
+	{
+
+		LOG.debug("from getStoreLocationforCnC PDP");
+		return mplCommerceCartService.getStoreLocationsforCnCMobile(storeLocationRequestDataList, sellerUssId, cartModel);
 	}
 
 	@Override

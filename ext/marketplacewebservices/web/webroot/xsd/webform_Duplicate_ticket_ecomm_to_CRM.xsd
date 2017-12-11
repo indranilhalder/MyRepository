@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="DuplicateTicketCheck" >
+		<xs:complexType>
+			<xs:sequence> 
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="CustomerId"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="HSOOrderID"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TransactionID"/>
+				<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="SubOrderId"/>
+				<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="L0CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="L1CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="L2CatCode"/>
+				<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="L3CatCode"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

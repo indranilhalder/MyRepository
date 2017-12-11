@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.msd.MSDWidgetFacade;
 import com.tisl.mpl.facades.data.MSDRequestdata;
-import com.tisl.mpl.facades.data.MSDResponsedata;
 import com.tisl.mpl.service.MSDService;
 
 
@@ -33,7 +32,7 @@ public class MSDWidgetFacadeImpl implements MSDWidgetFacade
 	 */
 
 	@Override
-	public MSDResponsedata getMSDWidgetFinalData(final MSDRequestdata msdRequest) throws EtailNonBusinessExceptions
+	public String getMSDWidgetFinalData(final MSDRequestdata msdRequest) throws EtailNonBusinessExceptions
 	{
 		return msdService.checkMSDServiceResponse(msdRequest);
 	}

@@ -12,14 +12,14 @@
 	    
 	    <c:choose>
 		    <c:when test="${responsive_view=='true'}">
-			<span class="offer_heading">BANK OFFERS</span>
-		    <span class="offer_heading_sub">Lorem ipsum dolor sit amet,
-			consectetur adipiscing elit.<a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
+			<span class="offer_heading"><spring:theme code="payment.cart.offer.responsive.title"/></span>
+		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.responsive.description"/>
+			<a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
 		    </c:when>    
 		    <c:otherwise>
-			<span class="offer_heading">AVAIL BANK OFFERS</span>
-		    <span class="offer_heading_sub">Lorem ipsum dolor sit amet,
-			consectetur adipiscing elit.<a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">Terms & Conditions</a></span>
+			<span class="offer_heading"><spring:theme code="payment.cart.offer.web.title"/></span>
+		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.web.description"/>
+		    <a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">Terms & Conditions</a></span>
 		    </c:otherwise>
 		</c:choose>
 	      

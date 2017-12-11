@@ -541,6 +541,7 @@ public class MarketplacewebservicesConstants
 
 	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
 	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
+	public static final String CRMNODES = "/{userId}/getWebCRMNodes";
 	public static final String MRUPEE = "MRUPEE".intern();
 
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
@@ -663,5 +664,5 @@ public class MarketplacewebservicesConstants
 	//added for TPR-1348
 	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
 
-
+	public static final String PAYTM = "PAYTM".intern();
 }

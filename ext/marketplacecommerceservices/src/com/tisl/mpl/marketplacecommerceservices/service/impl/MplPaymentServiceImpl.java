@@ -127,6 +127,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
@@ -462,8 +463,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				//				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
-				//						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+
+				//Added for paytm integration
+				else if (StringUtils.isNotEmpty(orderStatusResponse.getPaymentMethodType())
+						&& orderStatusResponse.getPaymentMethodType().equalsIgnoreCase("WALLET"))
+				{
+					//saving the cartmodel for paytm
+					getModelService().save(setValueInPaytmPaymentInfo(cart, orderStatusResponse));
+					//						break;
+				}
 				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(orderStatusResponse.getBankEmi()))
 				{
 					//saving the cartmodel for EMI
@@ -2128,6 +2136,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+
 						//getModelService().save(entry);
 					}
 					getModelService().saveAll(entryList);
@@ -2205,22 +2220,48 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		else if (null != orderModel)
 		{
 			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) && null != orderModel.getDiscounts().get(0)) //IQA for TPR-629
+			final List<DiscountModel> voucherDiscountList = orderModel.getDiscounts();
+			if (CollectionUtils.isNotEmpty(voucherDiscountList)) //IQA for TPR-629
 			{
-				final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
-						.getOrderEntryModelFromVouEntries((VoucherModel) orderModel.getDiscounts().get(0), orderModel); //Since only 1 voucher is applied to the cart and
-				//before promotion calculation only 1 discount will be present
-
-				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
+				for (final DiscountModel discount : voucherDiscountList)
 				{
-					for (final AbstractOrderEntryModel entry : entryList)
+					boolean isCartVoucher = false;
+					boolean isUserCoupon = false;
 
+					if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
 					{
-						entry.setCouponCode("");
-						entry.setCouponValue(Double.valueOf(0.00D));
-						//getModelService().save(entry);
+						isUserCoupon = true;
 					}
-					getModelService().saveAll(entryList);
+					else if (discount instanceof MplCartOfferVoucherModel)
+					{
+						isCartVoucher = true;
+					}
+
+					final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
+							.getOrderEntryModelFromVouEntries((VoucherModel) discount, orderModel);
+					if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
+					{
+						for (final AbstractOrderEntryModel entry : entryList)
+						{
+							if (isUserCoupon)
+							{
+								entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCouponValue(Double.valueOf(0.00D));
+
+								//TPR-7408 starts here
+								entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+								entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+								entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+							}
+							//TPR-7408 ends here
+							else if (isCartVoucher)
+							{
+								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+						}
+						getModelService().saveAll(entryList);
+					}
 				}
 			}
 
@@ -2380,7 +2421,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			if (null != cartModel)
 			{
 				//When customer has cartModel
-				final Double deliveryCost = cartModel.getDeliveryCost();
+
+				//	Double deliveryCost = cartModel.getDeliveryCost();
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
@@ -2388,10 +2430,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				final Double subTotal = cartModel.getSubtotal();
 				final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
-				final Double totalPriceAfterDeliveryCost = Double
-						.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue() - cartDiscount.doubleValue());
 
-				cartModel.setDeliveryCost(deliveryCost);
+				final double deliveryCost = calculateDeliveryChargeForShipping(cartModel);
+
+				cartModel.setDeliveryCost(Double.valueOf(deliveryCost));
+
+				final Double totalPriceAfterDeliveryCost = Double
+						.valueOf(subTotal.doubleValue() + deliveryCost - cartDiscount.doubleValue());
 
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
@@ -2436,6 +2481,29 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting calculatePromotion()========" + (endTime - startTime));
+	}
+
+	/**
+	 * @param cartModel
+	 */
+	private double calculateDeliveryChargeForShipping(final AbstractOrderModel cartModel)
+	{
+		// YTODO Auto-generated method stub
+		/**********
+		 * This is required for calculating tship and ship del charge separately
+		 *
+		 ***********/
+		double deliveryCost = 0.0d;
+
+		for (final AbstractOrderEntryModel cartentrymodel : cartModel.getEntries())
+		{
+			if (null != cartentrymodel.getCurrDelCharge() && cartentrymodel.getCurrDelCharge().doubleValue() > 0.0d)
+			{
+				deliveryCost += cartentrymodel.getCurrDelCharge().doubleValue();
+			}
+		}
+		return deliveryCost;
+
 	}
 
 
@@ -2517,6 +2585,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			if (null != orderData.getCouponDiscount() && null != orderData.getCouponDiscount().getValue())
 			{
 				value = Double.valueOf(value.doubleValue() + orderData.getCouponDiscount().getValue().doubleValue());
+			}
+
+			if (null != orderData.getCartCouponDiscount() && null != orderData.getCartCouponDiscount().getValue())
+			{
+				value = Double.valueOf(value.doubleValue() + orderData.getCartCouponDiscount().getValue().doubleValue());
 			}
 		}
 
@@ -3765,7 +3838,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment :- " + paymentMode + " For Order ID:- "
 					+ orderModel.getCode());
 
-			if (!paymentModeFromInfo.equalsIgnoreCase("COD"))
+			if (!paymentModeFromInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
 			{
 				LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment Prepaid" + " For Order ID:- "
 						+ orderModel.getCode());
@@ -3890,7 +3963,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			if (payInfo instanceof CODPaymentInfoModel)
 			{
-				return "COD";
+				return MarketplacecommerceservicesConstants.COD;
 			}
 			else if (payInfo instanceof CreditCardPaymentInfoModel)
 			{
@@ -3907,6 +3980,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			else if (payInfo instanceof EMIPaymentInfoModel)
 			{
 				return "EMI";
+			}
+			//Paytm Changes
+			else if (payInfo instanceof ThirdPartyWalletInfoModel)
+			{
+				if (StringUtils.isNotEmpty(((ThirdPartyWalletInfoModel) payInfo).getProviderName())
+						&& "PAYTM".equalsIgnoreCase(((ThirdPartyWalletInfoModel) payInfo).getProviderName()))
+				{
+					return "PAYTM";
+				}
+				else
+				{
+					return "CC";
+				}
 			}
 			else
 			{
@@ -5196,9 +5282,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-		paymentInfo.put("COD", orderModel.getConvenienceCharges());
+		paymentInfo.put(MarketplacecommerceservicesConstants.COD, orderModel.getConvenienceCharges());
 		sessionService.setAttribute("paymentModes", paymentInfo);
-		sessionService.setAttribute("paymentModeForPromotion", "COD");
+		sessionService.setAttribute("paymentModeForPromotion", MarketplacecommerceservicesConstants.COD);
 		getModelService().save(codPaymentInfoModel);
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
@@ -5223,10 +5309,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		final PaymentService juspayService = new PaymentService();
 
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService
+				.withKey(getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 		return juspayService.saveAndGetCardReferenceNo(addCardRequest);
@@ -5292,5 +5379,75 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("In rmvJuspayCardStatusForCustomer some issue occured customer:" + customerId);
 		}
 		return juspayCardStatusModel;
+
+	}
+
+	/**
+	 * Added for paytm integration
+	 *
+	 * @param cart
+	 * @param response
+	 * @return CartModel
+	 */
+	private AbstractOrderModel setValueInPaytmPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
+	{
+		try
+		{
+			//creating NetbankingPaymentInfoModel
+			final ThirdPartyWalletInfoModel nbPaymentInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
+
+			if (StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				nbPaymentInfoModel.setCode("PAYTM_" + cart.getGuid());//TODO::Setting like this until it is finalized
+			}
+			else
+			{
+				//nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());		//Erroneous code fixed
+				nbPaymentInfoModel.setCode("DUMMY_PAYTM_" + System.currentTimeMillis());
+			}
+			final UserModel user = cart.getUser();
+			if (null != user)
+			{
+				nbPaymentInfoModel.setUser(user);
+				if (StringUtils.isNotEmpty(user.getName()))
+				{
+					nbPaymentInfoModel.setWalletOwner(user.getName());
+				}
+				else
+				{
+					nbPaymentInfoModel.setWalletOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
+				}
+			}
+			nbPaymentInfoModel.setProviderName("PAYTM");
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
+			{
+				//saving the nbPaymentInfoModel
+				getModelService().save(nbPaymentInfoModel);
+
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(nbPaymentInfoModel);
+				cart.setPaymentAddress(cart.getDeliveryAddress());
+			}
+			else if (null != cart.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info -- not saving nbPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error(ERROR_PAYMENT + cart.getCode());
+			}
+
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Exception while saving netbanking payment info with " + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//returning the cart
+		return cart;
 	}
 }

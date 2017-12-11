@@ -881,7 +881,7 @@ function focusOnElement() {
 				success : function(data) {		
 						var pagelevelOffer = "<div class='pdp-offer-title pdp-title' id='offerDetailIdDiv'><b>OFFER: </b><span id='offerDetailIdPromotion'></span></div>" ;	
 
-						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc'><h3 class='product-name highlight desk-offer'><span id='messagePrimary'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDetPrimary'></span></p><p id='termsP'><span id='termsAndConditionsheading'></span><br><span id='termsAndConditions'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTimePrimary'></span><span class='date-time' id='offerstarthourTimePrimary'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTimePrimary'></span><span class='date-time' id='offerendhourTimePrimary'></span></div></div></div></div>";
+						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc'><h3 class='product-name highlight desk-offer'><span id='messagePrimary'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDetPrimary'></span></p><p id='termsP'><span id='termsAndConditionsheading'></span><br><span id='termsAndConditions'></span></p><p id='primaryPromoUrl'><span id='promoUrl'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTimePrimary'></span><span class='date-time' id='offerstarthourTimePrimary'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTimePrimary'></span><span class='date-time' id='offerendhourTimePrimary'></span></div></div></div></div>";
 						if (data['primaryOfferMessageMap'] != null) {			
 
 						    var offerMessageMap = data['primaryOfferMessageMap'];	
@@ -892,11 +892,21 @@ function focusOnElement() {
 							var messageEndDate = null;
 							var termsAndConditions = null;
 							var termsAndConditionsHeading = "Terms And Conditions :";
+							var promoUrl = null;
+							var bundlePromoLinkText = null;
 
 							$(".pdp-promo-title-link").css("display","none");		
 							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
 								$("#promolist").val(offerMessageMap);
-								$(".pdp-promo-title-link").css("display", "block");		
+								//$(".pdp-promo-title-link").css("display", "block");
+								if($(".pdp-promoDesc").text() == "")
+									{									
+									$(".pdp-promo-title-link").css("display", "none");
+									}
+								else
+									{									
+									$(".pdp-promo-title-link").css("display", "block");
+									}
 							} 
 									
 												
@@ -918,6 +928,12 @@ function focusOnElement() {
 										 }	
 										 if(keyInternal == 'termsAndConditions'){
 											 termsAndConditions = valueInternal;
+										 }	
+										 if(keyInternal == 'promoUrl'){
+											 promoUrl = valueInternal;
+										 }	
+										 if(keyInternal == 'bundlePromoLinkText'){
+											 bundlePromoLinkText = valueInternal;
 										 }	
 									 });
 									 
@@ -959,6 +975,22 @@ function focusOnElement() {
 										$("#termsAndConditions").remove();
 										$("#termsP").remove();
 									}
+									
+									if(promoUrl != null && bundlePromoLinkText != null)
+									{
+										if($("#promoUrl").text()==null || $("#promoUrl").text()!=bundlePromoLinkText)
+											{
+									           var link = document.createElement('a');
+									           link.textContent = bundlePromoLinkText;
+									           link.href = promoUrl;
+									           document.getElementById('promoUrl').appendChild(link);
+											}
+									}
+									else
+										{
+										$("#promoUrl").remove();
+										$("#primaryPromoUrl").remove();
+										}
 									
 							       var dateSplit = messageStartDate.split(" ");
 				                   var firstpart = dateSplit[0];

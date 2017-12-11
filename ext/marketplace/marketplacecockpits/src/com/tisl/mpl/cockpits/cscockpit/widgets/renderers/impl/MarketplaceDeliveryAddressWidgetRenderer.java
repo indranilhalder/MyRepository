@@ -274,7 +274,8 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 			landMarkListbox.setMold("select");
 			landMarkListbox.setParent(landMarkDiv);
 		} catch (Exception e) {
-			System.out.println("setParent " + e.getCause());
+			//System.out.println("setParent " + e.getCause());
+			LOG.debug("setParent " + e.getCause());
 		}
 
 		final Textbox landMarkField = createTextbox(landMarkDiv);

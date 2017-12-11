@@ -76953,14 +76953,15 @@ body .account .right-account form label.invite-text-lbl{
 /* TISSPTEN-120 start */
 
 @media (max-width: 768px){
-	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
     margin-left: -3px;
     margin-top: 0px;
 }
 .page-returnSubmit .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
     margin: 10px auto 15px auto ! important;
 }
-.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor {
+.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor,
+.selectReturnMethod.self.col-md-12.col-sm-12.greyColor {
     float: left;
     margin-bottom: 25px;
 }
@@ -76970,7 +76971,6 @@ body .account .right-account form label.invite-text-lbl{
 .thirdTataCliq .col-md-9.scheduledPickup + .col-md-9.selfCourier b {
     display: inline-block;
 }
-
 }
 
 /* TISSPTEN-120 END */
@@ -77607,33 +77607,192 @@ background: url(../images/search_image.png) no-repeat;}
 
 /* SDI-1393 End */
 
+/*paytm integration start*/
+label[for='priority_paytm'] img{
+	height: 70px;
+    margin-top: -29px;
+    margin-left: 10px;
+}
+/*paytm integration end*/
+
+/* Pagination link */
+.bottom-pagination.pagination-search{
+	display: inline-block;
+    position: relative;
+    float: right;
+    width: 80.16%;
+    padding: 0 0 0 20px;
+    text-align: center;
+}
+li.pageNoLi {
+    display: inline-block;
+}
+a.pageNo {
+    display: inline-block;
+    padding: 7px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+}
+.prev-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    color:#a9133d;
+}
+.pagination-block{
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+}
+.next-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    color:#a9133d;
+}
+a.pageNo.active{
+    display: inline-block;
+    background: #a9133d;
+    padding: 12px 25px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 9px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    color: #fff;
+}
+.next-page span,
+.next-block a span
+{
+	color:#a9133d;
+	/* font-weight: bold; */
+}
+.prev-page{
+	color:#a9133d;
+	/* font-weight: bold; */
+}
+.total-pagecount{
+	position: absolute;
+    left: 2%;
+    top: 27px;
+    float: left;
+    top: 7px;
+    font-size: 14px
+}
+@media (max-width: 767px){
+.bottom-pagination.pagination-search{
+    width: 100%;
+    padding: 0;
+}
+.total-pagecount{
+	top: 8px;
+    margin-right: 8%;
+}
+.pagination li {
+    font-size: 12px;
+}
+.total-pagecount{
+	font-size: 12px
+}
+.bottom-pagination.pagination-search>span {
+    display: inline-block;
+    margin-right: 10%;
+}
+}
+/* Pagination link */
+
+/* TISPRNXIII-14 start */
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
+    text-align: left ! important;
+}
+/* TISPRNXIII-14 end */
+
+/*Paytm changes*/
+@media (max-width: 768px){
+
+label[for='priority_paytm'] img {
+    margin-left: 30px;
+}
+}
+
+/* TISPRNXIII-34 start */
+@media (max-width: 768px){				
+button#saveBlockData {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+}
+/* TISPRNXIII-34 end */ 
+/* TISPRNXIII-38 */
+@media (max-width: 720px)
+{
+.removeModalAfterLoad .changeAdddd {
+    height: auto ! important;
+}
+}
+/* TISPRNXIII-38 */
+/* TPR-7078 */
+.listing.wrapper .bottom-pagination.pagination-search .pagination li.active a {
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    background: #a9133d;
+    color: white;
+    border-radius: 50%;
+    width: 29px;
+    height: 29px;
+    text-align: center;
+}
+.listing.wrapper .bottom-pagination.pagination-search .pagination li a{
+    display: inline-block;
+    width: 29px;
+    height: 29px;
+    text-align: center
+} 
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.last {
+    display: none;
+}
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.first {
+    display: none;
+}
+.bottom-pagination.pagination-search .pagination li.prev.disabled a, .pagination li.next.disabled a {
+    cursor: not-allowed;
+}
+
 /* TPR-5954 */
 .upload-image-title {
-				    cursor: pointer;
-					margin: 10px 18px;
-					color: #a9143c;
-				}
-				#upload-photo {
-				   opacity: 0;
-				   position: absolute;
-				   z-index: -1;
-				}
-				.add-comment-title{
-					color: #a9143c;
-				    font-size: 14px;
-				    margin: 10px 0;
-				}
+    cursor: pointer;
+	margin: 10px 18px;
+	color: #a9143c;
+}
+#upload-photo {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+.add-comment-title{
+	color: #a9143c;
+    font-size: 14px;
+    margin: 10px 0;
+}
 
 .accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnSubReason{
     width: 47%;
 }
 
-
-
-
 /* SDI-1393 End */
 
 /* start CAR-327 */
+.pdp-offer-title.pdp-title{
+	cursor: pointer;
+}
 #termsAndConditionsheading{
 	font-size: 12px;
     font-weight: bold;
@@ -77661,6 +77820,7 @@ background: url(../images/search_image.png) no-repeat;}
 /* end change for TISUAT-6116 */
 
 /* SDI-1393 End */
+
 .homefurnishing-overview:nth-child(2) {
     float: right ! important;
 }
@@ -77778,7 +77938,7 @@ p.sizetext.size {
 }
 /* HOME-227 End */
 /* HOME-239 start */
-	@media (max-width: 767px){
+@media (max-width: 767px){
 .product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
     clear: both;
 }
@@ -77802,4 +77962,100 @@ p.sizetext.size {
 .sizetext a.size-guide {
     position: relative;
 }
+
 /* HOME-239 End */
+
+
+/* TPR-7417 changes */
+
+.tnc-subtitle{
+overflow-y: scroll;
+height: 200px;
+			}
+.Emi-subTitle ul{
+	text-align: left;
+    list-style-type: disc;
+    font-weight: normal;
+    padding-left: 10px;
+    padding-top: 10px;
+    width: 95%;
+    margin: auto;
+}
+.product-detail .Emi p.active.emi-tnc,
+.product-detail .Emi p.emi-tnc{
+	position: absolute;
+    top: -38px;
+    left: 131px;
+    webkit-box-shadow: 0 -1px 3px rgba(138,134,138,1);
+    -moz-box-shadow: 0 -1px 3px rgba(138,134,138,1);
+   	box-shadow: 0 -1px 3px rgba(138,134,138,1);
+}
+.product-detail .Emi .modal-content p:before {
+    width: 94px;
+    background: #fff;
+    z-index: 0;
+    bottom: -5px;
+}
+.product-detail .Emi {
+    margin: -9px 0 0 !important;
+}
+a.tab-emi{
+	width: 50%;
+    position: absolute;
+   	top:0;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #fff;
+    color: #92002e;
+    letter-spacing: 1px;
+}
+.showEmi.tab-emi{
+	left:0;
+	 margin-right: -3px;
+}
+.emi-tnc.tab-emi{
+	right:0;
+}
+a.tab-emi.active{
+    background-color: #b2b2b2;
+    color: #fff;
+}
+.product-detail .Emi p+.modal-content {
+    padding-top: 32px;
+}
+.product-detail .Emi .modal-content .Close {
+    top: 32px;
+}
+/* TPR-7417 changes End */
+/* HOME-239 End */
+/* TISPRNXIII-53 start */
+@media (max-width: 767px){
+.col-md-9.selfCourier {
+    clear: both;
+}
+.selectReturnMethod.scheduled.col-md-12.col-sm-12.greyColor {
+    float: left;
+} 
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3{
+	padding: 0px ! important;
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 {
+    width: 23.666667%;
+    padding: 0px ! important;
+}
+.col-md-9.quickDrop {
+    clear: both;
+}
+}
+/* TISPRNXIII-53 end */
+.cart.wrapper .right-block.billing .block.bottom.order-details>ul li.item .product {
+    width: 68% ! important;
+    float: right;
+}
+/* TISPRNXIII-74 Start */
+.selectRadio.col-md-2.col-sm-2.col-xs-2 {
+    clear: both;
+}
+/* TISPRNXIII-74 End */
