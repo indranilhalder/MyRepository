@@ -446,6 +446,7 @@ ACC.carousel = {
     		nav:true,
     		dots:false,
     		navText:[],
+    		autoWidth: true,	/*add for TISCSS-64*/ 
     		responsive: {
                 0: {
                     items: 1,

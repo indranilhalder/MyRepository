@@ -620,7 +620,8 @@ function getProductsYouCareAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
-                    autoWidth: carouselAutoWidthAttr,
+                    /*autoWidth: carouselAutoWidthAttr,*/		/*commented for TISCSS-64*/
+                    autoWidth: true,		/*add for TISCSS-64*/
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -810,7 +811,8 @@ function getNewAndExclusiveAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
-                    autoWidth: carouselAutoWidthAttr,
+                    /*autoWidth: carouselAutoWidthAttr,*/		/*commented for TISCSS-64*/
+                    autoWidth: true,		/*add for TISCSS-64*/
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
