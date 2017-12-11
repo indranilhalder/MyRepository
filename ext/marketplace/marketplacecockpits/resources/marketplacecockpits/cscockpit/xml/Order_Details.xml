@@ -8,7 +8,7 @@
 		<custom class="com.tisl.mpl.cockpits.services.config.impl.OrderingDateColumn" name="Order date / time" visible="true">
 			<label key="cscockpit.widget.order.details.orderingdate" />
 		</custom>		
-		<property qualifier="AbstractOrder.status" visible="true"/>		
+		<!-- <property qualifier="AbstractOrder.status" visible="true"/>  -->		
 		<property qualifier="Order.salesApplication" visible="true"/>
 		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerFirstNameColumn" name="First Name" visible="true">
 			<label key="cscockpit.widget.order.search.firstName" />
