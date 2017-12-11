@@ -493,9 +493,9 @@ public class SearchPageController extends AbstractSearchPageController
 			setUpMetaData(model, metaKeywords, metaDescription);
 
 			model.addAttribute("dropDownText", dropDownText);
-			final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
 			if (commonUtils.isLuxurySite())
 			{
+				final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
 				model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, categoryForCode.getName());
 			}
 			else
