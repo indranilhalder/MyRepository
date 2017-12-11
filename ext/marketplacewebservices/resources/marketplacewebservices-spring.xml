@@ -453,6 +453,7 @@
 			<property name="consignmentStatusMapping" ref="consignmentStatusMapping" />
 			<property name="warehouseService" ref="warehouseService" />
 			<property name="consignmentProcessNotifier" ref="consignmentProcessNotifier" />
+			<property name="configurationService" ref="configurationService"></property>
 			</bean>
 			
 			
