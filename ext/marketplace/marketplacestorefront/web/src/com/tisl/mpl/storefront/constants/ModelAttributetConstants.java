@@ -985,5 +985,6 @@ public final class ModelAttributetConstants
 	public static final String SPECIAL_FEATURES = "special Features";
 	public static final String FEATURES = "Features";
 	// TPR-3878 END
-
+	public static final String SUB_REASON = "subReason";
+	public static final String NEW_COMMENTS = "newComments";
 }

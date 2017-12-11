@@ -14,7 +14,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "lineItems")
 @XmlType(propOrder =
-{ "lineItemId", "returnReasonCode", "cancelReasonCode", "timeSlotFrom", "timeSlotTo", "reverseSealLostflag" })
+{ "lineItemId", "returnReasonCode", "cancelReasonCode", "timeSlotFrom", "timeSlotTo", "reverseSealLostflag",
+		"subReturnReasonCode" })
 public class TicketlineItemsXMLData
 {
 	private String lineItemId;
@@ -23,6 +24,7 @@ public class TicketlineItemsXMLData
 	//R2.3 Changes Start
 	private String timeSlotFrom;
 	private String timeSlotTo;
+	private String subReturnReasonCode;
 
 	//R2.3 Changes END
 
@@ -137,6 +139,21 @@ public class TicketlineItemsXMLData
 		this.reverseSealLostflag = reverseSealLostflag;
 	}
 
+	/**
+	 * @return the subReturnReasonCode
+	 */
+	@XmlElement(name = "SubReturnReasonCode")
+	public String getSubReturnReasonCode()
+	{
+		return subReturnReasonCode;
+	}
 
-
+	/**
+	 * @param subReturnReasonCode
+	 *           the subReturnReasonCode to set
+	 */
+	public void setSubReturnReasonCode(final String subReturnReasonCode)
+	{
+		this.subReturnReasonCode = subReturnReasonCode;
+	}
 }

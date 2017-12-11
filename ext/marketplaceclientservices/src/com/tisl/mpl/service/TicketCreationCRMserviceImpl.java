@@ -260,7 +260,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -373,7 +373,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -515,6 +515,11 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					{
 						ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
 					}
+					//Added for TPR-5954
+					if (null != sendTicketRequestData.getComments())
+					{
+						ticket.setComments(sendTicketRequestData.getComments());
+					}
 
 					if (null != sendTicketRequestData.getAddressInfo())
 					{
@@ -576,6 +581,12 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					{
 						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
 					}
+					//Added for TPR-5954
+					if (null != sendTicketLineItemData.getSubReasonCode())
+					{
+						ticketLineObj.setSubReturnReasonCode(sendTicketLineItemData.getSubReasonCode());
+					}
+
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 					ticket.setLineItemDataList(ticketlineItemsXMLDataList);
 					ticketCreationCRM(ticket);

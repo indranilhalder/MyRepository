@@ -149,6 +149,8 @@
 						</ul>
 					<div class="reason">
 						<label>Reason for Return:</label> <span>${reasonDescription}</span>
+						<label>Sub Reason:</label> <span>${subReason}</span> <!-- Added for TPR-5954 -->
+						<label>Comments:</label> <span>${newComments}</span> <!-- Added for TPR-5954 -->
 					</div>
 					<div class="method">
 					
