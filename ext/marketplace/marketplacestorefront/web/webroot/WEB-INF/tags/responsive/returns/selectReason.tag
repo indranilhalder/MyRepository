@@ -118,8 +118,6 @@
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
 							<b><spring:theme code="text.order.returns.reasonvalidation.message"></spring:theme></b> <br/><br/>
 							
-							<%-- onchange="fetchCatSpecificReason(this) " --%>
-							
 							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" >
 								    <option selected='selected' value="NA"><spring:theme code="text.requestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"

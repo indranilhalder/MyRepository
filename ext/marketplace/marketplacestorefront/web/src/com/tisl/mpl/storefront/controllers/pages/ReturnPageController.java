@@ -494,20 +494,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnData.setUssid(returnForm.getUssid());
 				returnData.setReturnMethod(returnForm.getReturnMethod());
 				returnData.setReturnFulfillmentMode(returnFulfillmentType);
-				//TPR-5954
-				if (null != returnForm.getComments())
-				{
-					returnData.setComments(returnForm.getComments());
-				}
-				if (null != returnForm.getSubReturnReason())
-				{
-					returnData.setSubReasonCode(returnForm.getSubReturnReason());
-				}
-				if (null != returnForm.getImagePath())
-				{
-					returnData.getImageUrl();
-				}
-
 				// TPR-4134
 				if (null != returnForm.getReverseSeal())
 				{
@@ -641,19 +627,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnInfoDataObj.setReasonCode(returnForm.getReturnReason());
 				returnInfoDataObj.setUssid(returnForm.getUssid());
 				returnInfoDataObj.setReturnMethod(returnForm.getReturnMethod());
-				//TPR-5954
-				if (null != returnForm.getComments())
-				{
-					returnInfoDataObj.setComments(returnForm.getComments());
-				}
-				if (null != returnForm.getSubReturnReason())
-				{
-					returnInfoDataObj.setSubReasonCode(returnForm.getSubReturnReason());
-				}
-				if (null != returnForm.getImagePath())
-				{
-					returnInfoDataObj.setImageUrl(returnForm.getImagePath());
-				}
 				final boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,
 						returnInfoDataObj, customerData, SalesApplication.WEB, returnAddrData);
 				if (!cancellationStatusForSelfShip)
@@ -1471,80 +1444,5 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		this.accountAddressFacade = accountAddressFacade;
 	}
 
-	//TPR-5954
-	@ResponseBody
-	@RequireHardLogIn
-	@RequestMapping(value = "/fetchSubReason", method = RequestMethod.GET)
-	public List<ReturnReasonData> fetchSubReturnReason(@RequestParam final String parentReasonCode)
-	{
-		List<ReturnReasonData> returnableStores = null;
-		try
-		{
-			returnableStores = mplOrderFacade.getSubReasonCode(parentReasonCode);
-		}
-		catch (final Exception ex)
-		{
-			returnableStores = new ArrayList<ReturnReasonData>();
-		}
-		return returnableStores;
-	}
-
-	//TPR-5954
-	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-	@RequireHardLogIn
-	public String uploadImages(final MultipartFile returnImgFile, final Model model, final HttpServletRequest request,
-			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
-	{
-		try
-		{
-			LOG.debug("***************:" + returnImgFile.getOriginalFilename());
-			String fileUploadLocation = null;
-			String date = null;
-			Path path = null;
-			//TISRLUAT-50
-			if (null != configurationService)
-			{
-				fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
-				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
-				{
-					try
-					{
-						final byte barr[] = returnImgFile.getBytes();
-						final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-						date = sdf.format(new Date());
-						path = Paths.get(fileUploadLocation + File.separator + date);
-						if (!Files.exists(path))
-						{
-							try
-							{
-								Files.createDirectories(path);
-							}
-							catch (final IOException e)
-							{
-								//fail to create directory
-								LOG.error("Exception ,While creating the Directory " + e.getMessage());
-							}
-						}
-						final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
-								+ returnImgFile.getOriginalFilename()));
-						bout.write(barr);
-						bout.flush();
-						bout.close();
-						LOG.debug("FileUploadLocation   :" + fileUploadLocation);
-					}
-					catch (final Exception e)
-					{
-						LOG.error("Exception is:" + e);
-					}
-				}
-
-			}
-		}
-		catch (final Exception ex)
-		{
-			LOG.error(ex.getStackTrace());
-		}
-		return "OK";
-	}
 
 }
