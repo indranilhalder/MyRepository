@@ -1643,3 +1643,10 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 	    margin-top: 5px;
 	}
 }
+/* TISPRNXIII-38 */
+@media (max-width: 720px) {
+	.removeModalAfterLoad .changeAdddd {
+	    height: auto ! important;
+	}
+}
+/* TISPRNXIII-38 */

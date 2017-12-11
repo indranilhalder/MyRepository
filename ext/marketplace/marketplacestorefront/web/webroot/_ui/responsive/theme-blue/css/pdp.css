@@ -13059,3 +13059,12 @@ p.sizetext.size {
 	display: none;
 }
 /* end CMR 17 */
+/* TPR-6740 start */
+#stw_widget_hf .product-tile {
+    margin-bottom: 15px;
+}
+.gotopdp {
+    position: absolute;
+    bottom: 0;
+}
+/* TPR-6740 end */

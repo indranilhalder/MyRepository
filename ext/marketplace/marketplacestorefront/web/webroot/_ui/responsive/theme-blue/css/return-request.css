@@ -422,3 +422,28 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin {
 	border-color: #000;
 }
 /* end add for TISCSS-54 */
+/* TISPRNXIII-53 start */
+@media (max-width: 767px){
+.col-md-9.selfCourier {
+    clear: both;
+}
+.selectReturnMethod.scheduled.col-md-12.col-sm-12.greyColor {
+    float: left;
+} 
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3{
+	padding: 0px ! important;
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 {
+    width: 23.666667%;
+    padding: 0px ! important;
+}
+.col-md-9.quickDrop {
+    clear: both;
+}
+}
+/* TISPRNXIII-53 end */
+/* TISPRNXIII-74 Start */
+.selectRadio.col-md-2.col-sm-2.col-xs-2 {
+    clear: both;
+}
+/* TISPRNXIII-74 End */

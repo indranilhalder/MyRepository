@@ -178,7 +178,44 @@ a.change_location-link {
 	float:right;
 	
 }
+/* TPR-7078 */
+.listing.wrapper .bottom-pagination.pagination-search .pagination li.active a {
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    background: #a9133d;
+    color: white;
+    border-radius: 50%;
+    width: 29px;
+    height: 29px;
+    text-align: center;
+}
+.listing.wrapper .bottom-pagination.pagination-search .pagination li a {
+    display: inline-block;
+    width: 29px;
+    height: 29px;
+    text-align: center
+} 
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.last {
+    display: none;
+}
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.first {
+    display: none;
+}
+.bottom-pagination.pagination-search .pagination li.prev.disabled a, .pagination li.next.disabled a {
+    cursor: not-allowed;
+}
 
+.error_msg_backfrom_payment {
+    line-height: normal;
+    letter-spacing: .6px;
+    color: red;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
 
 
 

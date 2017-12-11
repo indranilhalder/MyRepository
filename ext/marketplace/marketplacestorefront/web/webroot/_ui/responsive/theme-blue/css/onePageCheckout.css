@@ -5008,6 +5008,11 @@ label {
 .checkTab .address-list .address {
     width: 84%;
 }
+.prd-info .item .product, .cart.wrapper .right-block.billing .block h3, .cart.wrapper .right-block.billing .block.bottom.order-details>ul li.item .product h3.product-name {
+	font-size: 12px !important;
+    font-weight: normal;
+    margin: 0;
+}
 }
 @media only screen and (max-width: 1250px){
 .choose-payment {
@@ -5691,4 +5696,70 @@ margin-top: 3px;
 /* end for TISCSS-72 */
 .cart.wrapper .right-block .checkout-order-summary .subtotals.top.block h2, .cart.wrapper .right-block .block.top h2 {
 	display: none;		/* add for TISCSS-75 */
+}
+/*paytm integration start*/
+label[for='priority_paytm'] img {
+	height: 70px;
+    margin-top: -29px;
+    margin-left: 10px;
+}
+/*paytm integration end*/
+/*Paytm changes*/
+@media (max-width: 768px) {
+	label[for='priority_paytm'] img {
+	    margin-left: 30px;
+	}
+}
+/* TISPRNXIII-14 start */
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
+    text-align: left ! important;
+}
+/* TISPRNXIII-14 end */
+/* start change for TISUAT-6116 */
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
+	top: 1px !important;
+}
+/* end change for TISUAT-6116 */
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info p {
+	margin-bottom: 12px;
+	padding: 0;
+}
+.cart.wrapper .right-block.billing .block.bottom.order-details.delivery-info>address, .cart.wrapper .right-block .block.bottom.order-details>ul li.item {
+	padding: 0;
+}
+.cart.wrapper .right-block.billing .block.bottom.order-details>ul li.item .product {
+    width: 68% ! important;
+    float: right;
+}
+.cart.wrapper .right-block.billing.checkout-list-right .block.delivery-info p {
+	font-size: 12px;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method {
+	border: solid 1px #ddd;
+    font-size: 12px;
+    padding: 8px 23px;
+    letter-spacing: normal;
+    margin-top: 16px;
+    line-height: normal;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method h3 {
+	color: #666;
+    letter-spacing: .6px;
+    margin-bottom: 8px;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method h3+p.delivery-method-description {
+    letter-spacing: .4px;
+    line-height: 18px;
+    padding-left: 21px;
+    position: relative;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .order-details.block.delivery-info .method h3+p.delivery-method-description:before {
+	background: url(../images/Sprite-combined.png) no-repeat scroll -255px -174px;
+    content: "";
+    display: inline-block;
+    height: 15px;
+    position: absolute;
+    top: 0;
+    width: 15px;
+    left: -1px;
 }
