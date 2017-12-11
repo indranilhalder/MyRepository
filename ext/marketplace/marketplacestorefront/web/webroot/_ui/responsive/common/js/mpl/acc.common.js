@@ -36,11 +36,12 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR)
 	// Modify options, control originalOptions, store jqXHR, etc
 	if (options.type === "post" || options.type === "POST")
 	{
-		var noData = (typeof options.data === "undefined");
-		if (noData || options.data.indexOf("CSRFToken") === -1)
-		{
-			options.data = (!noData ? options.data + "&" : "") + "CSRFToken=" + ACC.config.CSRFToken;
-		}
+		if (typeof options.data === "undefined")
+		    options.data = "";
+		else
+		    options.data += "&CSRFToken=" + ACC.config.CSRFToken;
+		//options.data = (!noData ? options.data + "&" : "") + "CSRFToken=" + ACC.config.CSRFToken;
+		
 	}
 });
 

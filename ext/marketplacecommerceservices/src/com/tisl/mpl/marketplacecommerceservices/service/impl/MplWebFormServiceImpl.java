@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -136,8 +135,16 @@ public class MplWebFormServiceImpl implements MplWebFormService
 		if (duplicateCheckEnable.equalsIgnoreCase("Y"))
 		{
 			duplicateResult = ticketCreationService.checkDuplicateWebFormTicket(mplWebCrmTicketModel);
+
+			if (null != duplicateResult && duplicateResult.equalsIgnoreCase("success"))
+			{
+				final TicketMasterXMLData ticketMasterXMLData = populateWebformTicketData(mplWebCrmTicketModel);
+				ticketCreationService.ticketCreationCRM(ticketMasterXMLData);
+				sentResult = SUCCESS;
+			}
 		}
-		if (null != duplicateResult && duplicateResult.equalsIgnoreCase("success"))
+		else
+		// Duplicate check disabled
 		{
 			final TicketMasterXMLData ticketMasterXMLData = populateWebformTicketData(mplWebCrmTicketModel);
 			ticketCreationService.ticketCreationCRM(ticketMasterXMLData);
@@ -149,23 +156,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Override
 	public TicketMasterXMLData populateWebformTicketData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
 	{
-		OrderEntryData orderEntry = null;
-		final OrderModel subOrderModel = orderModelService.getOrder(mplWebCrmTicketModel.getSubOrderCode());//Sub order model
-		final OrderData orderData = orderConverter.convert(subOrderModel); //model converted to data
-		for (final OrderEntryData entry : orderData.getEntries())
-		{
-			if (null != entry.getTransactionId())
-			{
-				if (entry.getTransactionId().equalsIgnoreCase(mplWebCrmTicketModel.getTransactionId()))
-				{
-					orderEntry = entry;
-				}
-			}
-		}
-		final TicketMasterXMLData ticketMasterXMLData = ticketCreationService.populateWebFormData(mplWebCrmTicketModel,
-				subOrderModel, orderData, orderEntry);
-
-		return ticketMasterXMLData;
+		return ticketCreationService.populateWebFormData(mplWebCrmTicketModel);
 	}
 
 	/*

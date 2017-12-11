@@ -470,7 +470,16 @@
 	background: url('/_ui/responsive/common/images/querySubmitDone.png')
 		no-repeat 0 0;
 }
-
+.custmCareHelp .issueQuryPopUp .issueQuryPopBox .headingSec .queryErrorIcon
+{
+	content: "";
+    background: url(../images/Sprite-combined.png) no-repeat scroll -94px -130px;
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    position: relative;
+    top: 20px;
+}
 .custmCareHelp .issueQuryPopUp .issueQuryPopBox .headingSec .querySubmitInfo
 	{
 	margin-left: 72px;

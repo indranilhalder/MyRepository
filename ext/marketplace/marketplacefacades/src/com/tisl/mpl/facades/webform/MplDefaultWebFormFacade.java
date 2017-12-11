@@ -212,7 +212,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		{
 			MplWebCrmTicketModel webFormModel = modelService.create(MplWebCrmTicketModel.class);
 			//checking ticket is duplicate or not in Commerce
-			if (checkDuplicateWebCRMTickets(formData))
+			if (!checkDuplicateWebCRMTickets(formData))
 			{
 				//Setting ECOM request prefix as E to for COMM triggered Ticket
 				prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
@@ -223,6 +223,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				modelService.save(webFormModel);
 				//send Ticket to CRM/PI
 				mplWebFormService.sendWebFormTicket(webFormModel);
+			}
+			else
+			{
+				commerceTicketId = "duplicate";
 			}
 		}
 		catch (final Exception e)
@@ -334,6 +338,11 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 			{
 				formData.setCustomerId(currentUser.getUid());
 			}
+			formData.setL0code(crmTicket.getL0code());
+			formData.setL1code(crmTicket.getL1code());
+			formData.setL2code(crmTicket.getL2code());
+			formData.setL3code(crmTicket.getL3code());
+			formData.setL4code(crmTicket.getL4code());
 			formData.setOrderCode(crmTicket.getOrderCode());
 			formData.setSubOrderCode(crmTicket.getSubOrderCode());
 			formData.setTransactionId(crmTicket.getTransactionId());

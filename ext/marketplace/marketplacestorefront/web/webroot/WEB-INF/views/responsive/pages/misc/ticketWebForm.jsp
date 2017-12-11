@@ -204,16 +204,10 @@
 									upload size 5MB)</p>
 								<div class="uploadFile">
 									<span>Upload File</span> 
-									<input id="attachmentFile" type="file" name="uploadFile" fileInput="JPEG,PNG,GIF,BMP,PDF,JPG" />
+									<input id="attachmentFile" type="file" name="uploadFile" multiple />
 									<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 								</div>
-								<!-- The global progress bar -->
-								<div id="progress" class="progress">
-									<div class="progress-bar progress-bar-success"></div>
-								</div>
-								<!-- The container for the uploaded files -->
-								<div id="files" class="files"></div>
-								<br>
+								<div id="uploads"></div>
 							</div>
 							<div class="formGroup">
 								<button class="needHelpBtn webfromTicketSubmit">Submit</button>

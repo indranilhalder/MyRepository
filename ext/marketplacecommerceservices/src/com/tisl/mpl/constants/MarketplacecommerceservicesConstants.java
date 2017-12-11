@@ -2370,7 +2370,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RECEIVED = "RECEIVED";
 	public static final String SENT = "SENT";
 	public static final String OPEN = "Open";
-	public static final String CRM_WEBFORM_TICKET_TYPE = "W";
 	public static final String CRM_WEBFORM_TICKET_SUB = "crm.ticketsubtype.nodel1";
 	public static final String CRM_WEBFORM_TICKET_SUB_ORDER = "O";
 	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
