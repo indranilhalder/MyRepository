@@ -285,67 +285,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 			}
 
-
-			//			//TPR-5954 || Category specific return reason || Start
-			//			Collection<CategoryModel> superCategories = productModel.getSupercategories();
-			//
-			//			outer: for (final CategoryModel category : superCategories)
-			//			{
-			//				if (category.getCode().startsWith("MPH"))
-			//				{
-			//					superCategories = category.getSupercategories();
-			//					for (final CategoryModel category1 : superCategories)
-			//					{
-			//						if (category1.getCode().startsWith("MPH"))
-			//						{
-			//							superCategories = category1.getSupercategories();
-			//							for (final CategoryModel category2 : superCategories)
-			//							{
-			//								if (category2.getCode().startsWith("MPH"))
-			//								{
-			//									L2Cat = category2.getCode();
-			//									break outer;
-			//								}
-			//							}
-			//						}
-			//					}
-			//
-			//				}
-			////			}
-			//			//TPR-5954 || Category specific return reason || End
-			//			List<ReturnReasonData> reasonDataList = null;
-			//			//reasonDataList = mplOrderFacade.getCatSpecificRetReason(L2Cat);
-			//			if (null != reasonDataList)
-			//			{
-			//				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-			//				//TPR-5954
-			//				final String reasonDesc = mplOrderFacade.fetchReasonDesc(returnForm.getReturnReason());
-			//				if (null != reasonDesc)
-			//				{
-			//					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reasonDesc);
-			//				}
-			//			}
-			//			else
-			//			{ //Fall back for return reason code
-			//				reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
-			//				if (!reasonDataList.isEmpty())
-			//				{
-			//					for (final ReturnReasonData reason : reasonDataList)
-			//					{
-			//						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
-			//						{
-			//							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
-			//						}
-			//					}
-			//				}
-			//
-			//				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-			//			}
-
-
-
-
-
 			final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
 
 
