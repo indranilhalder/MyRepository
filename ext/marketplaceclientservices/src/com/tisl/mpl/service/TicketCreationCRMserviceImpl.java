@@ -3,9 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringWriter;
@@ -260,7 +257,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -373,7 +370,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -515,11 +512,6 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					{
 						ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
 					}
-					//Added for TPR-5954
-					if (null != sendTicketRequestData.getComments())
-					{
-						ticket.setComments(sendTicketRequestData.getComments());
-					}
 
 					if (null != sendTicketRequestData.getAddressInfo())
 					{
@@ -581,12 +573,6 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					{
 						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
 					}
-					//Added for TPR-5954
-					if (null != sendTicketLineItemData.getSubReasonCode())
-					{
-						ticketLineObj.setSubReturnReasonCode(sendTicketLineItemData.getSubReasonCode());
-					}
-
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 					ticket.setLineItemDataList(ticketlineItemsXMLDataList);
 					ticketCreationCRM(ticket);
@@ -697,8 +683,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	 * @throws Exception
 	 */
 	@Override
-	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
-			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception
+	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
 	{
 		final AddressInfoDTO addressInfo = new AddressInfoDTO();
 		final TicketMasterXMLData ticket = new TicketMasterXMLData();
@@ -719,7 +704,9 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
 			}
-			ticket.setTicketType("W");
+			//setting default as W for WEb form
+			ticket.setTicketType(MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_TYPE);
+
 			if (null != mplWebCrmTicketModel.getTicketSubType())
 			{
 				ticket.setTicketSubType(mplWebCrmTicketModel.getTicketSubType());

@@ -7,11 +7,11 @@ import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.task.RetryLaterException;
 import de.hybris.platform.webform.model.WebFormTicketProcessModel;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
-import com.tisl.mpl.service.TicketCreationCRMservice;
 
 
 /**
@@ -22,9 +22,7 @@ public class WebFormTicketAction extends AbstractProceduralAction<WebFormTicketP
 {
 	private static final Logger LOG = Logger.getLogger(WebFormTicketAction.class);
 
-	@Autowired
-	private TicketCreationCRMservice ticketCreationService;
-	@Autowired
+	@Resource
 	private MplWebFormService mplWebFormService;
 
 	/**

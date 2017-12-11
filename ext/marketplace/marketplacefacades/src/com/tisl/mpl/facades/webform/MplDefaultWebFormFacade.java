@@ -69,7 +69,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -212,7 +212,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		{
 			MplWebCrmTicketModel webFormModel = modelService.create(MplWebCrmTicketModel.class);
 			//checking ticket is duplicate or not in Commerce
-			if (checkDuplicateWebCRMTickets(formData))
+			if (!checkDuplicateWebCRMTickets(formData))
 			{
 				//Setting ECOM request prefix as E to for COMM triggered Ticket
 				prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
@@ -223,6 +223,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				modelService.save(webFormModel);
 				//send Ticket to CRM/PI
 				mplWebFormService.sendWebFormTicket(webFormModel);
+			}
+			else
+			{
+				commerceTicketId = "duplicate";
 			}
 		}
 		catch (final Exception e)
@@ -235,7 +239,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
