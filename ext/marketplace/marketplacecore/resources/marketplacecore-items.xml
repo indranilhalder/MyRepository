@@ -8128,6 +8128,32 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Added for TPR-5954 || Start -->
+					<attribute qualifier="subReason" type="java.lang.String">
+						<description>Sub reason value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="subReasonCode" type="java.lang.String">
+						<description>Sub reason code</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnRemarks" type="java.lang.String">
+						<description>remarks for return</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="imgUrl" type="java.lang.String">
+						<description>url of the uploaded image</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(2000)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- Added for TPR-5954 || End -->
 				</attributes>
 			</itemtype>
 			<itemtype code="RefundEntry" autocreate="false" generate="true">
@@ -13929,7 +13955,23 @@
 					<description>The reason descriptions</description>
 					<modifiers optional="true" unique="false" write="true"
 							read="true" />
-					<persistence type="property" />
+					<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 				</attribute>
 				<attribute qualifier="orderStatus" type="java.lang.String">
 					<description>The parent child relation</description>

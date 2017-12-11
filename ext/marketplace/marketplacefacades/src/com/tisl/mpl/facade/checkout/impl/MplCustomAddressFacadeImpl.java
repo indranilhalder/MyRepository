@@ -900,6 +900,11 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
 							mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
 									MarketplacecommerceservicesConstants.INR, jewelleryInfo.get(0).getPCMUSSID(), fulfillmentType);
+							if (null == mplZoneDeliveryModeValueModel)
+							{
+								mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+										MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+							}
 						}
 						else
 						{

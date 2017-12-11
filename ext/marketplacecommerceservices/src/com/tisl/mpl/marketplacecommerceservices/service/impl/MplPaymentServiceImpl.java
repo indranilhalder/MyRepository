@@ -4975,8 +4975,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							for (final OrderEntryModel orderEntry : orderEntryModel)
 							{
 								//H2 Priority Sprint1
-								final Double chargeBack = orderEntry.getChargeback() != null ? orderEntry.getChargeback()
-										: NumberUtils.DOUBLE_ZERO;
+								/*
+								 * final Double chargeBack = orderEntry.getChargeback() != null ? orderEntry.getChargeback() :
+								 * NumberUtils.DOUBLE_ZERO;
+								 */
 
 								// If CosignmentEnteries are present then update OMS with
 								// the state.
@@ -5048,7 +5050,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							if (conStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 							{
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.CLOSED_ON_CANCELLATION, null);
+										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.ORDER_CANCELLED, null);
 							}
 							else
 							{
