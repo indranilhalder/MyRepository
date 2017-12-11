@@ -69,7 +69,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -235,7 +235,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -334,6 +334,11 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 			{
 				formData.setCustomerId(currentUser.getUid());
 			}
+			formData.setL0code(crmTicket.getL0code());
+			formData.setL1code(crmTicket.getL1code());
+			formData.setL2code(crmTicket.getL2code());
+			formData.setL3code(crmTicket.getL3code());
+			formData.setL4code(crmTicket.getL4code());
 			formData.setOrderCode(crmTicket.getOrderCode());
 			formData.setSubOrderCode(crmTicket.getSubOrderCode());
 			formData.setTransactionId(crmTicket.getTransactionId());
