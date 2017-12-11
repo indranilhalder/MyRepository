@@ -185,4 +185,13 @@ public interface MplVoucherService
 	 * @return List<JuspayCardStatus>
 	 */
 	public List<JuspayCardStatusModel> findJuspayCardStatus(String guid, String customerId);
+
+	/**
+	 * Cart/ Order Modified with fresh Discount Values
+	 * 
+	 * @param oModel
+	 * @param voucher
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel getUpdatedDiscountValues(AbstractOrderModel oModel, VoucherModel voucher);
 }
