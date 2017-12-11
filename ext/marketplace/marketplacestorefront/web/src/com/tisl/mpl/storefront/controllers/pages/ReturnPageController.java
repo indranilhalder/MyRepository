@@ -7,6 +7,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.i18n.I18NFacade;
@@ -41,6 +42,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -215,7 +217,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			//TATA-823 end
 			//TPR-5954
 			ProductModel productModel = null;
-			//final String L2Cat = null;
+			String L2Cat = null;
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -286,82 +288,70 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 
 
-			//			//TPR-5954 || Category specific return reason || Start
-			//			Collection<CategoryModel> superCategories = productModel.getSupercategories();
-			//
-			//			outer: for (final CategoryModel category : superCategories)
-			//			{
-			//				if (category.getCode().startsWith("MPH"))
-			//				{
-			//					superCategories = category.getSupercategories();
-			//					for (final CategoryModel category1 : superCategories)
-			//					{
-			//						if (category1.getCode().startsWith("MPH"))
-			//						{
-			//							superCategories = category1.getSupercategories();
-			//							for (final CategoryModel category2 : superCategories)
-			//							{
-			//								if (category2.getCode().startsWith("MPH"))
-			//								{
-			//									L2Cat = category2.getCode();
-			//									break outer;
-			//								}
-			//							}
-			//						}
-			//					}
-			//
-			//				}
-			////			}
-			//			//TPR-5954 || Category specific return reason || End
-			//			List<ReturnReasonData> reasonDataList = null;
-			//			//reasonDataList = mplOrderFacade.getCatSpecificRetReason(L2Cat);
-			//			if (null != reasonDataList)
-			//			{
-			//				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-			//				//TPR-5954
-			//				final String reasonDesc = mplOrderFacade.fetchReasonDesc(returnForm.getReturnReason());
-			//				if (null != reasonDesc)
-			//				{
-			//					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reasonDesc);
-			//				}
-			//			}
-			//			else
-			//			{ //Fall back for return reason code
-			//				reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
-			//				if (!reasonDataList.isEmpty())
-			//				{
-			//					for (final ReturnReasonData reason : reasonDataList)
-			//					{
-			//						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
-			//						{
-			//							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
-			//						}
-			//					}
-			//				}
-			//
-			//				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-			//			}
+			//TPR-5954 || Category specific return reason || Start
+			Collection<CategoryModel> superCategories = productModel.getSupercategories();
 
-
-
-
-
-			final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
-
-
-			if (!reasonDataList.isEmpty())
+			outer: for (final CategoryModel category : superCategories)
 			{
-				for (final ReturnReasonData reason : reasonDataList)
+				if (category.getCode().startsWith("MPH"))
 				{
-					if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+					superCategories = category.getSupercategories();
+					for (final CategoryModel category1 : superCategories)
 					{
-						model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+						if (category1.getCode().startsWith("MPH"))
+						{
+							superCategories = category1.getSupercategories();
+							for (final CategoryModel category2 : superCategories)
+							{
+								if (category2.getCode().startsWith("MPH"))
+								{
+									L2Cat = category2.getCode();
+									break outer;
+								}
+							}
+						}
 					}
+
 				}
 			}
+			//TPR-5954 || Category specific return reason || End
+			List<ReturnReasonData> reasonDataList = null;
+			reasonDataList = mplOrderFacade.getCatSpecificRetReason(L2Cat);
+			if (null != reasonDataList)
+			{
+				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+				//TPR-5954
+				final String reasonDesc = mplOrderFacade.fetchReasonDesc(returnForm.getReturnReason());
+				if (null != reasonDesc)
+				{
+					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reasonDesc);
+				}
+			}
+			else
+			{ //Fall back for return reason code
+				reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
+				if (!reasonDataList.isEmpty())
+				{
+					for (final ReturnReasonData reason : reasonDataList)
+					{
+						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+						{
+							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+						}
+					}
+				}
 
-			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
-
+				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			}
+			if (null != returnForm.getSubReturnReason())
+			{
+				model.addAttribute(ModelAttributetConstants.SUB_REASON,
+						cancelReturnFacade.fetchSubReasonDesc(returnForm.getSubReturnReason()));
+			}
+			if (null != returnForm.getComments())
+			{
+				model.addAttribute(ModelAttributetConstants.NEW_COMMENTS, returnForm.getComments());
+			}
 			//JWLSPCUAT-282
 			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			//if logistic partner not available for the given pin code

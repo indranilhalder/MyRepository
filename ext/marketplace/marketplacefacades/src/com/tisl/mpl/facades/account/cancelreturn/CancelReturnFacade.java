@@ -300,6 +300,10 @@ public interface CancelReturnFacade
 			throws Exception;
 
 	public boolean appliedPromotionCheckOnetouch(final OrderModel subOrderModel);
+
 	//TPR-1345:One touch cancel return--END
+
+	//TPR-5954
+	public String fetchSubReasonDesc(final String reasonCode);
 
 }

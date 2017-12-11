@@ -3133,6 +3133,8 @@
 		<!-- Added for TPR-5954 -->
 		<property name="returnReasonMap"
 			type="java.util.List&lt;ParentChildReason>" />
+		<property name="subReasonCode" type="java.lang.String" />
+		<property name="comment" type="java.lang.String" />
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
