@@ -35,6 +35,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -186,6 +188,64 @@ public class CatalogsController extends BaseController
 		return deptListDto;
 	}
 
+	// Mobile all Category
+	/**
+	 * To get all categories Shop by department component
+	 *
+	 * @param fields
+	 * @return DepartmentListHierarchyWsDTO
+	 */
+	//TPR-561
+	@RequestMapping(value = "/getAllCategoriesAmp", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject fetchAllCategoriesAmp(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		DepartmentListHierarchyData shopByDeptData = new DepartmentListHierarchyData();
+		DepartmentListHierarchyWsDTO deptListDto = new DepartmentListHierarchyWsDTO();
+		final JSONObject jsonObj = new JSONObject();
+		final JSONArray jsonArray = new JSONArray();
+		try
+		{
+			shopByDeptData = mplCustomCategoryService.getAllCategories();
+			final FieldSetBuilderContext context = new FieldSetBuilderContext();
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(DepartmentListHierarchyData.class, DataMapper.FIELD_PREFIX,
+					fields, context);
+			if (null != shopByDeptData && null != fieldSet)
+			{
+				deptListDto = dataMapper.map(shopByDeptData, DepartmentListHierarchyWsDTO.class, fieldSet);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				deptListDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				deptListDto.setErrorCode(e.getErrorCode());
+			}
+			deptListDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				deptListDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				deptListDto.setErrorCode(e.getErrorCode());
+			}
+			deptListDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		jsonArray.add(deptListDto);
+		jsonObj.put("items", jsonArray);
+		return jsonObj;
+	}
+
 
 	/**
 	 * To get all brands Shop by brand component
@@ -199,6 +259,7 @@ public class CatalogsController extends BaseController
 	{
 		BrandListHierarchyData shopbydeptdata = new BrandListHierarchyData();
 		BrandListHierarchyWsDTO brandListdto = new BrandListHierarchyWsDTO();
+
 		try
 		{
 			shopbydeptdata = mplCustomBrandService.getShopByBrand();
@@ -239,6 +300,64 @@ public class CatalogsController extends BaseController
 		}
 
 		return shopbydeptdata;
+	}
+
+	/**
+	 * To get all brands Shop by brand component
+	 *
+	 * @param fields
+	 * @return BrandListHierarchyWsDTO
+	 */
+	@RequestMapping(value = "/allBrandsAmp", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getAllBrandsAmp(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		BrandListHierarchyData shopbydeptdata = new BrandListHierarchyData();
+		BrandListHierarchyWsDTO brandListdto = new BrandListHierarchyWsDTO();
+		final JSONObject jsonObj = new JSONObject();
+		final JSONArray jsonArray = new JSONArray();
+
+		try
+		{
+			shopbydeptdata = mplCustomBrandService.getShopByBrand();
+			final FieldSetBuilderContext context = new FieldSetBuilderContext();
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(BrandListHierarchyWsDTO.class, DataMapper.FIELD_PREFIX,
+					fields, context);
+
+			if (null != shopbydeptdata && null != fieldSet)
+			{
+				brandListdto = dataMapper.map(shopbydeptdata, BrandListHierarchyWsDTO.class, fieldSet);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				brandListdto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				brandListdto.setErrorCode(e.getErrorCode());
+			}
+			brandListdto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				brandListdto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				brandListdto.setErrorCode(e.getErrorCode());
+			}
+			brandListdto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		jsonArray.add(shopbydeptdata);
+		jsonObj.put("items", jsonArray);
+		return jsonObj;
 	}
 
 	/**

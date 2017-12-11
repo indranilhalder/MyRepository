@@ -1,4 +1,3 @@
-<%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/pwamp/footer"%>
 <!doctype html>
 <html amp>
 <head>
@@ -22,7 +21,14 @@
 <link rel="manifest" href="/manifest.json">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<style amp-custom>body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFFFFF;}
+<!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" > -->
+<!-- jQuery library -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- Latest compiled JavaScript -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
+<style amp-custom>body{font-family:'Roboto', sans-serif; font-size:14px; background-color:#FFFFFF;}
 
 
 
@@ -208,7 +214,7 @@ p{
 	margin-bottom:30px;
 }
 
-a{text-decoration:none;}
+a{text-decoration:none; color:#3498db;}
 
 /*Lists*/
 .icon-list{list-style:none; font-size:14px; line-height:28px; color:#666666;}
@@ -513,6 +519,7 @@ header{
 	line-height:35px;
 	text-align:center;
 	border-radius:35px;
+	margin-right:15px;
 }
 
 .sidebar-menu ul li a .fa-circle{font-size:4px; margin-left:1px;}
@@ -521,6 +528,7 @@ header{
 	height:35px;
 	position:absolute;
 	right:0px;
+	top:11px;
 	font-size:4px;
 	color:#acacac;
 }
@@ -535,21 +543,20 @@ header{
 	background:none;
 	border:none;
     color: #3a3a3a;
-    line-height: 40px;
-    font-size: 16px;
+    line-height: 60px;
+    font-size: 12px;
     font-weight: 400;
 }
 
-.sidebar-menu h4 a {color: #3a3a3a;}
-
 .sidebar-menu ul{
-	padding:0px 0px 20px 10px;
+	line-height:50px;
+	padding:10px 0px 20px 0px;
 }
 
 .sidebar-menu ul li a{
 	color:#6b757d;
-	font-size:14px;
-	line-height:30px;
+	font-size:11px;
+	line-height:50px;
 }
 
 .sidebar-menu i:first-child{
@@ -571,17 +578,6 @@ header{
 	line-height:40px;
 	margin-bottom:10px;
 }
-
-.sidebar-divider-item{
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    padding-left: 20px;
-    color: #3a3a3a;
-    border-top: solid 1px rgba(0,0,0,0.1);
-	line-height:40px;
-}
-.sidebar-divider-item a {color: #3a3a3a;}
-.sidebar-divider-item a i {width: 20px;}
 
 .sidebar-menu .sidebar-item{
 	color:#1f1f1f;
@@ -1113,7 +1109,7 @@ padding-top:0px;
 .header-search-section {
 	width: 100%;
 	position: static;
-	margin: 0px;
+	margin: 10px 0px;
 	line-height: normal;
 }
 
@@ -1123,11 +1119,9 @@ padding-top:0px;
 }
 
 .header-search-center {
-	width: 40%;
-	float: right;
+	width: 50%;
+	float: left;
 }
-
-.header-search-center p {}
 
 .header-search-right {
 	width: 15%;
@@ -1135,91 +1129,19 @@ padding-top:0px;
 }
 
 .header-search-left-child {
+	width: 33%;
 	float: left;
 	text-align: left;
 	font-size: 12px;
-  padding: 10px 0px;
-  height: 40px;
-  margin-right: 100px;
 }
 
 .header-search-left-child strong {
 	cursor: pointer;
 }
 
-.header-search-input {
-  display: inline;
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 70%;
+.header-search-center, .header-search-right, .header-category {
+	padding-top: 5px;
 }
-
-.header-search-btn {padding: 10px; background-color: #444; border: 1px solid #444; color: white;}
-
-.shop-by-department, .shop-by-brand {display: none; height: 500px; width: 100%; position: absolute; border-top: 1px solid #ddd; background: #fff; z-index: 1; left: 0; top: 60px;}
-
-.shop-by-department-l2, .shop-by-brand-l2 {width: 17%; float: left; background: #f6f6f6; height: inherit;}
-
-.shop-by-department-l2 > ul, .shop-by-brand-l2 > ul {margin: 0;}
-
-.shop-by-department-l2 > ul > li, .shop-by-brand-l2 > ul > li {list-style-type: none; font-size: 16px; padding: 10px 20px;}
-
-.shop-by-department-l2 > ul > li:hover, .shop-by-brand-l2 > ul > li:hover {background-color: #444; color: white;}
-
-.shop-department:hover > #shop_by_department, .shop-brand:hover > #shop_by_brand {display: block;}
-
-.shop-by-department-l3, .shop-by-brand-l3 {
-  display: none; width: 78%; position: absolute; z-index: 2; top: 0px; color: #333; left: 17%; padding: 10px 20px;
-  max-height: 450px;
-  overflow: auto;
-}
-
-.shop_by_department_l3_content, .shop_by_department_l3_content > li > ul  {margin-left: 0;}
-
-.shop_by_department_l3_content > li {
-  display: inline-block;
-  list-style-type: none;
-  width: 18%;
-  float: left;
-  padding: 5px;
-}
-
-.shop_by_department_l3_content > li > ul >li.sbd_l3_headings {font-weight: 600; text-transform: uppercase; color: #000;}
-
-.shop_by_department_l3_content > li > ul >li:hover {color: #a9133d;}
-
-.shop_by_department_l3_content > li > ul >li {
-  list-style-type: none;
-  color: #777;
-  font-size: 12px;
-  letter-spacing: .6px;
-  cursor: pointer;
-}
-
-/* .shop-by-brand, .shop-by-brand-l3 {display: block;}*/
-.shop-by-department-l2 ul li:hover .shop-by-department-l3, .shop-by-brand-l2 ul li:hover .shop-by-brand-l3 {display: block;}
-
-.shop-by-brand-l3 .shop-by-brand-l3-component {
-  display: inline-block;
-  margin-right: 20px;
-  margin-top: 20px;
-  width: 18%;
-  float: left;
-}
-
-.shop-by-brand-l3-component:hover {box-shadow: #d0d0d0 0 0 4px 4px}
-
-.shop-by-brand-l3-component amp-img:last-child {
-  margin: 5px 60px;
-}
-
-.header-search-right, .header-category {
-	padding-top: 15px;
-  padding-bottom: 5px;
-  margin-right: 50px;
-}
-
-.header-search-center {padding-top: 10px; padding-bottom: 10px;}
 
 .mobile-item {
 	display: none;
@@ -1256,12 +1178,7 @@ padding-top:0px;
 @media (max-width: 480px) {
 	#topDealsCompCarousel amp-carousel, #whatToBuyCompCarousel amp-carousel, #newInCompCarousel amp-carousel, #hotNowCompCarousel amp-carousel {
 		/*give important*/
-		max-height: 180px;
-	}
-
-  #topDealsCompCarousel amp-list, #whatToBuyCompCarousel amp-list, #newInCompCarousel amp-list, #hotNowCompCarousel amp-list {
-		/*give important*/
-		max-height: 180px;
+		height: 180px;
 	}
 }
 
@@ -1269,12 +1186,11 @@ padding-top:0px;
 .topDealsTopSection {padding: 0px 20px;}
 
 .topDealsItem {
-	width: 232px; height: 320px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
+	width: 240px; height: 320px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .topDealsItemImg {height: inherit;}
-.topDealsItemImg a {height: inherit;}
-#topDealsComp {display: block; padding: 10px 0px 20px; padding: 20px 60px;}
+#topDealsComp {display: block; padding: 10px 0px 20px; padding: 20px;}
 
 @media(max-width: 480px) {
 	#topDealsComp {padding: 5px 0px 15px;}
@@ -1283,14 +1199,13 @@ padding-top:0px;
 
 /*Brand Studio CSS*/
 .homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
-.homeViewHeading {text-align: center; font-size: 28px; padding-bottom: 20px;}
+.homeViewHeading {text-align: center;}
 p {margin: 0;}
 .brandsYouLove {margin: 20px;}
 #brandsYouLove {display: none}
 #brandsYouLoveMobileComp {display: block; background-color: #f2f2f2;padding: 20px; }
 .brandsCarouselItem {width: 260px; height: 320px; margin: 0px 10px; border-radius: 4px; background-color: white; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);}
 .brandStudioImg {height: 180px;}
-.brandStudioImg a {height: inherit;}
 .brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 .brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left;}
 .brandStudioDescHeading {font-size: 13px; font-weight: bold;}
@@ -1298,13 +1213,12 @@ p {margin: 0;}
 .brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
 .brandStudioBottom {display: block; text-align: center; padding: 30px;}
-.brandStudioBottom a {display: -webkit-inline-box;}
-.brandStudioViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white; cursor: pointer;}
+.brandStudioViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white;}
 
 @media(max-width: 480px) {
 	.brandStudioBottom {display: none;}
-	.homeViewAllBtn a {display: block; font-size: 14px;}
-	.homeViewHeading {text-align: left; font-size: 18px; padding-bottom: 5px;}
+	.homeViewAllBtn a {display: block; font-size: 14px; padding-top: 3%;}
+	.homeViewHeading {text-align: left; font-size: 18px;}
 	.brandStudioTop {padding: 0px 20px;}
 	.brandsYouLove {margin: 20px;}
 	#brandsYouLove {display: none;}
@@ -1328,11 +1242,11 @@ p {margin: 0;}
 .whatToBuyTopSection {padding: 0px 20px;}
 
 .whatToBuyItem {
-	width: 300px; height: 400px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
+	width: 280px; height: 320px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-.whatToBuyItemImg, .whatToBuyItemImg a {height: inherit;}
-#whatToBuyComp {display: block; padding: 10px 0px 20px; padding: 20px 60px;}
+.whatToBuyItemImg {height: inherit;}
+#whatToBuyComp {display: block; padding: 10px 0px 20px; padding: 20px;}
 
 @media(max-width: 480px) {
 	#whatToBuyComp {padding: 5px 0px 15px;}
@@ -1343,13 +1257,11 @@ p {margin: 0;}
 .newInTopSection {padding: 0px 20px;}
 
 .newInItem {
-	width: 180px; height: 320px; margin: 0px 12px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
+	width: 200px; height: 320px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-.compContainer {width: 100%;}
 .newInItemImg {height: 85%;}
-.newInItemImg a {height: inherit;}
-#newInComp {display: block; padding: 10px 0px 20px; padding: 20px 60px; width: 43%; float: left;}
+#newInComp {display: block; padding: 10px 0px 20px; padding: 20px; width: 45%; float: left;}
 
 .newInDesc {padding: 0 5px;}
 .newInDescName {padding: 5px 0; text-overflow: ellipsis; overflow: hidden;}
@@ -1362,25 +1274,23 @@ p {margin: 0;}
 }
 
 /*Stay Qued*/
-.stayOne {width: 50%; float: left; padding: 10px;}
-.stayTwo {width: 40%; float: left; padding: 10px;}
+.stayOne, .stayTwo {width: 45%; float: left; padding: 10px;}
 
 .stayQuedTopSection {padding: 0px 20px;}
 
 .stayQuedItemImg {height: inherit;}
-#stayQuedComp {display: block; padding: 10px 20px 10px 0; width: 45%; float: left;}
+#stayQuedComp {display: block; padding: 10px 0px 20px; padding: 20px; width: 45%; float: left;}
 .stayQuedCenter {background-color: #f2f2f2; height:320px; padding: 0 0 0 10px;}
 
 .stayQuedBottom {display: block; text-align: center; padding: 10px;}
-.stayQuedBottom a {display: -webkit-inline-box;}
-.stayQuedViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white; cursor: pointer;}
+.stayQuedViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white;}
 
 @media(max-width: 480px) {
 	#stayQuedComp {padding: 5px 0px 15px; width: 100%;}
 	.stayQuedHeading {font-size: 18px;}
 	.stayQuedViewAllBtn {padding: 5px 15px;}
 	.stayOne {float: right;}
-	.stayOne, .stayTwo {padding: 10px; width: 42%;}
+	.stayOne, .stayTwo {padding: 10px;}
 	.stayQuedCenter {padding: 0 10px 0 0;}
 }
 
@@ -1392,7 +1302,6 @@ p {margin: 0;}
 }
 
 .hotNowItemImg {height: 80%;}
-.hotNowItemImg a {height: inherit;}
 #hotNowComp {display: block; padding: 10px 0px 20px; padding: 20px; width: 100%; float: left;}
 
 .hotNowMenu {float: right;}
@@ -1533,105 +1442,6 @@ amp-selector [option][selected] {
           box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
 }
 
-
-/*FOOTER*/
-.footer-section-content {
-  margin: 20px 40px;
-}
-
-.footer-section-content section p:first-child {
-  padding-top: 20px;
-  padding-bottom: 5px;
-}
-
-.footer-top-content {clear: both;}
-.footer-top-child {padding: 20px 0 40px; width: 25%; float: left; background: #f9f9f9;}
-.footer-top-content p:before {
-  content: "";
-  display: inline-block;
-  height: 47px;
-  line-height: 47px;
-  margin-left: 40px;
-  margin-right: 10px;
-  position: relative;
-  top: 16px;
-  width: 47px;
-}
-
-.footer-top-content .footer-top-child:nth-child(1) p:before {
-  background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -7px -175px;
-}
-
-.footer-top-content .footer-top-child:nth-child(2) p:before {
-  background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -73px -175px;
-}
-
-.footer-top-content .footer-top-child:nth-child(3) p:before {
-  background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -205px -175px;
-}
-
-.footer-top-content .footer-top-child:nth-child(4) p:before {
-  background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -139px -175px;
-}
-
-.footer-main-content {clear: both; display:flex; padding: 20px 40px;}
-.footer-child {clear: both; width: 22%; float: left;}
-.footer-child-last {width: 34%; float: right;}
-
-.footer-child h4 {background-color: white; padding: 5px; border: none; font-size: 12px;}
-.footer-child h4 i {float: right; padding-left: 10px;}
-.footer-child h4 i:last-child {display: none;}
-.footer-child ul {margin-left: 5px; font-size: 11px;}
-.footer-child ul a {color: #3a3a3a;}
-
-.footer-last-input {
-  display: inline;
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-
-.footer-last-btn {padding: 10px; background-color: #444; border: 1px solid #444; color: white;}
-
-.footer-child-last a i {
-  color: white;
-  background: #444;
-  border-radius: 4px;
-  padding: 6px;
-  width: 16px;
-  text-align: center;
-  border:1px solid #444;
-  margin-top: 15px;
-  margin-bottom: 40px;
-}
-
-.footer-child-last a i:hover {
-  color: #444;
-  background: white;
-}
-
-@media (max-width: 480px){
-  .footer-section-content {
-    margin: 20px 10px; clear: both;
-  }
-  .footer-top-child {width: 50%; float: left; padding-top: 0; padding-bottom: 20px;}
-  .footer-top-content p {font-size: 12px;}
-  .footer-top-content p:before {
-    margin-left: 10px;
-    margin-right: 0;
-    transform: scale(0.6);
-  }
-  .footer-main-content {display: block; padding-left: 20px;}
-  .footer-main-content .footer-child:first-child h4 {border-top: 1px solid #ccc;}
-  .footer-child h4 {border-bottom: 1px solid #ccc;}
-  .footer-child h4 i:last-child {display: block;}
-  .footer-child h4 i, .footer-child h4 i:before {margin-top: 2%;}
-  .footer-child, .footer-child-last {
-    width: 100%; float: left;
-  }
-}
-
 </style>
 <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
 </head>
@@ -1639,205 +1449,154 @@ amp-selector [option][selected] {
 
 <body>
 <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker>
-
 	<header>
-		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
+		<button class="header-icon-1" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
 		<!-- <a href="index.php" class="header-logo"><img src="./images/logo.png" /></a> -->
 		<section class="col-xs-12 header-search-section">
 			<section class="header-search-left">
 				<section class="header-search-left-child logo-container">
 					<amp-img class="logo-image" width="70" height="40" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
 				</section>
-				<section class="header-category header-search-left-child desktop-item shop-department">
+				<section class="header-category header-search-left-child desktop-item">
 					SHOP BY<br />
-					<strong>DEPARTMENT<i class="fa fa-chevron-down"></i></strong>
-          <section id="shop_by_department" class="desktop-item shop-by-department">
-            <section class="shop-by-department-l2">
-              <ul>
-                <li>
-                  Men
-                  <section class="shop-by-department-l3">
-                    <ul class="shop_by_department_l3_content">
-                      <li>
-                        <ul>
-                          <li class="sbd_l3_headings">Ethnic Wear</li>
-                          <li>Kurtis And Kurtas</li>
-                          <li>Suit Sets</li>
-                          <li>Fusion Wear</li>
-                          <li>Sarees</li>
-                          <li>Bottoms</li>
-                          <li>Dupattas</li>
-                          <li class="sbd_l3_headings">Inner & Nightwear</li>
-                          <li>Bras</li>
-                          <li>Panties</li>
-                          <li>Lingerie Sets</li>
-                          <li>Camisole</li>
-                          <li>Sleepwear & Robes</li>
-                          <li>Shapewear</li>
-                          <li class="sbd_l3_headings">Swim & Beachwear</li>
-                          <li class="sbd_l3_headings">Active & Sportswear</li>
-                        </ul>
-                      </li>
-                      <li>
-                        <ul>
-                          <li class="sbd_l3_headings">Top Brands</li>
-                          <li>Westside</li>
-                          <li>Hunkemoller</li>
-                          <li>Clarks</li>
-                          <li>New Look</li>
-                          <li>Baggit</li>
-                          <li>Titan</li>
-                          <li class="sbd_l3_headings">Value Stores</li>
-                          <li>Kurtas Under 899</li>
-                          <li>Dresses Under 999</li>
-                          <li>Footwear Under 799</li>
-                          <li>Sleepwear Under 699</li>
-                          <li>Bags Under 999</li>
-                          <li>Watches Under 1999</li>
-                          <li class="sbd_l3_headings">Winter Wear Store</li>
-                          <li class="sbd_l3_headings">The Wedding Store</li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </section>
-                </li>
-                <li>
-                  Women
-                  <section class="shop-by-department-l3">
-                    Women
-                  </section>
-                </li>
-                <li>Electronics</li>
-                <li>Appliances</li>
-                <li>Kids</li>
-                <li>Fashion Jewellery</li>
-              </ul>
-            </section>
-          </section>
+					<strong>DEPARTMENT <i class="fa fa-chevron-down"></i></strong>
 				</section>
-				<section class="header-category header-search-left-child desktop-item shop-brand">
+				<section class="header-category header-search-left-child desktop-item">
 					SHOP BY<br />
 					<strong>BRAND <i class="fa fa-chevron-down"></i></strong>
-          <section id="shop_by_brand" class="desktop-item shop-by-brand">
-            <section class="shop-by-brand-l2">
-              <ul>
-                <li>
-                  Appliances
-                  <section class="shop-by-brand-l3">
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709300766.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9448599846942.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709366302.jpg"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10523118829598.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709890590.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10701061423134.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709464606.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9461676769310.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709530142.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10791666155550.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709300766.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9448599846942.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709366302.jpg"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10523118829598.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709890590.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10701061423134.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709464606.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9461676769310.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709530142.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10791666155550.png"></amp-img>
-                    </a>
-                  </section>
-                </li>
-                <li>
-                  Electronics
-                  <section class="shop-by-brand-l3">
-                    Electronics
-                  </section>
-                </li>
-                <li>Watches and Accessories</li>
-                <li>Women's Wear</li>
-                <li>Lingerie</li>
-                <li>Men's Wear</li>
-                <li>Footwear</li>
-                <li>Kids</li>
-                <li>A-Z List</li>
-              </ul>
-            </section>
-          </section>
 				</section>
 			</section>
-      <section class="header-search-right desktop-item">
+			<section class="header-search-right desktop-item">
 				<button class="btn my-bag"><i class="fa fa-shopping-bag"></i> &nbsp; My Bag</button>
 			</section>
-      <section class="header-search-center">
-        <p><input class="header-search-input" placeholder="Search in Marketplace" /><button class="header-search-btn"><i class="fa fa-search"></i></button></p>
-      </section>
 		</section>
 		<a href="#" class="header-icon-2 mobile-item"><i class="fa fa-shopping-bag"></i></a>
 		<a href="#" class="header-icon-3 mobile-item"><i class="fa fa-search simpleSearchToggle"></i></a>
 	</header>
 
-
 	<div class="header-clear"></div>
 
 	<amp-sidebar id="sidebar" layout="nodisplay" side="left">
+		<div class="sidebar-header">
+			<a href="https://www.facebook.com/enabled.labs/"><i class="fa fa-facebook"></i></a>
+			<a href="https://twitter.com/iEnabled"><i class="fa fa-twitter"></i></a>
+			<a href="tel:+123 456 7890"><i class="fa fa-phone"></i></a>
+			<a href="sms:+123 456 7890"><i class="fa fa-comment-o"></i></a>
+			<a href="#"><i class="fa fa-times"></i></a>
+			<div class="clear"></div>
+		</div>
+		<a href="#" class="sidebar-logo"></a>
+		<p class="sidebar-divider">Navigation</p>
+		<div class="sidebar-menu active-item">
+			<a href="index.php" class="sidebar-item"><i class="bg-red-dark fa fa-star-o"></i>Welcome<i class="fa fa-circle"></i></a>
+		</div>
 		<amp-accordion class="sidebar-menu">
 			<section>
-				<h4>Departments<i class="fa fa-angle-down"></i></h4>
+				<h4><i class="bg-green-dark fa fa-home"></i>Home<i class="fa fa-angle-down"></i></h4>
 			  	<ul>
-  					<li><a href="#">Women</a></li>
-  					<li><a href="#">Men</a></li>
-  					<li><a href="#">Electronics</a></li>
-            <li><a href="#">Applicances</a></li>
-            <li><a href="#">Kids</a></li>
-            <li><a href="#">Fashion Jewellery</a></li>
-  				</ul>
+					<li class="active-menu"><a href="index.php"><i class="fa fa-angle-right"></i>Classic<i class="fa fa-circle"></i></a></li>
+					<li><a href="index-splash.php"><i class="fa fa-angle-right"></i>Splash<i class="fa fa-circle"></i></a></li>
+					<li><a href="index-landing.php"><i class="fa fa-angle-right"></i>Landing<i class="fa fa-circle"></i></a></li>
+					<li><a href="index-news.php"><i class="fa fa-angle-right"></i>News<i class="fa fa-circle"></i></a></li>
+				</ul>
 			</section>
 			<section>
-				<h4>Brand<i class="fa fa-angle-down"></i></h4>
+				<h4><i class="bg-blue-dark fa fa-bolt"></i>AMP Media<i class="fa fa-angle-down"></i></h4>
 			  	<ul>
-  					<li><a href="#">Appliances</a></li>
-            <li><a href="#">Electronics</a></li>
-            <li><a href="#">Watches & Accessories</a></li>
-            <li><a href="#">Women's Wear</a></li>
-            <li><a href="#">Lingerie</a></li>
-            <li><a href="#">Men's Wear</a></li>
-            <li><a href="#">Footwear</a></li>
-            <li><a href="#">Kids</a></li>
-            <li><a href="#">A-Z List</a></li>
-  				</ul>
+					<li><a href="amp-daily.php"><i class="fa fa-angle-right"></i>AMP Daily Motion<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-jwp.php"><i class="fa fa-angle-right"></i>AMP JWPlayer<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-soundcloud.php"><i class="fa fa-angle-right"></i>AMP SoundCloud<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-vimeo.php"><i class="fa fa-angle-right"></i>AMP Vimeo<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-youtube.php"><i class="fa fa-angle-right"></i>AMP YouTube<i class="fa fa-circle"></i></a></li>
+				</ul>
+			</section>
+			<section>
+				<h4><i class="bg-blue-dark fa fa-bolt"></i>AMP Social<i class="fa fa-angle-down"></i></h4>
+			  	<ul>
+					<li><a href="amp-facebook.php"><i class="fa fa-angle-right"></i>AMP Facebook<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-twitter.php"><i class="fa fa-angle-right"></i>AMP Twitter<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-instagram.php"><i class="fa fa-angle-right"></i>AMP Instagram<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-pinterest.php"><i class="fa fa-angle-right"></i>AMP Pinterest<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-social.php"><i class="fa fa-angle-right"></i>AMP Social Share<i class="fa fa-circle"></i></a></li>
+				</ul>
+			</section>
+			<section>
+				<h4><i class="bg-blue-dark fa fa-bolt"></i>AMP Features<i class="fa fa-angle-down"></i></h4>
+			  	<ul>
+					<li><a href="amp-accordion.php"><i class="fa fa-angle-right"></i>AMP Accordion<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-carousel.php"><i class="fa fa-angle-right"></i>AMP Carousel<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-fonts.php"><i class="fa fa-angle-right"></i>AMP Fonts<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-maps.php"><i class="fa fa-angle-right"></i>AMP Maps<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-lightbox.php"><i class="fa fa-angle-right"></i>AMP LightBox<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-list.php"><i class="fa fa-angle-right"></i>AMP List<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-social.php"><i class="fa fa-angle-right"></i>AMP Social Share<i class="fa fa-circle"></i></a></li>
+					<li><a href="amp-notifications.php"><i class="fa fa-angle-right"></i>AMP User Notifications<i class="fa fa-circle"></i></a></li>
+				</ul>
 			</section>
 		</amp-accordion>
-    <p class="sidebar-divider-item"><a href="#"><i class="fa fa-user"></i>Sign In/Sign Up</a></p>
-    <p class="sidebar-divider-item"><a href="#"><i class="fa fa-heart"></i>My Wishlists</a></p>
-    <p class="sidebar-divider-item"><a href="#">Track Order</a></p>
-    <p class="sidebar-divider-item"><a href="#"><i class="fa fa-mobile-phone"></i>Download App</a></p>
-    <p class="sidebar-divider-item"><a href="#">Enter Your Pincode</a></p>
+		<div class="sidebar-menu">
+			<a href="features.php" class="sidebar-item"><i class="bg-teal-dark fa fa-power-off"></i>More Features<i class="fa fa-circle"></i></a>
+		</div>
+		<amp-accordion class="sidebar-menu">
+			<section>
+				<h4><i class="bg-red-dark fa fa-file-o"></i>Page Templates<i class="fa fa-angle-down"></i></h4>
+			  	<ul>
+					<li><a href="page-404.php"><i class="fa fa-angle-right"></i>404 Page<i class="fa fa-circle"></i></a></li>
+					<li><a href="page-soon.php"><i class="fa fa-angle-right"></i>Coming Soon<i class="fa fa-circle"></i></a></li>
+					<li><a href="page-profile-1.php"><i class="fa fa-angle-right"></i>Profile Page 1<i class="fa fa-circle"></i></a></li>
+					<li><a href="page-profile-2.php"><i class="fa fa-angle-right"></i>Profile Page 2<i class="fa fa-circle"></i></a></li>
+					<li><a href="page-timeline-1.php"><i class="fa fa-angle-right"></i>Timeline Page 1<i class="fa fa-circle"></i></a></li>
+					<li><a href="page-timeline-2.php"><i class="fa fa-angle-right"></i>Timeline Page 2<i class="fa fa-circle"></i></a></li>
+				</ul>
+			</section>
+			<section>
+				<h4><i class="bg-green-dark fa fa-camera"></i>Gallery<i class="fa fa-angle-down"></i></h4>
+			  	<ul>
+					<li><a href="gallery-round.php"><i class="fa fa-angle-right"></i>Round<i class="fa fa-circle"></i></a></li>
+					<li><a href="gallery-square.php"><i class="fa fa-angle-right"></i>Squared<i class="fa fa-circle"></i></a></li>
+					<li><a href="gallery-wide.php"><i class="fa fa-angle-right"></i>Wide<i class="fa fa-circle"></i></a></li>
+				</ul>
+			</section>
+			<section>
+				<h4><i class="bg-blue-dark fa fa-picture-o"></i>Portfolio<i class="fa fa-angle-down"></i></h4>
+			  	<ul>
+					<li><a href="portfolio-1.php"><i class="fa fa-angle-right"></i>One Item<i class="fa fa-circle"></i></a></li>
+					<li><a href="portfolio-2.php"><i class="fa fa-angle-right"></i>Two Items<i class="fa fa-circle"></i></a></li>
+					<li><a href="portfolio-selected.php"><i class="fa fa-angle-right"></i>Selected Item<i class="fa fa-circle"></i></a></li>
+				</ul>
+			</section>
+			<section>
+				<h4><i class="bg-orange-dark fa fa-newspaper-o"></i>News<i class="fa fa-angle-down"></i></h4>
+			  	<ul>
+					<li><a href="news-thumbs.php"><i class="fa fa-angle-right"></i>News List<i class="fa fa-circle"></i></a></li>
+					<li><a href="news-blocks.php"><i class="fa fa-angle-right"></i>News List 2<i class="fa fa-circle"></i></a></li>
+					<li><a href="news-cards-2.php"><i class="fa fa-angle-right"></i>News Cards<i class="fa fa-circle"></i></a></li>
+					<li><a href="news-cards.php"><i class="fa fa-angle-right"></i>News Cards 2<i class="fa fa-circle"></i></a></li>
+					<li><a href="news-post.php"><i class="fa fa-angle-right"></i>News Post 1<i class="fa fa-circle"></i></a></li>
+					<li><a href="news-post-2.php"><i class="fa fa-angle-right"></i>News Post 2<i class="fa fa-circle"></i></a></li>
+				</ul>
+			</section>
+		</amp-accordion>
+		<div class="sidebar-menu">
+			<a href="contact.php" class="sidebar-item"><i class="bg-blue-light fa fa-envelope"></i>Contact<i class="fa fa-circle"></i></a>
+		</div>
+        <p class="sidebar-divider full-top">Let's get Social</p>
+		<div class="sidebar-menu full-top">
+			<a href="https://twitter.com/iEnabled" class="sidebar-item"><i class="facebook-bg fa fa-facebook"></i>Facebook<i class="fa fa-circle"></i></a>
+			<a href="https://www.facebook.com/enabled.labs/" class="sidebar-item"><i class="twitter-bg fa fa-twitter"></i>Twitter<i class="fa fa-circle"></i></a>
+            <a href="https://plus.google.com/u/1/105775801838187143320" class="sidebar-item"><i class="google-bg fa fa-google-plus"></i>Google +<i class="fa fa-circle"></i></a>
+            <a href="tel:+123 456 7890" class="sidebar-item"><i class="bg-green-dark fa fa-phone"></i>Call Us<i class="fa fa-circle"></i></a>
+            <a href="sms:+123 456 7890" class="sidebar-item"><i class="bg-green-light fa fa-comment-o"></i>Text Us<i class="fa fa-circle"></i></a>
+            <a href="contact.php" class="sidebar-item"><i class="bg-blue-light fa fa-envelope-o"></i>Mail Us<i class="fa fa-circle"></i></a>
+        </div>
+        <p class="sidebar-divider full-top">Copyright Here. All rights reserved.</p>
 	</amp-sidebar>
-	<!-- Banners -->
+
 	<div class="sliders main-content">
-	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="420" layout="fixed-height">
+	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="320" layout="fixed-height">
 	<template type="amp-mustache">
 	<amp-carousel class="slider" width="400" height="120" layout="responsive" type="slides" controls autoplay loop delay="3000">
-	  {{#desktopBanners}}
+	    {{#desktopBanners}}
 	    <div>
 			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
 		</div>
@@ -1860,7 +1619,7 @@ amp-selector [option][selected] {
 				{{#subItems}}
 					<div class="topDealsItem">
 						<div class="topDealsItemImg">
-							<a href="{{url}}"><amp-img class="responsive-img" layout="fill" src="{{imageUrl}}" alt="Brand Image"></amp-img></a>
+							<amp-img class="responsive-img" layout="fill" src="{{imageUrl}}" alt="Brand Image"></amp-img>
 						</div>
 					</div>
 				{{/subItems}}
@@ -1869,13 +1628,6 @@ amp-selector [option][selected] {
 				</amp-list>
 			</div>
 		</div>
-    <!-- <div class="brandStudioBottom">
-      <amp-list src="/json/bestpicks.json" height="40" layout="fixed-height">
-        <template type="amp-mustache">
-    			<a href="{{buttonLink}}"><button class="brandStudioViewAllBtn">{{buttonText}}</button></a>
-        </template>
-      </amp-list>
-		</div> -->
 	</div>
 
 	<!-- Brands You Love -->
@@ -1891,12 +1643,12 @@ amp-selector [option][selected] {
 			    	{{#subComponents}}
 					<div class="brandsCarouselItem">
 						<div class="brandStudioImg">
-							<a href="{{bannerUrl}}"><amp-img class="responsive-img" layout="fill" src="{{bannerImageUrl}}" alt="{{brandLogoAltText}}"></amp-img></a>
+							<amp-img class="responsive-img" layout="fill" src="{{bannerImageUrl}}" alt="{{brandLogoAltText}}"></amp-img>
 						</div>
 						<div class="brandStudioDesc">
 							<p class="brandStudioDescHeading">{{bannerText}}</p>
 							<p class="brandStudioDescInfo">{{text}}</p>
-							<p class="brandStudioVisitStore"><a href="{{bannerUrl}}">Visit Store</a></p>
+							<p class="brandStudioVisitStore">Visit Store</p>
 						</div>
 					</div>
 					{{/subComponents}}
@@ -1910,7 +1662,6 @@ amp-selector [option][selected] {
 		</div> -->
 	</div>
 
-  <br />&nbsp;
 	<!-- What To Buy Now -->
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
@@ -1918,92 +1669,89 @@ amp-selector [option][selected] {
 		</div>
 		<div>
 			<div id="whatToBuyCompCarousel">
-
-				<amp-list src="/pwamp/getProductsYouCare?version=Online" height="400" layout="fixed-height">
+				
+				<amp-list src="/pwamp/getProductsYouCare?version=Online" height="320" layout="fixed-height">
 				<template type="amp-mustache">
-				<amp-carousel height="400" layout="fixed-height" type="carousel">
+				<amp-carousel height="320" layout="fixed-height" type="carousel">
 				{{#categories}}
 					<div class="whatToBuyItem">
 						<div class="whatToBuyItemImg">
-							<a href="{{imageURL}}"><amp-img class="responsive-img" layout="fill" src="{{mediaURL}}" alt="Brand Image"></amp-img></a>
+							<amp-img class="responsive-img" layout="fill" src="{{mediaURL}}" alt="Brand Image"></amp-img>
 						</div>
 					</div>
-				{{/categories}}
+				{{/categories}}	
 				</amp-carousel>
 					</template>
 				</amp-list>
-
+				
 			</div>
 		</div>
 	</div>
 
-  <br />
+	<!-- New In -->
+	<div id="newInComp">
+		<div class="newInTopSection">
+			<h2 class="homeViewHeading">New In <small class="homeViewAllBtn"><a href="#">View All</a></small></h2>
+		</div>
+		<div>
+			<div id="newInCompCarousel">
+			<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="320" layout="fixed-height">
+				<template type="amp-mustache">
+				<amp-carousel height="320" layout="fixed-height" type="carousel">
+				{{#newAndExclusiveProducts}}
+					<div class="newInItem">
+						<div class="newInItemImg">
+							<amp-img class="responsive-img" layout="fill" src="{{productImageUrl}}" alt="Brand Image"></amp-img>
+						</div>
+						<div class="newInDesc">
+							<p class="newInDescName">{{productTitle}}</p>
+							{{#productPrice}}
+							<p class="newInDescPrice">{{dispPrice}}<span class="price-right">{{strikePrice}}</span></p>
+							{{/productPrice}}
+						</div>
+					</div>
+					{{/newAndExclusiveProducts}}
+				</amp-carousel>
+				</template>
+				</amp-list>
+			</div>
+		</div>
+		<div class="brandStudioBottom">
+			<button class="brandStudioViewAllBtn">View All</button>
+		</div>
+	</div>
 
-  <div class="compContainer">
-    <!-- New In -->
-  	<div id="newInComp">
-  		<div class="newInTopSection">
-  			<h2 class="homeViewHeading">New In <small class="homeViewAllBtn"><a href="#">View All</a></small></h2>
-  		</div>
-  		<div>
-  			<div id="newInCompCarousel">
-  			<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="320" layout="fixed-height">
-  				<template type="amp-mustache">
-  				<amp-carousel height="320" layout="fixed-height" type="carousel">
-  				{{#newAndExclusiveProducts}}
-  					<a href="{{productUrl}}"><div class="newInItem">
-  						<div class="newInItemImg">
-  							<amp-img class="responsive-img" layout="fill" src="{{productImageUrl}}" alt="Brand Image"></amp-img>
-  						</div>
-  						<div class="newInDesc">
-  							<p class="newInDescName">{{productTitle}}</p>
-  							{{#productPrice}}
-  							<p class="newInDescPrice">{{dispPrice}}<span class="price-right">{{strikePrice}}</span></p>
-  							{{/productPrice}}
-  						</div>
-  					</div></a>
-  					{{/newAndExclusiveProducts}}
-  				</amp-carousel>
-  				</template>
-  				</amp-list>
-  			</div>
-  		</div>
-  		<div class="brandStudioBottom">
-  			<button class="brandStudioViewAllBtn">View All</button>
-  		</div>
-  	</div>
+	<!-- Stay Qued -->
+	<div id="stayQuedComp">
+		<div class="stayQuedTopSection">
+			<h2 class="homeViewHeading">Stay Qued</h2>
+		</div>
+		<amp-list src="/pwamp/getStayQuedHomepage?version=Online" height="320" layout="fixed-height">
+		<template type="amp-mustache">
+		{{#allBannerJsonObject}}
+		<div class="stayQuedCenter">
+			<div class="stayOne">
+				<div>
+					<p>&nbsp;</p>
+					<p>&nbsp;</p>
+					<p class="h2 stayQuedHeading">{{promoText1}}</p>
+					<p>{{promoText2}}</p>
+					<div class="stayQuedBottom">
+						<button class="stayQuedViewAllBtn">Read The Story</button>
+					</div>
+				</div>
+			</div>
+			<div class="stayTwo">
+				<div>
+					<amp-img class="responsive-img" width="auto" height="300" layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
+				</div>
+			</div>
+		</div>
+		{{/allBannerJsonObject}}
+		</template>
+		</amp-list>
+	</div>
 
-  	<!-- Stay Qued -->
-  	<div id="stayQuedComp">
-  		<div class="stayQuedTopSection">
-  			<h2 class="homeViewHeading">Stay Qued</h2>
-  		</div>
-  		<amp-list src="/pwamp/getStayQuedHomepage?version=Online" height="320" layout="fixed-height">
-  		<template type="amp-mustache">
-  		<div class="stayQuedCenter">
-  			<div class="stayOne">
-  				<div>
-  					<p>&nbsp;</p>
-  					<p>&nbsp;</p>
-  					<p class="h2 stayQuedHeading">{{promoText1}}</p>
-  					<p>{{promoText2}}</p>
-  					<div class="stayQuedBottom">
-  						<a href="{{bannerUrlLink}}"><button class="stayQuedViewAllBtn">Read The Story</button></a>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="stayTwo">
-  				<div>
-  					<amp-img class="responsive-img" width="auto" height="300" layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
-  				</div>
-  			</div>
-  		</div>
-  		</template>
-  		</amp-list>
-  	</div>
-  </div>
-
-  <br />
 	<!-- Hot Now -->
 	<!--  <div id="hotNowComp">
 		<div class="hotNowTopSection">
@@ -2024,7 +1772,7 @@ amp-selector [option][selected] {
 						<div class="hotNowDesc">
 							<p class="hotNowTitle">Vivo</p>
 							<p class="hotNowDescName">{{text}}</p>
-
+							
 						</div>
 					</div>
 					{{/subItems}}
@@ -2033,7 +1781,7 @@ amp-selector [option][selected] {
 				</amp-list>
 				</template>
 				</amp-list>
-
+				
 			</div>
 		</div>
 		<div class="brandStudioBottom">
@@ -2056,13 +1804,12 @@ amp-selector [option][selected] {
 				<div role="tab"
 					class="tabButton"
 					selected
-					option="a">{{headerText}}
-        </div>
+					option="a">{{headerText}}</div>
 					{{#details}}
 				<div role="tabpanel"
 					class="tabContent">
 					<div class="inspireMeOne">
-						<a href="{{bannerUrl}}"><amp-img width="280" height="360" layout="flex-item" src="{{bannerImageUrl}}" alt="Brand Image"></amp-img></a>
+						<amp-img width="280" height="360" layout="flex-item" src="{{firstProductImageUrl}}" alt="Brand Image"></amp-img>
 					</div>
 					<div class="inspireMeTwo">
 						<div class="inspireMeCenter">
@@ -2080,7 +1827,7 @@ amp-selector [option][selected] {
 						</div>
 					</div>
 					<div class="inspireMeThree">
-						<a href="{{firstProductUrl}}"><amp-img width="300" height="360" layout="flex-item" src="{{firstProductImageUrl}}" alt="Brand Image"></amp-img></a>
+						<amp-img width="300" height="360" layout="flex-item" src="{{bannerImageUrl}}" alt="Brand Image"></amp-img>
 					</div>
 				</div>
 				{{/details}}
@@ -2090,7 +1837,5 @@ amp-selector [option][selected] {
 		</amp-list>
 		</div>
 	</div>
-<footer:footer/>
-
 </body>
 </html>

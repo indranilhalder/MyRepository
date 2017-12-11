@@ -20,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class ServiceWorkerController
 {
-	// BuildMyString.com generated code. Please enjoy your string responsibly.
 
-
-
+	/**
+	 * Data needs to be fetched from persistence layer
+	 *
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "cliq-service-worker.js", method = RequestMethod.GET)
 	public void worker(final HttpServletRequest request, final HttpServletResponse response) throws IOException
 	{
@@ -58,30 +62,55 @@ public class ServiceWorkerController
 		response.getWriter().write(sb.toString());
 	}
 
+	/**
+	 * Data needs to be fetched from persistence layer
+	 *
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "manifest.json", method = RequestMethod.GET)
 	public void manifest(final HttpServletRequest request, final HttpServletResponse response) throws IOException
 	{
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder manifest = new StringBuilder();
 
-		sb.append("{");
-		sb.append("  \"short_name\": \"Tata Cliq\",");
-		sb.append("  \"name\": \"Tata Cliq\",");
-		sb.append("  \"display\": \"standalone\",");
-		sb.append("  \"background_color\": \"#a9133d\",");
-		sb.append("  \"theme_color\": \"#a9133d\",");
-		sb.append("  \"icons\": [");
-		sb.append("    {");
-		sb.append("      \"src\": \"//assets.tatacliq.com/medias/sys_master/images/9906406817822.png\",");
-		sb.append("      \"type\": \"image/png\",");
-		sb.append("      \"sizes\": \"48x48\"");
-		sb.append("    }");
-		sb.append("  ],");
-		sb.append("  \"start_url\": \"/\"");
-		sb.append("}");
-
-
+		manifest.append("{");
+		manifest.append("  \"name\": \"Tata Cliq\",");
+		manifest.append("  \"short_name\": \"Tata Cliq\",");
+		manifest.append("  \"start_url\": \"/pwamp\",");
+		manifest.append("  \"display\": \"standalone\",");
+		manifest.append("  \"background_color\": \"#a9133d\",");
+		manifest.append("  \"theme_color\": \"#a9133d\",");
+		manifest.append("  \"orientation\": \"portrait\",");
+		manifest.append("  \"description\": \"Tata CLiQ: Online shopping in India at the most trusted destination.\",");
+		manifest.append("  \"icons\": [{");
+		manifest.append("    \"src\": \"/_ui/responsive/common/images/manifest/logo_48.png\",");
+		manifest.append("    \"sizes\": \"48x48\",");
+		manifest.append("    \"type\": \"image/png\"");
+		manifest.append("  }, {");
+		manifest.append("    \"src\": \"/_ui/responsive/common/images/manifest/logo_72.png\",");
+		manifest.append("    \"sizes\": \"72x72\",");
+		manifest.append("    \"type\": \"image/png\"");
+		manifest.append("  }, {");
+		manifest.append("    \"src\": \"/_ui/responsive/common/images/manifest/logo_96.png\",");
+		manifest.append("    \"sizes\": \"96x96\",");
+		manifest.append("    \"type\": \"image/png\"");
+		manifest.append("  }, {");
+		manifest.append("    \"src\": \"/_ui/responsive/common/images/manifest/logo_144.png\",");
+		manifest.append("    \"sizes\": \"144x144\",");
+		manifest.append("    \"type\": \"image/png\"");
+		manifest.append("  }, {");
+		manifest.append("    \"src\": \"/_ui/responsive/common/images/manifest/logo_168.png\",");
+		manifest.append("    \"sizes\": \"168x168\",");
+		manifest.append("    \"type\": \"image/png\"");
+		manifest.append("  }, {");
+		manifest.append("    \"src\": \"/_ui/responsive/common/images/manifest/logo_192.png\",");
+		manifest.append("    \"sizes\": \"192x192\",");
+		manifest.append("    \"type\": \"image/png\"");
+		manifest.append("  }]");
+		manifest.append("}");
 
 		response.setContentType("application/javascript");
-		response.getWriter().write(sb.toString());
+		response.getWriter().write(manifest.toString());
 	}
 }

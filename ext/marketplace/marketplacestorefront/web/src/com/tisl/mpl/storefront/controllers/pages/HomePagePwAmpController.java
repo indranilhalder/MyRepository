@@ -23,8 +23,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -89,6 +91,8 @@ public class HomePagePwAmpController extends AbstractPageController
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
 
+
+
 	private static final List<ProductOption> PRODUCT_OPTIONS2 = Arrays.asList(ProductOption.HOMEPAGEPRODUCTS);
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 	//Sonar fix
@@ -137,8 +141,9 @@ public class HomePagePwAmpController extends AbstractPageController
 					{
 						final RotatingImagesComponentModel homePageBanners = (RotatingImagesComponentModel) component;
 
-						final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
-						final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
+						final LinkedHashSet<LinkedHashMap<String, String>> mobileBannersSet = new LinkedHashSet<LinkedHashMap<String, String>>();
+						final LinkedHashSet<LinkedHashMap<String, String>> desktopBannersSet = new LinkedHashSet<LinkedHashMap<String, String>>();
+
 						for (final BannerComponentModel banner : homePageBanners.getBanners())
 						{
 
@@ -149,11 +154,15 @@ public class HomePagePwAmpController extends AbstractPageController
 								{
 									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 									{
+										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										mobileBannersSet.add(moblileBanners);
 									}
 									else
 									{
+										final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
 										desktopBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										desktopBannersSet.add(desktopBanners);
 									}
 								}
 
@@ -165,11 +174,15 @@ public class HomePagePwAmpController extends AbstractPageController
 								{
 									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 									{
+										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										mobileBannersSet.add(moblileBanners);
 									}
 									else
 									{
+										final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
 										desktopBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										desktopBannersSet.add(desktopBanners);
 									}
 								}
 							}
@@ -179,11 +192,15 @@ public class HomePagePwAmpController extends AbstractPageController
 								{
 									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 									{
+										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put("url", banner.getMedia().getUrl());
+										mobileBannersSet.add(moblileBanners);
 									}
 									else
 									{
+										final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
 										desktopBanners.put("url", banner.getMedia().getUrl());
+										desktopBannersSet.add(desktopBanners);
 									}
 								}
 							}
@@ -193,8 +210,8 @@ public class HomePagePwAmpController extends AbstractPageController
 							}
 
 						}
-						homePageBannerJson.put("desktopBanners", desktopBanners);
-						homePageBannerJson.put("moblileBanners", moblileBanners);
+						homePageBannerJson.put("desktopBanners", desktopBannersSet);
+						homePageBannerJson.put("moblileBanners", mobileBannersSet);
 
 					}
 					else
@@ -224,7 +241,6 @@ public class HomePagePwAmpController extends AbstractPageController
 		ampObj.put("items", ampArray);
 		return ampObj;
 	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLove", method = RequestMethod.GET)
@@ -356,6 +372,7 @@ public class HomePagePwAmpController extends AbstractPageController
 	}
 
 	/* Home Page StayQued */
+	@SuppressWarnings("boxing")
 	@ResponseBody
 	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
 	public JSONObject getStayQuedHomepage(@RequestParam(VERSION) final String version)
@@ -389,7 +406,10 @@ public class HomePagePwAmpController extends AbstractPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 		}
-		ampArray.add(getStayQuedHomepageJson);
+		final Random rand = new Random();
+		final int range = rand.nextInt(3) + 1;
+		final JSONArray items = (JSONArray) getStayQuedHomepageJson.get("allBannerJsonObject");
+		ampArray.add(items.get(range - 1));
 		ampObj.put("items", ampArray);
 		return ampObj;
 
@@ -622,6 +642,7 @@ public class HomePagePwAmpController extends AbstractPageController
 
 	}
 
+
 	/**
 	 * @param showCaseComponent
 	 */
@@ -750,8 +771,6 @@ public class HomePagePwAmpController extends AbstractPageController
 		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 		return showCaseComponentJson;
-
-
 	}
 
 	private boolean isNew(final Date existDate)
