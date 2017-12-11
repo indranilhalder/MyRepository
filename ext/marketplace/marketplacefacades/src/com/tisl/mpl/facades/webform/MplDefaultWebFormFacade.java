@@ -69,7 +69,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -158,7 +158,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -207,19 +207,27 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	@Override
 	public String sendWebformTicket(final WebFormData formData) throws Exception
 	{
-		MplWebCrmTicketModel webFormModel = new MplWebCrmTicketModel();
-		final WebFormData ticketData = new WebFormData();
-		//Setting ECOM request prefix as E to for COMM triggered Ticket
-		prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
-		final String commerceTicketId = prefixableKeyGenerator.generate().toString();
-		formData.setCommerceTicketId(commerceTicketId);
-		//checking ticket is duplicate or not in Commerce
-		if (checkDuplicateWebCRMTickets(formData))
+		String commerceTicketId = null;
+		try
 		{
-			webFormModel = webFormDataConverter.convert(ticketData, webFormModel);
-			//save Ticket in Commerce
-			modelService.save(webFormModel);
-			mplWebFormService.sendWebFormTicket(webFormModel);
+			MplWebCrmTicketModel webFormModel = modelService.create(MplWebCrmTicketModel.class);
+			//checking ticket is duplicate or not in Commerce
+			if (checkDuplicateWebCRMTickets(formData))
+			{
+				//Setting ECOM request prefix as E to for COMM triggered Ticket
+				prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
+				commerceTicketId = prefixableKeyGenerator.generate().toString();
+				formData.setCommerceTicketId(commerceTicketId);
+				webFormModel = webFormDataConverter.convert(formData);
+				//save Ticket in Commerce
+				modelService.save(webFormModel);
+				//send Ticket to CRM/PI
+				mplWebFormService.sendWebFormTicket(webFormModel);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
 		}
 		return commerceTicketId;
 	}
@@ -227,7 +235,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override

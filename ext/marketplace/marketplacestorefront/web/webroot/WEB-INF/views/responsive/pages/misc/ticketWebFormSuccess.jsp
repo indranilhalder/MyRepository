@@ -8,13 +8,20 @@
 <div class="custmCareHelp">
 	<div class="issueQuryPopUp">
 		<div class="issueQuryPopBox">
-			<!-- <button class="closeBtn" id="closeCustCarePopBox">X</button> -->
+			<button class="closeBtn" id="closeCustCarePopBox">X</button>
 			<div class="headingSec">
 				<div class="querySubmitIcon"></div>
 				<div class="querySubmitInfo">
+				<c:choose>
+				<c:when test="${not empty ticketRefId}" >
 					<h2>Your query is submitted successfully!</h2>
 					<p>Reference Number: ${ticketRefId}</p>
 				</div>
+				</c:when>
+				<c:otherwise>
+					<h2>Your query is not submitted!</h2>
+				</c:otherwise>
+				</c:choose>
 			</div>
 			<p class="summryQuery">
 				<spring:theme code="webform.query.success"

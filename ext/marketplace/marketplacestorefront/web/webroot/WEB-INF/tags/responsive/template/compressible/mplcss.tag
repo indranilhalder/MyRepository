@@ -12,3 +12,6 @@
 <!-- Start Added for new Social Login Changes -->
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/socialLogin.css"/>
 	<!-- End Added for new Social Login Changes -->
+<!-- Start Added for new Social Login Changes -->
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/webform.css"/>
+	<!-- End Added for new Social Login Changes -->	

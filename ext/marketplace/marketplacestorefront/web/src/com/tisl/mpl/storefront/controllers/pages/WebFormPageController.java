@@ -27,9 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -105,17 +103,31 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		String ticketRefId = null;
 		try
 		{
-			formData.setComment(webForm.getComment());
-			formData.setOrderCode(webForm.getOrderCode());
-			formData.setSubOrderCode(webForm.getSubOrderCode());
-			formData.setTransactionId(webForm.getTransactionId());
+			final String ticketSubType = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB, "L1C1");
 
 			formData.setL0code(webForm.getNodeL0());
 			formData.setL1code(webForm.getNodeL1());
 			formData.setL2code(webForm.getNodeL2());
 			formData.setL3code(webForm.getNodeL3());
 			formData.setL4code(webForm.getNodeL4());
-			//formData.setTicketType(webForm.getTicketType());
+			formData.setCustomerEmail(webForm.getContactEmail());
+			formData.setCustomerName(webForm.getContactName());
+			formData.setCustomerMobile(webForm.getContactMobile());
+			//CRM Mapping as per TPR-6872
+			formData.setTicketType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_TYPE);
+			if (webForm.getNodeL1().equalsIgnoreCase(ticketSubType))
+			{
+				formData.setTicketSubType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER);
+			}
+			else
+			{
+				formData.setTicketSubType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_NONORDER);
+			}
+			formData.setComment(webForm.getComment());
+			formData.setOrderCode(webForm.getOrderCode());
+			formData.setSubOrderCode(webForm.getSubOrderCode());
+			formData.setTransactionId(webForm.getTransactionId());
 
 			//uploading file if any
 			if (CollectionUtils.isNotEmpty(webForm.getAttachmentFiles()))
@@ -157,8 +169,8 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
+		String filelocation = null;
 		Path path = null;
-		final List<String> fileUploadLocations = new ArrayList<String>();
 		fileUploadLocation = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CRM_FILE_UPLOAD_PATH);
 		if (StringUtils.isNotEmpty(fileUploadLocation))
@@ -183,22 +195,21 @@ public class WebFormPageController extends AbstractMplSearchPageController
 						LOG.error("Exception ,While creating the Directory " + e.getMessage());
 					}
 				}
-				final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
-						+ uploadFile.getOriginalFilename()));
+				filelocation = path + File.separator + uploadFile.getOriginalFilename();
+				final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
 				bout.write(barr);
 				bout.flush();
 				bout.close();
-				LOG.debug("FileUploadLocation   :" + fileUploadLocation);
-				fileUploadLocations.add(fileUploadLocation);
+				LOG.debug("FileUploadLocation   :" + filelocation);
 			}
 			catch (final Exception e)
 			{
 				LOG.error("Exception is:" + e);
-				fileUploadLocation = "error";
+				filelocation = "error";
 			}
 
 		}
-		return StringUtils.join(fileUploadLocations, ',');
+		return filelocation;
 	}
 
 }
