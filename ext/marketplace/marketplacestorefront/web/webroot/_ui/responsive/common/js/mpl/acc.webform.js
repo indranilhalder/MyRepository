@@ -8,8 +8,7 @@ ACC.WebForm = {
 
 				var dataStr = $("#customerWebForm").serialize();
 				$.ajax({
-					url : ACC.config.encodedContextPath
-							+ "/ticketForm",
+					url : ACC.config.encodedContextPath+ "/ticketForm",
 					data : dataStr,
 					type : 'POST',
 					success : function(data) {
@@ -19,8 +18,7 @@ ACC.WebForm = {
 						});
 					},
 					error : function(resp) {
-						console.log("Error in crmChildNodes"
-								+ resp);
+						console.log("Error in crmChildNodes"+ resp);
 					}
 				});
 
@@ -44,14 +42,14 @@ ACC.WebForm = {
 						$(this).removeClass("feildSuccess");
 						$(this).addClass("feildError");
 						$(this).focus();
-						console.log("radio");
+						//console.log("radio");
 					}
 					if ($(this).is("textarea") && $(this).val() === '') {
 						isValid = false;
 						$(this).removeClass("feildSuccess");
 						$(this).addClass("feildError");
 						$(this).focus();
-						console.log("textarea");
+						//console.log("textarea");
 					}
 					// for all nodes
 					if (($(this).attr("name") === 'nodeL2' || $(this).attr("name") === 'nodeL3')
@@ -61,7 +59,7 @@ ACC.WebForm = {
 						$(this).removeClass("feildSuccess");
 						$(this).addClass("feildError");
 						$(this).focus();
-						console.log("nodeL2");
+						//console.log("nodeL2");
 					}
 					// validation for l4 node
 					if ($(this).attr("name") == 'nodeL4' && $(this).val() === '') {
@@ -69,7 +67,7 @@ ACC.WebForm = {
 						$("select[name='nodeL3']").removeClass("feildSuccess");
 						$("select[name='nodeL3']").addClass("feildError");
 						$("select[name='nodeL3']").focus();
-						console.log("nodeL4");
+						//console.log("nodeL4");
 					}
 					
 					// mobile validation
@@ -85,14 +83,14 @@ ACC.WebForm = {
 								$(this).addClass("feildError");
 								isValid = false;
 								$(this).focus();
-								console.log("mobile 1");
+								//console.log("mobile 1");
 							}
 						} else {
 							$(this).removeClass("feildSuccess");
 							$(this).addClass("feildError");
 							isValid = false;
 							$(this).focus();
-							console.log("mobile 2");
+							//console.log("mobile 2");
 						}
 					}
 					// email validation
@@ -107,7 +105,7 @@ ACC.WebForm = {
 							$(this).addClass("feildError");
 							isValid = false;
 							$(this).focus();
-							console.log("email");
+							//console.log("email");
 						}
 					}
 					
@@ -230,8 +228,6 @@ ACC.WebForm = {
 				 * to the upload is stored in
 				 * this.upload.
 				 */
-				name : "uploadFile",
-				data : {"CSRFToken": ACC.config.CSRFToken },
 				allowedExts : [ "jpg", "jpeg",
 						"jpe", "jif", "jfif",
 						"jfi", "png", "gif" ],
@@ -252,9 +248,7 @@ ACC.WebForm = {
 
 				progress : function(progress) {
 					// received progress
-					this.progressBar
-							.width(progress
-									+ "%");
+					this.progressBar.width(progress+ "%");
 				},
 
 				success : function(data) {
@@ -329,9 +323,11 @@ $(function() {
 		$('.custmCareQrySec').slideToggle();
 		$('.contCustCareBtn').removeClass('dActive');
 	});
-	$('#closeCustCarePopBox').click(function() {
+	
+	$('#closeCustCarePopBox').on("click",function() {
 		ACC.colorbox.close;
 	});
+	
 	$('.selectedProduct').click(function() {
 		$(this).next('.orderDrop').toggle();
 	});

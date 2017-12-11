@@ -166,7 +166,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	}
 
 	@RequestMapping(value = "/fileUpload", method =
-	{ RequestMethod.POST, RequestMethod.GET })
+	{ RequestMethod.POST })
 	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final MultipartFile uploadFile)
 			throws CMSItemNotFoundException
 	{

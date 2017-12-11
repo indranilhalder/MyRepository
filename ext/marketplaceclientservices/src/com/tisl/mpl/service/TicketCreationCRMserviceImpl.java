@@ -756,8 +756,14 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			if (null != mplWebCrmTicketModel.getCustomerMobile())// to -do
 			{
 				addressInfo.setPhoneNo(mplWebCrmTicketModel.getCustomerMobile());
+				ticket.setAlternatePhoneNo(mplWebCrmTicketModel.getCustomerMobile());
 			}
 			ticket.setAddressInfo(addressInfo);
+			if (null != mplWebCrmTicketModel.getCustomerName())
+			{
+				ticket.setAlternateContactName(mplWebCrmTicketModel.getCustomerName());
+			}
+
 			//Line item details loop
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();
