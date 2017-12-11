@@ -9,6 +9,7 @@ $productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCata
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
+$wideContent=CMSImageComponent,BannerComponent,CMSParagraphComponent
 
 # Language
 $lang=en
@@ -22,36 +23,13 @@ $lang=en
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;ProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
 
-
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EMITermsandConditionsslot;EMI Terms and Conditions;true
-
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;EMITermsandConditions;;;wide
 
-
-
-INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content
-;;EMITextParagraphComponent;Email Text Paragraph Component;EMITextParagraphComponent;"<ul>
-<li>The minimum order value to avail the EMI payment option is Rs 3,000.</li>
-<li>EMI can be availed when buying products from multiple sellers,  If all the sellers in the cart are offering EMI</li>
-<li>It may take up to 10 working days for your bank to covert the payment in to EMI</li>
-<li>Final EMI is calculated on the total value of your order at the time of payment.</li>
-<li>While you will not be charged a processing fee for availing TATA CLiQ's EMI option, the interest charged by the bank shall not be refunded by TATA CLiQ.</li>
-<li>You may check with the respective bank/issuer on how a cancellation, refund or pre-closure could affect the EMI terms, and what interest charges would be levied on you for the same.</li>
-<li>The Bank charges annual interest rates according to the reducing monthly balance. In the monthly reducing cycle, the principal is reduced with every EMI and the interest is calculated on the outstanding balance.</li>
-</ul>" 
-
-
-# ContentSlot 
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;EMITermsandConditionsslot;EMI Terms and Conditions;true;EMITextParagraphComponent;;;
-
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;EMITermsandCon-ProductDetails;EMITermsandConditions;;EMITermsandConditionsSlot;true
-
-INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='productDetails'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;EMITermsandCon-ProductDetails;EMITermsandConditions;;EMITermsandConditionsSlot;true
 
 #############################################################View Seller#####################################################################################
@@ -59,16 +37,11 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;ViewSellerPageTemplate      ;$jarResourceCms/structure-view/structure_viewSellerPageTemplate.vm
 
-
-INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ViewSellerPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;EMITermsandCon-ViewSellerPage;EMITermsandConditions;;EMITermsandConditionsSlot;true
-
-
-
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ViewSellerPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;EMITermsandConditions;;;wide
 
-
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ViewSellerPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;EMITermsandCon-ViewSellerPage;EMITermsandConditions;;EMITermsandConditionsSlot;true
 
 ##############################################################Quick View####################################################################################
 
@@ -78,8 +51,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
 ;;QuickViewPageTemplate;Quick View Page Template;fragments/product/quickViewLayout;ContentPage
 
-
-UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;QuickViewPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
 
 
@@ -112,8 +84,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 #pin code
 ;PinCodeServiceSlot;;PincodeServiceComponent
 # Product List / Grid are two layouts for Category Browsing pages
-;EMITermsandConditions;;;wide
-
+;EMITermsandConditionsSlot;;CMSParagraphComponent
 
 
 # Bind Content Slots to Page Templates
@@ -139,5 +110,5 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;ConfigureProductsCount-quickView;ConfigureProductsCount;;ConfigureProductsCountSlot;true
 #pincode
 ;;PinCodeService-quickView;PinCodeService;;PinCodeServiceSlot;true
-;;EMITermsandCon-quickView;EMITermsandConditions;;EMITermsandConditionsSlot;true
+;;EMITermsandConditions-quickView;EMITermsandConditionsSlot;;EMITermsandConditionsSlot;true
 
