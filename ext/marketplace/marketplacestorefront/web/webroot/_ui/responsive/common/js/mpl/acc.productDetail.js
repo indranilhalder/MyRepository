@@ -1393,6 +1393,7 @@ function pincodeServiceability(){
 												 //CAR-327 starts here
 												 var currentSeller=$(sellerSelId).val();
 												 populatePrimaryCalloutOfferMsgWrapper(productCode, currentSeller, null);
+											         populateOfferMsgWrapper(productCode, currentSeller, null);//TISPRDT-7715 fix
 												 //CAR-327 ends here
 
 										} else {
@@ -3867,6 +3868,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						//CAR-327 starts
 						currentSeller=$(sellerSelId).val();
 						populatePrimaryCalloutOfferMsgWrapper(productCode, currentSeller, null);
+						populateOfferMsgWrapper(productCode, currentSeller, null);//TISPRDT-7715 fix
 						//CAR-327 ends
 						
 						$('#selectedSize').val("true");

@@ -664,5 +664,8 @@ public class MarketplacewebservicesConstants
 	//added for TPR-1348
 	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
 
+	public static final String OMS_SYNC_SAVE_LOG = "oms.order.sync.saveLog.enabled";
+	public static final String OMS_SYNC_SAVE_LOG_DEFAULT = "Y";
+
 	public static final String PAYTM = "PAYTM".intern();
 }

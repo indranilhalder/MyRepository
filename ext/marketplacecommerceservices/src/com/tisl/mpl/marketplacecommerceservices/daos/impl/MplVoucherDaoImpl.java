@@ -123,7 +123,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAvailCnt(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
 		try
@@ -163,7 +163,112 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	{
 		try
 		{
-			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERY;
+			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYMNTH;
+			LOG.debug("Invalidation query is " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+
+			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * TPR-7448 This method returns Invalidation model for maxAountPerDay
+	 *
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return VoucherInvalidationModel
+	 */
+	@Override
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPDay(final VoucherModel voucher,
+			final String cardReferenceNo)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYDAY;
+			LOG.debug("Invalidation query is " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+
+			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * TPR-7448 This method returns Invalidation model for maxAountPerWeek
+	 *
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return VoucherInvalidationModel
+	 */
+	@Override
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPWeek(final VoucherModel voucher,
+			final String cardReferenceNo)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYWEEK;
+			LOG.debug("Invalidation query is " + queryString);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+
+			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * TPR-7448 This method returns Invalidation model for maxAountPerYear
+	 *
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return VoucherInvalidationModel
+	 */
+	@Override
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPYear(final VoucherModel voucher,
+			final String cardReferenceNo)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYYEAR;
 			LOG.debug("Invalidation query is " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
@@ -190,7 +295,6 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 *
 	 * @param guid
 	 * @param customerId
-	 * @param cardReferenceNo
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
