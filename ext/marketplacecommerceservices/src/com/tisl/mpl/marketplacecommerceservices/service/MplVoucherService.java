@@ -184,4 +184,11 @@ public interface MplVoucherService
 	 * @return List<JuspayCardStatus>
 	 */
 	public List<JuspayCardStatusModel> findJuspayCardStatus(String guid, String customerId);
+
+	/**
+	 * @param abstractOrderModel
+	 * @param voucherModel
+	 * @return double
+	 */
+	public double getVoucherDiscountValue(AbstractOrderModel abstractOrderModel, VoucherModel voucherModel);
 }

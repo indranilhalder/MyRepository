@@ -2107,7 +2107,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		return voucherInvalidationModel;
 	}
 
-	private double getVoucherDiscountValue(final AbstractOrderModel abstractOrderModel, final VoucherModel voucherModel)
+	/*
+	 * TPR-7448 (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#getVoucherDiscountValue(de.hybris.platform.
+	 * core.model.order.AbstractOrderModel, de.hybris.platform.voucher.model.VoucherModel)
+	 */
+	@Override
+	public double getVoucherDiscountValue(final AbstractOrderModel abstractOrderModel, final VoucherModel voucherModel)
 	{
 		final List<DiscountValue> discountList = abstractOrderModel.getGlobalDiscountValues();
 
@@ -2269,7 +2277,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			check = Boolean.FALSE;
 			failureCode = "03";
 		}
-		if ((discountAlreadyReceived == maxAmount) && currentDiscountPrice > 0.0)
+		if ((discountAlreadyReceived >= maxAmount) && currentDiscountPrice > 0.0)
 		{
 			//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
 			check = Boolean.FALSE;
