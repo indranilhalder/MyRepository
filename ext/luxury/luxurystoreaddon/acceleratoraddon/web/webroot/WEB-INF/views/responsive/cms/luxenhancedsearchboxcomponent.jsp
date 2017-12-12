@@ -4,7 +4,7 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<c:set var="categories" value="${searchBoxCategories}"/>  
+<c:set var="categories" value="${SearchBox.searchBoxCategories}"/>
 
 <c:url value="/search/autocomplete/${component.uid}"
 	var="autocompleteUrl" />
