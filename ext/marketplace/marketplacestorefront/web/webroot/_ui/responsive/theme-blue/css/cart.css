@@ -5795,8 +5795,10 @@ li.item>ul li:last-child {
 .MyBag-top-section {
 	margin: 0px;
 }
-.cart.wrapper .product-block li.item>ul>li:first-child div.product .product-name {
+/* start comment for TISCSS-77 */
+/* .cart.wrapper .product-block li.item>ul>li:first-child div.product .product-name {
     font-size: 11px;
     line-height: 18px !important;
     font-weight: normal;
-}
+} */
+/* end comment for TISCSS-77 */
