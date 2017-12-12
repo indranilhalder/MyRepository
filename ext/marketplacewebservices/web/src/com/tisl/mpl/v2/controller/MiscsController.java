@@ -2731,10 +2731,9 @@ public class MiscsController extends BaseController
 	 */
 
 
-	@RequestMapping(value = "/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/{baseSiteId}/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public CRMWsDataParent getcemwebform(@PathVariable final String emailId) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+	public CRMWsDataParent getcemwebform() throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final CRMWsDataParent crmDto = new CRMWsDataParent();
 
