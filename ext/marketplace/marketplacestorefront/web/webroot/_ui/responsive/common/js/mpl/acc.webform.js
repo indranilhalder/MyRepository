@@ -367,7 +367,7 @@ ACC.WebForm = {
 				
 				$(".orderDrop").html(htmlOption);
 				$("#totalPages").val(data.totalOrderLines);
-				$("#currentPage").val(currentPage + 1);
+				$("#currentPage").val(currentPage);
 			},
 			error : function(resp) {
 				console.log("Error in crmChildNodes"+ resp);
