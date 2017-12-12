@@ -97,8 +97,8 @@
 /* start CMR-45 */
 /* start change of TISCSS-68 */
 @media (min-width: 651px) {
-	.page-header {
-		padding: 50px 0;
+	.page-compare .page-header {
+		padding: 50px 0 !important;		/* modify for TISCSS-68 */
 		margin: 0;
 	}
 }
