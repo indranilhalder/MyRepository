@@ -5,7 +5,9 @@ package com.tisl.mpl.facades.webform;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
+import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -15,11 +17,14 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,6 +38,8 @@ import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.cms.data.NodeFormData;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
+import com.tisl.mpl.facades.cms.data.WebFormOrder;
+import com.tisl.mpl.facades.cms.data.WebFormOrderLine;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
 import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
 import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
@@ -73,35 +80,21 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
-	public WebForm getWebCRMForm(final PageableData pageableData)
+	public WebForm getWebCRMForm()
 	{
 		final WebForm form = new WebForm();
 		List<MplWebCrmModel> webCrmModels = new ArrayList<>();
 		final List<NodeFormData> nodes = new ArrayList<>();
 		CustomerModel currentUser = null;
-		final List<OrderData> orderDatas = new ArrayList<>();
 		try
 		{
 			currentUser = (CustomerModel) userService.getCurrentUser();
-			if (currentUser != null)
+			if (currentUser != null && !userService.isAnonymousUser(currentUser))
 			{
 				form.setEmailId(currentUser.getOriginalUid());
 				form.setMobile(currentUser.getMobileNumber());
 				form.setName(currentUser.getName());
 			}
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = mplOrderFacade
-					.getPagedFilteredParentOrderHistory(pageableData);
-			for (final OrderHistoryData orderHistoryData : searchPageDataParentOrder.getResults())
-			{
-				final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderHistoryData.getCode());
-				//this scenario will occour only when product is missing in order entries.
-				if (null == orderDetails)
-				{
-					continue;
-				}
-				orderDatas.addAll(orderDetails.getSellerOrderList());
-			}
-			form.setOrderDatas(orderDatas);
 
 			webCrmModels = mplWebFormService.getWebCRMParentNodes();
 			for (final MplWebCrmModel crmModel : webCrmModels)
@@ -141,6 +134,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				node.setNodeType(crmModel.getNodeType());
 				node.setNodeCode(crmModel.getNodeCrmCode());
 				node.setNodeDesc(crmModel.getNodeText());
+				node.setTicketType(crmModel.getTicketType());
 				node.setCreateTicketAllowed(Boolean.valueOf(crmModel.isCreateTicketAllowed()));
 				node.setNodeDisplayAllowed(Boolean.valueOf(crmModel.isNodeDisplayAllowed()));
 				node.setTicketAnswer(crmModel.getTicketAnswer());
@@ -261,6 +255,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				nodeL1.setNodeCode(crmModel.getNodeCrmCode());
 				nodeL1.setNodeDesc(crmModel.getNodeText());
 				nodeL1.setTicketAnswer((crmModel.getTicketAnswer()));
+				nodeL1.setTicketType(crmModel.getTicketType());
 				nodeL1.setCreateTicketAllowed(crmModel.isCreateTicketAllowed());
 				nodeL1.setNodeDisplayAllowed(crmModel.isNodeDisplayAllowed());
 				//crmData.add(nodeL1);
@@ -273,6 +268,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 					nodeL2.setNodeType(crmL2Model.getNodeType());
 					nodeL2.setNodeCode(crmL2Model.getNodeCrmCode());
 					nodeL2.setNodeDesc(crmL2Model.getNodeText());
+					nodeL2.setTicketType(crmL2Model.getTicketType());
 					nodeL2.setTicketAnswer((crmL2Model.getTicketAnswer()));
 					nodeL2.setCreateTicketAllowed(crmL2Model.isCreateTicketAllowed());
 					nodeL2.setNodeDisplayAllowed(crmL2Model.isNodeDisplayAllowed());
@@ -286,6 +282,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 						nodeL3.setNodeType(crmL3Model.getNodeType());
 						nodeL3.setNodeCode(crmL3Model.getNodeCrmCode());
 						nodeL3.setNodeDesc(crmL3Model.getNodeText());
+						nodeL3.setTicketType(crmL3Model.getTicketType());
 						nodeL3.setTicketAnswer((crmL3Model.getTicketAnswer()));
 						nodeL3.setCreateTicketAllowed(crmL3Model.isCreateTicketAllowed());
 						nodeL3.setNodeDisplayAllowed(crmL3Model.isNodeDisplayAllowed());
@@ -300,6 +297,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 							nodeL4.setNodeType(crmL4Model.getNodeType());
 							nodeL4.setNodeCode(crmL4Model.getNodeCrmCode());
 							nodeL4.setNodeDesc(crmL4Model.getNodeText());
+							nodeL4.setTicketType(crmL4Model.getTicketType());
 							nodeL4.setTicketAnswer((crmL4Model.getTicketAnswer()));
 							nodeL4.setCreateTicketAllowed(crmL4Model.isCreateTicketAllowed());
 							nodeL4.setNodeDisplayAllowed(crmL4Model.isNodeDisplayAllowed());
@@ -368,5 +366,92 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		return mplCRMWebFormResponseData;
 	}
 
+	@Override
+	public WebFormOrder getWebOrderLines(final PageableData pageableData)
+	{
+		final WebFormOrder form = new WebFormOrder();
+		List<ImageData> orderEntryImages = new ArrayList<>();
+		List<WebFormOrderLine> orderLines = new ArrayList<WebFormOrderLine>();
+		try
+		{
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = mplOrderFacade
+					.getPagedFilteredParentOrderHistory(pageableData);
+			if (searchPageDataParentOrder != null && CollectionUtils.isNotEmpty(searchPageDataParentOrder.getResults()))
+			{
+				for (final OrderHistoryData orderHistoryData : searchPageDataParentOrder.getResults())
+				{
+					//Parent Order
+					final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderHistoryData.getCode());
+					//this scenario will occour only when product is missing in order entries.
+					if (null == orderDetails)
+					{
+						continue;
+					}
+					//SUb Order
+					for (final OrderData subOrderData : orderDetails.getSellerOrderList())
+					{
+						// Order Line
+						orderLines = new ArrayList<WebFormOrderLine>();
+						for (final OrderEntryData line : subOrderData.getEntries())
+						{
+							final WebFormOrderLine orderLine = new WebFormOrderLine();
+							if (StringUtils.isNotEmpty(orderDetails.getCode()))
+							{
+								orderLine.setOrderCode(orderDetails.getCode());
+							}
+							if (null != subOrderData && StringUtils.isNotEmpty(subOrderData.getCode()))
+							{
+								orderLine.setSubOrderCode(subOrderData.getCode());
+							}
+							if (StringUtils.isNotEmpty(line.getTransactionId()))
+							{
+								orderLine.setTransactionId(line.getTransactionId());
+							}
+							if (null != orderDetails.getCreated())
+							{
+								final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM ,YYYY");
+								orderLine.setOrderDate(sdf.format(orderDetails.getCreated()));
+							}
+							if (line.getAmountAfterAllDisc() != null
+									&& StringUtils.isNotEmpty(line.getAmountAfterAllDisc().getFormattedValue()))
+							{
+								orderLine.setProdTotalPrice(line.getAmountAfterAllDisc().getFormattedValue());
+							}
+							if (line.getProduct() != null && CollectionUtils.isNotEmpty(line.getProduct().getImages()))
+							{
+								orderEntryImages = (List) line.getProduct().getImages();
+								orderLine.setProdImageURL(orderEntryImages.get(0).getUrl());
+							}
+							if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
+							{
+								orderLine.setProdTitle(line.getProduct().getName());
+							}
+							if (StringUtils.isNotEmpty(line.getCustomerOrderStatusDisplay()))
+							{
+								orderLine.setCustomerOrderStatus(line.getCustomerOrderStatusDisplay());
+							}
 
+							orderLines.add(orderLine);
+						}
+					}
+				}
+
+				if (searchPageDataParentOrder.getPagination() != null)
+				{
+					form.setTotalOrderLines(String.valueOf(searchPageDataParentOrder.getPagination().getTotalNumberOfResults()));
+				}
+				form.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				form.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("getWebOrderLines" + e);
+		}
+		return form;
+	}
 }

@@ -2376,7 +2376,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CRM_WEBFORM_TICKET_SUB = "crm.ticketsubtype.nodel1";
 	public static final String CRM_WEBFORM_TICKET_SUB_ORDER = "O";
 	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
-
+	public static final String WEBFORM_ORDER_HISTORY_PAGESIZE = "webform.order.pagesize.defaultValue";
 
 
 }
