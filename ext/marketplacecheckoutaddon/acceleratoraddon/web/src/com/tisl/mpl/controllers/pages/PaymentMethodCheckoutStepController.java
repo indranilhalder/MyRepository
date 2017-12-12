@@ -4303,7 +4303,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							{
 								final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
 								appliedVoucher = promotionVoucherModel;
-								mplCartVoucher = false;
+								mplCartVoucher = true;
 							}
 
 
@@ -4610,6 +4610,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
 					VoucherModel appliedVoucher = null;
+					boolean mplCartVoucher = false;
+					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
 					for (final DiscountModel discount : voucherList)
 					{
@@ -4619,11 +4621,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							{
 								final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = false;
 							}
 							else
 							{
 								final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
 								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = true;
 							}
 
 							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
@@ -4672,15 +4676,58 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										}
 									}
 
-
-									if (willApply == false)
-									{
-										return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+									if (mplCartVoucher)
+									{ //MplCartOfferVoucherModel
+										voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
 									}
+									else
+									{ //PromotionVoucherModel
+										voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+									}
+
+
+									/*
+									 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
+									 */
 								}
 
 							}
 						}
+					}
+					//ERROR MESSAGE FOR COUPON AND VOUCHER
+					boolean checkcartVoucher1 = true;
+					boolean checkPromovoucher2 = true;
+					for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+					{
+
+						if (voucherentry.getKey().equals("mplcartvoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkcartVoucher1 = false;
+							}
+						}
+						if (voucherentry.getKey().equals("promovoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkPromovoucher2 = false;
+							}
+						}
+					}
+
+					if (!checkcartVoucher1 && !checkPromovoucher2)
+					{ //both coupon and voucher
+						return MarketplacecheckoutaddonConstants.REDIRECTTOVOUCHERANDCOUPON;
+					}
+					else if (!checkcartVoucher1)
+					{ // only voucher
+						return MarketplacecheckoutaddonConstants.REDIRECTTOVOUCHER;
+					}
+					else if (!checkPromovoucher2)
+					{ //only coupon
+					  //return "coupon";
+						return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
 					}
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
@@ -5593,7 +5640,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
