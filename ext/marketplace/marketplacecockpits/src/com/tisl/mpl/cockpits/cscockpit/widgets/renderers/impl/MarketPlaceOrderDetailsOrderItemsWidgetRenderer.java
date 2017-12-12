@@ -9,6 +9,7 @@ import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,6 +202,11 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		listheader = new Listheader(LabelUtils.getLabel(widget, "bankDetails",
 				new Object[0]));
 		listheader.setWidth("120px");
+		row.appendChild(listheader);
+		
+		listheader = new Listheader(LabelUtils.getLabel(widget, "chargeBack",
+				new Object[0]));
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 		
 		// TPR-7412 end
@@ -397,6 +403,15 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		else{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
+		// ChargeBack start
+		String chargeback = entrymodel.getChargeback()!= null ? entrymodel.getChargeback().toString() : NumberUtils.DOUBLE_ZERO.toString();
+		if (StringUtils.isNotBlank(chargeback)){
+			row.appendChild(new Listcell(chargeback));
+		}
+		else{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		} 
+		// ChargeBack End
       //	TPR-7412 start	
 		String utrNoORarnNo=null;
 		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())

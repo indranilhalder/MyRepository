@@ -3,9 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringWriter;
@@ -686,8 +683,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	 * @throws Exception
 	 */
 	@Override
-	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
-			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception
+	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
 	{
 		final AddressInfoDTO addressInfo = new AddressInfoDTO();
 		final TicketMasterXMLData ticket = new TicketMasterXMLData();
@@ -708,7 +704,9 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
 			}
-			ticket.setTicketType("W");
+			//setting default as W for WEb form
+			ticket.setTicketType(MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_TYPE);
+
 			if (null != mplWebCrmTicketModel.getTicketSubType())
 			{
 				ticket.setTicketSubType(mplWebCrmTicketModel.getTicketSubType());
@@ -758,8 +756,14 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			if (null != mplWebCrmTicketModel.getCustomerMobile())// to -do
 			{
 				addressInfo.setPhoneNo(mplWebCrmTicketModel.getCustomerMobile());
+				ticket.setAlternatePhoneNo(mplWebCrmTicketModel.getCustomerMobile());
 			}
 			ticket.setAddressInfo(addressInfo);
+			if (null != mplWebCrmTicketModel.getCustomerName())
+			{
+				ticket.setAlternateContactName(mplWebCrmTicketModel.getCustomerName());
+			}
+
 			//Line item details loop
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();

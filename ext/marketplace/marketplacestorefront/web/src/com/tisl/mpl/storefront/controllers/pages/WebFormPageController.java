@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.facades.webform.MplWebFormFacade;
@@ -115,7 +116,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			formData.setCustomerName(webForm.getContactName());
 			formData.setCustomerMobile(webForm.getContactMobile());
 			//CRM Mapping as per TPR-6872
-			formData.setTicketType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_TYPE);
+			formData.setTicketType(MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_TYPE);
 			if (webForm.getNodeL1().equalsIgnoreCase(ticketSubType))
 			{
 				formData.setTicketSubType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER);
@@ -164,7 +165,8 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		return jsonObj;
 	}
 
-	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
+	@RequestMapping(value = "/fileUpload", method =
+	{ RequestMethod.POST })
 	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final MultipartFile uploadFile)
 			throws CMSItemNotFoundException
 	{

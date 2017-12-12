@@ -62,8 +62,7 @@ public interface MplVoucherService
 	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
-	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel,
-			AbstractOrderModel abstractOrderModel);
+	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param voucher
@@ -160,7 +159,7 @@ public interface MplVoucherService
 	 * @param cardReferenceNo
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAvailCnt(VoucherModel voucher, String cardReferenceNo);
+	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(VoucherModel voucher, String cardReferenceNo);
 
 	/**
 	 * @param voucher
@@ -219,4 +218,11 @@ public interface MplVoucherService
 	 * @return AbstractOrderModel
 	 */
 	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel, VoucherModel second);
+	
+	/**
+	 * @param abstractOrderModel
+	 * @param voucherModel
+	 * @return double
+	 */
+	public double getVoucherDiscountValue(AbstractOrderModel abstractOrderModel, VoucherModel voucherModel);
 }

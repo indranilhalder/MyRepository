@@ -51,6 +51,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.coupon.enums.TimeLimitTypeEnum;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.AddCardResponse;
@@ -1872,6 +1873,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		return tuple3;
 	}
 
+	/**
+	 * TPR-7448
+	 * 
+	 * Failure Code: 
+	 * 00:No failure 
+	 * 01:Failed at max avail count 
+	 * 02:Failed at max amount per time limit 
+	 * 03:Failed at max amount per time limit, But will get offer for lesser amount
+	 */
 	private Tuple3<?, ?, ?> promoVoucherForCardPerOfr(final boolean tokenRequired, final AbstractOrderModel abstractOrderModel,
 			final DiscountModel discount, final AddCardResponse addCardResponse, final String flag) throws CalculationException
 	{
@@ -1885,31 +1895,35 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			if (restrictionModel instanceof PaymentModeRestrictionModel)
 			{
-				final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
-						? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
-				final double maxAmountPerMonth = ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerMonth() != null
-						? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerMonth().doubleValue() : 0.0D;
-				if (tokenRequired && (maxAvailCount > 0 || maxAmountPerMonth > 0.0))
+				List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = null;
+				final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+						.getMaxAvailCount().intValue() : 0;
+				final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+						.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+				final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+						.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+				final TimeLimitTypeEnum timeLimitTypeEnum = ((PaymentModeRestrictionModel) restrictionModel).getTimeLimit();
+				if (tokenRequired && (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0))
 				{
 					LOG.error("Token is required inorder to proceed,cannot be empty");
 					throw new EtailNonBusinessExceptions(new Exception("Token cannot be empty"));
 				}
-				if (maxAvailCount > 0 && maxAmountPerMonth == 0.0D)
+				if (maxAvailCount > 0 && maxAmountPerTimeLimit == 0.0D && maxAmountAllTransactions == 0.0D)
 				{
-					final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao
-							.findInvalidationMaxAvailCnt(promotionVoucherModel, addCardResponse.getCardReference());
+					voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(promotionVoucherModel,
+							addCardResponse.getCardReference());
 					response = checkCardPerOfferMaxCountValidation(voucherInvalidationModel, maxAvailCount);
 					if (!response.booleanValue())
 					{
 						failureCode = flag + "01";
 					}
 				}
-				else if (maxAvailCount == 0 && maxAmountPerMonth > 0.0D)
+				else if (maxAvailCount == 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions == 0.0D)
 				{
-					final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao
-							.findInvalidationMaxAmtPMnth(promotionVoucherModel, addCardResponse.getCardReference());
-					tuple3Resp = checkCardPerOfferMaxAmtPMonthValidation(voucherInvalidationModel, maxAmountPerMonth,
-							discount.getValue().doubleValue());
+					voucherInvalidationModel = getCardPerOfrInvalidationModel(promotionVoucherModel, timeLimitTypeEnum,
+							addCardResponse.getCardReference());
+					tuple3Resp = checkCardPerOfferMaxAmtValidation(voucherInvalidationModel, maxAmountPerTimeLimit,
+							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
 					{
@@ -1917,12 +1931,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						priceDiff = (Double) tuple3Resp.getThird();
 					}
 				}
-				else if (maxAvailCount > 0 && maxAmountPerMonth > 0.0D)
+				else if (maxAvailCount > 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions == 0.0D)
 				{
-					final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao
-							.findInvalidationMaxAmtPMnth(promotionVoucherModel, addCardResponse.getCardReference());
-					tuple3Resp = checkCardPerOfferMaxCntAmtPMonthValidation(voucherInvalidationModel, maxAvailCount, maxAmountPerMonth,
-							discount.getValue().doubleValue());
+					voucherInvalidationModel = getCardPerOfrInvalidationModel(promotionVoucherModel, timeLimitTypeEnum,
+							addCardResponse.getCardReference());
+					tuple3Resp = checkCardPerOfferMaxCntAmtValidation(voucherInvalidationModel, maxAvailCount, maxAmountPerTimeLimit,
+							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
 					{
@@ -1930,7 +1944,59 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						priceDiff = (Double) tuple3Resp.getThird();
 					}
 				}
-				if (maxAvailCount > 0 || maxAmountPerMonth > 0.0)
+				else if (maxAvailCount > 0 && maxAmountPerTimeLimit == 0.0D && maxAmountAllTransactions > 0.0D)
+				{
+					voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(promotionVoucherModel,
+							addCardResponse.getCardReference());
+					tuple3Resp = checkCardPerOfferMaxCntAmtValidation(voucherInvalidationModel, maxAvailCount,
+							maxAmountAllTransactions, getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
+					if (!response.booleanValue())
+					{
+						failureCode = flag + (String) tuple3Resp.getSecond();
+						priceDiff = (Double) tuple3Resp.getThird();
+					}
+				}
+				else if (maxAvailCount == 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions > 0.0D)
+				{
+					voucherInvalidationModel = getCardPerOfrInvalidationModel(promotionVoucherModel, timeLimitTypeEnum,
+							addCardResponse.getCardReference());
+
+					tuple3Resp = checkCPOMaxAmtLmtAllTrnxValidation(voucherInvalidationModel, maxAmountPerTimeLimit,
+							maxAmountAllTransactions, getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
+					response = (Boolean) tuple3Resp.getFirst();
+					if (!response.booleanValue())
+					{
+						failureCode = flag + (String) tuple3Resp.getSecond();
+						priceDiff = (Double) tuple3Resp.getThird();
+					}
+				}
+				else if (maxAvailCount > 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions > 0.0D)
+				{
+					voucherInvalidationModel = getCardPerOfrInvalidationModel(promotionVoucherModel, timeLimitTypeEnum,
+							addCardResponse.getCardReference());
+					tuple3Resp = checkCPOMaxCntAmtLmtAllTrnxValidation(voucherInvalidationModel, maxAvailCount, maxAmountPerTimeLimit,
+							maxAmountAllTransactions, getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
+					response = (Boolean) tuple3Resp.getFirst();
+					if (!response.booleanValue())
+					{
+						failureCode = flag + (String) tuple3Resp.getSecond();
+						priceDiff = (Double) tuple3Resp.getThird();
+					}
+				}
+				else if (maxAvailCount == 0 && maxAmountPerTimeLimit == 0.0D && maxAmountAllTransactions > 0.0D)
+				{
+					voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(promotionVoucherModel,
+							addCardResponse.getCardReference());
+					tuple3Resp = checkCardPerOfferMaxAmtValidation(voucherInvalidationModel, maxAmountPerTimeLimit,
+							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
+					response = (Boolean) tuple3Resp.getFirst();
+					if (!response.booleanValue())
+					{
+						failureCode = flag + (String) tuple3Resp.getSecond();
+						priceDiff = (Double) tuple3Resp.getThird();
+					}
+				}
+				if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 				{
 					if (response.booleanValue())
 					{
@@ -1939,6 +2005,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					}
 					if (priceDiff.doubleValue() > 0.0)
 					{
+						//Updating model with new discount price
 						updateVoucherPriceAbstractOrderModel(abstractOrderModel, promotionVoucherModel, priceDiff);
 					}
 				}
@@ -1946,6 +2013,138 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		tuple3 = new Tuple3<Boolean, String, Double>(response, failureCode, priceDiff);
 		return tuple3;
+	}
+
+	/**
+	 * TPR-7448
+	 *
+	 * @param voucherInvalidationModel
+	 * @param maxAvailCount
+	 * @param maxAmountPerTimeLimit
+	 * @param maxAmountAllTransactions
+	 * @param currentDiscountPrice
+	 * @return tuple3
+	 */
+	private Tuple3<?, ?, ?> checkCPOMaxCntAmtLmtAllTrnxValidation(
+			final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel, final int maxAvailCount,
+			final double maxAmountPerTimeLimit, final double maxAmountAllTransactions, final double currentDiscountPrice)
+	{
+		Boolean check = Boolean.FALSE;
+		final Double priceDiff = new Double(0.0);
+		Tuple3<?, ?, ?> tuple3 = null;
+		String failureCode = "01";//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
+		if (CollectionUtils.isNotEmpty(voucherInvalidationModel) && maxAvailCount > voucherInvalidationModel.size())
+		{
+			tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountAllTransactions, currentDiscountPrice);
+			if (((Boolean) tuple3.getFirst()).booleanValue())
+			{
+				tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerTimeLimit, currentDiscountPrice);
+				return tuple3;
+			}
+			else
+			{
+				return tuple3;
+			}
+		}
+		else if (CollectionUtils.isEmpty(voucherInvalidationModel))
+		{
+			check = Boolean.TRUE;//As invalidation model is empty
+			failureCode = "00";//00 is success scenario
+		}
+		tuple3 = new Tuple3<Boolean, String, Double>(check, failureCode, priceDiff);
+		return tuple3;
+	}
+
+
+	/**
+	 * TPR-7448
+	 *
+	 * @param voucherInvalidationModel
+	 * @param maxAmountPerTimeLimit
+	 * @param maxAmountAllTransactions
+	 * @param currentDiscountPrice
+	 * @return tuple3
+	 */
+	private Tuple3<?, ?, ?> checkCPOMaxAmtLmtAllTrnxValidation(
+			final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel, final double maxAmountPerTimeLimit,
+			final double maxAmountAllTransactions, final double currentDiscountPrice)
+	{
+		Boolean check = Boolean.FALSE;
+		final Double priceDiff = new Double(0.0);
+		Tuple3<?, ?, ?> tuple3 = null;
+		String failureCode = "01";//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
+		if (CollectionUtils.isNotEmpty(voucherInvalidationModel))
+		{
+			tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountAllTransactions, currentDiscountPrice);
+			if (((Boolean) tuple3.getFirst()).booleanValue())
+			{
+				tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerTimeLimit, currentDiscountPrice);
+				return tuple3;
+			}
+			else
+			{
+				return tuple3;
+			}
+		}
+		else
+		{
+			check = Boolean.TRUE;//As invalidation model is empty
+			failureCode = "00";//00 is for validation success scenario
+		}
+		tuple3 = new Tuple3<Boolean, String, Double>(check, failureCode, priceDiff);
+		return tuple3;
+	}
+
+
+	private List<VoucherCardPerOfferInvalidationModel> getCardPerOfrInvalidationModel(final VoucherModel promotionVoucherModel,
+			final TimeLimitTypeEnum timeLimitTypeEnum, final String cardReference)
+	{
+		List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = null;
+		if (null == timeLimitTypeEnum)
+		{
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPMnth(promotionVoucherModel, cardReference);
+		}
+		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("day"))
+		{
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPDay(promotionVoucherModel, cardReference);
+		}
+		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("month"))
+		{
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPMnth(promotionVoucherModel, cardReference);
+		}
+		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("week"))
+		{
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPWeek(promotionVoucherModel, cardReference);
+		}
+		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("year"))
+		{
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPYear(promotionVoucherModel, cardReference);
+		}
+		return voucherInvalidationModel;
+	}
+
+	/*
+	 * TPR-7448 (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#getVoucherDiscountValue(de.hybris.platform.
+	 * core.model.order.AbstractOrderModel, de.hybris.platform.voucher.model.VoucherModel)
+	 */
+	@Override
+	public double getVoucherDiscountValue(final AbstractOrderModel abstractOrderModel, final VoucherModel voucherModel)
+	{
+		final List<DiscountValue> discountList = abstractOrderModel.getGlobalDiscountValues();
+
+		final Iterator iter = discountList.iterator();
+		while (iter.hasNext())
+		{
+			final DiscountValue discount = (DiscountValue) iter.next();
+			if (discount.getCode().equalsIgnoreCase(voucherModel.getCode()))
+			{
+				return discount.getValue();
+			}
+		}
+		return 0.0;
 	}
 
 	/**
@@ -1996,45 +2195,18 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param maxAmountPerMonth
 	 * @return boolean
 	 */
-	private Tuple3<?, ?, ?> checkCardPerOfferMaxCntAmtPMonthValidation(
+	private Tuple3<?, ?, ?> checkCardPerOfferMaxCntAmtValidation(
 			final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel, final int maxAvailCount,
 			final double maxAmountPerMonth, final double currentDiscountPrice)
 	{
 		Boolean check = Boolean.FALSE;
-		Double priceDiff = new Double(0.0);
+		final Double priceDiff = new Double(0.0);
 		Tuple3<?, ?, ?> tuple3 = null;
 		String failureCode = "01";//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
 		if (CollectionUtils.isNotEmpty(voucherInvalidationModel) && maxAvailCount > voucherInvalidationModel.size())
 		{
-			double discountAlreadyReceived = 0.0D;
-			for (final VoucherCardPerOfferInvalidationModel voucherInvalidation : voucherInvalidationModel)
-			{
-				discountAlreadyReceived += voucherInvalidation.getDiscount().doubleValue();
-			}
-			if (maxAmountPerMonth >= (discountAlreadyReceived + currentDiscountPrice))
-			{
-				check = Boolean.TRUE;
-				failureCode = "00";//00 is for validation success scenario
-			}
-			//			if (maxAmountPerMonth < (discountAlreadyReceived + currentDiscountPrice))
-			//			{
-			//				check = Boolean.FALSE;
-			//				failureCode = "00";
-			//			}
-			if ((discountAlreadyReceived < maxAmountPerMonth)
-					&& ((discountAlreadyReceived + currentDiscountPrice) > maxAmountPerMonth))
-			{
-				priceDiff = Double.valueOf((discountAlreadyReceived + currentDiscountPrice) - maxAmountPerMonth);
-				//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
-				check = Boolean.FALSE;
-				failureCode = "03";
-			}
-			if ((discountAlreadyReceived == maxAmountPerMonth) && currentDiscountPrice > 0.0)
-			{
-				//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
-				check = Boolean.FALSE;
-				failureCode = "02";
-			}
+			tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerMonth, currentDiscountPrice);
+			return tuple3;
 		}
 		else if (CollectionUtils.isEmpty(voucherInvalidationModel))
 		{
@@ -2053,40 +2225,18 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param maxAmountPerMonth
 	 * @return boolean
 	 */
-	private Tuple3<?, ?, ?> checkCardPerOfferMaxAmtPMonthValidation(
+	private Tuple3<?, ?, ?> checkCardPerOfferMaxAmtValidation(
 			final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel, final double maxAmountPerMonth,
 			final double currentDiscountPrice)
 	{
 		Boolean check = Boolean.FALSE;
-		Double priceDiff = new Double(0.0);
+		final Double priceDiff = new Double(0.0);
 		Tuple3<?, ?, ?> tuple3 = null;
 		String failureCode = "01";//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
 		if (CollectionUtils.isNotEmpty(voucherInvalidationModel))
 		{
-			double discountAlreadyReceived = 0.0D;
-			for (final VoucherCardPerOfferInvalidationModel voucherInvalidation : voucherInvalidationModel)
-			{
-				discountAlreadyReceived += voucherInvalidation.getDiscount().doubleValue();
-			}
-			if (maxAmountPerMonth >= (discountAlreadyReceived + currentDiscountPrice))
-			{
-				check = Boolean.TRUE;
-				failureCode = "00";//00 is for validation success scenario
-			}
-			if ((discountAlreadyReceived < maxAmountPerMonth)
-					&& ((discountAlreadyReceived + currentDiscountPrice) > maxAmountPerMonth))
-			{
-				priceDiff = Double.valueOf((discountAlreadyReceived + currentDiscountPrice) - maxAmountPerMonth);
-				//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
-				check = Boolean.FALSE;
-				failureCode = "03";
-			}
-			if ((discountAlreadyReceived == maxAmountPerMonth) && currentDiscountPrice > 0.0)
-			{
-				//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
-				check = Boolean.FALSE;
-				failureCode = "02";
-			}
+			tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerMonth, currentDiscountPrice);
+			return tuple3;
 		}
 		else
 		{
@@ -2118,6 +2268,40 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		return Boolean.FALSE;
 	}
 
+	private Tuple3<?, ?, ?> validateCardPerOfferDiscountPrice(
+			final List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel, final double maxAmount,
+			final double currentDiscountPrice)
+	{
+		double discountAlreadyReceived = 0.0D;
+		Boolean check = Boolean.FALSE;
+		Double priceDiff = new Double(0.0);
+		String failureCode = "01";
+		for (final VoucherCardPerOfferInvalidationModel voucherInvalidation : voucherInvalidationModel)
+		{
+			discountAlreadyReceived += voucherInvalidation.getDiscount().doubleValue();
+		}
+		if (maxAmount >= (discountAlreadyReceived + currentDiscountPrice))
+		{
+			check = Boolean.TRUE;
+			failureCode = "00";//00 is for validation success scenario
+		}
+		if ((discountAlreadyReceived < maxAmount) && ((discountAlreadyReceived + currentDiscountPrice) > maxAmount))
+		{
+			//priceDiff = Double.valueOf((discountAlreadyReceived + currentDiscountPrice) - maxAmountPerMonth);
+			priceDiff = Double.valueOf(maxAmount - discountAlreadyReceived);
+			//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
+			check = Boolean.FALSE;
+			failureCode = "03";
+		}
+		if ((discountAlreadyReceived >= maxAmount) && currentDiscountPrice > 0.0)
+		{
+			//sessionService.setAttribute("cardPerOfferPriceDiff", priceDiff);
+			check = Boolean.FALSE;
+			failureCode = "02";
+		}
+		return new Tuple3<Boolean, String, Double>(check, failureCode, priceDiff);
+	}
+
 
 	/**
 	 * TPR-7448
@@ -2127,10 +2311,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAvailCnt(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
-		return mplVoucherDao.findInvalidationMaxAvailCnt(voucher, cardReferenceNo);
+		return mplVoucherDao.findCardPerOfferInvalidation(voucher, cardReferenceNo);
 	}
 
 	/**

@@ -16,6 +16,10 @@
 		<property qualifier="ReturnEntry.status" visible="true"/>
 		<property qualifier="RefundEntry.refundedDate" visible="true"/>	
 		<property qualifier="ReturnEntry.notes" visible="true"/>
+		<!-- Added for TPR-5954 -->
+		<property qualifier="ReturnEntry.subReason" name="Sub Reason" visible="true" />
+		<property qualifier="ReturnEntry.returnRemarks" name="Comments" visible="true"/>
+		<!-- Added for TPR-5954 --> 
 		
 	</group>
 </list-view>

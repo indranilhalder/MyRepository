@@ -304,7 +304,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 		PaymentTransactionType paymentTransactionType = null;
 		boolean riskFlag = false;
-		PaymentTransactionModel paymentTransactionModel;
+		PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
 		if (null != refundTransactionModel.getRefundType()
 				&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
 		{
@@ -323,9 +323,18 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			riskFlag = true;
 		}
 
-		paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, SUCCESS,
-				refundTransactionModel.getRefundAmount(), paymentTransactionType, SUCCESS, uniqRequestID);
-		mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+		try
+		{
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, SUCCESS,
+					refundTransactionModel.getRefundAmount(), paymentTransactionType, SUCCESS, uniqRequestID);
+			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+		}
+		catch (final Exception e)
+		{
+			// YTODO Auto-generated catch block
+			LOG.error("Refund updation data failed", e);
+		}
+
 
 		if (riskFlag)
 		{

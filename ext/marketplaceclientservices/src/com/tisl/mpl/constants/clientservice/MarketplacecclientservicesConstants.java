@@ -323,4 +323,6 @@ public class MarketplacecclientservicesConstants
 	public static final String MSD_HTTP_ERRORCODE = "msd.http.errorcode";
 	public static final String MSD_WIDGET_URL = "msd.widget.url";
 
+	public static final String CRM_WEBFORM_TICKET_TYPE = "W";
+
 }
