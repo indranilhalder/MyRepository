@@ -27,7 +27,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -41,13 +43,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
+import com.tisl.mpl.facades.cms.data.WebFormOrder;
 import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -79,18 +82,12 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	private static final String WEB_FORM = "faq";
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String ticketFormView(
-			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
-			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode, final Model model)
-			throws CMSItemNotFoundException
+	public String ticketFormView(final Model model) throws CMSItemNotFoundException
 	{
 		final TicketWebForm form = new TicketWebForm();
 		model.addAttribute("ticketForm", form);
 
-		final int pageSize = configurationService.getConfiguration().getInt(MessageConstants.ORDER_HISTORY_PAGESIZE, 10);
-		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
-		model.addAttribute("formFields", mplWebFormFacade.getWebCRMForm(pageableData));
+		model.addAttribute("formFields", mplWebFormFacade.getWebCRMForm());
 
 		storeCmsPageInModel(model, getContentPageForLabelOrId(WEB_FORM));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(WEB_FORM));
@@ -116,7 +113,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			formData.setCustomerName(webForm.getContactName());
 			formData.setCustomerMobile(webForm.getContactMobile());
 			//CRM Mapping as per TPR-6872
-			formData.setTicketType(MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_TYPE);
+			formData.setTicketType(webForm.getTicketType());
 			if (webForm.getNodeL1().equalsIgnoreCase(ticketSubType))
 			{
 				formData.setTicketSubType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER);
@@ -167,11 +164,12 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = "/fileUpload", method =
 	{ RequestMethod.POST })
-	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final MultipartFile uploadFile)
+	public @ResponseBody String fileUpload(@RequestPart(value = "uploadFile") final List<MultipartFile> uploadFile)
 			throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
 		String filelocation = null;
+		final List<String> filelocations = new ArrayList<>();
 		Path path = null;
 		fileUploadLocation = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CRM_FILE_UPLOAD_PATH);
@@ -179,39 +177,57 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		{
 			try
 			{
-
-				final byte barr[] = uploadFile.getBytes();
-				final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-				nowDate = sdf.format(new Date());
-				path = Paths.get(fileUploadLocation + File.separator + nowDate);
-				//if directory exists?
-				if (!Files.exists(path))
+				for (final MultipartFile file : uploadFile)
 				{
-					try
+					final byte barr[] = file.getBytes();
+					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+					nowDate = sdf.format(new Date());
+					path = Paths.get(fileUploadLocation + File.separator + nowDate);
+					//if directory exists?
+					if (!Files.exists(path))
 					{
-						Files.createDirectories(path);
+						try
+						{
+							Files.createDirectories(path);
+						}
+						catch (final IOException e)
+						{
+							//fail to create directory
+							LOG.error("Exception ,While creating the Directory " + e.getMessage());
+						}
 					}
-					catch (final IOException e)
-					{
-						//fail to create directory
-						LOG.error("Exception ,While creating the Directory " + e.getMessage());
-					}
+					filelocation = path + File.separator + file.getOriginalFilename();
+					final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
+					bout.write(barr);
+					bout.flush();
+					bout.close();
+					LOG.debug("FileUploadLocation   :" + filelocation);
+					filelocations.add(filelocation);
 				}
-				filelocation = path + File.separator + uploadFile.getOriginalFilename();
-				final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
-				bout.write(barr);
-				bout.flush();
-				bout.close();
-				LOG.debug("FileUploadLocation   :" + filelocation);
 			}
 			catch (final Exception e)
 			{
 				LOG.error("Exception is:" + e);
 				filelocation = "error";
+				filelocations.add(filelocation);
 			}
-
 		}
-		return filelocation;
+
+		return String.join(",", filelocations);
 	}
 
+	@RequestMapping(value = "/webOrderlines", method = RequestMethod.GET)
+	public @ResponseBody WebFormOrder getChildrens(
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
+			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode, final Model model)
+			throws CMSItemNotFoundException
+	{
+		WebFormOrder form = new WebFormOrder();
+		final int pageSize = configurationService.getConfiguration().getInt(MessageConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
+		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
+		form = mplWebFormFacade.getWebOrderLines(pageableData);
+
+		return form;
+	}
 }

@@ -173,7 +173,7 @@ public final class MessageConstants
 	public static final String MEDIA_CODE = "brand.media.code";
 	public static final String SITE_NAME = "site.name";
 	public static final String EMAIL_URL = "update_Email_url";
-	
+
 	public static final String CANCEL_LOCAL_PROP = "orderHistory.cancel";
 	public static final String RETURN_LOCAL_PROP = "orderHistory.return";
 
@@ -211,7 +211,7 @@ public final class MessageConstants
 	public static final String GOOGLEUSER = "google";
 	public static final String USER_LOGIN_TYPE = "userLoginType";
 	public static final String NPSFEEDBACK_SAVE_ERROR = "text.nps.feedback.failure";
-    public static final String SUCCESS = "success";
+	public static final String SUCCESS = "success";
 	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
 	public static final String UPDATED = "Updated";
 	public static final String VALIDATE_ERROR = "Validation Error";
@@ -228,4 +228,6 @@ public final class MessageConstants
 	//Luxury Gigya
 	public static final String LUXURY_GIGYA_APIKEY = "luxury.gigya.apikey";
 	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
+
+	public static final String WEBFORM_ORDER_HISTORY_PAGESIZE = "webform.order.pagesize.defaultValue";
 }
