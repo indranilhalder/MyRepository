@@ -29,6 +29,7 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Helper;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
@@ -60,6 +61,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -82,6 +84,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private ExternalTaxesService externalTaxesService;
 	private List<CommercePlaceOrderMethodHook> commercePlaceOrderMethodHooks;
 	private ConfigurationService configurationService;
+	private MplVoucherService mplVoucherService;
+
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
 	/*
@@ -186,7 +190,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 			//TISPRD-958
 
-			final OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
+			OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
 
 			//TISPRO-540
 			final boolean isValidOrder = checkOrder(orderModel);
@@ -264,6 +268,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					Double totalPrice = Double.valueOf(0.0);
 
 
+
+
 					if (deliveryCostPromotionApplied)
 					{
 						totalPrice = fetchTotalPriceForDelvCostPromo(orderModel);
@@ -281,6 +287,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						LOG.error("Failed to calculate order [" + orderModel + "]", ex);
 					}
+
+					orderModel = (OrderModel) getMplVoucherService().modifyDiscountValues(orderModel);
+
 					final Double totalPriceWithconv = Double.valueOf(totalPrice.doubleValue()
 							+ orderModel.getDeliveryCost().doubleValue() + orderModel.getConvenienceCharges().doubleValue());
 
@@ -293,7 +302,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					//					orderModel.setTotalPrice(totalPrice);
 					//				}
 
-					//orderModel.setTotalPrice(totalPrice);
+					//*****This is Needed for Cart and Coupon Integration**//
+					//**************Please do not Close***************//
+
+					orderModel.setTotalPrice(totalPrice);
+
+					//*****This is Needed for Cart and Coupon Integration**//
+
 					//orderModel.setTotalPrice(totalPriceWithconv);
 					orderModel.setDeliveryCost(Double.valueOf(getDeliveryCost(orderModel)));
 					orderModel.setTotalPriceWithConv(totalPriceWithconv);
@@ -592,6 +607,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		double deliveryCost = 0.0D;
 		double promoDiscount = 0.0D;
 		double couponDiscount = 0.0D;
+		double cartcouponDiscount = 0.0D;
 
 		if (CollectionUtils.isNotEmpty(entries))
 		{
@@ -606,6 +622,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 								: (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
 					}
 
+					cartcouponDiscount += (null == oModel.getCartCouponValue() ? 0.0d : oModel.getCartCouponValue().doubleValue());
 					couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
 					promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d
 							: oModel.getTotalProductLevelDisc().doubleValue())
@@ -616,7 +633,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			LOG.info("promoDiscount for order entry in getTotalDiscount is = " + promoDiscount);
 			LOG.info("couponDiscount for order entry in getTotalDiscount is = " + couponDiscount);
 
-			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount);
+			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount + cartcouponDiscount);
 			LOG.info("discount for order entry in getTotalDiscount is = " + discount);
 		}
 		return discount;
@@ -913,24 +930,19 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
 				getVoucherService().getAppliedVouchers(cartModel));
 
+		List<AbstractOrderEntryModel> orderEntryList = null;
+
 		if (CollectionUtils.isNotEmpty(voucherList) && CollectionUtils.isEmpty(getVoucherService().getAppliedVouchers(orderModel)))
 		{
+			orderEntryList = new ArrayList<AbstractOrderEntryModel>();
+
 			LOG.error(
 					"Coupon present in cartmodel but NOT present ordermodel ---- Applying Coupon and resetting the Custom Fields on ordermodel");
 
-			//			final DiscountModel discountCart = voucherList.get(0);
-			//			if (discountCart instanceof PromotionVoucherModel)
-			//			{
-			//				final PromotionVoucherModel promotionVoucher = (PromotionVoucherModel) discountCart;
-			//				appliedCouponCode = promotionVoucher.getVoucherCode();
-			//			}
-
-			//Apply voucher on order with coupon code from cart
-			//getVoucherService().redeemVoucher(appliedCouponCode, orderModel);
-			//Set custom attributes of order from cart
 			for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
 			{
-				if (cartEntry.getNetAmountAfterAllDisc().doubleValue() > 0D && StringUtils.isNotEmpty(cartEntry.getCouponCode()))
+				if (cartEntry.getNetAmountAfterAllDisc().doubleValue() > 0D
+						&& (StringUtils.isNotEmpty(cartEntry.getCouponCode()) || StringUtils.isNotEmpty(cartEntry.getCartCouponCode())))
 				{
 					for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 					{
@@ -939,6 +951,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							//appliedCouponCode = cartEntry.getCouponCode();
 							orderEntry.setCouponCode(cartEntry.getCouponCode());
 							orderEntry.setCouponValue(cartEntry.getCouponValue());
+
+							orderEntry.setCartCouponCode(cartEntry.getCartCouponCode());
+							orderEntry.setCartCouponValue(cartEntry.getCartCouponValue());
 
 							//TPR-7408 starts here
 							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreOnePercentage())))
@@ -955,9 +970,24 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							}
 							//TPR-7408 ends here
 
+							orderEntryList.add(orderEntry);
+
 						}
 					}
 				}
+			}
+
+			try
+			{
+				if (CollectionUtils.isNotEmpty(orderEntryList))
+				{
+					getModelService().saveAll(orderEntryList);
+				}
+			}
+			catch (final ModelSavingException exception)
+			{
+				LOG.error("Error in Saving Entry Data Method : updateOrderForCoupon Class: Place Order Startegy"
+						+ exception.getMessage());
 			}
 			//getVoucherService().redeemVoucher(appliedCouponCode, orderModel);
 		}
@@ -1146,6 +1176,23 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	public void setPriceBreakupService(final PriceBreakupService priceBreakupService)
 	{
 		this.priceBreakupService = priceBreakupService;
+	}
+
+	/**
+	 * @return the mplVoucherService
+	 */
+	public MplVoucherService getMplVoucherService()
+	{
+		return mplVoucherService;
+	}
+
+	/**
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
+	 */
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
+	{
+		this.mplVoucherService = mplVoucherService;
 	}
 
 

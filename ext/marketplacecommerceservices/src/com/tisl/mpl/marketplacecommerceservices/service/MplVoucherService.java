@@ -62,7 +62,8 @@ public interface MplVoucherService
 	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
-	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
+	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel,
+			AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param voucher
@@ -218,11 +219,21 @@ public interface MplVoucherService
 	 * @return AbstractOrderModel
 	 */
 	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel, VoucherModel second);
-	
+
+
 	/**
 	 * @param abstractOrderModel
 	 * @param voucherModel
 	 * @return double
 	 */
 	public double getVoucherDiscountValue(AbstractOrderModel abstractOrderModel, VoucherModel voucherModel);
+
+
+	/**
+	 * Modify Discount Values
+	 *
+	 * @param cartModel
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel);
 }

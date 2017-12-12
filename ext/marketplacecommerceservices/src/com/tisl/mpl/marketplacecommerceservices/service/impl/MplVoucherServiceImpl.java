@@ -2572,6 +2572,22 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		return couponvalue;
 	}
 
+	private double getCartCouponDiscount(final List<AbstractOrderEntryModel> entries)
+	{
+		refreshOrderEntries(entries);
+		double couponvalue = 0;
+		if (CollectionUtils.isNotEmpty(entries))
+		{
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final double val = (null != entry.getCartCouponValue() && entry.getCartCouponValue().doubleValue() > 0)
+						? entry.getCartCouponValue().doubleValue() : 0;
+				couponvalue += val;
+			}
+		}
+		return couponvalue;
+	}
+
 
 	@Override
 	public Tuple2<Boolean, String> isUserVoucherPresent(final List<DiscountModel> discounts)
@@ -2627,6 +2643,89 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			globalDiscountList.add(cartdiscountValue);
 		}
 
+
+		oModel.setGlobalDiscountValues(globalDiscountList);
+		getModelService().save(oModel);
+		getModelService().refresh(oModel);
+
+		return oModel;
+	}
+
+
+
+	@Override
+	public AbstractOrderModel modifyDiscountValues(final AbstractOrderModel oModel)
+	{
+		getModelService().refresh(oModel);
+		final List<DiscountValue> globalDiscountList = new ArrayList<>(oModel.getGlobalDiscountValues());
+
+		final List<DiscountModel> voucherList = new ArrayList<>(oModel.getDiscounts());
+
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			for (final DiscountModel discount : voucherList)
+			{
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				{
+
+					final PromotionVoucherModel voucher = (PromotionVoucherModel) discount;
+					final String code = voucher.getCode();
+					final double couponDiscount = getCouponDiscount(oModel.getEntries());
+					DiscountValue cartdiscountValue = null;
+
+					if (CollectionUtils.isNotEmpty(globalDiscountList))
+					{
+						final Iterator iter = globalDiscountList.iterator();
+						while (iter.hasNext())
+						{
+							final DiscountValue discountVal = (DiscountValue) iter.next();
+							if (discountVal.getCode().equalsIgnoreCase(code))
+							{
+								cartdiscountValue = new DiscountValue(discountVal.getCode(), couponDiscount, true, couponDiscount,
+										discountVal.getCurrencyIsoCode());
+
+								iter.remove();
+								break;
+							}
+						}
+
+						globalDiscountList.add(cartdiscountValue);
+					}
+
+
+				}
+				else if (discount instanceof MplCartOfferVoucherModel)
+				{
+
+					final PromotionVoucherModel voucher = (PromotionVoucherModel) discount;
+					final String code = voucher.getCode();
+					final double couponDiscount = getCartCouponDiscount(oModel.getEntries());
+					DiscountValue cartdiscountValue = null;
+
+					if (CollectionUtils.isNotEmpty(globalDiscountList))
+					{
+						final Iterator iter = globalDiscountList.iterator();
+						while (iter.hasNext())
+						{
+							final DiscountValue discountVal = (DiscountValue) iter.next();
+							if (discountVal.getCode().equalsIgnoreCase(code))
+							{
+								cartdiscountValue = new DiscountValue(discountVal.getCode(), couponDiscount, true, couponDiscount,
+										discountVal.getCurrencyIsoCode());
+
+								iter.remove();
+								break;
+							}
+						}
+
+						globalDiscountList.add(cartdiscountValue);
+					}
+
+
+				}
+			}
+
+		}
 
 		oModel.setGlobalDiscountValues(globalDiscountList);
 		getModelService().save(oModel);
