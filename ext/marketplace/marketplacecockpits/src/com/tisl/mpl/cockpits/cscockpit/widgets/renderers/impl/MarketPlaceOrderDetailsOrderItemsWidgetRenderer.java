@@ -206,7 +206,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		
 		listheader = new Listheader(LabelUtils.getLabel(widget, "chargeBack",
 				new Object[0]));
-		listheader.setWidth("75px");
+		listheader.setWidth("135px");
 		row.appendChild(listheader);
 		
 		// TPR-7412 end
@@ -403,15 +403,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		else{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
-		// ChargeBack start
-		String chargeback = entrymodel.getChargeback()!= null ? entrymodel.getChargeback().toString() : NumberUtils.DOUBLE_ZERO.toString();
-		if (StringUtils.isNotBlank(chargeback)){
-			row.appendChild(new Listcell(chargeback));
-		}
-		else{
-			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
-		} 
-		// ChargeBack End
       //	TPR-7412 start	
 		String utrNoORarnNo=null;
 		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
@@ -441,6 +432,15 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 			}
+		 // ChargeBack start
+			String chargeback = entrymodel.getChargeback()!= null ? entrymodel.getChargeback().toString() : NumberUtils.DOUBLE_ZERO.toString();
+			if (StringUtils.isNotBlank(chargeback)){
+				row.appendChild(new Listcell(chargeback));
+			}
+			else{
+				row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+			} 
+		// ChargeBack End   
 		    
 		}
 		else

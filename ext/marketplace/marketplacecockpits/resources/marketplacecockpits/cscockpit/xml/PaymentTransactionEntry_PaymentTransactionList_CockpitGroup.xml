@@ -15,8 +15,12 @@
 		<custom class="de.hybris.platform.cscockpit.services.config.impl.PaymentTransactionEntryCurrencyAmountColumn" name="Amount" visible="true">
 			<label key="cscockpit.PaymentTransactionEntry.amount" />
 		</custom>
+		
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.ChargeBackStatus" name="Transaction status" visible="true">
+			<label key="cscockpit.PaymentTransactionEntry.Transactionstatus" />
+		</custom>
 
-		<property qualifier="PaymentTransactionEntry.transactionStatus" visible="true"/>
+		<!-- <property qualifier="PaymentTransactionEntry.transactionStatus" visible="true"/> -->
 		<property qualifier="PaymentTransactionEntry.transactionStatusDetails" visible="true"/>
 	</group>
 </list-view>
