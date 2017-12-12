@@ -674,7 +674,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final DiscountValue discount = (DiscountValue) iter.next();
 			if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
 			{
-				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
+				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discountAmt, discount.getCurrencyIsoCode());
 
 				iter.remove();
 				break;
@@ -1597,7 +1597,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final DiscountValue discount = (DiscountValue) iter.next();
 			if (discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
 			{
-				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
+				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discountAmt, discount.getCurrencyIsoCode());
 
 				iter.remove();
 				break;
