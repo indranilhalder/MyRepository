@@ -52,7 +52,6 @@ import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.facades.cms.data.WebFormOrder;
 import com.tisl.mpl.facades.webform.MplWebFormFacade;
-import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.web.forms.TicketWebForm;
@@ -224,7 +223,8 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			throws CMSItemNotFoundException
 	{
 		WebFormOrder form = new WebFormOrder();
-		final int pageSize = configurationService.getConfiguration().getInt(MessageConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
+		final int pageSize = configurationService.getConfiguration().getInt(
+				MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
 		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 		form = mplWebFormFacade.getWebOrderLines(pageableData);
 

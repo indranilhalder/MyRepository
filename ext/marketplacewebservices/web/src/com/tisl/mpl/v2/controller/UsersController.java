@@ -8962,18 +8962,16 @@ public class UsersController extends BaseCommerceController
 
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER, ROLE_CLIENT })
-	@RequestMapping(value = "/{userId}/getTicketSubmitForm", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/{userId}/submitTicket", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public CRMWebFormDataResponse getTicketSubmitForm(@PathVariable final String userId,
 			@RequestParam(required = false) final CRMWebFormDataRequest crmTicket) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
 		CRMWebFormDataResponse crmWebFormDTO = new CRMWebFormDataResponse();
-
 		try
 		{
 			crmWebFormDTO = mplWebFormFacade.getTicketSubmitForm(crmTicket);
-
 
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -9603,10 +9601,10 @@ public class UsersController extends BaseCommerceController
 	}
 
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
-	@RequestMapping(value = "/{userId}/orderhistorylistRequest", method = RequestMethod.GET)
+	@RequestMapping(value = "/{userId}/getOrderTransactions", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrdersHistoryList(@RequestParam(required = false) final String statuses,
-			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
+			@RequestParam final int currentPage,
 			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sort,
 			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
 			@RequestParam(required = false) final ShowMode showMode)
@@ -9618,13 +9616,11 @@ public class UsersController extends BaseCommerceController
 		OrderData orderDetails = null;
 		try
 		{
+			final int pageSizeConFig = configurationService.getConfiguration().getInt(
+					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
 
-			final int pageSizeConFig = Integer.parseInt(configurationService.getConfiguration()
-					.getString(MarketplacewebservicesConstants.ORDER_HISTORY_PAGESIZE_WEBSERVICE, "10").trim());
-
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSizeConFig, sort,
-					showMode);
-
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+					pageSizeConFig, sort, showMode);
 
 			if (null == searchPageDataParentOrder.getResults())
 			{
@@ -9636,15 +9632,11 @@ public class UsersController extends BaseCommerceController
 				for (final OrderHistoryData orderData : searchPageDataParentOrder.getResults())
 				{
 					orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderData.getCode());
-
-
 					//this scenario will occour only when product is missing in order entries.
 					if (null == orderDetails)
 					{
 						continue;
 					}
-
-
 					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
 					if (null != order)
 					{
