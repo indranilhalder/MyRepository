@@ -1089,7 +1089,7 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
 .confirmation .right-block .block .totals li.shippingthanks>span.amt {
 	display: table-cell;
     float: right;
-    text-align: right;
+    padding-top: 14px;	/* added for TISCSS-57 */
 }
 /* end for TISCSS-57 */
 #total {
