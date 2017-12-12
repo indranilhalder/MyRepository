@@ -2543,10 +2543,51 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getProductPromoCode()))
 			{
 				orderEntryModel.setProductPromoCode(abstractOrderEntryModel.getProductPromoCode());
+				orderEntryModel.setProductPromoCode(abstractOrderEntryModel.getProductPromoCode());
+				//TPR-7408 starts here
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getPromoProductCostCentreOnePercentage())))
+				{
+					orderEntryModel.setPromoProductCostCentreOnePercentage(abstractOrderEntryModel
+							.getPromoProductCostCentreOnePercentage());
+				}
+
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getPromoProductCostCentreTwoPercentage())))
+				{
+					orderEntryModel.setPromoProductCostCentreTwoPercentage(abstractOrderEntryModel
+							.getPromoProductCostCentreTwoPercentage());
+				}
+
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getPromoProductCostCentreThreePercentage())))
+				{
+					orderEntryModel.setPromoProductCostCentreThreePercentage(abstractOrderEntryModel
+							.getPromoProductCostCentreThreePercentage());
+				}
+				LOG.debug("Succesfully inserted the promoProductDetails");
+
+				//TPR-7408 ends here
 			}
 			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getCartPromoCode()))
 			{
 				orderEntryModel.setCartPromoCode(abstractOrderEntryModel.getCartPromoCode());
+				//TPR-7408 starts here
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getPromoCartCostCentreOnePercentage())))
+				{
+					orderEntryModel.setPromoCartCostCentreOnePercentage(abstractOrderEntryModel.getPromoCartCostCentreOnePercentage());
+				}
+
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getPromoCartCostCentreTwoPercentage())))
+				{
+					orderEntryModel.setPromoCartCostCentreTwoPercentage(abstractOrderEntryModel.getPromoCartCostCentreTwoPercentage());
+				}
+
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getPromoCartCostCentreThreePercentage())))
+				{
+					orderEntryModel.setPromoCartCostCentreThreePercentage(abstractOrderEntryModel
+							.getPromoCartCostCentreThreePercentage());
+				}
+
+				LOG.debug("Succesfully inserted the cartProductDetails");
+				//TPR-7408 ends here
 			}
 
 			if (abstractOrderEntryModel.getDeliveryPointOfService() != null)
@@ -2573,6 +2614,24 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getCouponCode()))
 			{
 				orderEntryModel.setCouponCode(abstractOrderEntryModel.getCouponCode());
+				//TPR-7408 starts here
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getCouponCostCentreOnePercentage())))
+				{
+					orderEntryModel.setCouponCostCentreOnePercentage(abstractOrderEntryModel.getCouponCostCentreOnePercentage());
+				}
+
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getCouponCostCentreTwoPercentage())))
+				{
+					orderEntryModel.setCouponCostCentreTwoPercentage(abstractOrderEntryModel.getCouponCostCentreTwoPercentage());
+				}
+
+				if (StringUtils.isNotEmpty(String.valueOf(abstractOrderEntryModel.getCouponCostCentreThreePercentage())))
+				{
+					orderEntryModel.setCouponCostCentreThreePercentage(abstractOrderEntryModel.getCouponCostCentreThreePercentage());
+				}
+
+				LOG.debug("Succesfully inserted the cartCouponDetails");
+				//TPR-7408 ends here
 			}
 			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getSellerForCoupon()))
 			{
@@ -2615,6 +2674,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setCartLevelDisc(Double.valueOf(0));
 				orderEntryModel.setCouponCode("");
 				orderEntryModel.setCouponValue(Double.valueOf(0));
+
+				//TPR-7408 starts here
+				orderEntryModel.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+				orderEntryModel.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+				orderEntryModel.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+				//TPR-7408 ends here
+
 				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(0.01));
 				//orderEntryModel.setBasePrice(Double.valueOf(0.01));
 				orderEntryModel.setTotalPrice(Double.valueOf(0.01));

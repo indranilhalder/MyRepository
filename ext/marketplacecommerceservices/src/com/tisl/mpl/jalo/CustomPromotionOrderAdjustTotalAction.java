@@ -176,6 +176,14 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		double percentageDiscount = 0.00D;
 		double totalvalidproductsPricevalue = 0.00D;
 		String cartPromoCode = null;
+
+		//TPR-7408 starts here
+		Double promoCostCentreOnePercentage = null;
+		Double promoCostCentreTwoPercentage = null;
+		Double promoCostCentreThreePercentage = null;
+		//TPR-7408 ends here
+
+
 		boolean isPercentageDisc = false;
 
 
@@ -205,6 +213,43 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 			isSellerPresent = ctx.getAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER) != null ? ((Boolean) ctx
 					.getAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER)).booleanValue() : false;
 			//CR Changes : TPR-715 ends
+
+			//TPR-7408 starts here
+			//			promoCostCentreOnePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) : null;
+			//
+			//			promoCostCentreTwoPercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) : null;
+			//
+			//			promoCostCentreThreePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) : null;
+
+			try
+			{
+				promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTREONE);
+				promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETWO);
+
+				promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+
+			}
+			catch (final JaloInvalidParameterException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (final JaloSecurityException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			//TPR-7408 ends here
+
+
+
 		}
 
 		//CR Changes : TPR-715
@@ -264,6 +309,16 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 					}
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
+
+					//TPR-7408 starts here
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+							promoCostCentreOnePercentage);
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+							promoCostCentreTwoPercentage);
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+							promoCostCentreThreePercentage);
+					//TPR-7408 ends here
+
 					cartEntry
 							.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,

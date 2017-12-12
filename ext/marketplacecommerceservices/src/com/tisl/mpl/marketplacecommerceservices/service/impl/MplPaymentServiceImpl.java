@@ -2122,6 +2122,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+
 						//getModelService().save(entry);
 					}
 					getModelService().saveAll(entryList);
@@ -2212,6 +2219,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+
 						//getModelService().save(entry);
 					}
 					getModelService().saveAll(entryList);

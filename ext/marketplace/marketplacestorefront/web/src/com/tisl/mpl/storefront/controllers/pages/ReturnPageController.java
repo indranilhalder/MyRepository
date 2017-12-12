@@ -213,6 +213,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
 			//TATA-823 end
+			//TPR-5954
+			ProductModel productModel = null;
+			//final String L2Cat = null;
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -221,7 +224,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
 					returnProductMap.put(subOrderEntry.getTransactionId(), returnOrderEntry);
 
-					final ProductModel productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
+					productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
 					List<RichAttributeModel> productRichAttributeModel = null;
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
@@ -281,6 +284,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				}
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 			}
+
 			final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
 
 
@@ -296,6 +300,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+
+
+
 			//JWLSPCUAT-282
 			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			//if logistic partner not available for the given pin code
@@ -487,7 +494,6 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnData.setUssid(returnForm.getUssid());
 				returnData.setReturnMethod(returnForm.getReturnMethod());
 				returnData.setReturnFulfillmentMode(returnFulfillmentType);
-
 				// TPR-4134
 				if (null != returnForm.getReverseSeal())
 				{

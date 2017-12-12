@@ -36,6 +36,20 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
 
+	//TPR-7408 starts here
+	public static final String COSTCENTREONE = "promoCostCentreOnePercentage".intern();
+	public static final String COSTCENTRETWO = "promoCostCentreTwoPercentage".intern();
+	public static final String COSTCENTRETHREE = "promoCostCentreThreePercentage".intern();
+
+	public static final String PRODUCTPROMOCOSTCENTREONE = "promoProductCostCentreOnePercentage".intern();
+	public static final String PRODUCTPROMOCOSTCENTRETWO = "promoProductCostCentreTwoPercentage".intern();
+	public static final String PRODUCTPROMOCOSTCENTRETHREE = "promoProductCostCentreThreePercentage".intern();
+	public static final String CARTPROMOCOSTCENTREONE = "promoCartCostCentreOnePercentage".intern();
+	public static final String CARTPROMOCOSTCENTRETWO = "promoCartCostCentreTwoPercentage".intern();
+	public static final String CARTPROMOCOSTCENTRETHREE = "promoCartCostCentreThreePercentage".intern();
+	//TPR-7408 ends here
+
+
 	//TPR-6272 starts here IQA
 	public static final String COMMACONSTANT = ",";
 	public static final int PLATFORM_ZERO = 0;
@@ -1905,6 +1919,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
 
+	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+	public static final String PROMOURL = "promoUrl".intern();
+	public static final String BUNDLEPROMOLINKTEXT = "bundlePromoLinkText".intern();
+
+
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
 	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
@@ -2306,6 +2325,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+	public static final String FINISHED = "FINISHED";
+	//SDI-2924
+	public static final String FPC_DURATION_SKIP = "mpl.forwardpaymentcleanup.duration.skip";
+	public static final String FPC_DURATION_THRESHOLD = "mpl.forwardpaymentcleanup.duration.threshold";
+	public static final String FPC_DURATION_OVERLAP = "mpl.forwardpaymentcleanup.duration.overlap";
 	//PR-4 || Refund sms cron job
 	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
 	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";

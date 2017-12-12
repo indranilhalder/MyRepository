@@ -1118,6 +1118,8 @@ $(document).ready(function(){
 	}
 	
 });	
+
+
 //TPR-7140		
 function hideRspShowRss(){
 	var hideRsp=$("#hideRsp").text();
@@ -1130,3 +1132,4 @@ function hideRspShowRss(){
 		$(".selectReturnMethod.self input[name='returnMethod']").prop( "checked", true );
 	}
 }
+
