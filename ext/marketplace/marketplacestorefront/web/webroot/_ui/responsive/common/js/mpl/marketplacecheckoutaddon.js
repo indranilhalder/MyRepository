@@ -6294,6 +6294,8 @@ $(".edit_address").click(function(){
  		});
 	return false;
 });
+
+
 });
 //TPR-1215
 $(".regular-radio").click(function(){
@@ -10888,6 +10890,14 @@ function recalculateCart() {
 					}
 					else
 					{
+						//Select voucher offer in multi step payment page
+						$('input[type=radio][value="'+response.voucherDiscount.voucherCode+'"]').first().attr('checked','checked');
+						var radioId = $('input[type=radio][name=offer_name]:checked').attr('id');
+						$('.promoapplied').removeClass("promoapplied"); 
+						$("#"+radioId).addClass("promoapplied");
+						
+				    	//Select voucher offer in multi step payment page
+						
 						$("#couponApplied").css("display","block");
 		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
 		 				// $("#couponFieldId").attr('disabled','disabled');
