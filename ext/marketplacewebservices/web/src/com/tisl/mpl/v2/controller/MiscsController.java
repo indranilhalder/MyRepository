@@ -2780,9 +2780,9 @@ public class MiscsController extends BaseController
 
 
 
-	@RequestMapping(value = "/crmFileUpload", method = RequestMethod.POST)
+	@RequestMapping(value = "/{baseSiteId}/crmFileUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public FileUploadResponseData getcrmFileUploadRequest(@RequestParam("file") final MultipartFile multipartFile)
+	public FileUploadResponseData getcrmFileUploadRequest(@RequestParam("uploadFile") final MultipartFile multipartFile)
 			throws WebserviceValidationException
 	{
 		final FileUploadResponseData crmFileUploaddata = new FileUploadResponseData();
