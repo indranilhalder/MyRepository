@@ -4360,7 +4360,10 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 		/* width: 46%; */
 	}
 	body.page-cartPage .cart.wrapper .checkout-types li {
+		/* start of TISCSS-76 */
 		width: auto;
+		width: 48%;
+		/* end of TISCSS-76 */
 		float: right;
 	}
 	body.page-cartPage .cart.wrapper .checkout-types li#checkout-id.onlyCheckout
@@ -4374,7 +4377,6 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 	body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButton,
 		body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types button.express-checkout-button
 		{
-		/* width: 100%; */
 		margin: 5px 0 0;
 	}
 	body.page-cartPage .cart.wrapper .product-block li.header {
@@ -4578,10 +4580,11 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 	body.page-cartPage .cart.wrapper .product-block {
 		margin-top: 20px;
 	}
-	/* body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButton
-		{
+	/* start change of TISCSS-76 */
+	body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButton {
 		width: 100%;
-	} */
+	}
+	/* end change of TISCSS-76 */
 	body.page-cartPage .MyBagHeadingDesktop {
 		text-align: center;
 		text-transform: capitalize;
@@ -5737,7 +5740,10 @@ li.item>ul li:last-child {
 	}
 	.MyBag-buttons .checkout-types {
 		position: absolute;
-		width: auto;
+		/* start for TISCSS-76 */
+		/* width: auto; */
+		width: 46%;
+		/* end for TISCSS-76 */
 		bottom: 0;
 	}
 }
