@@ -1800,20 +1800,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
 				{
 					final Double mrp = oModel.getMrp();
-					final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
-							: oModel.getNetAmountAfterAllDisc());
-					final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
+					final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
+							? oModel.getCartLevelDisc() : Double.valueOf(0);
+					final Double couponDiscount = (null != oModel.getCartCouponValue()
+							&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
+					final Double totalPrice = oModel.getTotalPrice();
+					final int quantity = oModel.getQuantity().intValue();
 
-					final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-							: entryPrice.doubleValue();
+					final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
-					totalDiscount += (mrp.doubleValue() - value);
+					totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
+
 				}
 			}
-
-			//			totalDiscount = (totalMRP)
-			//					- (null == cartModel.getTotalPriceWithConv() ? 0.0d : cartModel.getTotalPriceWithConv().doubleValue())
-			//					- couponDiscount - (null == cartModel.getDeliveryCost() ? 0.0d : cartModel.getDeliveryCost().doubleValue());
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
@@ -1828,20 +1827,20 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
 				{
 					final Double mrp = oModel.getMrp();
-					final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
-							: oModel.getNetAmountAfterAllDisc());
-					final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
+					final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
+							? oModel.getCartLevelDisc() : Double.valueOf(0);
+					final Double couponDiscount = (null != oModel.getCartCouponValue()
+							&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
+					final Double totalPrice = oModel.getTotalPrice();
+					final int quantity = oModel.getQuantity().intValue();
 
-					final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-							: entryPrice.doubleValue();
+					final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
-					totalDiscount += (mrp.doubleValue() - value);
+					totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
+
+
 				}
 			}
-
-			//			totalDiscount = (totalMRP)
-			//					- (null == orderModel.getTotalPriceWithConv() ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue())
-			//					- couponDiscount - (null == orderModel.getDeliveryCost() ? 0.0d : orderModel.getDeliveryCost().doubleValue());
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv()));

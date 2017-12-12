@@ -8852,6 +8852,11 @@ $("#couponSubmitButton").click(function(){
 			 				$("#couponApplied").css("display","block");
 			 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
 			 				//$("#couponFieldId").attr('disabled','disabled');
+			 				
+			 				if(null!= response.totalDiscount && undefined!= response.totalDiscount && response.totalDiscount.value != 0){
+			 					document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;
+			 				}
+			 				
 			 				$('#couponFieldId').attr('readonly', true);
 			 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
 			 				$('#couponMessage').show();
@@ -8940,6 +8945,11 @@ function removeAppliedVoucher(){
 // 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
 // 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
+ 				
+ 				if(null!= response.totalDiscount && undefined!= response.totalDiscount && response.totalDiscount.value != 0){
+ 					document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;
+ 				}
+
  				// $("#couponFieldId").attr('disabled','enabled');
  				//TPR-4461 starts here
 //				$('#couponPaymentRestrictionMessage').hide();
