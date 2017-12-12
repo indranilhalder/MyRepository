@@ -3873,7 +3873,8 @@ public class ProductPageController extends MidPageController
 	@ResponseBody
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/getOfferMessage", method = RequestMethod.GET)
 	public JSONObject populateOfferMessage(
-			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLERID) final String sellerId)
 			throws com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
