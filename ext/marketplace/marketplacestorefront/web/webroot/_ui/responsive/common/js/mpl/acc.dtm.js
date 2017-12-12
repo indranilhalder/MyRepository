@@ -696,9 +696,15 @@ $(document).ready(function(){
 				   name : footer_link
 				}	
 			}
-		if(typeof(_satellite) !="undefined"){
+		/*if(typeof(_satellite) !="undefined"){
 			   _satellite.track('footer_link_clicks');
-			}
+			}*/
+		setTimeout(function() {
+			if(typeof(_satellite) !="undefined"){
+				   _satellite.track('footer_link_clicks');
+				}
+			}, 1500);
+		
 	})
 	
 	//for header clicks
@@ -707,7 +713,26 @@ $(document).ready(function(){
 	var link_name =  $(this).find("a").eq(0).attr("href");
 	var id_name =  $(this).find("a").eq(0).attr("id");
 	var class_name =$(this).find("span").eq(0).attr("class");
-
+	
+	if(id_name == "socialLogin" || class_name == "material-icons"){
+		/*if(typeof _satellite !="undefined"){
+		    _satellite.track('header_link_clicks');
+		}*/
+		header_link = "login";
+	}
+	else if(link_name == "/cart"){
+		/*if(typeof _satellite !="undefined"){
+		     _satellite.track('header_link_clicks');
+		}*/
+			header_link = "my_bag";
+	}
+	else{
+	/*	if(typeof _satellite !="undefined"){
+	      _satellite.track('header_link_clicks');
+		}*/
+	   header_link = $(this).find('a').eq(0).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"").trim();
+	}
+	
 	digitalData = {
 			header : {
 				link : {
@@ -716,24 +741,12 @@ $(document).ready(function(){
 			}
 		}
 	
-	if(id_name == "socialLogin" || class_name == "material-icons"){
+	setTimeout(function() {
 		if(typeof _satellite !="undefined"){
-		    _satellite.track('header_link_clicks');
-		}
-		header_link = "login";
-	}
-	else if(link_name == "/cart"){
-		if(typeof _satellite !="undefined"){
-		     _satellite.track('header_link_clicks');
-		}
-			header_link = "my_bag";
-	}
-	else{
-		if(typeof _satellite !="undefined"){
-	      _satellite.track('header_link_clicks');
-		}
-	   header_link = $(this).find('a').eq(0).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"").trim();
-	}
+		      _satellite.track('header_link_clicks');
+			}
+		}, 1500);
+	
 	});
 	
 	/*On Size selection | PDP #29  | tpr- 6301*/ 
@@ -748,9 +761,13 @@ $(document).ready(function(){
 					size : product_size
 			     }
 		   }
-		if(typeof _satellite !="undefined"){
-			_satellite.track('cpj_pdp_product_size');
-		}
+		
+		setTimeout(function() {
+			 if(typeof _satellite !="undefined"){
+				_satellite.track('cpj_pdp_product_size');
+			   }
+			}, 1500);
+		
 	});
 	 // TPR-6029 |quick view  size|serp#39
 	$(document).on('click',"#quickViewVariant > li", function(){
@@ -770,40 +787,70 @@ $(document).ready(function(){
 	});
 	// TPR-6366 | need help starts
 	$(document).on('click',"#up",function(){
-		if(typeof _satellite !="undefined"){
+		/*if(typeof _satellite !="undefined"){
 		  _satellite.track('need_help');
-		}
+		}*/
+		setTimeout(function() {
+			if(typeof _satellite !="undefined"){
+				  _satellite.track('need_help');
+				}
+			}, 1500);
 	 });
 	
 	/*live chat*/
 	$(document).on("click","#chatMe",function(){
-		if(typeof _satellite !="undefined"){
+		/*if(typeof _satellite !="undefined"){
 		  _satellite.track('need_help_live_chat');
-		}
+		}*/
+		setTimeout(function() {
+			if(typeof _satellite !="undefined"){
+				  _satellite.track('need_help_live_chat');
+				}
+			}, 1500);
 	});
 	
 	/*call*/
 	$(document).on("click", "#callMe", function(e) {
-		if(typeof _satellite !="undefined"){
+		/*if(typeof _satellite !="undefined"){
 		   _satellite.track('need_help_call');
-		}
+		}*/
+		setTimeout(function() {
+			if(typeof _satellite !="undefined"){
+				   _satellite.track('need_help_call');
+				}
+			}, 1500);
 	});
 	
 	$(document).on('click','#gcbChatRegister',function(){
-		if(typeof _satellite !="undefined"){
+		/*if(typeof _satellite !="undefined"){
 		  _satellite.track('need_help_connect');
-		}
+		}*/
+		setTimeout(function() {
+			if(typeof _satellite !="undefined"){
+				  _satellite.track('need_help_connect');
+				}
+			}, 1500);
 	});
 	
     $(document).on('click','.gwc-chat-registration-skip #gcbChatSkipRegistration',function(){
-    	if(typeof _satellite !="undefined"){
+    	/*if(typeof _satellite !="undefined"){
     	    _satellite.track('need_help_cancel');
-    	}
+    	}*/
+    	setTimeout(function() {
+    		if(typeof _satellite !="undefined"){
+        	    _satellite.track('need_help_cancel');
+        	}
+			}, 1500);
 	});
     $(document).on('click','.button_fwd_wrapper.actions .bcancel',function(){
-    	if(typeof _satellite !="undefined"){
+    	/*if(typeof _satellite !="undefined"){
     	    _satellite.track('need_help_cancel');
-    	}
+    	}*/
+    	setTimeout(function() {
+    		if(typeof _satellite !="undefined"){
+        	    _satellite.track('need_help_cancel');
+        	}
+			}, 1500);
     })
 	//need help ends
     
@@ -945,10 +992,14 @@ function dtmAddProductToBag(triggerValue){
 	if( pageType == "Product Details" || pageType == "View Seller Page"){
 		eventName+="pdp_"+triggerValue;
 	}
-	if(typeof _satellite !="undefined"){
+	/*if(typeof _satellite !="undefined"){
      	_satellite.track(eventName);
-	}
-
+	}*/
+	setTimeout(function() {
+		if(typeof _satellite !="undefined"){
+	     	_satellite.track(eventName);
+		}
+		}, 1500);
 }
 
 //for pdp pincode check
@@ -979,14 +1030,25 @@ function dtmPdpPincode(msg,productCode,pin){
 			}
 		}
 
-		if(typeof _satellite != "undefined"){
+	/*	if(typeof _satellite != "undefined"){
 			if(msg == 'success'){
 				_satellite.track('pin_successful');
 			}	
 			else{
 				_satellite.track('pin_failed');
 			}	
-		} 
+		}*/ 
+		
+		setTimeout(function() {
+			if(typeof _satellite != "undefined"){
+				if(msg == 'success'){
+					_satellite.track('pin_successful');
+				}	
+				else{
+					_satellite.track('pin_failed');
+				}	
+			} 
+			}, 1500);
 	}
 	catch(e){
 		console.log("error fn:dtmPdpPincode"+e.message);
