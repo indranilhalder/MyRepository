@@ -2361,7 +2361,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//TPR-7448
 	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
-	public static final String VOUCHERCARDPEROFRMXAMTQUERY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYMNTH = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYDAY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'DD') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYWEEK = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'IW') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYYEAR = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'YY') AND SYSDATE";
 	public static final String JUSPAYCARDSTATUSQRY = "select {pk} from {JuspayCardStatus} where {guid}=?guid and {customerId}=?customerId order by {creationtime} desc";
 	public static final String CARDREFERENCENO = "cardRefNo".intern();
 

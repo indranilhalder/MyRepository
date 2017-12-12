@@ -3538,7 +3538,7 @@
 		<typegroup name="JuspayCardStatus">
 		 <itemtype code="JuspayCardStatus" autocreate="true"
 				generate="true" jaloclass="com.tisl.mpl.core.jalo.JuspayCardStatus">
-				<deployment table="MplJuspayCrdStatus" typecode="1603" />
+				<deployment table="MplJuspayCrdStatus" typecode="16003" />
 		 		<attributes>
 					<attribute qualifier="card_token" type="java.lang.String"
 						autocreate="true" generate="true">
