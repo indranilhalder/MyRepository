@@ -11216,12 +11216,12 @@ function showCardPerOfferFailureMsg(response)
 	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
 	case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
 	case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[3]+"."; 
-				cardPerOfferUpdatePrice(arr);
+				cardPerOfferUpdatePrice(arr,"promoVoucher");
 				break;
 	case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
 	case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
 	case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[3]+"."; 
-				cardPerOfferUpdatePrice(arr);
+				cardPerOfferUpdatePrice(arr,"cartOffer");
 				break;
 	default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
 	}
@@ -11234,7 +11234,7 @@ function showCardPerOfferFailureMsg(response)
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 }
-function cardPerOfferUpdatePrice(arr)
+function cardPerOfferUpdatePrice(arr,couponType)
 {
 	try{
 		document.getElementById("totalWithConvField").innerHTML=arr[2];
@@ -11245,12 +11245,12 @@ function cardPerOfferUpdatePrice(arr)
 		document.getElementById("outstanding-amount-mobile").innerHTML=arr[2];
 		$("#codAmount").text(arr[2]);
 			
-		if(arr[4] != null || arr[4] != 0 || arr[4] != ""){
+		if(couponType=="cartOffer" && (arr[4] != null || arr[4] != 0 || arr[4] != "")){
 			$("#promotionApplied").css("display","block");
 			//document.getElementById("promotion").innerHTML=arr[3];
 			$("#promotion").html(arr[4]);
 		}
-		if(arr[3] != null || arr[3] != 0 || arr[3] != ""){
+		if(couponType=="promoVoucher" && (arr[3] != null || arr[3] != 0 || arr[3] != "")){
 			//document.getElementById("couponValue").innerHTML=arr[2];
 			$("#couponValue").html(arr[3]);
 		}
