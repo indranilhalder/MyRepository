@@ -814,7 +814,7 @@ public class MplCouponController
 			{
 				CartModel cartModel = getCartService().getSessionCart();
 
-				cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel);
+				cartModel = (CartModel) getMplCouponFacade().removeCartCoupon(cartModel);
 
 				isCartVoucherRemoved = checkforCartVoucherRemoved(cartModel.getDiscounts());
 
@@ -825,7 +825,7 @@ public class MplCouponController
 			}
 			else
 			{
-				orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel);
+				orderModel = (OrderModel) getMplCouponFacade().removeCartCoupon(orderModel);
 
 				isCartVoucherRemoved = checkforCartVoucherRemoved(orderModel.getDiscounts());
 

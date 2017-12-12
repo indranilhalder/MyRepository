@@ -21,6 +21,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -180,6 +181,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		//Calculate when orderModel is present
 		else if (null != orderModel)
 		{
+			getModelService().refresh(orderModel);
 			//Find out all the vouchers for the selected cart
 			final List<VoucherData> voucherDataList = getVouchersForAbstractOrder(orderModel, null);
 
@@ -349,7 +351,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws NumberFormatException
 	 */
 	@Override
-	public boolean applyVoucher(final String voucherCode, CartModel cartModel, final OrderModel orderModel)
+	public boolean applyVoucher(final String voucherCode, CartModel cartModel, OrderModel orderModel)
 			throws VoucherOperationException, EtailNonBusinessExceptions //Added orderModel for TPR-629
 	{
 		boolean checkFlag = false;
@@ -550,6 +552,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (isVoucherRedeemable)
 					{
 						recalculateCartForCoupon(null, orderModel); //Recalculates cart after applying voucher
+						orderModel = (OrderModel) getMplVoucherService().getUpdatedDiscountValues(orderModel, voucher);
 
 						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
 								orderModel); //Finds applicable order entries
@@ -1533,7 +1536,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *            ,EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean applyCartVoucher(final String voucherCode, final CartModel cartModel, final OrderModel orderModel)
+	public boolean applyCartVoucher(final String voucherCode, CartModel cartModel, OrderModel orderModel)
 			throws VoucherOperationException, EtailNonBusinessExceptions
 	{
 
@@ -1639,6 +1642,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (isVoucherRedeemable)
 					{
 						recalculateCartForCoupon(cartModel, null); //Recalculates cart after applying voucher
+						cartModel = (CartModel) getMplVoucherService().getUpdatedCartDiscountValues(cartModel, voucher);
+
 						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
 								cartModel); //Finds applicable order entries
 
@@ -1729,6 +1734,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (isVoucherRedeemable)
 					{
 						recalculateCartForCoupon(null, orderModel);
+						orderModel = (OrderModel) getMplVoucherService().getUpdatedCartDiscountValues(orderModel, voucher);
 
 						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher,
 								orderModel);
@@ -1787,6 +1793,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		if (null != cartModel)
 		{
+			getModelService().refresh(cartModel);
+
 			if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 			{
 				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
@@ -1813,6 +1821,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		else if (null != orderModel)
 		{
+			getModelService().refresh(orderModel);
+
 			if (CollectionUtils.isNotEmpty(orderModel.getEntries()))
 			{
 				for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
@@ -1952,7 +1962,130 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 
 
+	/**
+	 * Code to Remove Cart Voucher
+	 *
+	 * @param oModel
+	 */
+	@Override
+	public AbstractOrderModel removeCartCoupon(final AbstractOrderModel oModel)
+	{
+		final List<DiscountModel> discountList = oModel.getDiscounts();
+		boolean isPresent = false;
+		MplCartOfferVoucherModel voucher = null;
 
+		double productPrice = 0.0;
+		String voucherCode = MarketplacecommerceservicesConstants.EMPTY;
+
+		boolean isUserCouponPresent = false;
+
+
+		try
+		{
+			if (CollectionUtils.isNotEmpty(discountList))
+			{
+				for (final DiscountModel discount : discountList)
+				{
+					if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplCartOfferVoucherModel))
+					{
+						isPresent = true;
+						voucher = (MplCartOfferVoucherModel) discount;
+						voucherCode = voucher.getVoucherCode();
+						break;
+					}
+				}
+			}
+
+
+			if (isPresent)
+			{
+				if (oModel instanceof CartModel)
+				{
+					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, oModel);
+
+					productPrice = getTotalProductPrice(applicableOrderEntryList);
+
+					getMplVoucherService().releaseCartVoucherAfterCheck((CartModel) oModel, null, voucherCode,
+							Double.valueOf(productPrice), applicableOrderEntryList, discountList);
+
+					getModelService().refresh(oModel);
+
+					final Tuple2<Boolean, VoucherModel> couponObj = isUserCouponPresent(oModel.getDiscounts());
+					isUserCouponPresent = couponObj.getFirst().booleanValue();
+					if (isUserCouponPresent)
+					{
+						CartModel cartModel = (CartModel) oModel;
+						cartModel = (CartModel) getMplVoucherService().modifyDiscountValues(cartModel, couponObj.getSecond());
+						final List<AbstractOrderEntryModel> entryList = getOrderEntryModelFromVouEntries(couponObj.getSecond(),
+								cartModel);
+						checkVoucherApplicability(voucherCode, couponObj.getSecond(), cartModel, null, entryList);
+						setApportionedValueForVoucher(couponObj.getSecond(), cartModel, voucherCode, entryList);
+					}
+				}
+				else if (oModel instanceof OrderModel)
+				{
+					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, oModel);
+
+					productPrice = getTotalProductPrice(applicableOrderEntryList);
+
+					getMplVoucherService().releaseCartVoucherAfterCheck(null, (OrderModel) oModel, voucherCode,
+							Double.valueOf(productPrice), applicableOrderEntryList, discountList);
+
+					getModelService().refresh(oModel);
+					final Tuple2<Boolean, VoucherModel> couponObj = isUserCouponPresent(oModel.getDiscounts());
+					isUserCouponPresent = couponObj.getFirst().booleanValue();
+					if (isUserCouponPresent)
+					{
+						OrderModel orderModel = (OrderModel) oModel;
+						orderModel = (OrderModel) getMplVoucherService().modifyDiscountValues(orderModel, couponObj.getSecond());
+						final List<AbstractOrderEntryModel> entryList = getOrderEntryModelFromVouEntries(couponObj.getSecond(),
+								orderModel);
+						checkVoucherApplicability(voucherCode, couponObj.getSecond(), null, orderModel, entryList);
+						setApportionedValueForVoucher(couponObj.getSecond(), orderModel, voucherCode, entryList);
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.debug("Exception" + exception.getMessage());
+		}
+
+		getModelService().refresh(oModel);
+
+		return oModel;
+	}
+
+
+
+	/**
+	 * Check for User Coupon
+	 *
+	 * @param discountList
+	 * @return isPresent
+	 */
+	private Tuple2<Boolean, VoucherModel> isUserCouponPresent(final List<DiscountModel> discountList)
+	{
+		boolean isPresent = false;
+		VoucherModel oModel = null;
+
+		if (CollectionUtils.isNotEmpty(discountList))
+		{
+			for (final DiscountModel discount : discountList)
+			{
+				if ((discount instanceof PromotionVoucherModel) && !(discount instanceof MplCartOfferVoucherModel))
+				{
+					isPresent = true;
+					oModel = (PromotionVoucherModel) discount;
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, VoucherModel> cartCouponObj = new Tuple2(Boolean.valueOf(isPresent), oModel);
+
+		return cartCouponObj;
+	}
 
 
 
