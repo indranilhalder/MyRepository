@@ -223,6 +223,7 @@ import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
+import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
 import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
@@ -232,6 +233,7 @@ import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
 import com.tisl.mpl.wsdto.GetCustomerDetailDto;
+import com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
@@ -247,6 +249,7 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.ParentChildReason;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
@@ -291,7 +294,8 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 	private CheckoutCustomerStrategy checkoutCustomerStrategy;
-
+	@Resource(name = "ordersHelper")
+	private OrdersHelper ordersHelper;
 	@Resource(name = "modelService")
 	private ModelService modelService;
 	@Resource(name = "customerGroupFacade")
@@ -9596,6 +9600,122 @@ public class UsersController extends BaseCommerceController
 			return output;
 		}
 		return output;
+	}
+
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
+	@RequestMapping(value = "/{userId}/orderhistorylistRequest", method = RequestMethod.GET)
+	@ResponseBody
+	public GetOrderHistoryListWsDTO getOrdersHistoryList(@RequestParam(required = false) final String statuses,
+			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sort,
+			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final ShowMode showMode)
+	{
+
+		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
+		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
+		int orderCount = 0, start = 0, end = 0;
+		OrderData orderDetails = null;
+		try
+		{
+
+			final int pageSizeConFig = Integer.parseInt(configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.ORDER_HISTORY_PAGESIZE_WEBSERVICE, "10").trim());
+
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSizeConFig, sort,
+					showMode);
+
+
+			if (null == searchPageDataParentOrder.getResults())
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9046);
+			}
+			else
+			{
+				//LOG.info("Number of Orders " + orderCount);
+				for (final OrderHistoryData orderData : searchPageDataParentOrder.getResults())
+				{
+					orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderData.getCode());
+
+
+					//this scenario will occour only when product is missing in order entries.
+					if (null == orderDetails)
+					{
+						continue;
+					}
+
+
+					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					if (null != order)
+					{
+						orderTrackingListWsDTO.add(order);
+						orderCount++;
+					}
+				}
+				if (orderTrackingListWsDTO.size() > 0)
+				{
+					orderHistoryListData.setTotalNoOfOrders(Integer.valueOf(orderCount));
+
+					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+
+					start = currentPage * pageSizeConFig;
+					end = start + pageSizeConFig;
+
+					if (end > orderTrackingListWsDTO.size())
+					{
+						end = orderTrackingListWsDTO.size();
+					}
+					if (start < orderTrackingListWsDTO.size() && start <= end)
+					{
+						orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
+						orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else
+					{
+						orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
+					}
+				}
+				else
+				{
+					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
+				}
+
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				orderHistoryListData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				orderHistoryListData.setErrorCode(e.getErrorCode());
+			}
+			orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				orderHistoryListData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				orderHistoryListData.setErrorCode(e.getErrorCode());
+			}
+			orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			orderHistoryListData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			orderHistoryListData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderHistoryListData;
 	}
 
 
