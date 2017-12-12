@@ -63,6 +63,8 @@ function viewPaymentCredit(){
 		$('#continue_payment_after_validate').show();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
+	$("#codtermsconditions").hide();	
+	$("#prepaidtermsconditions").show();
 //});
 }
 
@@ -115,6 +117,8 @@ function viewPaymentDebit(){
 		$('#continue_payment_after_validate').show();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
+	$("#codtermsconditions").hide();	
+	$("#prepaidtermsconditions").show();
 //});
 }
 
@@ -152,6 +156,8 @@ function viewPaymentNetbanking(){
 		$('#continue_payment_after_validate').show();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
+	$("#codtermsconditions").hide();	
+	$("#prepaidtermsconditions").show();
 //});
 }
 
@@ -193,6 +199,9 @@ function viewPaymentCOD(){
 		} else {
 			$('#continue_payment_after_validate').show();
 		}	
+	$("#codtermsconditions").show();	
+	$("#prepaidtermsconditions").hide();
+		
 //});
 }
 
@@ -229,6 +238,8 @@ function viewPaymentEMI(){
 			$('#continue_payment_after_validate').show();
 		}	
 		resetConvChargeElsewhere(); //REMOVE CONV CHARGE 	
+		$("#codtermsconditions").hide();	
+		$("#prepaidtermsconditions").show();
 //});
 }
 // Mode button click function ends
@@ -524,6 +535,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+				$("#codtermsconditions").hide();	
 				
 				return false;
 			}
@@ -555,6 +567,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+				$("#codtermsconditions").hide();	
 				//applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_TSHIP")
@@ -575,6 +588,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+				$("#codtermsconditions").hide();	
 				//applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
@@ -595,6 +609,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+				$("#codtermsconditions").hide();	
 				//applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
@@ -615,6 +630,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+				$("#codtermsconditions").hide();	
 				//applyPromotion(null,"none","none");
 			}
 			else{
@@ -637,6 +653,7 @@ function displayCODForm()
 								} else {
 									$('#continue_payment_after_validate').show();
 								}	
+								$("#codtermsconditions").show();	
 								
 								$("#OTPGenerationErrorMessage").css("display","none");
 								$("#sendOTPNumber, #convCharge").css("display","block");
@@ -10820,6 +10837,7 @@ function getlistofEMIbanks(){
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+				$("#prepaidtermsconditions").hide();	
 			}
 			
 		},
@@ -10985,7 +11003,7 @@ function loadTermsAsperEmiBank()
 	if(selectedBank!="Select" && selectedBank!="") {
 		
 	$("#is_emi").val("true");
-  $("#emi_bank").val(selectedBank);
+    $("#emi_bank").val(selectedBank);
 	$("#card").css("display","none");
 	$("#dcHeader").css("display","none");
 	$("#ccHeader").css("display","none");
@@ -11046,6 +11064,7 @@ function loadTermsAsperEmiBank()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
+                $("#prepaidtermsconditions").hide();
 			}
 		},
 		error : function(resp) {
