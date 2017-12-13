@@ -384,10 +384,8 @@ ACC.WebForm = {
 		var total=$('#totalPages').val();
 		
 		if ( $(".selectOrderSec").length ) {
-			if(parseInt(total) < parseInt(current) ){
+			if(parseInt(total) <= parseInt(current) ){
 				$('#viewMoreLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"')");
-			}else{
-				$('#viewMoreLink').hide();
 			}
 			
 			if(parseInt(current) > 1){
@@ -397,7 +395,25 @@ ACC.WebForm = {
 			}
 			//call default first page
 			ACC.WebForm.loadOrderLines(current);
+			ACC.WebForm.attachOrderDropEvent();
 		}
+	},
+	attachOrderDropEvent : function(){
+		$('.selectedProduct').click(function(){
+	    	$(this).next('.orderDrop').toggle();
+	    });
+		$('.selectOrders .orderDrop li').each(function(){
+			$(this).click(function(){
+	          var prodHtml = $(this).html();
+	          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
+	          $('.orderDrop').toggle();
+	       // set value
+				$('#orderCode').val($(this).attr("data-orderCode"));
+				$('#subOrderCode').val($(this).attr("data-subOrderCode"));
+				$('#transactionId').val($(this).attr("data-transactionId"));
+			});
+
+		});
 	},
 
 };
@@ -408,7 +424,7 @@ $(document).ready(function() {
 	ACC.WebForm.issueDropDown();
 	ACC.WebForm.sendTicket();
 	ACC.WebForm.loadPaginationLink();
-
+	ACC.WebForm.attachOrderDropEvent();
 	
 	$('.contCustCareBtn').click(function(){
 		$(this).toggleClass('dActive');
@@ -422,21 +438,6 @@ $(document).ready(function() {
 	});
 	$('#closeCustCarePopBox').click(function(){
 		$(this).parent().parent('.issueQuryPopUp').hide();
-	});
-    $('.selectedProduct').click(function(){
-    	$(this).next('.orderDrop').toggle();
-    });
-	$('.selectOrders .orderDrop li').each(function(){
-		$(this).click(function(){
-          var prodHtml = $(this).html();
-          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
-          $('.orderDrop').toggle();
-       // set value
-			$('#orderCode').val($(this).attr("data-orderCode"));
-			$('#subOrderCode').val($(this).attr("data-subOrderCode"));
-			$('#transactionId').val($(this).attr("data-transactionId"));
-		});
-
 	});
 	/*custum selecbox*/
 	 $(".customSelect").each(function(){

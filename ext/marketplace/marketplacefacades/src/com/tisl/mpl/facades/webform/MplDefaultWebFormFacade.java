@@ -371,7 +371,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	public WebFormOrder getWebOrderLines(final PageableData pageableData)
 	{
 		final WebFormOrder form = new WebFormOrder();
-		List<ImageData> orderEntryImages = new ArrayList<>();
 		List<WebFormOrderLine> orderLines = new ArrayList<WebFormOrderLine>();
 		try
 		{
@@ -422,8 +421,15 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 							}
 							if (line.getProduct() != null && CollectionUtils.isNotEmpty(line.getProduct().getImages()))
 							{
-								orderEntryImages = (List) line.getProduct().getImages();
-								orderLine.setProdImageURL(orderEntryImages.get(0).getUrl());
+								for (final ImageData imageData : line.getProduct().getImages())
+								{
+									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									{
+										orderLine.setProdImageURL(imageData.getUrl());
+										break;
+									}
+
+								}
 							}
 							if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
 							{
