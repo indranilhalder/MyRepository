@@ -8771,6 +8771,10 @@ $("#couponSubmitButton").click(function(){
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
+	 				//TISHS-53
+	 				$("#couponSubmitButton").prop('disabled', false);
+	 				$("#couponSubmitButton").css("opacity","1");
+	 				
 	 				if(response.redeemErrorMsg=="Price_exceeded")
 	 				{
 	 					$("#priceCouponError").css("display","block");
