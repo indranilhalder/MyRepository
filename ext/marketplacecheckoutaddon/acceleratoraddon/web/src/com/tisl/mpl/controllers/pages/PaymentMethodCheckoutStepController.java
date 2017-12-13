@@ -4828,6 +4828,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
 								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+						mplVoucherService.updateCardPerOfferVoucherEntry(orderModel);//TPR-7448
 					}
 				}
 				else if (null != orderModel.getPaymentInfo())
@@ -5680,7 +5681,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

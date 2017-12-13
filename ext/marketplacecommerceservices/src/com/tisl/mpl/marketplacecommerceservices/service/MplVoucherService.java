@@ -62,8 +62,7 @@ public interface MplVoucherService
 	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
-	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel,
-			AbstractOrderModel abstractOrderModel);
+	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param voucher
@@ -236,4 +235,25 @@ public interface MplVoucherService
 	 * @return AbstractOrderModel
 	 */
 	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel);
+
+
+	/**
+	 * @param orderModel
+	 */
+	public void cardPerOfferVoucherEntry(OrderModel orderModel);
+
+	/**
+	 * @param abstractOrderModel
+	 */
+	public void removeCardPerOfferVoucherInvalidation(AbstractOrderModel abstractOrderModel);
+
+	/**
+	 * @param orderModel
+	 */
+	public void removeCPOVoucherInvalidation(OrderModel orderModel);
+
+	/**
+	 * @param orderModel
+	 */
+	public void updateCardPerOfferVoucherEntry(OrderModel orderModel);
 }
