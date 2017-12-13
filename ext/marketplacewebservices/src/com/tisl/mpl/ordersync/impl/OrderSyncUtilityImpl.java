@@ -151,7 +151,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private Map<String, OrderStatus> orderStatusMapping;
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	private final StringBuffer callTrace = new StringBuffer(5000);
 
@@ -159,7 +159,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
