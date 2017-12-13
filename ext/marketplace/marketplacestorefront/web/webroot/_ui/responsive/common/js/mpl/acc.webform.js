@@ -368,7 +368,7 @@ ACC.WebForm = {
 					});
 					
 					$(".orderDrop").html(htmlOption);
-					
+					ACC.WebForm.attachOrderDropEvent();
 				}
 				$("#totalPages").val(data.totalOrderLines);
 				$("#currentPage").val(currentPage);
@@ -379,6 +379,7 @@ ACC.WebForm = {
 				if(currentPage > 1 ){
 					$('#viewBackLink').show();
 				}
+				
 				
 			},
 			error : function(resp) {
@@ -404,7 +405,7 @@ ACC.WebForm = {
 			}
 			//call default first page
 			ACC.WebForm.loadOrderLines(current);
-			ACC.WebForm.attachOrderDropEvent();
+			//ACC.WebForm.attachOrderDropEvent();
 		}
 	},
 	attachOrderDropEvent : function(){
