@@ -76,7 +76,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -106,6 +106,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				node.setCreateTicketAllowed(Boolean.valueOf(crmModel.isCreateTicketAllowed()));
 				node.setNodeDisplayAllowed(Boolean.valueOf(crmModel.isNodeDisplayAllowed()));
 				node.setTicketAnswer(crmModel.getTicketAnswer());
+				node.setParentNode(crmModel.getNodeParent());
 				nodes.add(node);
 			}
 
@@ -152,7 +153,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -233,7 +234,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
