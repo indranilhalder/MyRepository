@@ -698,3 +698,9 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 ;AkamaiRefreshCronJob;akamaiRefreshCronJob;false;en
 ;ProductSpecificIndexerCronJob;productSpecificIndexerCronJob;false;en
 ;SolrSlaveReplicatorJob;solrSlaveReplicatorJob;false;en
+
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;gigyaDataPullingJob;gigyaDataPullingJob;false;en 
+
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate[dateformat=yyyyMMddHHmmss]
+;gigyaDataPullingJob;;20150720000000
