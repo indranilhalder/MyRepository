@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ <!-- General setup -->
+    <bean id="baseDirectoryMarketplaceShippingPrice" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-shippingprice" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    <file:inbound-channel-adapter id="batchFilesMarketplaceShippingPrice" directory="#{baseDirectoryMarketplaceShippingPrice}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    <file:outbound-gateway request-channel="batchFilesMarketplaceShippingPrice" reply-channel="batchFilesMarketplaceShippingPriceProc"
+        directory="#{baseDirectoryMarketplaceShippingPrice}/processing" delete-source-files="true" />
+	
+ <int:service-activator input-channel="batchFilesMarketplaceShippingPriceProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceShippingPriceHeaderSetupTask" method="execute" />
+ 
+ 
+
+ 	<bean id="MarketplaceShippingPriceHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceShippingPrice" />
+    </bean>   
+ 
+	
+	
+     <!-- Transformer converters mappings -->
+    
+    
+    
+     <!-- Transformer for Product Approval when price is given Import -->      
+    <bean id="batchHomedeliveryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mplshippingprice"
+    p:converter-ref="batchHomedeliveryConverter"/>
+    	 
+
+ 	 <!-- Converters -->
+ 	
+ 	
+        
+        <!-- Converter for Product Approval when price is given Import --> 
+        <bean id="batchHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+
+					$inCurrency=INR
+					$value=value[default='0.0']
+                    $homedelivery=deliveryMode(code)[unique=true][default='home-delivery'] 
+                    $zone=zone(code)[default='in']
+                    $currency=currency(isocode)[default=$inCurrency]
+                    $minimum=minimum[default='0.0']
+                    $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
+				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true](sellerArticleSKU,$catalogVersion);productCode[unique=true](code,$catalogVersion);$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{2};{+1};{+0};home-delivery
+            		;{3};{+1};{+0};express-delivery
+            		;{4};{+1};{+0};click-and-collect
+            		</value>
+        </property>
+        <!-- <property name="rowFilter">
+			<bean class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexRowFilter">
+				Row Filter to check Price Greater than 0 
+				<property name="expression" value="Double.valueOf(row[4]) > 0"/>
+			</bean>
+		</property> -->
+         </bean>
+         
+
+        </beans>
+

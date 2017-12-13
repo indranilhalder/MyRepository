@@ -79,6 +79,19 @@
 		<property name="typeCode" value="SellerRestriction" />
 	</bean>
 	
+	
+	<!-- TPR-7408 starts here -->
+	<bean id="couponCostCentreInterceptor" class="com.tisl.mpl.interceptor.CouponCostCentreValidateInterceptor">
+	<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="couponCostCentreInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="couponCostCentreInterceptor" />
+		<property name="typeCode" value="Voucher" />
+	</bean>
+	<!-- TPR-7408 ends here -->
+	
+	
 	<!-- CouponSaveInterceptor ends -->		
 	
 	<!-- Added for custom coupon service -->

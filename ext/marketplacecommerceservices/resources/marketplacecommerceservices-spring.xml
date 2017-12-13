@@ -2000,6 +2000,20 @@
  	</bean>
  	<!-- Bean for Promotion Job ends-->
 
+
+	<!-- Bean for Indexing timestamp update in MplConfiguration  Starts -->
+	
+	<bean id="mplLastIndexTimeService" 
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplLastIndexTimeServiceImpl"/>
+		
+	<bean id="mplLastIndexTimeDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplLastIndexTimeDaoImpl"/>
+		
+	<bean id="updateLastRunTimeJob" class="com.tisl.mpl.marketplacecommerceservices.jobs.UpdateLastRunTimeJob" autowire="byName"/>
+	
+	<!-- Bean for Indexing timestamp update in MplConfiguration  ends  -->
+	
+	
 	<!-- LW-245 -->
 	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
 		parent="abstractJobPerformable"
@@ -2417,6 +2431,17 @@
 	
 	<!--  End TPR-6945 -->
 
+	<!-- SDI-2924 -->
+	<bean id="forwardPaymentCleanUpService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ForwardPaymentCleanUpServiceImpl" />
+	<bean id="forwardPaymentCleanUpDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ForwardPaymentCleanUpDaoImpl">
+	</bean>
+	<!-- TPR-7415 -->
+    <bean id="omsSubmissionPendingReportJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.OmsSubmissionPendingReportJob"
+		autowire="byName">
+	</bean>
     
 </beans>
 

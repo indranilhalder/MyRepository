@@ -1894,6 +1894,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		boolean isFineJew = false;
 		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
+		//final String L2Cat = null;
+
 		try
 		{
 			//OrderEntryData subOrderEntry = new OrderEntryData();
@@ -2023,6 +2025,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			}
 			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
+
 			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			if (!isFineJew)
 			{

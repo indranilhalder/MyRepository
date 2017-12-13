@@ -84,6 +84,7 @@ import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
 
+
 /**
  *
  * @author TCS
@@ -225,6 +226,27 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonData> getCatSpecificRetReason(final String L2CatCode) throws Exception
+	{
+		return mplOrderService.getCatspecificRetReason(L2CatCode);
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonData> getSubReasonCode(final String parentReturnReasonCode) throws Exception
+	{
+		return mplOrderService.fetchSubReturnReason(parentReturnReasonCode);
+	}
+
+	//TPR-5954
+	@Override
+	public String fetchReasonDesc(final String reasonCode) throws Exception
+	{
+		return mplOrderService.fetchReasonDesc(reasonCode);
 	}
 
 	@Override

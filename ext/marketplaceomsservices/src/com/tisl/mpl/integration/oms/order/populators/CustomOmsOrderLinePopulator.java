@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.Registry;
@@ -14,6 +15,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.text.ParseException;
@@ -54,6 +56,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
+
 /**
  * @author TCS
  *
@@ -88,14 +91,43 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	@Autowired
 	private MplSellerMasterService mplSellerMasterService;
 
+
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
+
+
+	//TPR-7408 starts here
+	@Autowired
+	private ConfigurationService configurationService;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	//TPR-7408 ends here
+
 
 	//	@Resource(name = "productService")
 	//	private ProductService productService;
 	//
 	//	@Resource(name = "catalogVersionService")
 	//	private CatalogVersionService catalogVersionService;
+
+	@Resource(name = "catalogVersionService")
+	private CatalogVersionService catalogVersionService;
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -296,6 +328,12 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setQuantity(quantity);
 			target.setQuantityUnassigned(quantity); // this value is for OOTB
 
+
+			//TPR-7408 starts here
+			final String costcentreflag = configurationService.getConfiguration().getString("promotion.coupon.costcentre.flag");
+			LOG.debug("The costCentreFlag is " + costcentreflag);
+			//TPR-7408 ends here
+
 			// for promotion dummy value added
 			final List<Promotion> promotions = new ArrayList<Promotion>();
 			if (source.getProductPromoCode() != null)
@@ -303,6 +341,31 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final Promotion prodPromotion = new Promotion();
 				prodPromotion.setPromotionCode(source.getProductPromoCode());
 				prodPromotion.setPromotionValue(source.getTotalProductLevelDisc().toString());
+
+				// TPR-7408 starts here
+				if (StringUtils.isNotEmpty(costcentreflag) && StringUtils.equalsIgnoreCase(costcentreflag, "false"))
+				{
+					if (StringUtils.isNotEmpty(source.getPromoProductCostCentreOnePercentage().toString()))
+					{
+						prodPromotion.setCostFunction1(Float.valueOf(source.getPromoProductCostCentreOnePercentage().toString()));
+						LOG.debug("The PromoProductCostCentreOnePercentage is "
+								+ source.getPromoProductCostCentreOnePercentage().toString());
+					}
+					if (StringUtils.isNotEmpty(source.getPromoProductCostCentreTwoPercentage().toString()))
+					{
+						prodPromotion.setCostFunction2(Float.valueOf(source.getPromoProductCostCentreTwoPercentage().toString()));
+						LOG.debug("The PromoProductCostCentreTwoPercentage is "
+								+ source.getPromoProductCostCentreTwoPercentage().toString());
+					}
+					if (StringUtils.isNotEmpty(source.getPromoProductCostCentreThreePercentage().toString()))
+					{
+						prodPromotion.setCostFunction3(Float.valueOf(source.getPromoProductCostCentreThreePercentage().toString()));
+						LOG.debug("The PromoProductCostCentreThreePercentage is "
+								+ source.getPromoProductCostCentreThreePercentage().toString());
+					}
+				}
+				// TPR-7408 ends here
+
 				promotions.add(prodPromotion);
 			}
 			else
@@ -314,6 +377,29 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final Promotion cartPromotion = new Promotion();
 				cartPromotion.setPromotionCode(source.getCartPromoCode());
 				cartPromotion.setPromotionValue(source.getCartLevelDisc().toString());
+
+				// TPR-7408 starts here
+				if (StringUtils.isNotEmpty(costcentreflag) && StringUtils.equalsIgnoreCase(costcentreflag, "false"))
+				{
+					if (StringUtils.isNotEmpty(source.getPromoCartCostCentreOnePercentage().toString()))
+					{
+						cartPromotion.setCostFunction1(Float.valueOf(source.getPromoCartCostCentreOnePercentage().toString()));
+						LOG.debug("The PromoCartCostCentreOnePercentage is " + source.getPromoCartCostCentreOnePercentage().toString());
+					}
+					if (StringUtils.isNotEmpty(source.getPromoCartCostCentreTwoPercentage().toString()))
+					{
+						cartPromotion.setCostFunction2(Float.valueOf(source.getPromoCartCostCentreTwoPercentage().toString()));
+						LOG.debug("The PromoCartCostCentreTwoPercentage is " + source.getPromoCartCostCentreTwoPercentage().toString());
+					}
+					if (StringUtils.isNotEmpty(source.getPromoCartCostCentreThreePercentage().toString()))
+					{
+						cartPromotion.setCostFunction3(Float.valueOf(source.getPromoCartCostCentreThreePercentage().toString()));
+						LOG.debug("The PromoCartCostCentreOnePercentage is "
+								+ source.getPromoCartCostCentreThreePercentage().toString());
+					}
+				}
+				// TPR-7408 ends here
+
 				promotions.add(cartPromotion);
 			}
 			else
@@ -335,6 +421,28 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				{
 					coupon.setCouponValue(source.getCouponValue().toString());
 				}
+
+				// TPR-7408 starts here
+
+				if (StringUtils.isNotEmpty(costcentreflag) && StringUtils.equalsIgnoreCase(costcentreflag, "false"))
+				{
+					if (StringUtils.isNotEmpty(source.getCouponCostCentreOnePercentage().toString()))
+					{
+						coupon.setCostFunction1(Float.valueOf(source.getCouponCostCentreOnePercentage().toString()));
+						LOG.debug("The CouponCostCentreOnePercentage is " + source.getCouponCostCentreOnePercentage().toString());
+					}
+					if (StringUtils.isNotEmpty(source.getCouponCostCentreTwoPercentage().toString()))
+					{
+						coupon.setCostFunction2(Float.valueOf(source.getCouponCostCentreTwoPercentage().toString()));
+						LOG.debug("The CouponCostCentreTwoPercentage is " + source.getCouponCostCentreTwoPercentage().toString());
+					}
+					if (StringUtils.isNotEmpty(source.getCouponCostCentreThreePercentage().toString()))
+					{
+						coupon.setCostFunction3(Float.valueOf(source.getCouponCostCentreThreePercentage().toString()));
+						LOG.debug("The CouponCostCentreThreePercentage is " + source.getCouponCostCentreThreePercentage().toString());
+					}
+				}
+				// TPR-7408 ends here
 
 				//coupon.setSellerID(sellerInfoModel.getSellerID());
 				final ArrayList<CouponDto> couponList = new ArrayList<>();
@@ -620,7 +728,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * }
 	 */
 

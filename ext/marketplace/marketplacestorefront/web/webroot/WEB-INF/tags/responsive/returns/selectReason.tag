@@ -118,9 +118,7 @@
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
 							<b><spring:theme code="text.order.returns.reasonvalidation.message"></spring:theme></b> <br/><br/>
 							
-							
-							
-							<form:select name="reasonList" class="reasonSelectBox" path="returnReason">
+							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" >
 								    <option selected='selected' value="NA"><spring:theme code="text.requestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
@@ -128,6 +126,10 @@
 									</c:forEach>									
 							</form:select>
 						</div>
+						
+						<br/><br/>
+						<br/><br/>
+						<br/><br/>
 						
 						<!-- TPR-4134 -->
 						<input type="hidden" id="ifShowReverseSeal" value="${showReverseSeal}">
@@ -150,4 +152,20 @@
 						</div>
 					</div>
 				</div>
-			
+				<!-- <style>
+				.upload-image-title {
+				    cursor: pointer;
+					margin: 10px 18px;
+					color: #a9143c;
+				}
+				#upload-photo {
+				   opacity: 0;
+				   position: absolute;
+				   z-index: -1;
+				}
+				.add-comment-title{
+					color: #a9143c;
+				    font-size: 14px;
+				    margin: 10px 0;
+				}
+				</style> -->
