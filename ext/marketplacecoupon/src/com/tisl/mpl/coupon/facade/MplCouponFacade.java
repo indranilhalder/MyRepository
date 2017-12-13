@@ -228,4 +228,13 @@ public interface MplCouponFacade
 	AbstractOrderModel removeLastCartCoupon(AbstractOrderModel oModel);
 
 
+	/**
+	 * Get Voucher Coupon Code
+	 *
+	 * @param orderModel
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel removeCartCoupon(AbstractOrderModel orderModel);
+
+
 }

@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
@@ -61,7 +62,8 @@ public interface MplVoucherService
 	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
-	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
+	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel,
+			AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param voucher
@@ -186,9 +188,52 @@ public interface MplVoucherService
 	public List<JuspayCardStatusModel> findJuspayCardStatus(String guid, String customerId);
 
 	/**
+	 * Cart/ Order Modified with fresh Discount Values
+	 *
+	 * @param oModel
+	 * @param voucher
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel getUpdatedDiscountValues(AbstractOrderModel oModel, VoucherModel voucher);
+
+	/**
+	 * Cart/ Order Modified with fresh Discount Values
+	 *
+	 * @param cartModel
+	 * @param voucher
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel getUpdatedCartDiscountValues(AbstractOrderModel cartModel, VoucherModel voucher);
+
+	/**
+	 * Check for User Discount Coupons
+	 *
+	 * @param discounts
+	 * @return Tuple2<Boolean, String>
+	 */
+	Tuple2<Boolean, String> isUserVoucherPresent(final List<DiscountModel> discounts);
+
+	/**
+	 * @param cartModel
+	 * @param second
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel, VoucherModel second);
+
+
+	/**
 	 * @param abstractOrderModel
 	 * @param voucherModel
 	 * @return double
 	 */
 	public double getVoucherDiscountValue(AbstractOrderModel abstractOrderModel, VoucherModel voucherModel);
+
+
+	/**
+	 * Modify Discount Values
+	 *
+	 * @param cartModel
+	 * @return AbstractOrderModel
+	 */
+	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel);
 }

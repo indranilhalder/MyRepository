@@ -144,24 +144,7 @@ public class MplCouponController
 
 				if (StringUtils.isNotEmpty(cartCouponCode))
 				{
-					try
-					{
-						final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, cartModel, null);
-						final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(null, cartModel, applyStatus,
-								true, couponCode);
-
-						data.setTotalDiscount(newData.getTotalDiscount());
-						data.setTotalPrice(newData.getTotalPrice());
-
-					}
-					catch (final VoucherOperationException e)
-					{
-						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
-					}
-					catch (final Exception e)
-					{
-						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
-					}
+					data = reapplyCartCoupon(data, cartCouponCode, cartModel);
 				}
 
 			}
@@ -220,6 +203,11 @@ public class MplCouponController
 				{
 					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_CALLCENTRE);
 				}
+
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					data = reapplyCartCoupon(data, cartCouponCode, cartModel);
+				}
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
@@ -277,24 +265,7 @@ public class MplCouponController
 
 				if (StringUtils.isNotEmpty(cartCouponCode))
 				{
-					try
-					{
-						final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, null, orderModel);
-						final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(orderModel, null, applyStatus,
-								true, couponCode);
-
-						data.setTotalDiscount(newData.getTotalDiscount());
-						data.setTotalPrice(newData.getTotalPrice());
-
-					}
-					catch (final VoucherOperationException e)
-					{
-						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
-					}
-					catch (final Exception e)
-					{
-						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
-					}
+					data = reapplyCartCoupon(data, cartCouponCode, orderModel);
 				}
 
 			}
@@ -347,6 +318,11 @@ public class MplCouponController
 				{
 					data.setRedeemErrorMsg(MarketplacecouponConstants.CHANNELINVALID_CALLCENTRE);
 				}
+
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					data = reapplyCartCoupon(data, cartCouponCode, orderModel);
+				}
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
@@ -370,6 +346,76 @@ public class MplCouponController
 		}
 
 		return data;
+	}
+
+
+
+	/**
+	 * Re apply Cart Coupon
+	 *
+	 * @param data
+	 * @param cartCouponCode
+	 * @param cartModel
+	 * @return dataPojo
+	 */
+	private VoucherDiscountData reapplyCartCoupon(final VoucherDiscountData data, final String cartCouponCode,
+			final CartModel cartModel)
+	{
+		final VoucherDiscountData dataPojo = data;
+		try
+		{
+			final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, cartModel, null);
+			final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(null, cartModel, applyStatus, true,
+					cartCouponCode);
+
+			data.setTotalDiscount(newData.getTotalDiscount());
+			data.setTotalPrice(newData.getTotalPrice());
+
+		}
+		catch (final VoucherOperationException e)
+		{
+			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+
+		return dataPojo;
+	}
+
+	/**
+	 * Re apply Cart Coupon
+	 *
+	 * @param data
+	 * @param cartCouponCode
+	 * @param oModel
+	 * @return dataPojo
+	 */
+	private VoucherDiscountData reapplyCartCoupon(final VoucherDiscountData data, final String cartCouponCode,
+			final OrderModel oModel)
+	{
+		final VoucherDiscountData dataPojo = data;
+		try
+		{
+			final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, null, oModel);
+			final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(oModel, null, applyStatus, true,
+					cartCouponCode);
+
+			data.setTotalDiscount(newData.getTotalDiscount());
+			data.setTotalPrice(newData.getTotalPrice());
+
+		}
+		catch (final VoucherOperationException e)
+		{
+			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+
+		return dataPojo;
 	}
 
 
@@ -814,7 +860,7 @@ public class MplCouponController
 			{
 				CartModel cartModel = getCartService().getSessionCart();
 
-				cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel);
+				cartModel = (CartModel) getMplCouponFacade().removeCartCoupon(cartModel);
 
 				isCartVoucherRemoved = checkforCartVoucherRemoved(cartModel.getDiscounts());
 
@@ -825,7 +871,7 @@ public class MplCouponController
 			}
 			else
 			{
-				orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel);
+				orderModel = (OrderModel) getMplCouponFacade().removeCartCoupon(orderModel);
 
 				isCartVoucherRemoved = checkforCartVoucherRemoved(orderModel.getDiscounts());
 

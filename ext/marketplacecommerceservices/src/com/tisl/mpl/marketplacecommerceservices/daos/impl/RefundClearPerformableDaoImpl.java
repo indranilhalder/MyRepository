@@ -9,6 +9,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -44,6 +44,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public MplConfigurationModel getCronDetails(final String code)
 	{
+		MplConfigurationModel mplConfigurationModel = new MplConfigurationModel();
 		try
 		{
 			final String queryString = //
@@ -54,12 +55,14 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
-			return getFlexibleSearchService().<MplConfigurationModel> searchUnique(query);
+			mplConfigurationModel = getFlexibleSearchService().<MplConfigurationModel> searchUnique(query);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+
+		return mplConfigurationModel;
 
 	}
 
@@ -69,6 +72,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<OrderModel> getRefundClearOrders(final Date date, final Date startDate)
 	{
+		List<OrderModel> orderModelList = new ArrayList<OrderModel>();
 		try
 		{
 
@@ -85,14 +89,15 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 					MarketplacecommerceservicesConstants.SUBORDER);
 
 			//fetching order list from DB using flexible search query
-			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
+			orderModelList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
 
-			return orderList;
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+
+		return orderModelList;
 	}
 
 
@@ -100,6 +105,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditDataList(final String guid)
 	{
+		List<MplPaymentAuditModel> paymentAuditModelList = new ArrayList<MplPaymentAuditModel>();
 		try
 		{
 			final String queryString = //
@@ -109,12 +115,13 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 					+ MplPaymentAuditModel.CARTGUID + "} = ?guid";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("guid", guid);
-			return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
+			paymentAuditModelList = getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+		return paymentAuditModelList;
 
 	}
 
@@ -146,6 +153,8 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<RefundTransactionMappingModel> fetchRefundTransactionMapping(final String juspayRefundId)
 	{
+
+		List<RefundTransactionMappingModel> refundTransactionMappingList = new ArrayList<RefundTransactionMappingModel>();
 		try
 		{
 			final String queryString = //
@@ -155,19 +164,21 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 					+ "{rtm." + RefundTransactionMappingModel.JUSPAYREFUNDID + "} = ?juspayRefundId";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("juspayRefundId", juspayRefundId);
-			return getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
+			refundTransactionMappingList = getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
-	}
 
+		return refundTransactionMappingList;
+	}
 
 	@Override
 	public RefundTransactionMappingModel fetchRefundTransactionByEntry(final AbstractOrderEntryModel orderEntry)
 	{
 
+		RefundTransactionMappingModel refundTransactionMappingModel = new RefundTransactionMappingModel();
 		try
 		{
 			final String queryString = //
@@ -178,12 +189,14 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("orderEntry", orderEntry.getPk());
 
-			return getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
+			refundTransactionMappingModel = getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+
+		return refundTransactionMappingModel;
 	}
 
 
