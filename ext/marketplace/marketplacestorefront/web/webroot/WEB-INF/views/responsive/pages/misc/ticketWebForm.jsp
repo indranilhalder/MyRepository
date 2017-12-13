@@ -80,22 +80,21 @@
 									<a class="needHelpBtn needHelpBtnSm" href="login">Login to Continue</a>
 								</div>
 							</sec:authorize>
-							<sec:authorize access="isFullyAuthenticated()">
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 								<div class="formGroup">
-									<div class="selectOrderSec">
-										<h3 class="secLabel">Select Your Order(s).</h3>
+							       <div class="selectOrderSec">
+							             <h3 class="secLabel">Select Your Order(s).</h3>
 								          <div class="selectOrders">
 								             <div class="selectedProduct">
 								               Select order from your previous orders
 								             </div>
-								            
-								            <input type="hidden" id="currentPage" value="0" name="currentPage"/>
-								            <input type="hidden" id="totalPages" value="0" name="totalPages"/>
-								            <a href="#" id="viewMoreLink" style="display:none;">View more orders</a>
-								            <a href="#" id="viewBackLink" style="display:none;">Back</a>
 											<ul class="orderDrop">
 												
 											</ul>
+											<input type="hidden" id="currentPage" value="0" name="currentPage"/>
+								            <input type="hidden" id="totalPages" value="0" name="totalPages"/>
+								            <a href="#" id="viewMoreLink" style="display:none;">View more orders</a>
+								            <a href="#" id="viewBackLink" style="display:none;">Back</a>
 										</div>
 									</div>
 								</div>

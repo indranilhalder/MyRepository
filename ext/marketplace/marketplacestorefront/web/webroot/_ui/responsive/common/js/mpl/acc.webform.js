@@ -372,6 +372,13 @@ ACC.WebForm = {
 				}
 				$("#totalPages").val(data.totalOrderLines);
 				$("#currentPage").val(currentPage);
+				// no of orderlins in one page
+				if(data.totalOrderLines > 5){
+					$('#viewMoreLink').show();
+				}
+				if(currentPage > 1 ){
+					$('#viewBackLink').show();
+				}
 				
 			},
 			error : function(resp) {
@@ -386,6 +393,8 @@ ACC.WebForm = {
 		if ( $(".selectOrderSec").length ) {
 			if(parseInt(total) <= parseInt(current) ){
 				$('#viewMoreLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"')");
+			}else{
+				$('#viewMoreLink').hide();
 			}
 			
 			if(parseInt(current) > 1){
