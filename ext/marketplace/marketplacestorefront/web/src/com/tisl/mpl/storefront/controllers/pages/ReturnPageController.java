@@ -183,6 +183,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	public String initiateReturn(final MplReturnsForm returnForm, final Model model, final HttpServletRequest request,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
 	{
+		//TPR-5954
+		if (null != returnForm.getSubReturnReason() && !returnForm.getSubReturnReason().isEmpty())
+		{
+			if (returnForm.getSubReturnReason().equalsIgnoreCase("NA"))
+			{
+				returnForm.setSubReturnReason("");
+			}
+		}
 		boolean cancellationStatus;
 		LOG.info(returnForm);
 		boolean quickdrop = false;
@@ -316,8 +324,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 			//TPR-5954 || Category specific return reason || End
 			List<ReturnReasonData> reasonDataList = null;
+			List<ReturnReasonData> subReasonDataList = null;
 			reasonDataList = mplOrderFacade.getCatSpecificRetReason(L2Cat);
-			if (null != reasonDataList)
+			if (null != reasonDataList && !reasonDataList.isEmpty())
 			{
 				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 				//TPR-5954
@@ -326,6 +335,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				{
 					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reasonDesc);
 				}
+				subReasonDataList = fetchSubReturnReason(returnForm.getReturnReason());
+				if (!subReasonDataList.isEmpty())
+				{
+					for (final ReturnReasonData reason : reasonDataList)
+					{
+						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+						{
+							model.addAttribute("subReasonDescription", reason.getReasonDescription());
+						}
+					}
+				}
+
+				model.addAttribute("subReasonDataList", subReasonDataList);
 			}
 			else
 			{ //Fall back for return reason code
@@ -1536,75 +1558,5 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			returnReasonData = new ArrayList<ReturnReasonData>();
 		}
 		return returnReasonData;
-	}
-
-	//TPR-5954
-	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-	//@RequireHardLogIn
-	@ResponseBody
-	public String uploadImages(@RequestParam final ArrayList<MultipartFile> files, final HttpServletRequest request,
-			final HttpServletResponse response) throws CMSItemNotFoundException, Exception
-	{
-		try
-		{
-			//final List<MultipartFile> files = new ArrayList<MultipartFile>
-			System.out.println(files.size());
-			String fileUploadLocation = null;
-			String date = null;
-			Path path = null;
-			//TISRLUAT-50
-			if (null != configurationService)
-			{
-				fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.IMG_UPLOAD_PATH);
-				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
-				{
-					try
-					{
-
-						//HttpSession session = request.getSession();
-						//session.setAttribute("UserName", username);
-
-						for (final MultipartFile fileObj : files)
-						{
-
-							final byte barr[] = fileObj.getBytes();
-							final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-							date = sdf.format(new Date());
-							path = Paths.get(fileUploadLocation + File.separator + date);
-							if (!Files.exists(path))
-							{
-								try
-								{
-									Files.createDirectories(path);
-								}
-								catch (final IOException e)
-								{
-									//fail to create directory
-									LOG.error("Exception ,While creating the Directory " + e.getMessage());
-								}
-							}
-							final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
-									+ fileObj.getOriginalFilename()));
-							bout.write(barr);
-							bout.flush();
-							bout.close();
-							LOG.debug("FileUploadLocation   :" + fileUploadLocation);
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error("Exception is:" + e);
-					}
-				}
-
-			}
-
-
-		}
-		catch (final Exception ex)
-		{
-			LOG.error(ex.getStackTrace());
-		}
-		return "OK";
 	}
 }
