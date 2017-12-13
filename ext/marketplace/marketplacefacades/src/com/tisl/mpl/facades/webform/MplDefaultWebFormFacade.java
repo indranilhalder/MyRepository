@@ -378,8 +378,11 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 					.getPagedFilteredParentOrderHistory(pageableData);
 			if (searchPageDataParentOrder != null && CollectionUtils.isNotEmpty(searchPageDataParentOrder.getResults()))
 			{
+				// Order Line
+				orderLines = new ArrayList<WebFormOrderLine>();
 				for (final OrderHistoryData orderHistoryData : searchPageDataParentOrder.getResults())
 				{
+
 					//Parent Order
 					final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderHistoryData.getCode());
 					//this scenario will occour only when product is missing in order entries.
@@ -390,8 +393,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 					//SUb Order
 					for (final OrderData subOrderData : orderDetails.getSellerOrderList())
 					{
-						// Order Line
-						orderLines = new ArrayList<WebFormOrderLine>();
+
 						for (final OrderEntryData line : subOrderData.getEntries())
 						{
 							final WebFormOrderLine orderLine = new WebFormOrderLine();
@@ -435,6 +437,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 						}
 					}
 				}
+				form.setOrderLineDatas(orderLines);
 
 				if (searchPageDataParentOrder.getPagination() != null)
 				{

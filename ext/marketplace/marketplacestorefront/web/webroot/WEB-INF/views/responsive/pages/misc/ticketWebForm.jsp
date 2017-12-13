@@ -88,7 +88,7 @@
 								             </div>
 								            
 								            <input type="hidden" id="currentPage" value="0" name="currentPage"/>
-								            <input type="hidden" id="totalPages" value="1" name="totalPages"/>
+								            <input type="hidden" id="totalPages" value="0" name="totalPages"/>
 								            <a href="#" id="viewMoreLink">View more orders</a>
 								            <a href="#" id="viewBackLink">Back</a>
 											<ul class="orderDrop">
@@ -101,7 +101,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel">What is the issue?</h3>
 								<select class="node formControl customSelect" name="nodeL2">
-										<option>Select Your issue</option>
+										<option value="">Select Your issue</option>
 										<c:forEach items="${formFields.nodes}" var="l2Node">
 											<c:if test="${l2Node.nodeType eq 'L2'}">
 												<option value="${l2Node.nodeCode}" nodeText="${l2Node.nodeDesc}" displayAllow="${l2Node.nodeDisplayAllowed}">${l2Node.nodeDesc}</option>
@@ -112,7 +112,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel">Select a sub-issue.</h3>
 								<select class="node formControl customSelect" name="nodeL3">
-										<option>Select your exact problem</option>
+										<option value="">Select your exact problem</option>
 										<c:forEach items="${formFields.nodes}" var="l3Node">
 											<c:if test="${l3Node.nodeType eq 'L3'}">
 												<option value="${l3Node.nodeCode}" nodeText="${l3Node.nodeDesc}" displayAllow="${l3Node.nodeDisplayAllowed}">${l3Node.nodeDesc}</option>
