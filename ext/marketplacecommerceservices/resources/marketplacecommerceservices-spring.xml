@@ -658,6 +658,7 @@
 		<property name="externalTaxesService" ref="externalTaxesService" />
 		<property name="commercePlaceOrderMethodHooks" ref="commercePlaceOrderMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
+		<property name="mplVoucherService" ref="mplVoucherService" />
 		<!-- TPR-3782 -->
  		<property name="priceBreakupService" ref="priceBreakupService" />
 

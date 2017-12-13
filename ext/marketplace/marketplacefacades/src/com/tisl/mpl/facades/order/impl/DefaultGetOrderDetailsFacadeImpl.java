@@ -137,6 +137,64 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	//TPR-5975 ends here
 
 
+
+	/**
+	 * @description method is called to fetch the details of a particular orders for the user
+	 * @param orderDetails
+	 * @return OrderTrackingWsDTO
+	 */
+
+	public OrderDataWsDTO getOrderhistorydetails(final OrderData orderDetails)
+	{
+
+		final OrderDataWsDTO orderHistoryWSDto = null;
+		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
+		final List<Ordershipmentdetailstdto> ordershipmentdetailstdtos = null;
+		final OrderProductWsDTO orderproductdto = null;
+		final OrderModel orderModel = null;
+		final String isGiveAway = "N";
+		final String consignmentStatus = MarketplacecommerceservicesConstants.NA;
+		final ConsignmentModel consignmentModel = null;
+		final String formattedProductDate = MarketplacecommerceservicesConstants.EMPTY;
+		final String formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
+
+		try
+		{
+
+			{
+
+				//	final ProductData product = entry.getProduct();
+
+				//				if (null != orderDetails.getCreated())
+				//				{
+				//
+				//					orderHistoryWSDto.setOrderDate(orderDetails.getCreated());
+				//				}
+			}
+
+		}
+
+
+
+
+
+
+
+		catch (final Exception expection)
+		{
+			LOG.error("Exception Oucer Get fileDownloadLocation DefaultGetOrderDetailsFacadeImpl");
+		}
+
+
+		return null;
+	}
+
+
+
+
+
+
+
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
 	 * @param orderDetails
@@ -376,14 +434,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								/*
 								 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 								 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-								 *
+								 * 
 								 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-								 *
+								 * 
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-								 *
+								 * 
 								 * }
 								 */
 
@@ -521,9 +579,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											}
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
-											 *
+											 * 
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -816,15 +874,15 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							/*
 							 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 							 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-							 *
+							 * 
 							 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-							 *
+							 * 
 							 * if (null != orderproductdto.getUSSID()) {
-							 *
+							 * 
 							 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
-							 *
+							 * 
 							 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-							 *
+							 * 
 							 * }
 							 */
 
@@ -936,9 +994,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										}
 										/*
 										 * if (null != sellerEntry.getReplacement()) {
-										 *
+										 * 
 										 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-										 *
+										 * 
 										 * }
 										 */
 										//for return
@@ -1328,40 +1386,40 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * subOrder, final ConsignmentData consignment) { final AWBResponseData trackingData = new AWBResponseData();
 	 * List<StatusRecordData> statusRecords = new ArrayList<>(); StatusRecordData statusRecord = new StatusRecordData();
 	 * try {
-	 *
+	 * 
 	 * final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DATE_FORMAT_AWB); final
 	 * SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
-	 *
+	 * 
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue());
 	 * trackingData.setIsSelected(orderStatusCode.getDisplay().booleanValue());
-	 *
+	 * 
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
-	 *
+	 * 
 	 * statusRecord = new StatusRecordData();
-	 *
+	 * 
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
 	 * statusRecord.setTime(smdfTime.format(consignment.getStatusDate())); } else {
 	 * statusRecord.setDate(smdfDate.format(subOrder.getCreated()));
 	 * statusRecord.setTime(smdfTime.format(subOrder.getCreated())); }
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
-	 *
+	 * 
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * return trackingData; }
 	 */
 
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
@@ -1901,12 +1959,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								}
 								//Delivery date is the final delivery date
 								/*
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode()) {
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 *
+								 * 
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1941,7 +1999,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -2043,9 +2101,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(subOrder.getStatus().getCode(),
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
-												 *
+												 * 
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -2073,9 +2131,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 *
+												 * 
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -2102,9 +2160,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											}
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
-											 *
+											 * 
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -2194,9 +2252,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 * consignmentModel.getCarrier()) {
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
-								 *
+								 * 
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 *
+								 * 
 								 * }
 								 */
 								//End
@@ -2870,7 +2928,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override

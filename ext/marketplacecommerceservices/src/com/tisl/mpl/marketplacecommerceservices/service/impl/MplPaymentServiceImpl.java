@@ -5043,6 +5043,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					else
 					{
+						paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
+								PaymentTransactionType.RETURN, uniqueRequestId);
 						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
 							final ConsignmentStatus conStatus = orderEntry.getConsignmentEntries().iterator().next().getConsignment()

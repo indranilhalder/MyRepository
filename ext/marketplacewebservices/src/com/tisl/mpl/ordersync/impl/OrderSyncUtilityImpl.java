@@ -159,7 +159,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -226,7 +226,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					if (orderUpdate != null && StringUtils.isNotEmpty(orderUpdate.getSellerOrder().getOrderLine().getOrderLineId())
 							&& StringUtils.isNotEmpty(orderUpdate.getSellerOrder().getOrderLine().getShipment().getOlqsStatus()))
 					{
-						log.setTransactionId(orderUpdate.getSellerOrder().getOrderLine().getOrderLineId());
+						log.setTransactionId(orderUpdate.getSellerOrder().getOrderLine().getOrderLineId() + "_" + new Date().toString());
 						log.setOrderStatus(orderUpdate.getSellerOrder().getOrderLine().getShipment().getOlqsStatus());
 
 					}

@@ -707,9 +707,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1434,7 +1434,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1447,11 +1447,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; }
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1970,9 +1970,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2731,23 +2731,16 @@ public class MiscsController extends BaseController
 	 */
 
 
-	@RequestMapping(value = "/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/{baseSiteId}/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public CRMWsDataParent getcemwebform(@PathVariable final String emailId) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+	public CRMWsDataParent getcemwebform() throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		final CRMWsDataParent crmDto = new CRMWsDataParent();
-
-
 		try
 		{
-
 			final List<CRMWsData> crmdata = mplWebFormFacade.getAllWebCRMTreedata();
 			crmDto.setNodes(crmdata);
 			crmDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-
-
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2781,17 +2774,15 @@ public class MiscsController extends BaseController
 
 
 
-	@RequestMapping(value = "/crmFileUpload", method = RequestMethod.POST)
+	@RequestMapping(value = "/{baseSiteId}/crmFileUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public FileUploadResponseData getcrmFileUploadRequest(@RequestParam("file") final MultipartFile multipartFile)
+	public FileUploadResponseData getcrmFileUploadRequest(@RequestParam("uploadFile") final MultipartFile multipartFile)
 			throws WebserviceValidationException
 	{
 		final FileUploadResponseData crmFileUploaddata = new FileUploadResponseData();
 		String finalUrlForDispatchProof = null;
-
 		try
 		{
-
 			LOG.debug("***************:" + multipartFile.getOriginalFilename());
 			String fileUploadLocation = null;
 
