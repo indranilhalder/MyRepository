@@ -14,6 +14,7 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.product.Unit;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
+import de.hybris.platform.promotions.jalo.AbstractPromotion;
 import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
@@ -78,8 +79,9 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 		//undo(ctx);
 		//}
 
+		final PromotionResult result = getPromotionResult(ctx);
 		final double freebieAmt = 0.01D;
-		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		final AbstractOrder order = result.getOrder(ctx);
 		String freeUSSIDData = MarketplacecommerceservicesConstants.EMPTY;
 		List<String> freeProductUSSIDList = new ArrayList<String>();
 		final List<String> tempfreeProductUSSIDList = new ArrayList<String>();
@@ -141,14 +143,14 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							+ orderEntry.getDiscountValues(ctx).size() + " discount values");
 				}
 
-				final PromotionResult pr = getPromotionResult(ctx);
+				//final PromotionResult pr = getPromotionResult(ctx);
 				//			final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 				//					getGuid(ctx), orderEntry, 1L);
 				//setCachingAllowed(ctx, order);
 				final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(ctx,
 						getGuid(ctx), orderEntry, freeGiftQuantity);
 				consumed.setAdjustedUnitPrice(ctx, 0.01D);
-				pr.addConsumedEntry(ctx, consumed);
+				result.addConsumedEntry(ctx, consumed);
 				setMarkedApplied(ctx, true);
 			}
 
@@ -170,13 +172,13 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					orderEntry.setProperty(ctx, "basePrice", new Double(freebieAmt));
 					orderEntry.setProperty(ctx, "totalPrice", new Double(freebieAmt));
 
-					final PromotionResult pr = getPromotionResult(ctx);
+					//final PromotionResult pr = getPromotionResult(ctx);
 					//setCachingAllowed(ctx, order);
 
 					final PromotionOrderEntryConsumed consumed = PromotionsManager.getInstance().createPromotionOrderEntryConsumed(
 							ctx, getGuid(ctx), orderEntry, freeGiftQuantity);
 					consumed.setAdjustedUnitPrice(ctx, 0.01D);
-					pr.addConsumedEntry(ctx, consumed);
+					result.addConsumedEntry(ctx, consumed);
 					setMarkedApplied(ctx, true);
 				}
 
@@ -230,13 +232,18 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 
 				try
 				{
-					promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
-							MarketplacecommerceservicesConstants.COSTCENTREONE);
-					promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
-							MarketplacecommerceservicesConstants.COSTCENTRETWO);
+					final AbstractPromotion promotion = result.getPromotion();
 
-					promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
-							MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+					if (null != promotion)
+					{
+						promoCostCentreOnePercentage = (Double) promotion.getAttribute(ctx,
+								MarketplacecommerceservicesConstants.COSTCENTREONE);
+						promoCostCentreTwoPercentage = (Double) promotion.getAttribute(ctx,
+								MarketplacecommerceservicesConstants.COSTCENTRETWO);
+
+						promoCostCentreThreePercentage = (Double) promotion.getAttribute(ctx,
+								MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+					}
 
 				}
 				catch (final JaloInvalidParameterException e)
@@ -264,12 +271,24 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
 
 					//TPR-7408 starts here
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
-							promoCostCentreOnePercentage);
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
-							promoCostCentreTwoPercentage);
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
-							promoCostCentreThreePercentage);
+					if (null != promoCostCentreOnePercentage)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+								promoCostCentreOnePercentage);
+					}
+
+					if (null != promoCostCentreTwoPercentage)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+								promoCostCentreTwoPercentage);
+					}
+
+					if (null != promoCostCentreThreePercentage)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+								promoCostCentreThreePercentage);
+					}
+
 					//TPR-7408 ends here
 
 
@@ -459,12 +478,23 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							}
 
 							//TPR-7408 starts here
-							entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
-									promoCostCentreOnePercentage);
-							entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
-									promoCostCentreTwoPercentage);
-							entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
-									promoCostCentreThreePercentage);
+							if (null != promoCostCentreOnePercentage)
+							{
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+										promoCostCentreOnePercentage);
+							}
+
+							if (null != promoCostCentreTwoPercentage)
+							{
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+										promoCostCentreTwoPercentage);
+							}
+
+							if (null != promoCostCentreThreePercentage)
+							{
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+										promoCostCentreThreePercentage);
+							}
 							//TPR-7408 ends here
 
 
