@@ -124,7 +124,7 @@ ACC.WebForm = {
 			if (nodeValue == undefined) {
 				nodeValue = $(this).val();
 			}
-			if(nodeValue!=='' || nodeValue){
+			if(nodeValue!=='' && nodeValue.indexOf("Select") == -1){
 				var htmlOption = "<option value=''>Select</option>";
 				$.ajax({
 					url : ACC.config.encodedContextPath
@@ -384,16 +384,36 @@ ACC.WebForm = {
 		var total=$('#totalPages').val();
 		
 		if ( $(".selectOrderSec").length ) {
-			if(parseInt(total) < parseInt(current) ){
+			if(parseInt(total) <= parseInt(current) ){
 				$('#viewMoreLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"')");
 			}
 			
 			if(parseInt(current) > 1){
 				$('#viewBackLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"')");
+			}else{
+				$('#viewBackLink').hide();
 			}
 			//call default first page
 			ACC.WebForm.loadOrderLines(current);
+			ACC.WebForm.attachOrderDropEvent();
 		}
+	},
+	attachOrderDropEvent : function(){
+		$('.selectedProduct').click(function(){
+	    	$(this).next('.orderDrop').toggle();
+	    });
+		$('.selectOrders .orderDrop li').each(function(){
+			$(this).click(function(){
+	          var prodHtml = $(this).html();
+	          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
+	          $('.orderDrop').toggle();
+	       // set value
+				$('#orderCode').val($(this).attr("data-orderCode"));
+				$('#subOrderCode').val($(this).attr("data-subOrderCode"));
+				$('#transactionId').val($(this).attr("data-transactionId"));
+			});
+
+		});
 	},
 
 };
@@ -404,47 +424,32 @@ $(document).ready(function() {
 	ACC.WebForm.issueDropDown();
 	ACC.WebForm.sendTicket();
 	ACC.WebForm.loadPaginationLink();
-
-	$('.contCustCareBtn').on("click",function() {
+	ACC.WebForm.attachOrderDropEvent();
+	
+	$('.contCustCareBtn').click(function(){
 		$(this).toggleClass('dActive');
 		$('.custmCareQrySec').slideToggle();
 		$('#closeCustCareSec').addClass('active');
 	});
-	$('#closeCustCareSec').on("click",function() {
+	$('#closeCustCareSec').click(function(){
 		$(this).removeClass('active');
 		$('.custmCareQrySec').slideToggle();
 		$('.contCustCareBtn').removeClass('dActive');
 	});
-	
-	$('.selectedProduct').on("click",function() {
-		$(this).next('.orderDrop').toggle();
+	$('#closeCustCarePopBox').click(function(){
+		$(this).parent().parent('.issueQuryPopUp').hide();
 	});
-	
-	$('.selectOrders .orderDrop li').each(function() {
-		$(this).click(function() {
-			var prodHtml = $(this).html();
-			$(this).parent('.orderDrop').prev('.selectedProduct')
-					.addClass('filled').html(prodHtml);
-			$('.orderDrop').toggle();
-			// set value
-			$('#orderCode').val($(this).attr("data-orderCode"));
-			$('#subOrderCode').val($(this).attr("data-subOrderCode"));
-			$('#transactionId').val($(this).attr("data-transactionId"));
-
-		});
-
-	});
-	/* custum selecbox */
-	$(".customSelect").each(function() {
-		$(this).wrap("<span class='customSelectWrap'></span>");
-		$(this).after("<span class='holder'></span>");
-		$(".holder").removeClass('active');
-	});
-	$(".customSelect").change(function() {
-		var selectedOption = $(this).find(":selected").text();
-		$(this).next(".holder").addClass('active');
-		$(this).next(".holder").text(selectedOption);
-	}).trigger('change');
-	
-	$(".holder").removeClass('active');
+	/*custum selecbox*/
+	 $(".customSelect").each(function(){
+            $(this).wrap("<span class='customSelectWrap'></span>");
+            $(this).after("<span class='holder'></span>");
+            $(".holder").removeClass('active');
+        });
+        $(".customSelect").change(function(){
+            var selectedOption = $(this).find(":selected").text();
+            $(this).next(".holder").addClass('active');
+            $(this).next(".holder").text(selectedOption);
+        }).trigger('change');
+         $(".holder").removeClass('active');
+         
 });

@@ -145,55 +145,122 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 */
 
 	public OrderDataWsDTO getOrderhistorydetails(final OrderData orderDetails)
+
 	{
 
-		final OrderDataWsDTO orderHistoryWSDto = null;
+		OrderDataWsDTO orderhistorydetailsWsDTO = new OrderDataWsDTO();
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
-		final List<Ordershipmentdetailstdto> ordershipmentdetailstdtos = null;
-		final OrderProductWsDTO orderproductdto = null;
-		final OrderModel orderModel = null;
-		final String isGiveAway = "N";
-		final String consignmentStatus = MarketplacecommerceservicesConstants.NA;
-		final ConsignmentModel consignmentModel = null;
-		final String formattedProductDate = MarketplacecommerceservicesConstants.EMPTY;
-		final String formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
-
+		OrderProductWsDTO orderproductdto = null;
+		String isGiveAway = "N";
 		try
 		{
 
+			if (null != orderDetails && StringUtils.isNotEmpty(orderDetails.getType())
+					&& orderDetails.getType().equalsIgnoreCase("Parent"))
 			{
+				orderhistorydetailsWsDTO = new OrderDataWsDTO();
 
-				//	final ProductData product = entry.getProduct();
 
-				//				if (null != orderDetails.getCreated())
-				//				{
-				//
-				//					orderHistoryWSDto.setOrderDate(orderDetails.getCreated());
-				//				}
+				if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
+				{
+					for (final OrderData subOrder : orderDetails.getSellerOrderList())
+					{
+						for (final OrderEntryData entry : subOrder.getEntries())
+						{
+							final List<String> parentTransactionIds = new ArrayList<>();
+							orderproductdto = new OrderProductWsDTO();
+							//seller order no
+							orderproductdto.setSellerorderno(subOrder.getCode());
+							final ProductData product = entry.getProduct();
+							if (product != null)
+							{
+								final List<ImageData> images = (List<ImageData>) product.getImages();
+								if (null != images)
+								{
+
+									for (final ImageData imageData : product.getImages())
+									{
+										if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+										{
+											orderproductdto.setImageURL(imageData.getUrl());
+											break;
+										}
+
+									}
+									if (null == orderproductdto.getImageURL())
+									{
+										orderproductdto.setImageURL(images.get(0).getUrl());
+									}
+
+									if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
+									{
+
+										orderproductdto.setProductBrand(product.getBrand().getBrandname());
+									}
+									if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
+									{
+
+										orderproductdto.setProductcode(product.getCode());
+									}
+									if (StringUtils.isNotEmpty(product.getName()))
+									{
+
+										orderproductdto.setProductName(product.getName());
+									}
+								}
+								if (entry.getTransactionId() != null)
+								{
+									orderproductdto.setTransactionId(entry.getTransactionId());
+								}
+								else
+								{
+									orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
+								}
+
+							}
+							if (entry.isGiveAway())
+							{
+								isGiveAway = "Y";
+							}
+							else
+							{
+								isGiveAway = "N";
+							}
+							orderproductdto.setIsGiveAway(isGiveAway);
+
+							if (entry.getSelectedUssid() != null)
+							{
+								orderproductdto.setUSSID(entry.getSelectedUssid());
+							}
+
+							if (entry.getAmountAfterAllDisc() != null)
+							{
+								orderproductdto.setPrice(entry.getAmountAfterAllDisc().getFormattedValue());
+							}
+
+							orderproductdtos.add(orderproductdto);
+						}
+					}
+				}
+				orderhistorydetailsWsDTO.setProducts(orderproductdtos);
 			}
 
 		}
-
-
-
-
-
-
-
-		catch (final Exception expection)
+		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("Exception Oucer Get fileDownloadLocation DefaultGetOrderDetailsFacadeImpl");
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 
-
-		return null;
+		return orderhistorydetailsWsDTO;
 	}
-
-
-
-
-
-
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user

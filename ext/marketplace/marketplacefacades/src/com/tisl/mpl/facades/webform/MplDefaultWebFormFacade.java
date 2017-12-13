@@ -76,7 +76,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -106,6 +106,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				node.setCreateTicketAllowed(Boolean.valueOf(crmModel.isCreateTicketAllowed()));
 				node.setNodeDisplayAllowed(Boolean.valueOf(crmModel.isNodeDisplayAllowed()));
 				node.setTicketAnswer(crmModel.getTicketAnswer());
+				node.setParentNode(crmModel.getNodeParent());
 				nodes.add(node);
 			}
 
@@ -152,7 +153,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -233,7 +234,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -370,7 +371,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	public WebFormOrder getWebOrderLines(final PageableData pageableData)
 	{
 		final WebFormOrder form = new WebFormOrder();
-		List<ImageData> orderEntryImages = new ArrayList<>();
 		List<WebFormOrderLine> orderLines = new ArrayList<WebFormOrderLine>();
 		try
 		{
@@ -421,8 +421,15 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 							}
 							if (line.getProduct() != null && CollectionUtils.isNotEmpty(line.getProduct().getImages()))
 							{
-								orderEntryImages = (List) line.getProduct().getImages();
-								orderLine.setProdImageURL(orderEntryImages.get(0).getUrl());
+								for (final ImageData imageData : line.getProduct().getImages())
+								{
+									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									{
+										orderLine.setProdImageURL(imageData.getUrl());
+										break;
+									}
+
+								}
 							}
 							if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
 							{
