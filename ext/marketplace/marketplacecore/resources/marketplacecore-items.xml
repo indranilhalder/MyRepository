@@ -13784,8 +13784,8 @@
 				<description>Takes Business Configured CRM mapping</description>
 				<deployment table="MplWebCrm" typecode="11890" />
 				<attributes>
-					<attribute qualifier="nodeType" type="java.lang.String">
-						<modifiers optional="false" />
+					<attribute qualifier="serialNum" type="java.lang.String">
+						<modifiers optional="false" unique="true"/>
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="nodeText" type="java.lang.String">
@@ -13794,7 +13794,11 @@
 					</attribute>
 					<attribute qualifier="nodeCrmCode" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers optional="false" unique="true" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="nodeType" type="java.lang.String">
+						<modifiers optional="false" />
+						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="nodeParent" type="java.lang.String">
 						<persistence type="property" />

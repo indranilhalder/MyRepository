@@ -14,12 +14,12 @@
 		    <c:when test="${responsive_view=='true'}">
 			<span class="offer_heading"><spring:theme code="payment.cart.offer.responsive.title"/></span>
 		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.responsive.description"/>
-			<a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
+			<a class="tnc-link tnc-link-mob" onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
 		    </c:when>    
 		    <c:otherwise>
 			<span class="offer_heading"><spring:theme code="payment.cart.offer.web.title"/></span>
 		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.web.description"/>
-		    <a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">Terms & Conditions</a></span>
+		    <a class="tnc-link" onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">Terms & Conditions</a></span>
 		    </c:otherwise>
 		</c:choose>
 	      
@@ -116,19 +116,52 @@
   <c:if test="${offer_page_contain == 'terms'}">
 <!-- -------offer terms & conditions available  section ------ -->
 
-<span class="offer_heading">Terms & Conditions</span>
-<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
-		<ul class="offertermsui">	
+	<!-- 	Desktop tnc popup -->
+<c:choose>
+ <c:when test="${responsive_view=='false'}">	
+		<span class="offer_heading">Terms & Conditions</span>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+		<ul class="offertermsui" id="accordion-tnc">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >
-					<div class="offerchoosesection">
-						<span class="offer_title">${offerTermsConditionsData.name}</span>
+					<!-- <span class="offerchoosesection"> -->
+						<span class="offer_title">${offerTermsConditionsData.name}
+						<span class="offer_des">10% Discount on Debit & Credit Cards. </span>
+						</span>
+						<div>
 						<br><span class="offer_des">${offerTermsConditionsData.description}</span>						
-						<br><span class="offer_des">${offerTermsConditionsData.termsAndCondition}</span>		
-					</div>
+						<br><span class="offer_des">${offerTermsConditionsData.termsAndCondition}</span>
+						</div>
+						
+					<!-- </span> -->
 				</li>
 		 </c:forEach>  
+		</ul> 
+ </c:when>    
+ <c:otherwise>
+		
+	<!-- 	Mobile tnc popup -->
+	
+		<span class="offer_heading">Terms & Conditions</span>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+		<ul class="offertermsui" id="">	
+		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
+				<li class="offer" id="offertermspop${status.index}" >
+					<!-- <span class="offerchoosesection"> -->
+						<span class="offer_title">${offerTermsConditionsData.name}
+						<span class="offer_des">10% Discount on Debit & Credit Cards. </span>
+						</span>
+						<div>
+						<br><span class="offer_des">${offerTermsConditionsData.description}</span>						
+						<br><span class="offer_des">${offerTermsConditionsData.termsAndCondition}</span>
+						</div>
+						
+					<!-- </span> -->
+				</li>
+		</c:forEach>  
 		</ul>
+</c:otherwise>
+</c:choose>
 <!-- -------offer terms & conditions available  section end ------ -->		    	 			
 
 
@@ -221,22 +254,58 @@ ul.offerui {
 #continue_payment_after_validate:hover {
 	background: #a5173c ! important;
 }
-.content.offer-content {
+#paymenttermsoffersPopup .offer_des {
+	 margin: 4px 0px;
+}
+#paymentoffersPopup .content.offer-content{
     overflow-y: hidden;
     width: 733px !important;
     padding: 31px 0px 75px 70px !important;
+    text-align: left;
 }
-#paymentoffersPopup .offer_heading {
+#paymenttermsoffersPopup .content.offer-content {
+    padding: 31px 47px 75px 44px !important;
+    overflow-y: hidden;
+    width: 733px !important;
+    text-align: left;
+}
+/* #paymenttermsoffersPopup.content.offer-content {
+    padding: 12px 15px !important;
+} */
+/* .tnc-heading{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.14;
+    letter-spacing: 0.7px;
+    text-align: left;
+    color: #252525;
+    margin-bottom: 23px;
+ } */
+#paymentoffersPopup .offer_heading,
+#paymenttermsoffersPopup .offer_heading{
     text-align: left;
     margin-bottom: 36px;
 }
-#paymentoffersPopup .offerui li {
+#paymentoffersPopup .offerui li,
+#paymenttermsoffersPopup .offerui li {
     margin: 6px 62px 6px 0px;
  }
- #paymentoffersPopup .content.offer-content>.close:before {
+ #paymentoffersPopup .content.offer-content>.close:before,
+ #paymenttermsoffersPopup .content.offer-content>.close:before {
     top: 13px;
 }
+.tnc-link{
+	font-size: 14px;
+    text-align: left;
+    color: #4a90e2;
+    text-decoration: underline;
+    margin-left: 11px;
+}
+.tnc-link-mob{
+	float:right;
+}
 @media screen and (min-width: 769px) {
+	
 	 .cart.wrapper .right-block.billing.checkout-list-right{
 	 	position: absolute;
 	    top: 0;
@@ -249,14 +318,23 @@ ul.offerui {
 	 }
  }
  @media screen and (max-width: 767px) {
- 	#paymentoffersPopup .content.offer-content {
+ #paymenttermsoffersPopup .content.offer-content {
+    	overflow-y: auto;
+    }
+ 	ul.offerui{
+ 		width:100%;
+ 	}
+ 	#paymentoffersPopup .content.offer-content,
+ 	#paymenttermsoffersPopup  .content.offer-contents{
 	    max-width: 68% !important;
 	    padding: 20px 0px ! important;
 	}
-	#paymentoffersPopup .offerui li {
+	#paymentoffersPopup .offerui li,
+	#paymenttermsoffersPopup .offerui li {
     	padding-left: 22px;
 	}
-	#paymentoffersPopup .offer_heading {
+	#paymentoffersPopup .offer_heading,
+	#paymenttermsoffersPopup .offer_heading{
     	margin-left: 21px;
 	    line-height: 1.14;
 	    letter-spacing: 0.7px;
@@ -303,4 +381,47 @@ ul.offerui {
 	    color: #444444;
  	}
  }
+#paymenttermsoffersPopup #accordion-tnc .offer_title:after {
+    content: "+";
+    position: absolute;
+    right: 17px;
+    top: 9px;
+    font-size: 30px;
+    line-height: 18px;
+    color:#979797;
+}
+#paymenttermsoffersPopup #accordion-tnc .offer_title.active:after {
+    content: "-";
+    font-size: 50px;
+}
+ #accordion-tnc > li {
+	display: block;
+    border-bottom: solid 1px #979797;
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: 15px;
+}
+/* #paymenttermsoffersPopup .offertermsui .offer_title:after{
+	 border-bottom: solid 1px #979797;
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: 15px;
+} */
+#accordion-tnc > li > span {
+	display: block;	
+}
+#accordion-tnc > li > div {
+	display: none;
+}
+button#continue_payment_after_validate {
+    width: 216px ! important;
+    margin: 30px ! important;
+}
 </style>
+<script>
+
+$("#accordion-tnc > li > span").click(function() {
+    $(this).toggleClass("active").next('div').slideToggle(250)
+    .closest('li').siblings().find('span').removeClass('active').next('div').slideUp(250);
+});
+</script>

@@ -24,7 +24,7 @@
 		<%-- <cms:pageSlot position="Section2B" var="com">
 			<cms:component component="${com}" />
 		</cms:pageSlot>  --%>
-		<div class="content"><center>Track Orders</center></div>
+		<div class="content"><center>Web Form</center></div>
 		<div class="content">
 			<div class="custmCareHelp">
 
@@ -46,8 +46,9 @@
 					<form name="customerWebForm" id="customerWebForm"
 						action="#" method="POST" >
 
-						<input type="hidden" name="nodeL0" value="L0C1" /> 
+						<input type="hidden" name="nodeL0" value="ZCA_01" /> 
 						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> 
+						<input type="hidden" name="ticketType" value="" id="ticketType" />
 						<input type="hidden" name="orderCode" value="" id="orderCode" /> 
 						<input type="hidden" name="subOrderCode" value="" id="subOrderCode" /> 
 						<input type="hidden" name="transactionId" value="" id="transactionId" />
@@ -85,64 +86,13 @@
 								             <div class="selectedProduct">
 								               Select order from your previous orders
 								             </div>
-								             
+								            
+								            <input type="hidden" id="currentPage" value="0" name="currentPage"/>
+								            <input type="hidden" id="totalPages" value="0" name="totalPages"/>
+								            <a href="#" id="viewMoreLink">View more orders</a>
+								            <a href="#" id="viewBackLink">Back</a>
 											<ul class="orderDrop">
-
-												<c:if test="${fn:length(formFields.orderDatas) gt 0}">
-													<c:set var="lineCount" value="0"></c:set>
-													
-													<c:forEach items="${formFields.orderDatas}"
-														var="parentOrder" varStatus="parentStatus">
-
-														<c:forEach items="${parentOrder.sellerOrderList}"
-															var="sellerOrder" varStatus="status">
-
-															<c:forEach items="${sellerOrder.entries}" var="entry"
-																varStatus="entryStatus">
-																<c:if test="${lineCount lt 5}">
-																<li data-orderCode="${parentOrder.code}"
-																	data-subOrderCode="${sellerOrder.code}"
-																	data-transactionId="${entry.transactionId}">
-																	<div class="prodImg">
-																		<c:choose>
-																			<c:when
-																				test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-																				<product:productPrimaryImage
-																					product="${entry.product}" format="luxuryCartIcon" />
-																			</c:when>
-																			<c:otherwise>
-																				<product:productPrimaryImage
-																					product="${entry.product}" format="thumbnail" />
-																			</c:otherwise>
-																		</c:choose>
-
-																	</div>
-																	<div class="prodInfo">
-																		<div class="prodTxt">
-																			<p class="orderDate">
-																				Order on:
-																				<fmt:formatDate value="${sellerOrder.created}"
-																					pattern="MMMMM dd, yyyy" />${formatedDate}
-																			</p>
-																			<p class="prodName">${entry.product.name}</p>
-																			<p class="prodPrice">
-																				Price:
-																				<format:price priceData="${entry.totalPrice}"
-																					displayFreeForZero="true" />
-																			</p>
-																			<span class="prodShiping">Shipped</span>
-																		</div>
-																	</div>
-																</li>
-																</c:if>
-																<c:set var="lineCount" value="${lineCount + 1}"></c:set>
-															</c:forEach>
-
-														</c:forEach>
-
-													</c:forEach>
-
-												</c:if>
+												
 											</ul>
 										</div>
 									</div>
@@ -151,7 +101,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel">What is the issue?</h3>
 								<select class="node formControl customSelect" name="nodeL2">
-										<option>Select Your issue</option>
+										<option value="">Select Your issue</option>
 										<c:forEach items="${formFields.nodes}" var="l2Node">
 											<c:if test="${l2Node.nodeType eq 'L2'}">
 												<option value="${l2Node.nodeCode}" nodeText="${l2Node.nodeDesc}" displayAllow="${l2Node.nodeDisplayAllowed}">${l2Node.nodeDesc}</option>
@@ -162,7 +112,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel">Select a sub-issue.</h3>
 								<select class="node formControl customSelect" name="nodeL3">
-										<option>Select your exact problem</option>
+										<option value="">Select your exact problem</option>
 										<c:forEach items="${formFields.nodes}" var="l3Node">
 											<c:if test="${l3Node.nodeType eq 'L3'}">
 												<option value="${l3Node.nodeCode}" nodeText="${l3Node.nodeDesc}" displayAllow="${l3Node.nodeDisplayAllowed}">${l3Node.nodeDesc}</option>

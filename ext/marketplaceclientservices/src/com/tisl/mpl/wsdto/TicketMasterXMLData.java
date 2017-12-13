@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
 { "ecomRequestId", "customerID", "orderId", "subOrderId", "ticketType", "refundType", "ticketSubType", "returnCategory",
-		"lineItemDataList", "L0CatCode", "L1CatCode", "L2CatCode", "L3CatCode", "L4CatCode", "TicketCat", "Comments",
+		"lineItemDataList", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "l4CatCode", "ticketCat", "comments",
 		"uploadImage", "alternateContactName", "alternatePhoneNo", "source", "lineItemId", "addressInfo" })
 public class TicketMasterXMLData
 {

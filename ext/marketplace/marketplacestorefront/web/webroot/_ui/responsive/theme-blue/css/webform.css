@@ -101,10 +101,12 @@
 }
 
 .custmCareHelp .needHelpBtn {
-	line-height: 12px;
+	text-align: center;
+    line-height: 12px;
+    text-decoration: none !important;
 	height: 42px;
 	font-size: 12px;
-	padding: 6px 30px;
+	padding: 15px 30px;
 	font-weight: 500;
 	background-color: #a9143c;
 	color: #fff;
