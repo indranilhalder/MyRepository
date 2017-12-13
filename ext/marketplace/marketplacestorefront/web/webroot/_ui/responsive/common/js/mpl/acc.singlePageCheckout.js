@@ -3437,6 +3437,9 @@ ACC.singlePageCheckout = {
     	//$('.promoapplied').removeClass("promoapplied"); 
     	//release voucher ajax call
 		ACC.singlePageCheckout.showAjaxLoader();
+		$("#juspayconnErrorDiv").css("display","none");
+		document.getElementById("juspayErrorMsg").innerHTML="";
+		
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";
 		var guid = $('#guid').val();
 		var data= {manuallyselectedvoucher:offerID,guid:guid};
