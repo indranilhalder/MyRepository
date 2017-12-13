@@ -102,9 +102,9 @@
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 						<li class="logged_in">
 							<a href="javascript:void(0)" class="account-userTitle account-userTitle-custom">
-								<ycommerce:testId code="header_LoggedUser">
+								<%-- <ycommerce:testId code="header_LoggedUser">
 									<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-								</ycommerce:testId>
+								</ycommerce:testId> --%>
 							</a>
 							<div class="sign-pop">
 							 	<ul>
