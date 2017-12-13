@@ -1129,13 +1129,18 @@ function fetchCatSpecificReason(element){
 			  data :"parentReasonCode="+code,
 			  success: function(data) {
 				  var options = $("#returnSubReason");
-				  $("#returnSubReason").html('');				  
+				  $("#returnSubReason").html('');
+				  	options.append($("<option />").val("").text("Select sub reason"));
 				    $.each(data, function(item,obj) {					
 				        options.append($("<option />").val(obj.code).text(obj.reasonDescription));
 				    });
 				    if($.isEmptyObject(data)){
-				    	$("select [name=subReasonList]").hide();
+				    	$("select[name=subReturnReason]").hide();
 				    }
+				    else
+			    	{
+				    	$("select[name=subReturnReason]").show();
+			    	}
 			  },
 			  error:function(data){
 				  console.log("Error in fetchCatSpecificReason"+data);

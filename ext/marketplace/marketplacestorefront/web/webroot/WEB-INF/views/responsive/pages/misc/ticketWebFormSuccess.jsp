@@ -8,7 +8,7 @@
 <div class="custmCareHelp">
 	<div class="issueQuryPopUp">
 		<div class="issueQuryPopBox">
-			<button class="closeBtn" id="closeCustCarePopBox">X</button>
+			<button class="closeBtn" id="closeCustCarePopBox" onclick='parent.$.colorbox.close(); return false;'>X</button>
 			<div class="headingSec">
 				
 				<c:choose>

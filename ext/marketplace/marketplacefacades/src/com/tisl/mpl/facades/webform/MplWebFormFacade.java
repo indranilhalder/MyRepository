@@ -10,6 +10,7 @@ import java.util.List;
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
+import com.tisl.mpl.facades.cms.data.WebFormOrder;
 import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
 import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CRMWsData;
@@ -24,7 +25,7 @@ import com.tisl.mpl.wsdto.CRMWsData;
 public interface MplWebFormFacade
 {
 
-	public WebForm getWebCRMForm(PageableData pageableData);
+	public WebForm getWebCRMForm();
 
 	public WebForm getWebCRMChildren(final String parentNode);
 
@@ -57,5 +58,11 @@ public interface MplWebFormFacade
 	 * @return
 	 */
 	public CRMWebFormDataResponse getTicketSubmitForm(CRMWebFormDataRequest crmTicket);
+
+	/**
+	 * @param pageableData
+	 * @return
+	 */
+	public WebFormOrder getWebOrderLines(final PageableData pageableData);
 
 }
