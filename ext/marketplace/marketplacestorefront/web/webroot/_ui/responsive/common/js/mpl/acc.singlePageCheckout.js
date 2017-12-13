@@ -1907,7 +1907,11 @@ ACC.singlePageCheckout = {
 	    	      	}*/
         			//If data.validation=="success" set prePaymentValidationDone to true
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
-        			recalculateCart();
+        			if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
+        				recalculateCart();
+        				ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
+        			}
+        			
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
 //        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
@@ -2331,6 +2335,7 @@ ACC.singlePageCheckout = {
 		isCncSelected:false,
 		isPickUpPersonDetailsSaved:false,
 		isPincodeServiceable:false,
+		isApplypromoCalled:false,
 		saveEditAddress:false,
 	},
 
@@ -3303,12 +3308,50 @@ ACC.singlePageCheckout = {
 		});
 	
 	},	
-	
 	chooseOffer:function(offerID,radioId){
+		
+		
+	  if(ACC.singlePageCheckout.getIsResponsive()) { //for responsive view	
+		   if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
+			  recalculateCart();
+		      ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
+			  setTimeout(function(){ ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId); }, 3000);
+		   } else {
+			   ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+		   }	
+		} else {
+			ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+		}
+		
+	},	
+	chooseOfferAjaxCall:function(offerID,radioId){
 		//alert(offerID);
 		//$('input[name=offer_name]:checked+label::before').css("background", "black");
-		$('.promoapplied').removeClass("promoapplied"); 
-		$("#"+radioId).addClass("promoapplied");
+		//$('.promoapplied').removeClass("promoapplied"); 
+		//$("#"+radioId).addClass("promoapplied");
+		$("#juspayconnErrorDiv").css("display","none");
+		document.getElementById("juspayErrorMsg").innerHTML="";
+			
+		$('input:radio[name=offer_name]').each(function () { 
+			if($(this).val() == offerID) {
+			  $(this).prop('checked', true);
+			  $(this).addClass("promoapplied");
+			} else {
+			  $(this).prop('checked', false);
+			  $(this).removeClass("promoapplied"); 
+			}
+		});
+		$('input:radio[name=offer_name_more]').each(function () { 
+			if($(this).val() == offerID) {
+			  $(this).prop('checked', true);
+			  $(this).addClass("promoapplied");
+			 } else {
+			  $(this).prop('checked', false);
+			  $(this).removeClass("promoapplied"); 
+			}
+		});
+		
+		
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/usevoucher";
 		var guid = $('#guid').val();
@@ -3335,12 +3378,37 @@ ACC.singlePageCheckout = {
 					$("#promotionApplied").css("display","block");
 					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
 				}
+	 		
+	 			
+	 			//offer applied from view more section Not top 3 offer | shall be the first Bank Offer visible
+	 			if(ACC.singlePageCheckout.getTopoffers(offerID) == false) {
+	 				var title_text = $("#"+radioId+" + label").text();
+	 				var title_desc = $("#"+radioId).parent().find('.offer_des').html();
+	 				var title_maxmin = $("#"+radioId).parent().find('.max-min-value').html();
+	 				
+	 				//replace
+	 				$("#offer_name0").val(offerID);
+	 				$("#offer_name0 + label").html(title_text);
+	 				$("#offer_name0").parent().find('.offer_des').html(title_desc);
+	 				$("#offer_name0").parent().find('.max-min-value').html(title_maxmin);
+	 				$('input:radio[name=offer_name]').each(function () { 
+	 					if($(this).val() == offerID) {
+	 					  $(this).prop('checked', true);
+	 					  $(this).addClass("promoapplied");
+	 					} else {
+	 					  $(this).prop('checked', false);
+	 					  $(this).removeClass("promoapplied"); 
+	 					}
+	 				});
+	 				
+	 			} 	
+	
 	 			
         	} else { // not applied
         		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
 				$("#juspayconnErrorDiv").css("display","block");
-				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); });
-				$('.promoapplied').removeClass("promoapplied"); 
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
+				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
         	}
         	
             	
@@ -3351,6 +3419,18 @@ ACC.singlePageCheckout = {
 		});
         
 		
+	},
+	getTopoffers:function(val){
+         var status = false;  
+		 $('input:radio[name=offer_name]').each(function (index) { 
+			 if(index < 3) {
+			   if($(this).val() == val) {
+				   //alert("top");
+				   status = true;
+			   }
+			 }
+		   });
+		    return status;
 	},
 	releasePromoVoucher:function(offerID){		
     	//$('.promoapplied').prop('checked', false);
@@ -3382,9 +3462,10 @@ ACC.singlePageCheckout = {
 					$("#promotionApplied").css("display","block");
 					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
 				}
-	 			$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); });
+	 			$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+	 			$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
 	 	    	//$('.promoapplied').prop('checked', false);
-	 	    	$('.promoapplied').removeClass("promoapplied");
+	 	    	//$('.promoapplied').removeClass("promoapplied");
         	} else { // not applied
         		console.log("Sorry! Unable to release the Offer");
 				//$("#juspayconnErrorDiv").css("display","block");
@@ -3406,7 +3487,21 @@ ACC.singlePageCheckout = {
 	paymentOffersPopup:function(data){		
      	   $("body").append('<div class="modal fade" id="paymentoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 
-		   $("#paymentoffersPopup").modal('show');	  
+		   $("#paymentoffersPopup").modal('show');	 
+		   if ($("input[name='offer_name']:checked").length > 0) {
+			   var selected = $("input[name='offer_name']:checked").val();
+			   $('input:radio[name=offer_name_more]').each(function () { 
+					if($(this).val() == selected) {
+					  $(this).prop('checked', true);
+					  $(this).addClass("promoapplied");
+					 } else {
+					  $(this).prop('checked', false);
+					  $(this).removeClass("promoapplied"); 
+					}
+				});
+			  
+		   } 
+		   
 		  
 	},
 	showPaymentSpecificOffersTermsConditions:function(){	
