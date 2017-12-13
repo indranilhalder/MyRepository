@@ -17,13 +17,13 @@
 				<spring:theme code="search.page.searchTextItem"/> --%>
 				<c:choose>
 					<c:when test="${not empty param.text}">
-						"<span class="searchString">${param.text}</span> in <span class="searchString">${searchCategory}</span>"
+						"<span class="searchString">${param.text}</span> in <span class="searchString">${searchCategoryName}</span>"
 					</c:when>
 					<c:when test="${not empty searchPageData.freeTextSearch}">
 						"<span class="searchString">					
 							<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>
 						</span>
-						in <span class="searchString">${searchCategory}</span>""
+						in <span class="searchString">${searchCategoryName}</span>""
 					</c:when>
 					<c:otherwise>
 						<span class="searchString">"All"</span>

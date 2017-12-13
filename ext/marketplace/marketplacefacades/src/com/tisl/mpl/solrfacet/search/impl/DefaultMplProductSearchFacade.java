@@ -774,6 +774,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			solrSearchQueryTermData.setValue(categoryCode);
 			filterTerms.add(solrSearchQueryTermData);
 			searchQueryData.setFilterTerms(filterTerms);
+			searchQueryData.setCategoryCode(categoryCode);
 		}
 		//INC144317341 ends
 		populateSolrSearchQueryData(searchState, searchQueryData);
@@ -833,6 +834,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermDataCategory));
 
 		}
+
+
 		//TISPRD-3816 ends
 		searchQueryData.setSns(searchState.isSns());
 		populateSolrSearchQueryData(searchState, searchQueryData);

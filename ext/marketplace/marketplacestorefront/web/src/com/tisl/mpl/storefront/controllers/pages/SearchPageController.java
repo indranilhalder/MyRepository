@@ -496,12 +496,9 @@ public class SearchPageController extends AbstractSearchPageController
 			if (commonUtils.isLuxurySite())
 			{
 				final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
-				model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, categoryForCode.getName());
+				model.addAttribute("searchCategoryName", categoryForCode.getName());
 			}
-			else
-			{
-				model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
-			}
+			model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
 			model.addAttribute("autoselectSearchDropDown", Boolean.FALSE);
 			model.addAttribute("isConceirge", "false");
 			if (searchPageData != null)
@@ -592,6 +589,7 @@ public class SearchPageController extends AbstractSearchPageController
 	{ REFINE_FACET_SEARCH_URL_PATTERN_1, REFINE_FACET_SEARCH_URL_PATTERN_2 })
 	public String refineFacetSearch(@RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String categorySearch,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
@@ -599,7 +597,7 @@ public class SearchPageController extends AbstractSearchPageController
 			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
 
-		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model, categorySearch);
 		//CKD:TPR-250 :Start
 		if (null != searchQuery && searchQuery.contains("sellerId:"))
 		{
@@ -641,6 +639,7 @@ public class SearchPageController extends AbstractSearchPageController
 	public String refineSearch(@RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String categorySearch,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -649,7 +648,7 @@ public class SearchPageController extends AbstractSearchPageController
 	{
 		//UF-15,16
 		pageSize = PAGE_SIZE;
-		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model, categorySearch);
 		if (null != lazyInterface && lazyInterface.equals("Y"))
 		{
 			model.addAttribute("lazyInterface", Boolean.TRUE);
@@ -690,8 +689,8 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param model
 	 */
 	private void populateRefineSearchResult(final String searchQuery, int page, final ShowMode showMode, final String sortCode,
-			final String searchText, final Integer pageSize, final HttpServletRequest request, final Model model)
-			throws CMSItemNotFoundException
+			final String searchText, final Integer pageSize, final HttpServletRequest request, final Model model,
+			final String selectedCategory) throws CMSItemNotFoundException
 	{
 		final String uri = request.getRequestURI();
 		final String pageTitle = "";
@@ -722,13 +721,17 @@ public class SearchPageController extends AbstractSearchPageController
 		// Get page facets to include in facet field exclude tag
 		final String pageFacets = request.getParameter("pageFacetData");
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-				searchQuery, page, showMode, sortCode, count, pageFacets);
+				searchQuery, page, showMode, sortCode, count, pageFacets, selectedCategory);
 		model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
 		searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
 		String searchCode = searchCategory;
-		if (searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY))
+		final String searchCategories = Config.getParameter(LUX_SEARCH_CATEGORIES);
+		final String[] searchCategoryArray = searchCategories.split(",");
+
+		if ((searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY))
+				|| (searchCategory != null && StringUtils.startsWithAny(searchCategory, searchCategoryArray)))
 		{
 			if (searchCategory.substring(0, 5).equals(searchCategory))
 			{
@@ -742,6 +745,11 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 		model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
+		if (commonUtils.isLuxurySite() && searchCategory != null)
+		{
+			final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
+			model.addAttribute("searchCategoryName", categoryForCode.getName());
+		}
 		model.addAttribute(ModelAttributetConstants.IS_CONCEIRGE, "false");
 		if (searchPageData != null)
 		{
@@ -851,7 +859,7 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @return ProductSearchPageData
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String searchQuery, final int page,
-			final ShowMode showMode, final String sortCode, final int pageSize, final String pageFacets)
+			final ShowMode showMode, final String sortCode, final int pageSize, final String pageFacets, final String searchCategory)
 	{
 		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 		pageableData.setPageFacets(pageFacets);
@@ -861,12 +869,21 @@ public class SearchPageController extends AbstractSearchPageController
 		searchQueryData.setValue(searchQuery);
 		searchState.setQuery(searchQueryData);
 		String sellerId = null;
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = new ProductCategorySearchPageData();
 		if (searchQuery != null && searchQuery.indexOf("sellerId:") > 1)
 		{
 			sellerId = searchQuery.substring(searchQuery.indexOf("sellerId:") + 9, searchQuery.indexOf("sellerId:") + 15);
 		}
-		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-				.textSearch(searchState, pageableData);
+
+		if (commonUtils.isLuxurySite())
+		{
+			searchPageData = productSearchFacade.categorySearch(searchCategory, searchState, pageableData);
+		}
+		else
+		{
+			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+					.textSearch(searchState, pageableData);
+		}
 
 		//PR-23 start
 		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
@@ -910,7 +927,7 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "sort", required = false) final String sortCode) throws CMSItemNotFoundException
 	{
 		final ProductSearchPageData<SearchStateData, ProductData> searchPageData = performSearch(searchQuery, page, showMode,
-				sortCode, getSearchPageSize(), null);
+				sortCode, getSearchPageSize(), null, null);
 		final SearchResultsData<ProductData> searchResultsData = new SearchResultsData<>();
 		searchResultsData.setResults(searchPageData.getResults());
 		searchResultsData.setPagination(searchPageData.getPagination());
@@ -1379,7 +1396,7 @@ public class SearchPageController extends AbstractSearchPageController
 		if (searchQuery != null)
 		{
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-					searchQuery, page, showMode, sortCode, getSearchPageSize(), null);
+					searchQuery, page, showMode, sortCode, getSearchPageSize(), null, null);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 			{
