@@ -1799,18 +1799,20 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
 				{
-					final Double mrp = oModel.getMrp();
-					final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
-							? oModel.getCartLevelDisc() : Double.valueOf(0);
-					final Double couponDiscount = (null != oModel.getCartCouponValue()
-							&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
-					final Double totalPrice = oModel.getTotalPrice();
-					final int quantity = oModel.getQuantity().intValue();
+					if (!oModel.getGiveAway().booleanValue())
+					{
+						final Double mrp = oModel.getMrp();
+						final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
+								? oModel.getCartLevelDisc() : Double.valueOf(0);
+						final Double couponDiscount = (null != oModel.getCartCouponValue()
+								&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
+						final Double totalPrice = oModel.getTotalPrice();
+						final int quantity = oModel.getQuantity().intValue();
 
-					final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
+						final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
-					totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
-
+						totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
+					}
 				}
 			}
 
@@ -1826,18 +1828,20 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
 				{
-					final Double mrp = oModel.getMrp();
-					final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
-							? oModel.getCartLevelDisc() : Double.valueOf(0);
-					final Double couponDiscount = (null != oModel.getCartCouponValue()
-							&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
-					final Double totalPrice = oModel.getTotalPrice();
-					final int quantity = oModel.getQuantity().intValue();
+					if (!oModel.getGiveAway().booleanValue())
+					{
+						final Double mrp = oModel.getMrp();
+						final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
+								? oModel.getCartLevelDisc() : Double.valueOf(0);
+						final Double couponDiscount = (null != oModel.getCartCouponValue()
+								&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
+						final Double totalPrice = oModel.getTotalPrice();
+						final int quantity = oModel.getQuantity().intValue();
 
-					final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
+						final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
-					totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
-
+						totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
+					}
 
 				}
 			}
