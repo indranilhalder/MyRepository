@@ -113,6 +113,7 @@ import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.BinData;
 import com.tisl.mpl.data.CODData;
 import com.tisl.mpl.data.EMIBankList;
@@ -243,8 +244,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@Resource(name = "priceBreakupFacade")
 	private PriceBreakupFacade priceBreakupFacade;
 
-	//@Autowired
-	//private MplCouponFacade mplCouponFacade;
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 
 	//PMD
 	//@Autowired
@@ -3227,6 +3228,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
+				//Remove existing vouchers
+				mplCouponFacade.releaseVoucherInCheckout(cart);
+
+
 				//TISEE-510 ,TISEE-5555
 
 				//				if (null != bankName && !bankName.equalsIgnoreCase("null"))
@@ -5675,7 +5680,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
