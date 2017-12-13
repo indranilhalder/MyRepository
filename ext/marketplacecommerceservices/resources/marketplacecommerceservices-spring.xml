@@ -2416,6 +2416,23 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
+	
+	<!-- gigya data pulling job starts-->
+	
+	<bean id="gigyaDataPullingJob" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullingJob"
+		autowire="byName" />
+	
+	<bean id="gigyaDataPullServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.GigyaDataPullServiceImpl">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
+	<bean id="gigyaDataPullDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.GigyaDataPullDaoImpl" />
+		
+	<bean id="gigyaDataPullUtility" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullUtility" />
+	
+	<!-- gigya data pulling job ends -->
 
     
 </beans>
