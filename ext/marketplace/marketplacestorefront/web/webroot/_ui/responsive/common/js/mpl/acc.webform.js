@@ -124,81 +124,83 @@ ACC.WebForm = {
 			if (nodeValue == undefined) {
 				nodeValue = $(this).val();
 			}
-			var htmlOption = "<option value=''>Select</option>";
-			$.ajax({
-				url : ACC.config.encodedContextPath
-						+ "/ticketForm/crmChildrenNodes?nodeParent="
-						+ nodeValue,
-				type : 'GET',
-				success : function(data) {
-					if (nodeType.startsWith("nodeL1")) {
-						$.each(data.nodes, function(index, data) {
-							htmlOption += "<option value='"
-									+ data.nodeCode + "' nodeText='"
-									+ data.nodeDesc
-									+ "' displayAllow='"
-									+ data.nodeDisplayAllowed + "'>"
-									+ data.nodeDesc + "</option>";
-						});
-						$("select[name=nodeL2]").html(htmlOption);
-						$("select[name=nodeL3]").show();
-					}
-					if (nodeType.startsWith("nodeL2")) {
-						var check = false;
-						var answer = "";
-						$.each(data.nodes, function(index, data) {
-
-							if (data.createTicketAllowed == true) {
+			if(nodeValue!=='' || nodeValue){
+				var htmlOption = "<option value=''>Select</option>";
+				$.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/ticketForm/crmChildrenNodes?nodeParent="
+							+ nodeValue,
+					type : 'GET',
+					success : function(data) {
+						if (nodeType.startsWith("nodeL1")) {
+							$.each(data.nodes, function(index, data) {
 								htmlOption += "<option value='"
-										+ data.nodeCode
-										+ "' nodeText='"
+										+ data.nodeCode + "' nodeText='"
 										+ data.nodeDesc
 										+ "' displayAllow='"
-										+ data.nodeDisplayAllowed
-										+ "'>" + data.nodeDesc
-										+ "</option>";
-							} else {
-								check = true;
-								answer = data.ticketAnswer;
-								htmlOption += "<option value='"
-										+ data.nodeCode
-										+ "' nodeText='"
-										+ data.nodeDesc
-										+ "' displayAllow='"
-										+ data.nodeDisplayAllowed
-										+ "' selected>" + data.nodeDesc
-										+ "</option>";
-							}
-						});
-
-						if (check == false) {
-							$("select[name=nodeL3]").html(htmlOption);
+										+ data.nodeDisplayAllowed + "'>"
+										+ data.nodeDesc + "</option>";
+							});
+							$("select[name=nodeL2]").html(htmlOption);
 							$("select[name=nodeL3]").show();
-						} else {
-							$("select[name=nodeL3]").html(htmlOption);
-							$("select[name=nodeL3]").parent(".customSelectWrap").hide();
-							$("select[name=nodeL3]").parent(".formGroup").append("<p>" + answer + "</p>");
 						}
-
-						$("#nodeL2Text").val(nodeText);
+						if (nodeType.startsWith("nodeL2")) {
+							var check = false;
+							var answer = "";
+							$.each(data.nodes, function(index, data) {
+	
+								if (data.createTicketAllowed == true) {
+									htmlOption += "<option value='"
+											+ data.nodeCode
+											+ "' nodeText='"
+											+ data.nodeDesc
+											+ "' displayAllow='"
+											+ data.nodeDisplayAllowed
+											+ "'>" + data.nodeDesc
+											+ "</option>";
+								} else {
+									check = true;
+									answer = data.ticketAnswer;
+									htmlOption += "<option value='"
+											+ data.nodeCode
+											+ "' nodeText='"
+											+ data.nodeDesc
+											+ "' displayAllow='"
+											+ data.nodeDisplayAllowed
+											+ "' selected>" + data.nodeDesc
+											+ "</option>";
+								}
+							});
+	
+							if (check == false) {
+								$("select[name=nodeL3]").html(htmlOption);
+								$("select[name=nodeL3]").show();
+							} else {
+								$("select[name=nodeL3]").html(htmlOption);
+								$("select[name=nodeL3]").parent(".customSelectWrap").hide();
+								$("select[name=nodeL3]").parent(".formGroup").append("<p>" + answer + "</p>");
+							}
+	
+							$("#nodeL2Text").val(nodeText);
+						}
+						if (nodeType.startsWith("nodeL3")) {
+							var l4val = "";
+							var ticketType = "";
+							$.each(data.nodes, function(index, data) {
+								l4val = data.nodeCode;
+								ticketType=data.ticketType;
+							});
+							//console.log(l4val);
+							$("#nodeL4").val(l4val);
+							$("#ticketType").val(ticketType);
+							$("#nodeL3Text").val(nodeText);
+						}
+					},
+					error : function(resp) {
+						console.log("Error in crmChildNodes" + resp);
 					}
-					if (nodeType.startsWith("nodeL3")) {
-						var l4val = "";
-						var ticketType = "";
-						$.each(data.nodes, function(index, data) {
-							l4val = data.nodeCode;
-							ticketType=data.ticketType;
-						});
-						//console.log(l4val);
-						$("#nodeL4").val(l4val);
-						$("#ticketType").val(ticketType);
-						$("#nodeL3Text").val(nodeText);
-					}
-				},
-				error : function(resp) {
-					console.log("Error in crmChildNodes" + resp);
-				}
-			});
+				});
+			}
 		});
 
 	},
@@ -348,26 +350,29 @@ ACC.WebForm = {
 			url : ACC.config.encodedContextPath+ "/ticketForm/webOrderlines",
 			type : 'GET',
 			success : function(data) {
-				
-				$.each(data.orderLineDatas, function(index, dataLine) {
-
-					htmlOption += "<li data-orderCode='"+ dataLine.orderCode+"' "+
-									"data-subOrderCode='"+ dataLine.subOrderCode+"' "+
-									"data-transactionId='"+dataLine.transactionId +"'>" +
-									"<div class='prodImg'><img src='"+ dataLine.prodImageURL+"' alt='' /></div>"+
-										"<div class='prodInfo'>"+
-											"<div class='prodTxt'>"+
-												"<p class='orderDate'>Order on: "+ dataLine.orderDate+"</p>"
-												"<p class='prodName'>"+dataLine.prodTitle +"</p>"+
-												"<p class='prodPrice'>Price: "+ dataLine.prodTotalPrice+"</p>"+
-												"<span class='prodShiping'>"+dataLine.customerOrderStatus+"</span>"+
-											"</div></div></li>";
+				if( $.isArray(data.orderLineDatas) ||  data.orderLineDatas.length ) {
+					$.each(data.orderLineDatas, function(index, dataLine) {
+	
+						htmlOption += "<li data-orderCode='"+ dataLine.orderCode+"' "+
+										"data-subOrderCode='"+ dataLine.subOrderCode+"' "+
+										"data-transactionId='"+dataLine.transactionId +"'>" +
+										"<div class='prodImg'><img src='"+ dataLine.prodImageURL+"' alt='' /></div>"+
+											"<div class='prodInfo'>"+
+												"<div class='prodTxt'>"+
+													"<p class='orderDate'>Order on: "+ dataLine.orderDate+"</p>"
+													"<p class='prodName'>"+dataLine.prodTitle +"</p>"+
+													"<p class='prodPrice'>Price: "+ dataLine.prodTotalPrice+"</p>"+
+													"<span class='prodShiping'>"+dataLine.customerOrderStatus+"</span>"+
+												"</div></div></li>";
+						
+					});
 					
-				});
-				
-				$(".orderDrop").html(htmlOption);
+					$(".orderDrop").html(htmlOption);
+					
+				}
 				$("#totalPages").val(data.totalOrderLines);
 				$("#currentPage").val(currentPage);
+				
 			},
 			error : function(resp) {
 				console.log("Error in crmChildNodes"+ resp);
