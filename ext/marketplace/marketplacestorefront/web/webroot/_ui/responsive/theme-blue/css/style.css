@@ -78236,6 +78236,7 @@ ul.offerui {
 	#paymentoffersPopup .offerui li,
 	#paymenttermsoffersPopup .offerui li {
     	padding-left: 22px;
+    	width: 100%;
 	}
 	#paymentoffersPopup .offer_heading,
 	#paymenttermsoffersPopup .offer_heading{
@@ -78322,3 +78323,23 @@ button#continue_payment_after_validate {
     margin: 30px ! important;
 }
 /* TPR 7486 END */
+/* TISHS-105 start */
+#paymentoffersPopup .offer_title{
+    width: 92%;
+    word-break: break-all;
+    display: inline-block;
+    padding-left: 25px;
+    vertical-align: sub;
+    white-space: pre-wrap;
+    position: relative;
+    top: -16px;
+}
+#paymentoffersPopup span.offer_des {
+    position: relative;
+    top: -14px;
+}
+#paymentoffersPopup .max-min-value {
+    position: absolute;
+    bottom: -10px;
+}
+/* TISHS-105 end */
