@@ -43,7 +43,7 @@
 			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 			</div>
 	<!-- TPR-844 -->
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->
