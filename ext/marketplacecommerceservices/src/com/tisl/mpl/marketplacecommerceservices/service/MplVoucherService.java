@@ -236,4 +236,22 @@ public interface MplVoucherService
 	 * @return AbstractOrderModel
 	 */
 	AbstractOrderModel modifyDiscountValues(AbstractOrderModel cartModel);
+
+	/**
+	 * Validate Total Price
+	 *
+	 * @param oModel
+	 * @return Double
+	 */
+	Double setTotalPrice(AbstractOrderModel oModel);
+
+	/**
+	 * Set Voucher Data When returning back from Payment Page
+	 *
+	 * @param abstractOrderModel
+	 * @return VoucherDiscountData
+	 */
+	VoucherDiscountData getVoucherData(AbstractOrderModel abstractOrderModel);
+
+
 }
