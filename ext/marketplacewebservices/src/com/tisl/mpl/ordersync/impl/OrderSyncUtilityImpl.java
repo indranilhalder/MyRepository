@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -76,6 +77,7 @@ import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusEvent;
 import com.tisl.mpl.order.DeliveryAddressDTO;
@@ -156,6 +158,9 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	private final StringBuffer callTrace = new StringBuffer(5000);
 
 	private boolean isError = false;
+
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	/*
 	 * (non-Javadoc)
@@ -389,7 +394,12 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			modelService.refresh(childOrder);
 			updateOrderLines(sellerOrder.getOrderLine(), sellerOrder, childOrder);
-
+			//TPR-7448 Starts here
+			if (getConsignmentStatusMapping().get(shipment.getOlqsStatus()).equals(ConsignmentStatus.ORDER_CANCELLED))
+			{
+				mplVoucherService.removeCPOVoucherInvalidation(childOrder);
+			}
+			//TPR-7448 Ends here
 		}
 		catch (final Exception e)
 		{
@@ -571,7 +581,6 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		final OrderStatus orderStatus = getOrderStatusMapping().get(sellerOrderStatus);
 		orderModel.setStatus(orderStatus);
 		modelService.save(orderModel);
-
 
 	}
 
