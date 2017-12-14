@@ -32,6 +32,7 @@ import com.tisl.mpl.data.DuplicateTicketRequestData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.wsdto.AddressInfoDTO;
+import com.tisl.mpl.wsdto.DuplicateTicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketlineItemsXMLData;
 import com.tisl.mpl.wsdto.UploadImage;
@@ -599,7 +600,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	 * @param mplWebCrmTicketModel
 	 * @throws JAXBException
 	 */
-	private DuplicateTicketRequestData populateDuplicateReq(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	private DuplicateTicketMasterXMLData populateDuplicateReq(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
 	{
 		final DuplicateTicketRequestData duplicateTicketRequestData = new DuplicateTicketRequestData();
 		if (null != mplWebCrmTicketModel.getTicketSubType() && mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase("NO"))
@@ -649,12 +650,12 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	{
 		LOG.info("Starting to execute checkDuplicateWebFormTicket method....");
 		String result = null;
-		DuplicateTicketRequestData duplicateReq = null;
+		DuplicateTicketMasterXMLData duplicateReq = null;
 		final StringWriter duplicateXmlString = new StringWriter();
 		try
 		{
 			duplicateReq = populateDuplicateReq(mplWebCrmTicketModel);
-			final JAXBContext context = JAXBContext.newInstance(DuplicateTicketRequestData.class);
+			final JAXBContext context = JAXBContext.newInstance(DuplicateTicketMasterXMLData.class);
 			final Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(duplicateReq, duplicateXmlString);

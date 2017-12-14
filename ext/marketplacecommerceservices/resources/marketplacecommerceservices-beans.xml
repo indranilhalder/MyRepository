@@ -926,16 +926,5 @@
     	<property name="Order" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.OrderListWsDTO>"/>
     </bean>
     <!-- TPR-5667 : Samsung order response | end -->
-    <!-- Added for TPR-5989 :: START -->
-    <bean class="com.tisl.mpl.data.DuplicateTicketRequestData">
-		<property name="parentOrderId" type="String"/>
-		<property name="transactionId" type="String"/>
-		<property name="subOrderId" type="String"/>
-		<property name="customerId" type="String"/>
-		<property name="L0CatCode" type="String"/>
-		<property name="L1CatCode" type="String"/>
-		<property name="L2CatCode" type="String"/>
-		<property name="L3CatCode" type="String"/>
-	</bean>
-	<!-- Added for TPR-5989 :: END -->
+   
 </beans>

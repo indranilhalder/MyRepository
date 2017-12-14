@@ -110,7 +110,7 @@
 										</c:forEach>
 								</select>
 							</div>
-							<div class="formGroup">
+							<div class="formGroup" id="subIssueDiv" style="display:none;">
 								<h3 class="secLabel">Select a sub-issue.</h3>
 								<select class="node formControl customSelect" name="nodeL3">
 										<option value="">Select your exact problem</option>

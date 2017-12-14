@@ -119,6 +119,10 @@ ACC.WebForm = {
 			// for select dropdown
 			var nodeValue = $("option:selected", this).val();
 			var nodeText = $("option:selected", this).attr("nodeText");
+			var nodeDisplayAllowed = $("option:selected", this).attr("nodeDisplayAllowed");
+			var createTicketAllowed = $("option:selected", this).attr("createTicketAllowed");
+			var ticketAnswer = $("option:selected", this).attr("ticketAnswer");
+			
 			var nodeType = $(this).attr("name");
 			// for radio
 			if (nodeValue == undefined) {
@@ -134,54 +138,43 @@ ACC.WebForm = {
 					success : function(data) {
 						if (nodeType.startsWith("nodeL1")) {
 							$.each(data.nodes, function(index, data) {
-								htmlOption += "<option value='"
-										+ data.nodeCode + "' nodeText='"
-										+ data.nodeDesc
-										+ "' displayAllow='"
-										+ data.nodeDisplayAllowed + "'>"
-										+ data.nodeDesc + "</option>";
+								htmlOption += "<option value='"+ data.nodeCode+ "' " +
+								" nodeText='"+ data.nodeDesc+ "' " +
+								" nodeDisplayAllowed='"+ data.nodeDisplayAllowed + "' "+
+								" createTicketAllowed='"+ data.createTicketAllowed + "' ";
+								if(data.ticketAnswer!=null){
+									htmlOption+=" ticketAnswer='"+data.ticketAnswer+ "' ";
+								}
+								htmlOption+=" >"+ data.nodeDesc+ "</option>";
+								
 							});
 							$("select[name=nodeL2]").html(htmlOption);
 							$("select[name=nodeL3]").show();
 						}
 						if (nodeType.startsWith("nodeL2")) {
 							var check = false;
-							var answer = "";
+							
 							$.each(data.nodes, function(index, data) {
 	
-								if (data.createTicketAllowed == true) {
-									htmlOption += "<option value='"
-											+ data.nodeCode
-											+ "' nodeText='"
-											+ data.nodeDesc
-											+ "' displayAllow='"
-											+ data.nodeDisplayAllowed
-											+ "'>" + data.nodeDesc
-											+ "</option>";
-								} else {
-									check = true;
-									answer = data.ticketAnswer;
-									htmlOption += "<option value='"
-											+ data.nodeCode
-											+ "' nodeText='"
-											+ data.nodeDesc
-											+ "' displayAllow='"
-											+ data.nodeDisplayAllowed
-											+ "' selected>" + data.nodeDesc
-											+ "</option>";
+								htmlOption += "<option value='"+ data.nodeCode+ "' " +
+								" nodeText='"+ data.nodeDesc+ "' " +
+								" nodeDisplayAllowed='"+ data.nodeDisplayAllowed + "' "+
+								" createTicketAllowed='"+ data.createTicketAllowed + "' "; 
+								if(data.ticketAnswer!=null){
+									htmlOption+=" ticketAnswer='"+data.ticketAnswer+ "' ";
 								}
+								htmlOption+=" >"+ data.nodeDesc+ "</option>";
+								
+								check= true;
 							});
 	
-							if (check == false) {
-								$("select[name=nodeL3]").html(htmlOption);
-								$("select[name=nodeL3]").show();
-							} else {
-								$("select[name=nodeL3]").html(htmlOption);
-								$("select[name=nodeL3]").parent(".customSelectWrap").hide();
-								$("select[name=nodeL3]").parent(".formGroup").append("<p>" + answer + "</p>");
-							}
-	
+							$("select[name=nodeL3]").html(htmlOption);
 							$("#nodeL2Text").val(nodeText);
+							
+							if(check){
+								$("#subIssueDiv").show();
+							}
+							
 						}
 						if (nodeType.startsWith("nodeL3")) {
 							var l4val = "";
@@ -190,6 +183,7 @@ ACC.WebForm = {
 								l4val = data.nodeCode;
 								ticketType=data.ticketType;
 							});
+							
 							//console.log(l4val);
 							$("#nodeL4").val(l4val);
 							$("#ticketType").val(ticketType);
@@ -201,105 +195,15 @@ ACC.WebForm = {
 					}
 				});
 			}
-		});
-
-	},
-	xhrFileUpload : function() {
-
-		var url = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
-
-		$("#attachmentFile").on("change",function(e) {
-			$.fn.simpleUpload.maxSimultaneousUploads(1);
-		
-			$(this).simpleUpload(url,
-			{
-		
-				/*
-				 * Each of these callbacks are
-				 * executed for each file. To
-				 * add callbacks that are
-				 * executed only once, see
-				 * init() and finish().
-				 * 
-				 * "this" is an object that can
-				 * carry data between callbacks
-				 * for each file. Data related
-				 * to the upload is stored in
-				 * this.upload.
-				 */
-				allowedExts : [ "jpg", "jpeg",
-						"jpe", "jif", "jfif",
-						"jfi", "png", "gif" ],
-				allowedTypes : [ "image/pjpeg",
-						"image/jpeg",
-						"image/png",
-						"image/x-png",
-						"image/gif",
-						"image/x-gif" ],
-				limit : 5, // 5 files only
-				start : function(file) {
-					// upload started
-					this.block = $('<div class="block"></div>');
-					this.progressBar = $('<div class="progressBar"></div>');
-					this.block.append(this.progressBar);
-					$('#uploads').append(this.block);
-				},
-
-				progress : function(progress) {
-					// received progress
-					this.progressBar.width(progress+ "%");
-				},
-
-				success : function(data) {
-					// upload successful
-					console.log(data);
-					this.progressBar.remove();
-
-					/*
-					 * Just because the success
-					 * callback is called
-					 * doesn't mean your
-					 * application logic was
-					 * successful, so check
-					 * application success.
-					 * 
-					 * Data as returned by the
-					 * server on... success:
-					 * {"success":true,"format":"..."}
-					 * error:
-					 * {"success":false,"error":{"code":1,"message":"..."}}
-					 */
-
-					if (data!=='error') {
-						// now fill the block
-						// with the format of
-						// the uploaded file
-						var formatDiv = $('<div class="format"></div>').text("File uploaded Successfully!!!");
-						this.block.append(formatDiv);
-						//adding input
-						var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
-						$("#customerWebForm").append(inputHidden);
-					} else {
-						// our application
-						// returned an error
-						var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
-						this.block.append(errorDiv);
-					}
-
-				},
-
-				error : function(error) {
-					// upload failed
-					this.progressBar.remove();
-					var error = error.message;
-					var errorDiv = $(
-							'<div class="error"></div>')
-							.text(error);
-					this.block.append(errorDiv);
-				},
-
-			});
-
+			
+			if (createTicketAllowed && nodeType.startsWith("nodeL3")) {
+				$('#subIssueDiv').after(ticketAnswer);
+			}
+			
+			if(!createTicketAllowed){
+				$(".webfromTicketSubmit").prop('disabled',true);
+			}
+			ACC.WebForm.attachSelectEvent();
 		});
 
 	},
@@ -451,6 +355,20 @@ ACC.WebForm = {
 
 		});
 	},
+	attachSelectEvent : function(){
+		/*custum selecbox*/
+		 $(".customSelect").each(function(){
+	            $(this).wrap("<span class='customSelectWrap'></span>");
+	            $(this).after("<span class='holder'></span>");
+	            $(".holder").removeClass('active');
+	        });
+	    $(".customSelect").change(function(){
+	        var selectedOption = $(this).find(":selected").text();
+	        $(this).next(".holder").addClass('active');
+	        $(this).next(".holder").text(selectedOption);
+	    }).trigger('change');
+	    $(".holder").removeClass('active');
+	},
 
 };
 
@@ -461,6 +379,7 @@ $(document).ready(function() {
 	ACC.WebForm.sendTicket();
 	ACC.WebForm.loadPaginationLink();
 	ACC.WebForm.attachOrderDropEvent();
+	ACC.WebForm.attachSelectEvent();
 	
 	$('.contCustCareBtn').click(function(){
 		$(this).toggleClass('dActive');
@@ -475,17 +394,5 @@ $(document).ready(function() {
 	$('#closeCustCarePopBox').click(function(){
 		$(this).parent().parent('.issueQuryPopUp').hide();
 	});
-	/*custum selecbox*/
-	 $(".customSelect").each(function(){
-            $(this).wrap("<span class='customSelectWrap'></span>");
-            $(this).after("<span class='holder'></span>");
-            $(".holder").removeClass('active');
-        });
-        $(".customSelect").change(function(){
-            var selectedOption = $(this).find(":selected").text();
-            $(this).next(".holder").addClass('active');
-            $(this).next(".holder").text(selectedOption);
-        }).trigger('change');
-         $(".holder").removeClass('active');
          
 });
