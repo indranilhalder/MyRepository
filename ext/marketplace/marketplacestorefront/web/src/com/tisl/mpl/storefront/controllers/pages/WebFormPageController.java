@@ -27,9 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -43,7 +41,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -163,12 +160,12 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = "/fileUpload", method =
 	{ RequestMethod.POST })
-	public @ResponseBody String fileUpload(@RequestPart(value = "uploadFile") final List<MultipartFile> uploadFile)
+	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final MultipartFile uploadFile)
 			throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
 		String filelocation = null;
-		final List<String> filelocations = new ArrayList<>();
+		//final List<String> filelocations = new ArrayList<>();
 		Path path = null;
 		fileUploadLocation = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CRM_FILE_UPLOAD_PATH);
@@ -176,43 +173,42 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		{
 			try
 			{
-				for (final MultipartFile file : uploadFile)
+				final byte barr[] = uploadFile.getBytes();
+				final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+				nowDate = sdf.format(new Date());
+				path = Paths.get(fileUploadLocation + File.separator + nowDate);
+				//if directory exists?
+				if (!Files.exists(path))
 				{
-					final byte barr[] = file.getBytes();
-					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-					nowDate = sdf.format(new Date());
-					path = Paths.get(fileUploadLocation + File.separator + nowDate);
-					//if directory exists?
-					if (!Files.exists(path))
+					try
 					{
-						try
-						{
-							Files.createDirectories(path);
-						}
-						catch (final IOException e)
-						{
-							//fail to create directory
-							LOG.error("Exception ,While creating the Directory " + e.getMessage());
-						}
+						Files.createDirectories(path);
 					}
-					filelocation = path + File.separator + file.getOriginalFilename();
-					final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
-					bout.write(barr);
-					bout.flush();
-					bout.close();
-					LOG.debug("FileUploadLocation   :" + filelocation);
-					filelocations.add(filelocation);
+					catch (final IOException e)
+					{
+						//fail to create directory
+						LOG.error("Exception ,While creating the Directory " + e.getMessage());
+					}
 				}
+				filelocation = path + File.separator + uploadFile.getOriginalFilename();
+				final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
+				bout.write(barr);
+				bout.flush();
+				bout.close();
+				LOG.debug("FileUploadLocation   :" + filelocation);
+				//filelocations.add(filelocation);
+				//}
 			}
 			catch (final Exception e)
 			{
 				LOG.error("Exception is:" + e);
 				filelocation = "error";
-				filelocations.add(filelocation);
+				//filelocations.add(filelocation);
 			}
 		}
 
-		return String.join(",", filelocations);
+		//return String.join(",", filelocations);
+		return filelocation;
 	}
 
 	@RequestMapping(value = "/webOrderlines", method = RequestMethod.GET)

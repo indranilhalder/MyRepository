@@ -304,45 +304,71 @@ ACC.WebForm = {
 
 	},
 	simpleAjaxUpload : function(){
-		var url = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
+		var uploadurl = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
 
 		$("#attachmentFile").on("change",function(e) {
-			
-			var objFormData = new FormData();
-		    // GET FILE OBJECT 
-		    //var objFile = $(this)[0].files[0];
-		    $.each($(this)[0].files, function(i, file) {
-		    	objFormData.append('uploadFile['+i+']', file);
-		    });
-		    // APPEND FILE TO POST DATA
-		    //objFormData.append('uploadFile', objFile);
+			e.preventDefault();
+		    //Disable submit button
+		    $(".webfromTicketSubmit").prop('disabled',true);
 		    
-		    $.ajax({
-		        url: url,
-		        type: 'POST',
-		        data: objFormData,
-		        //JQUERY CONVERT THE FILES ARRAYS INTO STRINGS.SO processData:false
-		        async: false,
-		        cache: false,
-		        contentType: false,
-		        enctype: 'multipart/form-data',
-		        processData: false,
-		        success: function(data) {
-		        	if (data!=='error') {
-						// the uploaded file
-						var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
-						$("#customerWebForm").append(inputHidden);
-					} else {
-						// our application
-						// returned an error
-						var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
-						$("#customCareError").append(errorDiv);
-					}
-		        	
-		        }
+		    var file = $(this)[0].files[0];
+		    var formData = new FormData();
+		    formData.append('uploadFile', file);
+		    
+		    // Ajax call for file uploaling
+		    var ajaxReq = $.ajax({
+		      url : uploadurl,
+		      type : 'POST',
+		      data : formData,
+		      async: false,
+	        cache: false,
+	        contentType: false,
+	        enctype: 'multipart/form-data',
+	        processData: false,
+		      xhr: function(){
+		        //Get XmlHttpRequest object
+		         var xhr = $.ajaxSettings.xhr() ;
+		        
+		        //Set onprogress event handler 
+		         xhr.upload.onprogress = function(event){
+		          	var perc = Math.round((event.loaded / event.total) * 100);
+		          	$('#progressBar').text(perc + '%');
+		          	$('#progressBar').css('width',perc + '%');
+		         };
+		         return xhr ;
+		    	},
+		    	beforeSend: function( xhr ) {
+		    		//Reset alert message and progress bar
+		    		$('#customCareError').text('');
+		    		$('#progressBar').text('');
+		    		$('#progressBar').css('width','0%');
+		         }
+		    });
+		  
+		    // Called on success of file upload
+		    ajaxReq.done(function(data) {
+		      $('#attachmentFile').val('');
+		      $('.webfromTicketSubmit').prop('disabled',false);
+		      
+		      if (data!=='error') {
+					// the uploaded file
+					var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
+					$("#customerWebForm").append(inputHidden);
+				} else {
+					// our application returned an error
+					var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
+					$("#customCareError").append(errorDiv);
+				}
 		    });
 		    
-		});
+		    // Called on failure of file upload
+		    ajaxReq.fail(function(jqXHR) {
+		      $('#customCareError').text(jqXHR.responseText+'('+jqXHR.status+
+		      		' - '+jqXHR.statusText+')');
+		      $('.webfromTicketSubmit').prop('disabled',false);
+		    });
+		  });
+		 
 	},
 	loadOrderLines : function(currentPage) {
 		var htmlOption="";
