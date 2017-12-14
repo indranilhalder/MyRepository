@@ -3727,12 +3727,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Logic when payment mode is Netbanking
 		try
 		{
+			//Paytm vulnerabilty check
+			final boolean value = configurationService.getConfiguration().getBoolean("payment.paytm.enable", false);
 
-			paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
-					redirectAfterPayment, format);
-			if (null != paytmResponse)
+			if (value)
 			{
-				return paytmResponse;
+				paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
+						redirectAfterPayment, format);
+				if (null != paytmResponse)
+				{
+					return paytmResponse;
+				}
+			}
+			else
+			{
+				throw new Exception("Payment through selected payment mode is not allowed!");
 			}
 		}
 		catch (final AdapterException e)
@@ -5680,7 +5689,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

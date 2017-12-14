@@ -317,8 +317,7 @@
 										</c:if>
 									</c:forEach> --%>
 									
-									<!-- Newly addded for paytm integration -->
-										<c:forEach var="map" items="${paymentModes}">
+									<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 			    							<c:when test="${map.key eq 'TW'}">
@@ -333,7 +332,6 @@
 											</c:choose>
 										</c:if>
 									</c:forEach>
-									<!-- Newly addded for paytm integration -->
 									
 									
 					</ul>
@@ -1363,81 +1361,63 @@
 										</c:if>
 						</c:forEach>
 									
-						<!-- paytm Changes -->
-						<li id="PAYTM">
-						<ul class="product-block blocks">
-						 <c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'PAYTM'}">
-												<input type="hidden" id="PAYTM" value="${map.value}" />
-												
+						<c:forEach var="map" items="${paymentModes}">
+							<c:if test="${map.value eq true}">
+								<c:choose>
+								<c:when test="${map.key eq 'PAYTM'}">	
+									<li id="PAYTM">
+										<ul class="product-block blocks">
+											<input type="hidden" id="PAYTM" value="${map.value}" />
 												<div class="radio">
 													 <input type="radio" name="priority_paytm" id="radioButton_Paytm" value="paytm" checked/>
-													 <label for="priority_paytm" class="numbers creditLabel"> <span><img src="${commonResourcePath}/images/paytm.png" alt=""></span></label>
-									   			<span id="paytmInfo" style="display:none">
-														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
-													</span>
+													 <label for="priority_paytm"  class="numbers creditLabel"><img src="${commonResourcePath}/images/paytm.png" alt=""></label>
 									   			</div>
-	
 												<li>
 													<span id="viewPaymentPaytm"  onclick="viewPaymentPaytm();">
 														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
 													</span>
 												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-						</c:forEach>
-						
-						<div class="pay newCardPaymentCC">
-									<button type="submit" class="make_payment button btn-block payment-button" id="make_paytm_payment" onclick="submitPaytmForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-						</div>
-						</ul>
-						</li>		
-						<!-- paytm Changes -->		
+												<div class="pay newCardPaymentCC">
+													<button type="submit" class="make_payment button btn-block payment-button" id="make_paytm_payment" onclick="submitPaytmForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+												</div>
+										</ul>
+									</li>
+								</c:when>
+								</c:choose>
+							</c:if>
+						</c:forEach>	
 									
-							 <li id="MRUPEE">
-							<ul class="product-block blocks">
-							<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'MRupee'}">
-												<input type="hidden" id="MRupee" value="${map.value}" />
-	
-								<!-- <li id="tpWallet"> -->
+						<c:forEach var="map" items="${paymentModes}">
+							<c:if test="${map.value eq true}">
+								<c:choose>
+									<c:when test="${map.key eq 'MRupee'}">
+							 			<li id="MRUPEE">
+										<ul class="product-block blocks">
+											<input type="hidden" id="MRupee" value="${map.value}" />
 												<div class="radio">
 													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee" checked/>
 													 <label for="radioButton_MRupee" class="numbers creditLabel"><span><img src="${commonResourcePath}/images/mRupeeLogo.PNG" alt=""></span></label>
-									   			<span id="mRupeeInfo" style="display:none">
-														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
+									   				<span id="mRupeeInfo" style="display:none">
+															<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
 													</span>
 									   			</div>
-									<form id="tpWallt_payment_form" autocomplete="off" action="${mRupeeUrl}">
-										<ycommerce:testId code="paymentDetailsWalletForm">
-										<input type="hidden" name="MCODE" value="${mCode}">
-										<input type="hidden" name="NARRATION" value="${narration}">
-										<input type="hidden" name="TXNTYPE" value="P">
-										<input type="hidden" name="AMT" id = "AMT">
-										<input type="hidden" name="RETURL" id = "RETURL">
-										<input type="hidden" name="REFNO" id = "REFNO">
-										<input type="hidden" name="CHECKSUM" id = "CHECKSUM">
-										
-
-
-
-											    
-									    </ycommerce:testId>
-									</form>
-		            			<!-- </li> -->
-		            			</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-						</ul>
-									
-					</li>
-					<!-- mRupee Changes ends -->
+										<form id="tpWallt_payment_form" autocomplete="off" action="${mRupeeUrl}">
+											<ycommerce:testId code="paymentDetailsWalletForm">
+												<input type="hidden" name="MCODE" value="${mCode}">
+												<input type="hidden" name="NARRATION" value="${narration}">
+												<input type="hidden" name="TXNTYPE" value="P">
+												<input type="hidden" name="AMT" id = "AMT">
+												<input type="hidden" name="RETURL" id = "RETURL">
+												<input type="hidden" name="REFNO" id = "REFNO">
+												<input type="hidden" name="CHECKSUM" id = "CHECKSUM">
+									    	</ycommerce:testId>
+										</form>
+		            					</ul>
+										</li>
+		            				</c:when>
+								</c:choose>
+							</c:if>
+					</c:forEach>
 									<!-- TPR-7486 one single Place orde button for all the payment mode -->
 				<button class="button validatepayment" type="button" id="continue_payment_after_validate">
 				<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
