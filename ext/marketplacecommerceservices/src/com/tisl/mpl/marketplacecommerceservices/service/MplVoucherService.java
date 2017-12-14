@@ -270,7 +270,6 @@ public interface MplVoucherService
 
 	/**
 	 * @param subOrderDetails
-	 * @param transactionId
 	 */
-	public void removeCPOVoucherInvalidation(OrderModel subOrderDetails, String transactionId);
+	public void removeCPOVoucherInvalidation(OrderModel subOrderDetails);
 }
