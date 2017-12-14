@@ -35,8 +35,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,8 +50,10 @@ import com.tisl.mpl.service.MplCustomBrandService;
 import com.tisl.mpl.service.MplCustomCategoryService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.BrandListHierarchyData;
+import com.tisl.mpl.wsdto.BrandListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.BrandListHierarchyWsDTO;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyData;
+import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyWsDTO;
 import com.tisl.mpl.wsdto.ProductForCategoryData;
 import com.tisl.mpl.wsdto.ProductForCategoryWsDTO;
@@ -198,15 +198,13 @@ public class CatalogsController extends BaseController
 	//TPR-561
 	@RequestMapping(value = "/getAllCategoriesAmp", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONObject fetchAllCategoriesAmp(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public DepartmentListHierarchyDataAmp fetchAllCategoriesAmp(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
-		DepartmentListHierarchyData shopByDeptData = new DepartmentListHierarchyData();
+		DepartmentListHierarchyDataAmp shopByDeptData = new DepartmentListHierarchyDataAmp();
 		DepartmentListHierarchyWsDTO deptListDto = new DepartmentListHierarchyWsDTO();
-		final JSONObject jsonObj = new JSONObject();
-		final JSONArray jsonArray = new JSONArray();
 		try
 		{
-			shopByDeptData = mplCustomCategoryService.getAllCategories();
+			shopByDeptData = mplCustomCategoryService.getAllCategoriesAmp();
 			final FieldSetBuilderContext context = new FieldSetBuilderContext();
 			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(DepartmentListHierarchyData.class, DataMapper.FIELD_PREFIX,
 					fields, context);
@@ -241,9 +239,7 @@ public class CatalogsController extends BaseController
 			}
 			deptListDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		jsonArray.add(deptListDto);
-		jsonObj.put("items", jsonArray);
-		return jsonObj;
+		return shopByDeptData;
 	}
 
 
@@ -310,16 +306,14 @@ public class CatalogsController extends BaseController
 	 */
 	@RequestMapping(value = "/allBrandsAmp", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONObject getAllBrandsAmp(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public BrandListHierarchyDataAmp getAllBrandsAmp(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
-		BrandListHierarchyData shopbydeptdata = new BrandListHierarchyData();
+		BrandListHierarchyDataAmp shopbydeptdata = new BrandListHierarchyDataAmp();
 		BrandListHierarchyWsDTO brandListdto = new BrandListHierarchyWsDTO();
-		final JSONObject jsonObj = new JSONObject();
-		final JSONArray jsonArray = new JSONArray();
 
 		try
 		{
-			shopbydeptdata = mplCustomBrandService.getShopByBrand();
+			shopbydeptdata = mplCustomBrandService.getShopByBrandAmp();
 			final FieldSetBuilderContext context = new FieldSetBuilderContext();
 			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(BrandListHierarchyWsDTO.class, DataMapper.FIELD_PREFIX,
 					fields, context);
@@ -355,9 +349,7 @@ public class CatalogsController extends BaseController
 			}
 			brandListdto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		jsonArray.add(shopbydeptdata);
-		jsonObj.put("items", jsonArray);
-		return jsonObj;
+		return shopbydeptdata;
 	}
 
 	/**

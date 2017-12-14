@@ -1,4 +1,5 @@
 <%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/pwamp/footer"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html amp>
 <head>
@@ -24,179 +25,17 @@
 
 <style amp-custom>body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFFFFF;}
 
-
-
-.bg-teal-light{ background-color: #1abc9c; color:#FFFFFF}
-.bg-teal-dark{  background-color: #16a085; color:#FFFFFF}
-.border-teal-light{ border:solid 1px #1abc9c;}
-.border-teal-dark{  border:solid 1px #16a085;}
-.color-teal-light{ color: #1abc9c;}
-.color-teal-dark{  color: #16a085;}
-.bg-green-light{background-color: #2ecc71; color:#FFFFFF}
-.bg-green-dark{background-color: #2abb67; color:#FFFFFF}
-.border-green-light{border:solid 1px #2ecc71;}
-.border-green-dark{ border:solid 1px #2abb67;}
-.color-green-light{color: #2ecc71;}
-.color-green-dark{color: #2abb67;}
-.bg-blue-light{background-color: #3498db; color:#FFFFFF}
-.bg-blue-dark{background-color: #2980b9; color:#FFFFFF;}
-.border-blue-light{border:solid 1px #3498db;}
-.border-blue-dark{ border:solid 1px #2980b9;}
-.color-blue-light{color: #3498db;}
-.color-blue-dark{color: #2980b9;}
-.bg-magenta-light{background-color: #9b59b6; color:#FFFFFF}
-.bg-magenta-dark{background-color: #8e44ad; color:#FFFFFF}
-.border-magenta-light{border:solid 1px #9b59b6;}
-.border-magenta-dark{ border:solid 1px #8e44ad;}
-.color-magenta-light{color: #9b59b6;}
-.color-magenta-dark{color: #8e44ad;}
-.bg-night-light{background-color: #34495e; color:#FFFFFF}
-.bg-night-dark{background-color: #2c3e50; color:#FFFFFF}
-.border-night-light{border:solid 1px #34495e;}
-.border-night-dark{ border:solid 1px #2c3e50;}
-.color-night-light{color: #34495e;}
-.color-night-dark{color: #2c3e50;}
-.bg-yellow-light{background-color: #E67E22; color:#FFFFFF}
-.bg-yellow-dark{background-color: #e86f2a; color:#FFFFFF}
-.border-yellow-light{border:solid 1px #E67E22;}
-.border-yellow-dark{ border:solid 1px #F27935;}
-.color-yellow-light{color: #f1c40f;}
-.color-yellow-dark{color: #f39c12;}
-.bg-orange-light{background-color: #F9690E; color:#FFFFFF}
-.bg-orange-dark{background-color: #D35400; color:#FFFFFF}
-.border-orange-light{border:solid 1px #F9690E;}
-.border-orange-dark{ border:solid 1px #D35400;}
-.color-orange-light{color: #e67e22;}
-.color-orange-dark{color: #d35400;}
-.bg-red-light{background-color: #e74c3c; color:#FFFFFF}
-.bg-red-dark{background-color: #c0392b; color:#FFFFFF}
-.border-red-light{border:solid 1px #e74c3c;}
-.border-red-dark{ border:solid 1px #c0392b;}
-.color-red-light{color: #e74c3c;}
-.color-red-dark{color: #c0392b;}
-.bg-pink-light{background-color: #fa6a8e ; color:#FFFFFF}
-.bg-pink-dark{background-color: #FB3365 ; color:#FFFFFF}
-.border-pink-light{border:solid 1px #fa6a8e ;}
-.border-pink-dark{ border:solid 1px #FB3365 ;}
-.color-pink-light{color: #fa6a8e;}
-.color-pink-dark{color: #FB3365;}
-.bg-gray-light{background-color: #bdc3c7; color:#FFFFFF}
-.bg-gray-dark{background-color: #95a5a6; color:#FFFFFF}
-.border-gray-light{border:solid 1px #bdc3c7;}
-.border-gray-dark{ border:solid 1px #95a5a6;}
-.color-gray-light{color: #bdc3c7;}
-.color-gray-dark{color: #95a5a6;}
-.bg-white{background-color:#FFFFFF;}
-.color-white{color:#FFFFFF;}
-.border-white{border:solid 1px #FFFFFF;}
-.bg-black{background-color:#000000;}
-.color-black{color:#000000;}
-.border-black{border:solid 1px #000000;}
-
-/*Social Icons*/
-.facebook-bg{background-color:#3b5998; color:#FFFFFF;}
-.linkedin-bg{background-color:#0077B5; color:#FFFFFF;}
-.twitter-bg{background-color:#4099ff; color:#FFFFFF;}
-.google-bg{ background-color:#d34836; color:#FFFFFF;}
-.whatsapp-bg{ background-color:#34AF23; color:#FFFFFF;}
-.pinterest-bg{ background-color:#C92228; color:#FFFFFF;}
-.sms-bg{ background-color:#27ae60; color:#FFFFFF;}
-.mail-bg{ background-color:#3498db; color:#FFFFFF;}
-.dribbble-bg{ background-color:#EA4C89; color:#FFFFFF;}
-.tumblr-bg{ background-color:#2C3D52; color:#FFFFFF;}
-.reddit-bg{ background-color:#336699; color:#FFFFFF;}
-.youtube-bg{ background-color:#D12827; color:#FFFFFF;}
-.phone-bg{ background-color:#27ae60; color:#FFFFFF;}
-.skype-bg{ background-color:#12A5F4; color:#FFFFFF;}
-.facebook-color{    color:#3b5998;}
-.linkedin-color{    color:#0077B5;}
-.twitter-color{     color:#4099ff;}
-.google-color{      color:#d34836;}
-.whatsapp-color{    color:#34AF23;}
-.pinterest-color{   color:#C92228;}
-.sms-color{         color:#27ae60;}
-.mail-color{        color:#3498db;}
-.dribbble-color{    color:#EA4C89;}
-.tumblr-color{      color:#2C3D52;}
-.reddit-color{      color:#336699;}
-.youtube-color{     color:#D12827;}
-.phone-color{       color:#27ae60;}
-.skype-color{       color:#12A5F4;}
-
-/*Background Images*/
-.bg-1{background-image:url(images/pictures/1.jpg)}
-.bg-2{background-image:url(images/pictures/2.jpg)}
-.bg-3{background-image:url(images/pictures/3.jpg)}
-.bg-4{background-image:url(images/pictures/4.jpg)}
-.bg-5{background-image:url(images/pictures/5.jpg)}
-.bg-6{background-image:url(images/pictures/6.jpg)}
-.bg-7{background-image:url(images/pictures/7.jpg)}
-.bg-8{background-image:url(images/pictures/8.jpg)}
-.bg-9{background-image:url(images/pictures/9.jpg)}
-.bg-body{background-image:url(images/pictures_vertical/bg2.jpg)}
-.overlay{background-color:rgba(0,0,0,0.8); position:absolute; top:0px; right:0px; bottom:0px; left:0px;}
-
-/*Font Settings*/
-h1{ font-size:24px; line-height:34px; font-weight:500;}
-h2{ font-size:22px; line-height:32px; font-weight:500;}
-h3{ font-size:20px; line-height:30px; font-weight:500;}
-h4{ font-size:18px; line-height:28px; font-weight:500;}
-h5{ font-size:16px; line-height:26px; font-weight:500;}
-h6{ font-size:14px; line-height:22px; font-weight:800;}
-.ultrathin{font-weight:200;}
-.thin{font-weight:300;}
-.thiner{font-weight:400;}
-.boder{font-weight:600;}
-.bold{font-weight:700;}
-.ultrabold{font-weight:800;}
-.capitalize{text-transform: capitalize;}
-.italic{font-style: italic;}
-.small-text{font-size:12px; display:block;}
-.center-text{text-align:center; display:block;}
-.right-text{text-align:right;}
-.uppercase{text-transform: uppercase;}
-.boxed-text{width:80%; margin:0px auto 30px auto;}
-.round-image{border-radius:500px;}
 p a{display:inline;}
 
-/*Content Settings*/
-.content{padding:0px 20px 0px 20px}
-.container{margin-bottom:30px}
-.full-bottom{margin-bottom:25px}
-.no-bottom{margin-bottom:0px}
-.full-top{margin-top:25px}
-.half-bottom{margin-bottom:15px}
-.half-top{margin-top:15px}
-.quarter-bottom{margin-bottom:15px}
-.hidden{display:none}
-.left-column{width:45%; margin-right:5%; float:left}
-.right-column{width:45%; margin-left:5%; float:left}
-.one-third-left{float:left; width:29%;  margin-right:1%}
-.one-third-center{float:left; width:29%; margin-left:5%; margin-right:5%}
-.one-third-right{float:left; width:29%; margin-left:1%}
-.clear{clear:both}
+ul {padding: 0;}
 
-* {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	vertical-align: baseline;
-	outline: none;
-	font-size-adjust: none;
-	-webkit-text-size-adjust: none;
-	-moz-text-size-adjust: none;
-	-ms-text-size-adjust: none;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
-    -webkit-font-smoothing: antialiased;
-    -webkit-transform: translate3d(1,1,1);
-    transform:translate3d(1,1,1);
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+.footer-child ul li {
+	list-style-type: none;
 }
 
-div, a, p, img, blockquote, form, fieldset, textarea, input, label, iframe, code, pre {
+.footer-child a, .footer-child h4 {letter-spacing: .6px;}
+
+a {
 	display: block;
 	position:relative;
 }
@@ -209,30 +48,6 @@ p{
 }
 
 a{text-decoration:none;}
-
-/*Lists*/
-.icon-list{list-style:none; font-size:14px; line-height:28px; color:#666666;}
-.icon-list i{width:30px;}
-
-.center-icon{
-	width:80px;
-	height:80px;
-	border-radius:80px;
-	border:solid 1px rgba(0,0,0,0.5);
-	text-align:center;
-	line-height:80px;
-	font-size:24px;
-	margin:0px auto 30px auto;
-	display:block;
-}
-
-.decoration, .decoration-no-bottom{
-	height:1px;
-	background-color:rgba(0,0,0,0.1);
-}
-
-.decoration{margin-bottom:30px;}
-.decoration-margins{margin:0px 20px 30px 20px}
 
 header{
 	position:fixed;
@@ -270,7 +85,7 @@ header{
 }
 
 .header-clear{
-	height:60px;
+	height:98px;
 }
 
 /*Footer*/
@@ -283,228 +98,13 @@ header{
 	margin:12px auto 20px auto;
 }
 
-.footer-socials a{
-	width:40px;
-	height:40px;
-	line-height:40px;
-	margin-left:2px;
-	margin-right:2px;
-	text-align:center;
-	float:left;
-}
-
-.footer-socials{
-	width:265px;
-	margin:0px auto 30px auto;
-}
-
-.news-slider .caption{
-	background-color:rgba(0,0,0,0.8);
-}
-
-.caption{
-	position:absolute;
-	bottom:0px;
-	left:0px;
-	right:0px;
-	height:65px;
-	padding-left:20px;
-	padding-right:20px;
-	background-color:rgba(0,0,0,0.5);
-}
-
-.caption h4{
-	font-size:14px;
-	color:#FFFFFF;
-	line-height:20px;
-	margin-top:12px;
-}
-
-.caption h3{
-	color:#FFFFFF;
-	margin-bottom:5px;
-	font-size:16px;
-	padding-top:23px;
-	line-height:0px;
-}
-
-.caption p{
-	font-size:12px;
-	color:rgba(255,255,255,0.5);
-}
-
-.call-to-action a{
-	width:33.3%;
-	float:left;
-	text-align:center;
-	border-bottom:solid 1px rgba(0,0,0,0.1);
-	height:50px;
-	line-height:50px;
-	color:#1f1f1f;
-	font-size:12px;
-}
-
-.call-to-action a i{
-	padding-right:10px;
-}
-
-.social-icons{
-	width:150px;
-	margin:0 auto;
-}
-
-.social-round a{border-radius:50px;}
-
-.social-icons-small{
-	width:95px;
-	margin:0 auto;
-}
-
-.social-icons a{
-	line-height:40px;
-	width:40px;
-	height:40px;
-	margin-left:5px;
-	margin-right:5px;
-	float:left;
-}
-
-.social-icons-small a{
-	line-height:35px;
-	width:35px;
-	height:35px;
-	margin-left:5px;
-	margin-right:5px;
-	float:left;
-}
-
-/*Heading Block*/
-.heading-block{
-	padding:30px 20px;
-	margin-bottom:30px;
-}
-
-.heading-block h4{
-	position:relative;
-	z-index:10;
-	color:#FFFFFF;
-}
-
-.heading-block p{
-	position:relative;
-	z-index:10;
-	color:rgba(255,255,255,0.5);
-	margin-bottom:0px;
-}
-
-.heading-block a{
-	z-index:10;
-	width:100px;
-	height:30px;
-	line-height:30px;
-	color:#FFFFFF;
-	text-align:center;
-	font-size:12px;
-	margin:20px auto 0px auto;
-	border:solid 1px rgba(255,255,255,0.5);
-	border-radius:5px;
-    display:block;
-}
-
-.icon-heading h4{margin-bottom:5px}
-.icon-heading h4 i{
-	font-size:16px;
-	padding-right:20px;
-}
-
-.quote-style h4{
-	font-weight:300;
-	margin-left:40px;
-	margin-right:40px;
-	text-align:center;
-	line-height:40px;
-}
-
-.rating{
-	width:95px;
-	margin-left:auto;
-	margin-right:auto;
-	margin-bottom:10px;
-	display:block;
-}
-
-
-.half-column-left .half-left-img{
-	position:absolute;
-	border-radius:150px;
-	margin-left:-50px;
-	left:0px;
-}
-
-.half-column-left{
-	padding-left:70px;
-	padding-right:20px;
-	min-height:110px;
-    overflow:hidden;
-}
-
-
-.half-column-right .half-right-img{
-	position:absolute;
-	border-radius:150px;
-	margin-right:-50px;
-	right:0px;
-}
-
-.half-column-right{
-	padding-right:70px;
-	padding-left:20px;
-	min-height:110px;
-    overflow:hidden;
-}
-
-/*Gallery*/
-
-.gallery-thumb{
-	width:31%;
-	float:left;
-	margin-bottom:3%;
-}
-.gallery-round .gallery-thumb{border-radius:100px}
-.gallery-wide .gallery-thumb-wide{margin-bottom:5px;}
-
-.gallery-thumb:nth-child(3n-1){
-	margin-left:3%;
-	margin-right:3%;
-}
-
-::-webkit-scrollbar { width: 0; }
-
 #sidebar{
 	width:250px;
 	background-color:#FFFFFF;
 }
 
-.sidebar-header a{
-	width:50px;
-	float:left;
-    padding-top:60px;
-	line-height:60px;
-	color:#1f1f1f;
-	text-align:center;
-	border-bottom:solid 1px rgba(0,0,0,0.05);
-}
 
-.sidebar-logo{
-	background-image:url(//assets.tatacliq.com/medias/sys_master/images/9906406817822.png);
-	height:31px;
-	width:150px;
-	background-size:150px 31px;
-	display:block;
-	margin:25px 0px 25px 15px;
-}
-
-.sidebar-menu{margin-left:15px; margin-bottom:0px;}
+.sidebar-menu {margin-left:15px; margin-bottom:0px;}
 
 .sidebar-menu i{
 	font-size:14px;
@@ -558,22 +158,8 @@ header{
 
 .sidebar-menu li a .fa-circle{margin-top:-5px;}
 
-.sidebar-divider{
-    font-family: 'Roboto', sans-serif;
-    margin-bottom: 20px;
-    font-size: 10px;
-    padding-left: 20px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color:#495254;
-    border-bottom: solid 1px rgba(0,0,0,0.1);
-    border-top: solid 1px rgba(0,0,0,0.1);
-	line-height:40px;
-	margin-bottom:10px;
-}
-
 .sidebar-divider-item{
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Montserrat';
     font-size: 14px;
     padding-left: 20px;
     color: #3a3a3a;
@@ -589,518 +175,51 @@ header{
 	line-height:60px;
 }
 
-.active-menu, .active-item{
-    font-weight:800;
-}
-
-.active-menu .fa-circle, .active-item .fa-circle{
-    color:#27ae60;
-}
-
-
-/*Splash Page*/
-.splash-content .splash-logo{
-	background-image:url(images/logo.png);
-	background-size:90px 90px;
-	width:90px;
-	height:90px;
-	margin:0px auto 20px auto;
-}
-
-.splash-content{
-	position:absolute;
-	width:240px;
-	height:350px;
-	left:50%;
-	top:50%;
-	margin-left:-120px;
-	margin-top:-175px;
-}
-
-.splash-button{
-	width:130px;
-	margin:0 auto;
-	text-align:center;
-	height:40px;
-	line-height:40px;
-	font-size:12px;
-}
-
-/*Landing Content*/
-.landing-content{
-	width:300px;
-	margin:30px auto 30px auto;
-	border-bottom:solid 1px rgba(255,255,255,0.1);
-}
-
-.landing-content a{
-	width:70px;
-	height:70px;
-	float:left;
-	margin:0px 15px 60px 15px;
-	border-radius:70px;
-	line-height:70px;
-	font-size:21px;
-	text-align:center;
-}
-
-.landing-content a em{
-	position:absolute;
-	font-size:14px;
-	width:70px;
-	text-align:center;
-	bottom:-60px;
-	left:0px;
-	right:0px;
-	font-style:normal;
-}
-
-/*Accordion Styles*/
-.accordion h4{
-	background-color:transparent;
-	border:none;
-}
-
-.accordion h4{
-	font-size:16px;
-	line-height:40px;
-}
-
-.accordion h4 i{
-	height:40px;
-	line-height:40px;
-	position:absolute;
-	right:0px;
-	font-size:12px;
-}
-
-.nested-accordion h4{
-	font-size:14px;
-}
-
 section[expanded] .fa-plus{	transform:rotate(45deg);}
 section[expanded] .fa-angle-down{	transform:rotate(180deg);}
 section[expanded] .fa-chevron-down{	transform:rotate(180deg);}
 
-/*Fonts*/
-.demo-icons a{
-	color:#FFFFFF;
-	width:20%;
-	height:50px;
-	float:left;
-}
-.demo-icons a i{
-	color:#1f1f1f;
-	font-size:21px;
-	width:50px;
-	height:50px;
-	float:left;
-	text-align:center;
-	overflow:hidden;
-}
-
-/*User Notifications*/
-.user-notification{
-	text-align:left;
-	padding-top:5px;
-	padding-left:10px;
-	padding-right:10px;
-	background-color:#27ae60;
-	height:50px;
-	color:#FFFFFF;
-	font-size:12px;
-	line-height:24px;
-	width:70%;
-	float:left;
-}
-
-.user-notification button{
-	background-color:#27ae60;
-	color:#FFFFFF;
-	height:55px;
-	position:fixed;
-	right:0px;
-	bottom:0px;
-	width:25%;
-}
-
-/*Dropcaps*/
-
-.dropcaps-1:first-letter{
-    float:left;
-    font-size:57px;
-	padding:14px 15px 0px 0px;
-    font-weight:800;
-    color:#1f1f1f;
-}
-
-.dropcaps-2:first-letter{
-    font-family: 'Times New Roman', sans-serif;
-    float:left;
-    font-size:42px;
-	padding:15px 15px 0px 0px;
-    font-weight:800;
-    color:#1f1f1f;
-}
-
-.dropcaps-3:first-letter{
-    background-color:#1f1f1f;
-	padding:10px 15px 10px 15px;
-	margin:5px 12px 0px 0px;
-    float:left;
-    font-size:24px;
-    font-weight:800;
-    color:#FFFFFF;
-}
-
-.dropcaps-4:first-letter{
-    font-family: 'Times New Roman', sans-serif;
-    font-weight:800;
-    background-color:#1f1f1f;
-	padding:8px 17px 8px 17px;
-	margin:5px 12px 0px 0px;
-    float:left;
-    font-size:20px;
-    font-weight:400;
-    color:#FFFFFF;
-}
-
-/*Highlights*/
-.highlight{margin-bottom:10px;}
-.highlight span{padding:3px 5px 3px 5px; margin-right:2px;}
-ol ul{	padding-left:5px;}
 ol, ul{line-height:24px; margin-left:20px;}
-.icon-list{list-style:none; margin-left:0px; padding-left:0px;}
-.icon-list i{font-size:10px;}
-.icon-list ul{list-style:none; padding-left:10px;}
-.icon-list ul ul{padding-left:10px;}
-
-/*Blockquotes*/
-.blockquote-1{border-left:solid 3px #1f1f1f; padding:10px 0px 10px 20px;}
-.blockquote-1 a{text-align:right; margin-top:-20px;  font-size:12px;}
-.blockquote-2 .blockquote-image{position:absolute; border-radius:50px;}
-.blockquote-2 h5{padding-left:60px;}
-.blockquote-2 .first-icon{padding-left:60px;}
-.blockquote-2 a{text-align:right; margin-top:-20px; font-size:12px;}
-.blockquote-3 .blockquote-image{width:150px; border-radius:150px; margin:0 auto; display:block;}
-.blockquote-3 h5{margin:10px 0px 10px 0px;}
-.blockquote-3 .ratings{width:100px; margin:10px auto 10px auto;}
-.blockquote-3 .ratings i{font-size:18px;}
-.blockquote-4 i{font-size:24px; position:absolute; margin-top:10px;}
-.blockquote-4 p{padding-left:50px;}
-
-/*Buttons*/
-.button{
-	display:inline-block;
-	padding:13px 20px;
-	margin:0px 0px 25px 0px;
-	font-size:12px;
-}
-
-.button-round{border-radius:30px;}
-.button-full{display: block; text-align: center;}
-.button-center{width:100px; margin-left:auto; margin-right:auto; display:block; text-align:center;}
-.button:hover{opacity:0.9;}
-
-.icon-square, .icon-round{
-	width:40px;
-	height:40px;
-	line-height:40px;
-	text-align:center;
-	display:inline-block;
-	margin-left:6px;
-	margin-right:6px;
-	margin-bottom:10px;
-	font-size:14px;
-}
-.icon-square:hover, .icon-round:hover{opacity:0.9;}
-.icon-round{border-radius:45px;}
-
-/*Page 404*/
-.page-404 h1{font-size:60px; line-height:70px; margin-top:50px;}
-.page-soon h1{font-size:60px; line-height:70px; margin-top:50px;}
-.page-soon h6{font-size:24px;}
-
-/*Profile Page*/
-
-.profile-gradient{
-    background: -moz-linear-gradient(top,rgba(255,255,255,0) 0%,rgba(255,255,255,0.95) 75%,rgba(255,255,255,1) 100%);
-    background: -webkit-linear-gradient(top,rgba(255,255,255,0) 0%,rgba(255,255,255,0.95) 75%,rgba(255,255,255,1) 100%);
-    background: linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,0.95) 75%,rgba(255,255,255,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff',endColorstr='#ffffff',GradientType=0);
-    height: 250px;
-    margin-top: -235px;
-}
-
-.profile-overlay .profile-header{margin-top:-80px}
-.profile-header h1{font-size:30px;}
-.profile-header h6{letter-spacing:2px; opacity:0.5;}
-.profile-header h5{font-size:12px;}
-.profile-header i{margin-right:10px;}
-.profile-header p{font-size:18px;}
-.profile-followers a{float:left; width:33%; color:#1f1f1f; font-size:18px;}
-.profile-followers em{display:block; font-style:normal; font-size:12px;}
-.profile-thumb{margin-top:-50px; width:100px; margin-left:auto; margin-right:auto; display:block; border-radius:100px; border-radius:100px; border:solid 3px #FFFFFF;}
-
-/*Timeline 1*/
-
-.timeline-1{overflow:hidden; padding:20px }
-
-.timeline-1 .timeline-deco{
-	position:absolute;
-	top:0px;
-	left:50%;
-	width:1px;
-	bottom:0px;
-	background-color:rgba(0,0,0,0.15);
-}
-
-.timeline-1 .timeline-icon{
-	width:60px;
-	height:60px;
-	border-radius:60px;
-	line-height:60px;
-	text-align:center;
-	font-size:18px;
-	background-color:#FFFFFF;
-	border:solid 1px rgba(0,0,0,0.2);
-	margin:0px auto 30px auto;
-}
-
-.timeline-1 .container{background-color:#FFFFFF; padding:30px 0px 1px 0px}
-.timeline-2{overflow:hidden; padding:50px 20px 0px 20px; }
-
-.timeline-2 .timeline-deco{
-	position:absolute;
-	top:0px;
-	left:50px;
-	width:1px;
-	bottom:0px;
-	background-color:rgba(0,0,0,0.15);
-}
-
-.timeline-2 .timeline-icon{
-	width:40px;
-	height:40px;
-	border-radius:40px;
-	line-height:40px;
-	text-align:center;
-	font-size:18px;
-	background-color:#FFFFFF;
-	border:solid 1px rgba(0,0,0,0.2);
-	margin-left:10px;
-}
-
-.timeline-2 .container{
-	background-color:#FFFFFF;
-	margin-left:70px;
-	margin-top:-60px;
-	padding-bottom:30px;
-}
-
-
-/*News Slider*/
-
-.news-slider .amp-carousel-button{display:none;}
-.news-slider{margin-bottom:10px;}
-
-/*News Thumbs*/
-
-.news-thumbs .news-item{
-	min-height:125px;
-	color:#1f1f1f;
-}
-
-.news-thumbs .news-item .responsive-img{
-	width:95px;
-	position:absolute;
-	margin-top:5px;
-}
-
-.news-thumbs .news-item h5{
-	margin-left:110px;
-	font-size:15px;
-}
-
-.news-thumbs .news-item p{
-	margin-left:110px;
-	line-height:27px;
-	margin-bottom:0px;
-	font-size:13px;
-}
-
-/*News Strip*/
-
-.news-strip{
-	background-color:#000000;
-	padding:20px 0px 20px 0px;
-	margin-bottom:30px;
-}
-
-.news-strip h5{
-	font-weight:800;
-	color:#FFFFFF;
-	padding:0px 20px 20px 20px;
-}
-
-/*News Cateogry*/
-
-.news-category{
-	margin:0px 20px 0px 20px;
-}
-
-.news-category p{
-	display:inline-block;
-	padding:5px 25px 0px 25px;
-	font-size:13px;
-	margin:0px;
-}
-
-.news-category div{
-	height:5px;
-	width:100%;
-}
-
-/*News Block*/
-
-.news-blocks .news-item{
-	min-height:125px;
-	color:#1f1f1f;
-}
-
-.news-blocks .news-item h5{
-	font-size:18px;
-	padding:15px 0px 5px 0px;
-}
-
-/*News full*/
-
-.news-full .news-item{margin-top:1px;}
-
-.news-full .news-item h6{
-	position:absolute;
-	background-color:rgba(0,0,0,0.8);
-	bottom:0px;
-	width:100%;
-	color:#FFFFFF;
-	padding:10px 10px 10px 10px;
-}
-
-.news-full .titles{
-	position:absolute;
-	background-color:#FFFFFF;
-	width:250px;
-	height:65px;
-	margin-top:-65px;
-}
-
-.news-full h5{
-	font-size:13px;
-	padding:10px 20px 0px 20px;
-	color:#000000;
-}
-.news-full em a{display:inline;}
-.news-full em{font-size:10px; padding-left:20px; display:block;}
-.news-full p{padding:10px 20px 0px 20px;}
-.news-full .read-more{
-	padding-right:20px;
-	text-align:right;
-	font-size:12px;
-	padding-bottom:30px;
-}
-
-/*News Posts*/
-
-.news-post-info{
-	font-style:normal;
-	font-size:12px;
-	padding:5px 0px 15px 0px;
-	display:block;
-}
-
-.news-post-info a{
-	display:inline;
-
-}
-
-/*Contact Page*/
-
-.contactField{
-	font-family:'Roboto', sans-serif;
-	height:40px;
-	line-height:40px;
-	line-height:100%;
-	width:100%;
-	display:block;
-	border:solid 1px rgba(0,0,0,0.1);
-	text-indent:10px;
-	font-size:13px;
-	transition:all 250ms ease;
-	margin-bottom:20px;
-}
-
-.contactField:focus{
-	border:solid 1px rgb(39, 174, 96);
-	transition:all 250ms ease;
-}
-
-.contactTextarea{
-	font-family:'Roboto', sans-serif;
-	padding-top:10px;
-	min-height:80px;
-	line-height:40px;
-	line-height:100%;
-	width:100%;
-	display:block;
-	border:solid 1px rgba(0,0,0,0.1);
-	text-indent:10px;
-	font-size:13px;
-	transition:all 250ms ease;
-	margin-bottom:30px;
-}
-
-.contactTextarea:focus{
-	transition:all 250ms ease;
-	border:solid 1px rgb(39, 174, 96);
-}
-
-.field-title{
-	font-size:13px;
-	margin-bottom:5px;
-}
-
-.field-title span{
-	font-size:10px;
-	color:#cacaca;
-	position:absolute;
-	right:0px;
-	margin-top:2px;
-}
-
-.buttonWrap{
-	width:100%;
-	display:block;
-	text-align:center;
-	margin-bottom:30px;
-    appearance:none;
-    -webkit-appearance:none;
-}
-
-.contact-icon{
-	color:#666666;
-	line-height:30px;
-}
-
-.contact-icon i{
-	color:#1f1f1f;
-	width:30px;
-}
 
 .sidebar-header a{
 padding-top:0px;
 }
 
 /*CSS by Vamshi*/
+.header-navigation-section {
+	position: static;
+	width: 100%;
+	line-height: normal;
+	margin: 0px;
+	background-color: #a9143c;
+	display: inline-block;
+}
+
+.header-navigation-tab {width: 150px; float: left; text-align: center;}
+
+.header-navigation-tab a {
+	text-transform: uppercase;
+	padding: 11px 20px;
+	font-size: 11px;
+  letter-spacing: .6px;
+  line-height: 14px;
+  font-weight: 400;
+	color: #a9143c;
+}
+
+.header-navigation-tab a:hover {text-decoration: underline;}
+.marketplace-tab {background-color: #fff;}
+.luxury-tab {color: #fff; background-color: #000;}
+.luxury-tab a {color: #fff;}
+.luxury-tab:hover {opacity: 0.4;}
+
+.header-navigation-right {
+	float: right;
+}
+
+.header-navigation-right ul li {list-style-type: none; display: inline-block; padding: 10px 15px;; font-size: 12px;}
+.header-navigation-right ul {line-height: normal; margin: 0;}
+.header-navigation-right ul li a {letter-spacing: .6px; color: #fff;}
 .logo-image {
 	left: 40px;
 }
@@ -1184,9 +303,13 @@ padding-top:0px;
   padding: 5px;
 }
 
-.shop_by_department_l3_content > li > ul >li.sbd_l3_headings {font-weight: 600; text-transform: uppercase; color: #000;}
+.sbd_l3_headings {font-weight: 600; text-transform: uppercase; color: #000;}
 
-.shop_by_department_l3_content > li > ul >li:hover {color: #a9133d;}
+.shop_by_department_l3_content > li > ul >li > ul {margin-left: 0;}
+
+.shop_by_department_l3_content > li > ul >li > ul > li {list-style-type: none;}
+
+.shop_by_department_l3_content > li > ul >li > ul > li:hover, .sbd_l3_headings:hover {color: #a9133d;}
 
 .shop_by_department_l3_content > li > ul >li {
   list-style-type: none;
@@ -1213,11 +336,16 @@ padding-top:0px;
   margin: 5px 60px;
 }
 
-.header-search-right, .header-category {
+span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
+.letter-spacing {letter-spacing: .6px;}
+
+.header-category {
 	padding-top: 15px;
   padding-bottom: 5px;
   margin-right: 50px;
 }
+
+.header-search-right {padding: 10px 0;}
 
 .header-search-center {padding-top: 10px; padding-bottom: 10px;}
 
@@ -1228,6 +356,10 @@ padding-top:0px;
 .my-bag {
 	background-color: #000;
 	color: #fff;
+}
+
+.logo-container {
+	margin-left: -20px;
 }
 
 @media(max-width: 748px) {
@@ -1246,6 +378,7 @@ padding-top:0px;
 
 	.logo-container {
 		width: 100%;
+		margin-left: 0;
 	}
 
 	/*.header-clear{
@@ -1283,7 +416,8 @@ padding-top:0px;
 
 /*Brand Studio CSS*/
 .homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
-.homeViewHeading {text-align: center; font-size: 28px; padding-bottom: 20px;}
+.homeViewHeading {text-align: center; font-size: 28px; padding-bottom: 20px; font-weight: 400;
+}
 p {margin: 0;}
 .brandsYouLove {margin: 20px;}
 #brandsYouLove {display: none}
@@ -1292,9 +426,9 @@ p {margin: 0;}
 .brandStudioImg {height: 180px;}
 .brandStudioImg a {height: inherit;}
 .brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
-.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left;}
+.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 10px 8px 0px; text-align: left;}
 .brandStudioDescHeading {font-size: 13px; font-weight: bold;}
-.brandStudioDescInfo {font-size: 12px; color: #666666;white-space: pre-line;}
+.brandStudioDescInfo {font-size: 12px; color: #666666; white-space: pre-line; height: 75px;}
 .brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
 .brandStudioBottom {display: block; text-align: center; padding: 30px;}
@@ -1576,7 +710,7 @@ amp-selector [option][selected] {
 
 .footer-main-content {clear: both; display:flex; padding: 20px 40px;}
 .footer-child {clear: both; width: 22%; float: left;}
-.footer-child-last {width: 34%; float: right;}
+.footer-child-last {width: 34%; float: right; letter-spacing: .6px; font-size: 12px;}
 
 .footer-child h4 {background-color: white; padding: 5px; border: none; font-size: 12px;}
 .footer-child h4 i {float: right; padding-left: 10px;}
@@ -1611,6 +745,8 @@ amp-selector [option][selected] {
   background: white;
 }
 
+.tata-title {color: #a9143c;}
+
 @media (max-width: 480px){
   .footer-section-content {
     margin: 20px 10px; clear: both;
@@ -1643,14 +779,32 @@ amp-selector [option][selected] {
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
 		<!-- <a href="index.php" class="header-logo"><img src="./images/logo.png" /></a> -->
+		<section class="header-navigation-section desktop-item">
+			<section class="header-navigation-tab marketplace-tab">
+				<a href="#">Marketplace</a>
+			</section>
+			<section class="header-navigation-tab luxury-tab">
+				<a href="#">Luxury</a>
+			</section>
+			<section class="header-navigation-right">
+				<ul>
+					<li><a href="#"><i class="fa fa-map-marker"></i> Enter Your Pincode</a></li>
+					<li><a href="#"><i class="fa fa-mobile-phone"></i> Download App</a></li>
+					<li><a href="#">Track Order</a></li>
+					<li><a href="#"><i class="fa fa-bell"></i> Notifications</a></li>
+					<li><a href="#"><i class="fa fa-heart"></i> My Wishlists</a></li>
+					<li><a href="#"><i class="fa fa-user"></i> Sign In/Sign Up</a></li>
+				</ul>
+			</section>
+		</section>
 		<section class="col-xs-12 header-search-section">
 			<section class="header-search-left">
 				<section class="header-search-left-child logo-container">
 					<amp-img class="logo-image" width="70" height="40" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
 				</section>
 				<section class="header-category header-search-left-child desktop-item shop-department">
-					SHOP BY<br />
-					<strong>DEPARTMENT<i class="fa fa-chevron-down"></i></strong>
+					<span class="letter-spacing">SHOP BY</span><br />
+					<strong class="letter-spacing">DEPARTMENT<i class="fa fa-chevron-down"></i></strong>
           <section id="shop_by_department" class="desktop-item shop-by-department">
             <section class="shop-by-department-l2">
               <ul>
@@ -1660,42 +814,132 @@ amp-selector [option][selected] {
                     <ul class="shop_by_department_l3_content">
                       <li>
                         <ul>
-                          <li class="sbd_l3_headings">Ethnic Wear</li>
-                          <li>Kurtis And Kurtas</li>
-                          <li>Suit Sets</li>
-                          <li>Fusion Wear</li>
-                          <li>Sarees</li>
-                          <li>Bottoms</li>
-                          <li>Dupattas</li>
-                          <li class="sbd_l3_headings">Inner & Nightwear</li>
-                          <li>Bras</li>
-                          <li>Panties</li>
-                          <li>Lingerie Sets</li>
-                          <li>Camisole</li>
-                          <li>Sleepwear & Robes</li>
-                          <li>Shapewear</li>
-                          <li class="sbd_l3_headings">Swim & Beachwear</li>
-                          <li class="sbd_l3_headings">Active & Sportswear</li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
                         </ul>
                       </li>
                       <li>
                         <ul>
-                          <li class="sbd_l3_headings">Top Brands</li>
-                          <li>Westside</li>
-                          <li>Hunkemoller</li>
-                          <li>Clarks</li>
-                          <li>New Look</li>
-                          <li>Baggit</li>
-                          <li>Titan</li>
-                          <li class="sbd_l3_headings">Value Stores</li>
-                          <li>Kurtas Under 899</li>
-                          <li>Dresses Under 999</li>
-                          <li>Footwear Under 799</li>
-                          <li>Sleepwear Under 699</li>
-                          <li>Bags Under 999</li>
-                          <li>Watches Under 1999</li>
-                          <li class="sbd_l3_headings">Winter Wear Store</li>
-                          <li class="sbd_l3_headings">The Wedding Store</li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        <ul>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        <ul>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        <ul>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
+                          <li>
+                            <span class="sbd_l3_headings">Ethnic Wear</span>
+                            <ul>
+                              <li>Kurtis And Kurtas</li>
+                              <li>Suit Sets</li>
+                              <li>Fusion Wear</li>
+                              <li>Sarees</li>
+                              <li>Bottoms</li>
+                              <li>Dupattas</li>
+                            </ul>
+                          </li>
                         </ul>
                       </li>
                     </ul>
@@ -1716,69 +960,24 @@ amp-selector [option][selected] {
           </section>
 				</section>
 				<section class="header-category header-search-left-child desktop-item shop-brand">
-					SHOP BY<br />
-					<strong>BRAND <i class="fa fa-chevron-down"></i></strong>
+					<span class="letter-spacing">SHOP BY</span><br />
+					<strong class="letter-spacing">BRAND <i class="fa fa-chevron-down"></i></strong>
           <section id="shop_by_brand" class="desktop-item shop-by-brand">
             <section class="shop-by-brand-l2">
               <ul>
+              <amp-list src="/marketplacewebservices/v2/mpl/catalogs/allBrandsAmp" height="420" layout="fixed-height">
+                <template type="amp-mustache">
                 <li>
-                  Appliances
+                  {{menu_brand_name}}
                   <section class="shop-by-brand-l3">
                     <a class="shop-by-brand-l3-component" href="#">
                       <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709300766.png"></amp-img>
                       <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9448599846942.png"></amp-img>
                     </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709366302.jpg"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10523118829598.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709890590.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10701061423134.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709464606.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9461676769310.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709530142.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10791666155550.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709300766.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9448599846942.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709366302.jpg"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10523118829598.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709890590.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10701061423134.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709464606.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9461676769310.png"></amp-img>
-                    </a>
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709530142.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10791666155550.png"></amp-img>
-                    </a>
                   </section>
                 </li>
-                <li>
-                  Electronics
-                  <section class="shop-by-brand-l3">
-                    Electronics
-                  </section>
-                </li>
-                <li>Watches and Accessories</li>
-                <li>Women's Wear</li>
-                <li>Lingerie</li>
-                <li>Men's Wear</li>
-                <li>Footwear</li>
-                <li>Kids</li>
-                <li>A-Z List</li>
+                </template>
+                </amp-list>
               </ul>
             </section>
           </section>
@@ -1833,7 +1032,9 @@ amp-selector [option][selected] {
     <p class="sidebar-divider-item"><a href="#">Enter Your Pincode</a></p>
 	</amp-sidebar>
 	<!-- Banners -->
-	<div class="sliders main-content">
+	<c:choose>
+	<c:when test="${currentDetectedDevice.mobileBrowser}">
+		<div class="sliders main-content">
 	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="420" layout="fixed-height">
 	<template type="amp-mustache">
 	<amp-carousel class="slider" width="400" height="120" layout="responsive" type="slides" controls autoplay loop delay="3000">
@@ -1846,6 +1047,25 @@ amp-selector [option][selected] {
 	</template>
 	</amp-list>
 	</div>
+	</c:when>
+	<c:otherwise>
+		<div class="sliders main-content">
+	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="420" layout="fixed-height">
+	<template type="amp-mustache">
+	<amp-carousel class="slider" width="400" height="120" layout="responsive" type="slides" controls autoplay loop delay="3000">
+	  {{#desktopBanners}}
+	    <div>
+			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
+		</div>
+		{{/desktopBanners}}
+	</amp-carousel>
+	</template>
+	</amp-list>
+	</div>
+	</c:otherwise>
+	</c:choose>
+	
+
 
 	<!-- Top Deals -->
 	<div id="topDealsComp">
