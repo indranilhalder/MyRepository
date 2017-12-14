@@ -38,7 +38,9 @@ ACC.WebForm = {
 						$(this).parent(".formGroup").removeClass("has-success");
 						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
-						$(this).parent().append('<span class="help-block">Please fill value!!</span>');
+						if($(this).parent().children(".help-block").length <= 0 ){
+							$(this).parent().append('<span class="help-block">Please fill value!!</span>');
+						}
 						//console.log("radio");
 					}
 					
@@ -47,7 +49,9 @@ ACC.WebForm = {
 						$(this).parent(".formGroup").removeClass("has-success");
 						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
-						$(this).parent().append('<span class="help-block">Please fill Comments!!</span>');
+						if($(this).parent().children(".help-block").length <= 0 ){
+							$(this).parent().append('<span class="help-block">Please fill Comments!!</span>');
+						}
 						//console.log("textarea");
 					}
 					// for all nodes
@@ -58,7 +62,9 @@ ACC.WebForm = {
 						$(this).parent(".formGroup").removeClass("has-success");
 						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
-						$(this).parent().append('<span class="help-block">Please select issue!!</span>');
+						if($(this).parent().children(".help-block").length <= 0 ){
+							$(this).parent().append('<span class="help-block">Please select issue!!</span>');
+						}
 						//console.log("nodeL2");
 					}
 					// validation for l4 node
@@ -67,7 +73,9 @@ ACC.WebForm = {
 						$("select[name='nodeL3']").parent(".formGroup").removeClass("has-success");
 						$("select[name='nodeL3']").parent(".formGroup").addClass("has-error");
 						$("select[name='nodeL3']").focus();
-						$("select[name='nodeL3']").parent().append('<span class="help-block">Issue not found!!</span>');
+						if($("select[name='nodeL3']").parent().children(".help-block").length <= 0 ){
+							$("select[name='nodeL3']").parent().append('<span class="help-block has-error">Issue not found!!</span>');
+						}
 								
 						//console.log("nodeL4");
 					}
@@ -85,7 +93,9 @@ ACC.WebForm = {
 								$(this).parent(".formGroup").removeClass("has-success");
 								$(this).parent(".formGroup").addClass("has-error");
 								$(this).focus();
-								$(this).parent().append('<span class="help-block">Please fill correct Mobile No.!!</span>');
+								if($(this).parent().children(".help-block").length <= 0 ){
+									$(this).parent().append('<span class="help-block">Please fill correct Mobile No.!!</span>');
+								}
 								//console.log("mobile 1");
 							}
 						} else {
@@ -93,7 +103,9 @@ ACC.WebForm = {
 							$(this).parent(".formGroup").removeClass("has-success");
 							$(this).parent(".formGroup").addClass("has-error");
 							$(this).focus();
-							$(this).parent().append('<span class="help-block">Please fill Mobile No.!!</span>');
+							if($(this).parent().children(".help-block").length <= 0 ){
+								$(this).parent().append('<span class="help-block">Please fill Mobile No.!!</span>');
+							}
 							//console.log("mobile 2");
 						}
 					}
@@ -109,19 +121,23 @@ ACC.WebForm = {
 							$(this).parent(".formGroup").removeClass("has-success");
 							$(this).parent(".formGroup").addClass("has-error");
 							$(this).focus();
-							$(this).parent().append('<span class="help-block">Please fill correct Email!!</span>');
+							if($(this).parent().children(".help-block").length <= 0 ){
+								$(this).parent().append('<span class="help-block">Please fill correct Email!!</span>');
+							}
 							//console.log("email");
 						}
 					}
 					//check for Order related Query
-					if($(this).attr("name") === 'nodeL1' && $(this).attr("nodcheck")==true ){
+					if($(this).attr("name") === 'nodeL1' && $(this).attr("nodcheck")=='true' ){
 						
 						if( $('#orderCode').val() === '' && $('#subOrderCode').val()  === '' && $('#transactionId').val()  === ''){
 							isValid = false;
-							$("select[name='nodeL1']").removeClass("has-success");
-							$("select[name='nodeL1']").addClass("has-error");
-							$(this).focus();
-							$(this).parent().append('<span class="help-block">Please select Order!!</span>');
+							$(".selectOrderSec").parent(".formGroup").removeClass("has-success");
+							$(".selectOrderSec").parent(".formGroup").addClass("has-error");
+							$(".selectOrderSec").focus();
+							if($(".selectOrderSec").parent().children(".help-block").length <= 0 ){
+								$(".selectOrderSec").parent().append('<span class="help-block has-error">Please select Order!!</span>');
+							}
 						}
 					}
 
@@ -304,8 +320,7 @@ ACC.WebForm = {
 		    
 		    // Called on failure of file upload
 		    ajaxReq.fail(function(jqXHR) {
-		      $('#customCareError').text(jqXHR.responseText+'('+jqXHR.status+
-		      		' - '+jqXHR.statusText+')');
+		      $('#customCareError').text(jqXHR.responseText+'('+jqXHR.status+' - '+jqXHR.statusText+')');
 		      $('.webfromTicketSubmit').prop('disabled',false);
 		    });
 		  });

@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -44,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.cms.data.WebForm;
@@ -165,8 +167,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = "/fileUpload", method =
 	{ RequestMethod.POST })
-	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final MultipartFile uploadFile)
-			throws CMSItemNotFoundException
+	public @ResponseBody String fileUpload(final MultipartHttpServletRequest request) throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
 		String filelocation = null;
@@ -178,31 +179,35 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		{
 			try
 			{
-				final byte barr[] = uploadFile.getBytes();
-				final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-				nowDate = sdf.format(new Date());
-				path = Paths.get(fileUploadLocation + File.separator + nowDate);
-				//if directory exists?
-				if (!Files.exists(path))
+				final List<MultipartFile> images = request.getFiles("uploadFile");
+				for (final MultipartFile imageFile : images)
 				{
-					try
+					final byte barr[] = imageFile.getBytes();
+					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+					nowDate = sdf.format(new Date());
+					path = Paths.get(fileUploadLocation + File.separator + nowDate);
+					//if directory exists?
+					if (!Files.exists(path))
 					{
-						Files.createDirectories(path);
+						try
+						{
+							Files.createDirectories(path);
+						}
+						catch (final IOException e)
+						{
+							//fail to create directory
+							LOG.error("Exception ,While creating the Directory " + e.getMessage());
+						}
 					}
-					catch (final IOException e)
-					{
-						//fail to create directory
-						LOG.error("Exception ,While creating the Directory " + e.getMessage());
-					}
+					filelocation = path + File.separator + imageFile.getOriginalFilename();
+					final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
+					bout.write(barr);
+					bout.flush();
+					bout.close();
+					LOG.debug("FileUploadLocation   :" + filelocation);
+					//filelocations.add(filelocation);
 				}
-				filelocation = path + File.separator + uploadFile.getOriginalFilename();
-				final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
-				bout.write(barr);
-				bout.flush();
-				bout.close();
-				LOG.debug("FileUploadLocation   :" + filelocation);
-				//filelocations.add(filelocation);
-				//}
+
 			}
 			catch (final Exception e)
 			{
