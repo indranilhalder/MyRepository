@@ -75754,7 +75754,7 @@ body.page-returnSubmit .account .wrapper{
   		line-height: 1.5;
   		letter-spacing: 0.6px;
   		padding-right: 22px;
-  		background: url('../images/plp-select-arrow.png') no-repeat 97% 13px #fff;
+  		/* background: url('../images/plp-select-arrow.png') no-repeat 97% 13px #fff; */ 
   		background-size: 10px;
  	}
  	span.price-breakup{

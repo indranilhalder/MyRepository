@@ -9,7 +9,6 @@ import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
-import de.hybris.platform.core.model.VoucherCardPerOfferInvalidationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -19,7 +18,6 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -40,7 +38,6 @@ import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 
 import java.math.BigDecimal;
@@ -74,7 +71,6 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.WalletEnum;
-import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -97,7 +93,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
-import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.OrderStatusSpecifier;
@@ -763,9 +758,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderModel.setIsWallet(WalletEnum.NONWALLET);
 			}
 
-			//TPR-7448 Starts here
-			cardPerOfferVoucherExists(orderModel);
-			//TPR-7448 Ends here
 
 			orderModel.setContainsFlashSaleItem(containsFlashSaleItem);
 			final List<OrderModel> orderList = getSubOrders(orderModel);
@@ -3551,80 +3543,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		return isPresent;
 
 	}
-
-	/**
-	 * TPR-7448 Starts here Checking or card per offer restriction
-	 *
-	 * @param orderModel
-	 */
-	private void cardPerOfferVoucherExists(final OrderModel orderModel)
-	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
-				.getAppliedVouchers(orderModel));
-		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
-		if (CollectionUtils.isNotEmpty(voucherList))
-		{
-			try
-			{
-				final UserModel userModel = orderModel.getUser();
-				final List<JuspayCardStatusModel> cardList = mplVoucherService.findJuspayCardStatus(orderModel.getGuid(),
-						userModel.getUid());
-				//final DiscountModel discount = voucherList.get(0);
-				for (final DiscountModel discount : voucherList)
-
-				{
-					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
-					{
-						String cardReferenceNo = "";
-						if (CollectionUtils.isNotEmpty(cardList))
-						{
-							cardReferenceNo = cardList.get(0).getCard_reference();
-							LOG.debug("cardReferenceNo=" + cardReferenceNo);
-							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
-							{
-								if (restrictionModel instanceof PaymentModeRestrictionModel)
-								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAvailCount().intValue() : 0;
-									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
-									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
-									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
-									{
-										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
-										LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
-										if (StringUtils.isNotEmpty(discount.getCode()))
-										{
-											final double discountValue = mplVoucherService.getVoucherDiscountValue(orderModel,
-													promotionVoucherModel);
-											voucherInvalidationModel.setVoucher(promotionVoucherModel);
-											voucherInvalidationModel.setGuid(orderModel.getGuid());
-											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
-											voucherInvalidationModel.setDiscount(Double.valueOf(discountValue));
-											getModelService().save(voucherInvalidationModel);
-										}
-									}
-								}
-
-							}
-						}
-					}
-				}
-			}
-			catch (final Exception e)
-			{
-				discountUtility.releaseVoucherAndInvalidation(orderModel);
-				LOG.error("Error in cardPerOfferVoucherExists=", e);
-				throw e;
-			}
-
-		}
-	}
-	//TPR-7448 Ends here
 
 
 

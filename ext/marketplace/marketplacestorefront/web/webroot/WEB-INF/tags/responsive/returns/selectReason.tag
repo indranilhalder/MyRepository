@@ -135,14 +135,26 @@
 						
 						<!-- TPR-5954 || start -->
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
+						<c:choose> 
+						<c:when  test="${not empty subReasonDataList}">
 							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason">
 								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
-									<c:forEach items="${reasonDataList}" var="reason"
+									<c:forEach items="${subReasonDataList}" var="subReason"
 										varStatus="reasonStatus">
-										<form:option value="${reason.code}">${reason.reasonDescription}</form:option>	
+										<form:option value="${subReason.code}">${subReason.reasonDescription}</form:option>	
 									</c:forEach>									
 							</form:select>	
-							
+						</c:when>
+						<c:otherwise>
+							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason" style="display:none">
+								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
+									<c:forEach items="${subReasonDataList}" var="subReason"
+										varStatus="reasonStatus">
+										<form:option value="${subReason.code}">${subReason.reasonDescription}</form:option>	
+									</c:forEach>									
+							</form:select>
+							</c:otherwise>
+						</c:choose> 
 							<br/><br/>
 										
 							<div>

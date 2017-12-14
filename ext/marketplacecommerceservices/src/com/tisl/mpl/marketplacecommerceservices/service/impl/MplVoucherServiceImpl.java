@@ -22,8 +22,10 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.promotions.util.Tuple3;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
@@ -97,6 +99,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	@Resource(name = "mplPaymentService")
 	private MplPaymentService mplPaymentService;
+
+	@Resource(name = "flexibleSearchService")
+	private FlexibleSearchService flexibleSearchService;
 
 	private final static String CODE00 = "00".intern();
 	private final static String CODE01 = "01".intern();
@@ -2193,7 +2198,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		final UserModel user = abstractOrderModel.getUser();
 		if (StringUtils.isNotEmpty(addCardResponse.getCardReference()) && null != user && StringUtils.isNotEmpty(user.getUid()))
 		{
-			final JuspayCardStatusModel juspayCardStatusModel = mplPaymentService.getJuspayCardStatusForCustomer(user.getUid());
+			final JuspayCardStatusModel juspayCardStatusModel = mplPaymentService.getJuspayCardStatusForCustomer(user.getUid(),
+					abstractOrderModel.getGuid());
 			juspayCardStatusModel.setCard_token(addCardResponse.getCardToken());
 			juspayCardStatusModel.setCard_reference(addCardResponse.getCardReference());
 			juspayCardStatusModel.setCard_fingerprint(addCardResponse.getCardFingerprint());
@@ -2751,6 +2757,294 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		return oModel;
 	}
 
+	/**
+	 * TPR-7448 Starts here Checking or card per offer restriction
+	 *
+	 * @param orderModel
+	 */
+	@Override
+	public void cardPerOfferVoucherEntry(final OrderModel orderModel)
+	{
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
+		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			try
+			{
+				final UserModel userModel = orderModel.getUser();
+				final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(orderModel.getGuid(), userModel.getUid());
+				//final DiscountModel discount = voucherList.get(0);
+				for (final DiscountModel discount : voucherList)
+				{
+					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
+					{
+						String cardReferenceNo = "";
+						if (CollectionUtils.isNotEmpty(cardList))
+						{
+							cardReferenceNo = cardList.get(0).getCard_reference();
+							LOG.debug("cardReferenceNo=" + cardReferenceNo);
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
+							{
+								if (restrictionModel instanceof PaymentModeRestrictionModel)
+								{
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
+									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
+									{
+										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+										LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+										if (StringUtils.isNotEmpty(discount.getCode()))
+										{
+											final double discountValue = getVoucherDiscountValue(orderModel, promotionVoucherModel);
+											voucherInvalidationModel.setVoucher(promotionVoucherModel);
+											voucherInvalidationModel.setGuid(orderModel.getGuid());
+											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											voucherInvalidationModel.setDiscount(Double.valueOf(discountValue));
+											getModelService().save(voucherInvalidationModel);
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+			catch (final Exception e)
+			{
+				discountUtility.releaseVoucherAndInvalidation(orderModel);
+				LOG.error("Error in cardPerOfferVoucherExists=", e);
+				throw e;
+			}
+
+		}
+	}
+
+	/**
+	 * TPR-7448 Starts here:Update/Create new invalidation entry for when order model is already created before payment.
+	 *
+	 * @param orderModel
+	 */
+	@Override
+	public void updateCardPerOfferVoucherEntry(final OrderModel orderModel)
+	{
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
+		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			try
+			{
+				final UserModel userModel = orderModel.getUser();
+				final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(orderModel.getGuid(), userModel.getUid());
+				voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+				voucherInvalidationModel.setGuid(orderModel.getGuid());
+				try
+				{
+					modelService.removeAll(flexibleSearchService.getModelsByExample(voucherInvalidationModel));
+				}
+				catch (final ModelNotFoundException e)
+				{
+					LOG.debug("No VoucherCardPerOfferInvalidationModel Object found to remove");
+				}
+				//final DiscountModel discount = voucherList.get(0);
+				for (final DiscountModel discount : voucherList)
+
+				{
+					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
+					{
+						String cardReferenceNo = "";
+						if (CollectionUtils.isNotEmpty(cardList))
+						{
+							cardReferenceNo = cardList.get(0).getCard_reference();
+							LOG.debug("cardReferenceNo=" + cardReferenceNo);
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
+							{
+								if (restrictionModel instanceof PaymentModeRestrictionModel)
+								{
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
+									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
+									{
+										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+										LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+										if (StringUtils.isNotEmpty(discount.getCode()))
+										{
+											final double discountValue = getVoucherDiscountValue(orderModel, promotionVoucherModel);
+											voucherInvalidationModel.setVoucher(promotionVoucherModel);
+											voucherInvalidationModel.setGuid(orderModel.getGuid());
+											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											voucherInvalidationModel.setDiscount(Double.valueOf(discountValue));
+											getModelService().save(voucherInvalidationModel);
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+			catch (final Exception e)
+			{
+				discountUtility.releaseVoucherAndInvalidation(orderModel);
+				LOG.error("Error in cardPerOfferVoucherExists=", e);
+				throw e;
+			}
+
+		}
+	}
+
+	/**
+	 * TPR-7448 -- To be called from MplProcessOrderServiceImpl, Cannot use removeCPOVoucherInvalidation as
+	 * removeCPOVoucherInvalidation will not work if voucher is already released
+	 *
+	 * @param abstractOrderModel
+	 */
+	@Override
+	public void removeCardPerOfferVoucherInvalidation(final AbstractOrderModel abstractOrderModel)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Inside removeCardPerOfferVoucherInvalidation");
+		}
+		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
+		try
+		{
+			final UserModel userModel = abstractOrderModel.getUser();
+			final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(abstractOrderModel.getGuid(), userModel.getUid());
+			//final DiscountModel discount = voucherList.get(0);
+
+			String cardReferenceNo = "";
+			if (CollectionUtils.isNotEmpty(cardList))
+			{
+				cardReferenceNo = cardList.get(0).getCard_reference();
+				LOG.debug("cardReferenceNo=" + cardReferenceNo);
+
+				voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+
+				voucherInvalidationModel.setGuid(abstractOrderModel.getGuid());
+				voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+				removeCardPerOfferInvalidation(voucherInvalidationModel);
+
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error in cardPerOfferVoucherExists=", e);
+			throw e;
+		}
+	}
+
+	/**
+	 * TPR-7448
+	 *
+	 * @param voucherInvalidationModel
+	 * @return boolean
+	 */
+	private boolean removeCardPerOfferInvalidation(final VoucherCardPerOfferInvalidationModel voucherInvalidationModel)
+	{
+		boolean success = true;
+		try
+		{
+
+			final List<VoucherCardPerOfferInvalidationModel> voucherModel = flexibleSearchService
+					.getModelsByExample(voucherInvalidationModel);
+			modelService.removeAll(voucherModel);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			success = false;
+			LOG.error("VoucherCardPerOfferInvalidationModel not found for=>VoucherCode=" + ",Guid="
+					+ voucherInvalidationModel.getGuid() + ",CardReferenceNo=" + voucherInvalidationModel.getCardRefNo());
+		}
+		return success;
+	}
+
+	/**
+	 * TPR-7448 --To be used while cancellation
+	 *
+	 * @param orderModel
+	 */
+	@Override
+	public void removeCPOVoucherInvalidation(final OrderModel orderModel)
+	{
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
+		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			try
+			{
+				final UserModel userModel = orderModel.getUser();
+				final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(orderModel.getGuid(), userModel.getUid());
+				//final DiscountModel discount = voucherList.get(0);
+				for (final DiscountModel discount : voucherList)
+
+				{
+					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
+					{
+						String cardReferenceNo = "";
+						if (CollectionUtils.isNotEmpty(cardList))
+						{
+							cardReferenceNo = cardList.get(0).getCard_reference();
+							LOG.debug("cardReferenceNo=" + cardReferenceNo);
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
+							{
+								if (restrictionModel instanceof PaymentModeRestrictionModel)
+								{
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
+									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
+									{
+										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+										LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+										if (StringUtils.isNotEmpty(discount.getCode()))
+										{
+											voucherInvalidationModel.setVoucher(promotionVoucherModel);
+											voucherInvalidationModel.setGuid(orderModel.getGuid());
+											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											removeCardPerOfferInvalidation(voucherInvalidationModel);
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+			catch (final Exception e)
+			{
+				discountUtility.releaseVoucherAndInvalidation(orderModel);
+				LOG.error("Error in cardPerOfferVoucherExists=", e);
+				throw e;
+			}
+
+		}
+	}
 
 	/**
 	 * Populate Discount Data when returned back to Payment Page for 3D Secure

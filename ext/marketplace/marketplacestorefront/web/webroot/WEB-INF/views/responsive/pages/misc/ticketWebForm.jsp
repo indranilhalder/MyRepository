@@ -46,7 +46,6 @@
 					<form name="customerWebForm" id="customerWebForm"
 						action="#" method="POST" >
 
-						<input type="hidden" name="nodeL0" value="ZCA_01" /> 
 						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> 
 						<input type="hidden" name="ticketType" value="" id="ticketType" />
 						<input type="hidden" name="orderCode" value="" id="orderCode" /> 
@@ -68,32 +67,34 @@
 												<span></span> ${l1Node.nodeDesc}
 											</label>
 										</div>
+										<c:set var="nodeL0" value="${l1Node.parentNode}"></c:set>
 									</c:if>
 								</c:forEach>
 							</div>
-
+							
+							<input type="hidden" name="nodeL0" value="${nodeL0}" /> 
+							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 								<div class="loginSec">
 									<p class="loginTxt">Please login to see your order(s).</p>
 									<a class="needHelpBtn needHelpBtnSm" href="login">Login to Continue</a>
 								</div>
 							</sec:authorize>
-							<sec:authorize access="isFullyAuthenticated()">
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 								<div class="formGroup">
-									<div class="selectOrderSec">
-										<h3 class="secLabel">Select Your Order(s).</h3>
+							       <div class="selectOrderSec">
+							             <h3 class="secLabel">Select Your Order(s).</h3>
 								          <div class="selectOrders">
 								             <div class="selectedProduct">
 								               Select order from your previous orders
 								             </div>
-								            
-								            <input type="hidden" id="currentPage" value="0" name="currentPage"/>
-								            <input type="hidden" id="totalPages" value="1" name="totalPages"/>
-								            <a href="#" id="viewMoreLink">View more orders</a>
-								            <a href="#" id="viewBackLink">Back</a>
 											<ul class="orderDrop">
 												
 											</ul>
+											<input type="hidden" id="currentPage" value="0" name="currentPage"/>
+								            <input type="hidden" id="totalPages" value="0" name="totalPages"/>
+								            <a href="#" id="viewMoreLink" style="display:none;">View more orders</a>
+								            <a href="#" id="viewBackLink" style="display:none;">Back</a>
 										</div>
 									</div>
 								</div>
@@ -101,7 +102,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel">What is the issue?</h3>
 								<select class="node formControl customSelect" name="nodeL2">
-										<option>Select Your issue</option>
+										<option value="">Select Your issue</option>
 										<c:forEach items="${formFields.nodes}" var="l2Node">
 											<c:if test="${l2Node.nodeType eq 'L2'}">
 												<option value="${l2Node.nodeCode}" nodeText="${l2Node.nodeDesc}" displayAllow="${l2Node.nodeDisplayAllowed}">${l2Node.nodeDesc}</option>
@@ -112,7 +113,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel">Select a sub-issue.</h3>
 								<select class="node formControl customSelect" name="nodeL3">
-										<option>Select your exact problem</option>
+										<option value="">Select your exact problem</option>
 										<c:forEach items="${formFields.nodes}" var="l3Node">
 											<c:if test="${l3Node.nodeType eq 'L3'}">
 												<option value="${l3Node.nodeCode}" nodeText="${l3Node.nodeDesc}" displayAllow="${l3Node.nodeDisplayAllowed}">${l3Node.nodeDesc}</option>

@@ -76,7 +76,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -106,6 +106,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				node.setCreateTicketAllowed(Boolean.valueOf(crmModel.isCreateTicketAllowed()));
 				node.setNodeDisplayAllowed(Boolean.valueOf(crmModel.isNodeDisplayAllowed()));
 				node.setTicketAnswer(crmModel.getTicketAnswer());
+				node.setParentNode(crmModel.getNodeParent());
 				nodes.add(node);
 			}
 
@@ -152,7 +153,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -233,7 +234,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -370,7 +371,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	public WebFormOrder getWebOrderLines(final PageableData pageableData)
 	{
 		final WebFormOrder form = new WebFormOrder();
-		List<ImageData> orderEntryImages = new ArrayList<>();
 		List<WebFormOrderLine> orderLines = new ArrayList<WebFormOrderLine>();
 		try
 		{
@@ -378,8 +378,11 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 					.getPagedFilteredParentOrderHistory(pageableData);
 			if (searchPageDataParentOrder != null && CollectionUtils.isNotEmpty(searchPageDataParentOrder.getResults()))
 			{
+				// Order Line
+				orderLines = new ArrayList<WebFormOrderLine>();
 				for (final OrderHistoryData orderHistoryData : searchPageDataParentOrder.getResults())
 				{
+
 					//Parent Order
 					final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderHistoryData.getCode());
 					//this scenario will occour only when product is missing in order entries.
@@ -390,8 +393,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 					//SUb Order
 					for (final OrderData subOrderData : orderDetails.getSellerOrderList())
 					{
-						// Order Line
-						orderLines = new ArrayList<WebFormOrderLine>();
+
 						for (final OrderEntryData line : subOrderData.getEntries())
 						{
 							final WebFormOrderLine orderLine = new WebFormOrderLine();
@@ -419,8 +421,15 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 							}
 							if (line.getProduct() != null && CollectionUtils.isNotEmpty(line.getProduct().getImages()))
 							{
-								orderEntryImages = (List) line.getProduct().getImages();
-								orderLine.setProdImageURL(orderEntryImages.get(0).getUrl());
+								for (final ImageData imageData : line.getProduct().getImages())
+								{
+									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									{
+										orderLine.setProdImageURL(imageData.getUrl());
+										break;
+									}
+
+								}
 							}
 							if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
 							{
@@ -435,6 +444,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 						}
 					}
 				}
+				form.setOrderLineDatas(orderLines);
 
 				if (searchPageDataParentOrder.getPagination() != null)
 				{

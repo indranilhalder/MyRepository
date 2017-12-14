@@ -124,81 +124,83 @@ ACC.WebForm = {
 			if (nodeValue == undefined) {
 				nodeValue = $(this).val();
 			}
-			var htmlOption = "<option value=''>Select</option>";
-			$.ajax({
-				url : ACC.config.encodedContextPath
-						+ "/ticketForm/crmChildrenNodes?nodeParent="
-						+ nodeValue,
-				type : 'GET',
-				success : function(data) {
-					if (nodeType.startsWith("nodeL1")) {
-						$.each(data.nodes, function(index, data) {
-							htmlOption += "<option value='"
-									+ data.nodeCode + "' nodeText='"
-									+ data.nodeDesc
-									+ "' displayAllow='"
-									+ data.nodeDisplayAllowed + "'>"
-									+ data.nodeDesc + "</option>";
-						});
-						$("select[name=nodeL2]").html(htmlOption);
-						$("select[name=nodeL3]").show();
-					}
-					if (nodeType.startsWith("nodeL2")) {
-						var check = false;
-						var answer = "";
-						$.each(data.nodes, function(index, data) {
-
-							if (data.createTicketAllowed == true) {
+			if(nodeValue!=='' && nodeValue.indexOf("Select") == -1){
+				var htmlOption = "<option value=''>Select</option>";
+				$.ajax({
+					url : ACC.config.encodedContextPath
+							+ "/ticketForm/crmChildrenNodes?nodeParent="
+							+ nodeValue,
+					type : 'GET',
+					success : function(data) {
+						if (nodeType.startsWith("nodeL1")) {
+							$.each(data.nodes, function(index, data) {
 								htmlOption += "<option value='"
-										+ data.nodeCode
-										+ "' nodeText='"
+										+ data.nodeCode + "' nodeText='"
 										+ data.nodeDesc
 										+ "' displayAllow='"
-										+ data.nodeDisplayAllowed
-										+ "'>" + data.nodeDesc
-										+ "</option>";
-							} else {
-								check = true;
-								answer = data.ticketAnswer;
-								htmlOption += "<option value='"
-										+ data.nodeCode
-										+ "' nodeText='"
-										+ data.nodeDesc
-										+ "' displayAllow='"
-										+ data.nodeDisplayAllowed
-										+ "' selected>" + data.nodeDesc
-										+ "</option>";
-							}
-						});
-
-						if (check == false) {
-							$("select[name=nodeL3]").html(htmlOption);
+										+ data.nodeDisplayAllowed + "'>"
+										+ data.nodeDesc + "</option>";
+							});
+							$("select[name=nodeL2]").html(htmlOption);
 							$("select[name=nodeL3]").show();
-						} else {
-							$("select[name=nodeL3]").html(htmlOption);
-							$("select[name=nodeL3]").parent(".customSelectWrap").hide();
-							$("select[name=nodeL3]").parent(".formGroup").append("<p>" + answer + "</p>");
 						}
-
-						$("#nodeL2Text").val(nodeText);
+						if (nodeType.startsWith("nodeL2")) {
+							var check = false;
+							var answer = "";
+							$.each(data.nodes, function(index, data) {
+	
+								if (data.createTicketAllowed == true) {
+									htmlOption += "<option value='"
+											+ data.nodeCode
+											+ "' nodeText='"
+											+ data.nodeDesc
+											+ "' displayAllow='"
+											+ data.nodeDisplayAllowed
+											+ "'>" + data.nodeDesc
+											+ "</option>";
+								} else {
+									check = true;
+									answer = data.ticketAnswer;
+									htmlOption += "<option value='"
+											+ data.nodeCode
+											+ "' nodeText='"
+											+ data.nodeDesc
+											+ "' displayAllow='"
+											+ data.nodeDisplayAllowed
+											+ "' selected>" + data.nodeDesc
+											+ "</option>";
+								}
+							});
+	
+							if (check == false) {
+								$("select[name=nodeL3]").html(htmlOption);
+								$("select[name=nodeL3]").show();
+							} else {
+								$("select[name=nodeL3]").html(htmlOption);
+								$("select[name=nodeL3]").parent(".customSelectWrap").hide();
+								$("select[name=nodeL3]").parent(".formGroup").append("<p>" + answer + "</p>");
+							}
+	
+							$("#nodeL2Text").val(nodeText);
+						}
+						if (nodeType.startsWith("nodeL3")) {
+							var l4val = "";
+							var ticketType = "";
+							$.each(data.nodes, function(index, data) {
+								l4val = data.nodeCode;
+								ticketType=data.ticketType;
+							});
+							//console.log(l4val);
+							$("#nodeL4").val(l4val);
+							$("#ticketType").val(ticketType);
+							$("#nodeL3Text").val(nodeText);
+						}
+					},
+					error : function(resp) {
+						console.log("Error in crmChildNodes" + resp);
 					}
-					if (nodeType.startsWith("nodeL3")) {
-						var l4val = "";
-						var ticketType = "";
-						$.each(data.nodes, function(index, data) {
-							l4val = data.nodeCode;
-							ticketType=data.ticketType;
-						});
-						//console.log(l4val);
-						$("#nodeL4").val(l4val);
-						$("#ticketType").val(ticketType);
-						$("#nodeL3Text").val(nodeText);
-					}
-				},
-				error : function(resp) {
-					console.log("Error in crmChildNodes" + resp);
-				}
-			});
+				});
+			}
 		});
 
 	},
@@ -348,26 +350,37 @@ ACC.WebForm = {
 			url : ACC.config.encodedContextPath+ "/ticketForm/webOrderlines",
 			type : 'GET',
 			success : function(data) {
-				
-				$.each(data.orderLineDatas, function(index, dataLine) {
-
-					htmlOption += "<li data-orderCode='"+ dataLine.orderCode+"' "+
-									"data-subOrderCode='"+ dataLine.subOrderCode+"' "+
-									"data-transactionId='"+dataLine.transactionId +"'>" +
-									"<div class='prodImg'><img src='"+ dataLine.prodImageURL+"' alt='' /></div>"+
-										"<div class='prodInfo'>"+
-											"<div class='prodTxt'>"+
-												"<p class='orderDate'>Order on: "+ dataLine.orderDate+"</p>"
-												"<p class='prodName'>"+dataLine.prodTitle +"</p>"+
-												"<p class='prodPrice'>Price: "+ dataLine.prodTotalPrice+"</p>"+
-												"<span class='prodShiping'>"+dataLine.customerOrderStatus+"</span>"+
-											"</div></div></li>";
+				if( $.isArray(data.orderLineDatas) ||  data.orderLineDatas.length ) {
+					$.each(data.orderLineDatas, function(index, dataLine) {
+	
+						htmlOption += "<li data-orderCode='"+ dataLine.orderCode+"' "+
+										"data-subOrderCode='"+ dataLine.subOrderCode+"' "+
+										"data-transactionId='"+dataLine.transactionId +"'>" +
+										"<div class='prodImg'><img src='"+ dataLine.prodImageURL+"' alt='' /></div>"+
+											"<div class='prodInfo'>"+
+												"<div class='prodTxt'>"+
+													"<p class='orderDate'>Order on: "+ dataLine.orderDate+"</p>"
+													"<p class='prodName'>"+dataLine.prodTitle +"</p>"+
+													"<p class='prodPrice'>Price: "+ dataLine.prodTotalPrice+"</p>"+
+													"<span class='prodShiping'>"+dataLine.customerOrderStatus+"</span>"+
+												"</div></div></li>";
+						
+					});
 					
-				});
-				
-				$(".orderDrop").html(htmlOption);
+					$(".orderDrop").html(htmlOption);
+					ACC.WebForm.attachOrderDropEvent();
+				}
 				$("#totalPages").val(data.totalOrderLines);
 				$("#currentPage").val(currentPage);
+				// no of orderlins in one page
+				if(data.totalOrderLines > 5){
+					$('#viewMoreLink').show();
+				}
+				if(currentPage > 1 ){
+					$('#viewBackLink').show();
+				}
+				
+				
 			},
 			error : function(resp) {
 				console.log("Error in crmChildNodes"+ resp);
@@ -379,16 +392,38 @@ ACC.WebForm = {
 		var total=$('#totalPages').val();
 		
 		if ( $(".selectOrderSec").length ) {
-			if(parseInt(total) < parseInt(current) ){
+			if(parseInt(total) <= parseInt(current) ){
 				$('#viewMoreLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"')");
+			}else{
+				$('#viewMoreLink').hide();
 			}
 			
 			if(parseInt(current) > 1){
 				$('#viewBackLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"')");
+			}else{
+				$('#viewBackLink').hide();
 			}
 			//call default first page
 			ACC.WebForm.loadOrderLines(current);
+			//ACC.WebForm.attachOrderDropEvent();
 		}
+	},
+	attachOrderDropEvent : function(){
+		$('.selectedProduct').click(function(){
+	    	$(this).next('.orderDrop').toggle();
+	    });
+		$('.selectOrders .orderDrop li').each(function(){
+			$(this).click(function(){
+	          var prodHtml = $(this).html();
+	          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
+	          $('.orderDrop').toggle();
+	       // set value
+				$('#orderCode').val($(this).attr("data-orderCode"));
+				$('#subOrderCode').val($(this).attr("data-subOrderCode"));
+				$('#transactionId').val($(this).attr("data-transactionId"));
+			});
+
+		});
 	},
 
 };
@@ -399,47 +434,32 @@ $(document).ready(function() {
 	ACC.WebForm.issueDropDown();
 	ACC.WebForm.sendTicket();
 	ACC.WebForm.loadPaginationLink();
-
-	$('.contCustCareBtn').on("click",function() {
+	ACC.WebForm.attachOrderDropEvent();
+	
+	$('.contCustCareBtn').click(function(){
 		$(this).toggleClass('dActive');
 		$('.custmCareQrySec').slideToggle();
 		$('#closeCustCareSec').addClass('active');
 	});
-	$('#closeCustCareSec').on("click",function() {
+	$('#closeCustCareSec').click(function(){
 		$(this).removeClass('active');
 		$('.custmCareQrySec').slideToggle();
 		$('.contCustCareBtn').removeClass('dActive');
 	});
-	
-	$('.selectedProduct').on("click",function() {
-		$(this).next('.orderDrop').toggle();
+	$('#closeCustCarePopBox').click(function(){
+		$(this).parent().parent('.issueQuryPopUp').hide();
 	});
-	
-	$('.selectOrders .orderDrop li').each(function() {
-		$(this).click(function() {
-			var prodHtml = $(this).html();
-			$(this).parent('.orderDrop').prev('.selectedProduct')
-					.addClass('filled').html(prodHtml);
-			$('.orderDrop').toggle();
-			// set value
-			$('#orderCode').val($(this).attr("data-orderCode"));
-			$('#subOrderCode').val($(this).attr("data-subOrderCode"));
-			$('#transactionId').val($(this).attr("data-transactionId"));
-
-		});
-
-	});
-	/* custum selecbox */
-	$(".customSelect").each(function() {
-		$(this).wrap("<span class='customSelectWrap'></span>");
-		$(this).after("<span class='holder'></span>");
-		$(".holder").removeClass('active');
-	});
-	$(".customSelect").change(function() {
-		var selectedOption = $(this).find(":selected").text();
-		$(this).next(".holder").addClass('active');
-		$(this).next(".holder").text(selectedOption);
-	}).trigger('change');
-	
-	$(".holder").removeClass('active');
+	/*custum selecbox*/
+	 $(".customSelect").each(function(){
+            $(this).wrap("<span class='customSelectWrap'></span>");
+            $(this).after("<span class='holder'></span>");
+            $(".holder").removeClass('active');
+        });
+        $(".customSelect").change(function(){
+            var selectedOption = $(this).find(":selected").text();
+            $(this).next(".holder").addClass('active');
+            $(this).next(".holder").text(selectedOption);
+        }).trigger('change');
+         $(".holder").removeClass('active');
+         
 });
