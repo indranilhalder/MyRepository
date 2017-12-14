@@ -3201,7 +3201,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName, final String guid,
+	public @ResponseBody MplPromoPriceData applyPromotions(final String ModeofPayment, final String Nameofbank, final String guid,
 			final boolean isNewCard) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
 			ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
 			JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
@@ -3209,6 +3209,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
 
+		//TPR-7486
+		final String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
+		final String bankName = MarketplacecommerceservicesConstants.EMPTY;
 
 		//Payment Soln changes
 		OrderModel orderModel = null;
@@ -4370,10 +4373,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 											}
 										}
-										else
-										{
-											willApply = true;
-										}
+										/*
+										 * else { willApply = true; }
+										 */
 									}
 									if (mplCartVoucher)
 									{ //MplCartOfferVoucherModel
@@ -4702,10 +4704,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 											}
 										}
-										else
-										{
-											willApply = true;
-										}
+										/*
+										 * else { willApply = true; }
+										 */
 									}
 
 									if (mplCartVoucher)
@@ -5859,10 +5860,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 										}
 									}
-									else
-									{
-										willApply = true;
-									}
+									/*
+									 * else { willApply = true; }
+									 */
 								}
 								if (mplCartVoucher)
 								{ //MplCartOfferVoucherModel
@@ -6052,10 +6052,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 										}
 									}
-									else
-									{
-										willApply = true;
-									}
+									/*
+									 * else { willApply = true; }
+									 */
 								}
 								if (mplCartVoucher)
 								{ //MplCartOfferVoucherModel
