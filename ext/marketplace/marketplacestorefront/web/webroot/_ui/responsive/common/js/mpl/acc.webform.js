@@ -335,19 +335,16 @@ ACC.WebForm = {
 			}
 			//call default first page
 			ACC.WebForm.loadOrderLines(current);
-			//ACC.WebForm.attachOrderDropEvent();
+			ACC.WebForm.attachOrderDropEvent();
 		}
 	},
 	attachOrderDropEvent : function(){
-		$('.selectedProduct').click(function(){
-	    	$(this).next('.orderDrop').toggle();
-	    });
 		$('.selectOrders .orderDrop li').each(function(){
-			$(this).click(function(){
-	          var prodHtml = $(this).html();
-	          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
-	          $('.orderDrop').toggle();
-	       // set value
+			$(this).on("click",function(){
+				var prodHtml = $(this).html();
+				$('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
+				$('.orderDrop').toggle();
+				// set value
 				$('#orderCode').val($(this).attr("data-orderCode"));
 				$('#subOrderCode').val($(this).attr("data-subOrderCode"));
 				$('#transactionId').val($(this).attr("data-transactionId"));
@@ -362,11 +359,6 @@ ACC.WebForm = {
 	            $(this).after("<span class='holder'></span>");
 	            $(".holder").removeClass('active');
 	        });
-	    $(".customSelect").change(function(){
-	        var selectedOption = $(this).find(":selected").text();
-	        $(this).next(".holder").addClass('active');
-	        $(this).next(".holder").text(selectedOption);
-	    }).trigger('change');
 	    $(".holder").removeClass('active');
 	},
 
@@ -378,7 +370,7 @@ $(document).ready(function() {
 	ACC.WebForm.issueDropDown();
 	ACC.WebForm.sendTicket();
 	ACC.WebForm.loadPaginationLink();
-	ACC.WebForm.attachOrderDropEvent();
+	//ACC.WebForm.attachOrderDropEvent();
 	ACC.WebForm.attachSelectEvent();
 	
 	$('.contCustCareBtn').click(function(){
@@ -394,5 +386,14 @@ $(document).ready(function() {
 	$('#closeCustCarePopBox').click(function(){
 		$(this).parent().parent('.issueQuryPopUp').hide();
 	});
+	
+	$('.selectedProduct').on("click",function(){
+    	$('.orderDrop').toggle();
+    });
+	 $(".customSelect").change(function(){
+	        var selectedOption = $(this).find(":selected").text();
+	        $(this).next(".holder").addClass('active');
+	        $(this).next(".holder").text(selectedOption);
+	    }).trigger('change');
          
 });
