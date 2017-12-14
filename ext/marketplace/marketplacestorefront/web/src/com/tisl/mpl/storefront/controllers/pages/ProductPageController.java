@@ -3968,7 +3968,8 @@ public class ProductPageController extends MidPageController
 							//final boolean excludePromotion = false;
 							if (null != productPromotion)
 							{
-								if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								//if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								if (CollectionUtils.isNotEmpty(productPromotion.getExcludedProducts()))//EQA fix
 								{
 									final List<ProductModel> excludedList = new ArrayList<ProductModel>(
 											productPromotion.getExcludedProducts());

@@ -238,6 +238,22 @@ public interface MplVoucherService
 
 
 	/**
+	 * Validate Total Price
+	 *
+	 * @param oModel
+	 * @return Double
+	 */
+	Double setTotalPrice(AbstractOrderModel oModel);
+
+	/**
+	 * Set Voucher Data When returning back from Payment Page
+	 *
+	 * @param abstractOrderModel
+	 * @return VoucherDiscountData
+	 */
+	VoucherDiscountData getVoucherData(AbstractOrderModel abstractOrderModel);
+
+	/**
 	 * @param orderModel
 	 */
 	public void cardPerOfferVoucherEntry(OrderModel orderModel);
@@ -256,4 +272,5 @@ public interface MplVoucherService
 	 * @param orderModel
 	 */
 	public void updateCardPerOfferVoucherEntry(OrderModel orderModel);
+
 }

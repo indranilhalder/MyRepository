@@ -1848,7 +1848,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv()));
-			data.setTotalDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
+			data.setTotalDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
 		}
 
 
