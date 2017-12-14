@@ -570,6 +570,12 @@
 	color: #d0d0d0;
 }
 
+.content .fab-content{
+    margin-left: 174px;
+    width: 96%
+} 
+
+
 @media ( max-width :767px) {
 	.custmCareHelp .secHeading {
 		text-align: left !important;
