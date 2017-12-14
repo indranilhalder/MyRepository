@@ -49,6 +49,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -2481,6 +2482,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		final List<DiscountValue> globalDiscountList = abstractOrderModel.getGlobalDiscountValues();
 		double discount = 0;
+		double subtotal = 0;
+
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<AbstractOrderEntryModel>(abstractOrderModel.getEntries());
 
 
 		if (CollectionUtils.isNotEmpty(globalDiscountList))
@@ -2490,11 +2494,23 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				discount += value.getAppliedValue();
 			}
 		}
+		//		final double subtotal = (null != abstractOrderModel.getSubtotal() && abstractOrderModel.getSubtotal().doubleValue() > 0)
+		//				? abstractOrderModel.getSubtotal().doubleValue() : 0;
 
-		final double subtotal = (null != abstractOrderModel.getSubtotal() && abstractOrderModel.getSubtotal().doubleValue() > 0) ? abstractOrderModel
-				.getSubtotal().doubleValue() : 0;
-		final double deliveryCost = (null != abstractOrderModel.getDeliveryCost() && abstractOrderModel.getDeliveryCost()
-				.doubleValue() > 0) ? abstractOrderModel.getDeliveryCost().doubleValue() : 0;
+		if (CollectionUtils.isNotEmpty(entryList))
+		{
+			for (final AbstractOrderEntryModel entry : entryList)
+			{
+				if (BooleanUtils.isFalse(entry.getGiveAway()) || BooleanUtils.isFalse(entry.getIsBOGOapplied()))
+				{
+					subtotal += (null != entry.getTotalPrice() && entry.getTotalPrice().doubleValue() > 0)
+							? entry.getTotalPrice().doubleValue() : 0;
+				}
+			}
+		}
+
+		final double deliveryCost = (null != abstractOrderModel.getDeliveryCost()
+				&& abstractOrderModel.getDeliveryCost().doubleValue() > 0) ? abstractOrderModel.getDeliveryCost().doubleValue() : 0;
 
 		final double totalPriceData = (subtotal + deliveryCost) - discount;
 
@@ -2764,8 +2780,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	@Override
 	public void cardPerOfferVoucherEntry(final OrderModel orderModel)
 	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
-				.getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+				getVoucherService().getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -2788,14 +2804,17 @@ public class MplVoucherServiceImpl implements MplVoucherService
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
+											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+											.getMaxAmountPerTimeLimit() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue()
+													: 0.0D;
 									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+											.getMaxAmountAllTransaction() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction()
+															.doubleValue()
+													: 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 									{
 										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
@@ -2835,8 +2854,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	@Override
 	public void updateCardPerOfferVoucherEntry(final OrderModel orderModel)
 	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
-				.getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+				getVoucherService().getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -2870,14 +2889,17 @@ public class MplVoucherServiceImpl implements MplVoucherService
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
+											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+											.getMaxAmountPerTimeLimit() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue()
+													: 0.0D;
 									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+											.getMaxAmountAllTransaction() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction()
+															.doubleValue()
+													: 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 									{
 										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
@@ -3030,14 +3052,17 @@ public class MplVoucherServiceImpl implements MplVoucherService
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
+											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+											.getMaxAmountPerTimeLimit() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue()
+													: 0.0D;
 									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
+											.getMaxAmountAllTransaction() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction()
+															.doubleValue()
+													: 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 									{
 										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);

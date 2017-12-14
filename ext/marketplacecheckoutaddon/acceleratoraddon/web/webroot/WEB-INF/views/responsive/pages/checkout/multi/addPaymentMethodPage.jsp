@@ -48,12 +48,12 @@
 			<jsp:body> --%>
 				<script>
     				$(document).ready(function(){
-    					recalculateCart();
+    					recalculateCart(true);
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
     					var updateItHereLink=window.location.href;
     	
     					//TPR-7486
-    					ACC.singlePageCheckout.populatePaymentSpecificOffers();
+    					//ACC.singlePageCheckout.populatePaymentSpecificOffers();
     					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{
     						displayCODForm();
