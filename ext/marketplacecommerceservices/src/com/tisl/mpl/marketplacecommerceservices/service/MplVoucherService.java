@@ -266,11 +266,10 @@ public interface MplVoucherService
 	/**
 	 * @param orderModel
 	 */
-	public void removeCPOVoucherInvalidation(OrderModel orderModel);
-
-	/**
-	 * @param orderModel
-	 */
 	public void updateCardPerOfferVoucherEntry(OrderModel orderModel);
 
+	/**
+	 * @param subOrderDetails
+	 */
+	public void removeCPOVoucherInvalidation(OrderModel subOrderDetails);
 }

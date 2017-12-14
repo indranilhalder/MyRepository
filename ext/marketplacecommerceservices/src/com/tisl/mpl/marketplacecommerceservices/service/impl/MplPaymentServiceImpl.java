@@ -94,7 +94,6 @@ import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
-import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
@@ -2447,14 +2446,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		 *
 		 ***********/
 		double deliveryCost = 0.0d;
-
+		double sdCharge = 0.0d;
 		for (final AbstractOrderEntryModel cartentrymodel : cartModel.getEntries())
 		{
 			if (null != cartentrymodel.getCurrDelCharge() && cartentrymodel.getCurrDelCharge().doubleValue() > 0.0d)
 			{
 				deliveryCost += cartentrymodel.getCurrDelCharge().doubleValue();
 			}
+			sdCharge += cartentrymodel.getScheduledDeliveryCharge().doubleValue();
 		}
+		deliveryCost = deliveryCost + sdCharge;
 		return deliveryCost;
 
 	}
@@ -3374,11 +3375,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3390,9 +3391,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3769,7 +3770,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3919,7 +3920,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3973,7 +3974,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -4037,7 +4038,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -4936,6 +4937,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
 								PaymentTransactionType.RETURN, uniqueRequestId);
+						LOG.info("total refund amount from if " + totalRefundAmount);
 						if (null != paymentTransactionModel)
 						{
 							mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
@@ -5013,10 +5015,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
 								PaymentTransactionType.RETURN, uniqueRequestId);
+						LOG.info("total refund amount from else " + totalRefundAmount);
 						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
 							final ConsignmentStatus conStatus = orderEntry.getConsignmentEntries().iterator().next().getConsignment()
 									.getStatus();
+							LOG.info("consignment status" + conStatus);
 							if (conStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 							{
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
@@ -5026,6 +5030,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							{
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.RETURN_COMPLETED, null);
+								getModelService().save(orderEntry);
 							}
 
 						}

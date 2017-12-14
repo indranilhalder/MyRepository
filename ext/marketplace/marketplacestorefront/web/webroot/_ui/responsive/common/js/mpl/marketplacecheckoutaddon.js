@@ -11249,22 +11249,27 @@ function tokenizeJuspayCard(paymentMode)
 	});
 	return token;
 }
+//Codes with C are for CartCoupon, With P are for promotional voucher
 function showCardPerOfferFailureMsg(response)
 {
+	var message="";
 	var arr=response.split("|");
 	switch(arr[1]){
-	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-	case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-	case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[3]+"."; 
-				cardPerOfferUpdatePrice(arr,"promoVoucher");
+	case "P01": message="Unfortunately, the coupon has already been used and cannot be applied for this transaction.";break;
+	case "P02" : message="Unfortunately, the discount is not applicable for this transaction."; break;
+	case "P03" :message="Unfortunately, the discount is not applicable for this transaction.";
+				//message="Voucher max amount that can be availed is "+arr[3]+"."; 
+				//cardPerOfferUpdatePrice(arr,"promoVoucher");//Method to update price tags in dom
 				break;
-	case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
-	case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-	case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[3]+"."; 
-				cardPerOfferUpdatePrice(arr,"cartOffer");
+	case "C01": message="Unfortunately, the bank offer has been availed and cannot be applied for this transaction.";break;
+	case "C02" : message="Unfortunately, the discount is not applicable for this transaction."; break;
+	case "C03" :message="Unfortunately, the discount is not applicable for this transaction.";
+				//message="Voucher max amount that can be availed is "+arr[3]+"."; 
+				//cardPerOfferUpdatePrice(arr,"cartOffer");//Method to update price tags in dom
 				break;
 	default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
 	}
+	document.getElementById("juspayErrorMsg").innerHTML=message;
 	ACC.singlePageCheckout.scrollToDiv("juspayErrorMsg",100);
 	$("#juspayconnErrorDiv").css("display","block");
 	$(".pay .loaderDiv").remove();
@@ -11274,6 +11279,7 @@ function showCardPerOfferFailureMsg(response)
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 }
+//Method to update price tags in dom
 function cardPerOfferUpdatePrice(arr,couponType)
 {
 	try{
