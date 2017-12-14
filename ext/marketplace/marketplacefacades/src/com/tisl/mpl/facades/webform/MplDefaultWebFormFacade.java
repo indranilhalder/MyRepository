@@ -372,6 +372,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	{
 		final WebFormOrder form = new WebFormOrder();
 		List<WebFormOrderLine> orderLines = new ArrayList<WebFormOrderLine>();
+		String imgURl = null;
 		try
 		{
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = mplOrderFacade
@@ -425,12 +426,13 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 								{
 									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
 									{
-										orderLine.setProdImageURL(imageData.getUrl());
+										imgURl = imageData.getUrl();
 										break;
 									}
 
 								}
 							}
+							orderLine.setProdImageURL(imgURl);
 							if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
 							{
 								orderLine.setProdTitle(line.getProduct().getName());

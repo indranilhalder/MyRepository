@@ -9601,7 +9601,7 @@ public class UsersController extends BaseCommerceController
 	}
 
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
-	@RequestMapping(value = "/{userId}/getOrderTransactions", method = RequestMethod.GET)
+	@RequestMapping(value = "/{userId}/getOrderTransactions", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrdersHistoryList(@RequestParam(required = false) final String statuses,
 			@RequestParam final int currentPage,

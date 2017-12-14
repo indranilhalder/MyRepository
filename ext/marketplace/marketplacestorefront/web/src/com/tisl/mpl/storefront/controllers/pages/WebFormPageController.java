@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.StoreBreadcrumbBuilder;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
@@ -27,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,9 +43,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.cms.data.WebForm;
@@ -80,12 +80,16 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	private static final String WEB_FORM = "faq";
 
+
 	@RequestMapping(method = RequestMethod.GET)
+	@RequireHardLogIn
 	public String ticketFormView(final Model model) throws CMSItemNotFoundException
 	{
 		final TicketWebForm form = new TicketWebForm();
 		model.addAttribute("ticketForm", form);
-
+		final String ticketSubType = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB, "L1C1");
+		model.addAttribute("tiketL1Check", ticketSubType);
 		model.addAttribute("formFields", mplWebFormFacade.getWebCRMForm());
 
 		storeCmsPageInModel(model, getContentPageForLabelOrId(WEB_FORM));
@@ -163,12 +167,11 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = "/fileUpload", method =
 	{ RequestMethod.POST })
-	public @ResponseBody String fileUpload(@RequestPart(value = "uploadFile") final List<MultipartFile> uploadFile)
-			throws CMSItemNotFoundException
+	public @ResponseBody String fileUpload(final MultipartHttpServletRequest request) throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
 		String filelocation = null;
-		final List<String> filelocations = new ArrayList<>();
+		//final List<String> filelocations = new ArrayList<>();
 		Path path = null;
 		fileUploadLocation = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CRM_FILE_UPLOAD_PATH);
@@ -176,9 +179,10 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		{
 			try
 			{
-				for (final MultipartFile file : uploadFile)
+				final List<MultipartFile> images = request.getFiles("uploadFile");
+				for (final MultipartFile imageFile : images)
 				{
-					final byte barr[] = file.getBytes();
+					final byte barr[] = imageFile.getBytes();
 					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
 					nowDate = sdf.format(new Date());
 					path = Paths.get(fileUploadLocation + File.separator + nowDate);
@@ -195,24 +199,26 @@ public class WebFormPageController extends AbstractMplSearchPageController
 							LOG.error("Exception ,While creating the Directory " + e.getMessage());
 						}
 					}
-					filelocation = path + File.separator + file.getOriginalFilename();
+					filelocation = path + File.separator + imageFile.getOriginalFilename();
 					final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(filelocation));
 					bout.write(barr);
 					bout.flush();
 					bout.close();
 					LOG.debug("FileUploadLocation   :" + filelocation);
-					filelocations.add(filelocation);
+					//filelocations.add(filelocation);
 				}
+
 			}
 			catch (final Exception e)
 			{
 				LOG.error("Exception is:" + e);
 				filelocation = "error";
-				filelocations.add(filelocation);
+				//filelocations.add(filelocation);
 			}
 		}
 
-		return String.join(",", filelocations);
+		//return String.join(",", filelocations);
+		return filelocation;
 	}
 
 	@RequestMapping(value = "/webOrderlines", method = RequestMethod.GET)

@@ -62,9 +62,10 @@
 								<c:forEach items="${formFields.nodes}" var="l1Node">
 									<c:if test="${l1Node.nodeType eq 'L1'}">
 										<div class="queryOptRadio">
-											<label> <input type="radio" name="nodeL1"
-												class="node formControl" value="${l1Node.nodeCode}">
-												<span></span> ${l1Node.nodeDesc}
+											<label> 
+												<input type="radio" name="nodeL1" class="node formControl" nodcheck="${l1Node.nodeCode eq tiketL1Check}" value="${l1Node.nodeCode}">
+												<span></span>
+												${l1Node.nodeDesc}
 											</label>
 										</div>
 										<c:set var="nodeL0" value="${l1Node.parentNode}"></c:set>
@@ -74,31 +75,23 @@
 							
 							<input type="hidden" name="nodeL0" value="${nodeL0}" /> 
 							
-							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-								<div class="loginSec">
-									<p class="loginTxt">Please login to see your order(s).</p>
-									<a class="needHelpBtn needHelpBtnSm" href="login">Login to Continue</a>
-								</div>
-							</sec:authorize>
-							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-								<div class="formGroup">
+							<div class="formGroup">
 							       <div class="selectOrderSec">
 							             <h3 class="secLabel">Select Your Order(s).</h3>
 								          <div class="selectOrders">
-								             <div class="selectedProduct">
-								               Select order from your previous orders
-								             </div>
+								            <div class="selectedProduct">Select order from your previous orders</div>
 											<ul class="orderDrop">
 												
 											</ul>
-											<input type="hidden" id="currentPage" value="0" name="currentPage"/>
+											
+										</div>
+										<input type="hidden" id="currentPage" value="0" name="currentPage"/>
 								            <input type="hidden" id="totalPages" value="0" name="totalPages"/>
 								            <a href="#" id="viewMoreLink" style="display:none;">View more orders</a>
 								            <a href="#" id="viewBackLink" style="display:none;">Back</a>
-										</div>
 									</div>
 								</div>
-							</sec:authorize>
+							
 							<div class="formGroup">
 								<h3 class="secLabel">What is the issue?</h3>
 								<select class="node formControl customSelect" name="nodeL2">
@@ -110,7 +103,7 @@
 										</c:forEach>
 								</select>
 							</div>
-							<div class="formGroup">
+							<div class="formGroup" id="subIssueDiv" style="display:none;">
 								<h3 class="secLabel">Select a sub-issue.</h3>
 								<select class="node formControl customSelect" name="nodeL3">
 										<option value="">Select your exact problem</option>
@@ -121,6 +114,7 @@
 										</c:forEach>
 								</select>
 							</div>
+							<div id="ticketAnswerReply"></div>
 							<div class="formGroup">
 								<h3 class="secLabel">Name</h3>
 								<input type="text" class="formControl" placeholder="Enter Your Name" 
@@ -130,7 +124,7 @@
 								<div class="feildCols">
 									<div class="formGroup">
 										<h3 class="secLabel">Registered Email ID</h3>
-										<input type="text" class="formControl" name="contactEmail"
+										<input type="text" class="formControl" name="contactEmail" readonly
 											placeholder="Enter Your Email" value="${formFields.emailId}" />
 									</div>
 								</div>
@@ -147,9 +141,9 @@
 								<h3 class="secLabel issueComment">Comment</h3>
 								<div class="commentLength">Remaining characters:1000</div>
 								<textarea class="formControl textArea" rows="3"
-									placeholder="Describe your issue here." name="comment"></textarea>
+									placeholder="Describe your issue here." name="comment" maxlength="1000"></textarea>
 							</div>
-							<div class="formGroup">
+							<div class="formGroup" id="fileSubmit">
 								<h3 class="secLabel">Add attachment (Optional)</h3>
 								<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 									upload size 5MB)</p>
@@ -158,10 +152,13 @@
 									<input id="attachmentFile" type="file" name="uploadFile" multiple />
 									<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 								</div>
-								<div id="uploads"></div>
+								<div class="progress">
+							      <div id="progressBar" class="progress-bar progress-bar-success" role="progressbar"
+							        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+							    </div>
 							</div>
 							<div class="formGroup">
-								<button class="needHelpBtn webfromTicketSubmit">Submit</button>
+								<button class="needHelpBtn webfromTicketSubmit" type="submit">Submit</button>
 							</div>
 						</div>
 					</form>
