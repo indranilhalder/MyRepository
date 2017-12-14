@@ -8771,6 +8771,10 @@ $("#couponSubmitButton").click(function(){
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
+	 				//TISHS-53
+	 				$("#couponSubmitButton").prop('disabled', false);
+	 				$("#couponSubmitButton").css("opacity","1");
+	 				
 	 				if(response.redeemErrorMsg=="Price_exceeded")
 	 				{
 	 					$("#priceCouponError").css("display","block");
@@ -10046,7 +10050,7 @@ function submitCODForm(paymentInfo){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
 				//TPR-4461 STARTS HERE
-				else if(response=='redirect_with_coupon'){
+				/*else if(response=='redirect_with_coupon'){
 					// $(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
@@ -10060,6 +10064,28 @@ function submitCODForm(paymentInfo){
 					//$(".pay button, #make_cc_payment_up").css("opacity","1");
 					// alert("Sorry!!! Voucher is not applicable for the payment mode/bank you have selected.Click OK to be back to the payment page and proceed further.");
 				    
+				}*/
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");								    
+				}
+				else if(response=='redirect_with_vouchercart'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+								    
+				}
+				else if(response=='redirect_with_vouchercart_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");								    
 				}
 				//TPR-4461 ENDS HERE
 				else{

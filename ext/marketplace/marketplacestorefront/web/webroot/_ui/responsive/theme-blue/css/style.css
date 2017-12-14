@@ -78059,3 +78059,266 @@ a.tab-emi.active{
     clear: both;
 }
 /* TISPRNXIII-74 End */
+/* TPR 7486 START*/
+.offerui li {
+	display: inline;
+	float: left;
+	width: 268px;
+	height: 104px;
+	border: solid 1px #dddddd;
+	margin: 6px 19px 6px 0px;
+	padding: 7px;
+	position: relative;
+	text-align: left;
+}
+.offer_des {
+	display: block;
+	margin: 4px 0px 0px 24px;
+	font-size: 13px;
+	color: #787878;
+}
+
+.max-min-value .offer_des {
+	font-size: 11px;
+	color: #787878;
+	margin-bottom: 4px
+}
+.max-min-value {
+	position: absolute;
+	bottom: 5px;
+}
+.offer_heading {
+	font-size: 16px;
+	color: #252525;
+	display: block;
+	margin-bottom: 4px;
+}
+.offer_heading_sub {
+	color: #6e6e6e;
+	margin-bottom: 17px;
+	display: block;
+}
+.offer_title {
+	color: #252525;
+	display: inline-block;
+	vertical-align: middle;
+}
+.viewmoreoffer {
+    width: auto;
+    height: 34px;
+    background-color: #666666;
+    padding: 6px;
+    font-weight: normal;
+    text-transform: capitalize;
+    cursor: pointer;
+}
+.viewmoreoffer span {
+	font-size: 13px;
+    text-align: left;
+    color: #ffffff;
+    display: inline-block;
+}
+ul.offerui {
+	display: inline-block;
+	clear: both;
+	height: auto;
+	background: #fff;s
+}
+.offer_container {
+	position: relative;
+	width: 67%;
+	margin-bottom: 50px;
+}
+.offerui li:last-child {
+    margin-right: 0;
+}
+.offer_title, .offer_heading_sub {
+	font-size: 14px;
+}
+.cart.wrapper.checkout-payment .left-block.choose-payment{
+	border: 1px solid #dddddd;
+}
+.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv
+	{
+	border: 1px solid transparent !important;
+}
+#continue_payment_after_validate:hover {
+	background: #a5173c ! important;
+}
+#paymenttermsoffersPopup .offer_des {
+	 margin: 4px 0px;
+}
+#paymentoffersPopup .content.offer-content{
+    text-align: left;
+	overflow-y: auto;
+    width: 733px !important;
+    padding: 31px 0px 75px 55px !important 
+}
+#paymenttermsoffersPopup .content.offer-content {
+    padding: 31px 47px 75px 44px !important;
+    overflow-y: hidden;
+    width: 733px !important;
+    text-align: left;
+}
+/* #paymenttermsoffersPopup.content.offer-content {
+    padding: 12px 15px !important;
+} */
+/* .tnc-heading{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.14;
+    letter-spacing: 0.7px;
+    text-align: left;
+    color: #252525;
+    margin-bottom: 23px;
+ } */
+#paymentoffersPopup .offer_heading,
+#paymenttermsoffersPopup .offer_heading{
+    text-align: left;
+    margin-bottom: 36px;
+}
+#paymentoffersPopup .offerui li,
+#paymenttermsoffersPopup .offerui li {
+    margin: 6px 70px 6px 0px;
+    width: 260px;
+ }
+ #paymentoffersPopup .content.offer-content>.close:before,
+ #paymenttermsoffersPopup .content.offer-content>.close:before {
+    top: 13px;
+}
+.tnc-link{
+	font-size: 14px;
+    text-align: left;
+    color: #4a90e2;
+    text-decoration: underline;
+    margin-left: 11px;
+}
+.tnc-link-mob{
+	float:right;
+}
+@media screen and (max-width: 900px) and (min-width: 520px) {
+	.offerui li{
+		width:220px;
+	}
+}
+@media screen and (max-width: 1024px) {
+	.offerui li{
+		width:206px;
+	}
+}
+@media screen and (min-width: 769px) {
+	#paymenttermsoffersPopup .content.offer-content {
+    	overflow-y: auto;
+    }
+	 .cart.wrapper .right-block.billing.checkout-list-right{
+	 	position: absolute;
+	    top: 0;
+	    right: 0;
+	 }
+	 .viewmoreoffer {
+	    position: absolute;
+	    right: 0px;
+	    bottom: -37px;
+	 }
+ }
+ @media screen and (max-width: 767px) {
+	 #paymentoffersPopup .content.offer-content{
+		overflow-y: auto;
+	}
+ 	ul.offerui{
+ 		width:100%;
+ 	}
+ 	#paymentoffersPopup .content.offer-content,
+ 	#paymenttermsoffersPopup  .content.offer-contents{
+	    max-width: 68% !important;
+	    padding: 20px 0px ! important;
+	}
+	#paymentoffersPopup .offerui li,
+	#paymenttermsoffersPopup .offerui li {
+    	padding-left: 22px;
+	}
+	#paymentoffersPopup .offer_heading,
+	#paymenttermsoffersPopup .offer_heading{
+    	margin-left: 21px;
+	    line-height: 1.14;
+	    letter-spacing: 0.7px;
+	    text-align: left;
+	    color: #252525;
+	    font-size: 14px;
+	}
+	 .offerui li{
+	    width: 100%;
+	    border-width: 0px 0px 1px 0px;
+	    padding-left: 15px;
+	 }
+	 .offer_container{
+	 	width:100%;
+	 	background: #fff;
+	 }
+	 .viewmoreoffer {
+	  margin: auto;
+	  background-color: transparent;
+	 }
+	 .viewmoreoffer span {
+	    font-size: 12px;
+	    color: #a5173c;
+	    font-weight: bold;
+    }
+    .offer_heading_sub {
+	    margin-bottom: 0px;
+	    padding-bottom: 17px;
+    }
+    .offer-heading {
+    	background: #eee;
+	}
+	.offer_heading_sub {
+	    font-size: 12px;
+	    text-align: left;
+	    color: #888888;
+	}
+	.offer_heading {
+	    font-size: 12px;
+	    font-weight: 500;
+	    line-height: 1.33;
+	    letter-spacing: 0.6px;
+	    text-align: left;
+	    color: #444444;
+ 	}
+ }
+#paymenttermsoffersPopup #accordion-tnc .offer_title:after {
+    content: "+";
+    position: absolute;
+    right: 17px;
+    top: 9px;
+    font-size: 30px;
+    line-height: 18px;
+    color:#979797;
+}
+#paymenttermsoffersPopup #accordion-tnc .offer_title.active:after {
+    content: "-";
+    font-size: 50px;
+}
+ #accordion-tnc > li {
+	display: block;
+    border-bottom: solid 1px #979797;
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: 15px;
+}
+#paymenttermsoffersPopup .offertermsui .offer_title:after{
+	 border-bottom: solid 1px #979797;
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: 15px;
+}
+#accordion-tnc > li > span {
+	display: block;	
+}
+#accordion-tnc > li > div {
+	display: none;
+}
+button#continue_payment_after_validate {
+    width: 216px ! important;
+    margin: 30px ! important;
+}
+/* TPR 7486 END */

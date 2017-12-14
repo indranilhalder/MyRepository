@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -114,6 +115,9 @@ public class PaymentServicesController extends BaseController
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
+
+	@Resource(name = "mplCouponFacade")
+	private MplCouponFacade mplCouponFacade;
 
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
@@ -1266,6 +1270,7 @@ public class PaymentServicesController extends BaseController
 							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
+					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 				}
 				else
 				{
@@ -1281,6 +1286,7 @@ public class PaymentServicesController extends BaseController
 						MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
+				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)

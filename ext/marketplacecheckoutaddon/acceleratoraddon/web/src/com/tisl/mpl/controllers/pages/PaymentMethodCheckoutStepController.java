@@ -113,6 +113,7 @@ import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.BinData;
 import com.tisl.mpl.data.CODData;
 import com.tisl.mpl.data.EMIBankList;
@@ -243,8 +244,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@Resource(name = "priceBreakupFacade")
 	private PriceBreakupFacade priceBreakupFacade;
 
-	//@Autowired
-	//private MplCouponFacade mplCouponFacade;
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 
 	//PMD
 	//@Autowired
@@ -3227,6 +3228,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
+				//Remove existing vouchers
+				mplCouponFacade.releaseVoucherInCheckout(cart);
+
+
 				//TISEE-510 ,TISEE-5555
 
 				//				if (null != bankName && !bankName.equalsIgnoreCase("null"))
@@ -3722,12 +3727,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Logic when payment mode is Netbanking
 		try
 		{
+			//Paytm vulnerabilty check
+			final boolean value = configurationService.getConfiguration().getBoolean("payment.paytm.enable", false);
 
-			paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
-					redirectAfterPayment, format);
-			if (null != paytmResponse)
+			if (value)
 			{
-				return paytmResponse;
+				paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
+						redirectAfterPayment, format);
+				if (null != paytmResponse)
+				{
+					return paytmResponse;
+				}
+			}
+			else
+			{
+				throw new Exception("Payment through selected payment mode is not allowed!");
 			}
 		}
 		catch (final AdapterException e)
@@ -4823,6 +4837,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
 								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+						mplVoucherService.updateCardPerOfferVoucherEntry(orderModel);//TPR-7448
 					}
 				}
 				else if (null != orderModel.getPaymentInfo())
@@ -5793,13 +5808,27 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
 					VoucherModel appliedVoucher = null;
+					boolean mplCartVoucher = false;
+					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
 					final DiscountModel discount = voucherList.get(0);
 
 					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
-						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-						appliedVoucher = promotionVoucherModel;
+
+						if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
+						{
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+							mplCartVoucher = false;
+
+						}
+						else
+						{
+							final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+							mplCartVoucher = true;
+						}
 
 						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
 						for (final RestrictionModel restriction : restrictions)
@@ -5835,14 +5864,56 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										willApply = true;
 									}
 								}
-
-								if (willApply == false)
-								{
-									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								if (mplCartVoucher)
+								{ //MplCartOfferVoucherModel
+									voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
 								}
+								else
+								{ //PromotionVoucherModel
+									voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+								}
+
+								/*
+								 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
+								 */
 							}
 
 						}
+					}
+					//ERROR MESSAGE FOR COUPON AND VOUCHER
+					boolean checkcartVoucher1 = true;
+					boolean checkPromovoucher2 = true;
+					for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+					{
+
+						if (voucherentry.getKey().equals("mplcartvoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkcartVoucher1 = false;
+							}
+						}
+						if (voucherentry.getKey().equals("promovoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkPromovoucher2 = false;
+							}
+						}
+					}
+
+					if (!checkcartVoucher1 && !checkPromovoucher2)
+					{ //both coupon and voucher
+						return MarketplacecheckoutaddonConstants.REDIRECTTOVOUCHERANDCOUPON;
+					}
+					else if (!checkcartVoucher1)
+					{ // only voucher
+						return MarketplacecheckoutaddonConstants.REDIRECTTOVOUCHER;
+					}
+					else if (!checkPromovoucher2)
+					{ //only coupon
+					  //return "coupon";
+						return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
 					}
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
@@ -5932,13 +6003,28 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
 					VoucherModel appliedVoucher = null;
+					boolean mplCartVoucher = false;
+					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
 					final DiscountModel discount = voucherList.get(0);
 
 					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 					{
-						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-						appliedVoucher = promotionVoucherModel;
+
+						if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
+						{
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+							mplCartVoucher = false;
+
+						}
+						else
+						{
+							final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+							mplCartVoucher = true;
+						}
+
 
 						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
 						for (final RestrictionModel restriction : restrictions)
@@ -5971,14 +6057,56 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										willApply = true;
 									}
 								}
-
-								if (willApply == false)
-								{
-									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								if (mplCartVoucher)
+								{ //MplCartOfferVoucherModel
+									voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
 								}
+								else
+								{ //PromotionVoucherModel
+									voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+								}
+
+								/*
+								 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
+								 */
 							}
 
 						}
+					}
+					//ERROR MESSAGE FOR COUPON AND VOUCHER
+					boolean checkcartVoucher1 = true;
+					boolean checkPromovoucher2 = true;
+					for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+					{
+
+						if (voucherentry.getKey().equals("mplcartvoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkcartVoucher1 = false;
+							}
+						}
+						if (voucherentry.getKey().equals("promovoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkPromovoucher2 = false;
+							}
+						}
+					}
+
+					if (!checkcartVoucher1 && !checkPromovoucher2)
+					{ //both coupon and voucher
+						return MarketplacecheckoutaddonConstants.REDIRECTTOVOUCHERANDCOUPON;
+					}
+					else if (!checkcartVoucher1)
+					{ // only voucher
+						return MarketplacecheckoutaddonConstants.REDIRECTTOVOUCHER;
+					}
+					else if (!checkPromovoucher2)
+					{ //only coupon
+					  //return "coupon";
+						return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
 					}
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher

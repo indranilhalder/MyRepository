@@ -252,6 +252,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 									if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 									{
+										mplVoucherService.removeCardPerOfferVoucherInvalidation(orderModel);//TPR-7448
 										getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 									}
 								}
@@ -310,6 +311,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 							if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 							{
+								mplVoucherService.removeCardPerOfferVoucherInvalidation(orderModel);//TPR-7448
 								getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 							}
 
@@ -569,6 +571,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 					if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 					{
+						mplVoucherService.removeCardPerOfferVoucherInvalidation(orderModel);//TPR-7448
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 					}
 					//limited stock promotion issue starts here
@@ -641,7 +644,6 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
 					LOG.debug("Inside With payment Info-->payment failed");
-
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 					//limited stock promotion issue starts here
 					removePromotionInvalidation(orderModel);
