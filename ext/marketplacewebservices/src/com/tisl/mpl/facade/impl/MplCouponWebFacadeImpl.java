@@ -8,6 +8,7 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
@@ -16,10 +17,12 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -32,8 +35,10 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.service.MplCouponWebService;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
@@ -234,6 +239,203 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		return applycouponDto;
 	}
 
+	/* TPR 7486 */
+	@Override
+	public ApplyCartCouponsDTO applyCartVoucher(final String manuallyselectedvoucher, CartModel cartModel, OrderModel orderModel,
+			final String paymentMode) throws VoucherOperationException, CalculationException, NumberFormatException,
+			JaloInvalidParameterException, JaloSecurityException, EtailBusinessExceptions, EtailNonBusinessExceptions
+	{
+		final String couponCode = mplCouponFacade.getCouponCode(manuallyselectedvoucher);
+		final ApplyCartCouponsDTO applycouponDto = new ApplyCartCouponsDTO();
+		//final boolean redeem = true;
+		boolean couponRedStatus = false;
+		VoucherDiscountData data = new VoucherDiscountData();
+		Map<String, Double> paymentInfo = null;
+		try
+		{
+			//Redeem coupon for cartModel
+			if (orderModel == null)
+			{
+				//				Commented-----to be implemented in R2 later
+				//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
+				//		if (StringUtils.isEmpty(bankNameSelected))
+				//		{
+				//			getSessionService().setAttribute("bank", bankNameSelected);
+				//		}
+				//		else
+				//		{
+				//			for (final BankModel bank : bankList)
+				//			{
+				//				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
+				//				{
+				//					//setting the bank in session to be used for Promotion
+				//					getSessionService().setAttribute("bank", bank);
+				//					break;
+				//				}
+				//			}
+				//		}
+				if (cartModel != null /* && StringUtils.isNotEmpty(paymentMode) */)
+				{
+					//Apply the voucher
+
+					cartModel = (CartModel) mplCouponFacade.removeLastCartCoupon(cartModel);
+					if (StringUtils.isNotEmpty(couponCode))
+					{
+						couponRedStatus = mplCouponFacade.applyCartVoucher(couponCode, cartModel, null);
+						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+						//data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
+					}
+
+
+					//couponRedStatus = mplCouponFacade.applyVoucher(couponCode, cartModel, null);
+
+					//LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
+
+					//Calculate and set data attributes
+					//data = mplCouponFacade.calculateValues(null, cartModel, couponRedStatus, redeem);
+					data = mplCouponFacade.populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
+
+					paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue()));
+
+					//Update paymentInfo in session
+					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
+
+					//getSessionService().removeAttribute("bank");	//Do not remove---needed later
+					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
+					{
+						//Price data new calculation for 2 decimal values
+						//applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
+						//.setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setDiscount(String.valueOf(data.getTotalDiscount().getValue()
+								.setScale(2, BigDecimal.ROUND_HALF_UP)));
+					}
+
+					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
+							.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9500);
+				}
+				applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+
+				orderModel = (OrderModel) mplCouponFacade.removeLastCartCoupon(orderModel);
+				if (StringUtils.isNotEmpty(couponCode))
+				{
+					couponRedStatus = mplCouponFacade.applyCartVoucher(couponCode, null, orderModel);
+					LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+					//data = getMplCouponFacade().populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
+				}
+
+
+
+				//Apply the voucher
+				//couponRedStatus = mplCouponFacade.applyVoucher(couponCode, null, orderModel);
+
+				//LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
+
+				//Calculate and set data attributes
+				//data = mplCouponFacade.calculateValues(orderModel, null, couponRedStatus, redeem);
+				data = mplCouponFacade.populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
+				/*
+				 * if (StringUtils.isNotEmpty(paymentMode)) {
+				 */
+				paymentInfo = new HashMap<String, Double>();
+				paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				/* } */
+				//Update paymentInfo in session
+				mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
+				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
+				if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
+				{
+					//applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+					applycouponDto.setDiscount(String
+							.valueOf(data.getTotalDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+
+				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
+						.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
+				applycouponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+
+		}
+		catch (final VoucherOperationException e)
+		{
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+
+			if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCPRICEEXCEEDED))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9501);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9503);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCEXPIRED))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9505);
+			}
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCISSUE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTAPPLICABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9509);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTRESERVABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9510);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCFREEBIE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9511);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9512);
+			}
+			/* Added for TPR-1290 */
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9332);
+			}
+			//TPR-4460 Changes
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_MOBILE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9303);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_WEB))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9302);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.CHANNELRESTVIOLATION_CALLCENTRE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9304);
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+		}
+		return applycouponDto;
+	}
+
 	@Override
 	public ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
 			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
@@ -306,6 +508,128 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			LOG.error(MarketplacecouponConstants.COUPONRELISSUE, e);
 			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO);
+		}
+
+
+		return releaseCouponsDTO;
+	}
+
+	private boolean checkforCartVoucherRemoved(final List<DiscountModel> discounts)
+	{
+		boolean isCartVoucherRemoved = true;
+
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					isCartVoucherRemoved = false;
+					break;
+				}
+			}
+		}
+
+		return isCartVoucherRemoved;
+	}
+
+	/* TPR - 7486 */
+	@Override
+	public ReleaseCouponsDTO releaseCartVoucher(final String couponCode, CartModel cartModel, OrderModel orderModel,
+			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailBusinessExceptions
+	{
+		ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
+		//final Map<String, Double> paymentInfo = null;
+		//final boolean redeem = false;
+		boolean isCartVoucherRemoved = false;
+		VoucherDiscountData data = new VoucherDiscountData();
+		try
+		{
+			//Release coupon for cartModel
+			if (null != cartModel)
+			{
+
+				LOG.debug("Step 1:::The cart coupon code to be released by the customer is ::: " + couponCode);
+
+
+				cartModel = (CartModel) mplCouponFacade.removeCartCoupon(cartModel);
+
+				isCartVoucherRemoved = checkforCartVoucherRemoved(cartModel.getDiscounts());
+
+				if (isCartVoucherRemoved)
+				{
+					data = mplCouponFacade.populateCartVoucherData(null, cartModel, false, false, couponCode);
+				}
+
+
+				//Release the coupon
+				//mplCouponFacade.releaseVoucher(couponCode, cartModel, null);
+
+				//Recalculate cart after releasing coupon
+				//mplCouponFacade.recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
+
+				//data = mplCouponFacade.calculateValues(null, cartModel, true, redeem);
+
+				//Update paymentInfo from model
+				//paymentInfo = new HashMap<String, Double>();
+				//paymentInfo.put(paymentMode, Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue()));
+				//mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
+				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
+				{
+					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+
+				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			//Release coupon for orderModel
+			else if (null != orderModel)
+			{
+
+				LOG.debug("Step 1:::The cart coupon code to be released by the customer is ::: " + couponCode);
+				orderModel = (OrderModel) mplCouponFacade.removeCartCoupon(orderModel);
+				isCartVoucherRemoved = checkforCartVoucherRemoved(orderModel.getDiscounts());
+
+				if (isCartVoucherRemoved)
+				{
+					data = mplCouponFacade.populateCartVoucherData(orderModel, null, false, false, couponCode);
+				}
+				//Release the coupon
+				//mplCouponFacade.releaseVoucher(couponCode, null, orderModel);
+
+				//Recalculate cart after releasing coupon
+				//mplCouponFacade.recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
+
+				//data = mplCouponFacade.calculateValues(orderModel, null, true, redeem);
+
+				//Update paymentInfo in
+				//paymentInfo = new HashMap<String, Double>();
+				//paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+
+				//mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
+				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
+				{
+					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
+			}
+		}
+
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);

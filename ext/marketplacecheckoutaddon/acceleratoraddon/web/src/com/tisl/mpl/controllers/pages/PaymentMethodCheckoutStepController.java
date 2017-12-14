@@ -3201,7 +3201,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName, final String guid,
+	public @ResponseBody MplPromoPriceData applyPromotions(final String ModeofPayment, final String Nameofbank, final String guid,
 			final boolean isNewCard) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
 			ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
 			JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
@@ -3209,6 +3209,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
 
+		//TPR-7486
+		final String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
+		final String bankName = MarketplacecommerceservicesConstants.EMPTY;
 
 		//Payment Soln changes
 		OrderModel orderModel = null;
@@ -3727,12 +3730,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Logic when payment mode is Netbanking
 		try
 		{
+			//Paytm vulnerabilty check
+			final boolean value = configurationService.getConfiguration().getBoolean("payment.paytm.enable", false);
 
-			paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
-					redirectAfterPayment, format);
-			if (null != paytmResponse)
+			if (value)
 			{
-				return paytmResponse;
+				paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
+						redirectAfterPayment, format);
+				if (null != paytmResponse)
+				{
+					return paytmResponse;
+				}
+			}
+			else
+			{
+				throw new Exception("Payment through selected payment mode is not allowed!");
 			}
 		}
 		catch (final AdapterException e)
@@ -4361,10 +4373,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 											}
 										}
-										else
-										{
-											willApply = true;
-										}
+										/*
+										 * else { willApply = true; }
+										 */
 									}
 									if (mplCartVoucher)
 									{ //MplCartOfferVoucherModel
@@ -4693,10 +4704,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 											}
 										}
-										else
-										{
-											willApply = true;
-										}
+										/*
+										 * else { willApply = true; }
+										 */
 									}
 
 									if (mplCartVoucher)
@@ -5850,10 +5860,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 										}
 									}
-									else
-									{
-										willApply = true;
-									}
+									/*
+									 * else { willApply = true; }
+									 */
 								}
 								if (mplCartVoucher)
 								{ //MplCartOfferVoucherModel
@@ -6043,10 +6052,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 										}
 									}
-									else
-									{
-										willApply = true;
-									}
+									/*
+									 * else { willApply = true; }
+									 */
 								}
 								if (mplCartVoucher)
 								{ //MplCartOfferVoucherModel

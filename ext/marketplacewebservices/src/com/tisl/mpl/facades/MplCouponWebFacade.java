@@ -15,6 +15,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 
 import java.net.MalformedURLException;
 
+import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
@@ -56,6 +57,9 @@ public interface MplCouponWebFacade
 			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
 			JaloSecurityException;
 
+	ApplyCartCouponsDTO applyCartVoucher(String couponCode, CartModel cartModel, OrderModel orderModel, String paymentMode)
+			throws VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
+			JaloSecurityException;
 
 	/**
 	 * @description release the Coupon for the particular user
@@ -74,6 +78,11 @@ public interface MplCouponWebFacade
 	 * @throws CalculationException
 	 */
 	ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
+			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, CalculationException;
+
+	ReleaseCouponsDTO releaseCartVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
 			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, CalculationException;

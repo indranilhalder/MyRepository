@@ -159,7 +159,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 						}
 					}
 				}
-
+				LOG.error("Going to process the Order NO:" + order.getCode());
 				checkWebhookEntryForRefund(order, refundRequestIdList);
 
 			}
@@ -301,56 +301,65 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	private void updateStatusOnly(final RefundTransactionMappingModel refundTransactionModel, final String uniqRequestID,
 			final OrderModel order)
 	{
-
-		PaymentTransactionType paymentTransactionType = null;
-		boolean riskFlag = false;
-		PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
-		if (null != refundTransactionModel.getRefundType()
-				&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
+		if (null != refundTransactionModel)
 		{
-			paymentTransactionType = PaymentTransactionType.CANCEL;
-
-		}
-		else if (null != refundTransactionModel.getRefundType()
-				&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
-		{
-			paymentTransactionType = PaymentTransactionType.RETURN;
-		}
-		else if (null != refundTransactionModel.getRefundType()
-				&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED_FOR_RISK.toString()))
-		{
-			paymentTransactionType = PaymentTransactionType.CANCEL;
-			riskFlag = true;
-		}
-
-		try
-		{
-			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, SUCCESS,
-					refundTransactionModel.getRefundAmount(), paymentTransactionType, SUCCESS, uniqRequestID);
-			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
-		}
-		catch (final Exception e)
-		{
-			// YTODO Auto-generated catch block
-			LOG.error("Refund updation data failed", e);
-		}
 
 
-		if (riskFlag)
-		{
-			updateOrderStatusCancelledForRisk(order);
+			LOG.error("Updating status for Order:" + order.getCode());
+			PaymentTransactionType paymentTransactionType = null;
+			boolean riskFlag = false;
+			PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
+			if (null != refundTransactionModel.getRefundType()
+					&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
+			{
+				paymentTransactionType = PaymentTransactionType.CANCEL;
+
+			}
+			else if (null != refundTransactionModel.getRefundType()
+					&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
+			{
+				paymentTransactionType = PaymentTransactionType.RETURN;
+			}
+			else if (null != refundTransactionModel.getRefundType()
+					&& refundTransactionModel.getRefundType().toString()
+							.equalsIgnoreCase(JuspayRefundType.CANCELLED_FOR_RISK.toString()))
+			{
+				paymentTransactionType = PaymentTransactionType.CANCEL;
+				riskFlag = true;
+			}
+
+			try
+			{
+				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, SUCCESS,
+						refundTransactionModel.getRefundAmount(), paymentTransactionType, SUCCESS, uniqRequestID);
+				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			}
+			catch (final Exception e)
+			{
+				// YTODO Auto-generated catch block
+				LOG.error("paymentTransactionModel creation failed from updateStatusOnly for order:" + order.getCode(), e);
+			}
+
+
+			if (riskFlag)
+			{
+				updateOrderStatusCancelledForRisk(order);
+			}
+			else if (refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
+			{
+				updateOrderStatusCancelled(order, refundTransactionModel.getRefundedOrderEntry(), paymentTransactionModel);
+			}
+			else if (refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
+			{
+				updateOrderStatusReturn(order, refundTransactionModel.getRefundedOrderEntry(), paymentTransactionModel);
+			}
+
 		}
-		else if (refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
+		else
 		{
-			updateOrderStatusCancelled(order, refundTransactionModel.getRefundedOrderEntry(), paymentTransactionModel);
-		}
-		else if (refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
-		{
-			updateOrderStatusReturn(order, refundTransactionModel.getRefundedOrderEntry(), paymentTransactionModel);
+			LOG.error("RTM entry not present for order:" + order.getCode());
 		}
 	}
-
-
 
 	/**
 	 * @param refund
@@ -414,6 +423,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			}
 
 			PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+			LOG.error("Going to make refund for Order: " + order.getCode());
 			paymentTransactionModel = mplJusPayRefundService.doRefund(order, refundAmount, paymentTransactionType, uniqueRequestId);
 			if (null != paymentTransactionModel)
 			{
@@ -437,7 +447,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			}
 			catch (final Exception e)
 			{
-				LOG.error("Refund updation data failed");
+				LOG.error("Refund type consignment updation failed" + e);
 			}
 
 
@@ -465,7 +475,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		return returnflag;
 
 	}
-
 
 	/**
 	 * @param oldRequestId
@@ -561,53 +570,69 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		// YTODO Auto-generated method stub
 		orderStatusList = refundClearPerformableDao.fetchWebhookTableStatus(auditId);
 		final ArrayList<String> juspayOrderStatusRequestIdList = new ArrayList<String>();
-
-		if (CollectionUtils.isNotEmpty(orderStatusList))
+		try
 		{
-			//Fetching the latest entry in JuspayOrderStaus from query
-			final List<JuspayRefundResponseModel> RefundResponseList = orderStatusList.get(0).getRefunds();
 
 
-
-			for (final JuspayRefundResponseModel juspayRefundResponseModel : RefundResponseList)
+			if (CollectionUtils.isNotEmpty(orderStatusList))
 			{
-				juspayOrderStatusRequestIdList.add(juspayRefundResponseModel.getUniqueRequestId());
+				//Fetching the latest entry in JuspayOrderStaus from query
+				final List<JuspayRefundResponseModel> RefundResponseList = orderStatusList.get(0).getRefunds();
 
-				if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
-						&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("SUCCESS"))
+
+
+				for (final JuspayRefundResponseModel juspayRefundResponseModel : RefundResponseList)
 				{
-					//update order status only
-					final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(juspayRefundResponseModel
-							.getUniqueRequestId());
-					updateStatusOnly(refundTransactionModel, juspayRefundResponseModel.getUniqueRequestId(), order);
-				}
-				else if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
-						&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("PENDING"))
-				{
-					checkStatusMakeRefund(auditId, order, juspayRefundResponseModel.getUniqueRequestId());
+					juspayOrderStatusRequestIdList.add(juspayRefundResponseModel.getUniqueRequestId());
+
+					if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
+							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("SUCCESS"))
+					{
+						//update order status only
+						final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(juspayRefundResponseModel
+								.getUniqueRequestId());
+
+						if (null != refundTransactionModel)
+						{
+
+							updateStatusOnly(refundTransactionModel, juspayRefundResponseModel.getUniqueRequestId(), order);
+						}
+
+					}
+					else if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
+							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("PENDING"))
+					{
+						LOG.error("PENDING post from juspay, chekstatus and making refund for order: " + order.getCode());
+						checkStatusMakeRefund(auditId, order, juspayRefundResponseModel.getUniqueRequestId());
+					}
 				}
 			}
-		}
 
-		//Filtering out the not posted refundlist in webhook / JuspayOrderStatus
-		if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isNotEmpty(juspayOrderStatusRequestIdList))
-		{
-			refundRequestIdList.removeAll(juspayOrderStatusRequestIdList);
-			if (CollectionUtils.isNotEmpty(refundRequestIdList))
+			//Filtering out the not posted refundlist in webhook / JuspayOrderStatus
+			if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isNotEmpty(juspayOrderStatusRequestIdList))
+			{
+				refundRequestIdList.removeAll(juspayOrderStatusRequestIdList);
+				if (CollectionUtils.isNotEmpty(refundRequestIdList))
+				{
+					for (final String reqid : refundRequestIdList)
+					{
+						checkStatusMakeRefund(auditId, order, reqid);
+					}
+				}
+			}
+			//If the number of return request is only one and that too not posted by juspay
+			else if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isEmpty(juspayOrderStatusRequestIdList))
 			{
 				for (final String reqid : refundRequestIdList)
 				{
 					checkStatusMakeRefund(auditId, order, reqid);
 				}
 			}
+
 		}
-		//If the number of return request is only one and that too not posted by juspay
-		else if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isEmpty(juspayOrderStatusRequestIdList))
+		catch (final Exception e)
 		{
-			for (final String reqid : refundRequestIdList)
-			{
-				checkStatusMakeRefund(auditId, order, reqid);
-			}
+			LOG.error(e.getMessage(), e);
 		}
 
 

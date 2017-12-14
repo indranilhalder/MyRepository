@@ -433,7 +433,11 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 			}
 		 // ChargeBack start
-			String chargeback = entrymodel.getChargeback()!= null ? entrymodel.getChargeback().toString() : NumberUtils.DOUBLE_ZERO.toString();
+			String chargeback = null; 
+			if(null!=entrymodel.getChargeback())
+			{
+				chargeback = entrymodel.getChargeback().toString();
+			}
 			if (StringUtils.isNotBlank(chargeback)){
 				row.appendChild(new Listcell(chargeback));
 			}
