@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.enums.OrderStatus;
@@ -19,6 +20,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.promotions.util.Tuple3;
@@ -102,6 +104,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
+
 
 	private final static String CODE00 = "00".intern();
 	private final static String CODE01 = "01".intern();
@@ -2011,10 +2014,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						//Save card ref no in db
 						saveCardRefNoInDb(addCardResponse, abstractOrderModel);
 					}
-					if (priceDiff.doubleValue() > 0.0)
+					if (Boolean.FALSE.booleanValue() && priceDiff.doubleValue() > 0.0)//Disabling this code for H2_SPRINT2 as price update will not go in sprint 2
 					{
 						//Updating model with new discount price
-						updateVoucherPriceAbstractOrderModel(abstractOrderModel, promotionVoucherModel, priceDiff);
+						//updateVoucherPriceAbstractOrderModel(abstractOrderModel, promotionVoucherModel, priceDiff);//Commenting for now will go in H2_SPRINT3
 					}
 				}
 			}
@@ -2979,11 +2982,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	/**
 	 * TPR-7448 --To be used while cancellation
 	 *
-	 * @param orderModel
+	 * @param subOrderDetails
+	 * @param transactionId
 	 */
 	@Override
-	public void removeCPOVoucherInvalidation(final OrderModel orderModel)
+	public void removeCPOVoucherInvalidation(final OrderModel subOrderDetails, final String transactionId)
 	{
+		final OrderModel orderModel = mplPaymentService.fetchOrderOnGUID(subOrderDetails.getGuid());
 		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
 				.getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
@@ -2992,16 +2997,38 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			try
 			{
 				final UserModel userModel = orderModel.getUser();
-				final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(orderModel.getGuid(), userModel.getUid());
+				final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(subOrderDetails.getGuid(), userModel.getUid());
 				//final DiscountModel discount = voucherList.get(0);
 				for (final DiscountModel discount : voucherList)
 
 				{
 					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
 					{
-						String cardReferenceNo = "";
-						if (CollectionUtils.isNotEmpty(cardList))
+						int cancelledEntrySize = 0;
+						final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(
+								(VoucherModel) discount, orderModel);
+
+						final int entrySize = applicableOrderEntryList.size();
+						for (final AbstractOrderEntryModel applicableOrderEntry : applicableOrderEntryList)
 						{
+							if (null != applicableOrderEntry.getConsignmentEntries())
+							{
+								for (final ConsignmentEntryModel consignmentEntry : applicableOrderEntry.getConsignmentEntries())
+								{
+									final String consignmentStatus = consignmentEntry.getConsignment().getStatus().getCode();
+									if (consignmentStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED)
+											|| consignmentStatus.equals(ConsignmentStatus.ORDER_CANCELLED)
+											|| consignmentStatus.equals(ConsignmentStatus.REFUND_INITIATED)
+											|| consignmentStatus.equals(ConsignmentStatus.REFUND_IN_PROGRESS))
+									{
+										cancelledEntrySize++;
+									}
+								}
+							}
+						}
+						if (cancelledEntrySize == entrySize && CollectionUtils.isNotEmpty(cardList))
+						{
+							String cardReferenceNo = "";
 							cardReferenceNo = cardList.get(0).getCard_reference();
 							LOG.debug("cardReferenceNo=" + cardReferenceNo);
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
@@ -3024,7 +3051,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 										if (StringUtils.isNotEmpty(discount.getCode()))
 										{
 											voucherInvalidationModel.setVoucher(promotionVoucherModel);
-											voucherInvalidationModel.setGuid(orderModel.getGuid());
+											voucherInvalidationModel.setGuid(subOrderDetails.getGuid());
 											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
 											removeCardPerOfferInvalidation(voucherInvalidationModel);
 										}
@@ -3033,12 +3060,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 							}
 						}
+						else
+						{
+							//TODO update the price of the invalidation model entry based on the coupon discount/cart coupon discount price of the cancelled item.
+						}
 					}
 				}
 			}
 			catch (final Exception e)
 			{
-				discountUtility.releaseVoucherAndInvalidation(orderModel);
 				LOG.error("Error in cardPerOfferVoucherExists=", e);
 				throw e;
 			}
