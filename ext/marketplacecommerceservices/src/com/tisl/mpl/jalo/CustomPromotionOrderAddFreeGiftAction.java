@@ -480,19 +480,19 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 							//TPR-7408 starts here
 							if (null != promoCostCentreOnePercentage)
 							{
-								entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
 										promoCostCentreOnePercentage);
 							}
 
 							if (null != promoCostCentreTwoPercentage)
 							{
-								entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
 										promoCostCentreTwoPercentage);
 							}
 
 							if (null != promoCostCentreThreePercentage)
 							{
-								entry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+								entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
 										promoCostCentreThreePercentage);
 							}
 							//TPR-7408 ends here

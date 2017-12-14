@@ -400,19 +400,19 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			//TPR-7408 starts here
 			if (null != promoCostCentreOnePercentage)
 			{
-				orderEntry
-						.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE, promoCostCentreOnePercentage);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
+						promoCostCentreOnePercentage);
 			}
 
 			if (null != promoCostCentreTwoPercentage)
 			{
-				orderEntry
-						.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO, promoCostCentreTwoPercentage);
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
+						promoCostCentreTwoPercentage);
 			}
 
 			if (null != promoCostCentreThreePercentage)
 			{
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
 						promoCostCentreThreePercentage);
 			}
 			//TPR-7408 ends here

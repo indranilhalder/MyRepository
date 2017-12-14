@@ -47,7 +47,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -333,19 +333,19 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 				if (null != promoCostCentreOnePercentage)
 				{
-					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
 							promoCostCentreOnePercentage);
 				}
 
 				if (null != promoCostCentreTwoPercentage)
 				{
-					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
 							promoCostCentreTwoPercentage);
 				}
 
 				if (null != promoCostCentreThreePercentage)
 				{
-					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
 							promoCostCentreThreePercentage);
 				}
 
