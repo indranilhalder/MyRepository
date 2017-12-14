@@ -5039,6 +5039,8 @@ function setBankForSavedCard(bankName){
 //TPR-629---changes in parameter
 function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 {
+	ACC.singlePageCheckout.showAjaxLoader();
+	
 	var staticHost=$('#staticHost').val();
 	//Commenting the below two lines for UF-97
 	//$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -5320,6 +5322,8 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 				$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
 			}
+			ACC.singlePageCheckout.hideAjaxLoader();
+			
 			//if(isNewCard){//if this variable is true resetting the opacity
 			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			//isNewCard = false;
