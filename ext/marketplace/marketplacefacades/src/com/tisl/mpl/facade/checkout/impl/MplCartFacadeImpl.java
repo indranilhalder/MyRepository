@@ -846,6 +846,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		double totalPrice = 0.0;
 		Double discountValue = Double.valueOf(0.0);
 		double delCharge = 0.0;
+		double sdCharge = 0.0;
 		final boolean cartSaveRequired = false; //TISPT 80
 		if (cartModel != null)
 		{
@@ -863,6 +864,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				//				}
 				//getModelService().save(entry); //TISPT 80
 				delCharge += entry.getCurrDelCharge().doubleValue();
+				sdCharge += entry.getScheduledDeliveryCharge().doubleValue();
 			}
 			if (cartSaveRequired)
 			{
@@ -880,7 +882,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 			}
 
-			totalPrice = subtotal + delCharge - discountValue.doubleValue();
+			totalPrice = subtotal + delCharge + sdCharge - discountValue.doubleValue();
 
 			cartModel.setDeliveryCost(Double.valueOf(delCharge));
 			cartModel.setSubtotal(Double.valueOf(subtotal));

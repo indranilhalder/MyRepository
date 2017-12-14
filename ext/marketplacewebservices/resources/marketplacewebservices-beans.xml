@@ -3548,6 +3548,13 @@
 		<property name="offerMinCartValue" type="String" />
 		<property name="offerTermsConditions" type="String" />
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.ApplyCartCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="couponDiscount" type="String" />
+		<property name="discount" type="String" />
+		<property name="total" type="String" />
+		<property name="couponMessage" type="String" />
+	</bean>
+	<!-- TPR-7486 end-->
 	<!-- Added for TPR-5954 || Start -->
 	<bean class="com.tisl.mpl.wsdto.ParentChildReason">
 		<property name="parentReturnReason" type="java.lang.String" />
