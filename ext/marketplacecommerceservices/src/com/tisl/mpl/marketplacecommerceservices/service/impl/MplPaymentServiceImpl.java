@@ -94,7 +94,6 @@ import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
-import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
@@ -4938,6 +4937,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
 								PaymentTransactionType.RETURN, uniqueRequestId);
+						LOG.info("total refund amount from if " + totalRefundAmount);
 						if (null != paymentTransactionModel)
 						{
 							mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
@@ -5015,10 +5015,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
 								PaymentTransactionType.RETURN, uniqueRequestId);
+						LOG.info("total refund amount from else " + totalRefundAmount);
 						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
 							final ConsignmentStatus conStatus = orderEntry.getConsignmentEntries().iterator().next().getConsignment()
 									.getStatus();
+							LOG.info("consignment status" + conStatus);
 							if (conStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 							{
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
@@ -5028,6 +5030,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							{
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 										orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.RETURN_COMPLETED, null);
+								getModelService().save(orderEntry);
 							}
 
 						}

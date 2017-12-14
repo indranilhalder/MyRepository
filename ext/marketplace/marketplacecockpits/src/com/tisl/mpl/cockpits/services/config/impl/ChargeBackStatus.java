@@ -23,7 +23,7 @@ public class ChargeBackStatus extends AbstractSimpleCustomColumnConfiguration <S
 			final PaymentTransactionEntryModel paymentEntry = (PaymentTransactionEntryModel) itemModel;
 			final PaymentTransactionModel paymentTransMod = paymentEntry.getPaymentTransaction();
 			
-			if(paymentTransMod != null && paymentTransMod.getPlannedAmount() !=null && paymentTransMod.getPlannedAmount().equals(Double.valueOf(0.00))){
+			if(paymentEntry != null && paymentEntry.getAmount() !=null && paymentEntry.getAmount().equals(Double.valueOf(0.00))){
 				paymentstatus = PAYMENT_STATUS;
 			}
 			else
