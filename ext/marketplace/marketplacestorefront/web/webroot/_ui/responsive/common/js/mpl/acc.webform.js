@@ -18,37 +18,36 @@ ACC.WebForm = {
 						});
 					},
 					error : function(resp) {
-						console.log("Error in crmChildNodes"+ resp);
+						console.log("Error in Submit Ticket"+ resp);
 					}
 				});
 
-			} else {
-				$div = $('.customCareError');
-				$div.html('<div class="error">Please fill up the mandatory fields.</div>');
 			}
+			
+			return false;
 
 		});
 
 	},
 	validateCRMForm : function() {
-
 		var isValid = true;
 		$('#customerWebForm input, select, textarea').each(function() {
 
-					if ($(this).val() === ''
-							&& ($(this).attr("type") === 'radio'
-									|| $(this).attr("type") === 'text')) {
+					if ($(this).val() === ''  && $(this).attr("type") === 'text' && !($(this).attr("name") === 'contactMobile')) {
 						isValid = false;
-						$(this).removeClass("feildSuccess");
-						$(this).addClass("feildError");
+						$(this).parent(".formGroup").removeClass("has-success");
+						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
+						$(this).parent().append('<span class="help-block">Please fill value!!</span>');
 						//console.log("radio");
 					}
+					
 					if ($(this).is("textarea") && $(this).val() === '') {
 						isValid = false;
-						$(this).removeClass("feildSuccess");
-						$(this).addClass("feildError");
+						$(this).parent(".formGroup").removeClass("has-success");
+						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
+						$(this).parent().append('<span class="help-block">Please fill Comments!!</span>');
 						//console.log("textarea");
 					}
 					// for all nodes
@@ -56,17 +55,20 @@ ACC.WebForm = {
 							&& $(this).attr("displayAllow") === true
 							&& $(this).val() === '') {
 						isValid = false;
-						$(this).removeClass("feildSuccess");
-						$(this).addClass("feildError");
+						$(this).parent(".formGroup").removeClass("has-success");
+						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
+						$(this).parent().append('<span class="help-block">Please select issue!!</span>');
 						//console.log("nodeL2");
 					}
 					// validation for l4 node
 					if ($(this).attr("name") == 'nodeL4' && $(this).val() === '') {
 						isValid = false;
-						$("select[name='nodeL3']").removeClass("feildSuccess");
-						$("select[name='nodeL3']").addClass("feildError");
+						$("select[name='nodeL3']").parent(".formGroup").removeClass("has-success");
+						$("select[name='nodeL3']").parent(".formGroup").addClass("has-error");
 						$("select[name='nodeL3']").focus();
+						$("select[name='nodeL3']").parent().append('<span class="help-block">Issue not found!!</span>');
+								
 						//console.log("nodeL4");
 					}
 					
@@ -76,20 +78,22 @@ ACC.WebForm = {
 						var filter = /^\d*(?:\.\d{1,2})?$/;
 						if (filter.test(mobNum)) {
 							if (mobNum.length == 10) {
-								$(this).removeClass("feildError");
-								$(this).addClass("feildSuccess");
+								$(this).parent(".formGroup").removeClass("has-error");
+								$(this).parent(".formGroup").addClass("has-success");
 							} else {
-								$(this).removeClass("feildSuccess");
-								$(this).addClass("feildError");
 								isValid = false;
+								$(this).parent(".formGroup").removeClass("has-success");
+								$(this).parent(".formGroup").addClass("has-error");
 								$(this).focus();
+								$(this).parent().append('<span class="help-block">Please fill correct Mobile No.!!</span>');
 								//console.log("mobile 1");
 							}
 						} else {
-							$(this).removeClass("feildSuccess");
-							$(this).addClass("feildError");
 							isValid = false;
+							$(this).parent(".formGroup").removeClass("has-success");
+							$(this).parent(".formGroup").addClass("has-error");
 							$(this).focus();
+							$(this).parent().append('<span class="help-block">Please fill Mobile No.!!</span>');
 							//console.log("mobile 2");
 						}
 					}
@@ -98,19 +102,30 @@ ACC.WebForm = {
 						var email = $(this).val();
 						var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 						if (emailReg.test(email)) {
-							$(this).removeClass("feildError");
-							$(this).addClass("feildSuccess");
+							$(this).parent(".formGroup").removeClass("has-error");
+							$(this).parent(".formGroup").addClass("has-success");
 						} else if(email==='' || email!== undefined){
-							$(this).removeClass("feildSuccess");
-							$(this).addClass("feildError");
 							isValid = false;
+							$(this).parent(".formGroup").removeClass("has-success");
+							$(this).parent(".formGroup").addClass("has-error");
 							$(this).focus();
+							$(this).parent().append('<span class="help-block">Please fill correct Email!!</span>');
 							//console.log("email");
 						}
 					}
-					
+					//check for Order related Query
+					if($(this).attr("name") === 'nodeL1' && $(this).attr("nodcheck")==true ){
+						
+						if( $('#orderCode').val() === '' && $('#subOrderCode').val()  === '' && $('#transactionId').val()  === ''){
+							isValid = false;
+							$("select[name='nodeL1']").removeClass("has-success");
+							$("select[name='nodeL1']").addClass("has-error");
+							$(this).focus();
+							$(this).parent().append('<span class="help-block">Please select Order!!</span>');
+						}
+					}
 
-				});
+		});
 		return isValid;
 	},
 	issueDropDown : function() {
@@ -122,8 +137,8 @@ ACC.WebForm = {
 			var nodeDisplayAllowed = $("option:selected", this).attr("nodeDisplayAllowed");
 			var createTicketAllowed = $("option:selected", this).attr("createTicketAllowed");
 			var ticketAnswer = $("option:selected", this).attr("ticketAnswer");
-			
 			var nodeType = $(this).attr("name");
+			var nodcheck=$(this).attr("nodcheck");
 			// for radio
 			if (nodeValue == undefined) {
 				nodeValue = $(this).val();
@@ -149,7 +164,20 @@ ACC.WebForm = {
 								
 							});
 							$("select[name=nodeL2]").html(htmlOption);
-							$("select[name=nodeL3]").show();
+							$("select[name=nodeL2]").parent().children(".holder").removeClass('active');
+							$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
+							
+							console.log("nodeChck"+nodcheck);
+							
+							if(nodcheck==='true'){
+								console.log("show");
+								$(".selectOrderSec").show();
+								$("#fileSubmit").show();
+							}else{
+								console.log("hide");
+								$(".selectOrderSec").hide();
+								$("#fileSubmit").hide();
+							}
 						}
 						if (nodeType.startsWith("nodeL2")) {
 							var check = false;
@@ -169,10 +197,13 @@ ACC.WebForm = {
 							});
 	
 							$("select[name=nodeL3]").html(htmlOption);
+							$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 							$("#nodeL2Text").val(nodeText);
 							
-							if(check){
+							if(check===true){
 								$("#subIssueDiv").show();
+							}else{
+								$("#subIssueDiv").hide();
 							}
 							
 						}
@@ -195,16 +226,22 @@ ACC.WebForm = {
 					}
 				});
 			}
-			
-			if (createTicketAllowed && nodeType.startsWith("nodeL3")) {
-				$('#subIssueDiv').after(ticketAnswer);
+			//console.log("createTicketAllowed"+createTicketAllowed + "nodeType"+nodeType);
+			if (createTicketAllowed==='false' && nodeType.startsWith("nodeL3") && ticketAnswer!=undefined) {
+				//console.log("Answer");
+				$('#ticketAnswerReply').html("<span class='help-text'>Reply: "+ticketAnswer+"</span>");
+			}else{
+				$('#ticketAnswerReply').html("");
 			}
 			
-			if(!createTicketAllowed){
+			if(createTicketAllowed==='true'){
+				$(".webfromTicketSubmit").prop('disabled',false);
+			}else{
 				$(".webfromTicketSubmit").prop('disabled',true);
 			}
-			ACC.WebForm.attachSelectEvent();
+			
 		});
+		ACC.WebForm.attachSelectEvent();
 
 	},
 	simpleAjaxUpload : function(){
@@ -280,7 +317,7 @@ ACC.WebForm = {
 			url : ACC.config.encodedContextPath+ "/ticketForm/webOrderlines",
 			type : 'GET',
 			success : function(data) {
-				if( $.isArray(data.orderLineDatas) ||  data.orderLineDatas.length ) {
+				if( $.isArray(data.orderLineDatas) && data.orderLineDatas.length ) {
 					$.each(data.orderLineDatas, function(index, dataLine) {
 	
 						htmlOption += "<li data-orderCode='"+ dataLine.orderCode+"' "+
@@ -303,11 +340,15 @@ ACC.WebForm = {
 				$("#totalPages").val(data.totalOrderLines);
 				$("#currentPage").val(currentPage);
 				// no of orderlins in one page
-				if(data.totalOrderLines > 5){
+				if(parseInt(data.totalOrderLines) > 5){
 					$('#viewMoreLink').show();
+				}else{
+					$('#viewMoreLink').hide();
 				}
-				if(currentPage > 1 ){
+				if(parseInt(currentPage) > 1 ){
 					$('#viewBackLink').show();
+				}else{
+					$('#viewBackLink').hide();
 				}
 				
 				
@@ -323,13 +364,13 @@ ACC.WebForm = {
 		
 		if ( $(".selectOrderSec").length ) {
 			if(parseInt(total) <= parseInt(current) ){
-				$('#viewMoreLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"')");
+				$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"');");
 			}else{
 				$('#viewMoreLink').hide();
 			}
 			
 			if(parseInt(current) > 1){
-				$('#viewBackLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"')");
+				$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"');");
 			}else{
 				$('#viewBackLink').hide();
 			}
@@ -355,12 +396,19 @@ ACC.WebForm = {
 	attachSelectEvent : function(){
 		/*custum selecbox*/
 		 $(".customSelect").each(function(){
-	            $(this).wrap("<span class='customSelectWrap'></span>");
-	            $(this).after("<span class='holder'></span>");
-	            $(".holder").removeClass('active');
+			 	if($(this).parent(".customSelectWrap").length <= 0){
+		            $(this).wrap("<span class='customSelectWrap'></span>");
+		            $(this).after("<span class='holder'></span>");
+		            $(".holder").removeClass('active');
+			 	}
 	        });
 	    $(".holder").removeClass('active');
 	},
+	closeWebForm : function (){
+		parent.$.colorbox.close(); 
+		window.href=ACC.config.encodedContextPath+ "/faq";
+		return false;
+	}
 
 };
 

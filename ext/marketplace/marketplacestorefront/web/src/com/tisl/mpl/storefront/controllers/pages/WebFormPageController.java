@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.StoreBreadcrumbBuilder;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
@@ -77,12 +78,16 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	private static final String WEB_FORM = "faq";
 
+
 	@RequestMapping(method = RequestMethod.GET)
+	@RequireHardLogIn
 	public String ticketFormView(final Model model) throws CMSItemNotFoundException
 	{
 		final TicketWebForm form = new TicketWebForm();
 		model.addAttribute("ticketForm", form);
-
+		final String ticketSubType = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB, "L1C1");
+		model.addAttribute("tiketL1Check", ticketSubType);
 		model.addAttribute("formFields", mplWebFormFacade.getWebCRMForm());
 
 		storeCmsPageInModel(model, getContentPageForLabelOrId(WEB_FORM));
