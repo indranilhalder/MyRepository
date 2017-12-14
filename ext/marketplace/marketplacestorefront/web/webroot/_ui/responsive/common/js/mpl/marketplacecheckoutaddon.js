@@ -10888,7 +10888,7 @@ function getlistofEMIbanks(){
 
 //recalculate cart after review page
 
-function recalculateCart() {
+function recalculateCart(loadOffer) {
 
 	var staticHost=$('#staticHost').val();
 	var paymentMode=$("#paymentMode").val();
@@ -10925,6 +10925,10 @@ function recalculateCart() {
 		 		}else{
 		 			$("#deliveryCostSpanId").html("Free");
 		 		}
+				if(typeof loadOffer !== "undefined") {
+				   var offerID = ""; //selected cart voucher
+		                   ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
+	                        }
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
 				{

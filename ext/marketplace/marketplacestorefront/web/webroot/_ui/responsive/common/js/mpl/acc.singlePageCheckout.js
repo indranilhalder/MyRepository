@@ -3256,7 +3256,50 @@ ACC.singlePageCheckout = {
 			}
 		}
 	},
-	populatePaymentSpecificOffers:function(){
+	selectPaymentSpecificOffers:function(offerID){
+	   if(ACC.singlePageCheckout.getTopoffers(offerID) == false) { //not top 3 offers
+              $('input:radio[name=offer_name_more]').each(function () { 
+		if($(this).val() == offerID) {
+		    $(this).prop('checked', true);
+		    $(this).addClass("promoapplied");
+		    var SelectedOfferRadioId = $(this).attr("id");
+		    var title_text   = $("#"+SelectedOfferRadioId+" + label").text();
+			var title_desc   = $("#"+SelectedOfferRadioId).parent().find('.offer_des').html();
+			var title_maxmin = $("#"+SelectedOfferRadioId).parent().find('.max-min-value').html();
+			
+			//replace
+			$("#offer_name0").val(offerID);
+			$("#offer_name0 + label").html(title_text);
+			$("#offer_name0").parent().find('.offer_des').html(title_desc);
+			$("#offer_name0").parent().find('.max-min-value').html(title_maxmin);
+			
+			$('input:radio[name=offer_name]').each(function () { 
+				if($(this).val() == offerID) {
+				  $(this).prop('checked', true);
+				  $(this).addClass("promoapplied");
+				} 
+			});
+					  
+		} 
+	});	 				
+        } else { 
+
+		$('input:radio[name=offer_name]').each(function () { 
+			if($(this).val() == offerID) {
+			  $(this).prop('checked', true);
+			  $(this).addClass("promoapplied");
+			} 
+		});
+		$('input:radio[name=offer_name_more]').each(function () { 
+			if($(this).val() == offerID) {
+			  $(this).prop('checked', true);
+			  $(this).addClass("promoapplied");
+			 } 
+		});
+				
+         }
+	},
+	populatePaymentSpecificOffers:function(selectedOffer){
 
 		//ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffers";
@@ -3276,6 +3319,9 @@ ACC.singlePageCheckout = {
             	$('.offers_section_paymentpage').css("display","block");
             	$('.offers_section_paymentpage').html(response);
         	}
+		if(typeof selectedOffer !== "undefined" && selectedOffer != "") {
+		        ACC.singlePageCheckout.selectPaymentSpecificOffers(selectedOffer);
+	        }
 
             	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
             	
