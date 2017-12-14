@@ -191,6 +191,11 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnForm.setSubReturnReason("");
 			}
 		}
+		if (null != returnForm.getComments() && !returnForm.getComments().isEmpty() && returnForm.getComments().length() >= 250) //server side length check
+		{
+			final String comments = returnForm.getComments().substring(0, 249);
+			returnForm.setComments(comments);
+		}
 		boolean cancellationStatus;
 		LOG.info(returnForm);
 		boolean quickdrop = false;
