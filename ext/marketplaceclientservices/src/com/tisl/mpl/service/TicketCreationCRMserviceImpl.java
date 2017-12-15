@@ -257,7 +257,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -370,7 +370,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -715,6 +715,10 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
 			}
+			if (null != mplWebCrmTicketModel.getTicketType())
+			{
+				ticket.setTicketCat(mplWebCrmTicketModel.getTicketType());
+			}
 			//setting default as W for WEb form
 			ticket.setTicketType(MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_TYPE);
 
@@ -722,7 +726,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setTicketSubType(mplWebCrmTicketModel.getTicketSubType());
 			}
-			if (StringUtils.isNotBlank(mplWebCrmTicketModel.getCommerceTicketId())) //to-do
+			if (StringUtils.isNotEmpty(mplWebCrmTicketModel.getCommerceTicketId())) //to-do
 			{
 				ticket.setEcomRequestId(mplWebCrmTicketModel.getCommerceTicketId());
 			}
