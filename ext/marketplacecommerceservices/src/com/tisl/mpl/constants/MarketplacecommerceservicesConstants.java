@@ -2385,5 +2385,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
 	public static final String WEBFORM_ORDER_HISTORY_PAGESIZE = "webform.order.pagesize.defaultValue";
 
-
+	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
+			.intern();
 }
