@@ -4095,6 +4095,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						cart.setModeOfPayment(MarketplacecommerceservicesConstants.MRUPEE);
 						getModelService().save(cart);
 					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("paytm"))
+					{
+						cart.setModeOfPayment("PAYTM");
+						getModelService().save(cart);
+					}
 
 				}
 
@@ -4165,6 +4170,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 					{
 						orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("paytm"))
+					{
+						orderModel.setModeOfOrderPayment("PAYTM");
 						getModelService().save(orderModel);
 					}
 
@@ -5771,7 +5781,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CONFIRMCODORDER, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public @ResponseBody String validateforCOD(final String guid) throws InvalidKeyException, NoSuchAlgorithmException
+	public @ResponseBody String validateforCOD(final String guid, final String paymentinfo) throws InvalidKeyException,
+			NoSuchAlgorithmException
 	{
 
 		boolean redirectFlag = false;
@@ -5786,6 +5797,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//getting current user
 			emailId = getUserService().getCurrentUser().getUid();
 			//OTP handled for both cart and order
+
+			validateBankAndPaymentModePromotions(paymentinfo, guid);
 
 			if (StringUtils.isNotEmpty(guid))
 			{
