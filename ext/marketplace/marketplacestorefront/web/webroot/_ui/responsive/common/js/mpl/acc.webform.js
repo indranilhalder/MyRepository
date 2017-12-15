@@ -193,6 +193,7 @@ ACC.WebForm = {
 								console.log("hide");
 								$(".selectOrderSec").hide();
 								$("#fileSubmit").hide();
+								$(".help-block.has-error").hide();
 							}
 						}
 						if (nodeType.startsWith("nodeL2")) {
