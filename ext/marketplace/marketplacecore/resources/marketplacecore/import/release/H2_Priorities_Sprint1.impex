@@ -1,0 +1,114 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=mplProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+$wideContent=CMSImageComponent,BannerComponent,CMSParagraphComponent
+
+# Language
+$lang=en
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EMITermsandConditionsslot;EMI Terms and Conditions;true
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;EMITermsandConditions;;;wide
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;EMITermsandCon-ProductDetails;EMITermsandConditions;;EMITermsandConditionsSlot;true
+
+#############################################################View Seller#####################################################################################
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ViewSellerPageTemplate      ;$jarResourceCms/structure-view/structure_viewSellerPageTemplate.vm
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ViewSellerPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;EMITermsandConditions;;;wide
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ViewSellerPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;EMITermsandCon-ViewSellerPage;EMITermsandConditions;;EMITermsandConditionsSlot;true
+
+##############################################################Quick View####################################################################################
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;quickView;Quick View Page;QuickViewPageTemplate;fragments/product/quickViewLayout
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;QuickViewPageTemplate;Quick View Page Template;fragments/product/quickViewLayout;ContentPage
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;QuickViewPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
+
+
+
+# Product Details Page Template
+# The CrossSelling and UpSelling slots are designed for related products, cross-sells and up-sells.
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='QuickViewPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;;wide
+;Section2;;;wide
+;Section3;;;wide
+;Section4;;;wide
+;VariantSelector;;ProductVariantSelectorComponent;narrow
+;AddToCart;;ProductAddToCartComponent;narrow
+;CrossSelling;;ProductReferencesComponent;narrow
+;UpSelling;;ProductReferencesComponent;narrow
+;Footer;;;footer
+;Tabs;;CMSTabParagraphContainer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+#pdp changes for configuring number of images to be shown in pdp
+;ConfigureImagesCountSlot;;ConfigureImagesCountComponent
+#pdp changes for configuring number of products to be shown in pdp
+;ConfigureProductsCountSlot;;ConfigureProductsCountComponent
+#pin code
+;PinCodeServiceSlot;;PincodeServiceComponent
+# Product List / Grid are two layouts for Category Browsing pages
+;EMITermsandConditionsSlot;;CMSParagraphComponent
+
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='QuickViewPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-quickView;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-quickView;HomepageNavLink;;HomepageNavLinkSlot;true
+;;MiniCart-quickView;MiniCart;;MiniCartSlot;true
+;;NavigationBar-quickView;NavigationBar;;NavigationBarSlot;true
+;;Tabs-quickView;Tabs;;TabsSlot;true
+;;Footer-quickView;Footer;;FooterSlot;true
+;;HeaderLinks-quickView;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-quickView;SearchBox;;SearchBoxSlot;true
+;;VariantSelector-quickView;VariantSelector;;VariantSelectorSlot;true
+;;AddToCart-quickView;AddToCart;;AddToCartSlot;true
+;;UpSelling-quickView;UpSelling;;UpSellingSlot;true
+;;CrossSelling-quickView;CrossSelling;;CrossSellingSlot;true
+;;TopHeaderSlot-quickView;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-quickView;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-quickView;PlaceholderContentSlot;;PlaceholderContentSlot;true
+#pdp changes for configuring number of images to be shown in pdp
+;;ConfigureImagesCount-quickView;ConfigureImagesCount;;ConfigureImagesCountSlot;true
+#pdp changes for configuring number of products to be shown in pdp
+;;ConfigureProductsCount-quickView;ConfigureProductsCount;;ConfigureProductsCountSlot;true
+#pincode
+;;PinCodeService-quickView;PinCodeService;;PinCodeServiceSlot;true
+;;EMITermsandConditions-quickView;EMITermsandConditionsSlot;;EMITermsandConditionsSlot;true
+

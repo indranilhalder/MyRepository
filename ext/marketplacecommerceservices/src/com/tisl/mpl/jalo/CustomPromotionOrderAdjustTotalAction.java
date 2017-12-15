@@ -9,6 +9,8 @@ import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
+import de.hybris.platform.promotions.jalo.AbstractPromotion;
+import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.util.Helper;
 import de.hybris.platform.util.DiscountValue;
 
@@ -62,7 +64,8 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 	public boolean apply(final SessionContext ctx)
 	{
 		boolean needsCalc = false;
-		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		final PromotionResult result = getPromotionResult(ctx);
+		final AbstractOrder order = result.getOrder(ctx);
 		final String code = getGuid(ctx);
 
 		if (log.isDebugEnabled())
@@ -84,7 +87,7 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		final DiscountValue discountValue = Helper.findGlobalDiscountValue(ctx, order, getGuid(ctx));
 		if (discountValue != null)
 		{
-			needsCalc = calculateApportionedDiscount(order, ctx);
+			needsCalc = calculateApportionedDiscount(order, ctx, result);
 		}
 
 		//setMarkedApplied(ctx, true);
@@ -170,7 +173,7 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 		return (-1.0D * getAmount(ctx).doubleValue());
 	}
 
-	private boolean calculateApportionedDiscount(final AbstractOrder order, final SessionContext ctx)
+	private boolean calculateApportionedDiscount(final AbstractOrder order, final SessionContext ctx, final PromotionResult result)
 	{
 		boolean needsCalc = false;
 		double percentageDiscount = 0.00D;
@@ -226,12 +229,13 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 
 			try
 			{
-				promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+				final AbstractPromotion promotion = result.getPromotion();
+				promoCostCentreOnePercentage = (Double) promotion.getAttribute(ctx,
 						MarketplacecommerceservicesConstants.COSTCENTREONE);
-				promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+				promoCostCentreTwoPercentage = (Double) promotion.getAttribute(ctx,
 						MarketplacecommerceservicesConstants.COSTCENTRETWO);
 
-				promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+				promoCostCentreThreePercentage = (Double) promotion.getAttribute(ctx,
 						MarketplacecommerceservicesConstants.COSTCENTRETHREE);
 
 			}
@@ -311,12 +315,23 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
 
 					//TPR-7408 starts here
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
-							promoCostCentreOnePercentage);
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
-							promoCostCentreTwoPercentage);
-					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
-							promoCostCentreThreePercentage);
+					if (null != promoCostCentreOnePercentage)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+								promoCostCentreOnePercentage);
+					}
+
+					if (null != promoCostCentreTwoPercentage)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+								promoCostCentreTwoPercentage);
+					}
+
+					if (null != promoCostCentreThreePercentage)
+					{
+						cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+								promoCostCentreThreePercentage);
+					}
 					//TPR-7408 ends here
 
 					cartEntry
