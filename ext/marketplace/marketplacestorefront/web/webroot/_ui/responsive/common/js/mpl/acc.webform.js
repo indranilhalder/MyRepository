@@ -42,7 +42,7 @@ ACC.WebForm = {
 							$(this).parent().append('<span class="help-block">Please fill value!!</span>');
 						}
 						//console.log("radio");
-					}
+					} 
 					
 					if ($(this).is("textarea") && $(this).val() === '') {
 						isValid = false;
@@ -260,7 +260,7 @@ ACC.WebForm = {
 		});
 		ACC.WebForm.attachSelectEvent();
 
-	},
+	},	
 	simpleAjaxUpload : function(){
 		var uploadurl = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
 
@@ -422,7 +422,9 @@ ACC.WebForm = {
 	},
 	closeWebForm : function (){
 		parent.$.colorbox.close(); 
-		window.href=ACC.config.encodedContextPath+ "/faq";
+		//window.href=ACC.config.encodedContextPath+ "/faq";
+		/*TISHS-134*/
+		window.location.href=ACC.config.encodedContextPath+ "/faq";
 		return false;
 	}
 
@@ -460,4 +462,16 @@ $(document).ready(function() {
 	        $(this).next(".holder").text(selectedOption);
 	    }).trigger('change');
          
+});
+
+$(document).ready(function() {
+    var text_max = 1000;
+    $('#textarea_feedback').html('Remaining Characters' + text_max);
+
+    $('#textarea').keyup(function() {
+        var text_length = $('#textarea').val().length;
+        var text_remaining = text_max - text_length;
+
+        $('#textarea_feedback').html('Remaining Characters' + text_remaining);
+    });
 });

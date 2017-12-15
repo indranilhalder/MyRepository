@@ -139,9 +139,14 @@
 							</div>
 							<div class="formGroup">
 								<h3 class="secLabel issueComment">Comment</h3>
-								<div class="commentLength">Remaining characters:1000</div>
+								<!-- <div class="commentLength">Remaining characters:1000</div>
 								<textarea class="formControl textArea" rows="3"
 									placeholder="Describe your issue here." name="comment" maxlength="1000"></textarea>
+								 -->
+								 	<div id="textarea_feedback"></div>	
+									<textarea id="textarea" rows="8" cols="66" maxlength="1000" ></textarea>
+										
+									
 							</div>
 							<div class="formGroup" id="fileSubmit">
 								<h3 class="secLabel">Add attachment (Optional)</h3>
