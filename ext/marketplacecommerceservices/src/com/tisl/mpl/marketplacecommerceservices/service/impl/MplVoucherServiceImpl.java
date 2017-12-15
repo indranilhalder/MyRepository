@@ -317,7 +317,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			if (cartModel != null)
 			{
 				//For cart
-				final double cartSubTotal = cartModel.getSubtotal().doubleValue();
+				final double cartSubTotal = getSubTotal(cartModel);
 				double voucherCalcValue = 0.0;
 				double promoCalcValue = 0.0;
 				List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); //Discount values against the cart
@@ -434,7 +434,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			else if (orderModel != null)
 			{
 				//For order
-				final double cartSubTotal = orderModel.getSubtotal().doubleValue();
+				final double cartSubTotal = getSubTotal(orderModel);
 				double voucherCalcValue = 0.0;
 				double promoCalcValue = 0.0;
 				List<DiscountValue> discountList = orderModel.getGlobalDiscountValues(); //Discount values against the cart
@@ -567,6 +567,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
 		return discountData;
 	}
+
+
+
 
 	/**
 	 * @Description This is for releasing voucher
@@ -1266,7 +1269,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			if (cartModel != null)
 			{
 				//For cart
-				final double cartSubTotal = cartModel.getSubtotal().doubleValue();
+				final double cartSubTotal = getSubTotal(cartModel);
 				double voucherCalcValue = 0.0;
 				double discountCalcValue = 0.0;
 
@@ -1301,7 +1304,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					LOG.debug("Step 13:::Inside max discount block");
 					discountList = setGlobalDiscount(discountList, lastVoucher, lastVoucher.getMaxDiscountValue().doubleValue());
 					cartModel.setGlobalDiscountValues(discountList);
-					getMplDefaultCalculationService().calculateTotals(cartModel, false);
+					setTotalPrice(cartModel);
 					getModelService().save(cartModel);
 
 					discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel,
@@ -1379,7 +1382,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			else if (orderModel != null)
 			{
 				//For order
-				final double cartSubTotal = orderModel.getSubtotal().doubleValue();
+				final double cartSubTotal = getSubTotal(orderModel);
 				double voucherCalcValue = 0.0;
 				double discountCalcValue = 0.0;
 				List<DiscountValue> discountList = orderModel.getGlobalDiscountValues(); //Discount values against the cart
@@ -1415,7 +1418,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					LOG.debug("Step 13:::Inside max discount block");
 					discountList = setGlobalDiscount(discountList, lastVoucher, lastVoucher.getMaxDiscountValue().doubleValue());
 					orderModel.setGlobalDiscountValues(discountList);
-					getMplDefaultCalculationService().calculateTotals(orderModel, false);
+					setTotalPrice(orderModel);
 					getModelService().save(orderModel);
 
 					discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel,
@@ -1496,10 +1499,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
-		}
-		catch (final CalculationException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0017);
 		}
 		catch (final NumberFormatException e)
 		{
@@ -3150,5 +3149,30 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		return data;
 	}
 
+	/**
+	 * Calculate Subtotal
+	 *
+	 * @param oModel
+	 * @return double
+	 */
+	private double getSubTotal(final AbstractOrderModel oModel)
+	{
+		double subtotal = 0;
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<AbstractOrderEntryModel>(oModel.getEntries());
+
+		if (CollectionUtils.isNotEmpty(entryList))
+		{
+			for (final AbstractOrderEntryModel entry : entryList)
+			{
+				if (BooleanUtils.isFalse(entry.getIsBOGOapplied()) || BooleanUtils.isFalse(entry.getGiveAway()))
+				{
+					subtotal += entry.getTotalPrice().doubleValue();
+				}
+
+			}
+		}
+
+		return subtotal;
+	}
 
 }
