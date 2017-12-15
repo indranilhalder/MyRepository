@@ -134,8 +134,8 @@ public class MplCouponController
 				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
-				final Map<String, Double> paymentInfo = getSessionService()
-						.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
@@ -183,6 +183,14 @@ public class MplCouponController
 				else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
 				{
 					data.setRedeemErrorMsg(MarketplacecouponConstants.USERINVALID);
+				}
+				if (e.getMessage().contains(MarketplacecommerceservicesConstants.SELLERVIOLATION))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.SELLERVIOLATION);
+				}
+				if (e.getMessage().contains(MarketplacecommerceservicesConstants.ORDERTHRESHOLD))
+				{
+					data.setRedeemErrorMsg(MarketplacecouponConstants.ORDERVIOLATION);
 				}
 				/* TPR-1075 Changes Start */
 				else if (e.getMessage().contains(MarketplacecouponConstants.EXCFIRSTPURUSERINVALID))
@@ -257,8 +265,8 @@ public class MplCouponController
 				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
-				final Map<String, Double> paymentInfo = getSessionService()
-						.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
@@ -931,12 +939,12 @@ public class MplCouponController
 			for (final AbstractOrderEntryModel oModel : abstractOrderModel.getEntries())
 			{
 				final Double mrp = oModel.getMrp();
-				final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
-						: oModel.getNetAmountAfterAllDisc());
+				final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0) : oModel
+						.getNetAmountAfterAllDisc());
 				final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-				final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-						: entryPrice.doubleValue();
+				final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue() : entryPrice
+						.doubleValue();
 
 				totalDiscount += (mrp.doubleValue() - value);
 			}

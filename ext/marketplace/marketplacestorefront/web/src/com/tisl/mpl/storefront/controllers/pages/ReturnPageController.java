@@ -303,28 +303,30 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 			//TPR-5954 || Category specific return reason || Start
 			Collection<CategoryModel> superCategories = productModel.getSupercategories();
-
-			outer: for (final CategoryModel category : superCategories)
+			if (CollectionUtils.isNotEmpty(superCategories)) //IQA comments
 			{
-				if (category.getCode().startsWith("MPH"))
+				outer: for (final CategoryModel category : superCategories)
 				{
-					superCategories = category.getSupercategories();
-					for (final CategoryModel category1 : superCategories)
+					if (category.getCode().startsWith("MPH"))
 					{
-						if (category1.getCode().startsWith("MPH"))
+						superCategories = category.getSupercategories();
+						for (final CategoryModel category1 : superCategories)
 						{
-							superCategories = category1.getSupercategories();
-							for (final CategoryModel category2 : superCategories)
+							if (category1.getCode().startsWith("MPH"))
 							{
-								if (category2.getCode().startsWith("MPH"))
+								superCategories = category1.getSupercategories();
+								for (final CategoryModel category2 : superCategories)
 								{
-									L2Cat = category2.getCode();
-									break outer;
+									if (category2.getCode().startsWith("MPH"))
+									{
+										L2Cat = category2.getCode();
+										break outer;
+									}
 								}
 							}
 						}
-					}
 
+					}
 				}
 			}
 			//TPR-5954 || Category specific return reason || End
@@ -343,7 +345,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				subReasonDataList = fetchSubReturnReason(returnForm.getReturnReason());
 				if (!subReasonDataList.isEmpty())
 				{
-					for (final ReturnReasonData reason : reasonDataList)
+					for (final ReturnReasonData reason : subReasonDataList)
 					{
 						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
 						{
@@ -1560,6 +1562,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		}
 		catch (final Exception ex)
 		{
+			LOG.error(ex); //IQA comments
 			returnReasonData = new ArrayList<ReturnReasonData>();
 		}
 		return returnReasonData;

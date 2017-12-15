@@ -1119,7 +1119,6 @@ $(document).ready(function(){
 	
 });	
 
-
 function fetchCatSpecificReason(element){
 	try{
 	var code=$("#returnReason :selected").val();
@@ -1152,6 +1151,7 @@ function fetchCatSpecificReason(element){
 		console.log("Error:"+e);
 	}
 }
+
 //TPR-7140		
 function hideRspShowRss(){
 	var hideRsp=$("#hideRsp").text();

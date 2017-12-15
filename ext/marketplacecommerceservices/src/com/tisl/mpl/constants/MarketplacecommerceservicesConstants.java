@@ -60,7 +60,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final int PLATFORM_FIVE = 5;
 	//TPR-6272 ends here
 	//TPR-4461 STARTS HERE
-	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
+	public static final String COUPONFAILUREMESSAGE = "Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
+	public static final String CARTCOUPONFAILUREMESSAGE = "Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank.";
+	public static final String CARTANDCOUPONBOTHFAILUREMESSAGE = "Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
+
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
@@ -1290,7 +1293,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String DATEFORMAT = "yyyy-MM-dd".intern();
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
-	public static final String ORDER = "order".intern();
+	public static final String ORDERTHRESHOLD = "order".intern();
+	//public static final String ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -1633,12 +1637,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String USER = "user".intern();
 	public static final String DATE = "Date".intern();
-	//TPR-1075
+	public static final String ORDER = "Order".intern();
+	//TPR-1075SELLERVIOLATION
 	public static final String NEWCUSTOMER = "NewCustomer".intern();
 	public static final String NEWUSERRESTVIOLATION = "Voucher for New Customer is violated".intern();
 	public static final String VOUCHERINVALIDNEWCUST = "Voucher for New Customer : ".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
 	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
+	public static final String COUPONNOTREDEEMABLE = "This coupon has expired".intern();
 	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
 	public static final String VOUCHERINAPPLICABLE = "Voucher is not applicable: ".intern();
 	public static final String VOUCHERNOTRESERVABLE = "Voucher is not reservable: ".intern();
@@ -1649,6 +1655,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FREEBIEERROR = " cannot be redeemed: freebie".intern();
 	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
 	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
+	public static final String ORDERRESTRICTION = "Order restriction is violated".intern();
 	public static final String USERRESTVIOLATION = "User restriction is violated".intern();
 	public static final String VOUCHERCODE = "voucherCode".intern();
 	public static final String SYSDATE = "sysdate".intern();
@@ -2378,5 +2385,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
 	public static final String WEBFORM_ORDER_HISTORY_PAGESIZE = "webform.order.pagesize.defaultValue";
 
-
+	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
+			.intern();
 }
