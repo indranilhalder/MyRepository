@@ -512,6 +512,11 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					{
 						ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
 					}
+					//TPR-5954
+					if (StringUtils.isNotBlank(sendTicketRequestData.getComments()))
+					{
+						ticket.setComments(sendTicketRequestData.getComments());
+					}
 
 					if (null != sendTicketRequestData.getAddressInfo())
 					{
@@ -572,6 +577,11 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReverseSealLostflag()))
 					{
 						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
+					}
+					//TPR-5954
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getSubReasonCode()))
+					{
+						ticketLineObj.setSubReturnReasonCode(sendTicketLineItemData.getSubReasonCode());
 					}
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 					ticket.setLineItemDataList(ticketlineItemsXMLDataList);
