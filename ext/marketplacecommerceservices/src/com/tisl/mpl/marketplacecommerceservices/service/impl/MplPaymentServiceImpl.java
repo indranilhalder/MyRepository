@@ -56,8 +56,6 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -2109,7 +2107,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
+	public MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, CartModel cartModel,
 			OrderModel orderModel, final MplPromoPriceData promoPriceData)
 			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
 			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions //Additional parameters added for TPR-629
@@ -2119,34 +2117,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		VoucherDiscountData discData = new VoucherDiscountData();
 		if (null != cartModel)
 		{
-			//Reset Voucher Apportion
-			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()) && null != cartModel.getDiscounts().get(0)) //IQA for TPR-629
-			{
-				final List<AbstractOrderEntryModel> entryList = getMplVoucherService()
-						.getOrderEntryModelFromVouEntries((VoucherModel) cartModel.getDiscounts().get(0), cartModel); //Since only 1 voucher is applied to the cart and
-				//before promotion calculation only 1 discount will be present
-
-				if (CollectionUtils.isNotEmpty(entryList)) //IQA for TPR-629
-				{
-					for (final AbstractOrderEntryModel entry : entryList)
-
-					{
-						entry.setCouponCode("");
-						entry.setCouponValue(Double.valueOf(0.00D));
-
-						//TPR-7408 starts here
-						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
-						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
-						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
-						//TPR-7408 ends here
-
-						//getModelService().save(entry);
-					}
-					getModelService().saveAll(entryList);
-				}
-			}
-
-
 			calculatePromotion(cartModel, null, cartData, null);
 
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
@@ -2170,18 +2140,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 
 			//Checking if the cart has coupon already applied
-			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts())
-					&& cartModel.getDiscounts().get(0) instanceof PromotionVoucherModel)
+			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 			{
-				LOG.debug(">> 2 : Checking voucher related promotion >> ");
-				final PromotionVoucherModel voucher = (PromotionVoucherModel) cartModel.getDiscounts().get(0);
-				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService()
-						.getOrderEntryModelFromVouEntries(voucher, cartModel);
-				discData = getMplVoucherService().checkCartAfterApply(voucher, cartModel, null, applicableOrderEntryList);
-				getMplVoucherService().setApportionedValueForVoucher(voucher, cartModel, voucher.getVoucherCode(),
-						applicableOrderEntryList);
-				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
+				cartModel = (CartModel) getMplVoucherService().modifyDiscountValues(cartModel);
+				final Double totalPrice = getMplVoucherService().setTotalPrice(cartModel);
+				if (null != totalPrice && totalPrice.doubleValue() > 0)
+				{
+					cartModel.setTotalPrice(totalPrice);
+					getModelService().save(cartModel);
+					getModelService().refresh(cartModel);
+				}
 
+				discData = getMplVoucherService().getVoucherData(cartModel);
+				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 			}
 			//Removing the session if the session is not empty
 			if (null != getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION))
