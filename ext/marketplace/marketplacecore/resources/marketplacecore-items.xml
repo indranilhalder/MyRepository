@@ -6009,6 +6009,24 @@
 				</attributes>
 			</itemtype>
 
+	<!--SDI 3591  -->
+			
+			<itemtype code="CODReturnOMSSyncProcess" extends="OrderProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.CODReturnOMSSyncProcess">
+				<description>Represents process that is used to initiate OMS call for COD Return Orders from FICO</description>
+				<attributes>
+					<attribute qualifier="transactionStatus" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction status to pass to OMS</description>
+					</attribute>
+					<attribute qualifier="transactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction Id to pass to OMS</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 		</typegroup>
 		<!-- Blacklist Model -->
 		<typegroup name="Marketplace">
