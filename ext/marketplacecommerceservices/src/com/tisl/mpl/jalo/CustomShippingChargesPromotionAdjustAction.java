@@ -48,14 +48,15 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
 	public boolean apply(final SessionContext ctx)
 	{
 		boolean needsCalc = false;
-		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		final PromotionResult promotionResult = getPromotionResult(ctx);
+		final AbstractOrder order = promotionResult.getOrder(ctx);
 
 		final boolean isShippingCartPromo = (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? true
 				: false;
@@ -68,7 +69,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 			for (final AbstractOrderEntry entry : validProductUssidList)
 			{
-				calculateApportionedDiscount(entry, ctx);
+				calculateApportionedDiscount(entry, ctx, promotionResult);
 			}
 		}
 		else
@@ -77,25 +78,10 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
 			if (orderEntry != null)
 			{
-				needsCalc = calculateApportionedDiscount(orderEntry, ctx);
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx, promotionResult);
 			}
 		}
 
-
-		final PromotionResult result = getPromotionResult(ctx);
-		final AbstractOrder order = result.getOrder(ctx);
-		final Integer orderEntryNumber = getOrderEntryNumber(ctx);
-		final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
-
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("(" + getPK() + ") apply: Applying OrderEntry adjustment action for order [" + order.getPK() + "]");
-		}
-
-		if (orderEntry != null)
-		{
-			needsCalc = calculateApportionedDiscount(orderEntry, ctx, result);
-		}
 
 		return needsCalc;
 	}
