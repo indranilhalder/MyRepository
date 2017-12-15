@@ -18,37 +18,40 @@ ACC.WebForm = {
 						});
 					},
 					error : function(resp) {
-						console.log("Error in crmChildNodes"+ resp);
+						console.log("Error in Submit Ticket"+ resp);
 					}
 				});
 
-			} else {
-				$div = $('.customCareError');
-				$div.html('<div class="error">Please fill up the mandatory fields.</div>');
 			}
+			
+			return false;
 
 		});
 
 	},
 	validateCRMForm : function() {
-
 		var isValid = true;
 		$('#customerWebForm input, select, textarea').each(function() {
 
-					if ($(this).val() === ''
-							&& ($(this).attr("type") === 'radio'
-									|| $(this).attr("type") === 'text')) {
+					if ($(this).val() === ''  && $(this).attr("type") === 'text' && !($(this).attr("name") === 'contactMobile')) {
 						isValid = false;
-						$(this).removeClass("feildSuccess");
-						$(this).addClass("feildError");
+						$(this).parent(".formGroup").removeClass("has-success");
+						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
+						if($(this).parent().children(".help-block").length <= 0 ){
+							$(this).parent().append('<span class="help-block">Please fill value!!</span>');
+						}
 						//console.log("radio");
 					}
+					
 					if ($(this).is("textarea") && $(this).val() === '') {
 						isValid = false;
-						$(this).removeClass("feildSuccess");
-						$(this).addClass("feildError");
+						$(this).parent(".formGroup").removeClass("has-success");
+						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
+						if($(this).parent().children(".help-block").length <= 0 ){
+							$(this).parent().append('<span class="help-block">Please fill Comments!!</span>');
+						}
 						//console.log("textarea");
 					}
 					// for all nodes
@@ -56,17 +59,24 @@ ACC.WebForm = {
 							&& $(this).attr("displayAllow") === true
 							&& $(this).val() === '') {
 						isValid = false;
-						$(this).removeClass("feildSuccess");
-						$(this).addClass("feildError");
+						$(this).parent(".formGroup").removeClass("has-success");
+						$(this).parent(".formGroup").addClass("has-error");
 						$(this).focus();
+						if($(this).parent().children(".help-block").length <= 0 ){
+							$(this).parent().append('<span class="help-block">Please select issue!!</span>');
+						}
 						//console.log("nodeL2");
 					}
 					// validation for l4 node
 					if ($(this).attr("name") == 'nodeL4' && $(this).val() === '') {
 						isValid = false;
-						$("select[name='nodeL3']").removeClass("feildSuccess");
-						$("select[name='nodeL3']").addClass("feildError");
+						$("select[name='nodeL3']").parent(".formGroup").removeClass("has-success");
+						$("select[name='nodeL3']").parent(".formGroup").addClass("has-error");
 						$("select[name='nodeL3']").focus();
+						if($("select[name='nodeL3']").parent().children(".help-block").length <= 0 ){
+							$("select[name='nodeL3']").parent().append('<span class="help-block has-error">Issue not found!!</span>');
+						}
+								
 						//console.log("nodeL4");
 					}
 					
@@ -76,20 +86,26 @@ ACC.WebForm = {
 						var filter = /^\d*(?:\.\d{1,2})?$/;
 						if (filter.test(mobNum)) {
 							if (mobNum.length == 10) {
-								$(this).removeClass("feildError");
-								$(this).addClass("feildSuccess");
+								$(this).parent(".formGroup").removeClass("has-error");
+								$(this).parent(".formGroup").addClass("has-success");
 							} else {
-								$(this).removeClass("feildSuccess");
-								$(this).addClass("feildError");
 								isValid = false;
+								$(this).parent(".formGroup").removeClass("has-success");
+								$(this).parent(".formGroup").addClass("has-error");
 								$(this).focus();
+								if($(this).parent().children(".help-block").length <= 0 ){
+									$(this).parent().append('<span class="help-block">Please fill correct Mobile No.!!</span>');
+								}
 								//console.log("mobile 1");
 							}
 						} else {
-							$(this).removeClass("feildSuccess");
-							$(this).addClass("feildError");
 							isValid = false;
+							$(this).parent(".formGroup").removeClass("has-success");
+							$(this).parent(".formGroup").addClass("has-error");
 							$(this).focus();
+							if($(this).parent().children(".help-block").length <= 0 ){
+								$(this).parent().append('<span class="help-block">Please fill Mobile No.!!</span>');
+							}
 							//console.log("mobile 2");
 						}
 					}
@@ -98,19 +114,34 @@ ACC.WebForm = {
 						var email = $(this).val();
 						var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 						if (emailReg.test(email)) {
-							$(this).removeClass("feildError");
-							$(this).addClass("feildSuccess");
+							$(this).parent(".formGroup").removeClass("has-error");
+							$(this).parent(".formGroup").addClass("has-success");
 						} else if(email==='' || email!== undefined){
-							$(this).removeClass("feildSuccess");
-							$(this).addClass("feildError");
 							isValid = false;
+							$(this).parent(".formGroup").removeClass("has-success");
+							$(this).parent(".formGroup").addClass("has-error");
 							$(this).focus();
+							if($(this).parent().children(".help-block").length <= 0 ){
+								$(this).parent().append('<span class="help-block">Please fill correct Email!!</span>');
+							}
 							//console.log("email");
 						}
 					}
-					
+					//check for Order related Query
+					if($(this).attr("name") === 'nodeL1' && $(this).attr("nodcheck")=='true' ){
+						
+						if( $('#orderCode').val() === '' && $('#subOrderCode').val()  === '' && $('#transactionId').val()  === ''){
+							isValid = false;
+							$(".selectOrderSec").parent(".formGroup").removeClass("has-success");
+							$(".selectOrderSec").parent(".formGroup").addClass("has-error");
+							$(".selectOrderSec").focus();
+							if($(".selectOrderSec").parent().children(".help-block").length <= 0 ){
+								$(".selectOrderSec").parent().append('<span class="help-block has-error">Please select Order!!</span>');
+							}
+						}
+					}
 
-				});
+		});
 		return isValid;
 	},
 	issueDropDown : function() {
@@ -119,7 +150,11 @@ ACC.WebForm = {
 			// for select dropdown
 			var nodeValue = $("option:selected", this).val();
 			var nodeText = $("option:selected", this).attr("nodeText");
+			var nodeDisplayAllowed = $("option:selected", this).attr("nodeDisplayAllowed");
+			var createTicketAllowed = $("option:selected", this).attr("createTicketAllowed");
+			var ticketAnswer = $("option:selected", this).attr("ticketAnswer");
 			var nodeType = $(this).attr("name");
+			var nodcheck=$(this).attr("nodcheck");
 			// for radio
 			if (nodeValue == undefined) {
 				nodeValue = $(this).val();
@@ -134,54 +169,59 @@ ACC.WebForm = {
 					success : function(data) {
 						if (nodeType.startsWith("nodeL1")) {
 							$.each(data.nodes, function(index, data) {
-								htmlOption += "<option value='"
-										+ data.nodeCode + "' nodeText='"
-										+ data.nodeDesc
-										+ "' displayAllow='"
-										+ data.nodeDisplayAllowed + "'>"
-										+ data.nodeDesc + "</option>";
+								htmlOption += "<option value='"+ data.nodeCode+ "' " +
+								" nodeText='"+ data.nodeDesc+ "' " +
+								" nodeDisplayAllowed='"+ data.nodeDisplayAllowed + "' "+
+								" createTicketAllowed='"+ data.createTicketAllowed + "' ";
+								if(data.ticketAnswer!=null){
+									htmlOption+=" ticketAnswer='"+data.ticketAnswer+ "' ";
+								}
+								htmlOption+=" >"+ data.nodeDesc+ "</option>";
+								
 							});
 							$("select[name=nodeL2]").html(htmlOption);
-							$("select[name=nodeL3]").show();
+							$("select[name=nodeL2]").parent().children(".holder").removeClass('active');
+							$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
+							
+							console.log("nodeChck"+nodcheck);
+							
+							if(nodcheck==='true'){
+								console.log("show");
+								$(".selectOrderSec").show();
+								$("#fileSubmit").show();
+							}else{
+								console.log("hide");
+								$(".selectOrderSec").hide();
+								$("#fileSubmit").hide();
+							}
 						}
 						if (nodeType.startsWith("nodeL2")) {
 							var check = false;
-							var answer = "";
+							
 							$.each(data.nodes, function(index, data) {
 	
-								if (data.createTicketAllowed == true) {
-									htmlOption += "<option value='"
-											+ data.nodeCode
-											+ "' nodeText='"
-											+ data.nodeDesc
-											+ "' displayAllow='"
-											+ data.nodeDisplayAllowed
-											+ "'>" + data.nodeDesc
-											+ "</option>";
-								} else {
-									check = true;
-									answer = data.ticketAnswer;
-									htmlOption += "<option value='"
-											+ data.nodeCode
-											+ "' nodeText='"
-											+ data.nodeDesc
-											+ "' displayAllow='"
-											+ data.nodeDisplayAllowed
-											+ "' selected>" + data.nodeDesc
-											+ "</option>";
+								htmlOption += "<option value='"+ data.nodeCode+ "' " +
+								" nodeText='"+ data.nodeDesc+ "' " +
+								" nodeDisplayAllowed='"+ data.nodeDisplayAllowed + "' "+
+								" createTicketAllowed='"+ data.createTicketAllowed + "' "; 
+								if(data.ticketAnswer!=null){
+									htmlOption+=" ticketAnswer='"+data.ticketAnswer+ "' ";
 								}
+								htmlOption+=" >"+ data.nodeDesc+ "</option>";
+								
+								check= true;
 							});
 	
-							if (check == false) {
-								$("select[name=nodeL3]").html(htmlOption);
-								$("select[name=nodeL3]").show();
-							} else {
-								$("select[name=nodeL3]").html(htmlOption);
-								$("select[name=nodeL3]").parent(".customSelectWrap").hide();
-								$("select[name=nodeL3]").parent(".formGroup").append("<p>" + answer + "</p>");
-							}
-	
+							$("select[name=nodeL3]").html(htmlOption);
+							$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 							$("#nodeL2Text").val(nodeText);
+							
+							if(check===true){
+								$("#subIssueDiv").show();
+							}else{
+								$("#subIssueDiv").hide();
+							}
+							
 						}
 						if (nodeType.startsWith("nodeL3")) {
 							var l4val = "";
@@ -190,6 +230,7 @@ ACC.WebForm = {
 								l4val = data.nodeCode;
 								ticketType=data.ticketType;
 							});
+							
 							//console.log(l4val);
 							$("#nodeL4").val(l4val);
 							$("#ticketType").val(ticketType);
@@ -201,148 +242,89 @@ ACC.WebForm = {
 					}
 				});
 			}
+			//console.log("createTicketAllowed"+createTicketAllowed + "nodeType"+nodeType);
+			if (createTicketAllowed==='false' && nodeType.startsWith("nodeL3") && ticketAnswer!=undefined) {
+				//console.log("Answer");
+				$('#ticketAnswerReply').html("<span class='help-text'>Reply: "+ticketAnswer+"</span>");
+			}else{
+				$('#ticketAnswerReply').html("");
+			}
+			
+			if(createTicketAllowed==='true'){
+				$(".webfromTicketSubmit").prop('disabled',false);
+			}else{
+				$(".webfromTicketSubmit").prop('disabled',true);
+			}
+			
 		});
-
-	},
-	xhrFileUpload : function() {
-
-		var url = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
-
-		$("#attachmentFile").on("change",function(e) {
-			$.fn.simpleUpload.maxSimultaneousUploads(1);
-		
-			$(this).simpleUpload(url,
-			{
-		
-				/*
-				 * Each of these callbacks are
-				 * executed for each file. To
-				 * add callbacks that are
-				 * executed only once, see
-				 * init() and finish().
-				 * 
-				 * "this" is an object that can
-				 * carry data between callbacks
-				 * for each file. Data related
-				 * to the upload is stored in
-				 * this.upload.
-				 */
-				allowedExts : [ "jpg", "jpeg",
-						"jpe", "jif", "jfif",
-						"jfi", "png", "gif" ],
-				allowedTypes : [ "image/pjpeg",
-						"image/jpeg",
-						"image/png",
-						"image/x-png",
-						"image/gif",
-						"image/x-gif" ],
-				limit : 5, // 5 files only
-				start : function(file) {
-					// upload started
-					this.block = $('<div class="block"></div>');
-					this.progressBar = $('<div class="progressBar"></div>');
-					this.block.append(this.progressBar);
-					$('#uploads').append(this.block);
-				},
-
-				progress : function(progress) {
-					// received progress
-					this.progressBar.width(progress+ "%");
-				},
-
-				success : function(data) {
-					// upload successful
-					console.log(data);
-					this.progressBar.remove();
-
-					/*
-					 * Just because the success
-					 * callback is called
-					 * doesn't mean your
-					 * application logic was
-					 * successful, so check
-					 * application success.
-					 * 
-					 * Data as returned by the
-					 * server on... success:
-					 * {"success":true,"format":"..."}
-					 * error:
-					 * {"success":false,"error":{"code":1,"message":"..."}}
-					 */
-
-					if (data!=='error') {
-						// now fill the block
-						// with the format of
-						// the uploaded file
-						var formatDiv = $('<div class="format"></div>').text("File uploaded Successfully!!!");
-						this.block.append(formatDiv);
-						//adding input
-						var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
-						$("#customerWebForm").append(inputHidden);
-					} else {
-						// our application
-						// returned an error
-						var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
-						this.block.append(errorDiv);
-					}
-
-				},
-
-				error : function(error) {
-					// upload failed
-					this.progressBar.remove();
-					var error = error.message;
-					var errorDiv = $(
-							'<div class="error"></div>')
-							.text(error);
-					this.block.append(errorDiv);
-				},
-
-			});
-
-		});
+		ACC.WebForm.attachSelectEvent();
 
 	},
 	simpleAjaxUpload : function(){
-		var url = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
+		var uploadurl = ACC.config.encodedContextPath + "/ticketForm/fileUpload";
 
 		$("#attachmentFile").on("change",function(e) {
-			
-			var objFormData = new FormData();
-		    // GET FILE OBJECT 
-		    //var objFile = $(this)[0].files[0];
-		    $.each($(this)[0].files, function(i, file) {
-		    	objFormData.append('uploadFile['+i+']', file);
-		    });
-		    // APPEND FILE TO POST DATA
-		    //objFormData.append('uploadFile', objFile);
+			e.preventDefault();
+		    //Disable submit button
+		    $(".webfromTicketSubmit").prop('disabled',true);
 		    
-		    $.ajax({
-		        url: url,
-		        type: 'POST',
-		        data: objFormData,
-		        //JQUERY CONVERT THE FILES ARRAYS INTO STRINGS.SO processData:false
-		        async: false,
-		        cache: false,
-		        contentType: false,
-		        enctype: 'multipart/form-data',
-		        processData: false,
-		        success: function(data) {
-		        	if (data!=='error') {
-						// the uploaded file
-						var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
-						$("#customerWebForm").append(inputHidden);
-					} else {
-						// our application
-						// returned an error
-						var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
-						$("#customCareError").append(errorDiv);
-					}
-		        	
-		        }
+		    var file = $(this)[0].files[0];
+		    var formData = new FormData();
+		    formData.append('uploadFile', file);
+		    
+		    // Ajax call for file uploaling
+		    var ajaxReq = $.ajax({
+		      url : uploadurl,
+		      type : 'POST',
+		      data : formData,
+		      async: false,
+	        cache: false,
+	        contentType: false,
+	        enctype: 'multipart/form-data',
+	        processData: false,
+		      xhr: function(){
+		        //Get XmlHttpRequest object
+		         var xhr = $.ajaxSettings.xhr() ;
+		        
+		        //Set onprogress event handler 
+		         xhr.upload.onprogress = function(event){
+		          	var perc = Math.round((event.loaded / event.total) * 100);
+		          	$('#progressBar').text(perc + '%');
+		          	$('#progressBar').css('width',perc + '%');
+		         };
+		         return xhr ;
+		    	},
+		    	beforeSend: function( xhr ) {
+		    		//Reset alert message and progress bar
+		    		$('#customCareError').text('');
+		    		$('#progressBar').text('');
+		    		$('#progressBar').css('width','0%');
+		         }
+		    });
+		  
+		    // Called on success of file upload
+		    ajaxReq.done(function(data) {
+		      $('#attachmentFile').val('');
+		      $('.webfromTicketSubmit').prop('disabled',false);
+		      
+		      if (data!=='error') {
+					// the uploaded file
+					var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
+					$("#customerWebForm").append(inputHidden);
+				} else {
+					// our application returned an error
+					var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
+					$("#customCareError").append(errorDiv);
+				}
 		    });
 		    
-		});
+		    // Called on failure of file upload
+		    ajaxReq.fail(function(jqXHR) {
+		      $('#customCareError').text(jqXHR.responseText+'('+jqXHR.status+' - '+jqXHR.statusText+')');
+		      $('.webfromTicketSubmit').prop('disabled',false);
+		    });
+		  });
+		 
 	},
 	loadOrderLines : function(currentPage) {
 		var htmlOption="";
@@ -350,7 +332,7 @@ ACC.WebForm = {
 			url : ACC.config.encodedContextPath+ "/ticketForm/webOrderlines",
 			type : 'GET',
 			success : function(data) {
-				if( $.isArray(data.orderLineDatas) ||  data.orderLineDatas.length ) {
+				if( $.isArray(data.orderLineDatas) && data.orderLineDatas.length ) {
 					$.each(data.orderLineDatas, function(index, dataLine) {
 	
 						htmlOption += "<li data-orderCode='"+ dataLine.orderCode+"' "+
@@ -373,11 +355,15 @@ ACC.WebForm = {
 				$("#totalPages").val(data.totalOrderLines);
 				$("#currentPage").val(currentPage);
 				// no of orderlins in one page
-				if(data.totalOrderLines > 5){
+				if(parseInt(data.totalOrderLines) > 5){
 					$('#viewMoreLink').show();
+				}else{
+					$('#viewMoreLink').hide();
 				}
-				if(currentPage > 1 ){
+				if(parseInt(currentPage) > 1 ){
 					$('#viewBackLink').show();
+				}else{
+					$('#viewBackLink').hide();
 				}
 				
 				
@@ -393,31 +379,28 @@ ACC.WebForm = {
 		
 		if ( $(".selectOrderSec").length ) {
 			if(parseInt(total) <= parseInt(current) ){
-				$('#viewMoreLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"')");
+				$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"');");
 			}else{
 				$('#viewMoreLink').hide();
 			}
 			
 			if(parseInt(current) > 1){
-				$('#viewBackLink').attr("href","ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"')");
+				$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"');");
 			}else{
 				$('#viewBackLink').hide();
 			}
 			//call default first page
 			ACC.WebForm.loadOrderLines(current);
-			//ACC.WebForm.attachOrderDropEvent();
+			ACC.WebForm.attachOrderDropEvent();
 		}
 	},
 	attachOrderDropEvent : function(){
-		$('.selectedProduct').click(function(){
-	    	$(this).next('.orderDrop').toggle();
-	    });
 		$('.selectOrders .orderDrop li').each(function(){
-			$(this).click(function(){
-	          var prodHtml = $(this).html();
-	          $(this).parent('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
-	          $('.orderDrop').toggle();
-	       // set value
+			$(this).on("click",function(){
+				var prodHtml = $(this).html();
+				$('.orderDrop').prev('.selectedProduct').addClass('filled').html(prodHtml);
+				$('.orderDrop').toggle();
+				// set value
 				$('#orderCode').val($(this).attr("data-orderCode"));
 				$('#subOrderCode').val($(this).attr("data-subOrderCode"));
 				$('#transactionId').val($(this).attr("data-transactionId"));
@@ -425,6 +408,22 @@ ACC.WebForm = {
 
 		});
 	},
+	attachSelectEvent : function(){
+		/*custum selecbox*/
+		 $(".customSelect").each(function(){
+			 	if($(this).parent(".customSelectWrap").length <= 0){
+		            $(this).wrap("<span class='customSelectWrap'></span>");
+		            $(this).after("<span class='holder'></span>");
+		            $(".holder").removeClass('active');
+			 	}
+	        });
+	    $(".holder").removeClass('active');
+	},
+	closeWebForm : function (){
+		parent.$.colorbox.close(); 
+		window.href=ACC.config.encodedContextPath+ "/faq";
+		return false;
+	}
 
 };
 
@@ -434,7 +433,8 @@ $(document).ready(function() {
 	ACC.WebForm.issueDropDown();
 	ACC.WebForm.sendTicket();
 	ACC.WebForm.loadPaginationLink();
-	ACC.WebForm.attachOrderDropEvent();
+	//ACC.WebForm.attachOrderDropEvent();
+	ACC.WebForm.attachSelectEvent();
 	
 	$('.contCustCareBtn').click(function(){
 		$(this).toggleClass('dActive');
@@ -449,17 +449,14 @@ $(document).ready(function() {
 	$('#closeCustCarePopBox').click(function(){
 		$(this).parent().parent('.issueQuryPopUp').hide();
 	});
-	/*custum selecbox*/
-	 $(".customSelect").each(function(){
-            $(this).wrap("<span class='customSelectWrap'></span>");
-            $(this).after("<span class='holder'></span>");
-            $(".holder").removeClass('active');
-        });
-        $(".customSelect").change(function(){
-            var selectedOption = $(this).find(":selected").text();
-            $(this).next(".holder").addClass('active');
-            $(this).next(".holder").text(selectedOption);
-        }).trigger('change');
-         $(".holder").removeClass('active');
+	
+	$('.selectedProduct').on("click",function(){
+    	$('.orderDrop').toggle();
+    });
+	 $(".customSelect").change(function(){
+	        var selectedOption = $(this).find(":selected").text();
+	        $(this).next(".holder").addClass('active');
+	        $(this).next(".holder").text(selectedOption);
+	    }).trigger('change');
          
 });

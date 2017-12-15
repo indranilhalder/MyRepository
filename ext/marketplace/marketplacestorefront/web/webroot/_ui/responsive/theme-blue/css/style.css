@@ -78209,6 +78209,8 @@ ul.offerui {
 @media screen and (min-width: 769px) {
 	#paymenttermsoffersPopup .content.offer-content {
     	overflow-y: auto;
+    	height: 697px;
+    	margin-top: 104px 
     }
 	 .cart.wrapper .right-block.billing.checkout-list-right{
 	 	position: absolute;
@@ -78294,6 +78296,7 @@ ul.offerui {
     font-size: 30px;
     line-height: 18px;
     color:#979797;
+    border: none;
 }
 #paymenttermsoffersPopup #accordion-tnc .offer_title.active:after {
     content: "-";
@@ -78324,6 +78327,9 @@ button#continue_payment_after_validate {
 }
 /* TPR 7486 END */
 /* TISHS-105 start */
+.offer_des li {
+    list-style-type: disc !important;
+}
 #paymentoffersPopup .offer_title{
     width: 92%;
     word-break: break-all;
@@ -78337,9 +78343,35 @@ button#continue_payment_after_validate {
 #paymentoffersPopup span.offer_des {
     position: relative;
     top: -14px;
+    word-break: break-all;
 }
 #paymentoffersPopup .max-min-value {
     position: absolute;
     bottom: -10px;
 }
 /* TISHS-105 end */
+/* TISHS-96 start */
+.consent-disclaimer{
+	font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: 0.2px;
+    text-align: left;
+    color: #a2a2a2;
+    letter-spacing: 0.1px;
+    text-transform: initial;
+    width: 425px;
+    height: 32px;
+    margin-top: 10px;
+    font-weight: normal;
+}
+/* TISHS-96 end */
+/* TISHS-115 start */
+.headingSec p.summryQuery {
+    padding-left: 71px !important;
+}
+/* TISHS-115 end */
+/* TISHS-166 start  */
+.custmCareHelp .issueQuryPopUp p{
+	 word-break: break-all;
+}
+/* TISHS-166 End  */

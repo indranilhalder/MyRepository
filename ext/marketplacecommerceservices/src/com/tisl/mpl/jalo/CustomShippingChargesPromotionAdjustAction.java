@@ -8,6 +8,8 @@ import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
+import de.hybris.platform.promotions.jalo.AbstractPromotion;
+import de.hybris.platform.promotions.jalo.PromotionResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,14 +48,15 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
 	public boolean apply(final SessionContext ctx)
 	{
 		boolean needsCalc = false;
-		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		final PromotionResult promotionResult = getPromotionResult(ctx);
+		final AbstractOrder order = promotionResult.getOrder(ctx);
 
 		final boolean isShippingCartPromo = (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? true
 				: false;
@@ -66,7 +69,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 			for (final AbstractOrderEntry entry : validProductUssidList)
 			{
-				calculateApportionedDiscount(entry, ctx);
+				calculateApportionedDiscount(entry, ctx, promotionResult);
 			}
 		}
 		else
@@ -75,15 +78,10 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
 			if (orderEntry != null)
 			{
-				needsCalc = calculateApportionedDiscount(orderEntry, ctx);
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx, promotionResult);
 			}
 		}
 
-
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("(" + getPK() + ") apply: Applying OrderEntry adjustment action for order [" + order.getPK() + "]");
-		}
 
 		return needsCalc;
 	}
@@ -207,7 +205,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 		return true;
 	}
 
-	private boolean calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx)
+	private boolean calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
+			final PromotionResult result)
 	{
 		boolean needsCalc = false;
 		Map<String, Integer> qualifyingCountMap = null;
@@ -251,12 +250,13 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 			try
 			{
-				promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+				final AbstractPromotion promotion = result.getPromotion();
+				promoCostCentreOnePercentage = (Double) promotion.getAttribute(ctx,
 						MarketplacecommerceservicesConstants.COSTCENTREONE);
-				promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+				promoCostCentreTwoPercentage = (Double) promotion.getAttribute(ctx,
 						MarketplacecommerceservicesConstants.COSTCENTRETWO);
 
-				promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+				promoCostCentreThreePercentage = (Double) promotion.getAttribute(ctx,
 						MarketplacecommerceservicesConstants.COSTCENTRETHREE);
 
 			}
@@ -354,12 +354,23 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			if (StringUtils.isNotEmpty(productPromoCode))
 			{
 
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
-						promoCostCentreOnePercentage);
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
-						promoCostCentreTwoPercentage);
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
-						promoCostCentreThreePercentage);
+				if (null != promoCostCentreOnePercentage)
+				{
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
+							promoCostCentreOnePercentage);
+				}
+
+				if (null != promoCostCentreTwoPercentage)
+				{
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
+							promoCostCentreTwoPercentage);
+				}
+
+				if (null != promoCostCentreThreePercentage)
+				{
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
+							promoCostCentreThreePercentage);
+				}
 
 			}
 			//TPR-7408 ends here
@@ -369,12 +380,23 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			//TPR-7408 starts here
 			if (StringUtils.isNotEmpty(cartPromoCode))
 			{
-				orderEntry
-						.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE, promoCostCentreOnePercentage);
-				orderEntry
-						.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO, promoCostCentreTwoPercentage);
-				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
-						promoCostCentreThreePercentage);
+				if (null != promoCostCentreOnePercentage)
+				{
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+							promoCostCentreOnePercentage);
+				}
+
+				if (null != promoCostCentreTwoPercentage)
+				{
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+							promoCostCentreTwoPercentage);
+				}
+
+				if (null != promoCostCentreThreePercentage)
+				{
+					orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+							promoCostCentreThreePercentage);
+				}
 
 			}
 			//TPR-7408 ends here

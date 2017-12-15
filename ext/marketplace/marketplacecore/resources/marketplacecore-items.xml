@@ -13891,7 +13891,24 @@
 						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="comment" type="java.lang.String">
-						<persistence type="property" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(1100)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Comments</description>					
 						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="crmTicketRef" type="java.lang.String">				

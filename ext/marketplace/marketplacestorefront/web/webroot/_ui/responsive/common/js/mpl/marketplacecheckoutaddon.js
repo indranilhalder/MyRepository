@@ -5446,8 +5446,15 @@ function setBankForSavedCard(bankName){
 		type: "GET",
 		cache: false,
 		dataType:'json',
-		success : function(response) {
-	        checkTamperingPlaceOrder=false;//TISUAT-6107 fix		
+		beforeSend: function(){
+			ACC.singlePageCheckout.showAjaxLoader();
+		},
+		complete: function(){
+			ACC.singlePageCheckout.hideAjaxLoader();
+	  	},
+		success : function(response) {			
+			checkTamperingPlaceOrder=false;//TISUAT-6107 fix
+			
 			if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect")
 			{
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
@@ -5709,7 +5716,7 @@ function setBankForSavedCard(bankName){
 				}
 				$("#no-click").remove();
 				//$(".make_payment").removeAttr('disabled');
-			}
+			}			
 			//if(isNewCard){//if this variable is true resetting the opacity
 			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			//isNewCard = false;

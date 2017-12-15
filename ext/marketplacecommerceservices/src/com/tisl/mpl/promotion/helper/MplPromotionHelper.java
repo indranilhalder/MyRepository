@@ -1284,18 +1284,22 @@ public class MplPromotionHelper
 	{
 		final MplLimitedOfferData data = new MplLimitedOfferData();
 		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+		String guid = StringUtils.EMPTY;
+		guid = getGUID(order);
 
 		final int totalOrderPlaced = getStockService().getTotalOfferOrderCount(promoCode,
-				MarketplacecommerceservicesConstants.EMPTY);
+				MarketplacecommerceservicesConstants.EMPTY, guid);
 		final int totalOfferCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
 		final int maxCustomerOfferCount = getStockCustomerRedeemCount(restrictionList);
+
+
 
 		if (totalOrderPlaced < totalOfferCount)
 		{
 			orginalUid = getOriginalUID(order);
 			if (StringUtils.isNotEmpty(orginalUid))
 			{
-				final int offerReceiveCount = getStockService().getTotalOfferOrderCount(promoCode, orginalUid);
+				final int offerReceiveCount = getStockService().getTotalOfferOrderCount(promoCode, orginalUid, guid);//TISHS-143
 				if (offerReceiveCount == 0)
 				{
 					data.setExhausted(false);
@@ -1563,5 +1567,16 @@ public class MplPromotionHelper
 	@Autowired
 	private CategoryService categoryService;
 
+	/**
+	 * Get GUID
+	 *
+	 * @param order
+	 * @return guid
+	 */
+	private String getGUID(final AbstractOrder order)
+	{
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+		return abstractOrderModel.getGuid();
+	}
 
 }
