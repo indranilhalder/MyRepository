@@ -429,11 +429,13 @@
 		}
 	}
 	.itemsQuantity {
+        display: flex;        
+        
 		@include media-breakpoint-down(sm) {
 			margin: 0 0 10px;
 		}
 		> div {
-			display: inline-block;
+			/*display: inline-block;*/
             /*vertical-align: top;*/
             
 			label {
