@@ -60,7 +60,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final int PLATFORM_FIVE = 5;
 	//TPR-6272 ends here
 	//TPR-4461 STARTS HERE
-	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
+	public static final String COUPONFAILUREMESSAGE = "Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
+	public static final String CARTCOUPONFAILUREMESSAGE = "Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank.";
+	public static final String CARTANDCOUPONBOTHFAILUREMESSAGE = "Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
+
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 

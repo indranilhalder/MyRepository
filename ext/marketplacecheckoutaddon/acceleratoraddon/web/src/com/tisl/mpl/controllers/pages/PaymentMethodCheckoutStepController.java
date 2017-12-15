@@ -5825,72 +5825,76 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					boolean mplCartVoucher = false;
 					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
-					final DiscountModel discount = voucherList.get(0);
-
-					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					//final DiscountModel discount = voucherList.get(0);
+					for (final DiscountModel discount : voucherList)
 					{
 
-						if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
-						{
-							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
-							mplCartVoucher = false;
 
-						}
-						else
+						if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 						{
-							final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
-							mplCartVoucher = true;
-						}
 
-						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-						for (final RestrictionModel restriction : restrictions)
-						{
-							if (restriction instanceof PaymentModeRestrictionModel)
+							if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
 							{
-								boolean willApply = false;
+								final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = false;
 
-
-								final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
-
-
-								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-										.getPaymentTypeData(); //Voucher Payment mode
-
-
-								if (CollectionUtils.isNotEmpty(paymentTypeList))
-								{
-									if (StringUtils.isNotEmpty(paymentModeCard))
-									{
-										for (final PaymentTypeModel paymentType : paymentTypeList)
-										{
-											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
-											{
-												willApply = true;
-												break;
-											}
-
-										}
-									}
-									/*
-									 * else { willApply = true; }
-									 */
-								}
-								if (mplCartVoucher)
-								{ //MplCartOfferVoucherModel
-									voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
-								}
-								else
-								{ //PromotionVoucherModel
-									voucherMap.put("promovoucher", Boolean.valueOf(willApply));
-								}
-
-								/*
-								 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
-								 */
+							}
+							else
+							{
+								final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = true;
 							}
 
+							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+							for (final RestrictionModel restriction : restrictions)
+							{
+								if (restriction instanceof PaymentModeRestrictionModel)
+								{
+									boolean willApply = false;
+
+
+									final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
+
+
+									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+											.getPaymentTypeData(); //Voucher Payment mode
+
+
+									if (CollectionUtils.isNotEmpty(paymentTypeList))
+									{
+										if (StringUtils.isNotEmpty(paymentModeCard))
+										{
+											for (final PaymentTypeModel paymentType : paymentTypeList)
+											{
+												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+												{
+													willApply = true;
+													break;
+												}
+
+											}
+										}
+										/*
+										 * else { willApply = true; }
+										 */
+									}
+									if (mplCartVoucher)
+									{ //MplCartOfferVoucherModel
+										voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+									}
+									else
+									{ //PromotionVoucherModel
+										voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+									}
+
+									/*
+									 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
+									 */
+								}
+
+							}
 						}
 					}
 					//ERROR MESSAGE FOR COUPON AND VOUCHER
@@ -6019,70 +6023,73 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					boolean mplCartVoucher = false;
 					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
-					final DiscountModel discount = voucherList.get(0);
-
-					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					//final DiscountModel discount = voucherList.get(0);
+					for (final DiscountModel discount : voucherList)
 					{
 
-						if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
+						if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
 						{
-							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
-							mplCartVoucher = false;
 
-						}
-						else
-						{
-							final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
-							mplCartVoucher = true;
-						}
-
-
-						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-						for (final RestrictionModel restriction : restrictions)
-						{
-							if (restriction instanceof PaymentModeRestrictionModel)
+							if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
 							{
-								boolean willApply = false;
+								final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = false;
 
-								final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
-
-								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-										.getPaymentTypeData(); //Voucher Payment mode
-
-								if (CollectionUtils.isNotEmpty(paymentTypeList))
-								{
-									if (StringUtils.isNotEmpty(paymentModeCard))
-									{
-										for (final PaymentTypeModel paymentType : paymentTypeList)
-										{
-											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
-											{
-												willApply = true;
-												break;
-											}
-
-										}
-									}
-									/*
-									 * else { willApply = true; }
-									 */
-								}
-								if (mplCartVoucher)
-								{ //MplCartOfferVoucherModel
-									voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
-								}
-								else
-								{ //PromotionVoucherModel
-									voucherMap.put("promovoucher", Boolean.valueOf(willApply));
-								}
-
-								/*
-								 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
-								 */
+							}
+							else
+							{
+								final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = true;
 							}
 
+
+							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+							for (final RestrictionModel restriction : restrictions)
+							{
+								if (restriction instanceof PaymentModeRestrictionModel)
+								{
+									boolean willApply = false;
+
+									final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
+
+									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+											.getPaymentTypeData(); //Voucher Payment mode
+
+									if (CollectionUtils.isNotEmpty(paymentTypeList))
+									{
+										if (StringUtils.isNotEmpty(paymentModeCard))
+										{
+											for (final PaymentTypeModel paymentType : paymentTypeList)
+											{
+												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+												{
+													willApply = true;
+													break;
+												}
+
+											}
+										}
+										/*
+										 * else { willApply = true; }
+										 */
+									}
+									if (mplCartVoucher)
+									{ //MplCartOfferVoucherModel
+										voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+									}
+									else
+									{ //PromotionVoucherModel
+										voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+									}
+
+									/*
+									 * if (willApply == false) { return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON; }
+									 */
+								}
+
+							}
 						}
 					}
 					//ERROR MESSAGE FOR COUPON AND VOUCHER
