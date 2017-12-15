@@ -1293,7 +1293,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String DATEFORMAT = "yyyy-MM-dd".intern();
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
-	public static final String ORDER = "order".intern();
+	public static final String ORDERTHRESHOLD = "order".intern();
+	//public static final String ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -1636,12 +1637,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String USER = "user".intern();
 	public static final String DATE = "Date".intern();
-	//TPR-1075
+	public static final String ORDER = "Order".intern();
+	//TPR-1075SELLERVIOLATION
 	public static final String NEWCUSTOMER = "NewCustomer".intern();
 	public static final String NEWUSERRESTVIOLATION = "Voucher for New Customer is violated".intern();
 	public static final String VOUCHERINVALIDNEWCUST = "Voucher for New Customer : ".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
 	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
+	public static final String COUPONNOTREDEEMABLE = "This coupon has expired".intern();
 	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
 	public static final String VOUCHERINAPPLICABLE = "Voucher is not applicable: ".intern();
 	public static final String VOUCHERNOTRESERVABLE = "Voucher is not reservable: ".intern();
@@ -1652,6 +1655,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FREEBIEERROR = " cannot be redeemed: freebie".intern();
 	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
 	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
+	public static final String ORDERRESTRICTION = "Order restriction is violated".intern();
 	public static final String USERRESTVIOLATION = "User restriction is violated".intern();
 	public static final String VOUCHERCODE = "voucherCode".intern();
 	public static final String SYSDATE = "sysdate".intern();
