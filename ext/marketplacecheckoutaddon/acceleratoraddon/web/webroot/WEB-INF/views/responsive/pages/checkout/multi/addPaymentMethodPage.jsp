@@ -191,7 +191,7 @@
 				<!-- TISCR-305 starts -->	
 
 				<!--TPR-7486  -->
-				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive">
+				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive" style="display:none">
 				      <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			       </button>				
 
@@ -1377,9 +1377,7 @@
 														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
 													</span>
 												</li>
-												<div class="pay newCardPaymentCC">
-													<button type="submit" class="make_payment button btn-block payment-button" id="make_paytm_payment" onclick="submitPaytmForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-												</div>
+												
 										</ul>
 									</li>
 								</c:when>
