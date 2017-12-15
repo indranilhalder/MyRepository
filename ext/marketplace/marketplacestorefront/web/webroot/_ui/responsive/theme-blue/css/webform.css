@@ -621,3 +621,7 @@
 		width: 100%;
 	}
 }
+.selectOrders .prodImg img {
+    width: 48px;
+    height: 78px;
+}
