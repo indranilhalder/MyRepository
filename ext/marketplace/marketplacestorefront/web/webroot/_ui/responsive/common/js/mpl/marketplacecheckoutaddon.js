@@ -10925,10 +10925,17 @@ function recalculateCart(loadOffer) {
 		 		}else{
 		 			$("#deliveryCostSpanId").html("Free");
 		 		}
-				if(typeof loadOffer !== "undefined") {
-				   var offerID = ""; //selected cart voucher
-		                   ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
-	                        }
+				
+				
+				if(null!=response.voucherDiscount && null!=response.voucherDiscount.loadOffer)
+				{
+					var offerID = response.voucherDiscount.loadOffer; 
+					 ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
+				}else{
+					ACC.singlePageCheckout.populatePaymentSpecificOffers();
+				}
+				
+				
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
 				{

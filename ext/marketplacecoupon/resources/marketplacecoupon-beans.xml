@@ -28,6 +28,7 @@
     	<!-- couponMessageInfo added for TPR-4461 -->
     	<property name="couponMessageInfo" type="String"/>  
     	<property name="totalDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="loadOffer" type="String"/>
     </bean>
     
       <bean class="com.tisl.mpl.data.VoucherDisplayData">
