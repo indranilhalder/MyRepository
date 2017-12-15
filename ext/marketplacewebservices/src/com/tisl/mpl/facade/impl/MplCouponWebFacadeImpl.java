@@ -13,6 +13,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.promotions.util.Tuple2;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -73,7 +74,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 
 	@Override
-	public ApplyCouponsDTO applyVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
+	public ApplyCouponsDTO applyVoucher(final String couponCode, CartModel cartModel, OrderModel orderModel,
 			final String paymentMode) throws VoucherOperationException, CalculationException, NumberFormatException,
 			JaloInvalidParameterException, JaloSecurityException, EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
@@ -81,6 +82,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		final boolean redeem = true;
 		boolean couponRedStatus = false;
 		VoucherDiscountData data = new VoucherDiscountData();
+		boolean isCartVoucherPresent = false;
+		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
 		Map<String, Double> paymentInfo = null;
 		try
 		{
@@ -105,10 +108,23 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//				}
 				//			}
 				//		}
-				if (cartModel != null && StringUtils.isNotEmpty(paymentMode))
+				if (cartModel != null /* && StringUtils.isNotEmpty(paymentMode) */)
 				{
+
+
+					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cartModel.getDiscounts());
+
+					isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+					if (isCartVoucherPresent)
+					{
+						cartCouponCode = cartCouponObj.getSecond();
+						cartModel = (CartModel) mplCouponFacade.removeLastCartCoupon(cartModel); // Removing any Cart level Coupon Offer
+					}
+
 					//Apply the voucher
 					couponRedStatus = mplCouponFacade.applyVoucher(couponCode, cartModel, null);
+
 
 					LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
 
@@ -121,12 +137,18 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					//Update paymentInfo in session
 					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
 
+					if (StringUtils.isNotEmpty(cartCouponCode))
+					{
+						data = reapplyCartCoupon(data, cartCouponCode, cartModel);
+					}
+
 					//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
 						//Price data new calculation for 2 decimal values
 						applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
 								.setScale(2, BigDecimal.ROUND_HALF_UP)));
+
 					}
 
 					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -141,6 +163,15 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			}
 			else
 			{
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(orderModel.getDiscounts());
+
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					orderModel = (OrderModel) mplCouponFacade.removeLastCartCoupon(orderModel); // Removing any Cart level Coupon Offer
+				}
 				//Apply the voucher
 				couponRedStatus = mplCouponFacade.applyVoucher(couponCode, null, orderModel);
 
@@ -155,10 +186,17 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				}
 				//Update paymentInfo in session
 				mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
+
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					data = reapplyCartCoupon(data, cartCouponCode, orderModel);
+				}
+
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 				{
 					applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+
 				}
 
 				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
@@ -437,7 +475,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	}
 
 	@Override
-	public ReleaseCouponsDTO releaseVoucher(final String couponCode, final CartModel cartModel, final OrderModel orderModel,
+	public ReleaseCouponsDTO releaseVoucher(final String couponCode, CartModel cartModel, OrderModel orderModel,
 			final String paymentMode) throws RequestParameterException, WebserviceValidationException, MalformedURLException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, EtailBusinessExceptions
@@ -446,6 +484,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		//final Map<String, Double> paymentInfo = null;
 		final boolean redeem = false;
 		VoucherDiscountData data = new VoucherDiscountData();
+		boolean isCartVoucherPresent = false;
+		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
 			//Release coupon for cartModel
@@ -453,6 +493,15 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			{
 
 				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cartModel.getDiscounts());
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					cartModel = (CartModel) mplCouponFacade.removeLastCartCoupon(cartModel); // Removing any Cart level Coupon Offer
+				}
+
 
 				//Release the coupon
 				mplCouponFacade.releaseVoucher(couponCode, cartModel, null);
@@ -460,7 +509,34 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//Recalculate cart after releasing coupon
 				mplCouponFacade.recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
-				data = mplCouponFacade.calculateValues(null, cartModel, true, redeem);
+				//data = mplCouponFacade.calculateValues(null, cartModel, true, redeem);
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					try
+					{
+						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cartModel, null);
+						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(null, cartModel, applyStatus, true,
+								couponCode);
+
+						data = newData;
+						//data.setTotalDiscount(newData.getTotalDiscount());
+						//data.setTotalPrice(newData.getTotalPrice());
+
+					}
+					catch (final VoucherOperationException e)
+					{
+						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
+				}
+				else
+				{
+					data = mplCouponFacade.calculateValues(null, cartModel, true, redeem);
+
+				}
 
 				//Update paymentInfo from model
 				//paymentInfo = new HashMap<String, Double>();
@@ -478,13 +554,50 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			{
 
 				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(orderModel.getDiscounts());
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					orderModel = (OrderModel) mplCouponFacade.removeLastCartCoupon(orderModel); // Removing any Cart level Coupon Offer
+				}
+
 				//Release the coupon
 				mplCouponFacade.releaseVoucher(couponCode, null, orderModel);
 
 				//Recalculate cart after releasing coupon
 				mplCouponFacade.recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
 
-				data = mplCouponFacade.calculateValues(orderModel, null, true, redeem);
+				//data = mplCouponFacade.calculateValues(orderModel, null, true, redeem);
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					try
+					{
+						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
+						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus,
+								true, couponCode);
+
+						data = newData;
+						//data.setTotalDiscount(newData.getTotalDiscount());
+						//data.setTotalPrice(newData.getTotalPrice());
+
+					}
+					catch (final VoucherOperationException e)
+					{
+						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
+				}
+				else
+				{
+					data = mplCouponFacade.calculateValues(orderModel, null, true, redeem);
+
+				}
+
 
 				//Update paymentInfo in
 				//paymentInfo = new HashMap<String, Double>();
@@ -523,6 +636,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		return releaseCouponsDTO;
 	}
 
+	//TPR - 7486
 	private boolean checkforCartVoucherRemoved(final List<DiscountModel> discounts)
 	{
 		boolean isCartVoucherRemoved = true;
@@ -541,6 +655,99 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 		return isCartVoucherRemoved;
 	}
+
+	//TPR - 7486
+	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
+	{
+		boolean flag = false;
+		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
+					flag = true;
+					couponCode = object.getVoucherCode();
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
+
+		return cartCouponObj;
+	}
+
+	/**
+	 * Re apply Cart Coupon TPR - 7486
+	 *
+	 * @param data
+	 * @param cartCouponCode
+	 * @param cartModel
+	 * @return dataPojo
+	 */
+	private VoucherDiscountData reapplyCartCoupon(final VoucherDiscountData data, final String cartCouponCode,
+			final CartModel cartModel)
+	{
+		final VoucherDiscountData dataPojo = data;
+		try
+		{
+			final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cartModel, null);
+			final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(null, cartModel, applyStatus, true,
+					cartCouponCode);
+
+			data.setTotalDiscount(newData.getTotalDiscount());
+			data.setTotalPrice(newData.getTotalPrice());
+
+		}
+		catch (final VoucherOperationException e)
+		{
+			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+
+		return dataPojo;
+	}
+
+	/**
+	 * Re apply Cart Coupon
+	 *
+	 * @param data
+	 * @param cartCouponCode
+	 * @param oModel
+	 * @return dataPojo
+	 */
+	private VoucherDiscountData reapplyCartCoupon(final VoucherDiscountData data, final String cartCouponCode,
+			final OrderModel oModel)
+	{
+		final VoucherDiscountData dataPojo = data;
+		try
+		{
+			final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, oModel);
+			final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(oModel, null, applyStatus, true,
+					cartCouponCode);
+
+			data.setTotalDiscount(newData.getTotalDiscount());
+			data.setTotalPrice(newData.getTotalPrice());
+
+		}
+		catch (final VoucherOperationException e)
+		{
+			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+
+		return dataPojo;
+	}
+
 
 	/* TPR - 7486 */
 	@Override

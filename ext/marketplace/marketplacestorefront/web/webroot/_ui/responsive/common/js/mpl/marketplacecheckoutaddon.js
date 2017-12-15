@@ -5742,19 +5742,21 @@ function setBankForSavedCard(bankName){
 }*/
 
 /*paytm changes*/
-function submitPaytmForm(){
+function submitPaytmForm(paymentInfo){
 	var staticHost = $('#staticHost').val();
-		$(".pay button, .make_paytm_payment_up").prop("disabled",true);
-		$(".pay button, .make_paytm_payment_up").css("opacity","0.5");
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+	   $("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",true);
+	   $("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","0.5");
+		//$(".pay button, .make_paytm_payment_up").prop("disabled",true);
+		//$(".pay button, .make_paytm_payment_up").css("opacity","0.5");
+		//$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		//$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var firstName=null;
 		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=false;
 		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : null, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : null, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'paymentinfo':paymentInfo},
 			type: "GET",
 			cache: false,
 			success : function(response) {
@@ -5775,33 +5777,66 @@ function submitPaytmForm(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
-					$(".pay button, .make_payment_top_nb").prop("disabled",false);
-					$(".pay button, .make_payment_top_nb").css("opacity","1");	
-					$(".pay .loaderDiv").remove();
-					$("#no-click,.spinner").remove();
+					//$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					//$(".pay button, #make_cc_payment_up").css("opacity","1");
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.spinner").remove();									    
+				}
+				else if(response=='redirect_with_vouchercart'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					//$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					//$(".pay button, #make_cc_payment_up").css("opacity","1");
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.spinner").remove();									    
+				}
+				else if(response=='redirect_with_vouchercart_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					//$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					//$(".pay button, #make_cc_payment_up").css("opacity","1");
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.spinner").remove();									    
 				}
 				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
-					$(".pay button, .make_payment_top_nb").prop("disabled",false);
-					$(".pay button, .make_payment_top_nb").css("opacity","1");
-					$(".pay .loaderDiv").remove();
-					$("#no-click,.loaderDiv").remove();
+					//$(".pay button, .make_payment_top_nb").prop("disabled",false);
+					//$(".pay button, .make_payment_top_nb").css("opacity","1");
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.loaderDiv").remove();
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
 				}
 				//added for INC144317450 Payment Not processing--starts
 			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
 					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
 					$("#juspayconnErrorDiv").css("display","block");
-					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
-					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
-					$(".pay .loaderDiv").remove();
-					$(".pay .spinner").remove();
-					$("#no-click,.loaderDiv").remove();
-					$("#no-click,.spinner").remove();									    
+					//$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					//$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					//$(".pay .loaderDiv").remove();
+					//$(".pay .spinner").remove();
+					//$("#no-click,.loaderDiv").remove();
+					//$("#no-click,.spinner").remove();
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
 
 			    }
 				//added for INC144317450 Payment Not processing--ends
@@ -5829,10 +5864,13 @@ function submitPaytmForm(){
 									paymentErrorTrack("juspay_unavailable");
 									document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 									$("#juspayconnErrorDiv").css("display","block");
-									$(".pay button, .make_payment_top_nb").prop("disabled",false);
-									$(".pay button, .make_payment_top_nb").css("opacity","1");
-									$(".pay .loaderDiv").remove();
-									$("#no-click,.loaderDiv").remove();
+									//$(".pay button, .make_payment_top_nb").prop("disabled",false);
+									//$(".pay button, .make_payment_top_nb").css("opacity","1");
+									////$(".pay .loaderDiv").remove();
+									//$("#no-click,.loaderDiv").remove();
+									$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+									$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
 								}
 
 								else{
@@ -5869,10 +5907,13 @@ function submitPaytmForm(){
 							},
 						error : function(resp) {
 							$("#netbankingIssueError").css("display","block");
-							$(".pay button, .make_payment_top_nb").prop("disabled",false);
-							$(".pay button, .make_payment_top_nb").css("opacity","1");
-							$(".pay .loaderDiv").remove();
-							$("#no-click,.loaderDiv").remove();
+							//$(".pay button, .make_payment_top_nb").prop("disabled",false);
+							//$(".pay button, .make_payment_top_nb").css("opacity","1");
+							//$(".pay .loaderDiv").remove();
+							//$("#no-click,.loaderDiv").remove();
+							$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
+							$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
+
 							paymentErrorTrack("juspay_unavailable");
 						}
 					});		
@@ -5970,8 +6011,8 @@ function submitNBForm(paymentInfo){
 					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 
-					$(".pay .loaderDiv").remove();
-					$("#no-click,.spinner").remove();									    
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.spinner").remove();									    
 				}
 				else if(response=='redirect_with_vouchercart'){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank";
@@ -5982,8 +6023,8 @@ function submitNBForm(paymentInfo){
 					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 
-					$(".pay .loaderDiv").remove();
-					$("#no-click,.spinner").remove();									    
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.spinner").remove();									    
 				}
 				else if(response=='redirect_with_vouchercart_coupon'){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
@@ -5994,8 +6035,8 @@ function submitNBForm(paymentInfo){
 					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 					$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 
-					$(".pay .loaderDiv").remove();
-					$("#no-click,.spinner").remove();									    
+					//$(".pay .loaderDiv").remove();
+					//$("#no-click,.spinner").remove();									    
 				}
 				else if(response=='stayInPayment'){ //TPR-7486
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred";
@@ -9857,14 +9898,14 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 })
 
 
-$("#make_paytm_payment").click(function(){
+/*$("#make_paytm_payment").click(function(){
 	 if(isSessionActive()==false){
 		 redirectToCheckoutLogin();
 		}
 		else{
 			submitPaytmForm();
 		}
-})
+})*/
 
 function displayThrdPrtyWlt(){
 	$("#make_mrupee_payment_up").show();
@@ -9875,7 +9916,7 @@ function displayThrdPrtyWlt(){
 function displayPaytm(){
 	$("#make_paytm_payment").show();
 	$("li#PAYTM").css("display","block");
-	applyPromotion(null,"none","none");
+	//applyPromotion(null,"none","none");
 }
 /*paytm changes end*/
 function viewPaymentMRupee()
@@ -10308,6 +10349,9 @@ function validateCodeligible() {
 function formatPaymentInfo(pmode,cardinfo,refno){
 	var dataString = "";
 	if(pmode == 'COD') {
+		dataString+= pmode;
+	}
+	else if(pmode == 'PAYTM'){
 		dataString+= pmode;
 	}
 	else if (pmode == 'Credit Card' || pmode == 'Debit Card'){
@@ -10750,6 +10794,10 @@ function validatePaymentModes(){
 			}
 			
 		} 
+		else if(modeofPayment == 'PAYTM'){ //PAYTM		
+			 proceedToNextStep(modeofPayment); //all fine 
+
+		}
 		else if(modeofPayment == 'Netbanking'){ //net banking
 			if(validateNetBankingForm()) {
 				 var netbankname = getSelectedNetBankname();
@@ -10925,10 +10973,17 @@ function recalculateCart(loadOffer) {
 		 		}else{
 		 			$("#deliveryCostSpanId").html("Free");
 		 		}
-				if(typeof loadOffer !== "undefined") {
-				   var offerID = ""; //selected cart voucher
-		                   ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
-	                        }
+				
+				
+				if(null!=response.voucherDiscount && null!=response.voucherDiscount.loadOffer)
+				{
+					var offerID = response.voucherDiscount.loadOffer; 
+					 ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
+				}else{
+					ACC.singlePageCheckout.populatePaymentSpecificOffers();
+				}
+				
+				
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
 				{
@@ -11194,7 +11249,12 @@ function placeAnOrder(){
 	   else if(modeofPayment == 'Netbanking') {
 		   var netbankname = getSelectedNetBankname();
 		   submitNBForm(formatPaymentInfo(modeofPayment,netbankname));
-	   }	   	
+	   }
+	   else if(modeofPayment == 'PAYTM') {   
+		   submitPaytmForm(formatPaymentInfo(modeofPayment));
+	   }
+	   
+	   
 		
 }
 }

@@ -842,6 +842,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							{
 								entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
 								entry.setCouponValue(Double.valueOf(0.00D));
+
+								entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+								entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+								entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
 							}
 							getModelService().saveAll(entryList);
 						}
@@ -857,8 +861,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						{
 							for (final AbstractOrderEntryModel entry : entryList)
 							{
-								entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
-								entry.setCouponValue(Double.valueOf(0.00D));
+								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCartCouponValue(Double.valueOf(0.00D));
 
 								//TPR-7408 starts here
 								entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
