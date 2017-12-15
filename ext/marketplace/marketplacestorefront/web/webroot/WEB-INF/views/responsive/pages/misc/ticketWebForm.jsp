@@ -16,11 +16,9 @@
 
 	<div class="customer-service">
 
-		<div class="side-nav">
-			<cms:pageSlot position="Section2A" var="comp">
-				<cms:component component="${comp}" />
-			</cms:pageSlot>
-		</div>
+		<cms:pageSlot position="Section2A" var="comp">
+			<cms:component component="${comp}" />
+		</cms:pageSlot>
 		<%-- <cms:pageSlot position="Section2B" var="com">
 			<cms:component component="${com}" />
 		</cms:pageSlot>  --%>
@@ -117,8 +115,7 @@
 							<div id="ticketAnswerReply"></div>
 							<div class="formGroup">
 								<h3 class="secLabel">Name</h3>
-								<input type="text" class="formControl" placeholder="Enter Your Name" 
-								name="contactName" value="${formFields.name}" />
+								<input type="text" class="formControl" placeholder="Enter Your Name" name="contactName" value="${formFields.name}" />
 							</div>
 							<div class="emalIdMobileFeild">
 								<div class="feildCols">
