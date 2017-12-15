@@ -61,7 +61,16 @@
 									<c:if test="${l1Node.nodeType eq 'L1'}">
 										<div class="queryOptRadio">
 											<label> 
-												<input type="radio" name="nodeL1" class="node formControl" nodcheck="${l1Node.nodeCode eq tiketL1Check}" value="${l1Node.nodeCode}">
+												<c:choose>
+													<c:when test="${l1Node.nodeCode eq tiketL1Check}">
+														<input type="radio" name="nodeL1" class="node formControl" nodcheck="true" value="${l1Node.nodeCode}" checked>
+													</c:when>
+													<c:otherwise>
+														<input type="radio" name="nodeL1" class="node formControl" nodcheck="false" value="${l1Node.nodeCode}">
+													</c:otherwise>
+												</c:choose>
+												
+												
 												<span></span>
 												${l1Node.nodeDesc}
 											</label>
