@@ -156,7 +156,8 @@
 								<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 									upload size 5MB)</p>
 								<div class="uploadFile">
-									<span>Upload File</span> 
+									<span>Upload File</span>
+									<span id= "file_success_message"  style="display:none"></span>
 									<input id="attachmentFile" type="file" name="uploadFile" multiple />
 									<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 								</div>

@@ -203,10 +203,13 @@ ACC.WebForm = {
 					// the uploaded file
 					var inputHidden=$('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
 					$("#customerWebForm").append(inputHidden);
+					$("#file_success_message").text("File uploaded Sucessfully.");
+					$("#file_success_message").show();
 				} else {
 					// our application returned an error
 					var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
 					$("#customCareError").append(errorDiv);
+					$("#file_success_message").hide();
 				}
 		    });
 		    
