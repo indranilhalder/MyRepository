@@ -1501,7 +1501,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
 	<bean id="mplCategorySourceForCategoryFacet" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,LSH1" />
+		<property name="rootCategory" value="MSH1,LSH" />
 		<!-- 'brands' is the root of the brands hierarchy -->
 	</bean>
 
@@ -1522,11 +1522,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- TPR-6336 -->
 	<bean id="mplCategorySource" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,LSH1" />
+		<property name="rootCategory" value="MSH1,LSH" />
 	</bean>
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH1" />
+		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH" />
 	</bean>
 
 
