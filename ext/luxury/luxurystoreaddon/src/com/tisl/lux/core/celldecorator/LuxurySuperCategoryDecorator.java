@@ -6,6 +6,7 @@ package com.tisl.lux.core.celldecorator;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.CSVCellDecorator;
+import de.hybris.platform.util.Config;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -110,8 +111,10 @@ public class LuxurySuperCategoryDecorator implements CSVCellDecorator
 
 			return finalvalue;
 		}
-
-
+		else if (parsedValue.isEmpty())
+		{
+			return Config.getString("luxurySaleRootCategory", "LSH");
+		}
 		else
 		{
 			return parsedValue;
