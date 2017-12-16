@@ -657,10 +657,7 @@ public class MplPromotionHelper
 	{
 
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-
 		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
-
-
 
 		boolean isFreebie = false;
 		boolean isofValidSeller = false;
@@ -669,10 +666,14 @@ public class MplPromotionHelper
 
 		for (final AbstractOrderEntry entry : entries)
 		{
+
 			isFreebie = validateEntryForFreebie(entry);
 			if (!isFreebie)
 			{
-				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(entry.getProduct()))
+
+				final String fulfillmentType = (String) entry.getAttribute(arg0, "fulfillmentType");
+				if (fulfillmentType.equalsIgnoreCase("TSHIP") && CollectionUtils.isNotEmpty(allowedProductList)
+						&& allowedProductList.contains(entry.getProduct()))
 				{
 					if (CollectionUtils.isEmpty(restrictionList))
 					{
