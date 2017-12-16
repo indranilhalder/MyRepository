@@ -320,7 +320,7 @@
 									<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-			    							<c:when test="${map.key eq 'TW'}">
+			    							<c:when test="${map.key eq 'PAYTM'}">
 			    								<input type="hidden" id="TW" value="${map.value}" />
 			       								<li>
 				       								<span id="viewPaymentPaytm" onclick="viewPaymentPaytm();">
