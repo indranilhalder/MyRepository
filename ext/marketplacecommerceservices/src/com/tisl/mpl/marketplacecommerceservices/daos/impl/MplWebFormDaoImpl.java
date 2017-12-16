@@ -41,8 +41,8 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 	public List<MplWebCrmModel> getWebCRMParentNodes()
 	{
 		final String queryString = "SELECT {form: " + MplWebCrmModel.PK + " } " + " FROM { " + MplWebCrmModel._TYPECODE
-				+ " AS form}" + "where " + " { form." + MplWebCrmModel.NODETYPE + " }  = ?nodeType order by "
-				+ MplWebCrmModel.SERIALNUM;
+				+ " AS form}" + "where " + " { form." + MplWebCrmModel.NODETYPE + " }  = ?nodeType order by " + "{"
+				+ MplWebCrmModel.SERIALNUM + "}";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("nodeType", "L1");
@@ -59,8 +59,8 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 	public List<MplWebCrmModel> getWebCRMByNodes(final String nodeParent)
 	{
 		final String queryString = "SELECT {form: " + MplWebCrmModel.PK + " } " + " FROM { " + MplWebCrmModel._TYPECODE
-				+ " AS form} " + "where " + " { form." + MplWebCrmModel.NODEPARENT + " }  = ?nodeParent order by "
-				+ MplWebCrmModel.SERIALNUM;
+				+ " AS form} " + "where " + " { form." + MplWebCrmModel.NODEPARENT + " }  = ?nodeParent order by {"
+				+ MplWebCrmModel.SERIALNUM + "}";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("nodeParent", nodeParent);
