@@ -122,6 +122,7 @@
 								</select>
 							</div>
 							<div id="ticketAnswerReply"></div>
+					<span id=form_details>
 							<div class="formGroup">
 								<h3 class="secLabel">Name</h3>
 								<input type="text" class="formControl" placeholder="Enter Your Name" name="contactName" value="${formFields.name}" />
@@ -145,10 +146,6 @@
 							</div>
 							<div class="formGroup">
 								<h3 class="secLabel issueComment">Comment</h3>
-								<!-- <div class="commentLength">Remaining characters:1000</div>
-								<textarea class="formControl textArea" rows="3"
-									placeholder="Describe your issue here." name="comment" maxlength="1000"></textarea>
-								 -->
 								 	<div id="textarea_feedback"></div>	
 									<textarea id="textarea" rows="8" cols="66" maxlength="1000" ></textarea>
 										
@@ -171,6 +168,7 @@
 							<div class="formGroup">
 								<button class="needHelpBtn webfromTicketSubmit" type="submit">Submit</button>
 							</div>
+							</span>
 						</div>
 					</form>
 				</div>

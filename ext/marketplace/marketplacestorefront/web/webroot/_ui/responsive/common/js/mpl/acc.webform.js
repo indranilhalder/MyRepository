@@ -421,8 +421,10 @@ ACC.WebForm = {
 		if (createTicketAllowed==='false' && nodeType.startsWith("nodeL3") && ticketAnswer!=undefined) {
 			//console.log("Answer");
 			$('#ticketAnswerReply').html("<span class='help-text'>Reply: "+ticketAnswer+"</span>");
+			$('#form_details').hide();
 		}else{
 			$('#ticketAnswerReply').html("");
+			$('#form_details').show();
 		}
 		
 		if(createTicketAllowed==='true'){
