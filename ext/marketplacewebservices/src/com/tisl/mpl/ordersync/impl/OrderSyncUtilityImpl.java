@@ -165,7 +165,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -396,7 +396,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			modelService.refresh(childOrder);
 			updateOrderLines(sellerOrder.getOrderLine(), sellerOrder, childOrder);
 			//TPR-7448 Starts here
-			if (getConsignmentStatusMapping().get(shipment.getOlqsStatus()).equals(ConsignmentStatus.ORDER_CANCELLED))
+			if (StringUtils.isNotEmpty(shipment.getOlqsStatus())
+					&& getConsignmentStatusMapping().get(shipment.getOlqsStatus()).equals(ConsignmentStatus.ORDER_CANCELLED))
 			{
 				mplVoucherService.removeCPOVoucherInvalidation(childOrder);
 			}
@@ -1488,8 +1489,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		try
 		{
 			//TISHS-87
-			final InitiateRefundProcessModel initiateRefundProcessModel = (InitiateRefundProcessModel) businessProcessService.createProcess(
-					"autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
+			final InitiateRefundProcessModel initiateRefundProcessModel = (InitiateRefundProcessModel) businessProcessService
+					.createProcess("autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
 			initiateRefundProcessModel.setOrder(orderModel);
 			initiateRefundProcessModel.setRefundTransactionId(refundTransactionId);
 			businessProcessService.startProcess(initiateRefundProcessModel);
