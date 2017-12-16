@@ -3105,7 +3105,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		final VoucherDiscountData data = new VoucherDiscountData();
 		boolean isUserCoupon = false;
 
-		final List<AbstractOrderEntryModel> entryList = new ArrayList<AbstractOrderEntryModel>(abstractOrderModel.getEntries());
+		//final List<AbstractOrderEntryModel> entryList = new ArrayList<AbstractOrderEntryModel>(abstractOrderModel.getEntries());
 
 		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
 
@@ -3117,6 +3117,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final Tuple2<Boolean, String> couponObj = isUserVoucherPresent(voucherList);
 			isUserCoupon = couponObj.getFirst().booleanValue();
 			couponCode = couponObj.getSecond();
+
+			for (final DiscountModel discount : voucherList)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel coupon = (MplCartOfferVoucherModel) discount;
+					data.setLoadOffer(coupon.getCode());
+				}
+			}
 		}
 
 		if (isUserCoupon)
@@ -3129,19 +3138,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					data.setCouponDiscount(
 							getDiscountUtility().createPrice(abstractOrderModel, Double.valueOf(discountVal.getAppliedValue())));
 					data.setCouponRedeemed(true);
-				}
-			}
-		}
-
-
-		if (CollectionUtils.isNotEmpty(entryList))
-		{
-			for (final AbstractOrderEntryModel entry : entryList)
-			{
-				if (StringUtils.isNotEmpty(entry.getCartCouponCode()))
-				{
-					data.setLoadOffer(entry.getCartCouponCode());
-					break;
 				}
 			}
 		}
