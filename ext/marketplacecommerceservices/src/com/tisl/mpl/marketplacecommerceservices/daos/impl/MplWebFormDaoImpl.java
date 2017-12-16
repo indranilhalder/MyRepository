@@ -34,7 +34,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMParentNodes()
 	 */
 	@Override
@@ -52,15 +52,15 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
 	public List<MplWebCrmModel> getWebCRMByNodes(final String nodeParent)
 	{
 		final String queryString = "SELECT {form: " + MplWebCrmModel.PK + " } " + " FROM { " + MplWebCrmModel._TYPECODE
-				+ " AS form} " + "where " + " { form." + MplWebCrmModel.NODEPARENT + " }  = ?nodeParent order by "
-				+ MplWebCrmModel.SERIALNUM;
+				+ " AS form} " + "where " + " { form." + MplWebCrmModel.NODEPARENT + " }  = ?nodeParent order by {"
+				+ MplWebCrmModel.SERIALNUM + "}";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("nodeParent", nodeParent);
@@ -71,7 +71,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -89,7 +89,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
