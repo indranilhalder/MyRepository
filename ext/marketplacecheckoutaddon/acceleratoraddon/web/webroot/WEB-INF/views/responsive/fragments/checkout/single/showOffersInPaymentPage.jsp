@@ -126,10 +126,9 @@
 				<li class="offer" id="offertermspop${status.index}" >
 					<!-- <span class="offerchoosesection"> -->
 						<span class="offer_title">${offerTermsConditionsData.name}
-						<span class="offer_des">10% Discount on Debit & Credit Cards. </span>
+						<span class="offer_des">${offerTermsConditionsData.description}</span>
 						</span>
-						<div>
-						<br><span class="offer_des">${offerTermsConditionsData.description}</span>						
+						<div>				
 						<br><span class="offer_des">${offerTermsConditionsData.termsAndCondition}</span>
 						</div>
 						
@@ -149,10 +148,9 @@
 				<li class="offer" id="offertermspop${status.index}" >
 					<!-- <span class="offerchoosesection"> -->
 						<span class="offer_title">${offerTermsConditionsData.name}
-						<span class="offer_des">10% Discount on Debit & Credit Cards. </span>
+						<span class="offer_des">${offerTermsConditionsData.description}</span>
 						</span>
-						<div>
-						<br><span class="offer_des">${offerTermsConditionsData.description}</span>						
+						<div>					
 						<br><span class="offer_des">${offerTermsConditionsData.termsAndCondition}</span>
 						</div>
 						

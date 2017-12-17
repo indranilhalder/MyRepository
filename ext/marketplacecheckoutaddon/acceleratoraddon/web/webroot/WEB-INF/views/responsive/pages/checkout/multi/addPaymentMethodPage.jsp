@@ -420,6 +420,7 @@
 									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 									                  			<input type="hidden" name="creditCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 									                  			<input type="hidden" name="creditCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
+									                  			<input type="hidden" name="creditCardsRefno" id="creditCardsRefnocc${status.index}" class="card_bank" value="${map.value.cardReferenceNumber}" />
 									                  			<input type="hidden" name="creditIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
 									                  			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
@@ -747,6 +748,7 @@
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 										                   			<input type="hidden" name="debitCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 										                   			<input type="hidden" name="debitCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
+										                   			<input type="hidden" name="debitCardsBanksRefno" id="debitCardsBanksRefnodc${status.index}" class="card_bank" value="${map.value.cardReferenceNumber}" />
 										                   			<input type="hidden" name="debitIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
 										            			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>

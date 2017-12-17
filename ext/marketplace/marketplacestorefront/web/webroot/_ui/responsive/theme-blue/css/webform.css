@@ -577,6 +577,9 @@
 
 
 @media ( max-width :767px) {
+	.content .fab-content{
+    	margin-left: 0px;
+	} 
 	.custmCareHelp .secHeading {
 		text-align: left !important;
 	}
@@ -634,3 +637,11 @@
 	height:0px !important;
 }
 /* TISHS-137 end */
+@media ( max-width :970px) {
+	.page-faq #colorbox{
+		display:block ! important;
+	}
+}
+.page-faq #textarea{
+		width:100%;
+}

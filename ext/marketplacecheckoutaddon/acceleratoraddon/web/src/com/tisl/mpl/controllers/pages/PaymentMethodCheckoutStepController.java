@@ -4225,7 +4225,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @return String
 	 * @throws EtailNonBusinessExceptions
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.CREATEJUSPAYORDER, method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.CREATEJUSPAYORDER, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
