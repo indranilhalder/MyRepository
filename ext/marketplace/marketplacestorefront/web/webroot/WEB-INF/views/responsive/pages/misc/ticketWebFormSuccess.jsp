@@ -17,7 +17,6 @@
 					<div class="querySubmitIcon"></div>
 					<div class="querySubmitInfo">
 						<h2>Your query is submitted successfully!</h2>
-						<p>Reference Number: ${ticketRefId}</p>
 					</div>
 					</div>
 					<p class="summryQuery">
