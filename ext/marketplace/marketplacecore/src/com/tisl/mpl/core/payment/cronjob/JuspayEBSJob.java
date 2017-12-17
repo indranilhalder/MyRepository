@@ -122,41 +122,53 @@ public class JuspayEBSJob extends AbstractJobPerformable<CronJobModel>
 
 			for (final MplPaymentAuditModel audit : emptyRiskAuditList)
 			{
-				if (null != audit.getRequestDate() && null != ebsjobTATOne && StringUtils.isNotEmpty(ebsjobTATOne.toString())
-						&& null != cronModel && null != cronModel.getStartTime())
+				try
 				{
-					isTAT1Expired = checkIfTATExpired(audit.getRequestDate(), ebsjobTATOne, cronModel.getStartTime());
-				}
-				else
-				{
-					isTAT1Expired = true;
-				}
-				if (null != audit.getCartGUID())
-				{
-					final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
-					if (null != oModel)
+					if (null != audit.getRequestDate() && null != ebsjobTATOne && StringUtils.isNotEmpty(ebsjobTATOne.toString())
+							&& null != cronModel && null != cronModel.getStartTime())
 					{
-						//SDI-2922
-						if(oModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+						isTAT1Expired = checkIfTATExpired(audit.getRequestDate(), ebsjobTATOne, cronModel.getStartTime());
+					}
+					else
+					{
+						isTAT1Expired = true;
+					}
+					if (null != audit.getCartGUID())
+					{
+						final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
+						if (null != oModel)
 						{
-							setAuditExpiredIfNoError(errorFlag, audit);
-						}
-						else
-						{
-							if (!isTAT1Expired)
+							//SDI-2922
+							if(oModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 							{
-								executeProcess(audit, oModel);
+								setAuditExpiredIfNoError(errorFlag, audit);
 							}
 							else
 							{
-								LOG.debug("OMS CALL TO APROVE ORDER");
+								if (!isTAT1Expired)
+								{
+									executeProcess(audit, oModel);
+								}
+								else
+								{
+									LOG.debug("OMS CALL TO APROVE ORDER");
 
-								getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
-								errorFlag = getJuspayEBSService().initiateProcess(oModel);
-								setAuditExpiredIfNoError(errorFlag, audit);
+									getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
+									errorFlag = getJuspayEBSService().initiateProcess(oModel);
+									setAuditExpiredIfNoError(errorFlag, audit);
+								}
 							}
 						}
+						else
+						{
+							setAuditExpiredIfNoError(errorFlag, audit);
+						}
 					}
+				}
+				catch(Exception e)
+				{
+					LOG.error("Exception while empty risk order audit : " + audit.getAuditId()) ;
+					LOG.error(e.getMessage());
 				}
 			}
 		}
@@ -244,55 +256,70 @@ public class JuspayEBSJob extends AbstractJobPerformable<CronJobModel>
 			LOG.debug("Fetched Audit Entries with Status REVIEW");
 			for (final MplPaymentAuditModel audit : auditList)
 			{
-				isCompleted = checkAuditEntryStatus(audit);
-				if (!isCompleted)
+				try
 				{
-					getOrderStatusResponse = getJuspayEBSService().getOrderStatusFromJuspay(audit.getAuditId());
-					if (null != audit.getRequestDate() && null != cronModel && null != cronModel.getStartTime())
+					isCompleted = checkAuditEntryStatus(audit);
+					if (!isCompleted)
 					{
-						isExpired = checkIfTATExpired(audit.getRequestDate(), ebsjobTAT, cronModel.getStartTime());
-						final Boolean isMailSent = audit.getIsNotificationSent();
-
-						//For sending alert to Payment User Group when EBS TAT is about to expire
-						final boolean isSuccessful = notifyPaymentUserGroup(audit.getAuditId(), audit.getRequestDate(), ebsjobTAT,
-								tatForAlert, date, isMailSent);
-
-						if (isSuccessful)
+						getOrderStatusResponse = getJuspayEBSService().getOrderStatusFromJuspay(audit.getAuditId());
+						if (null != audit.getRequestDate() && null != cronModel && null != cronModel.getStartTime())
 						{
-							audit.setIsNotificationSent(Boolean.TRUE);
-							modelService.save(audit);
-						}
+							isExpired = checkIfTATExpired(audit.getRequestDate(), ebsjobTAT, cronModel.getStartTime());
+							final Boolean isMailSent = audit.getIsNotificationSent();
 
-						//SDI-2922
-						if(null != audit.getCartGUID())
-						{
-							final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
+							//For sending alert to Payment User Group when EBS TAT is about to expire
+							final boolean isSuccessful = notifyPaymentUserGroup(audit.getAuditId(), audit.getRequestDate(), ebsjobTAT,
+									tatForAlert, date, isMailSent);
+
+							if (isSuccessful)
+							{
+								audit.setIsNotificationSent(Boolean.TRUE);
+								modelService.save(audit);
+							}
 
 							//SDI-2922
-							if(null != oModel && oModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+							if(null != audit.getCartGUID())
 							{
-								setAuditExpiredIfNoError(errorFlag, audit);
-							}
-							else
-							{
-								if (isExpired)
+								final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
+								//TISPRDT-7769
+								if(null != oModel)
 								{
-									LOG.debug("OMS CALL TO APROVE ORDER");
-
-									getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
-									errorFlag = getJuspayEBSService().initiateProcess(oModel);
-									setAuditExpiredIfNoError(errorFlag, audit);
-								}
-								else
-								{
-									if (null != getOrderStatusResponse)
+									//SDI-2922
+									if(oModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 									{
-										getJuspayEBSService().actionOnResponse(getOrderStatusResponse, audit);
+										setAuditExpiredIfNoError(errorFlag, audit);
+									}
+									else
+									{
+										if (isExpired)
+										{
+											LOG.debug("OMS CALL TO APROVE ORDER");
+
+											getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
+											errorFlag = getJuspayEBSService().initiateProcess(oModel);
+											setAuditExpiredIfNoError(errorFlag, audit);
+										}
+										else
+										{
+											if (null != getOrderStatusResponse)
+											{
+												getJuspayEBSService().actionOnResponse(getOrderStatusResponse, audit);
+											}
+										}
 									}
 								}
 							}
+							else
+							{
+								setAuditExpiredIfNoError(errorFlag, audit);
+							}
 						}
 					}
+				}
+				catch(Exception e)
+				{
+					LOG.error("Exception while processing held order audit : " + audit.getAuditId()) ;
+					LOG.error(e.getMessage());
 				}
 			}
 		}
