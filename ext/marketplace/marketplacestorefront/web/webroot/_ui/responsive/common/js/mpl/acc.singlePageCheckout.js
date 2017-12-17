@@ -3510,6 +3510,8 @@ ACC.singlePageCheckout = {
 	 			if(response.couponDiscount.value != 0){
 					$("#promotionApplied").css("display","block");
 					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				} else {
+					$("#promotionApplied").css("display","none");
 				}
 	 			$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
 	 			$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
