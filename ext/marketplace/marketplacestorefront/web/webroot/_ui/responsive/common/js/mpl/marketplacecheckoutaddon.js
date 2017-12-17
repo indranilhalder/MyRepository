@@ -8771,7 +8771,7 @@ $("#couponSubmitButton").click(function(){
 	$(this).css("opacity","0.5");
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
 			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
-			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
+			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #sellerCouponError, #orderThresholdError,#invalidChannelError").css("display","none");
 	if($("#couponFieldId").val()==""){
 		$("#emptyCouponError").css("display","block");	
 		// document.getElementById("couponError").innerHTML="Please enter a
@@ -8875,6 +8875,14 @@ $("#couponSubmitButton").click(function(){
 	 				{
 	 					$("#notApplicableCouponError").css("display","block");
 	 				}
+	 				else if(response.redeemErrorMsg=="sellerViolated")
+	 				{
+	 					$("#sellerCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="orderViolated")
+	 				{
+	 					$("#orderThresholdError").css("display","block");
+	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");
 	 				dtmCouponCheck("invalid_coupon",couponCode);
@@ -8966,7 +8974,7 @@ $("#couponFieldId").focus(function(){
 	//TPR-4460 changes -- invalidChannelError id added
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
 			" #expiredCouponError, #issueCouponError, #notApplicableCouponError," +
-			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
+			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError,#sellerCouponError,#orderThresholdError, #invalidChannelError").css("display","none");
 });
 
 
@@ -11301,19 +11309,22 @@ function tokenizeJuspayCard(paymentMode)
 	
 	var url=$("#juspayBaseUrl").val();
 	var token="";
-	$.ajax({
-		url: url+"/card/tokenize",
-		type: "POST",
-		data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code},
-		cache: false,
-		async:false,
-		success : function(response) {
-			token=response.token;
-		},
-		error : function(resp) {
-			console.log("Error in fetching token for juspay")
-		}
-	});
+	if(url!="")
+	{
+		$.ajax({
+			url: url+"/card/tokenize",
+			type: "POST",
+			data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code},
+			cache: false,
+			async:false,
+			success : function(response) {
+				token=response.token;
+			},
+			error : function(resp) {
+				console.log("Error in fetching token for juspay")
+			}
+		});
+	}
 	return token;
 }
 //Codes with C are for CartCoupon, With P are for promotional voucher

@@ -32,6 +32,7 @@ import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.NewCustomerRestrictionModel;
+import de.hybris.platform.voucher.model.OrderRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
@@ -66,6 +67,7 @@ import com.tisl.mpl.model.ChannelRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.model.SellerRestrictionModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 import com.tisl.mpl.wsdto.OfferListWsData;
 import com.tisl.mpl.wsdto.OfferResultWsData;
@@ -398,8 +400,16 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							final String error = checkViolatedRestrictions(voucher, cartModel);
 							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.SELLERVIOLATION))
+							{
+								throw new VoucherOperationException(error);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDERTHRESHOLD))
+							{
+								throw new VoucherOperationException(error);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
 							{
@@ -722,6 +732,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final List<RestrictionModel> getViolatedRestrictions = getVoucherModelService().getViolatedRestrictions(voucher,
 				abstractOrderModel);
 		String error = null;
+
 		for (final RestrictionModel restriction : getViolatedRestrictions)
 		{
 			if (restriction instanceof DateRestrictionModel)
@@ -742,6 +753,18 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				LOG.error(MarketplacecommerceservicesConstants.NEWUSERRESTVIOLATION);
 				error = MarketplacecommerceservicesConstants.NEWCUSTOMER;
+				break;
+			}
+			else if (restriction instanceof SellerRestrictionModel)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.SELLERVIOLATION);
+				error = MarketplacecommerceservicesConstants.SELLERVIOLATION;
+				break;
+			}
+			else if (restriction instanceof OrderRestrictionModel)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.ORDERRESTRICTION);
+				error = MarketplacecommerceservicesConstants.ORDERTHRESHOLD;
 				break;
 			}
 			/* TPR-1075 Changes End */

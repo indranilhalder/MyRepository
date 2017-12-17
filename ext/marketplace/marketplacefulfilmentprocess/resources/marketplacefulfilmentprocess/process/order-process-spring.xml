@@ -114,4 +114,10 @@
 	</bean>
 	<!-- TPR-5989 Ends -->
 
+
+   	<!-- SDI 3591 -->
+	<bean id="cODReturnOMSSyncAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.CODReturnOMSSyncAction"  parent="abstractAction"/>
+   	<!-- SDI 3591 -->
+
+
 </beans>

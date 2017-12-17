@@ -214,7 +214,7 @@
 		</property>
 	</bean>
 	<bean id="batchManualRefundOrderAttributeConverterFollowOnHistory"
-		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexOrderHistoryConverter">
 		<property name="header">
 			<value>
                   #% impex.enableCodeExecution( true );

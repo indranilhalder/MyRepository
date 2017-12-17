@@ -8,7 +8,9 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
@@ -275,7 +277,13 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 									//		pincodereqObj.setStore(reqStreNames);
 								}
 							}
-							pincodereqObj.setDeliveryMode(deliveryModes);
+							//TISHS-133 Starts
+							final Set<String> s = new HashSet<String>();
+							s.addAll(deliveryModes);
+							final List<String> deliveryModesList = new ArrayList<String>();
+							deliveryModesList.addAll(s);
+							//TISHS-133 Ends
+							pincodereqObj.setDeliveryMode(deliveryModesList);
 						}
 						if (null != pincodeServiceData.getIsDeliveryDateRequired())
 						{

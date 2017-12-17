@@ -1833,7 +1833,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYBASEURL,
-				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYBASEURL));//TPR-7448
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));//TPR-7448
 
 	}
 
@@ -5701,7 +5701,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

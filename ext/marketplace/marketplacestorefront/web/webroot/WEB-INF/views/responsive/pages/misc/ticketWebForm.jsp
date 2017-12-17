@@ -16,11 +16,9 @@
 
 	<div class="customer-service">
 
-		<div class="side-nav">
-			<cms:pageSlot position="Section2A" var="comp">
-				<cms:component component="${comp}" />
-			</cms:pageSlot>
-		</div>
+		<cms:pageSlot position="Section2A" var="comp">
+			<cms:component component="${comp}" />
+		</cms:pageSlot>
 		<%-- <cms:pageSlot position="Section2B" var="com">
 			<cms:component component="${com}" />
 		</cms:pageSlot>  --%>
@@ -63,7 +61,16 @@
 									<c:if test="${l1Node.nodeType eq 'L1'}">
 										<div class="queryOptRadio">
 											<label> 
-												<input type="radio" name="nodeL1" class="node formControl" nodcheck="${l1Node.nodeCode eq tiketL1Check}" value="${l1Node.nodeCode}">
+												<c:choose>
+													<c:when test="${l1Node.nodeCode eq tiketL1Check}">
+														<input type="radio" name="nodeL1" class="node formControl" nodcheck="true" value="${l1Node.nodeCode}" checked>
+													</c:when>
+													<c:otherwise>
+														<input type="radio" name="nodeL1" class="node formControl" nodcheck="false" value="${l1Node.nodeCode}">
+													</c:otherwise>
+												</c:choose>
+												
+												
 												<span></span>
 												${l1Node.nodeDesc}
 											</label>
@@ -115,10 +122,10 @@
 								</select>
 							</div>
 							<div id="ticketAnswerReply"></div>
+					<span id=form_details>
 							<div class="formGroup">
 								<h3 class="secLabel">Name</h3>
-								<input type="text" class="formControl" placeholder="Enter Your Name" 
-								name="contactName" value="${formFields.name}" />
+								<input type="text" class="formControl" placeholder="Enter Your Name" name="contactName" value="${formFields.name}" />
 							</div>
 							<div class="emalIdMobileFeild">
 								<div class="feildCols">
@@ -139,16 +146,18 @@
 							</div>
 							<div class="formGroup">
 								<h3 class="secLabel issueComment">Comment</h3>
-								<div class="commentLength">Remaining characters:1000</div>
-								<textarea class="formControl textArea" rows="3"
-									placeholder="Describe your issue here." name="comment" maxlength="1000"></textarea>
+								 	<div id="textarea_feedback"></div>	
+									<textarea id="textarea" rows="8" cols="66" maxlength="1000" ></textarea>
+										
+									
 							</div>
 							<div class="formGroup" id="fileSubmit">
 								<h3 class="secLabel">Add attachment (Optional)</h3>
 								<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 									upload size 5MB)</p>
 								<div class="uploadFile">
-									<span>Upload File</span> 
+									<span>Upload File</span>
+									<span id= "file_success_message"  style="display:none"></span>
 									<input id="attachmentFile" type="file" name="uploadFile" multiple />
 									<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 								</div>
@@ -160,6 +169,7 @@
 							<div class="formGroup">
 								<button class="needHelpBtn webfromTicketSubmit" type="submit">Submit</button>
 							</div>
+							</span>
 						</div>
 					</form>
 				</div>
