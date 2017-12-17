@@ -873,14 +873,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 			//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
 
-			final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
-
+			//	final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
+			discountValue = cartModel.getTotalDiscounts();// TSHIP SHIPPING CHARGE
 
 			////TISST-13010
-			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
-			{
-				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
-			}
+			//			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
+			//			{
+			//				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
+			//			}
 
 			totalPrice = subtotal + delCharge + sdCharge - discountValue.doubleValue();
 
