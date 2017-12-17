@@ -1,5 +1,6 @@
 package com.tisl.mpl.cockpits.services.config.impl;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +24,7 @@ public class ChargeBackStatus extends AbstractSimpleCustomColumnConfiguration <S
 			final PaymentTransactionEntryModel paymentEntry = (PaymentTransactionEntryModel) itemModel;
 			final PaymentTransactionModel paymentTransMod = paymentEntry.getPaymentTransaction();
 			
-			if(paymentEntry != null && paymentEntry.getAmount() !=null && paymentEntry.getAmount().equals(Double.valueOf(0.00))){
+			if(paymentEntry != null && paymentEntry.getAmount() !=null && paymentEntry.getAmount() == new BigDecimal(0.00)){
 				paymentstatus = PAYMENT_STATUS;
 			}
 			else
