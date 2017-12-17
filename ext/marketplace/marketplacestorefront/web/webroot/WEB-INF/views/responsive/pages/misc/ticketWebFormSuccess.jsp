@@ -5,7 +5,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<div class="custmCareHelp">
+<div class="custmCareHelp custmCareHelp-success">
 	<div class="issueQuryPopUp">
 		<div class="issueQuryPopBox">
 			<button class="closeBtn" id="closeCustCarePopBox" onclick="ACC.WebForm.closeWebForm();">X</button>
