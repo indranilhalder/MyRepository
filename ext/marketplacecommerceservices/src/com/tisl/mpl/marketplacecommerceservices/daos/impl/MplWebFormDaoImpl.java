@@ -34,7 +34,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMParentNodes()
 	 */
 	@Override
@@ -52,7 +52,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
@@ -71,7 +71,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -89,7 +89,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
@@ -102,20 +102,15 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 				+ " AS form } " + " where { form." + MplWebCrmTicketModel.L0CODE + " }  = ?L0code " + " AND { form."
 				+ MplWebCrmTicketModel.L1CODE + " }  = ?L1code " + " AND { form." + MplWebCrmTicketModel.L2CODE + " }  = ?L2code "
 				+ " AND { form." + MplWebCrmTicketModel.L3CODE + " }  = ?L3code " + " AND { form." + MplWebCrmTicketModel.L4CODE
-				+ " }  = ?L4code " + " AND { form." + MplWebCrmTicketModel.CUSTOMERNAME + " }  = ?customerName " + " AND { form."
-				+ MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail ";
-
+				+ " }  = ?L4code " + " AND { form." + MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail ";
+		//TISHS-172
 		if (StringUtils.isNotEmpty(formData.getOrderCode()) && StringUtils.isNotEmpty(formData.getSubOrderCode())
 				&& StringUtils.isNotEmpty(formData.getTransactionId()))
 		{
-			queryString = queryString + " OR ( { form." + MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode " + " AND { form."
+			queryString = queryString + " AND  { form." + MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode " + " AND { form."
 					+ MplWebCrmTicketModel.SUBORDERCODE + " }  = ?subOrderCode " + " AND { form." + MplWebCrmTicketModel.TRANSACTIONID
-					+ " }  = ?transactionId )";
+					+ " }  = ?transactionId ";
 		}
-
-
-
-
 
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);

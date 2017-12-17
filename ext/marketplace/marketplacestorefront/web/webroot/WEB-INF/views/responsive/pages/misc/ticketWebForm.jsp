@@ -147,7 +147,7 @@
 							<div class="formGroup">
 								<h3 class="secLabel issueComment">Comment</h3>
 								 	<div id="textarea_feedback"></div>	
-									<textarea id="textarea" rows="8" cols="66" maxlength="1000" ></textarea>
+									<textarea id="textarea" rows="8" cols="66" maxlength="1000" name="comment"></textarea>
 										
 									
 							</div>
