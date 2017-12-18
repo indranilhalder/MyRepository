@@ -224,7 +224,7 @@ ACC.WebForm = {
 	loadOrderLines : function(currentPage) {
 		var htmlOption="";
 		$.ajax({
-			url : ACC.config.encodedContextPath+ "/ticketForm/webOrderlines",
+			url : ACC.config.encodedContextPath+ "/ticketForm/webOrderlines?page="+currentPage,
 			type : 'GET',
 			success : function(data) {
 				if( $.isArray(data.orderLineDatas) && data.orderLineDatas.length ) {
@@ -238,55 +238,50 @@ ACC.WebForm = {
 												"<div class='prodTxt'>"+
 													"<p class='orderDate'>Order on: "+ dataLine.orderDate+"</p>"+
 													"<p class='prodName'>"+dataLine.prodTitle +"</p>"+
-													"<p class='prodPrice'>Price: "+ dataLine.prodTotalPrice+"</p>"+
-													"<span class='prodShiping'>"+dataLine.customerOrderStatus+"</span>"+
-												"</div></div></li>";
+													"<p class='prodPrice'>Price: "+ dataLine.prodTotalPrice+"</p>";
+													if(dataLine.customerOrderStatus1!='null'){
+														htmlOption +="<span class='prodShiping'>"+dataLine.customerOrderStatus+"</span>";
+													}
+													htmlOption +="</div></div></li>";
 						
 					});
-					
+					//call default first page
+					//call default first page
 					$(".orderDrop").html(htmlOption);
 					ACC.WebForm.attachOrderDropEvent();
+					ACC.WebForm.loadPaginationLink();
+										
 				}
 				$("#totalPages").val(data.totalOrderLines);
-				$("#currentPage").val(currentPage);
-				// no of orderlins in one page
-				if(parseInt(data.totalOrderLines) > 5){
-					$('#viewMoreLink').show();
-				}else{
-					$('#viewMoreLink').hide();
-				}
-				if(parseInt(currentPage) > 1 ){
-					$('#viewBackLink').show();
-				}else{
-					$('#viewBackLink').hide();
-				}
-				
 				
 			},
 			error : function(resp) {
-				console.log("Error in crmChildNodes"+ resp);
+				console.log("Error in loadOrderLines"+ resp);
 			}
 		});
 	},
 	loadPaginationLink : function() {
 		var current=$('#currentPage').val();
 		var total=$('#totalPages').val();
-		
+		//TISPRDT-7759
 		if ( $(".selectOrderSec").length ) {
+			
 			if(parseInt(total) <= parseInt(current) ){
-				$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+parseInt(current + 1)+"');");
+				$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+(current + 1)+"');");
+				$('#viewMoreLink').show();
+				$('#currentPage').val(current+1);
 			}else{
 				$('#viewMoreLink').hide();
 			}
 			
 			if(parseInt(current) > 1){
-				$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+parseInt(current - 1)+"');");
+				$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+(current - 1)+"');");
+				$('#viewBackLink').show();
+				$('#currentPage').val(current-1);
 			}else{
 				$('#viewBackLink').hide();
 			}
-			//call default first page
-			ACC.WebForm.loadOrderLines(current);
-			ACC.WebForm.attachOrderDropEvent();
+			
 		}
 	},
 	attachOrderDropEvent : function(){
@@ -445,9 +440,11 @@ $(document).ready(function() {
 	ACC.WebForm.issueDropDown();
 	ACC.WebForm.nodeDropdown($("input[name=nodeL1]:checked"));
 	ACC.WebForm.sendTicket();
-	ACC.WebForm.loadPaginationLink();
-	//ACC.WebForm.attachOrderDropEvent();
+	
 	ACC.WebForm.attachSelectEvent();
+	ACC.WebForm.loadOrderLines("0");
+	
+	
 	
 	$('.contCustCareBtn').click(function(){
 		$(this).toggleClass('dActive');

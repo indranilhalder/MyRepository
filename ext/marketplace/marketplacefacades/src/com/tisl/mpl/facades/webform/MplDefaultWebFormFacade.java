@@ -76,7 +76,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -153,7 +153,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -234,7 +234,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -437,9 +437,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 							{
 								orderLine.setProdTitle(line.getProduct().getName());
 							}
-							if (StringUtils.isNotEmpty(line.getCustomerOrderStatusDisplay()))
+							//TISPRDT-7784
+							if (line.getConsignment() != null && StringUtils.isNotEmpty(line.getConsignment().getStatusDisplay()))
 							{
-								orderLine.setCustomerOrderStatus(line.getCustomerOrderStatusDisplay());
+								orderLine.setCustomerOrderStatus(line.getConsignment().getStatusDisplay());
 							}
 
 							orderLines.add(orderLine);
