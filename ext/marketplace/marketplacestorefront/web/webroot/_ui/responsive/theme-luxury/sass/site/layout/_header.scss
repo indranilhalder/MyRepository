@@ -202,6 +202,9 @@ ul.tabs{
                         font-style: normal;
                         display: block;
                         font-weight: normal;
+                        font-weight: 400;
+                        font-size: 11px;
+                        text-transform: uppercase;
                     }
                    /* padding-left: 30px;*/
 
@@ -228,10 +231,10 @@ ul.tabs{
                 .wishlist-mob{
                     
                     .wishlist{                        
-                        position: relative;
-                        padding-left: 0px;
+                        position: relative;                        
+                        padding: 5px 0px;
                         
-                        &:before{
+                       /* &:before{
                             position: absolute;
                             content: ' ';
                             top:13px;
@@ -240,10 +243,15 @@ ul.tabs{
                             height: 20px;
                             background-image: $Sprite_icon;
                             background-position: -2680px 0;
-                        }
+                        }*/
 
                     }
                         
+                }
+                .account-mob{
+                    a{
+                       padding: 5px 0px; 
+                    }
                 }
 
                 .mob-login{
