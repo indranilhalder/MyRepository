@@ -1,4 +1,4 @@
-<%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/pwamp/footer"%>
+<%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/common/footer"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html amp>
@@ -15,13 +15,22 @@
 <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
 <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>
 <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
+<script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
 <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
+<script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
 <!--AMP HTML files require a canonical link pointing to the regular HTML. If no HTML version exists, it should point to itself.-->
 <link rel="canonical" href="/pwamp">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link rel="manifest" href="/manifest.json">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" > -->
+<!-- jQuery library -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- Latest compiled JavaScript -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
 <style amp-custom>body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFFFFF;}
 
@@ -66,6 +75,7 @@ header{
 	display:block;
 	font-size:14px;
 	background-color:transparent;
+  border: none;
 }
 
 .header-icon-1 {z-index: 10;}
@@ -85,7 +95,7 @@ header{
 }
 
 .header-clear{
-	height:98px;
+	height:60px;
 }
 
 /*Footer*/
@@ -217,11 +227,12 @@ padding-top:0px;
 	float: right;
 }
 
-.header-navigation-right ul li {list-style-type: none; display: inline-block; padding: 10px 15px;; font-size: 12px;}
+.header-navigation-right ul li {list-style-type: none; display: inline-block; padding: 10px; font-size: 12px;}
 .header-navigation-right ul {line-height: normal; margin: 0;}
 .header-navigation-right ul li a {letter-spacing: .6px; color: #fff;}
 .logo-image {
 	left: 40px;
+  top: 5px;
 }
 
 .header-icon-3{
@@ -242,9 +253,30 @@ padding-top:0px;
 }
 
 .header-search-center {
-	width: 40%;
+	width: 50%;
 	float: right;
 }
+
+.department-menu {
+	width: 150px;
+	float: left;
+	border: 1px solid #ddd;
+	text-align: left;
+	height: 36px;
+	font-size: 12px;
+}
+
+.department-menu > span {padding: 10px; width: 100%; line-height: 36px;}
+
+.department-menu i  {float: right; padding-right: 10px;  line-height: 36px;}
+
+.department-menu-items {display: none; margin: 0; border: 1px solid #ddd; background-color: #fff;}
+
+.department-menu-items li {list-style-type: none; line-height: 38px; cursor: pointer; padding-left: 10px;}
+
+.department-menu-items li:hover {color: #fff; background-color: #a9143c;}
+
+.department-menu:hover .department-menu-items {display: block;}
 
 .header-search-center p {}
 
@@ -269,21 +301,24 @@ padding-top:0px;
 .header-search-input {
   display: inline;
   border: 1px solid #ddd;
+	border-left: none;
   padding: 10px;
-  width: 70%;
+  width: 60%;
+	height: 16px;
+	float: left;
 }
 
-.header-search-btn {padding: 10px; background-color: #444; border: 1px solid #444; color: white;}
+.header-search-btn {padding: 10px; background-color: #f8f8f8; border: 1px solid #ddd; border-left: none; cursor: pointer; height: 38px; float: left; width: 60px;}
 
 .shop-by-department, .shop-by-brand {display: none; height: 500px; width: 100%; position: absolute; border-top: 1px solid #ddd; background: #fff; z-index: 1; left: 0; top: 60px;}
 
 .shop-by-department-l2, .shop-by-brand-l2 {width: 17%; float: left; background: #f6f6f6; height: inherit;}
 
-.shop-by-department-l2 > ul, .shop-by-brand-l2 > ul {margin: 0;}
+.shop-by-department-l2 ul, .shop-by-brand-l2 ul {margin: 0;}
 
-.shop-by-department-l2 > ul > li, .shop-by-brand-l2 > ul > li {list-style-type: none; font-size: 16px; padding: 10px 20px;}
+.shop-by-department-l2 ul li, .shop-by-brand-l2 ul li {list-style-type: none; font-size: 14px; padding: 10px 20px;}
 
-.shop-by-department-l2 > ul > li:hover, .shop-by-brand-l2 > ul > li:hover {background-color: #444; color: white;}
+.shop-by-department-l2 ul li:hover, .shop-by-brand-l2 ul li:hover {background-color: #444; color: white;}
 
 .shop-department:hover > #shop_by_department, .shop-brand:hover > #shop_by_brand {display: block;}
 
@@ -362,7 +397,75 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 	margin-left: -20px;
 }
 
-@media(max-width: 748px) {
+/*Autocomplete*/
+.suggest {width: 31%; margin-left: 152px; position: absolute; top: 48px;}
+
+.suggest amp-selector {margin: 0; padding: 0; text-align: left;}
+.suggest amp-list {background-color: #fff;}
+
+.autosuggest-container {
+  position: relative;
+}
+
+.autosuggest-box {
+  position: absolute;
+  width: 100%;
+  /* make the overlay opaque */
+  background-color: #fafafa;
+}
+
+.autosuggest-box amp-selector {padding: 10px 15px;}
+.autosuggest-box > div {overflow: auto;}
+
+.select-option.no-outline[selected] {
+  outline: initial;
+}
+
+.select-option a {color: #000;}
+
+.hidden {
+  display: none;
+}
+
+.search-submit {
+  margin: 10px 0;
+  padding: .5em 1em;
+  color: #444;
+  border: 1px solid #999;
+  background-color: #fafafa;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.autosuggest-box {
+  box-shadow: 0px 2px 6px rgba(0,0,0,.3);
+}
+
+.select-option {
+  box-sizing: border-box;
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+.select-option:hover {
+  background-color: #ddd;
+}
+
+.select-option.empty {
+  text-align: center;
+}
+/*Autocomplete*/
+
+.signup-lightbox {
+	float: right;
+	width: 400px;
+	border: 1px solid #ddd;
+	margin-top: 36px;
+	background-color: #fff;
+}
+
+@media(max-width: 480px) {
 	.desktop-item {
 		display: none;
 	}
@@ -371,10 +474,24 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 	}
 	.header-search-center {
 		width: 100%;
-		padding-top: 10px;
+		padding-top: 0;
 		/*ToggleSearch*/
-		display: none;
 	}
+
+  .suggest {
+    width: auto;
+    margin: 0;
+    top: 98px;
+    right: 44px;
+    left: 16px;
+  }
+
+  header {border-bottom: 1px solid #ddd;}
+
+  .header-search-input {
+    width: calc(100% - 110px);
+    border-left: 1px solid #ddd;
+  }
 
 	.logo-container {
 		width: 100%;
@@ -387,19 +504,31 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 }
 
 @media (max-width: 480px) {
-	#topDealsCompCarousel amp-carousel, #whatToBuyCompCarousel amp-carousel, #newInCompCarousel amp-carousel, #hotNowCompCarousel amp-carousel {
+	#topDealsCompCarousel amp-carousel, #whatToBuyCompCarousel amp-carousel, #hotNowCompCarousel amp-carousel {
 		/*give important*/
 		max-height: 180px;
 	}
 
-  #topDealsCompCarousel amp-list, #whatToBuyCompCarousel amp-list, #newInCompCarousel amp-list, #hotNowCompCarousel amp-list {
+  #topDealsCompCarousel amp-list, #whatToBuyCompCarousel amp-list, #hotNowCompCarousel amp-list {
 		/*give important*/
 		max-height: 180px;
 	}
 }
 
+.shop-promos {
+	height: 100px;
+}
+
+.shop-promos > ul {margin: 0; display: flex;}
+
+.shop-promos > ul> li {width: 20%; list-style-type: none; border: 1px solid #ddd; border-left: none;
+	text-align: center; padding: 10px 0; font-size: 12px; display: table-cell; float: left; position: relative;}
+
+.shop-promos > ul> li > a {color: #444;}
+.shop-promos > ul> li > a:hover {color: #a9143c;}
+
 /*Top Deals*/
-.topDealsTopSection {padding: 0px 20px;}
+.topDealsTopSection {padding: 0px 15px;}
 
 .topDealsItem {
 	width: 232px; height: 320px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
@@ -439,7 +568,7 @@ p {margin: 0;}
 	.brandStudioBottom {display: none;}
 	.homeViewAllBtn a {display: block; font-size: 14px;}
 	.homeViewHeading {text-align: left; font-size: 18px; padding-bottom: 5px;}
-	.brandStudioTop {padding: 0px 20px;}
+	.brandStudioTop {padding: 0px 15px;}
 	.brandsYouLove {margin: 20px;}
 	#brandsYouLove {display: none;}
 	#brandsYouLoveMobileComp {display: block; background-color: #f2f2f2; padding: 5px 0px 15px;}
@@ -447,7 +576,7 @@ p {margin: 0;}
 	.brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 	.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left;}
 	.brandStudioDescHeading {font-size: 13px;}
-	.brandStudioDescInfo {font-size: 12px; color: #666666;white-space: pre-line;}
+	.brandStudioDescInfo {font-size: 12px; color: #666666;white-space: pre-line; max-height: 60px;}
 	.brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
 	.amp-scrollable-carousel-slide:first-child {
@@ -459,30 +588,26 @@ p {margin: 0;}
 }
 
 /*What To Buy Now*/
-.whatToBuyTopSection {padding: 0px 20px;}
+.whatToBuyTopSection {padding: 0px 15px;}
 
 .whatToBuyItem {
-	width: 300px; height: 400px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
+	width: 300px; height: 400px; margin: 0px; padding: 0 5px;
 }
+
+.whatToBuyItem:first-child {padding-left: 0;}
 
 .whatToBuyItemImg, .whatToBuyItemImg a {height: inherit;}
 #whatToBuyComp {display: block; padding: 10px 0px 20px; padding: 20px 60px;}
 
 @media(max-width: 480px) {
-	#whatToBuyComp {padding: 5px 0px 15px;}
-	.whatToBuyItem {width: 140px; height: 180px;}
+	#whatToBuyComp {padding: 5px 0px;}
+	.whatToBuyItem {width: 128px; height: 160px;}
 }
 
 /*New In*/
-.newInTopSection {padding: 0px 20px;}
-
-.newInItem {
-	width: 180px; height: 320px; margin: 0px 12px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
-}
+.newInTopSection {padding: 0px 15px;}
 
 .compContainer {width: 100%;}
-.newInItemImg {height: 85%;}
-.newInItemImg a {height: inherit;}
 #newInComp {display: block; padding: 10px 0px 20px; padding: 20px 60px; width: 43%; float: left;}
 
 .newInDesc {padding: 0 5px;}
@@ -492,34 +617,36 @@ p {margin: 0;}
 
 @media(max-width: 480px) {
 	#newInComp {padding: 5px 0px 15px; width:100%;}
-	.newInItem {width: 120px; height: 180px;}
+	.newInItem {width: 140px; height: 200px; margin: 0; padding: 0 5px;}
 }
 
-/*Stay Qued*/
+/*Stay Qued && Inspire Me Mobile*/
 .stayOne {width: 50%; float: left; padding: 10px;}
 .stayTwo {width: 40%; float: left; padding: 10px;}
 
-.stayQuedTopSection {padding: 0px 20px;}
+.stayQuedTopSection, .inspireMeMobileTopSection {padding: 0px 15px;}
 
 .stayQuedItemImg {height: inherit;}
-#stayQuedComp {display: block; padding: 10px 20px 10px 0; width: 45%; float: left;}
-.stayQuedCenter {background-color: #f2f2f2; height:320px; padding: 0 0 0 10px;}
+#stayQuedComp, #inspireMeMobileComp {display: block; padding: 10px 20px 10px 0; width: 45%; float: left;}
+.stayQuedCenter {background-color: #f2f2f2; padding: 0 0 0 10px;}
 
 .stayQuedBottom {display: block; text-align: center; padding: 10px;}
 .stayQuedBottom a {display: -webkit-inline-box;}
 .stayQuedViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white; cursor: pointer;}
 
 @media(max-width: 480px) {
-	#stayQuedComp {padding: 5px 0px 15px; width: 100%;}
-	.stayQuedHeading {font-size: 18px;}
+	#stayQuedComp, #inspireMeMobileComp {background-color: #f2f2f2; padding: 5px 0px 15px; width: 100%;}
+	.stayQuedHeading {font-size: 13px; line-height: 1.25; text-transform: uppercase; letter-spacing: .6px; color: #000; margin-bottom: 8px;}
 	.stayQuedViewAllBtn {padding: 5px 15px;}
-	.stayOne {float: right;}
-	.stayOne, .stayTwo {padding: 10px; width: 42%;}
-	.stayQuedCenter {padding: 0 10px 0 0;}
+	.stayOne, .stayTwo {padding: 0px; width: 50%; float: left;}
+  .stayOne {padding-left: 15px;}
+	.stayQuedCenter {padding: 0 5%; display: inline-flex;}
+  .inspireMeCenter {display: flex; padding: 0 5%; }
+  #inspireMeMobileComp .amp-carousel-button { display: none }
 }
 
 /*Hot Now*/
-.hotNowTopSection {padding: 0px 20px;}
+.hotNowTopSection {padding: 0px 15px;}
 
 .hotNowItem {
 	width: 200px; height: 320px; margin: 0px 10px; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
@@ -679,32 +806,36 @@ amp-selector [option][selected] {
 }
 
 .footer-top-content {clear: both;}
-.footer-top-child {padding: 20px 0 40px; width: 25%; float: left; background: #f9f9f9;}
+.footer-top-child {padding: 0 24px 20px; float: left; background: #f9f9f9; margin: 0;line-height: normal;}
 .footer-top-content p:before {
   content: "";
   display: inline-block;
   height: 47px;
   line-height: 47px;
-  margin-left: 40px;
+  margin-left: -55px;
   margin-right: 10px;
   position: relative;
-  top: 16px;
+  top: 22px;
   width: 47px;
 }
 
-.footer-top-content .footer-top-child:nth-child(1) p:before {
+.footer-top-child li {list-style-type: none; display: inline-block; float: left; width: 50%;}
+
+.footer-top-child li p {padding: 0 0 0 45px; line-height: normal;}
+
+.footer-top-content .footer-top-child li:nth-child(1) p:before {
   background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -7px -175px;
 }
 
-.footer-top-content .footer-top-child:nth-child(2) p:before {
+.footer-top-content .footer-top-child li:nth-child(2) p:before {
   background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -73px -175px;
 }
 
-.footer-top-content .footer-top-child:nth-child(3) p:before {
+.footer-top-content .footer-top-child li:nth-child(3) p:before {
   background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -205px -175px;
 }
 
-.footer-top-content .footer-top-child:nth-child(4) p:before {
+.footer-top-content .footer-top-child li:nth-child(4) p:before {
   background: url(https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -139px -175px;
 }
 
@@ -751,11 +882,8 @@ amp-selector [option][selected] {
   .footer-section-content {
     margin: 20px 10px; clear: both;
   }
-  .footer-top-child {width: 50%; float: left; padding-top: 0; padding-bottom: 20px;}
   .footer-top-content p {font-size: 12px;}
   .footer-top-content p:before {
-    margin-left: 10px;
-    margin-right: 0;
     transform: scale(0.6);
   }
   .footer-main-content {display: block; padding-left: 20px;}
@@ -774,229 +902,129 @@ amp-selector [option][selected] {
 
 
 <body>
-<amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker>
-
+<!-- <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker> -->
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
 		<!-- <a href="index.php" class="header-logo"><img src="./images/logo.png" /></a> -->
-		<section class="header-navigation-section desktop-item">
-			<section class="header-navigation-tab marketplace-tab">
-				<a href="#">Marketplace</a>
-			</section>
-			<section class="header-navigation-tab luxury-tab">
-				<a href="#">Luxury</a>
-			</section>
-			<section class="header-navigation-right">
-				<ul>
-					<li><a href="#"><i class="fa fa-map-marker"></i> Enter Your Pincode</a></li>
-					<li><a href="#"><i class="fa fa-mobile-phone"></i> Download App</a></li>
-					<li><a href="#">Track Order</a></li>
-					<li><a href="#"><i class="fa fa-bell"></i> Notifications</a></li>
-					<li><a href="#"><i class="fa fa-heart"></i> My Wishlists</a></li>
-					<li><a href="#"><i class="fa fa-user"></i> Sign In/Sign Up</a></li>
-				</ul>
-			</section>
-		</section>
+
 		<section class="col-xs-12 header-search-section">
 			<section class="header-search-left">
-				<section class="header-search-left-child logo-container">
-					<amp-img class="logo-image" width="70" height="40" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
-				</section>
-				<section class="header-category header-search-left-child desktop-item shop-department">
-					<span class="letter-spacing">SHOP BY</span><br />
-					<strong class="letter-spacing">DEPARTMENT<i class="fa fa-chevron-down"></i></strong>
-          <section id="shop_by_department" class="desktop-item shop-by-department">
-            <section class="shop-by-department-l2">
-              <ul>
-                <li>
-                  Men
-                  <section class="shop-by-department-l3">
-                    <ul class="shop_by_department_l3_content">
-                      <li>
-                        <ul>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <ul>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <ul>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <ul>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <ul>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                          <li>
-                            <span class="sbd_l3_headings">Ethnic Wear</span>
-                            <ul>
-                              <li>Kurtis And Kurtas</li>
-                              <li>Suit Sets</li>
-                              <li>Fusion Wear</li>
-                              <li>Sarees</li>
-                              <li>Bottoms</li>
-                              <li>Dupattas</li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </section>
-                </li>
-                <li>
-                  Women
-                  <section class="shop-by-department-l3">
-                    Women
-                  </section>
-                </li>
-                <li>Electronics</li>
-                <li>Appliances</li>
-                <li>Kids</li>
-                <li>Fashion Jewellery</li>
-              </ul>
-            </section>
-          </section>
-				</section>
-				<section class="header-category header-search-left-child desktop-item shop-brand">
-					<span class="letter-spacing">SHOP BY</span><br />
-					<strong class="letter-spacing">BRAND <i class="fa fa-chevron-down"></i></strong>
-          <section id="shop_by_brand" class="desktop-item shop-by-brand">
-            <section class="shop-by-brand-l2">
-              <ul>
-              <amp-list src="/marketplacewebservices/v2/mpl/catalogs/allBrandsAmp" height="420" layout="fixed-height">
-                <template type="amp-mustache">
-                <li>
-                  {{menu_brand_name}}
-                  <section class="shop-by-brand-l3">
-                    <a class="shop-by-brand-l3-component" href="#">
-                      <amp-img width="auto" height="195" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/10987709300766.png"></amp-img>
-                      <amp-img width="80" height="28" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9448599846942.png"></amp-img>
-                    </a>
-                  </section>
-                </li>
-                </template>
-                </amp-list>
-              </ul>
-            </section>
-          </section>
+				<section class="logo-container header-search-left-child">
+					<amp-img class="logo-image" width="50" height="30" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
 				</section>
 			</section>
-      <section class="header-search-right desktop-item">
-				<button class="btn my-bag"><i class="fa fa-shopping-bag"></i> &nbsp; My Bag</button>
-			</section>
-      <section class="header-search-center">
-        <p><input class="header-search-input" placeholder="Search in Marketplace" /><button class="header-search-btn"><i class="fa fa-search"></i></button></p>
+      <section class="header-search-center desktop-item" [class]="visible ? 'header-search-center mobile-item' : 'desktop-item'">
+					<!-- <input class="header-search-input" autocomplete placeholder="Search in Marketplace" /> -->
+					<section class="department-menu desktop-item">
+						<span><span [text]="category">All</span> <i class="fa fa-angle-down"></i></span>
+						<ul id="department_menu_list" class="department-menu-items">
+							<li tabindex="1" role="button" on='tap:AMP.setState({category: "All", categoryId: "all"})'>All</li>
+							<li tabindex="2" role="button" on='tap:AMP.setState({category: "Women&#39;s Clothing", categoryId: "MSH10"})'>Women's Clothing</li>
+							<li tabindex="3" role="button" on='tap:AMP.setState({category: "Men&#39;s Clothing", categoryId: "MSH11"})'>Men's Clothing</li>
+							<li tabindex="4" role="button" on='tap:AMP.setState({category: "Electronics", categoryId: "MSH12"})'>Electronics</li>
+							<li tabindex="5" role="button" on='tap:AMP.setState({category: "Footwear", categoryId: "MSH13"})'>Footwear</li>
+							<li tabindex="6" role="button" on='tap:AMP.setState({category: "Watches", categoryId: "MSH15"})'>Watches</li>
+							<li tabindex="7" role="button" on='tap:AMP.setState({category: "Accessories", categoryId: "MSH16"})'>Accessories</li>
+						</ul>
+					</section>
+					<input name="search" id="search_autocomplete"
+          type="text"
+					placeholder="Search in Marketplace"
+          class="header-search-input"
+          on="
+            input-debounced:
+              AMP.setState({
+                term: event.value,
+                showDropdown: event.value,
+								categoryId: categoryId == null ? 'all' : categoryId
+              }),
+              autosuggest-list.show;
+            tap:
+              AMP.setState({
+                term: term == null ? '' : term,
+								category: category == null ? 'All' : category,
+                showDropdown: 'true'
+              }),
+              autosuggest-list.show"
+          [value]="term || ''"
+          value=""
+          required
+          autocomplete="off" />
+				<button class="header-search-btn"><i class="fa fa-search"></i></button>
+				<div class="suggest">
+					<div class="autosuggest-container hidden"
+						[class]="(showDropdown && term) ?
+							'autosuggest-container' :
+							'autosuggest-container hidden'">
+						<amp-list class="autosuggest-box"
+							layout="fixed-height"
+							height="140"
+							src="https://www.tatacliq.com/search/autocomplete/MplEnhancedSearchBox?term="
+							[src]="term.length>2 ?
+								autosuggest.endpoint :
+								autosuggest.emptyAndInitialTemplateJson"
+							id="autosuggest-list">
+							<template type="amp-mustache">
+								<amp-selector id="autosuggest-selector"
+									keyboard-select-mode="focus"
+									layout="container"
+									on="
+										select:
+											AMP.setState({
+												term: event.targetOption,
+												showDropdown: false
+											}),
+											autosuggest-list.hide">
+                  <strong>{{searchTerm}}</strong>
+                  {{#brands}}
+									<div class="select-option no-outline"
+										role="option"
+										tabindex="0"
+										on="tap:autosuggest-list.hide"
+										option="{{name}}">
+                    <a href="https://www.tatacliq.com/search/page-1?q={{searchTerm}}%3Arelevance%3Abrand%3A{{code}}%3AisLuxuryProduct%3Afalse&text={{searchTerm}}&searchCategory=all">in {{name}}</a>
+                  </div>
+									{{/brands}} {{^brands}}
+									{{/brands}}
+                  <strong>{{searchTerm}}</strong>
+                  {{#categories}}
+									<div class="select-option no-outline"
+										role="option"
+										tabindex="0"
+										on="tap:autosuggest-list.hide"
+										option="{{name}}">
+                    <a href="https://www.tatacliq.com/search/page-1?q={{searchTerm}}%3Arelevance%3Acategory%3A{{code}}%3AisLuxuryProduct%3Afalse&text={{searchTerm}}&searchCategory=all">in {{name}}</a>
+                  </div>
+									{{/categories}} {{^categories}}
+									{{/categories}}
+								</amp-selector>
+							</template>
+						</amp-list>
+					</div>
+				</div>
+				<amp-state id="autosuggest">
+					<script type="application/json">
+						{
+							"category": "",
+							"endpoint": "/json/searchdata.json",
+							"emptyAndInitialTemplateJson": {"items": [{
+								"suggestions": [],
+								"products": [],
+                "categories": [],
+                "searchTerm": "",
+                "brands": []
+							}]},
+              "searchInBrand": "https://www.tatacliq.com/search/page-1?q="
+						}
+					</script>
+				</amp-state>
       </section>
 		</section>
 		<a href="#" class="header-icon-2 mobile-item"><i class="fa fa-shopping-bag"></i></a>
-		<a href="#" class="header-icon-3 mobile-item"><i class="fa fa-search simpleSearchToggle"></i></a>
+		<a href="#" class="header-icon-3 mobile-item"><i tabindex="1" role="main" on="tap:AMP.setState({visible: !visible}), search_autocomplete.focus" class="fa fa-search simpleSearchToggle"></i></a>
 	</header>
 
-
 	<div class="header-clear"></div>
-
 	<amp-sidebar id="sidebar" layout="nodisplay" side="left">
 		<amp-accordion class="sidebar-menu">
 			<section>
@@ -1031,42 +1059,32 @@ amp-selector [option][selected] {
     <p class="sidebar-divider-item"><a href="#"><i class="fa fa-mobile-phone"></i>Download App</a></p>
     <p class="sidebar-divider-item"><a href="#">Enter Your Pincode</a></p>
 	</amp-sidebar>
-	<!-- Banners -->
-	<c:choose>
-	<c:when test="${currentDetectedDevice.mobileBrowser}">
-		<div class="sliders main-content">
-	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="420" layout="fixed-height">
-	<template type="amp-mustache">
-	<amp-carousel class="slider" width="400" height="120" layout="responsive" type="slides" controls autoplay loop delay="3000">
-	  {{#desktopBanners}}
-	    <div>
-			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
-		</div>
-		{{/desktopBanners}}
-	</amp-carousel>
-	</template>
-	</amp-list>
-	</div>
-	</c:when>
-	<c:otherwise>
-		<div class="sliders main-content">
-	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="420" layout="fixed-height">
-	<template type="amp-mustache">
-	<amp-carousel class="slider" width="400" height="120" layout="responsive" type="slides" controls autoplay loop delay="3000">
-	  {{#desktopBanners}}
-	    <div>
-			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
-		</div>
-		{{/desktopBanners}}
-	</amp-carousel>
-	</template>
-	</amp-list>
-	</div>
-	</c:otherwise>
-	</c:choose>
-	
 
+	<div class="sliders main-content">
+		<amp-list src="/json/banner.json" height="370" layout="fixed-height">
+			<template type="amp-mustache">
+				<amp-carousel class="slider" width="400" height="400" layout="responsive" type="slides" controls autoplay loop delay="3000">
+				  {{#moblileBanners}}
+				    <div>
+  						<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
+  					</div>
+					{{/moblileBanners}}
+				</amp-carousel>
+			</template>
+		</amp-list>
+	</div>
 
+	<!-- <ul>
+		<amp-iframe width="500"
+		  title="Netflix House of Cards branding: The Stack"
+		  height="281"
+		  layout="responsive"
+		  sandbox="allow-scripts allow-same-origin allow-popups"
+		  allowfullscreen
+		  frameborder="0"
+		  src="http://localhost:8887/pages/shopbydepartment.html">
+		</amp-iframe>
+	</ul> -->
 	<!-- Top Deals -->
 	<div id="topDealsComp">
 		<div class="topDealsTopSection">
@@ -1074,7 +1092,7 @@ amp-selector [option][selected] {
 		</div>
 		<div>
 			<div id="topDealsCompCarousel">
-			<amp-list src="/pwamp/getBestPicks?version=Online" height="320" layout="fixed-height">
+			<amp-list src="/json/bestpicks.json" height="320" layout="fixed-height">
 			<template type="amp-mustache">
 				<amp-carousel height="320" layout="fixed-height" type="carousel">
 				{{#subItems}}
@@ -1089,23 +1107,23 @@ amp-selector [option][selected] {
 				</amp-list>
 			</div>
 		</div>
-    <!-- <div class="brandStudioBottom">
+    <div class="brandStudioBottom">
       <amp-list src="/json/bestpicks.json" height="40" layout="fixed-height">
         <template type="amp-mustache">
     			<a href="{{buttonLink}}"><button class="brandStudioViewAllBtn">{{buttonText}}</button></a>
         </template>
       </amp-list>
-		</div> -->
+		</div>
 	</div>
 
 	<!-- Brands You Love -->
 	<div id="brandsYouLoveMobileComp" class="">
 		<div class="brandStudioTop">
-			<h2 class="homeViewHeading">Brand Studio <small class="homeViewAllBtn"><a href="#">View All</a></small></h2>
+			<h2 class="homeViewHeading">Brand Studio</h2>
 		</div>
 		<div>
 			<div id="brandsYouLoveMobileCompCarousel">
-			<amp-list src="/pwamp/getBrandsYouLove?version=Online" height="320" layout="fixed-height">
+			<amp-list src="/json/brandsyoulove.json" height="320" layout="fixed-height">
 				<template type="amp-mustache">
 			    <amp-carousel height="320" layout="fixed-height" type="carousel">
 			    	{{#subComponents}}
@@ -1134,12 +1152,12 @@ amp-selector [option][selected] {
 	<!-- What To Buy Now -->
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
-			<h2 class="homeViewHeading">What To Buy Now <small class="homeViewAllBtn"><a href="#">View All</a></small></h2>
+			<h2 class="homeViewHeading">What To Buy Now</h2>
 		</div>
 		<div>
 			<div id="whatToBuyCompCarousel">
 
-				<amp-list src="/pwamp/getProductsYouCare?version=Online" height="400" layout="fixed-height">
+				<amp-list src="/json/productsyoucare.json" height="400" layout="fixed-height">
 				<template type="amp-mustache">
 				<amp-carousel height="400" layout="fixed-height" type="carousel">
 				{{#categories}}
@@ -1160,6 +1178,37 @@ amp-selector [option][selected] {
   <br />
 
   <div class="compContainer">
+    <!-- Stay Qued -->
+    <div id="stayQuedComp">
+      <div class="stayQuedTopSection">
+        <h2 class="homeViewHeading">Stay Qued</h2>
+      </div>
+      <amp-list src="/json/stayqued.json" height="240" layout="fixed-height">
+      <template type="amp-mustache">
+      {{#allBannerJsonObject}}
+      <div class="stayQuedCenter">
+        <div class="stayTwo">
+          <div>
+            <amp-img class="responsive-img" width="auto" height="200" layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
+          </div>
+        </div>
+        <div class="stayOne">
+          <div>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p class="h2 stayQuedHeading">{{promoText1}}</p>
+            <p>{{promoText2}}</p>
+            <div class="stayQuedBottom">
+              <a href="{{bannerUrlLink}}"><button class="stayQuedViewAllBtn">Read The Story</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/allBannerJsonObject}}
+      </template>
+      </amp-list>
+    </div>
+
     <!-- New In -->
   	<div id="newInComp">
   		<div class="newInTopSection">
@@ -1167,13 +1216,13 @@ amp-selector [option][selected] {
   		</div>
   		<div>
   			<div id="newInCompCarousel">
-  			<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="320" layout="fixed-height">
+  			<amp-list src="/json/newandexclusive.json" height="280" layout="fixed-height">
   				<template type="amp-mustache">
-  				<amp-carousel height="320" layout="fixed-height" type="carousel">
+  				<amp-carousel height="280" layout="fixed-height" type="carousel">
   				{{#newAndExclusiveProducts}}
   					<a href="{{productUrl}}"><div class="newInItem">
   						<div class="newInItemImg">
-  							<amp-img class="responsive-img" layout="fill" src="{{productImageUrl}}" alt="Brand Image"></amp-img>
+  							<amp-img width="120" height="180" layout="responsive" src="{{productImageUrl}}" alt="Brand Image"></amp-img>
   						</div>
   						<div class="newInDesc">
   							<p class="newInDescName">{{productTitle}}</p>
@@ -1191,35 +1240,6 @@ amp-selector [option][selected] {
   		<div class="brandStudioBottom">
   			<button class="brandStudioViewAllBtn">View All</button>
   		</div>
-  	</div>
-
-  	<!-- Stay Qued -->
-  	<div id="stayQuedComp">
-  		<div class="stayQuedTopSection">
-  			<h2 class="homeViewHeading">Stay Qued</h2>
-  		</div>
-  		<amp-list src="/pwamp/getStayQuedHomepage?version=Online" height="320" layout="fixed-height">
-  		<template type="amp-mustache">
-  		<div class="stayQuedCenter">
-  			<div class="stayOne">
-  				<div>
-  					<p>&nbsp;</p>
-  					<p>&nbsp;</p>
-  					<p class="h2 stayQuedHeading">{{promoText1}}</p>
-  					<p>{{promoText2}}</p>
-  					<div class="stayQuedBottom">
-  						<a href="{{bannerUrlLink}}"><button class="stayQuedViewAllBtn">Read The Story</button></a>
-  					</div>
-  				</div>
-  			</div>
-  			<div class="stayTwo">
-  				<div>
-  					<amp-img class="responsive-img" width="auto" height="300" layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
-  				</div>
-  			</div>
-  		</div>
-  		</template>
-  		</amp-list>
   	</div>
   </div>
 
@@ -1262,55 +1282,39 @@ amp-selector [option][selected] {
 	</div>-->
 
 	<!-- Inspire Me -->
-	<div id="inspireMeComp">
-		<div class="newInTopSection">
-			<h2 class="homeViewHeading">Inspire Me</h2>
-		</div>
-		<div class="inspireMeCompSection">
-			<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="320" layout="fixed-height">
-			<template type="amp-mustache">
-			<amp-selector role="tablist"
-				layout="container"
-				class="ampTabContainer">
-				{{#subComponents}}
-				<div role="tab"
-					class="tabButton"
-					selected
-					option="a">{{headerText}}
-        </div>
-					{{#details}}
-				<div role="tabpanel"
-					class="tabContent">
-					<div class="inspireMeOne">
-						<a href="{{bannerUrl}}"><amp-img width="280" height="360" layout="flex-item" src="{{bannerImageUrl}}" alt="Brand Image"></amp-img></a>
-					</div>
-					<div class="inspireMeTwo">
-						<div class="inspireMeCenter">
-							<div>
-								<p class="h4 stayQuedHeading"><strong>{{firstProductTitle}}</strong></p>
-								<p>&nbsp;</p>
-								<p>{{text}}</p>
-								<div class="inspireMeBottom">
-									<button class="stayQuedViewAllBtn">Read The Story</button>
-								</div>
-								<div class="inspireMeBottom">
-									<button class="inspireMeReadMoreBtn">Read More</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="inspireMeThree">
-						<a href="{{firstProductUrl}}"><amp-img width="300" height="360" layout="flex-item" src="{{firstProductImageUrl}}" alt="Brand Image"></amp-img></a>
-					</div>
-				</div>
-				{{/details}}
-				{{/subComponents}}
-			</amp-selector>
-			</template>
-		</amp-list>
-		</div>
-	</div>
-<footer:footer/>
-
+  <div id="inspireMeMobileComp">
+    <div class="inspireMeMobileTopSection">
+      <h2 class="homeViewHeading">Inspire Me</h2>
+    </div>
+    <amp-list src="/json/collectionshowcase.json" height="240" layout="fixed-height">
+      <template type="amp-mustache">
+        <amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000">
+          {{#subComponents}}
+          <div class="inspireMeCenter">
+            <div class="stayTwo">
+              <div>
+                <amp-img class="responsive-img" width="auto" height="200" layout="flex-item" src="{{details.bannerImageUrl}}" alt="{{bannerAltText}}"></amp-img>
+              </div>
+            </div>
+            <div class="stayOne">
+              <div>
+                <p class="h2 stayQuedHeading">{{headerText}}</p>
+                <p>{{text}}</p>
+                <p>These accessories simply add just the right amount of style to any outfit.</p>
+                <div class="stayQuedBottom">
+                  <a href="{{details.bannerUrl}}"><button class="stayQuedViewAllBtn">Read The Story</button></a>
+                </div>
+                <div class="stayQuedBottom">
+                  <a href="https://www.tatacliq.com/que/"><button class="stayQuedViewAllBtn">Read More</button></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/subComponents}}
+        </amp-carousel>
+      </template>
+    </amp-list>
+  </div>
+<footer:ampfooter/>
 </body>
 </html>
