@@ -475,8 +475,8 @@ public class MplPromotionHelper
 			}
 			else
 			{
-				promoGrpModel = getBulkPromotionCreationDao()
-						.fetchPromotionGroup(MarketplacecommerceservicesConstants.PROMOTION_GROUP_DEFAULT);
+				promoGrpModel = getBulkPromotionCreationDao().fetchPromotionGroup(
+						MarketplacecommerceservicesConstants.PROMOTION_GROUP_DEFAULT);
 			}
 		}
 		return promoGrpModel;
@@ -617,20 +617,20 @@ public class MplPromotionHelper
 	 * public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final
 	 * AbstractOrder order, final List<AbstractPromotionRestriction> restrictionList) { //CR Changes final Map<String,
 	 * AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-	 *
+	 * 
 	 * final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new
 	 * ArrayList<AbstractOrderEntry>();
-	 *
+	 * 
 	 * // if (CollectionUtils.isNotEmpty(entries)) // { boolean isFreebie = false; boolean isofValidSeller = false;
 	 * String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final AbstractOrderEntry entry : entries) { isFreebie = validateEntryForFreebie(entry); if (!isFreebie) {
 	 * isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry); if
 	 * (isofValidSeller) { try { selectedUSSID = (String) entry.getAttribute(arg0,
 	 * MarketplacecommerceservicesConstants.SELECTEDUSSID); } catch (JaloInvalidParameterException |
 	 * JaloSecurityException e) { LOG.error(e); } validProductUssidMap.put(selectedUSSID, entry); } } } //}
-	 *
+	 * 
 	 * return validProductUssidMap; }
 	 */
 	//commented for PR-15 ends here
@@ -704,6 +704,71 @@ public class MplPromotionHelper
 
 		return validProductUssidMap;
 	}
+
+	@SuppressWarnings("deprecation")
+	public Map<String, AbstractOrderEntry> getCartTshipSellerEligibleProducts(final SessionContext arg0,
+			final AbstractOrder order, final List<AbstractPromotionRestriction> restrictionList,
+			final List<Product> allowedProductList) throws JaloInvalidParameterException, JaloSecurityException
+	{
+
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
+
+		boolean isFreebie = false;
+		boolean isofValidSeller = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+
+		for (final AbstractOrderEntry entry : entries)
+		{
+
+			isFreebie = validateEntryForFreebie(entry);
+			if (!isFreebie)
+			{
+
+				final String fulfillmentType = (String) entry.getAttribute(arg0, "fulfillmentType");
+				if (fulfillmentType.equalsIgnoreCase("TSHIP") && CollectionUtils.isNotEmpty(allowedProductList)
+						&& allowedProductList.contains(entry.getProduct()))
+				{
+					if (CollectionUtils.isEmpty(restrictionList))
+					{
+						selectedUSSID = entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
+						validProductUssidMap.put(selectedUSSID, entry);
+					}
+					else
+					{
+						isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
+						if (isofValidSeller)
+						{
+							try
+							{
+								selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+							}
+							catch (JaloInvalidParameterException | JaloSecurityException e)
+							{
+								LOG.error(e);
+							}
+							validProductUssidMap.put(selectedUSSID, entry);
+						}
+					}
+
+				}
+			}
+		}
+
+
+		return validProductUssidMap;
+	}
+
+
+
+
+
+
+
+
+
+
 
 	// PR-15 ends here
 
@@ -1011,8 +1076,8 @@ public class MplPromotionHelper
 		}
 		else
 		{
-			stockCountMap = getStockService()
-					.getCumulativeStockMap(productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
+			stockCountMap = getStockService().getCumulativeStockMap(
+					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
 			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
 			{
 				if (MapUtils.isNotEmpty(stockCountMap) && null != entry.getValue()
