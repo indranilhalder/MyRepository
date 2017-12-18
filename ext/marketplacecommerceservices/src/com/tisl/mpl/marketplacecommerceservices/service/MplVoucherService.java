@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.core.model.VoucherCardPerOfferInvalidationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -154,19 +153,6 @@ public interface MplVoucherService
 	 */
 	void releaseCartVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
 
-	/**
-	 * @param voucher
-	 * @param cardReferenceNo
-	 * @return List<VoucherCardPerOfferInvalidationModel>
-	 */
-	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(VoucherModel voucher, String cardReferenceNo);
-
-	/**
-	 * @param voucher
-	 * @param cardReferenceNo
-	 * @return List<VoucherCardPerOfferInvalidationModel>
-	 */
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(VoucherModel voucher, String cardReferenceNo);
 
 	/**
 	 * @param abstractOrderModel
@@ -272,4 +258,15 @@ public interface MplVoucherService
 	 * @param subOrderDetails
 	 */
 	public void removeCPOVoucherInvalidation(OrderModel subOrderDetails);
+
+	/**
+	 * @param abstractOrderModel
+	 * @param token
+	 * @param cardSaved
+	 * @param cardRefNo
+	 * @return tuple3
+	 * @throws Exception
+	 */
+	public Tuple3<?, ?, ?> checkCardPerOfferValidationMobile(AbstractOrderModel abstractOrderModel, String token,
+			String cardSaved, String cardRefNo) throws Exception;
 }

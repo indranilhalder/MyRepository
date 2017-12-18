@@ -123,7 +123,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(final String guid, final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
 		try
@@ -133,6 +133,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
 		}
@@ -158,7 +159,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(final String guid, final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
 		try
@@ -168,6 +169,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
 		}
@@ -193,7 +195,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPDay(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPDay(final String guid, final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
 		try
@@ -203,6 +205,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
 		}
@@ -228,7 +231,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPWeek(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPWeek(final String guid, final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
 		try
@@ -238,6 +241,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
 		}
@@ -263,7 +267,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPYear(final VoucherModel voucher,
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPYear(final String guid, final VoucherModel voucher,
 			final String cardReferenceNo)
 	{
 		try
@@ -273,6 +277,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
 		}
