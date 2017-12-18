@@ -645,3 +645,8 @@
 .page-faq #textarea{
 		width:100%;
 }
+/* TISPDRT-7803  */
+p.summryQuery{
+	word-break: normal !important;
+}
+/* TISPDRT-7803  */
