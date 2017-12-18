@@ -193,6 +193,11 @@
 		<property name="shopbybrand"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.BrandHierarchyData>" />
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyDataAmp">
+		<property name="modifiedTime" type="String" />
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BrandHierarchyData>" />
+	</bean>
 	<bean class="com.tisl.mpl.wsdto.BrandHierarchyData">
 
 		<property name="menu_brand_name" type="String" />
@@ -210,7 +215,12 @@
 		<property name="sub_brand_logo" type="String" />
 
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyWsDTOAmp" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="modifiedTime" type="String" />
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BrandHierarchyWsDTO>" />
 
+	</bean>
 	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="modifiedTime" type="String" />
 		<property name="shopbybrand"
@@ -238,6 +248,11 @@
 	<bean class="com.tisl.mpl.wsdto.DepartmentListHierarchyData">
 		<property name="modifiedTime" type="String" />
 		<property name="shopbydepartment"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentHierarchyData>" />
+	</bean>
+		<bean class="com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp">
+		<property name="modifiedTime" type="String" />
+		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentHierarchyData>" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentHierarchyData">

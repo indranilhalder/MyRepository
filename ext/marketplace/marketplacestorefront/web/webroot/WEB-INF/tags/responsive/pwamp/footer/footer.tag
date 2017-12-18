@@ -35,7 +35,7 @@
         <section class="footer-child">
           <amp-accordion>
       			<section expanded>
-      				<h4>Tata MARKETPLACE<i class="fa fa-angle-down"></i></h4>
+      				<h4><span class="tata-title">Tata</span> MARKETPLACE<i class="fa fa-angle-down"></i></h4>
       			  	<ul>
         					<li><a href="#">About Us</a></li>
         					<li><a href="#">Home</a></li>
