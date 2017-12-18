@@ -1634,6 +1634,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	/**
 	 * This is a GET method which helps in resetting the convenience charges whenever it is not required
 	 *
+	 * @param guid
 	 * @return String
 	 * @throws InvalidKeyException
 	 * @throws NoSuchAlgorithmException
@@ -1641,32 +1642,51 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.RESETCONVCHARGEELSEWHEREURL, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody String resetConvChargeElsewhere()
+	public @ResponseBody String resetConvChargeElsewhere(final String guid)
 			throws InvalidKeyException, NoSuchAlgorithmException, CalculationException
 	{
 		//getting cartdata
-		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-		final CartModel cart = getCartService().getSessionCart();
+		OrderModel orderModel = null;
+		PriceData totalPriceAfterConvCharge = null;
+		PriceData conveniCharge = null;
 
-		if (null != cart)
+		if (StringUtils.isNotEmpty(guid))
 		{
-			//setting in cartmodel
-			cart.setConvenienceCharges(Double.valueOf(0));
+			//final String orderGuid = decryptKey(guid);
+			orderModel = getMplPaymentFacade().getOrderByGuid(guid);
 		}
-		//saving cartmodel
-		getMplPaymentFacade().saveCart(cart);
 
-		final PriceData totalPriceAfterConvCharge = getMplCustomAddressFacade().setTotalWithConvCharge(cart, cartData);
-		final PriceData conveniCharge = getMplCustomAddressFacade().addConvCharge(cart, cartData);
-
-		if (null != getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE))
+		if (null == orderModel)
 		{
-			getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
-			getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION);
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartModel cart = getCartService().getSessionCart();
+
+			if (null != cart)
+			{
+				//setting in cartmodel
+				cart.setConvenienceCharges(Double.valueOf(0));
+			}
+			//saving cartmodel
+			getMplPaymentFacade().saveCart(cart);
+
+			totalPriceAfterConvCharge = getMplCustomAddressFacade().setTotalWithConvCharge(cart, cartData);
+			conveniCharge = getMplCustomAddressFacade().addConvCharge(cart, cartData);
 		}
-		//return both total price with conv charge & conv charge
+		else
+		{
+			orderModel.setConvenienceCharges(Double.valueOf(0));
+			getModelService().save(orderModel);
+			getModelService().refresh(orderModel);
+
+			totalPriceAfterConvCharge = discountUtility.createPrice(orderModel, orderModel.getTotalPriceWithConv());
+			conveniCharge = discountUtility.createPrice(orderModel, orderModel.getConvenienceCharges());
+		}
+
+
+
 		return totalPriceAfterConvCharge.getFormattedValue() + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
 				+ conveniCharge.getFormattedValue();
+
 	}
 
 
