@@ -6876,8 +6876,9 @@ public class UsersController extends BaseCommerceController
 														{
 															willApply = getMplPaymentFacade().validateBank(bankLists, bankName);
 														}
+														break;
 													}
-													break;
+
 
 												}
 											}
@@ -7145,8 +7146,9 @@ public class UsersController extends BaseCommerceController
 													{
 														willApply = getMplPaymentFacade().validateBank(bankLists, bankName);
 													}
+													break;
 												}
-												break;
+
 
 											}
 										}
