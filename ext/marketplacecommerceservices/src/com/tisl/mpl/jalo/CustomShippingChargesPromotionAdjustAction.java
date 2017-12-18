@@ -1,5 +1,6 @@
 package com.tisl.mpl.jalo;
 
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -48,7 +48,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -112,16 +112,14 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 		else
 		{
 			final List<AbstractOrderEntry> validProductUssidList = getValidProductUssidList();
-
-			if (CollectionUtils.isNotEmpty(validProductUssidList))
+			for (final AbstractOrderEntry entry : validProductUssidList)
 			{
-				for (final AbstractOrderEntry entry : validProductUssidList)
-				{
-					entry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
-					entry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
+				final Double zoneDeliveryCharge = getDefaultPromotionsManager().undoDeliveryCharges(entry);
 
-				}
+				entry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
+				entry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, zoneDeliveryCharge);
 			}
+
 			//			if (order != null)
 			//			{
 			//				for (final AbstractOrderEntry oe : order.getEntries())
@@ -433,10 +431,11 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 		return needsCalc;
 	}
-	//	protected DefaultPromotionManager getDefaultPromotionsManager()
-	//	{
-	//		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
-	//	}
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
 
 
 }
