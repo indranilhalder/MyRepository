@@ -1577,9 +1577,9 @@ function tealiumCallOnPageLoad()
  					+ $("#product_brand").val() + ',';				
  				tealiumData += '"product_quantity_update":'
  					+ qtyUpdated + ',';			
- 				tealiumData += '"checkout_seller_ids":"'		 for TPR-429
+ 				tealiumData += '"checkout_seller_ids":"'		// for TPR-429
  					+ $("#checkoutSellerIDs").val() + '",';
- 				 L1 L2 L3 For cart  TPR-4831
+ 				 //L1 L2 L3 For cart  TPR-4831
  				if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
  					tealiumData += '"page_subcategory_L1":'
  						+ getListValue("page_subcategory_L1") + ',';           
@@ -1592,13 +1592,13 @@ function tealiumCallOnPageLoad()
  					tealiumData += '"page_subcategory_l3":'
  						+ getListValue("page_subcategory_l3") + ',';            
  					}
- 				 added for kidswear:L4 needs to be populated
+ 				 //added for kidswear:L4 needs to be populated
  				if($("#page_subcategory_l4").val() !=undefined || $("#page_subcategory_l4").val() !=null){ 
  					tealiumData += '"page_subcategory_l4":'
  						+ getListValue("page_subcategory_l4") + ',';            
  					}
- 				 L1 L2 L3 cart ends
- 				 TPR-430 Start
+ 				 //L1 L2 L3 cart ends
+ 				 //TPR-430 Start
  				if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
  					tealiumData += '"product_category":'
  					+ getListValue("product_category") + ',';	/*value passed as array instead of single string  INC_11511
@@ -1610,14 +1610,14 @@ function tealiumCallOnPageLoad()
  				}
  				if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
  					tealiumData += '"page_subcategory_name_L3":"'
- 				+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",';  TISPRDT-1462
+ 				+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",'; // TISPRDT-1462
  				}
- 				 added for kidswear:L4 needs to be populated
+ 				 //added for kidswear:L4 needs to be populated
  				if($("#page_subcategory_name_l4").val() !=undefined || $("#page_subcategory_name_l4").val() !=null){ 
  					tealiumData += '"page_subcategory_name_L4":"'
  				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '"}';
  				}
- 			 TPR-430 End
+ 			 //TPR-430 End
  				data = data.replace("}<TealiumScript>", tealiumData);
 				$('#tealiumHome').html(data);
 			}
@@ -1637,7 +1637,7 @@ function tealiumCallOnPageLoad()
  			cache : false,
  			success : function(data) {
  				var tealiumData = "";
- 				tealiumData += ',"user_login_type":"'	 TPR-668
+ 				tealiumData += ',"user_login_type":"'	// TPR-668
  					+ user_login_type + '",';
  				tealiumData += '"cart_total":"'
  						+ $("#cart_total").val() + '",';
@@ -1658,8 +1658,7 @@ function tealiumCallOnPageLoad()
  				tealiumData += '"product_brand":'
  					+ $("#product_brand").val() + ',';
  				
- 				 kidswear
- 				 L1 L2 L3 For cart
+ 				 //kidswear L1 L2 L3 For cart
  				if($("#page_subcategory_L1").val() !=undefined || $("#page_subcategory_L1").val() !=null){ 
  					tealiumData += '"page_subcategory_L1":'
  						+ getListValue("page_subcategory_L1") + ',';           
@@ -1672,15 +1671,14 @@ function tealiumCallOnPageLoad()
  					tealiumData += '"page_subcategory_l3":'
  						+ getListValue("page_subcategory_l3") + ',';            
  					}
- 				 added for kidswear:L4 needs to be populated
+ 				 //added for kidswear:L4 needs to be populated
  				if($("#page_subcategory_l4").val() !=undefined || $("#page_subcategory_l4").val() !=null){ 
  					tealiumData += '"page_subcategory_l4":'
  						+ getListValue("page_subcategory_l4") + ',';            
  					}
- 				 L1 L2 L3 cart ends
- 				 kidswear
+ 				 //L1 L2 L3 cart ends kidswear
  				
- 				 TPR-430 Start
+ 				 //TPR-430 Start
  				if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
  					tealiumData += '"product_category":'
  					+ getListValue("product_category") + ',';                /*value passed as array instead of single string  INC_11511*/
@@ -1694,13 +1692,13 @@ function tealiumCallOnPageLoad()
  					tealiumData += '"page_subcategory_name_L3":"'
  				+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",';
  				}
- 				 added for kidswear:L4 needs to be populated
+ 				 //added for kidswear:L4 needs to be populated
  				if($("#page_subcategory_name_l4").val() !=undefined || $("#page_subcategory_name_l4").val() !=null){ 
  					tealiumData += '"page_subcategory_name_L4":"'
- 				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '",';  TISPRDT-1462
+ 				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '",';  //TISPRDT-1462
  				}
- 			 TPR-430 End
- 				tealiumData += '"checkout_seller_ids":"'		 for TPR-429
+ 			 //TPR-430 End
+ 				tealiumData += '"checkout_seller_ids":"'		 //for TPR-429
  					+ $("#checkoutSellerIDs").val() + '"}';
  				data = data.replace("}<TealiumScript>", tealiumData);
  				$("#tealiumHome").html(data);

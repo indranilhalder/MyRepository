@@ -78085,7 +78085,7 @@ a.tab-emi.active{
 }
 .max-min-value {
 	position: absolute;
-	bottom: 5px;
+	bottom: -10px;
 }
 .offer_heading {
 	font-size: 16px;
@@ -78330,7 +78330,8 @@ button#continue_payment_after_validate {
 .offer_des li {
     list-style-type: disc !important;
 }
-#paymentoffersPopup .offer_title{
+#paymentoffersPopup .offer_title,
+.offer_title{
     width: 92%;
     word-break: break-all;
     display: inline-block;
@@ -78340,15 +78341,16 @@ button#continue_payment_after_validate {
     position: relative;
     top: -16px;
 }
-#paymentoffersPopup span.offer_des {
+#paymentoffersPopup span.offer_des,
+.offer_des {
     position: relative;
     top: -14px;
     word-break: break-all;
 }
-#paymentoffersPopup .max-min-value {
+/* #paymentoffersPopup .max-min-value {
     position: absolute;
     bottom: -10px;
-}
+} */
 /* TISHS-105 end */
 /* TISHS-96 start */
 .consent-disclaimer{
