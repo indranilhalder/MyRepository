@@ -78156,7 +78156,7 @@ ul.offerui {
 }
 #paymenttermsoffersPopup .content.offer-content {
     padding: 31px 47px 75px 44px !important;
-    overflow-y: hidden;
+    overflow-y: auto;
     width: 733px !important;
     text-align: left;
 }
