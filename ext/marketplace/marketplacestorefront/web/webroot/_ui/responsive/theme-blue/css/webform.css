@@ -469,7 +469,7 @@
 	height: 43px;
 	float: left;
 	margin: -3px 0 0;
-	background: url('/_ui/responsive/common/images/querySubmitDone.png')
+	background: url('../_ui/responsive/common/images/querySubmitDone.png')
 		no-repeat 0 0;
 }
 .custmCareHelp .issueQuryPopUp .issueQuryPopBox .headingSec .queryErrorIcon
