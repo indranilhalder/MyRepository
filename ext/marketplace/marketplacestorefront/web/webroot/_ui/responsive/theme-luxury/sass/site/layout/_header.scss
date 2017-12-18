@@ -39,6 +39,11 @@ ul.tabs{
         opacity: 0.6;
         font-family: Lato;
         
+        @include media-breakpoint-down(sm) { 
+            padding: 7px 3px 18px 3px;
+            font-size: 16px;
+        }
+        
         &.current{
             color: #2d2d2d; 
             opacity: 1.0;
@@ -189,6 +194,15 @@ ul.tabs{
                 .welcome-link{
                     position: relative;
                     font-style: italic;
+                    font-weight: bold;
+                    text-align: center;
+                    
+                    span{
+                        color: #ccc;
+                        font-style: normal;
+                        display: block;
+                        font-weight: normal;
+                    }
                    /* padding-left: 30px;*/
 
                    /* &:before{
@@ -202,12 +216,20 @@ ul.tabs{
                         background-position: -944px -49px;
                     }*/
                 }
+                li{
+                    border-top: 0px;
+                    padding: 0px;
+                }
+                a{
+                    text-align:left;
+                    padding-left: 0px;
+                }
 
                 .wishlist-mob{
                     
                     .wishlist{                        
                         position: relative;
-                        padding-left: 26px;
+                        padding-left: 0px;
                         
                         &:before{
                             position: absolute;
@@ -226,6 +248,11 @@ ul.tabs{
 
                 .mob-login{
                     border-bottom: 1px solid #fff;
+                    padding: 15px;
+                    
+                    a{
+                        text-align: center;                        
+                    }
                 }
                 
                 .account-userTitle.account-userTitle-custom{
@@ -347,11 +374,34 @@ ul.tabs{
 
 		> ul {
 			> li {
+                &.parent{
+                    @include media-breakpoint-down(sm) {
+                        a{                       
+                            font-weight: bold;                        
+                        }
+                        .sub-menu{
+                            a{
+                                font-weight: normal;
+                            }
+                        }
+                    }
+                }
 				a {
 					text-decoration: none;
 					display: block;
                     font-size: 16px;
+                    
+                    @include media-breakpoint-down(sm) {
+                        font-size: 15px;
+                    }
 				}
+                
+                h4{
+                    @include media-breakpoint-down(sm) {
+                        font-size: 15px;
+                    }
+                }
+               
 			}
 
 			@include media-breakpoint-down(sm) {
@@ -443,7 +493,9 @@ ul.tabs{
                            
 						}
 						h4 {
-							font-weight: 700;
+                            @include media-breakpoint-down(sm) {
+                                font-weight: 700;
+                            }
 						}
 						div > ul {
 							> li {
@@ -849,7 +901,7 @@ ul.tabs{
                 
 				li{
 					padding:6px;
-					text-align:center;
+					text-align:left;
 					font-size:16px;
 					a{
 						display:block;
@@ -1233,6 +1285,7 @@ ul.tabs{
 		z-index: 999;
 		.main-nav {
 			top: 125px;
+            padding-bottom: 125px;
 		}
 	}
 	.header-promo{
@@ -1358,7 +1411,7 @@ ul.tabs{
     .header{
         .inner{
             margin-top: 10px;
-            min-height: 50px;
+            min-height: 60px;
         } 
         .container-fluid{
             padding-left: 10px;
@@ -1436,7 +1489,15 @@ ul.tabs{
             } 
         }        
     }
-    
+     
+    footer{
+        .sub-menu{
+            .sub-menu-toggle{
+                display: none;
+            }
+        }
+    }
+     
      .sub-menu-toggle{
             right: 10px;
             top: 10px;
@@ -1447,6 +1508,8 @@ ul.tabs{
            -webkit-transform: rotate(40deg);
             transform: rotate(40deg);
             @include transition(all 0.3s ease-in-out);
+         
+            
 
             &:before, &:after {
                 position: absolute;
@@ -1478,6 +1541,10 @@ ul.tabs{
             }           
         }
     .sub-menu-inner.open-inner-menu{
+        
+        h4{
+            margin: 0px;
+        }
         .sub-menu-toggle{
             right: 10px;
             top: 10px;
@@ -1526,10 +1593,6 @@ ul.tabs{
         }
         
     }
-    .mob-login{
-        
-    }
- 
 }
 .search-content{
     .search-tabs{

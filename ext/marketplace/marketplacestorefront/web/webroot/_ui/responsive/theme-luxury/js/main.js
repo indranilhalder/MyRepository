@@ -295,7 +295,6 @@ TATA.CommonFunctions = {
             $(this).parent(".header-search").removeClass("active");
             
         });
-
     },
 
     DocumentClick: function() {
@@ -724,6 +723,8 @@ TATA.CommonFunctions = {
         	}
             $("#hamburger-menu").on("click", function() {
                 $("body").addClass("menu-open");
+                $( ".header-left .tab-link, .main-nav .tab-content" ).first().addClass( "current");
+                
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
             }); 
@@ -761,6 +762,7 @@ TATA.CommonFunctions = {
                 $('ul.tabs').find('li[data-tab="'+tab_id+'"]').addClass('current');
                   
             });
+            
             
         },
         init: function() {

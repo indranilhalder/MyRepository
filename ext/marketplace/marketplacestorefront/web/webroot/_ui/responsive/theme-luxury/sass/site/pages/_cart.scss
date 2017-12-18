@@ -444,6 +444,10 @@
 				padding-right: 5px;
 				display: inline-block;
 				margin-bottom: 0;
+                
+                @include media-breakpoint-down(sm) {
+                   padding-right: 2px;
+                }
 			}
 		}
 		.selectboxit-btn {
