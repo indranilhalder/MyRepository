@@ -338,8 +338,9 @@ ACC.WebForm = {
 	},
 	loadOrderLines : function(currentPage) {
 		var htmlOption = "";
-		$
-				.ajax({
+		//performance fix
+		if ($(".selectOrderSec").length) {
+		$.ajax({
 					url : ACC.config.encodedContextPath
 							+ "/ticketForm/webOrderlines?page="
 							+ parseInt(currentPage),
@@ -378,47 +379,43 @@ ACC.WebForm = {
 							// call default first page
 							// call default first page
 							$(".orderDrop").html(htmlOption);
+							$("#totalPages").val(data.totalOrderLines);
+							
 							ACC.WebForm.attachOrderDropEvent();
 							ACC.WebForm.loadPaginationLink();
 
 						}
-						$("#totalPages").val(data.totalOrderLines);
+						
 
 					},
 					error : function(resp) {
 						console.log("Error in loadOrderLines" + resp);
 					}
 				});
+		}
 	},
 	loadPaginationLink : function() {
 		var current = $('#currentPage').val();
 		var total = $('#totalPages').val();
 		// TISPRDT-7759
-		if ($(".selectOrderSec").length) {
-
-			if (parseInt(total) <= parseInt(current)) {
-				$('#viewMoreLink').attr(
-						"href",
-						"javascript:ACC.WebForm.loadOrderLines('"
-								+ (parseInt(current) + 1) + "');");
-				$('#viewMoreLink').show();
-				$('#currentPage').val(parseInt(current) + 1);
-			} else {
-				$('#viewMoreLink').hide();
-			}
-
-			if (parseInt(current) >= 1) {
-				$('#viewBackLink').attr(
-						"href",
-						"javascript:ACC.WebForm.loadOrderLines('"
-								+ (parseInt(current) - 1) + "');");
-				$('#viewBackLink').show();
-				$('#currentPage').val(parseInt(current) - 1);
-			} else {
-				$('#viewBackLink').hide();
-			}
-
+		
+		if (parseInt(total) <= parseInt(current)) {
+			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
+			$('#viewMoreLink').show();
+			$('#currentPage').val(parseInt(current) + 1);
+		} else {
+			$('#viewMoreLink').hide();
 		}
+
+		if (parseInt(current) >= 1) {
+			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
+			$('#viewBackLink').show();
+			$('#currentPage').val(parseInt(current) - 1);
+		} else {
+			$('#viewBackLink').hide();
+		}
+
+		
 	},
 	attachOrderDropEvent : function() {
 		$('.selectOrders .orderDrop li').each(
