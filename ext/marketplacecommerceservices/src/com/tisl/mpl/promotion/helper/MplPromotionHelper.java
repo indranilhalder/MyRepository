@@ -475,8 +475,8 @@ public class MplPromotionHelper
 			}
 			else
 			{
-				promoGrpModel = getBulkPromotionCreationDao().fetchPromotionGroup(
-						MarketplacecommerceservicesConstants.PROMOTION_GROUP_DEFAULT);
+				promoGrpModel = getBulkPromotionCreationDao()
+						.fetchPromotionGroup(MarketplacecommerceservicesConstants.PROMOTION_GROUP_DEFAULT);
 			}
 		}
 		return promoGrpModel;
@@ -671,9 +671,9 @@ public class MplPromotionHelper
 			if (!isFreebie)
 			{
 
-				final String fulfillmentType = (String) entry.getAttribute(arg0, "fulfillmentType");
-				if (fulfillmentType.equalsIgnoreCase("TSHIP") && CollectionUtils.isNotEmpty(allowedProductList)
-						&& allowedProductList.contains(entry.getProduct()))
+				//final String fulfillmentType = (String) entry.getAttribute(arg0, "fulfillmentType"); // Blocked for TISPRDT-7819
+
+				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(entry.getProduct()))
 				{
 					if (CollectionUtils.isEmpty(restrictionList))
 					{
@@ -1011,8 +1011,8 @@ public class MplPromotionHelper
 		}
 		else
 		{
-			stockCountMap = getStockService().getCumulativeStockMap(
-					productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
+			stockCountMap = getStockService()
+					.getCumulativeStockMap(productCodes.toString().substring(0, productCodes.lastIndexOf(",")), promoCode, false);
 			for (final Map.Entry<String, AbstractOrderEntry> entry : validProductUssidMap.entrySet())
 			{
 				if (MapUtils.isNotEmpty(stockCountMap) && null != entry.getValue()
