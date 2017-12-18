@@ -11317,7 +11317,8 @@ function placeAnOrder(dataString){
 	   }
 	   else if(modeofPayment == 'COD') {
 		   	   if(!$("#g-recaptcha-response").val()){
-					$('#captchaError').html("<font color='red'>Please verify that you are not a robot! </font>")
+					$('#captchaError').html("<font color='red'>Please verify that you are not a robot! </font>");
+					hideloaderAndEnableButton();
 					return false;
 				}
 				else{
