@@ -1834,12 +1834,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		try
 		{
-			final CustomerModel user = (CustomerModel) abstractOrderModel.getUser();
 			AddCardResponse addCardResponse = null;
 			if (savedCardBoolean)//This will be called for new cards
 			{
 				if (StringUtils.isNotEmpty(token))
 				{
+					final CustomerModel user = (CustomerModel) abstractOrderModel.getUser();
 					addCardResponse = mplPaymentService.getCurrentCardReferenceNo(token, user.getOriginalUid(), user.getUid());
 				}
 				else
@@ -2142,10 +2142,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		final List<DiscountValue> discountList = abstractOrderModel.getGlobalDiscountValues();
 
-		final Iterator iter = discountList.iterator();
-		while (iter.hasNext())
+		for (final DiscountValue discount : discountList)
 		{
-			final DiscountValue discount = (DiscountValue) iter.next();
 			if (discount.getCode().equalsIgnoreCase(voucherModel.getCode()))
 			{
 				return discount.getValue();
@@ -2161,6 +2159,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param priceDiff
 	 * @throws CalculationException
 	 */
+	@SuppressWarnings("unused")
 	private void updateVoucherPriceAbstractOrderModel(final AbstractOrderModel abstractOrderModel,
 			final VoucherModel promotionVoucherModel, final Double priceDiff) throws CalculationException
 	{
@@ -2951,7 +2950,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				cardReferenceNo = cardList.get(0).getCard_reference();
 				LOG.debug("cardReferenceNo=" + cardReferenceNo);
 
-				voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+				voucherInvalidationModel = new VoucherCardPerOfferInvalidationModel();
 
 				voucherInvalidationModel.setGuid(abstractOrderModel.getGuid());
 				voucherInvalidationModel.setCardRefNo(cardReferenceNo);
