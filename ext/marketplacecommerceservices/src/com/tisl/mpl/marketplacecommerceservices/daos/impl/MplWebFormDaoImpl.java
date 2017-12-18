@@ -34,7 +34,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMParentNodes()
 	 */
 	@Override
@@ -52,7 +52,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
@@ -71,7 +71,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -89,7 +89,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
@@ -104,12 +104,17 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 				+ " AND { form." + MplWebCrmTicketModel.L3CODE + " }  = ?L3code " + " AND { form." + MplWebCrmTicketModel.L4CODE
 				+ " }  = ?L4code " + " AND { form." + MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail ";
 		//TISHS-172
-		if (StringUtils.isNotEmpty(formData.getOrderCode()) && StringUtils.isNotEmpty(formData.getSubOrderCode())
-				&& StringUtils.isNotEmpty(formData.getTransactionId()))
+		if (StringUtils.isNotEmpty(formData.getOrderCode()))
 		{
-			queryString = queryString + " AND  { form." + MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode " + " AND { form."
-					+ MplWebCrmTicketModel.SUBORDERCODE + " }  = ?subOrderCode " + " AND { form." + MplWebCrmTicketModel.TRANSACTIONID
-					+ " }  = ?transactionId ";
+			queryString += " AND  { form." + MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode ";
+		}
+		if (StringUtils.isNotEmpty(formData.getSubOrderCode()))
+		{
+			queryString += " AND { form." + MplWebCrmTicketModel.SUBORDERCODE + " }  = ?subOrderCode ";
+		}
+		if (StringUtils.isNotEmpty(formData.getTransactionId()))
+		{
+			queryString += " AND { form." + MplWebCrmTicketModel.TRANSACTIONID + " }  = ?transactionId ";
 		}
 
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
@@ -122,11 +127,16 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 		query.addQueryParameter("customerName", formData.getCustomerName());
 		query.addQueryParameter("customerEmail", formData.getCustomerEmail());
 
-		if (StringUtils.isNotEmpty(formData.getOrderCode()) && StringUtils.isNotEmpty(formData.getSubOrderCode())
-				&& StringUtils.isNotEmpty(formData.getTransactionId()))
+		if (StringUtils.isNotEmpty(formData.getOrderCode()))
 		{
 			query.addQueryParameter("orderCode", formData.getOrderCode());
+		}
+		if (StringUtils.isNotEmpty(formData.getSubOrderCode()))
+		{
 			query.addQueryParameter("subOrderCode", formData.getSubOrderCode());
+		}
+		if (StringUtils.isNotEmpty(formData.getTransactionId()))
+		{
 			query.addQueryParameter("transactionId", formData.getTransactionId());
 		}
 
@@ -139,5 +149,4 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 		return returnResult;
 	}
-
 }
