@@ -404,8 +404,8 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
       //	TPR-7412 start	
-		String utrNoORarnNo=null;
-		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
+		String utrNoORarnNo=StringUtils.EMPTY;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId()))
 		{
 		 utrNoORarnNo = ((MplDefaultOrderController)widget.getWidgetController()).getUtrNoArnNo(entrymodel.getOrderLineId());
 		}
@@ -418,10 +418,10 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
     //TPR-7412 end
-		if(null!=entrymodel.getOrder() && null!=entrymodel.getOrder().getUser() && null!=entrymodel.getOrder().getUser().getUid() )
+		if(null!=entrymodel.getOrder() && null!=entrymodel.getOrder().getUser() &&StringUtil.isNotEmpty(entrymodel.getOrder().getUser().getUid()) )
 		{
 			MplCustomerBankAccountDetailsModel customerBankDetailsModel = null;
-			String st=null;
+			String st=StringUtils.EMPTY;
 			customerBankDetailsModel=((MplDefaultOrderController)widget.getWidgetController()).getCustomerBankdetails(entrymodel.getOrder().getUser().getUid());
 		    if(null !=customerBankDetailsModel)
 		    {
@@ -431,26 +431,27 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		    else
 			{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
-			}
-		 // ChargeBack start
-			String chargeback = null; 
-			if(null!=entrymodel.getChargeback())
-			{
-				chargeback = entrymodel.getChargeback().toString();
-			}
-			if (StringUtils.isNotBlank(chargeback)){
-				row.appendChild(new Listcell(chargeback));
-			}
-			else{
-				row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
-			} 
-		// ChargeBack End   
+			}  
 		    
 		}
+		
 		else
 		{
 		row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
+		 // ChargeBack start
+		String chargeback = StringUtils.EMPTY; 
+		if(null!=entrymodel.getChargeback())
+		{
+			chargeback = entrymodel.getChargeback().toString();
+		}
+		if (StringUtils.isNotBlank(chargeback)){
+			row.appendChild(new Listcell(chargeback));
+		}
+		else{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		} 
+	// ChargeBack End 
 	}
 
 	

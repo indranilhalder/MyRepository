@@ -69,7 +69,7 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 			}
 		}
 		
-		if(couponFlag)
+		if(couponFlag && CollectionUtils.isNotEmpty(discounts))
 		{
 			Div container = new Div();
 			container.setSclass("voucherAlignment");
@@ -227,7 +227,7 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 				prodBox.setParent(container);
 			//}
 		}
-		if(cartCouponFlag)
+		if(cartCouponFlag && CollectionUtils.isNotEmpty(discounts))
 		{
 			Div cartcontainer = new Div();
 			cartcontainer.setSclass("voucherAlignment");

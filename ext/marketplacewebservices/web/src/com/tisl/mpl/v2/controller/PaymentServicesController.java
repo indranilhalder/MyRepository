@@ -738,8 +738,9 @@ public class PaymentServicesController extends BaseController
 														if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 														{
 															willApply = true;
+															break;
 														}
-														break;
+
 													}
 												}
 
@@ -818,8 +819,7 @@ public class PaymentServicesController extends BaseController
 						final Double cartValue = cart.getSubtotal();
 						final Double totalCODCharge = cart.getConvenienceCharges();
 
-						//saving COD Payment related info
-						getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
+
 
 						//Mandatory checks agains cart
 						if (!getMplPaymentFacade().checkCart(cart))
@@ -865,6 +865,8 @@ public class PaymentServicesController extends BaseController
 						}
 						else
 						{
+							//saving COD Payment related info
+							getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
 							//CAR-110
 							//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
 							orderCode = mplCheckoutFacade.placeOrderMobile(cart);
@@ -965,8 +967,9 @@ public class PaymentServicesController extends BaseController
 													if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 													{
 														willApply = true;
+														break;
 													}
-													break;
+
 												}
 											}
 
@@ -1036,8 +1039,7 @@ public class PaymentServicesController extends BaseController
 					final Double orderValue = orderModel.getSubtotal();
 					final Double totalCODCharge = orderModel.getConvenienceCharges();
 
-					//saving COD Payment related info
-					getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+
 
 					//Mandatory checks agains order
 					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
@@ -1071,6 +1073,8 @@ public class PaymentServicesController extends BaseController
 						}
 						else
 						{
+							//saving COD Payment related info
+							getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
 							// OrderIssues:-  multiple Payment Response from juspay restriction
 							//adding Payment id to model
 							if (mplPaymentWebFacade.updateOrder(orderModel))

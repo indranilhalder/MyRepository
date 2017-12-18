@@ -78156,7 +78156,7 @@ ul.offerui {
 }
 #paymenttermsoffersPopup .content.offer-content {
     padding: 31px 47px 75px 44px !important;
-    overflow-y: hidden;
+    overflow-y: auto;
     width: 733px !important;
     text-align: left;
 }
@@ -78331,7 +78331,7 @@ button#continue_payment_after_validate {
     list-style-type: disc !important;
 }
 #paymentoffersPopup .offer_title,
-.offer_title{
+.offerui .offer_title{
     width: 92%;
     word-break: break-all;
     display: inline-block;
@@ -78342,7 +78342,7 @@ button#continue_payment_after_validate {
     top: -16px;
 }
 #paymentoffersPopup span.offer_des,
-.offer_des {
+.offerui .offer_des {
     position: relative;
     top: -14px;
     word-break: break-all;

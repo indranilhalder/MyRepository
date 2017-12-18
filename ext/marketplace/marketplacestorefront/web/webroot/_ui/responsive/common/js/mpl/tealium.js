@@ -1559,14 +1559,14 @@ function tealiumCallOnPageLoad()
 					+ user_login_type + '",';
 				tealiumData += '"cart_total":"'
 						+ $("#cart_total").val() + '",';
-				tealiumData += '"product_unit_price":'
-						+ " " + ',';
-				tealiumData += '"product_list_price":'
-					+ " "  + ',';
+				tealiumData += '"product_unit_price":"'
+						+ '",';
+				tealiumData += '"product_list_price":"'
+					+ '",';
 				tealiumData += '"product_name":'
 					+ $("#product_name").val() + ',';
-				tealiumData += '"product_quantity":'
- 					+ " " + ',';
+				tealiumData += '"product_quantity":"'
+ 					+ '",';
  				tealiumData += '"adobe_product":"'
  					+ $("#adobe_product").val() + '",';
  				tealiumData += '"product_sku":'
@@ -1615,8 +1615,9 @@ function tealiumCallOnPageLoad()
  				 //added for kidswear:L4 needs to be populated
  				if($("#page_subcategory_name_l4").val() !=undefined || $("#page_subcategory_name_l4").val() !=null){ 
  					tealiumData += '"page_subcategory_name_L4":"'
- 				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '"}';
+ 				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '"';
  				}
+ 				tealiumData += '}';
  			 //TPR-430 End
  				data = data.replace("}<TealiumScript>", tealiumData);
 				$('#tealiumHome').html(data);
