@@ -1060,7 +1060,7 @@ amp-selector [option][selected] {
 	</amp-sidebar>
 
 	<div class="sliders main-content">
-		<amp-list src="/json/banner.json" height="370" layout="fixed-height">
+		<amp-list src="/pwamp/getHomePageBanners?version=Online" height="370" layout="fixed-height">
 			<template type="amp-mustache">
 				<amp-carousel class="slider" width="400" height="400" layout="responsive" type="slides" controls autoplay loop delay="3000">
 				  {{#moblileBanners}}
@@ -1091,7 +1091,7 @@ amp-selector [option][selected] {
 		</div>
 		<div>
 			<div id="topDealsCompCarousel">
-			<amp-list src="/json/bestpicks.json" height="320" layout="fixed-height">
+			<amp-list src="/pwamp/getBestPicks?version=Online" height="320" layout="fixed-height">
 			<template type="amp-mustache">
 				<amp-carousel height="320" layout="fixed-height" type="carousel">
 				{{#subItems}}
@@ -1122,7 +1122,7 @@ amp-selector [option][selected] {
 		</div>
 		<div>
 			<div id="brandsYouLoveMobileCompCarousel">
-			<amp-list src="/json/brandsyoulove.json" height="320" layout="fixed-height">
+			<amp-list src="/pwamp/getBrandsYouLove?version=Online" height="320" layout="fixed-height">
 				<template type="amp-mustache">
 			    <amp-carousel height="320" layout="fixed-height" type="carousel">
 			    	{{#subComponents}}
@@ -1156,7 +1156,7 @@ amp-selector [option][selected] {
 		<div>
 			<div id="whatToBuyCompCarousel">
 
-				<amp-list src="/json/productsyoucare.json" height="400" layout="fixed-height">
+				<amp-list src="/pwamp/getProductsYouCare?version=Online" height="400" layout="fixed-height">
 				<template type="amp-mustache">
 				<amp-carousel height="400" layout="fixed-height" type="carousel">
 				{{#categories}}
@@ -1182,7 +1182,7 @@ amp-selector [option][selected] {
       <div class="stayQuedTopSection">
         <h2 class="homeViewHeading">Stay Qued</h2>
       </div>
-      <amp-list src="/json/stayqued.json" height="240" layout="fixed-height">
+      <amp-list src="/pwamp/getStayQuedHomepage?version=Online" height="240" layout="fixed-height">
       <template type="amp-mustache">
       {{#allBannerJsonObject}}
       <div class="stayQuedCenter">
@@ -1215,7 +1215,7 @@ amp-selector [option][selected] {
   		</div>
   		<div>
   			<div id="newInCompCarousel">
-  			<amp-list src="/json/newandexclusive.json" height="280" layout="fixed-height">
+  			<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="280" layout="fixed-height">
   				<template type="amp-mustache">
   				<amp-carousel height="280" layout="fixed-height" type="carousel">
   				{{#newAndExclusiveProducts}}
@@ -1285,7 +1285,7 @@ amp-selector [option][selected] {
     <div class="inspireMeMobileTopSection">
       <h2 class="homeViewHeading">Inspire Me</h2>
     </div>
-    <amp-list src="/json/collectionshowcase.json" height="240" layout="fixed-height">
+    <amp-list src="/pwamp/getCollectionShowcase?version=Online" height="240" layout="fixed-height">
       <template type="amp-mustache">
         <amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000">
           {{#subComponents}}
