@@ -13,7 +13,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 
 public class ChargeBackStatus extends AbstractSimpleCustomColumnConfiguration <String, ItemModel>
 {
-	public static final String PAYMENT_STATUS = "Unsuccessful_ Chargeback";
+	public static final String PAYMENT_STATUS = "Unsuccessful_Chargeback";
 	@Override
 	protected String getItemValue(ItemModel itemModel, Locale locale)
 			throws ValueHandlerException {
@@ -24,7 +24,8 @@ public class ChargeBackStatus extends AbstractSimpleCustomColumnConfiguration <S
 			final PaymentTransactionEntryModel paymentEntry = (PaymentTransactionEntryModel) itemModel;
 			final PaymentTransactionModel paymentTransMod = paymentEntry.getPaymentTransaction();
 			
-			if(paymentEntry != null && paymentEntry.getAmount() !=null && paymentEntry.getAmount() == new BigDecimal(0.00)){
+			if(paymentEntry != null && paymentEntry.getAmount() !=null && (paymentEntry.getAmount().compareTo(new BigDecimal(0.00)) == 0)){
+				
 				paymentstatus = PAYMENT_STATUS;
 			}
 			else
