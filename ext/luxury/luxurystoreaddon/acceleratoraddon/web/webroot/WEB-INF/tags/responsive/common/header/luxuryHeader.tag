@@ -128,6 +128,7 @@
 				</ul>
 			</div>
 			<div class="header-search " id="header-search">
+			<div class="main-nav-close"></div>
 				<div class="header-search-inner">
 				<cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
 					<cms:component component="${SearchBox}" element="div"/></cms:pageSlot>
@@ -173,19 +174,23 @@
 					
 					<ul class="hidden-sm hidden-md hidden-lg mob-menu">
 					 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-						<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
+						<a href="#" class="account-userTitle account-userTitle-custom"></a>
 						<ycommerce:testId code="header_LoggedUser">
 							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-							<spring:theme code="lux.header.welcome" text=" - My Account"  /></div>
+							<span>Your Other usful links</span></div>
 						</ycommerce:testId>
-							</a>
+						
 						</li>
 					</sec:authorize>
 					</ul>
 					<ul class="hidden-sm hidden-md hidden-lg mob-menu">						
 							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<li class="account-mob">
+									<a href="<c:url value="/my-account"/>" class="wishlist">My Profile</a>
+								</li>
+
 								<li class="wishlist-mob">
-									<a href="<c:url value="/my-account/wishList"/>" class="wishlist">Wishlist</a>
+									<a href="<c:url value="/my-account/wishList"/>" class="wishlist">My Wishlist</a>
 								</li>
 							</sec:authorize>							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
