@@ -1,10 +1,12 @@
 <%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/pwamp/footer"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!doctype html>
 <html amp>
 <head>
 <meta charset="utf-8">
 <script async src="https://cdn.ampproject.org/v0.js"></script>
+<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
 <script async custom-element="amp-font" src="https://cdn.ampproject.org/v0/amp-font-0.1.js"></script>
 <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
 <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
@@ -22,6 +24,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">
 <link rel="manifest" href="/manifest.json">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black">
+<%-- <c:set var= "host" value="statshost.publishersite.com"/> --%>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.host.adobe')" var="host"/>
 
 <style amp-custom>body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFFFFF;}
 
@@ -1311,6 +1315,28 @@ amp-selector [option][selected] {
 		</div>
 	</div>
 <footer:footer/>
+
+
+	<!-- <DTM Amp-Analytics starts> -->
+<amp-analytics type="adobeanalytics_nativeConfig">
+	<script type="application/json">
+	{
+		"requests": {
+			"base": "https://${host}",           
+			"iframeMessage": "${base}/stats.html?pageURL=${ampdocUrl}&ref=${documentReferrer}"  
+		},
+		"vars": {
+			"host": "${host}"           
+		},
+		"extraUrlParams": {
+			"pageName": "HomePage",        
+			"page_type": "home",
+            "user_login_type" : "${userLoginType}",
+            "site_currency "  : "INR"
+		}
+	}
+	</script>
+</amp-analytics> 
 
 </body>
 </html>
