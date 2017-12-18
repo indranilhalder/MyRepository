@@ -14,6 +14,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
+import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -173,8 +174,11 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "mplProductFacade")
 	private MplProductFacade mplProductFacade;
 
-	@Autowired
-	private DeviceDetectionFacade deviceDetection;
+	@Resource(name = "uiExperienceService")
+	private UiExperienceService uiExperienceService;
+
+	@Resource(name = "deviceDetectionFacade")
+	private DeviceDetectionFacade deviceDetectionFacade;
 
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
@@ -1616,9 +1620,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1722,7 +1726,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
