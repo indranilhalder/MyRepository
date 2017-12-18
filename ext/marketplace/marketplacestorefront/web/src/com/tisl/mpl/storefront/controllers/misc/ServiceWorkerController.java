@@ -113,4 +113,11 @@ public class ServiceWorkerController
 		response.setContentType("application/javascript");
 		response.getWriter().write(manifest.toString());
 	}
+
+	@RequestMapping(value = "/stats.html", method = RequestMethod.GET)
+	public String adobeStats(final HttpServletRequest request, final HttpServletResponse response) throws IOException
+	{
+		// code here
+		return "pages/pwamp/stats";
+	}
 }

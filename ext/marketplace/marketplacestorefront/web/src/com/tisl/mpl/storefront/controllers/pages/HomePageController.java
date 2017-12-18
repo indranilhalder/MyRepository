@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -171,6 +172,9 @@ public class HomePageController extends AbstractPageController
 	//TPR-6740
 	@Resource(name = "mplProductFacade")
 	private MplProductFacade mplProductFacade;
+
+	@Autowired
+	private DeviceDetectionFacade deviceDetection;
 
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
@@ -383,7 +387,19 @@ public class HomePageController extends AbstractPageController
 		//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 		//					MarketplacecommerceservicesConstants.E0000));
 		//		}
-		return getViewForPage(model);
+
+		//UF-484
+		final String slotUid = ModelAttributetConstants.FOOTERSLOT;
+		getFooterContent(slotUid, model);
+		if (deviceDetection.getCurrentDetectedDevice().getMobileBrowser())
+		{
+			return "/pages/pwamp/home";
+		}
+		else
+		{
+			return getViewForPage(model);
+		}
+
 	}
 
 	@Override
@@ -1600,9 +1616,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 * 
+			 *
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 * 
+			 *
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1706,7 +1722,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 

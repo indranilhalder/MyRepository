@@ -1,5 +1,4 @@
 <%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/common/footer"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html amp>
 <head>
