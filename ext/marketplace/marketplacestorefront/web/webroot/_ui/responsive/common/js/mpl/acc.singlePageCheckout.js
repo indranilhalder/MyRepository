@@ -3311,8 +3311,8 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
-        	
-        	if(ACC.singlePageCheckout.getIsResponsive()) {
+        	var path = window.location.pathname;
+        	if(ACC.singlePageCheckout.getIsResponsive() && (path.indexOf("multi/payment-method") == -1)) {
             	$('.offer_section_responsive').css("display","block");
             	$('.offer_section_responsive').html(response);
         	} else {
