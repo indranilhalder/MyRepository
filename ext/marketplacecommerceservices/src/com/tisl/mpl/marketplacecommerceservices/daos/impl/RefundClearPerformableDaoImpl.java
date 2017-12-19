@@ -3,9 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -38,7 +38,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao#getCronDetails(java.lang.String)
 	 */
 	@Override
@@ -47,6 +47,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 		MplConfigurationModel mplConfigurationModel = new MplConfigurationModel();
 		try
 		{
+
 			final String queryString = //
 			"SELECT {cm:" + MplConfigurationModel.PK
 					+ "} "//
@@ -70,26 +71,26 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 
 	@Override
-	public List<OrderModel> getRefundClearOrders(final Date date, final Date startDate)
+	public List<ConsignmentModel> getRefundClearConsignments(final Date date, final Date startDate)
 	{
-		List<OrderModel> orderModelList = new ArrayList<OrderModel>();
+		List<ConsignmentModel> consignmentModelList = new ArrayList<ConsignmentModel>();
 		try
 		{
 
 			final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARORDERQUERY;
 			//forming the flexible search query
-			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
-					OrderStatus.REFUND_INITIATED.getCode());
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSTWO,
-					OrderStatus.REFUND_IN_PROGRESS.getCode());
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, date);
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startDate);
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
-					MarketplacecommerceservicesConstants.SUBORDER);
+			final FlexibleSearchQuery consignmentListQuery = new FlexibleSearchQuery(queryString);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
+					ConsignmentStatus.REFUND_INITIATED);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSTWO,
+					ConsignmentStatus.REFUND_IN_PROGRESS);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, date);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startDate);
+			//			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
+			//					MarketplacecommerceservicesConstants.SUBORDER);
 
 			//fetching order list from DB using flexible search query
-			orderModelList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
+			consignmentModelList = getFlexibleSearchService().<ConsignmentModel> search(consignmentListQuery).getResult();
 
 		}
 		catch (final Exception e)
@@ -97,7 +98,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 			LOG.error(e);
 		}
 
-		return orderModelList;
+		return consignmentModelList;
 	}
 
 
@@ -216,6 +217,16 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao#getRefundClearOrders(java.util.Date,
+	 * java.util.Date)
+	 */
 
 
 
