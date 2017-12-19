@@ -263,11 +263,11 @@ ACC.WebForm = {
 	simpleAjaxUpload : function() {
 		var uploadurl = ACC.config.encodedContextPath
 				+ "/ticketForm/fileUpload";
-		$.ajaxSetup({
+		/*$.ajaxSetup({
 			headers : {
 				'X-CSRF-TOKEN' : ACC.config.CSRFToken
 			}
-		});
+		});*/
 
 		$("#attachmentFile")
 				.on(
