@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
-<html amp>
+<html ⚡>
 <header:ampheader/>
 <body on="tap:AMP.setState({visible: false})" role="menu" tabindex="0">
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.host.adobe')" var="host"/>
@@ -166,63 +166,21 @@
               </section>
             </amp-accordion>
           </section>
-          <section>
-            <h4 class="l2-options">Men<i class="fa fa-angle-right"></i></h4>
-            <amp-accordion class="sidebar-menu l3-accordian">
-              <section>
-                <h4 class="l3-options">Footwear<i class="fa fa-angle-right"></i></h4>
-                <ul>
-                  <li><a href="#">Casual Shoes</a></li>
-                  <li><a href="#">Sneakers</a></li>
-                  <li><a href="#">Formal Shoes</a></li>
-                </ul>
-              </section>
-              <section>
-                <h4 class="l3-options">Ethnic Wear<i class="fa fa-angle-right"></i></h4>
-                <ul>
-                  <li><a href="#">Kurtas</a></li>
-                  <li><a href="#">Kurta Sets</a></li>
-                </ul>
-              </section>
-              <section>
-                <h4 class="l3-options">Clothing<i class="fa fa-angle-right"></i></h4>
-                <ul>
-                  <li><a href="#">T-Shirts & Polos</a></li>
-                  <li><a href="#">Casual Shirts</a></li>
-                  <li><a href="#">Jeans</a></li>
-                </ul>
-              </section>
-            </amp-accordion>
-          </section>
         </amp-accordion>
 			</section>
       <section>
 				<h4 class="l1-options">Brand<i class="fa fa-angle-right"></i></h4>
         <amp-accordion class="sidebar-menu l2-accordian">
+        <c:forEach items="${shopByBrandDataList}" var="shopByBrands">
           <section>
-            <h4 class="l2-options">Applicances<i class="fa fa-angle-right"></i></h4>
+            <h4 class="l2-options">${shopByBrands.masterBrandName}<i class="fa fa-angle-right"></i></h4>
             <ul>
-              <li><a href="#">Voltas</a></li>
-              <li><a href="#">Chroma</a></li>
-              <li><a href="#">LG</a></li>
+            <c:forEach items="${shopByBrands.subBrandList}" var="subShopByBrand">
+              <li><a href="${subShopByBrand.subBrandUrl}">${subShopByBrand.subBrandName}</a></li>
+             </c:forEach>
             </ul>
           </section>
-          <section>
-            <h4 class="l2-options">Electronics<i class="fa fa-angle-right"></i></h4>
-            <ul>
-              <li><a href="#">Xiaomi</a></li>
-              <li><a href="#">Chroma</a></li>
-              <li><a href="#">HP</a></li>
-            </ul>
-          </section>
-          <section>
-            <h4 class="l2-options">Watches & Accessories<i class="fa fa-angle-right"></i></h4>
-            <ul>
-              <li><a href="#">Titan</a></li>
-              <li><a href="#">Casio</a></li>
-              <li><a href="#">Fossil</a></li>
-            </ul>
-          </section>
+          </c:forEach>
         </amp-accordion>
 			</section>
 		</amp-accordion>
