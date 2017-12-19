@@ -177,8 +177,8 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "uiExperienceService")
 	private UiExperienceService uiExperienceService;
 
-	@Resource(name = "deviceDetectionFacade")
-	private DeviceDetectionFacade deviceDetectionFacade;
+	@Resource(name = "ampDeviceDetectionFacade")
+	private DeviceDetectionFacade ampDeviceDetectionFacade;
 
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
@@ -395,14 +395,15 @@ public class HomePageController extends AbstractPageController
 		//UF-484
 		final String slotUid = ModelAttributetConstants.FOOTERSLOT;
 		getFooterContent(slotUid, model);
-		//if (deviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
-		//{
-		//	return "/pages/pwamp/home";
-		//}
-		//else
-		//{
-		return getViewForPage(model);
-		//}
+		ampDeviceDetectionFacade.initializeRequest(request);
+		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
+		{
+			return "/pages/pwamp/home";
+		}
+		else
+		{
+			return getViewForPage(model);
+		}
 
 	}
 

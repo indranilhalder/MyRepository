@@ -1,9 +1,9 @@
 <%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/common/footer"%>
 <%@ taglib prefix="header" tagdir="/WEB-INF/tags/responsive/common/header"%>
 <!doctype html>
-<html amp>
+<html ⚡>
 <header:ampheader/>
-<body>
+<body on="tap:AMP.setState({visible: false})" role="menu" tabindex="0">
 <!-- <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker> -->
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
@@ -58,6 +58,7 @@
 						[class]="(showDropdown && term) ?
 							'autosuggest-container' :
 							'autosuggest-container hidden'">
+							<!-- autosuggest.endpoint + term + '&category=' + categoryId -->
 						<amp-list class="autosuggest-box"
 							layout="fixed-height"
 							height="140"
@@ -123,36 +124,102 @@
       </section>
 		</section>
 		<a href="#" class="header-icon-2 mobile-item"><i class="fa fa-shopping-bag"></i></a>
-		<a href="#" class="header-icon-3 mobile-item"><i tabindex="1" role="main" on="tap:AMP.setState({visible: !visible}), search_autocomplete.focus" class="fa fa-search simpleSearchToggle"></i></a>
+		<p class="header-icon-3 mobile-item"><i tabindex="1" role="main" on="tap:AMP.setState({visible: !visible}), search_autocomplete.focus" class="">&nbsp;</i></p>
 	</header>
 
 	<div class="header-clear"></div>
 	<amp-sidebar id="sidebar" layout="nodisplay" side="left">
-		<amp-accordion class="sidebar-menu">
+		<amp-accordion class="sidebar-menu l1-accordian">
 			<section>
-				<h4>Departments<i class="fa fa-angle-down"></i></h4>
-			  	<ul>
-  					<li><a href="#">Women</a></li>
-  					<li><a href="#">Men</a></li>
-  					<li><a href="#">Electronics</a></li>
-            <li><a href="#">Applicances</a></li>
-            <li><a href="#">Kids</a></li>
-            <li><a href="#">Fashion Jewellery</a></li>
-  				</ul>
+				<h4 class="l1-options">Department<i class="fa fa-angle-right"></i></h4>
+        <amp-accordion class="sidebar-menu l2-accordian">
+          <section>
+            <h4 class="l2-options">Women<i class="fa fa-angle-right"></i></h4>
+            <amp-accordion class="sidebar-menu l3-accordian">
+              <section>
+                <h4 class="l3-options">Ethnic wear<i class="fa fa-angle-right"></i></h4>
+                <ul>
+                  <li><a href="#">Kurtis And Kurtas</a></li>
+                  <li><a href="#">Suit Sets</a></li>
+                  <li><a href="#">Fusion Wear</a></li>
+                </ul>
+              </section>
+              <section>
+                <h4 class="l3-options">Inner & Nightwear<i class="fa fa-angle-right"></i></h4>
+                <ul>
+                  <li><a href="#">Bras</a></li>
+                  <li><a href="#">Panties</a></li>
+                  <li><a href="#">Lingerie Sets</a></li>
+                </ul>
+              </section>
+              <section>
+                <h4 class="l3-options">Western Wear<i class="fa fa-angle-right"></i></h4>
+                <ul>
+                  <li><a href="#">Tops & Tees</a></li>
+                  <li><a href="#">Dresses</a></li>
+                  <li><a href="#">Shirts</a></li>
+                </ul>
+              </section>
+            </amp-accordion>
+          </section>
+          <section>
+            <h4 class="l2-options">Men<i class="fa fa-angle-right"></i></h4>
+            <amp-accordion class="sidebar-menu l3-accordian">
+              <section>
+                <h4 class="l3-options">Footwear<i class="fa fa-angle-right"></i></h4>
+                <ul>
+                  <li><a href="#">Casual Shoes</a></li>
+                  <li><a href="#">Sneakers</a></li>
+                  <li><a href="#">Formal Shoes</a></li>
+                </ul>
+              </section>
+              <section>
+                <h4 class="l3-options">Ethnic Wear<i class="fa fa-angle-right"></i></h4>
+                <ul>
+                  <li><a href="#">Kurtas</a></li>
+                  <li><a href="#">Kurta Sets</a></li>
+                </ul>
+              </section>
+              <section>
+                <h4 class="l3-options">Clothing<i class="fa fa-angle-right"></i></h4>
+                <ul>
+                  <li><a href="#">T-Shirts & Polos</a></li>
+                  <li><a href="#">Casual Shirts</a></li>
+                  <li><a href="#">Jeans</a></li>
+                </ul>
+              </section>
+            </amp-accordion>
+          </section>
+        </amp-accordion>
 			</section>
-			<section>
-				<h4>Brand<i class="fa fa-angle-down"></i></h4>
-			  	<ul>
-  					<li><a href="#">Appliances</a></li>
-            <li><a href="#">Electronics</a></li>
-            <li><a href="#">Watches & Accessories</a></li>
-            <li><a href="#">Women's Wear</a></li>
-            <li><a href="#">Lingerie</a></li>
-            <li><a href="#">Men's Wear</a></li>
-            <li><a href="#">Footwear</a></li>
-            <li><a href="#">Kids</a></li>
-            <li><a href="#">A-Z List</a></li>
-  				</ul>
+      <section>
+				<h4 class="l1-options">Brand<i class="fa fa-angle-right"></i></h4>
+        <amp-accordion class="sidebar-menu l2-accordian">
+          <section>
+            <h4 class="l2-options">Applicances<i class="fa fa-angle-right"></i></h4>
+            <ul>
+              <li><a href="#">Voltas</a></li>
+              <li><a href="#">Chroma</a></li>
+              <li><a href="#">LG</a></li>
+            </ul>
+          </section>
+          <section>
+            <h4 class="l2-options">Electronics<i class="fa fa-angle-right"></i></h4>
+            <ul>
+              <li><a href="#">Xiaomi</a></li>
+              <li><a href="#">Chroma</a></li>
+              <li><a href="#">HP</a></li>
+            </ul>
+          </section>
+          <section>
+            <h4 class="l2-options">Watches & Accessories<i class="fa fa-angle-right"></i></h4>
+            <ul>
+              <li><a href="#">Titan</a></li>
+              <li><a href="#">Casio</a></li>
+              <li><a href="#">Fossil</a></li>
+            </ul>
+          </section>
+        </amp-accordion>
 			</section>
 		</amp-accordion>
     <p class="sidebar-divider-item"><a href="#"><i class="fa fa-user"></i>Sign In/Sign Up</a></p>
