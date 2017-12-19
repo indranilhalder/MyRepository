@@ -209,7 +209,7 @@ ACC.autocomplete = {
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
-								var suggestedString="";
+								 suggestedString="";
 								
 								if(data.categories.length!=undefined && data.categories.length>0){
 									
@@ -239,39 +239,20 @@ ACC.autocomplete = {
 					if(data.categories != null){
 						$.each(data.categories, function (i, obj)
 						{
-							if (document.getElementById("suggestionText")!=null) {
-								autoSearchData.push(
-										{value: obj.name,
-											code: obj.code,
-											desc: obj.description,	
-											//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
-											//Fix for TISPRO-237 :: Search - Getting wrong top line when SERP is loaded from SNS
-											//url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-										//	url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-											url:   ACC.config.encodedContextPath + "/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-											term: data.searchTerm,
-											type: "category",
-											index: i,
-											valueset: true
-											});
-							}
-							else{
-								autoSearchData.push(
-										{value: obj.name,
-											code: obj.code,
-											desc: obj.description,	
-											//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
-											//Fix for TISPRO-237 :: Search - Getting wrong top line when SERP is loaded from SNS
-											//url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-										//	url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-											url:   ACC.config.encodedContextPath + "/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-											term: data.searchTerm,
-											type: "category",
-											index: i,
-											valueset: true
-											});
-							}
-							
+							autoSearchData.push(
+									{value: obj.name,
+										code: obj.code,
+										desc: obj.description,	
+										//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
+										//Fix for TISPRO-237 :: Search - Getting wrong top line when SERP is loaded from SNS
+										//url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+									//	url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url:   ACC.config.encodedContextPath + "/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										term: data.searchTerm,
+										type: "category",
+										index: i,
+										valueset: true
+										});
 						});
 					}
 					/*if(data.seller != null){					
