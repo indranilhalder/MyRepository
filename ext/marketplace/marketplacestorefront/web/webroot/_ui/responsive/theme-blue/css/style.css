@@ -78224,6 +78224,12 @@ ul.offerui {
 	 }
  }
  @media screen and (max-width: 767px) {
+ 	#paymenttermsoffersPopup .offertermsui li {
+    	margin-bottom: 20px;
+	}
+	 #paymenttermsoffersPopup .offer_heading {
+   	 margin-left: 0px !importants;
+	}
 	 #paymentoffersPopup .content.offer-content{
 		overflow-y: auto;
 	}
