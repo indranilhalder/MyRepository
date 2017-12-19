@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -146,7 +147,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 							result1 = result.subList(remStart, remEnd);
 							response = sendSmsService.sendBulkSms(result1);
 							//}
-							///delete dynamic query
+							///change status dynamic query
 							if (response)
 							{
 								for (final BulkSmsPerBatch obj : result1)
@@ -163,16 +164,19 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 					if (deleteDynamicQuery.length() != 0)
 					{
 						subQuery = deleteDynamicQuery.substring(0, deleteDynamicQuery.length() - 1);
-						///delete rows
+						///change status of rows
 						LOG.debug("======== change status query==========" + subQuery);
 						final List<RefundTransactionEntryModel> refTraList = refundSmsDao.getModelForChangeStaus(subQuery);
 
 						final List<RefundTransactionEntryModel> newList = new ArrayList<RefundTransactionEntryModel>();
-
-						for (final RefundTransactionEntryModel refTraEntry : refTraList)
+						if (CollectionUtils.isNotEmpty(refTraList))
 						{
-							refTraEntry.setStatus(MarketplacecommerceservicesConstants.SENT);
-							newList.add(refTraEntry);
+
+							for (final RefundTransactionEntryModel refTraEntry : refTraList)
+							{
+								refTraEntry.setStatus(MarketplacecommerceservicesConstants.SENT);
+								newList.add(refTraEntry);
+							}
 						}
 						modelService.saveAll(newList);
 						subQuery = null;

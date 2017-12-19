@@ -142,8 +142,8 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 						Map<String, Integer> validProdQCountMap = null;
 						Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
-						final Map<String, AbstractOrderEntry> validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(
-								arg0, order, restrictionList, allowedProductList);//Seller Satisfied Map
+						final Map<String, AbstractOrderEntry> validUssidMap = getMplPromotionHelper()
+								.getCartTshipSellerEligibleProducts(arg0, order, restrictionList, allowedProductList);//Seller Satisfied Map
 						if (MapUtils.isNotEmpty(validUssidMap))
 						{
 							validProdQCountMap = getMplPromotionHelper().getvalidProdQCForOrderShippingPromotion(
@@ -366,7 +366,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)

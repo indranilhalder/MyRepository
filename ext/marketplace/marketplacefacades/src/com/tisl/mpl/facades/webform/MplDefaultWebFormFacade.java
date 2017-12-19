@@ -20,10 +20,12 @@ import de.hybris.platform.servicelayer.user.UserService;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.facades.cms.data.WebFormOrder;
 import com.tisl.mpl.facades.cms.data.WebFormOrderLine;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
 import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CRMWsData;
@@ -73,6 +77,8 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	private ModelService modelService;
 	@Resource(name = "webFormDataConverter")
 	private Converter<WebFormData, MplWebCrmTicketModel> webFormDataConverter;
+	@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;
 
 	/*
 	 * (non-Javadoc)
@@ -373,6 +379,9 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		final WebFormOrder form = new WebFormOrder();
 		List<WebFormOrderLine> orderLines = new ArrayList<WebFormOrderLine>();
 		String imgURl = null;
+		String consignmentStatus = null;
+		String currentStatus = null;
+		OrderStatusCodeMasterModel customerStatusModel = null;
 		try
 		{
 			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = mplOrderFacade
@@ -381,6 +390,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 			{
 				// Order Line
 				orderLines = new ArrayList<WebFormOrderLine>();
+				final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStatusCodeMasterList();
 				for (final OrderHistoryData orderHistoryData : searchPageDataParentOrder.getResults())
 				{
 
@@ -392,58 +402,73 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 						continue;
 					}
 					//SUb Order
-					for (final OrderData subOrderData : orderDetails.getSellerOrderList())
+					if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
 					{
-
-						for (final OrderEntryData line : subOrderData.getEntries())
+						for (final OrderData subOrderData : orderDetails.getSellerOrderList())
 						{
-							final WebFormOrderLine orderLine = new WebFormOrderLine();
-							if (StringUtils.isNotEmpty(orderDetails.getCode()))
+							for (final OrderEntryData line : subOrderData.getEntries())
 							{
-								orderLine.setOrderCode(orderDetails.getCode());
-							}
-							if (null != subOrderData && StringUtils.isNotEmpty(subOrderData.getCode()))
-							{
-								orderLine.setSubOrderCode(subOrderData.getCode());
-							}
-							if (StringUtils.isNotEmpty(line.getTransactionId()))
-							{
-								orderLine.setTransactionId(line.getTransactionId());
-							}
-							if (null != orderDetails.getCreated())
-							{
-								final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM ,YYYY");
-								orderLine.setOrderDate(sdf.format(orderDetails.getCreated()));
-							}
-							if (line.getAmountAfterAllDisc() != null
-									&& StringUtils.isNotEmpty(line.getAmountAfterAllDisc().getFormattedValue()))
-							{
-								orderLine.setProdTotalPrice(line.getAmountAfterAllDisc().getFormattedValue());
-							}
-							if (line.getProduct() != null && CollectionUtils.isNotEmpty(line.getProduct().getImages()))
-							{
-								for (final ImageData imageData : line.getProduct().getImages())
+								final WebFormOrderLine orderLine = new WebFormOrderLine();
+								if (StringUtils.isNotEmpty(orderDetails.getCode()))
 								{
-									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
-									{
-										imgURl = imageData.getUrl();
-										break;
-									}
-
+									orderLine.setOrderCode(orderDetails.getCode());
 								}
-							}
-							orderLine.setProdImageURL(imgURl);
-							if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
-							{
-								orderLine.setProdTitle(line.getProduct().getName());
-							}
-							//TISPRDT-7784
-							if (line.getConsignment() != null && StringUtils.isNotEmpty(line.getConsignment().getStatusDisplay()))
-							{
-								orderLine.setCustomerOrderStatus(line.getConsignment().getStatusDisplay());
-							}
+								if (null != subOrderData && StringUtils.isNotEmpty(subOrderData.getCode()))
+								{
+									orderLine.setSubOrderCode(subOrderData.getCode());
+								}
+								if (StringUtils.isNotEmpty(line.getTransactionId()))
+								{
+									orderLine.setTransactionId(line.getTransactionId());
+								}
+								if (null != orderDetails.getCreated())
+								{
+									final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM ,YYYY");
+									orderLine.setOrderDate(sdf.format(orderDetails.getCreated()));
+								}
+								if (line.getAmountAfterAllDisc() != null
+										&& StringUtils.isNotEmpty(line.getAmountAfterAllDisc().getFormattedValue()))
+								{
+									orderLine.setProdTotalPrice(line.getAmountAfterAllDisc().getFormattedValue());
+								}
+								if (line.getProduct() != null && CollectionUtils.isNotEmpty(line.getProduct().getImages()))
+								{
+									for (final ImageData imageData : line.getProduct().getImages())
+									{
+										if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+										{
+											imgURl = imageData.getUrl();
+											break;
+										}
 
-							orderLines.add(orderLine);
+									}
+								}
+								orderLine.setProdImageURL(imgURl);
+
+								//TISPRDT-7784
+								if (line.getConsignment() != null && line.getConsignment().getStatus() != null
+										&& StringUtils.isNotEmpty(line.getConsignment().getStatus().getCode())
+										&& MapUtils.isNotEmpty(orderStatusCodeMap))
+								{
+									consignmentStatus = line.getConsignment().getStatus().getCode();
+									customerStatusModel = orderStatusCodeMap.get(consignmentStatus);
+									if (customerStatusModel != null)
+									{
+										currentStatus = customerStatusModel.getStage();
+									}
+									else
+									{
+										currentStatus = MarketplacecommerceservicesConstants.EMPTY;
+									}
+								}
+								else
+								{
+									currentStatus = MarketplacecommerceservicesConstants.EMPTY;
+								}
+								orderLine.setCustomerOrderStatus(currentStatus);
+
+								orderLines.add(orderLine);
+							}
 						}
 					}
 				}

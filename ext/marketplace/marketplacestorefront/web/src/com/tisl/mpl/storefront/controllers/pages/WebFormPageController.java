@@ -29,7 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 
@@ -45,7 +45,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.cms.data.WebForm;
@@ -165,12 +164,13 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		return jsonObj;
 	}
 
-	@RequestMapping(value = "/fileUpload", method =
-	{ RequestMethod.POST })
-	public @ResponseBody String fileUpload(final MultipartHttpServletRequest request) throws CMSItemNotFoundException
+	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
+	public @ResponseBody String fileUpload(@RequestParam("uploadFile") final MultipartFile[] uploadFile)
+			throws CMSItemNotFoundException
 	{
 		String fileUploadLocation = null, nowDate = null;
 		String filelocation = null;
+		final StringJoiner fileLocations = new StringJoiner(" , ");
 		//final List<String> filelocations = new ArrayList<>();
 		Path path = null;
 		fileUploadLocation = configurationService.getConfiguration().getString(
@@ -179,8 +179,8 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		{
 			try
 			{
-				final List<MultipartFile> images = request.getFiles("uploadFile");
-				for (final MultipartFile imageFile : images)
+				//final List<MultipartFile> images = request.getFiles("uploadFile");
+				for (final MultipartFile imageFile : uploadFile)
 				{
 					final byte barr[] = imageFile.getBytes();
 					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
@@ -205,7 +205,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 					bout.flush();
 					bout.close();
 					LOG.debug("FileUploadLocation   :" + filelocation);
-					//filelocations.add(filelocation);
+					fileLocations.add(filelocation);
 				}
 
 			}
@@ -213,12 +213,12 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			{
 				LOG.error("Exception is:" + e);
 				filelocation = "error";
-				//filelocations.add(filelocation);
+				fileLocations.add(filelocation);
 			}
 		}
 
 		//return String.join(",", filelocations);
-		return filelocation;
+		return fileLocations.toString();
 	}
 
 	@RequestMapping(value = "/webOrderlines", method = RequestMethod.GET)
