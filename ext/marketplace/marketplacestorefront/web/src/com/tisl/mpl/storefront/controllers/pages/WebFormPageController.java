@@ -147,7 +147,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		return ControllerConstants.Views.Pages.Misc.webFormSuccess;
 	}
 
-	@RequestMapping(value = "/crmChildrenNodes", method = RequestMethod.GET)
+	@RequestMapping(value = "/crmChildrenNodes", method = RequestMethod.POST)
 	public @ResponseBody WebForm getChildrens(@RequestParam(value = "nodeParent") final String nodeParent)
 			throws CMSItemNotFoundException
 	{
@@ -221,7 +221,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		return fileLocations.toString();
 	}
 
-	@RequestMapping(value = "/webOrderlines", method = RequestMethod.GET)
+	@RequestMapping(value = "/webOrderlines", method = RequestMethod.POST)
 	public @ResponseBody WebFormOrder getChildrens(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
 			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
