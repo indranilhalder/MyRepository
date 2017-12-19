@@ -1223,12 +1223,11 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 				}
 			}
-			if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
-					.equals(newStatus))
-					|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
-					|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
-					|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
-					|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
+			//TISPRDT-7871 Duplicate return request data are getting generated in commerce DB
+
+			if ((ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
+					|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus)) || (ConsignmentStatus.QC_FAILED.equals(newStatus))
+					|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus)) || (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
 					&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 			{
 				LOG.debug("************************In " + newStatus + " Check .......");
@@ -1240,22 +1239,20 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				{
 					if (null != orderModel.getReturnRequests())
 					{
-						if (null != orderModel.getReturnRequests())
+
+						for (final ReturnRequestModel returnRequest : orderModel.getReturnRequests())
 						{
-							for (final ReturnRequestModel returnRequest : orderModel.getReturnRequests())
+							if (null != returnRequest.getReturnEntries())
 							{
-								if (null != returnRequest.getReturnEntries())
+								for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
 								{
-									for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
+									if (null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID())
 									{
-										if (null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID())
+										if (returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
 										{
-											if (returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
-											{
-												refundEntryModel = (RefundEntryModel) returnEntry;
-												refundEntryModelExists = true;
-												break;
-											}
+											refundEntryModel = (RefundEntryModel) returnEntry;
+											refundEntryModelExists = true;
+											break;
 										}
 									}
 								}
