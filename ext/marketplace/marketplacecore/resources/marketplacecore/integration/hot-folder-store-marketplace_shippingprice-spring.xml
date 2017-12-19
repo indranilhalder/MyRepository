@@ -84,7 +84,7 @@
                     $currency=currency(isocode)[default=$inCurrency]
                     $minimum=minimum[default='0.0']
                     $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
-				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true](sellerArticleSKU,$catalogVersion);productCode[unique=true](code,$catalogVersion);$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
+				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true](sellerArticleSKU,$catalogVersion);productCode[unique=true](code,$catalogVersion);$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes[unique=true]
             </value>
         </property>
         <property name="impexRow">

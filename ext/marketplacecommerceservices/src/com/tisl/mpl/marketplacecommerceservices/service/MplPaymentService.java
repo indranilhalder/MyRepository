@@ -444,6 +444,7 @@ public interface MplPaymentService
 	 */
 	public void rmvJuspayCardStatusForCustomer(String customerId);
 
+	public double calculateDeliveryChargeForShipping(CartModel cartModel);
 
 	/**
 	 * @param customerId
