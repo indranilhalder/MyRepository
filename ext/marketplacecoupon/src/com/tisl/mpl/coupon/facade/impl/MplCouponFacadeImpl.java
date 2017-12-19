@@ -33,6 +33,7 @@ import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.NewCustomerRestrictionModel;
 import de.hybris.platform.voucher.model.OrderRestrictionModel;
+import de.hybris.platform.voucher.model.ProductCategoryRestrictionModel;
 import de.hybris.platform.voucher.model.ProductRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
@@ -756,6 +757,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				break;
 			}
 			else if (restriction instanceof SellerRestrictionModel)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.SELLERVIOLATION);
+				error = MarketplacecommerceservicesConstants.SELLERVIOLATION;
+				break;
+			}
+			else if (restriction instanceof ProductCategoryRestrictionModel)
 			{
 				LOG.error(MarketplacecommerceservicesConstants.SELLERVIOLATION);
 				error = MarketplacecommerceservicesConstants.SELLERVIOLATION;
