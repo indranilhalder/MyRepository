@@ -395,14 +395,14 @@ public class HomePageController extends AbstractPageController
 		//UF-484
 		final String slotUid = ModelAttributetConstants.FOOTERSLOT;
 		getFooterContent(slotUid, model);
-		if (deviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
-		{
-			return "/pages/pwamp/home";
-		}
-		else
-		{
-			return getViewForPage(model);
-		}
+		//if (deviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
+		//{
+		//	return "/pages/pwamp/home";
+		//}
+		//else
+		//{
+		return getViewForPage(model);
+		//}
 
 	}
 
@@ -1620,9 +1620,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1726,7 +1726,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
