@@ -1,9 +1,11 @@
 <%@ taglib prefix="footer" tagdir="/WEB-INF/tags/responsive/common/footer"%>
 <%@ taglib prefix="header" tagdir="/WEB-INF/tags/responsive/common/header"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!doctype html>
 <html amp>
 <header:ampheader/>
 <body>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.host.adobe')" var="host"/>
 <!-- <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker> -->
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
@@ -418,5 +420,25 @@
     </amp-list>
   </div>
 <footer:ampfooter/>
+	<!-- <DTM Amp-Analytics starts> -->
+<amp-analytics type="adobeanalytics_nativeConfig">
+	<script type="application/json">
+	{
+		"requests": {
+			"base": "https://${host}",           
+			"iframeMessage": "${base}/stats.html?pageURL=${ampdocUrl}&ref=${documentReferrer}"  
+		},
+		"vars": {
+			"host": "${host}"           
+		},
+		"extraUrlParams": {
+			"pageName": "HomePage",        
+			"page_type": "home",
+            "user_login_type" : "${userLoginType}",
+            "site_currency "  : "INR"
+		}
+	}
+	</script>
+</amp-analytics> 
 </body>
 </html>
