@@ -14,7 +14,7 @@ $jarResourceCms=$config-jarResourceCmsValue
 # Necessary headers for Responsive Tata marketplace Site CMS Content 
 # 
 # 
-$productCatalogName=MarketPlace Product Catalog 
+$productCatalogName=Luxury Product Catalog 
 $picture=media(code, $contentCV) ;
 $siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
 

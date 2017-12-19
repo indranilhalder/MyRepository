@@ -723,7 +723,8 @@ TATA.CommonFunctions = {
         	}
             $("#hamburger-menu").on("click", function() {
                 $("body").addClass("menu-open");
-                $( ".header-left .tab-link, .main-nav .tab-content" ).first().addClass( "current");
+                $( ".header-left .tab-link" ).first().addClass( "current");
+                $( ".main-nav .tab-content" ).first().addClass( "current");
                 
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
