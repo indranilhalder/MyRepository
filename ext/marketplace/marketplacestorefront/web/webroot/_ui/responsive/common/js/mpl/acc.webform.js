@@ -10,7 +10,7 @@ ACC.WebForm = {
 				$.ajax({
 					url : ACC.config.encodedContextPath + "/ticketForm",
 					data : dataStr,
-					type : 'POST',
+					method : 'POST',
 					success : function(data) {
 						ACC.colorbox.open("", {
 							html : data,
@@ -261,106 +261,90 @@ ACC.WebForm = {
 
 	},
 	simpleAjaxUpload : function() {
-		var uploadurl = ACC.config.encodedContextPath
-				+ "/ticketForm/fileUpload";
-		/*$.ajaxSetup({
-			headers : {
-				'X-CSRF-TOKEN' : ACC.config.CSRFToken
-			}
-		});*/
+		var uploadurl = ACC.config.encodedContextPath+ "/ticketForm/fileUpload";
+		
+		$("#attachmentFile").on("change",function(e) {
+			e.preventDefault();
+			// Disable submit button
+			$(".webfromTicketSubmit").prop('disabled', true);
 
-		$("#attachmentFile")
-				.on(
-						"change",
-						function(e) {
-							e.preventDefault();
-							// Disable submit button
-							$(".webfromTicketSubmit").prop('disabled', true);
+			var file = $(this)[0].files[0];
+			var formData = new FormData();
+			formData.append('uploadFile', file);
+			formData.append('CSRFToken',ACC.config.CSRFToken);
 
-							var file = $(this)[0].files[0];
-							var formData = new FormData();
-							formData.append('uploadFile', file);
-							// formData.append('CSRFToken',ACC.config.CSRFToken);
+			// Ajax call for file uploaling
+			var ajaxReq = $.ajax({
+					url : uploadurl,
+					method : 'POST',
+					type : 'POST', // For jQuery < 1.9
+					data : formData,
+					async : false,
+					cache : false,
+					contentType : false,
+					enctype : 'multipart/form-data',
+					processData : false,
+					datatype : "json",
+					xhr : function() {
+						// Get XmlHttpRequest object
+						var xhr = $.ajaxSettings.xhr();
 
-							// Ajax call for file uploaling
-							var ajaxReq = $
-									.ajax({
-										url : uploadurl,
-										method : 'POST',
-										type : 'POST', // For jQuery < 1.9
-										data : formData,
-										async : false,
-										cache : false,
-										contentType : false,
-										enctype : 'multipart/form-data',
-										processData : false,
-										datatype : "json",
-										xhr : function() {
-											// Get XmlHttpRequest object
-											var xhr = $.ajaxSettings.xhr();
+						// Set onprogress event handler
+						xhr.upload.onprogress = function(event) {
+							var perc = Math.round((event.loaded / event.total) * 100);
+							$('#progressBar').text(perc + '%');
+							$('#progressBar').css('width',perc + '%');
+						};
+						return xhr;
+					},
+					beforeSend : function(xhr) {
+						// Reset alert message and progress
+						// bar
+						$('#customCareError').text('');
+						$('#progressBar').text('');
+						$('#progressBar')
+								.css('width', '0%');
+					}
+				});
 
-											// Set onprogress event handler
-											xhr.upload.onprogress = function(
-													event) {
-												var perc = Math
-														.round((event.loaded / event.total) * 100);
-												$('#progressBar').text(
-														perc + '%');
-												$('#progressBar').css('width',
-														perc + '%');
-											};
-											return xhr;
-										},
-										beforeSend : function(xhr) {
-											// Reset alert message and progress
-											// bar
-											$('#customCareError').text('');
-											$('#progressBar').text('');
-											$('#progressBar')
-													.css('width', '0%');
-										}
-									});
+			// Called on success of file upload
+			ajaxReq.done(function(data) {
+				$('#attachmentFile').val('');
+				$('.webfromTicketSubmit').prop('disabled', false);
 
-							// Called on success of file upload
-							ajaxReq
-									.done(function(data) {
-										$('#attachmentFile').val('');
-										$('.webfromTicketSubmit').prop(
-												'disabled', false);
+				if (data !== 'error') {
+					// the uploaded file
+					var inputHidden = $(
+							'<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />')
+							.val(data);
+					$("#customerWebForm").append(
+							inputHidden);
+					$("#file_success_message")
+							.text(
+									"File uploaded Sucessfully.");
+					$("#file_success_message").show();
+				} else {
+					// our application returned an error
+					var errorDiv = $(
+							'<div class="error"></div>')
+							.text(
+									"File not uploaded!!!");
+					$("#customCareError").append(
+							errorDiv);
+					$("#file_success_message").hide();
+				}
+			});
 
-										if (data !== 'error') {
-											// the uploaded file
-											var inputHidden = $(
-													'<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />')
-													.val(data);
-											$("#customerWebForm").append(
-													inputHidden);
-											$("#file_success_message")
-													.text(
-															"File uploaded Sucessfully.");
-											$("#file_success_message").show();
-										} else {
-											// our application returned an error
-											var errorDiv = $(
-													'<div class="error"></div>')
-													.text(
-															"File not uploaded!!!");
-											$("#customCareError").append(
-													errorDiv);
-											$("#file_success_message").hide();
-										}
-									});
-
-							// Called on failure of file upload
-							ajaxReq.fail(function(jqXHR) {
-								$('#customCareError').text(
-										jqXHR.responseText + '(' + jqXHR.status
-												+ ' - ' + jqXHR.statusText
-												+ ')');
-								$('.webfromTicketSubmit').prop('disabled',
-										false);
-							});
-						});
+			// Called on failure of file upload
+			ajaxReq.fail(function(jqXHR) {
+				$('#customCareError').text(
+						jqXHR.responseText + '(' + jqXHR.status
+								+ ' - ' + jqXHR.statusText
+								+ ')');
+				$('.webfromTicketSubmit').prop('disabled',
+						false);
+			});
+		});
 
 	},
 	loadOrderLines : function(currentPage) {
@@ -370,7 +354,7 @@ ACC.WebForm = {
 		$.ajax({
 				url : ACC.config.encodedContextPath
 						+ "/ticketForm/webOrderlines",
-				type : 'POST',
+				method : 'POST',
 				data : {"page": parseInt(currentPage)},
 				success : function(data) {
 					if ($.isArray(data.orderLineDatas)
@@ -508,7 +492,8 @@ ACC.WebForm = {
 			$.ajax({
 				url : ACC.config.encodedContextPath
 						+ "/ticketForm/crmChildrenNodes",
-				type : 'POST',
+				method : 'POST',
+				type : 'POST', // For jQuery < 1.9
 				data : {"nodeParent":nodeValue},
 				success : function(data) {
 					if (nodeType.startsWith("nodeL1")) {
