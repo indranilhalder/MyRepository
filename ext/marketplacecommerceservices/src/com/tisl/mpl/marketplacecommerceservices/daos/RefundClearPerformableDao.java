@@ -4,7 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 
 import java.util.Date;
 import java.util.List;
@@ -29,7 +29,7 @@ public interface RefundClearPerformableDao
 	 * @param queryStartTime
 	 * @return
 	 */
-	List<OrderModel> getRefundClearOrders(Date refundClearTAT, Date queryStartTime);
+	//	List<ConsignmentModel> getRefundClearOrders(Date refundClearTAT, Date queryStartTime);
 
 	/**
 	 * @param guid
@@ -49,6 +49,13 @@ public interface RefundClearPerformableDao
 	 * @param abstractOrderEntryModel
 	 */
 	RefundTransactionMappingModel fetchRefundTransactionByEntry(AbstractOrderEntryModel abstractOrderEntryModel);
+
+	/**
+	 * @param queryTAT
+	 * @param queryStartTime
+	 * @return
+	 */
+	List<ConsignmentModel> getRefundClearConsignments(Date queryTAT, Date queryStartTime);
 
 
 }

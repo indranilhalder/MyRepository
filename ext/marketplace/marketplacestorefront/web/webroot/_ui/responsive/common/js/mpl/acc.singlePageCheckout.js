@@ -3263,7 +3263,7 @@ ACC.singlePageCheckout = {
 		    $(this).prop('checked', true);
 		    $(this).addClass("promoapplied");
 		    var SelectedOfferRadioId = $(this).attr("id");
-		    var title_text   = $("#"+SelectedOfferRadioId+" + label").text();
+		    var title_text   = $("#"+SelectedOfferRadioId+" + label").html();
 			var title_desc   = $("#"+SelectedOfferRadioId).parent().find('.offer_des').html();
 			var title_maxmin = $("#"+SelectedOfferRadioId).parent().find('.max-min-value').html();
 			
@@ -3311,8 +3311,8 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
-        	
-        	if(ACC.singlePageCheckout.getIsResponsive()) {
+        	var path = window.location.pathname;
+        	if(ACC.singlePageCheckout.getIsResponsive() && (path.indexOf("multi/payment-method") == -1)) {
             	$('.offer_section_responsive').css("display","block");
             	$('.offer_section_responsive').html(response);
         	} else {
@@ -3354,8 +3354,10 @@ ACC.singlePageCheckout = {
 		});
 	
 	},	
-	chooseOffer:function(offerID,radioId){
+	chooseOffer:function(id,value){
 		
+		var radioId	= id;
+		var offerID =  value;
 		
 	  if(ACC.singlePageCheckout.getIsResponsive()) { //for responsive view	
 		   if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
@@ -3363,11 +3365,27 @@ ACC.singlePageCheckout = {
 		      ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
 			  setTimeout(function(){ ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId); }, 3000);
 		   } else {
-			   ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+			   //ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+			   if($( "#"+radioId ).hasClass( "promoapplied" )) { // need release
+					var releaseCode = offerID;
+					if(releaseCode != undefined && releaseCode != "") {
+				 		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
+				 	}
+				} else { //apply coupon
+					ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+				}
 		   }	
 		} else {
-			ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
-		}
+			//ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+			 if($( "#"+radioId ).hasClass( "promoapplied" )) { // need release
+					var releaseCode = offerID;
+					if(releaseCode != undefined && releaseCode != "") {
+				 		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
+				 	}
+				} else { ////apply coupon
+					ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+				}
+		}	
 		
 	},	
 	chooseOfferAjaxCall:function(offerID,radioId){
@@ -3428,7 +3446,7 @@ ACC.singlePageCheckout = {
 	 			
 	 			//offer applied from view more section Not top 3 offer | shall be the first Bank Offer visible
 	 			if(ACC.singlePageCheckout.getTopoffers(offerID) == false) {
-	 				var title_text = $("#"+radioId+" + label").text();
+	 				var title_text = $("#"+radioId+" + label").html();
 	 				var title_desc = $("#"+radioId).parent().find('.offer_des').html();
 	 				var title_maxmin = $("#"+radioId).parent().find('.max-min-value').html();
 	 				
@@ -3451,7 +3469,7 @@ ACC.singlePageCheckout = {
 	
 	 			
         	} else { // not applied
-			if(response.totalPrice.formattedValue != null) {
+			   if(response.totalPrice !=null && response.totalPrice.formattedValue != null) {
         			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
     	 			if(document.getElementById("outstanding-amount")!=null)
     	 			{
@@ -3673,14 +3691,14 @@ $(document).ready(function(){
 	
 });
 
-$(document).on('click','.promoapplied',function(e){
+/*$(document).on('click','.promoapplied',function(e){
 	event.preventDefault();
 	var releaseCode = $('.promoapplied').val();
  	if(releaseCode != undefined && releaseCode != "") {
  		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
  	}
 	    
-});
+});*/
 
 
 

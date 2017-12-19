@@ -165,7 +165,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -263,7 +263,10 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 			}
 		}
+
+		//Resetting the values of the class variable
 		callTrace.delete(0, callTrace.length() - 1);
+		isError = false;
 		return log;
 
 

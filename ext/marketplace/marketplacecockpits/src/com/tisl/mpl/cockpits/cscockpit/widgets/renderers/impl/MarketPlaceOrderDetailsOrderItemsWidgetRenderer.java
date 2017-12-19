@@ -212,7 +212,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		
 		listheader = new Listheader(LabelUtils.getLabel(widget, "chargeBack",
 				new Object[0]));
-		listheader.setWidth("135px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 		
 		// TPR-7412 end

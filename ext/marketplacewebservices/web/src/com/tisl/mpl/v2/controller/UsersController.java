@@ -9928,6 +9928,7 @@ public class UsersController extends BaseCommerceController
 				{
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
 				}
+				orderHistoryListData.setPageSize(pageSizeConFig);
 
 			}
 		}

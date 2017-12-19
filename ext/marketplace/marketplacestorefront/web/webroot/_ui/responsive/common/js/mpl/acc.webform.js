@@ -167,7 +167,7 @@ ACC.WebForm = {
 										$(this)
 												.parent()
 												.append(
-														'<span class="help-block">Please fill Mobile No.!!</span>');
+														'<span class="help-block">Mobile No should be 10 digit!!</span>'); //TISPRDT-7897
 									}
 									// console.log("mobile 2");
 								}
@@ -424,24 +424,24 @@ ACC.WebForm = {
 	loadPaginationLink : function(total) {
 		var current = $('#currentPage').val();
 		// TISPRDT-7759
-		console.log("total"+total+"current"+current);
-		if (parseInt(total) <= parseInt(current)) {
-			console.log("View more");
+		//console.log("total"+total+"current"+current);
+		if (parseInt(total) >= parseInt(current)) {
+			//console.log("View more");
 			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
 			$('#viewMoreLink').show();
 			$('#currentPage').val(parseInt(current) + 1);
 		} else {
-			console.log("View more hide");
+			//console.log("View more hide");
 			$('#viewMoreLink').hide();
 		}
 
 		if (parseInt(current) >= 1) {
-			console.log("View back");
+			//console.log("View back");
 			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
 			$('#viewBackLink').show();
 			$('#currentPage').val(parseInt(current) - 1);
 		} else {
-			console.log("View back hide");
+			//console.log("View back hide");
 			$('#viewBackLink').hide();
 		}
 
