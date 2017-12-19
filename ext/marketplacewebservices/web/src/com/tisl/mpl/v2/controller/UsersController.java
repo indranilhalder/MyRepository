@@ -69,6 +69,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -204,6 +205,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileServic
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.BankModel;
@@ -475,6 +477,9 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "i18NFacade")
 	private I18NFacade i18NFacade;
+
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
@@ -6740,7 +6745,9 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String state, @RequestParam final String pincode, @RequestParam final String cardSaved,
 			@RequestParam final String sameAsShipping, @PathVariable final String userId, @RequestParam final String cartGuid,
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
-			@RequestBody(required = false) final InventoryReservListRequestWsDTO item) throws EtailNonBusinessExceptions
+			@RequestBody(required = false) final InventoryReservListRequestWsDTO item,
+			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo)
+			throws EtailNonBusinessExceptions
 	{
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
@@ -6955,7 +6962,22 @@ public class UsersController extends BaseCommerceController
 						}
 						//ERROR MESSAGE FOR COUPON AND VOUCHER
 
-
+						//TPR-7448 Starts here
+						if (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo))
+						{
+							final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(cart, token, cardSaved,
+									cardRefNo);
+							if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+							{
+								failFlag = true;
+								failErrorCode = (String) tuple3.getSecond();
+								if (StringUtils.isNotEmpty((String) tuple3.getThird()))
+								{
+									orderCreateInJusPayWsDto.setErrorMessage((String) tuple3.getThird());
+								}
+							}
+						}
+						//TPR-7448 Ends here
 					}
 
 					//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NULL
@@ -7149,7 +7171,6 @@ public class UsersController extends BaseCommerceController
 													break;
 												}
 
-
 											}
 										}
 
@@ -7221,6 +7242,22 @@ public class UsersController extends BaseCommerceController
 					}
 					//ERROR MESSAGE FOR COUPON AND VOUCHER
 
+					//TPR-7448 Starts here
+					if (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo))
+					{
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token,
+								cardSaved, cardRefNo);
+						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+						{
+							failFlag = true;
+							failErrorCode = (String) tuple3.getSecond();
+							if (StringUtils.isNotEmpty((String) tuple3.getThird()))
+							{
+								orderCreateInJusPayWsDto.setErrorMessage((String) tuple3.getThird());
+							}
+						}
+					}
+					//TPR-7448 Ends here
 				}
 				//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NOT NULL
 
