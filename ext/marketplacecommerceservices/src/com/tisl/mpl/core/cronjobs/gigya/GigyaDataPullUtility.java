@@ -87,7 +87,7 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 		LOG.debug("calling comments.getComments with product : " + listingId + " and categoryType : " + categoryType);
 
 		final String proxySet = configService.getConfiguration().getString(RATING_PROXY_ENABLED);
-		final String secretKey = configService.getConfiguration().getString(RATING_SECRETKEY);
+		//final String secretKey = configService.getConfiguration().getString(RATING_SECRETKEY);
 		final String apiKey = configService.getConfiguration().getString(RATING_APIKEY);
 
 		//		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
@@ -105,7 +105,8 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 		mapper.getSerializerProvider().setNullKeySerializer(new GigyaDataPullUtility());
 		try
 		{
-			final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
+			//final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
+			final GSRequest gsRequest = new GSRequest(apiKey, method);
 			gsRequest.setParam(CATEGORY_ID, categoryType);
 			gsRequest.setParam(STREAM_ID, listingId);
 			gsRequest.setParam(INCLUDE_STREAM_INFO, TRUE_STATUS);
@@ -152,18 +153,8 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 		LOG.debug("calling comments.getStreamInfo with product : " + listingId + " and categoryType : " + categoryType);
 
 		final String proxySet = configService.getConfiguration().getString(RATING_PROXY_ENABLED);
-		final String secretKey = configService.getConfiguration().getString(RATING_SECRETKEY);
+		//final String secretKey = configService.getConfiguration().getString(RATING_SECRETKEY);
 		final String apiKey = configService.getConfiguration().getString(RATING_APIKEY);
-
-		//		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
-		//		final String site = currentBaseSite.getUid();
-		//
-		//		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
-		//		{
-		//			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
-		//			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
-		//
-		//		}
 
 		final String method = "comments.getStreamInfo";
 		final ObjectMapper mapper = new ObjectMapper();
@@ -172,7 +163,8 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 
 		try
 		{
-			final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
+			//final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
+			final GSRequest gsRequest = new GSRequest(apiKey, method);
 			gsRequest.setParam(CATEGORY_ID, categoryType);
 			gsRequest.setParam(STREAM_ID, listingId);
 			gsRequest.setParam(STREAM_INFO, TRUE_STATUS);
@@ -189,13 +181,6 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 			final GSResponse gsResponse = gsRequest.send();
 			if (gsResponse.getErrorCode() == 0)
 			{
-				//				final GigyaResponseCaptureModel gModel = new GigyaResponseCaptureModel();
-				//				gModel.setListingId(listingId);
-				//				//	mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-				//				final String jsonInString = mapper.writeValueAsString(gsResponse);
-				//				gModel.setReviewSummaryResponse(jsonInString);
-				//				modelService.save(gModel);
-
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
 
 				final GSObject gsCommentObject = gsObj.getObject(STREAM_INFO);
