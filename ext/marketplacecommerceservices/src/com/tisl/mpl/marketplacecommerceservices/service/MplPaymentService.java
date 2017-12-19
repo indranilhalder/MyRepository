@@ -444,7 +444,7 @@ public interface MplPaymentService
 	 */
 	public void rmvJuspayCardStatusForCustomer(String customerId);
 
-	public double calculateDeliveryChargeForShipping(CartModel cartModel);
+
 
 	/**
 	 * @param customerId
@@ -452,6 +452,7 @@ public interface MplPaymentService
 	 * @return JuspayCardStatusModel
 	 */
 	public JuspayCardStatusModel getJuspayCardStatusForCustomer(String customerId, String guid);
+
 
 
 }
