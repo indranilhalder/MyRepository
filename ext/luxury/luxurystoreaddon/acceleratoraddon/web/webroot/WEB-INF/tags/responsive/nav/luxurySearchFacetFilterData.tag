@@ -26,7 +26,7 @@
 						in <span class="searchString">${searchCategoryName}</span>""
 					</c:when>
 					<c:otherwise>
-						<span class="searchString">"All"</span>
+						<span class="searchString">${searchCategoryName}</span>
 					</c:otherwise>
 				</c:choose>
 			</c:when>
