@@ -17,8 +17,6 @@ import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.jalo.OrderPromotion;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.jalo.PromotionResult;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.result.PromotionOrderResults;
 import de.hybris.platform.util.DiscountValue;
 
@@ -27,16 +25,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 
 
 /**
@@ -59,30 +53,30 @@ public class DefaultExtendedPromoCartPopulator extends CartPopulator
 			{
 				super.populate(source, target);
 				addOveriddenPromoDetails(source, target);
-				if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
-				{
-					final Set<PromotionResultModel> eligiblePromoList = source.getAllPromotionResults();
-					boolean isShippingPromoApplied = false;
-					for (final PromotionResultModel promotionResultModel : eligiblePromoList)
-					{
-
-						final AbstractPromotionModel promotion = promotionResultModel.getPromotion();
-
-						if (promotionResultModel.getCertainty().floatValue() == 1.0F
-								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
-						{
-							isShippingPromoApplied = true;
-							break;
-						}
-					}
-
-					if (isShippingPromoApplied)
-					{
-						addDeliveryModePromotion(source, target);
-					}
-
-				}
+				//				if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
+				//				{
+				//					final Set<PromotionResultModel> eligiblePromoList = source.getAllPromotionResults();
+				//					boolean isShippingPromoApplied = false;
+				//					for (final PromotionResultModel promotionResultModel : eligiblePromoList)
+				//					{
+				//
+				//						final AbstractPromotionModel promotion = promotionResultModel.getPromotion();
+				//
+				//						if (promotionResultModel.getCertainty().floatValue() == 1.0F
+				//								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
+				//										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+				//						{
+				//							isShippingPromoApplied = true;
+				//							break;
+				//						}
+				//					}
+				//
+				//					if (isShippingPromoApplied)
+				//					{
+				//						addDeliveryModePromotion(source, target);
+				//					}
+				//
+				//				}
 				if (null != source.getConvenienceCharges())
 				{
 					target.setConvenienceChargeForCOD(createPrice(source, source.getConvenienceCharges()));
@@ -99,7 +93,7 @@ public class DefaultExtendedPromoCartPopulator extends CartPopulator
 				{
 					target.setTotalPriceWithConvCharge(createPrice(source, Double.valueOf(0.0d)));
 				}
-				//TCL-818 & TCL-947			
+				//TCL-818 & TCL-947
 				if (null != source.getCurrency().getSymbol())
 				{
 
