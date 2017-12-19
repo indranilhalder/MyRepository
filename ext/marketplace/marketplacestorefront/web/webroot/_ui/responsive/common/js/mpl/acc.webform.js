@@ -167,7 +167,7 @@ ACC.WebForm = {
 										$(this)
 												.parent()
 												.append(
-														'<span class="help-block">Please fill Mobile No.!!</span>');
+														'<span class="help-block">Mobile No should be 10 digit!!</span>'); //TISPRDT-7897
 									}
 									// console.log("mobile 2");
 								}

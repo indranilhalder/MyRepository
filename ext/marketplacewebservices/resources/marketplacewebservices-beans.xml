@@ -1598,6 +1598,7 @@
 		<property name="orderData"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.OrderDataWsDTO>" />
 		<property name="totalNoOfOrders" type="Integer" />
+		<property name="pageSize" type="Integer" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.OrderDataWsDTO">
 		<!-- cardHolderName -->
