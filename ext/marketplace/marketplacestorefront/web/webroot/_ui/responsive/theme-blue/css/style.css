@@ -78228,7 +78228,7 @@ ul.offerui {
     	margin-bottom: 20px;
 	}
 	 #paymenttermsoffersPopup .offer_heading {
-   	 margin-left: 0px !importants;
+   	 margin-left: 0px !important;
 	}
 	 #paymentoffersPopup .content.offer-content{
 		overflow-y: auto;
