@@ -255,9 +255,9 @@ ul.tabs{
                 }
 
                 .mob-login{
-                    border-bottom: 1px solid #fff;
+                    /*border-bottom: 1px solid #fff;*/
                     padding: 15px;
-                    margin-top: 15px;
+                    margin-top: 20px;
                     
                     a{
                         text-align: center;                        
@@ -584,7 +584,7 @@ ul.tabs{
             }
         }
         .mob-login{
-            background-color: #eeeeee;
+            /*background-color: #eeeeee;*/
             text-align: center;
             padding: 15px 0px;
 
@@ -592,6 +592,20 @@ ul.tabs{
                 text-transform: uppercase;
                 padding: 0px;
                 font-weight: 600;
+            }
+            &.signout{
+                
+                a{
+                    width: 94px;                   
+                    border-radius: 2px;
+                    border: solid 1px #7d7d7d;
+                    margin: 0 auto;
+                    padding: 5px 0px;
+                    cursor: pointer;
+                }
+                span{
+                    display: none;
+                }
             }
         }
         
