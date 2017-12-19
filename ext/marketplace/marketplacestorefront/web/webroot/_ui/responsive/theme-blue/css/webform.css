@@ -650,3 +650,8 @@ p.summryQuery{
 	word-break: normal !important;
 }
 /* TISPDRT-7803  */
+div#textarea_feedback {
+    float: right;
+    color: #999;
+    font-size: 12px;
+}
