@@ -6963,7 +6963,7 @@ public class UsersController extends BaseCommerceController
 						//ERROR MESSAGE FOR COUPON AND VOUCHER
 
 						//TPR-7448 Starts here
-						if (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo))
+						if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
 						{
 							final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(cart, token, cardSaved,
 									cardRefNo);
@@ -7243,7 +7243,7 @@ public class UsersController extends BaseCommerceController
 					//ERROR MESSAGE FOR COUPON AND VOUCHER
 
 					//TPR-7448 Starts here
-					if (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo))
+					if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
 					{
 						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token,
 								cardSaved, cardRefNo);
