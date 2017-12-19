@@ -632,7 +632,7 @@
 .custmCareHelp-success{
 	border:0px solid transparent !important;
 }
-#cboxContent{
+.page-faq #cboxContent{
 	max-height: 0px !important;
 	height:0px !important;
 }
