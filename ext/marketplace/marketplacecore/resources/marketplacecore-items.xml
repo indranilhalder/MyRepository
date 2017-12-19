@@ -1393,6 +1393,11 @@
 			</targetElement>
 		</relation>
 		<!-- TPR-6665 : relation betwwen slave urls with solr server config end -->
+		<!-- gigya rating-review response to the user comments using googleplus site for a listing id -->											   
+		<relation code="GigyaResp2GooglePlusSiteUserRelation" autocreate="true" generate="true" localized="false" >
+			<sourceElement qualifier ="gigyaResponseCapture" type="GigyaResponseCapture" cardinality="one"></sourceElement>
+			<targetElement qualifier = "gigyaGooglePlusUserInfo" type="GigyaGooglePlusUserInfo" cardinality="many"></targetElement>
+		</relation>	
 
 	</relations>
 	<itemtypes>
@@ -14097,8 +14102,23 @@
 				</attribute>
 			</attributes>
 		</itemtype>
-	</typegroup>
-			
+	<!-- table to store info for user commented from google plus site for a listing id-->
+		<itemtype code="GigyaGooglePlusUserInfo" autocreate="true" generate="true">
+			<deployment table="GigyaGooglePlusUserInfo" typecode="25390" />
+			<attributes>
+				<attribute autocreate="true" qualifier="uid" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="googleEmailId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>		
   </itemtypes>
 
 </items>
