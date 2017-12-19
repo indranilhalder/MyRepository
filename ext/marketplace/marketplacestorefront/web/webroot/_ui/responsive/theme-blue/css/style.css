@@ -73240,7 +73240,7 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
     width: 100%;
     margin: 0px auto;
     padding: 15px;
-    font-size: 14px;
+    font-size: 12px;/* TISPRDT-7845 */
     min-height: 45px;
     height: auto !important;
 }
@@ -78224,6 +78224,12 @@ ul.offerui {
 	 }
  }
  @media screen and (max-width: 767px) {
+ 	#paymenttermsoffersPopup .offertermsui li {
+    	margin-bottom: 20px;
+	}
+	 #paymenttermsoffersPopup .offer_heading {
+   	 margin-left: 0px !important;
+	}
 	 #paymentoffersPopup .content.offer-content{
 		overflow-y: auto;
 	}

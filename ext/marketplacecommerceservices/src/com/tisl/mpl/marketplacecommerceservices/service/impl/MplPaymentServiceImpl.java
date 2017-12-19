@@ -55,6 +55,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.io.IOException;
@@ -5219,11 +5220,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				: ((CustomerModel) orderModel.getUser()).getOriginalUid());
 		orderModel.setPaymentInfo(codPaymentInfoModel);
 
-		if (null != baseStoreService.getCurrentBaseStore())
+		final BaseStoreModel baseStore = baseStoreService.getCurrentBaseStore();
+		if (null != baseStore)
 		{
-			orderModel
-					.setConvenienceCharges(Double.valueOf(null != baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD()
-							? baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
+			final double convenienceCharge = (null != baseStore.getConvenienceChargeForCOD())
+					? baseStore.getConvenienceChargeForCOD().longValue() : 0.0;
+
+			orderModel.setConvenienceCharges(Double.valueOf(convenienceCharge));
 		}
 		else
 		{

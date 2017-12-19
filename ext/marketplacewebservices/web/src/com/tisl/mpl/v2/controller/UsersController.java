@@ -6733,7 +6733,29 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @Description : For Juspay Order Creation. It returns juspayMerchantKey, juspayMerchantId,
 	 *              juspayReturnUrl,juspayOrderId --TPR-629
+	 *
+	 * @param firstName
+	 * @param lastName
+	 * @param addressLine1
+	 * @param addressLine2
+	 * @param addressLine3
+	 * @param country
+	 * @param city
+	 * @param state
+	 * @param pincode
+	 * @param cardSaved
+	 * @param sameAsShipping
+	 * @param userId
+	 * @param cartGuid
+	 * @param platform
+	 * @param bankName
+	 * @param item
+	 * @param token
+	 *           Receives token generated using https://juspay.in/docs/api/ec/#tokenize api
+	 * @param cardRefNo
+	 *           Card reference no. of saved card.
 	 * @return OrderCreateInJusPayWsDto
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
@@ -9177,32 +9199,57 @@ public class UsersController extends BaseCommerceController
 	{
 		final String returnCancelFlag = "R";
 		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
+		final ReturnReasonDetails returnReasonData = null;
+		final ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
 		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
 				"finejewellery.reverseseal.sellername");
 		boolean isFineJew = false;
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		String sellerRichAttrOfQuickDrop = "";
+		String productRichAttrOfQuickDrop = "";
 		ProductModel productModel = null;
 		String L2Cat = null;
-		List<SubReasonsMap> subReasonList = null;
 		ParentChildReason parentChildReason = null;
+		List<SubReasonsMap> subReasonList = null;
 		try
 		{
+			//TPR-7140
+			//Initial on load conditons
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(entry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					break;
+				}
+			}
+
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
 					returnCancelFlag);
-
-
 			if (orderproductWsDto.size() > 0)
 			{
 
 				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
 				//returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
-				//TPR-4134 starts
-				returnModes.setSelfCourier(true);
-				returnModes.setSchedulePickup(true);
-				returnModes.setQuickDrop(true);
+
+
+				//	returnModes.setQuickDrop(true);
 				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
 
 				if (StringUtils.isNotEmpty(revSealSellerList))
@@ -9221,26 +9268,74 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 				}
+
 				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
 				{
-					productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
-					if (null != productModel
-							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
-									.equalsIgnoreCase(productModel.getProductCategoryType()))
+
+					if (orderEntryDto.getTransactionId().equalsIgnoreCase(transactionId.trim()))
 					{
-						isFineJew = true;
-						if (showRevSeal)
+						productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+						List<RichAttributeModel> productRichAttributeModel = null;
+						if (null != productModel && productModel.getRichAttribute() != null)
 						{
-							returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+							if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+							{
+								productRichAttrOfQuickDrop = (productRichAttributeModel.get(0).getReturnAtStoreEligible().toString());
+								LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
+							}
 						}
-						returnModes.setSelfCourier(false);
-						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						for (final SellerInformationModel sellerInformationModel : sellerInfo)
+						{
+							/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntryDto.getUSSID()))
+							{
+								List<RichAttributeModel> sellerRichAttributeModel = null;
+								if (sellerInformationModel.getRichAttribute() != null)
+								{
+									sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+									if (sellerRichAttributeModel != null
+											&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+									{
+										sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+										LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
+									}
+								}
+							}
+							if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+							{
+								if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop
+										.equalsIgnoreCase("yes")))
+								{
+									returnModes.setQuickDrop(true);
+								}
+								else
+								{
+									returnModes.setQuickDrop(false);
+								}
+							}
+
+						}
+						//break;
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							isFineJew = true;
+
+							if (showRevSeal)
+							{
+								returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							}
+							returnModes.setSelfCourier(false);
+							returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+							break;
+						}
 						break;
 					}
 				}
 				returnRequestDTO.setReturnModes(returnModes);
-				//TPR-4134 ends
-
 
 				//TPR-5954 || Category specific return reason || Start
 				//final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());

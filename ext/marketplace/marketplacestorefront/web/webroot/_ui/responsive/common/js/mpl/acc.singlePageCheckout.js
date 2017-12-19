@@ -3451,6 +3451,22 @@ ACC.singlePageCheckout = {
 	
 	 			
         	} else { // not applied
+			if(response.totalPrice.formattedValue != null) {
+        			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+    	 			if(document.getElementById("outstanding-amount")!=null)
+    	 			{
+    	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+    	 			}
+    				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+    	 			$("#codAmount").text(response.totalPrice.formattedValue);
+        		}
+        		 			
+	 			if(response.couponDiscount.value != 0 && response.couponDiscount.value !=null){
+					$("#promotionApplied").css("display","block");
+					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				} else {
+					$("#promotionApplied").css("display","none");
+				}
         		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
 				$("#juspayconnErrorDiv").css("display","block");
 				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });

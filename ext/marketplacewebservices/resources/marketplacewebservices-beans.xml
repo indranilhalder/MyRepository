@@ -3494,12 +3494,12 @@
 	
 	
 	<bean class="com.tisl.mpl.wsdto.CRMWebFormDataRequest">
-		<property name="L0code" type="String"></property>
-		<property name="L1code" type="String"></property>
-		<property name="L2code" type="String"></property>
-		<property name="L3code" type="String" />
-		<property name="L4code" type="String" />
-		<property name="attachments" type="String" />
+		<property name="nodeL0" type="String"></property>
+		<property name="nodeL1" type="String"></property>
+		<property name="nodeL2" type="String"></property>
+		<property name="nodeL3" type="String" />
+		<property name="nodeL4" type="String" />
+		<property name="attachmentFiles" type="String" />
 		<property name="ticketType" type="String" />
 		<property name="crmTicketRef" type="String" />
 		<property name="ticketSubType" type="String" />
@@ -3509,6 +3509,9 @@
 		<property name="customerId" type="String" />
 		<property name="orderCode" type="String" />
 		<property name="comment" type="String" />
+		<property name="contactEmail" type="String" />
+		<property name="contactMobile" type="String" />
+		<property name="contactName" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.CRMWebFormDataResponse">
