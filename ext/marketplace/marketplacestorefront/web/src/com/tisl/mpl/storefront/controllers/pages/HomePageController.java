@@ -13,9 +13,11 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
 import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
@@ -40,6 +42,8 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -47,6 +51,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,11 +82,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.data.ShopByBrandData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -392,12 +400,94 @@ public class HomePageController extends AbstractPageController
 		//					MarketplacecommerceservicesConstants.E0000));
 		//		}
 
-		//UF-484
-		final String slotUid = ModelAttributetConstants.FOOTERSLOT;
-		getFooterContent(slotUid, model);
+
 		ampDeviceDetectionFacade.initializeRequest(request);
 		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
 		{
+			//UF-484
+			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
+			getFooterContent(slotUid, model);
+			//Shop by navigation
+			final ContentSlotModel contentSlotModel = contentSlotService
+					.getContentSlotForId(ModelAttributetConstants.NAVIGATIONBARSLOT);
+			final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+			for (final AbstractCMSComponentModel cmsmodel : componentLists)
+			{
+				if (cmsmodel instanceof NavigationBarCollectionComponentModel)
+				{
+					final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
+					model.addAttribute(ModelAttributetConstants.COMPONENT, deptModel);
+				}
+			}
+
+
+			//Shop by brand
+			final List<BrandComponentModel> brands = cmsPageService.getBrandsForShopByBrand();
+			final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
+			BrandComponentModel brandComponent = null;
+			for (final BrandComponentModel brand : brands)
+			{
+				final String component = brand.getUid();
+				//AtoZ brands starts
+				if (component.equals(ModelAttributetConstants.ATOZBRANDSCOMPONENT))
+				{
+					Map<Character, List<CategoryModel>> sortedMap = null;
+
+					sortedMap = brandFacade.getAllBrandsFromCmsCockpit(component);
+
+					Map<Character, List<CategoryModel>> GroupBrandsAToE = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsFToJ = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsKToO = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsPToT = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsUToZ = new TreeMap<Character, List<CategoryModel>>();
+
+					GroupBrandsAToE = getBrandsForRange('A', 'E', sortedMap);
+					GroupBrandsFToJ = getBrandsForRange('F', 'J', sortedMap);
+					GroupBrandsKToO = getBrandsForRange('K', 'O', sortedMap);
+					GroupBrandsPToT = getBrandsForRange('P', 'T', sortedMap);
+					GroupBrandsUToZ = getBrandsForRange('U', 'Z', sortedMap);
+
+
+					model.addAttribute(ModelAttributetConstants.A_E_Brands, GroupBrandsAToE);
+					model.addAttribute(ModelAttributetConstants.F_J_Brands, GroupBrandsFToJ);
+					model.addAttribute(ModelAttributetConstants.K_O_Brands, GroupBrandsKToO);
+					model.addAttribute(ModelAttributetConstants.P_T_Brands, GroupBrandsPToT);
+					model.addAttribute(ModelAttributetConstants.U_Z_Brands, GroupBrandsUToZ);
+				}
+				//AtoZ brands ends
+
+				final ShopByBrandData shopByBrandData = new ShopByBrandData();
+				if (StringUtils.isNotEmpty(component))
+				{
+					brandComponent = (BrandComponentModel) cmsComponentService.getSimpleCMSComponent(component);
+				}
+				shopByBrandData.setLayout(brandComponent.getLayout());
+				shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
+				shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
+				shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
+				shopByBrandData.setSubBrands(brandComponent.getSubBrands());
+				shopByBrandDataList.add(shopByBrandData);
+				model.addAttribute(ModelAttributetConstants.SHOPBYBRANDDATALIST, shopByBrandDataList);
+				for (final CategoryModel category : brandComponent.getSubBrands())
+				{
+					String categoryPath = GenericUtilityMethods.urlSafe(category.getName());
+					if (StringUtils.isNotEmpty(categoryPath))
+					{
+						try
+						{
+							categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+						}
+						catch (final UnsupportedEncodingException e)
+						{
+							LOG.error(e.getMessage());
+						}
+						categoryPath = categoryPath.toLowerCase();
+						categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+					}
+					category.setName(category.getName() + "||" + categoryPath);
+				}
+			}
+
 			return "/pages/pwamp/home";
 		}
 		else
@@ -439,38 +529,38 @@ public class HomePageController extends AbstractPageController
 		return super.getContentPageForLabelOrId(labelOrId);
 	}
 
-	//	/**
-	//	 * @param AtoZ
-	//	 *           brands range
-	//	 * @param endCharacter
-	//	 * @param sortedMap
-	//	 * @return map
-	//	 */
-	//	@SuppressWarnings(
-	//	{ "boxing", "javadoc" })
-	//	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
-	//			final Map<Character, List<CategoryModel>> sortedMap)
-	//	{
-	//		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
-	//
-	//		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
-	//		{ //ASCII Value of entry key
-	//			final int entryKeyCharacterASCII = entry.getKey();
-	//
-	//			//ASCII value of startCharacter
-	//			final int startCharacterASCII = startCharacter;
-	//
-	//			//ASCII value of endCharacter
-	//			final int endCharacterASCII = endCharacter;
-	//
-	//			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
-	//			{
-	//				brandsByRange.put(entry.getKey(), entry.getValue());
-	//			}
-	//
-	//		}
-	//		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
-	//	}
+	/**
+	 * @param AtoZ
+	 *           brands range
+	 * @param endCharacter
+	 * @param sortedMap
+	 * @return map
+	 */
+	@SuppressWarnings(
+	{ "boxing", "javadoc" })
+	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
+			final Map<Character, List<CategoryModel>> sortedMap)
+	{
+		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
+
+		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
+		{ //ASCII Value of entry key
+			final int entryKeyCharacterASCII = entry.getKey();
+
+			//ASCII value of startCharacter
+			final int startCharacterASCII = startCharacter;
+
+			//ASCII value of endCharacter
+			final int endCharacterASCII = endCharacter;
+
+			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
+			{
+				brandsByRange.put(entry.getKey(), entry.getValue());
+			}
+
+		}
+		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
+	}
 
 	/**
 	 * @description this is called to update the page title
@@ -1823,6 +1913,7 @@ public class HomePageController extends AbstractPageController
 
 			model.addAttribute("footerSocialIconList", fData.getFooterSocialIconList());
 			model.addAttribute("footerText", fData.getFooterText());
+			model.addAttribute("footerTextMobile", fData.getFooterTextMobile());
 			model.addAttribute("notice", fData.getNotice());
 			model.addAttribute("footerAppImageList", fData.getFooterAppImageList());
 			model.addAttribute("navigationNodes", fData.getNavigationNodes());

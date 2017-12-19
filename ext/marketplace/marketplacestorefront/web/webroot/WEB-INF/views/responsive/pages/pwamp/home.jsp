@@ -2,7 +2,7 @@
 <%@ taglib prefix="header" tagdir="/WEB-INF/tags/responsive/common/header"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!doctype html>
-<html ⚡>
+<html amp>
 <header:ampheader/>
 <body on="tap:AMP.setState({visible: false})" role="menu" tabindex="0">
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.host.adobe')" var="host"/>
@@ -488,7 +488,7 @@
   </div>
 <footer:ampfooter/>
 	<!-- <DTM Amp-Analytics starts> -->
-<amp-analytics type="adobeanalytics_nativeConfig">
+<!--  <amp-analytics type="adobeanalytics_nativeConfig">
 	<script type="application/json">
 	{
 		"requests": {
@@ -506,6 +506,6 @@
 		}
 	}
 	</script>
-</amp-analytics> 
+</amp-analytics> -->
 </body>
 </html>

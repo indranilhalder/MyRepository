@@ -109,7 +109,7 @@
 			              </section>
       		
           </amp-accordion>
-          <p class="footer-copyright"> 2017 Tata CLiQ | All rights reserved</p>
+          <p class="footer-copyright"> ${notice}</p>
         </section>
       </section>
     </section>

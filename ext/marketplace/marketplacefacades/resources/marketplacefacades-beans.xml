@@ -1142,6 +1142,7 @@
 		<bean class="com.tisl.mpl.facades.data.FooterComponentData">
 		<property name="footerSocialIconList" type="java.util.List&lt;com.tisl.mpl.facades.data.SimpleBannerComponentData>"></property>
 		<property name="footerText" type="String"></property>
+		<property name="footerTextMobile" type="String"></property>
 		<property name="notice" type="String"></property>
 		<property name="footerAppImageList" type="java.util.List&lt;com.tisl.mpl.facades.data.SimpleBannerComponentData>"></property>
 		<property name="contactNumber" type="String"></property>
