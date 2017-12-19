@@ -82,7 +82,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -159,7 +159,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -240,7 +240,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -444,7 +444,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 									}
 								}
 								orderLine.setProdImageURL(imgURl);
-
+								if (line.getProduct() != null && StringUtils.isNotEmpty(line.getProduct().getName()))
+								{
+									orderLine.setProdTitle(line.getProduct().getName());
+								}
 								//TISPRDT-7784
 								if (line.getConsignment() != null && line.getConsignment().getStatus() != null
 										&& StringUtils.isNotEmpty(line.getConsignment().getStatus().getCode())
