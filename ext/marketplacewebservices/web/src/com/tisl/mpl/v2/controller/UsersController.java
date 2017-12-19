@@ -6733,7 +6733,29 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @Description : For Juspay Order Creation. It returns juspayMerchantKey, juspayMerchantId,
 	 *              juspayReturnUrl,juspayOrderId --TPR-629
+	 *
+	 * @param firstName
+	 * @param lastName
+	 * @param addressLine1
+	 * @param addressLine2
+	 * @param addressLine3
+	 * @param country
+	 * @param city
+	 * @param state
+	 * @param pincode
+	 * @param cardSaved
+	 * @param sameAsShipping
+	 * @param userId
+	 * @param cartGuid
+	 * @param platform
+	 * @param bankName
+	 * @param item
+	 * @param token
+	 *           Receives token generated using https://juspay.in/docs/api/ec/#tokenize api
+	 * @param cardRefNo
+	 *           Card reference no. of saved card.
 	 * @return OrderCreateInJusPayWsDto
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
