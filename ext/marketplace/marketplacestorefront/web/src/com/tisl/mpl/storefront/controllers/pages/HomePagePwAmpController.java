@@ -3,10 +3,14 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+import de.hybris.platform.cms2.model.navigation.CMSNavigationNodeModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
@@ -56,8 +60,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.DepartmentHierarchyData;
+import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
+import com.tisl.mpl.wsdto.DepartmentSubHierarchyData;
+import com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData;
 
 
 /**
@@ -1086,5 +1095,217 @@ public class HomePagePwAmpController extends AbstractPageController
 		}
 
 		return productPriceMap;
+	}
+
+	@RequestMapping(value = "/getAllCategories", method = RequestMethod.GET)
+	@ResponseBody
+	public DepartmentListHierarchyDataAmp fetchAllCategories()
+	{
+		final DepartmentListHierarchyDataAmp shopByDeptData = new DepartmentListHierarchyDataAmp();
+		final List<DepartmentHierarchyData> deptDataList = new ArrayList<DepartmentHierarchyData>();
+		//	List<DepartmentSubHierarchyData> subDeptDataList = null;
+		DepartmentHierarchyData deptData = null;
+		DepartmentSubHierarchyData subDeptData = null;
+		List<NavigationBarComponentModel> departmentList = new ArrayList<NavigationBarComponentModel>();
+		Date modifiedTime = null;
+		subDeptData = new DepartmentSubHierarchyData();
+
+		DepartmentSuperSubHierarchyData thirdLevelCat = null;
+		thirdLevelCat = new DepartmentSuperSubHierarchyData();
+		List<DepartmentSubHierarchyData> subDeptDataList = null;
+		List<DepartmentSuperSubHierarchyData> superSubDeptDataList = null;
+
+
+		try
+		{
+
+			String componentUid = null;
+			if (null != configurationService && null != configurationService.getConfiguration()
+					&& null != ControllerConstants.SHOPBYDEPTCOMPONENT)
+			{
+				componentUid = configurationService.getConfiguration().getString(ControllerConstants.SHOPBYDEPTCOMPONENT);
+			}
+
+			final NavigationBarCollectionComponentModel shopByDeptComponent = (NavigationBarCollectionComponentModel) cmsComponentService
+					.getSimpleCMSComponent(componentUid);
+
+
+
+
+			if (CollectionUtils.isNotEmpty(shopByDeptComponent.getComponents()))
+			{
+				departmentList = shopByDeptComponent.getComponents();
+			}
+
+			for (final NavigationBarComponentModel dept : departmentList)
+			{
+				final CMSLinkComponentModel superNode = dept.getLink();
+				final CMSNavigationNodeModel linkNode = dept.getNavigationNode();
+				deptData = new DepartmentHierarchyData();
+				subDeptDataList = new ArrayList<DepartmentSubHierarchyData>();
+
+				//Super category
+				if (null != modifiedTime && null != dept.getModifiedtime() && dept.getModifiedtime().compareTo(modifiedTime) > 0)
+				{
+					modifiedTime = dept.getModifiedtime();
+				}
+
+				if (null != superNode.getCategory() && StringUtils.isNotEmpty(superNode.getCategory().getCode()))
+				{
+					deptData.setSuper_category_id(superNode.getCategory().getCode());
+				}
+				if (StringUtils.isNotEmpty(superNode.getLinkName()))
+				{
+					deptData.setSuper_category_name(superNode.getLinkName());
+				}
+
+				//TISQAUAT-613--Start
+				if (StringUtils.isNotEmpty(superNode.getDeeplinkType()))
+				{
+					deptData.setDeepLinkType(superNode.getDeeplinkType());
+				}
+				if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeId()))
+				{
+					deptData.setDeepLinkId(superNode.getDeeplinkTypeId());
+				}
+				if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeVal()))
+				{
+					deptData.setDeepLinkVal(superNode.getDeeplinkTypeVal());
+				}
+				//TISQAUAT-613--End
+
+				if (StringUtils.isNotEmpty(superNode.getUrl()))
+				{
+					deptData.setUrl(superNode.getUrl());
+				}
+
+				//Sub category
+				if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
+				{
+					for (final CMSNavigationNodeModel sublink : linkNode.getChildren())
+					{
+						if (CollectionUtils.isNotEmpty(sublink.getLinks()))
+						{
+							subDeptData = new DepartmentSubHierarchyData();
+							superSubDeptDataList = new ArrayList<DepartmentSuperSubHierarchyData>();
+
+							final CMSLinkComponentModel sublinknode = sublink.getLinks().get(0);
+
+							if (null != modifiedTime && null != sublink.getModifiedtime()
+									&& sublink.getModifiedtime().compareTo(modifiedTime) > 0)
+							{
+								modifiedTime = sublink.getModifiedtime();
+							}
+
+							if (null != sublinknode.getCategory() && StringUtils.isNotEmpty(sublinknode.getCategory().getCode()))
+							{
+								subDeptData.setSub_category_id(sublinknode.getCategory().getCode());
+							}
+							if (StringUtils.isNotEmpty(sublink.getTitle()))
+							{
+								subDeptData.setSub_category_name(sublink.getTitle());
+							}
+							//TISQAUAT-613--Start
+							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkType()))
+							{
+								subDeptData.setDeepLinkType(sublinknode.getDeeplinkType());
+							}
+							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeId()))
+							{
+								subDeptData.setDeepLinkId(sublinknode.getDeeplinkTypeId());
+							}
+							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeVal()))
+							{
+								subDeptData.setDeepLinkVal(sublinknode.getDeeplinkTypeVal());
+							}
+
+							//TISQAUAT-613--End
+							if (StringUtils.isNotEmpty(sublinknode.getUrl()))
+							{
+								subDeptData.setUrl(sublinknode.getUrl());
+							}
+							int count = 0;
+							//Super sub category
+							for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
+							{
+
+								if (count > 0)
+								{
+									thirdLevelCat = new DepartmentSuperSubHierarchyData();
+
+									if (null != modifiedTime && null != thirdLevelsublink.getModifiedtime()
+											&& thirdLevelsublink.getModifiedtime().compareTo(modifiedTime) > 0)
+									{
+										modifiedTime = thirdLevelsublink.getModifiedtime();
+									}
+
+									if (null != thirdLevelsublink.getCategory()
+											&& StringUtils.isNotEmpty(thirdLevelsublink.getCategory().getCode()))
+									{
+										thirdLevelCat.setSuper_sub_category_id(thirdLevelsublink.getCategory().getCode());
+									}
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getLinkName()))
+									{
+										thirdLevelCat.setSuper_sub_category_name(thirdLevelsublink.getLinkName());
+									}
+									//TISQAUAT-613--Start
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkType()))
+									{
+										thirdLevelCat.setDeepLinkType(thirdLevelsublink.getDeeplinkType());
+									}
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeId()))
+									{
+										thirdLevelCat.setDeepLinkId(thirdLevelsublink.getDeeplinkTypeId());
+									}
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeVal()))
+									{
+										thirdLevelCat.setDeepLinkVal(thirdLevelsublink.getDeeplinkTypeVal());
+									}
+									//TISQAUAT-613--End
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getUrl()))
+									{
+										thirdLevelCat.setUrl(thirdLevelsublink.getUrl());
+									}
+
+									superSubDeptDataList.add(thirdLevelCat);
+								}
+								count++;
+
+							}
+
+							subDeptData.setSupersubCategories(superSubDeptDataList);
+							subDeptDataList.add(subDeptData);
+						}
+					}
+
+					if (!subDeptDataList.isEmpty())
+					{
+						deptData.setSubCategories(subDeptDataList);
+					}
+				}
+
+				deptDataList.add(deptData);
+			}
+
+			if (null != modifiedTime && !StringUtils.isEmpty(modifiedTime.toString()))
+			{
+				shopByDeptData.setModifiedTime(modifiedTime.toString());
+			}
+
+			if (!deptDataList.isEmpty())
+			{
+				shopByDeptData.setItems(deptDataList);
+			}
+
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			throw new EtailNonBusinessExceptions(e, ControllerConstants.B9004);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, ControllerConstants.B9004);
+		}
+		return shopByDeptData;
 	}
 }

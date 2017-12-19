@@ -266,6 +266,7 @@
 		<property name="deepLinkId" type="String" />
 		<property name="deepLinkVal" type="String" />
 		<!-- TISQAUAT-613 --> 
+		<property name="url" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSubHierarchyData">
 		<property name="sub_category_name" type="String" />
@@ -277,6 +278,7 @@
 		<property name="deepLinkId" type="String" />
 		<property name="deepLinkVal" type="String" />
 		<!-- TISQAUAT-613 -->
+		<property name="url" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData">
 
@@ -287,7 +289,7 @@
 		<property name="deepLinkId" type="String" />
 		<property name="deepLinkVal" type="String" />
 		<!-- TISQAUAT-613 --> 
-		
+		<property name="url" type="String" />
 
 	</bean>
 
