@@ -337,21 +337,41 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		String commerceRef = null;
 		try
 		{
-			formData.setComment(crmTicket.getComment());
+			final String ticketSubType = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB, "L1C1");
+
 			final CustomerData currentUser = customerFacade.getCurrentCustomer();
 			if (currentUser != null)
 			{
 				formData.setCustomerId(currentUser.getUid());
 			}
-			formData.setL0code(crmTicket.getL0code());
-			formData.setL1code(crmTicket.getL1code());
-			formData.setL2code(crmTicket.getL2code());
-			formData.setL3code(crmTicket.getL3code());
-			formData.setL4code(crmTicket.getL4code());
+			formData.setL0code(crmTicket.getNodeL0());
+			formData.setL1code(crmTicket.getNodeL1());
+			formData.setL2code(crmTicket.getNodeL2());
+			formData.setL3code(crmTicket.getNodeL3());
+			formData.setL4code(crmTicket.getNodeL4());
 			formData.setOrderCode(crmTicket.getOrderCode());
 			formData.setSubOrderCode(crmTicket.getSubOrderCode());
 			formData.setTransactionId(crmTicket.getTransactionId());
-			formData.setAttachments(crmTicket.getAttachments());
+			formData.setAttachments(crmTicket.getAttachmentFiles());
+			if (StringUtils.isNotEmpty(crmTicket.getComment()))
+			{
+				formData.setComment(crmTicket.getComment());
+			}
+			formData.setCustomerMobile(crmTicket.getContactMobile());
+			formData.setCustomerEmail(crmTicket.getContactEmail());
+			formData.setTicketType(crmTicket.getTicketType());
+			if (crmTicket.getNodeL1().equalsIgnoreCase(ticketSubType))
+			{
+				formData.setTicketSubType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER);
+			}
+			else
+			{
+				formData.setTicketSubType(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_NONORDER);
+			}
+
+
+
 
 			commerceRef = sendWebformTicket(formData);
 			// API response set
