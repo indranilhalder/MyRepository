@@ -238,7 +238,9 @@
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.home.delivery"/> (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			<!-- UF-306 ends -->
 																			
-																		<p>${delMode.description }</p></label></li>
+																		<p>${delMode.description }</p>
+																		<p>Shipping Charges subject to change depending on final Order Value</p>
+																		</label></li>
 																		<%-- <c:set var='delModeChecked'  value='true' /> --%>			
 																	</c:when>
 																	<c:when test="${delMode.code eq 'click-and-collect'}">
