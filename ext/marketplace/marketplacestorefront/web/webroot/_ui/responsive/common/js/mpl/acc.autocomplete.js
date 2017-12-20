@@ -209,7 +209,7 @@ ACC.autocomplete = {
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
-								var suggestedString="";
+								 suggestedString="";
 								
 								if(data.categories.length!=undefined && data.categories.length>0){
 									
