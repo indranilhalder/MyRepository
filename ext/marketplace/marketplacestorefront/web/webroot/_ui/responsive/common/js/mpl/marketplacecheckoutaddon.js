@@ -59,8 +59,10 @@ function viewPaymentCredit(){
 	//TPR-7486
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
-	} else {
 		$('#continue_payment_after_validate').hide();
+	} else {
+		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate_responsive').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -113,8 +115,10 @@ function viewPaymentDebit(){
 	//TPR-7486
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
-	} else {
 		$('#continue_payment_after_validate').hide();
+	} else {
+		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate_responsive').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -152,9 +156,11 @@ function viewPaymentNetbanking(){
 	//TPR-7486
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
-	} else {
 		$('#continue_payment_after_validate').hide();
-	}	
+	} else {
+		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate_responsive').hide();
+	}		
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
 	$("#prepaidtermsconditions").show();
@@ -196,9 +202,11 @@ function viewPaymentCOD(){
 	//TPR-7486
 		if(ACC.singlePageCheckout.getIsResponsive()) {
 			$('#continue_payment_after_validate_responsive').show();
-		} else {
 			$('#continue_payment_after_validate').hide();
-		}	
+		} else {
+			$('#continue_payment_after_validate').show();
+			$('#continue_payment_after_validate_responsive').hide();
+		}		
 	$("#codtermsconditions").show();	
 	$("#prepaidtermsconditions").hide();
 		
@@ -234,8 +242,10 @@ function viewPaymentEMI(){
 	//TPR-7486
 		if(ACC.singlePageCheckout.getIsResponsive()) {
 			$('#continue_payment_after_validate_responsive').show();
-		} else {
 			$('#continue_payment_after_validate').hide();
+		} else {
+			$('#continue_payment_after_validate').show();
+			$('#continue_payment_after_validate_responsive').hide();
 		}	
 		resetConvChargeElsewhere(); //REMOVE CONV CHARGE 	
 		$("#codtermsconditions").hide();	
@@ -1809,8 +1819,10 @@ function savedCreditCardRadioChange(radioId){
 	   //TPR-7486
 	 	if(ACC.singlePageCheckout.getIsResponsive()) {
 	 		$('#continue_payment_after_validate_responsive').show();
-	 	} else {
 	 		$('#continue_payment_after_validate').hide();
+	 	} else {
+	 		$('#continue_payment_after_validate').show();
+	 		$('#continue_payment_after_validate_responsive').hide();
 	 	}	
  //});
 }
@@ -1875,12 +1887,14 @@ function savedDebitCardRadioChange(radioId){
 				$("#maestroMessage").css("display","none");
 	     }
 	     $("#paymentMode_newcard_savedcard").val("savedCard"); //for responsive --TPR-7486
-	     //TPR-7486
-		 	if(ACC.singlePageCheckout.getIsResponsive()) {
-		 		$('#continue_payment_after_validate_responsive').show();
-		 	} else {
-		 		$('#continue_payment_after_validate').hide();
-		 	}	
+	   //TPR-7486
+	 	if(ACC.singlePageCheckout.getIsResponsive()) {
+	 		$('#continue_payment_after_validate_responsive').show();
+	 		$('#continue_payment_after_validate').hide();
+	 	} else {
+	 		$('#continue_payment_after_validate').show();
+	 		$('#continue_payment_after_validate_responsive').hide();
+	 	}	
 	 //});
 }
   
@@ -11364,6 +11378,7 @@ function tokenizeJuspayCard(paymentMode)
 	var card_exp_year="";
 	var card_exp_month="";
 	var card_security_code="";
+	var name_on_card="";
 	if(paymentMode=="CC")
 	{
 		merchant_id=$("#newCardCC #merchant_id").val();
@@ -11371,6 +11386,7 @@ function tokenizeJuspayCard(paymentMode)
 		card_exp_year=$("#newCardCC select[name=expyy] option:selected").val();
 		card_exp_month=$("#newCardCC select[name=expmm] option:selected").val();
 		card_security_code=$("#newCardCC input[name=cvv]").val();
+		name_on_card=$("#newCardCC input[name=memberName]").val();
 	}
 	else if(paymentMode=="DC")
 	{
@@ -11379,6 +11395,7 @@ function tokenizeJuspayCard(paymentMode)
 		card_exp_year=$("#debitCard select[name=expyy] option:selected").val();
 		card_exp_month=$("#debitCard select[name=expmm] option:selected").val();
 		card_security_code=$("#debitCard input[name=cvv]").val();
+		name_on_card=$("#debitCard input[name=memberName]").val();
 	}
 	else if(paymentMode=="EM")
 	{
@@ -11387,6 +11404,7 @@ function tokenizeJuspayCard(paymentMode)
 		card_exp_year=$("#newCardCCEmi select[name=expyy] option:selected").val();
 		card_exp_month=$("#newCardCCEmi select[name=expmm] option:selected").val();
 		card_security_code=$("#newCardCCEmi input[name=cvv]").val();
+		name_on_card=$("#newCardCCEmi input[name=memberName]").val();
 	}
 	
 	var url=$("#juspayBaseUrl").val();
@@ -11396,7 +11414,7 @@ function tokenizeJuspayCard(paymentMode)
 		$.ajax({
 			url: url+"/card/tokenize",
 			type: "POST",
-			data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code},
+			data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code,'name_on_card':name_on_card},
 			cache: false,
 			async:false,
 			success : function(response) {
