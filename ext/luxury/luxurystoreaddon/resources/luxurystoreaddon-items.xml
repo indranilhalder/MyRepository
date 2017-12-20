@@ -612,22 +612,22 @@
 				<description>Creating the luxury Customer Category Model .</description>
 				<deployment table="LuxuryHomePagePreference" typecode="11066" />
 				<attributes>
-					<attribute qualifier="gender" autocreate="true" type="Gender"
+					<attribute qualifier="gender" autocreate="true" type="java.lang.String"
 							generate="true">
 							<modifiers read="true" write="true" search="true"
 								optional="true" />
 							<persistence type="property" />
 						</attribute>
-						<attribute autocreate="true" generate="true" qualifier="category" type="HomePageTypes">
+						<attribute autocreate="true" generate="true" qualifier="category" type="java.lang.String">
 							<description>the category.</description>
 							<persistence type="property" />
 							<modifiers read="true" write="true" initial="false"
 								optional="true" />
 						</attribute>
 						<attribute type="java.lang.String" qualifier="pageID"
-							autocreate="true" generate="true">
+							autocreate="true" generate="true" >
 							<persistence type="property"></persistence>
-							<modifiers optional="false" />
+							<modifiers optional="false" unique="true" />
 						</attribute>
 					</attributes>
 		</itemtype>		
