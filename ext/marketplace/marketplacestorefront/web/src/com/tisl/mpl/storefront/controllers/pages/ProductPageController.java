@@ -54,18 +54,25 @@ import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
+import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
@@ -78,23 +85,27 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -110,7 +121,9 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -143,8 +156,9 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
+import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
+import com.tisl.mpl.facade.msd.MSDWidgetFacade;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.product.MplJewelleryFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
@@ -153,7 +167,8 @@ import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.data.ATSResponseData;
+import com.tisl.mpl.facades.data.MSDRequestdata;
+import com.tisl.mpl.facades.data.MSDResponsedata;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -164,10 +179,26 @@ import com.tisl.mpl.facades.product.data.ExchangeGuideData;
 import com.tisl.mpl.facades.product.data.ExchangeGuideDropdownData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
+import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
+import com.tisl.mpl.model.BuyAPercentageDiscountModel;
+import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
+import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
+import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
+import com.tisl.mpl.model.ManufacturersRestrictionModel;
+import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
+import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -185,6 +216,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 import atg.taglib.json.util.JSONException;
+
 
 
 /**
@@ -270,12 +302,21 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	private static final String PRODUCTCODE = "productCode";
+
 	//TPR-3736
 	private static final String IA_USS_IDS = "iaUssIds";
 
 	private static final String REGEX = "[^\\w\\s]";
 
+
+	private static final String FEATURE1 = "Feature1";
+	private static final String FEATURE2 = "Feature2";
+	private static final String FEATURE3 = "Feature3";
+
 	private static final String NEW_LINE = "\n";//Sonar Fix
+
+	private static final String MPH = "MPH".intern();
 
 	//TPR-6405
 	private static final String SAMSUNG = "Samsung";
@@ -352,9 +393,6 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
 
-	@Autowired
-	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
-
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
 
@@ -374,14 +412,30 @@ public class ProductPageController extends MidPageController
 	private BuyBoxService buyBoxService;
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
-	@Resource(name = "mplStoreLocatorFacade")
-	private MplStoreLocatorFacade mplStoreLocatorFacade;
+
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
 	@Autowired
 	private CommonUtils commonUtils;
 
+
+	//CAR-327 starts here
+	@Autowired
+	private TimeService timeService;
+	@Autowired
+	private PromotionsService promotionsService;
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+
+	//CAR-327 ends here
+
+
+	@Resource(name = "mplCartFacade")
+	private MplCartFacade mplCartFacade;
+
+	@Resource(name = "msdWidgetFacade")
+	private MSDWidgetFacade msdWidgetFacade;
 
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
@@ -494,31 +548,11 @@ public class ProductPageController extends MidPageController
 				model.addAttribute("aplusHTML", "");
 			}
 
-
+			//Added for TPR-6740
+			final String isStwheaderforPDP = configurationService.getConfiguration().getString("isStwheaderforPDP.name", "");
 			// TPR- 4389 STARTS FROM HERE
-
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			//TPR-6655
-			final boolean isGigyaforPdpEnabled = configurationService.getConfiguration().getBoolean("gigya.pdpCall");
-			if (isGigyaforPdpEnabled)
-			{
-				final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
-						productModel.getProductCategoryType(), productCode);
 
-				if (reviewAndRating != null)
-				{
-					for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
-					{
-						final String commentCount = entry.getKey();
-						final String ratingCount = entry.getValue();
-						model.addAttribute("commentCount", commentCount);
-						model.addAttribute("averageRating", ratingCount);
-
-					}
-				}
-				//   TPR-4389 ENDS HERE
-			}
-			model.addAttribute("isGigyaforPdpEnabled", isGigyaforPdpEnabled);
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
 					&& !isLuxurySite())
@@ -564,6 +598,8 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+				//STW
+				model.addAttribute(ModelAttributetConstants.STW_HEADER_PDP, isStwheaderforPDP);
 
 				//CAR-255
 				/*
@@ -600,7 +636,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -612,6 +648,15 @@ public class ProductPageController extends MidPageController
 
 				returnStatement = getViewForPage(model);
 			}
+
+			//Added for TPR-6738
+			populateBuyingGuide(productModel, model);
+			//changes for TPR-6738 ends
+			//Added for TPR-6855
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+			getQuantityDropdownData(productCategoryType, model);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -636,6 +681,93 @@ public class ProductPageController extends MidPageController
 
 
 		return returnStatement;
+	}
+
+
+	/**
+	 * @param categoryType
+	 * @param model
+	 */
+	private void getQuantityDropdownData(final String categoryType, final Model model)
+	{
+		try
+		{
+			final String productCategoryType = categoryType;
+			if (StringUtils.isNotEmpty(productCategoryType)
+					&& StringUtils.equalsIgnoreCase(ModelAttributetConstants.HOME_FURNISHING, productCategoryType))
+			{
+				final ArrayList<Integer> quantityConfigurationList = getMplCartFacade().getQuantityConfiguratioList();
+				if (CollectionUtils.isNotEmpty(quantityConfigurationList))
+				{
+					model.addAttribute(ModelAttributetConstants.QUANTITY_DROPDOWN_LIST, quantityConfigurationList);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+		}
+
+
+	}
+
+	/**
+	 * The Logic Identifies the PDP to be that of Home or not and if so removes Size Guide
+	 *
+	 * @param categoryType
+	 * @param model
+	 */
+	private void removeSizeGuideForHome(final String categoryType, final Model model)
+	{
+		try
+		{
+			final String productCategoryType = categoryType;
+			if (StringUtils.isNotEmpty(productCategoryType)
+					&& StringUtils.equalsIgnoreCase(ModelAttributetConstants.HOME_FURNISHING, productCategoryType))
+			{
+				model.addAttribute(ModelAttributetConstants.REMOVE_SIZEGUIDE, productCategoryType);
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+		}
+	}
+
+	/**
+	 * This Method deals with population of Buying Guide details on PDP
+	 *
+	 * @param productModel
+	 * @param model
+	 */
+	private void populateBuyingGuide(final ProductModel productModel, final Model model)
+	{
+		try
+		{
+			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(superCategoryDetails))
+			{
+				for (final CategoryModel category : superCategoryDetails)
+				{
+					//final String code = category.getCode();
+					final String buyingGuideCode = category.getBuyingGuide();
+
+					if (StringUtils.isNotEmpty(buyingGuideCode))
+					{
+						LOG.error("Buying Guide redirect URL" + buyingGuideCode);
+						model.addAttribute(ModelAttributetConstants.BUYING_GUIDE, buyingGuideCode);
+						break;
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + "Error>>"
+					+ exception);
+		}
+
 	}
 
 	//Changes for UF-238
@@ -708,7 +840,7 @@ public class ProductPageController extends MidPageController
 	//		final List<MetaElementData> metadata = new LinkedList<>();
 	//		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
 	//		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-	//		metadata.add(createMetaElement("productCode", pdCode));
+	//		metadata.add(createMetaElement(PRODUCTCODE, pdCode));
 	//		//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 	//		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 	//		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
@@ -1408,6 +1540,7 @@ public class ProductPageController extends MidPageController
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_PDP, pincodeResponse);
+						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP, pinCodeModelObj);
 						return pincodeResponse;
 					}
 					catch (final Exception e)
@@ -1637,6 +1770,15 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			returnStatement = getViewForPage(model);
+
+			//Added for TPR-6738
+			populateBuyingGuide(productModel, model);
+			//changes for TPR-6738 ends
+
+			//Added for TPR-6855
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+			getQuantityDropdownData(productCategoryType, model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1718,7 +1860,6 @@ public class ProductPageController extends MidPageController
 					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
 		}
 
-
 		//final String returnStatement = null;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -1727,6 +1868,7 @@ public class ProductPageController extends MidPageController
 		try
 		{
 			populateProductData(productData, model);
+
 			//UF-422 starts
 			int sizeCounter = 0;
 			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
@@ -1745,7 +1887,18 @@ public class ProductPageController extends MidPageController
 			}
 			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
 			//UF-422 ends
-			displayConfigurableAttribute(productData, model);
+			//displayConfigurableAttribute(productData, model);
+
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			model.addAttribute(SELECTED_SIZE, selectedSize);
@@ -1824,6 +1977,16 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+
+			//Added for TPR-7417
+			storeCmsPageInModel(model, getContentPageForLabelOrId(ControllerConstants.Views.Fragments.Product.QUICK_VIEW));
+
+			//Added for TPR-6855 : Quick View Changes
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+			populateBuyingGuide(productModel, model);
+			getQuantityDropdownData(productCategoryType, model);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1842,7 +2005,7 @@ public class ProductPageController extends MidPageController
 
 
 
-		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+		return ControllerConstants.Views.Fragments.Product.QuickViewLayOutPopup; //Added for TPR-7417
 	}
 
 	@Deprecated
@@ -2091,16 +2254,29 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
+
+
 			//TPR-6654
-			/*
-			 * final String pincode = (String)
-			 * sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE); //
-			 * sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode); if
-			 * (StringUtils.isNotEmpty(pincode)) { model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
-			 * //model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL,
-			 * mplProductFacade.storeLocatorPDP(pincode)); }
-			 */
-			displayConfigurableAttribute(productData, model);
+
+			//final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			//			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
+			//			if (StringUtils.isNotEmpty(pincode))
+			//			{
+			//				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+			//				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+			//			}
+			//displayConfigurableAttribute(productData, model);
+
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
@@ -2116,9 +2292,11 @@ public class ProductPageController extends MidPageController
 			{
 				productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 			}
+
 			LOG.debug("===========After FASHIONJEWELLERY block=================");
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
+
 
 			//this method is called to fetch the details of seller specific description to show in return refund tab for fine jewellery.
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
@@ -2166,24 +2344,7 @@ public class ProductPageController extends MidPageController
 				}
 			}
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
-			//For Gigya
-			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-			final String siteId = getSiteConfigService().getProperty("luxury.site.id");
-			final String gigyaAPIKey;
-			final String gigyaRatingURL;
-			if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
-			{
-
-				gigyaAPIKey = configurationService.getConfiguration().getString("luxury.gigya.apikey");
-				gigyaRatingURL = configurationService.getConfiguration().getString("luxury.gigya.rating.url");
-			}
-			else
-			{
-				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
-				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
-			}
 			LOG.debug("===========After step2 block=================");
-			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
@@ -2231,13 +2392,6 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.IS_LARGE_APPLIANCE, isLargeApplnc);
 			//UF-160 ends
 
-			//For Gigya
-			model.addAttribute(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
-			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
-			model.addAttribute(ModelAttributetConstants.RATING_REVIEW_URL, gigyaRatingURL);
-			//End Gigya
-
-
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.CLIQCARENUMBER,
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
@@ -2265,7 +2419,7 @@ public class ProductPageController extends MidPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)
@@ -2398,13 +2552,393 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords); //PRDI-422
 		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-		metadata.add(createMetaElement("productCode", productCode));
+		metadata.add(createMetaElement(PRODUCTCODE, productCode));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
 		//Added for UF-33
 		model.addAttribute(CMS_PAGE_TITLE, metaTitle);
 	}
 
+	@SuppressWarnings(BOXING)
+	private void displayConfigurableAttributeForHF(final ProductData productData, final Model model)
+	{
+		{
+			final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+			final Map<String, List<String>> mapConfigurableAttributes = new LinkedHashMap<String, List<String>>();
+			final List<String> warrentyList = new ArrayList<String>();
+			try
+			{
+				/* Checking the presence of classification attributes */
+				if (null != productData.getClassifications())
+				{
+					final String propertiesValue = configurationService.getConfiguration().getString(
+							ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+					final String[] overviewSectionSeq = configurationService.getConfiguration()
+							.getString(ModelAttributetConstants.OVERVIEW_SEC_SEQ).split(ModelAttributetConstants.COMMA);
+					model.addAttribute("overviewTabSeq", overviewSectionSeq);
+					final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+							productData.getClassifications());
+
+					String keyProdptsHeaderName = null;
+					final String prodDimension = "Product Dimensions";
+					String prodDimensionValue = "";
+					boolean islengthAvailable = false;
+					boolean iswidthAvailable = false;
+					boolean isheightAvailable = false;
+					String length = "";
+					String width = "";
+					String height = "";
+					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+					{
+						keyProdptsHeaderName = configurableAttributData.getName();
+						final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+						final List<String> productFeatureDataList = new ArrayList<String>();
+						if (configurationService.getConfiguration()
+								.getString((ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + ModelAttributetConstants.HOME_FURNISHING))
+								.contains(configurableAttributData.getName()))
+						{
+							boolean setInfoFlag = false;
+							boolean isetInfoComputed = false;
+							for (final FeatureData featureData : featureDataList)
+							{
+								final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+										featureData.getFeatureValues());
+
+								if (null != productData.getRootCategory())
+								{
+									final FeatureValueData featureValueData = featureValueList.get(0);
+
+									if (featureData.getFeatureValues().iterator().hasNext()
+											&& configurationService
+													.getConfiguration()
+													.getString(
+															ModelAttributetConstants.CLASSIFICATION_ATTR
+																	+ ModelAttributetConstants.CLASSIFICATION_ATTR_HF
+																	+ configurableAttributData.getName().replaceAll(
+																			ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE))
+													.contains(featureData.getName()))
+									{
+										//CKD:CAR-289
+										final ProductFeatureModel productFeature = mplProductFacade
+												.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
+										String unit = ModelAttributetConstants.NO_SPACE;
+
+										if (productFeature.getUnit() != null && !productFeature.getUnit().getSymbol().isEmpty())
+										{
+											unit = productFeature.getUnit().getSymbol();
+										}
+
+										if (configurableAttributData.getName()
+												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_PF))
+										{
+											keyProdptsHeaderName = ModelAttributetConstants.KEY_PROD_PTS;
+											productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
+										}
+										else if (configurableAttributData.getName()
+												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASHCARE))
+										{
+											for (final FeatureValueData data : featureData.getFeatureValues())
+											{
+												productFeatureDataList.add(data.getValue());
+											}
+										}
+										else if (configurableAttributData.getName()
+												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_CAINS))
+										{
+											for (final FeatureValueData data : featureData.getFeatureValues())
+											{
+												productFeatureDataList.add(data.getValue());
+											}
+										}
+										else if (configurableAttributData.getName().equals(
+												ModelAttributetConstants.CLASSIFICATION_ATTR_SI_SPACE))
+										{
+
+											if (featureData.getName().equalsIgnoreCase(ModelAttributetConstants.SET))
+											{
+												setInfoFlag = featureData.getFeatureValues().iterator().next().getValue()
+														.equalsIgnoreCase(ModelAttributetConstants.YES);
+											}
+											if (setInfoFlag && !featureData.getName().equalsIgnoreCase(ModelAttributetConstants.SET)
+													&& !isetInfoComputed)
+											{
+
+												productFeatureDataList.addAll(Arrays.asList(groupSetInfoHF(
+														configurableAttributData,
+														configurationService
+																.getConfiguration()
+																.getInteger(
+																		ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE
+																				+ ModelAttributetConstants.HOME_FURNISHING
+																				+ ModelAttributetConstants.CLASSIFICATION_ATTR_SI + "."
+																				+ ModelAttributetConstants.CLASSIFICATION_ATTR_SI_SPACE, 10)
+																.intValue()).split(ModelAttributetConstants.PIPE_REGEX)));
+												isetInfoComputed = true;
+
+											}
+										}
+										else
+
+										{
+											if (featureData.getName().equals("Length") || featureData.getName().equals("Width")
+													|| featureData.getName().equals("Height"))
+											{
+
+												if (featureData.getName().equals("Length"))
+												{
+													length = featureValueData.getValue() + unit;
+													islengthAvailable = true;
+													if (!productFeatureDataList.contains(prodDimension))
+													{
+														productFeatureDataList.add(prodDimension);
+													}
+												}
+												if (featureData.getName().equals("Width"))
+												{
+													width = featureValueData.getValue() + unit;
+													iswidthAvailable = true;
+													if (!productFeatureDataList.contains(prodDimension))
+													{
+														productFeatureDataList.add(prodDimension);
+													}
+												}
+												if (featureData.getName().equals("Height"))
+												{
+													height = featureValueData.getValue() + unit;
+													isheightAvailable = true;
+													if (!productFeatureDataList.contains(prodDimension))
+													{
+														productFeatureDataList.add(prodDimension);
+													}
+												}
+
+
+											}
+											else
+											{
+												final StringBuffer multivalue = new StringBuffer(600);
+												for (final FeatureValueData data : featureData.getFeatureValues())
+												{
+													if (StringUtils.isNotEmpty(data.getValue()))
+													{
+														if (StringUtils.isEmpty(multivalue.toString()))
+														{
+															multivalue.append(data.getValue());
+															multivalue.append(unit);
+														}
+														else
+														{
+															multivalue.append(MarketplacecommerceservicesConstants.COMMA
+																	+ MarketplacecommerceservicesConstants.SPACE);
+															multivalue.append(data.getValue());
+														}
+
+													}
+
+												}
+												if (StringUtils.isNotEmpty(multivalue.toString()))
+												{
+
+													productFeatureDataList.add(featureData.getName()
+															+ MarketplacecommerceservicesConstants.SPACE + ModelAttributetConstants.COLON
+															+ MarketplacecommerceservicesConstants.SPACE + multivalue.toString());
+												}
+
+											}
+										}
+
+
+										if (featureData.getName().toLowerCase()
+												.contains(ModelAttributetConstants.WARRANTY_DETAILS_HF.toLowerCase()))
+										{
+											warrentyList.add(featureValueData.getValue());
+										}
+
+										else
+										{
+											if (StringUtils.isBlank(propertiesValue.toLowerCase()))
+											{
+												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											}
+											if (propertiesValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
+
+											{
+												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											}
+
+
+										}
+
+									}
+								}
+							}
+
+
+						}
+						else
+						{
+							continue;
+						}
+						List tempList;
+						if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
+						{
+							tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
+
+							if (productFeatureDataList.contains(prodDimension))
+							{
+								if (islengthAvailable && iswidthAvailable && isheightAvailable)
+								{
+									prodDimensionValue = length + " X " + width + " X " + height;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
+								else if (islengthAvailable && iswidthAvailable)
+								{
+									prodDimensionValue = length + " X " + width;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
+							}
+							tempList.addAll(productFeatureDataList);
+							mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
+							tempList = null;
+						}
+						else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS)
+								&& configurableAttributData.getName().equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE))
+						{
+							tempList = mapConfigurableAttributes.get(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS);
+							tempList.addAll(productFeatureDataList);
+							Collections.reverse(tempList);
+							mapConfigurableAttributes.put(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+							tempList = null;
+						}
+						else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE)
+								&& configurableAttributData.getName().equals(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS))
+						{
+							tempList = mapConfigurableAttributes.get(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE);
+							tempList.addAll(productFeatureDataList);
+							Collections.reverse(tempList);
+							mapConfigurableAttributes.put(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+							tempList = null;
+							removeKeyfromMap(mapConfigurableAttributes, ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE);
+						}
+						else if (!productFeatureDataList.isEmpty())
+						{
+							{
+								if (productFeatureDataList.contains(prodDimension))
+
+								{
+									if (islengthAvailable && iswidthAvailable && isheightAvailable)
+									{
+										prodDimensionValue = length + " X " + width + " X " + height;
+										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+												+ prodDimensionValue);
+										productFeatureDataList.remove(prodDimension);
+									}
+									else if (islengthAvailable && iswidthAvailable)
+									{
+										prodDimensionValue = length + " X " + width;
+										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+												+ prodDimensionValue);
+										productFeatureDataList.remove(prodDimension);
+									}
+								}
+								mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
+							}
+
+						}
+					}
+				}
+				else
+				{
+					final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
+					model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, treeMapConfigurableAttribute);
+				}
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
+				model.addAttribute(ModelAttributetConstants.WARRANTY, warrentyList);
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				throw new EtailNonBusinessExceptions(e, ModelAttributetConstants.E0000);
+			}
+		}
+	}
+
+	/**
+	 * @param mapConfigurableAttributes
+	 * @param classKey
+	 */
+	private void removeKeyfromMap(final Map<String, List<String>> mapConfigurableAttributes, final String classKey)
+	{
+		for (final Iterator<Map.Entry<String, List<String>>> it = mapConfigurableAttributes.entrySet().iterator(); it.hasNext();)
+		{
+			final Entry<String, List<String>> entry = it.next();
+			if (entry.getKey().equals(classKey))
+			{
+				it.remove();
+			}
+		}
+	}
+
+
+	private String groupSetInfoHF(final ClassificationData configurableAttributData, final int setCount)
+	{
+		final StringBuffer groupedString = new StringBuffer(5000);
+
+		final Collection<FeatureData> featureColletion = configurableAttributData.getFeatures();
+		for (int i = 1; i <= setCount; i++)
+		{
+			//for Quantity
+			final String featureQty = ModelAttributetConstants.SET_COMPONENT + ModelAttributetConstants.SINGLE_SPACE + i
+					+ ModelAttributetConstants.SINGLE_SPACE + ModelAttributetConstants.QTY;
+			final Collection<FeatureValueData> featureValueQty = featureColletion.stream()
+					.filter(x -> featureQty.equals(x.getName())).map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+
+			if (CollectionUtils.isNotEmpty(featureValueQty) && StringUtils.isNotEmpty(featureValueQty.iterator().next().getValue()))
+			{
+				groupedString.append(featureValueQty.iterator().next().getValue() + ModelAttributetConstants.SINGLE_SPACE);
+			}
+
+			//for Name
+			final String featureName = ModelAttributetConstants.SET_COMPONENT + ModelAttributetConstants.SINGLE_SPACE + i
+					+ ModelAttributetConstants.SINGLE_SPACE + ModelAttributetConstants.NAME;
+			final Collection<FeatureValueData> featureValue = featureColletion.stream().filter(x -> featureName.equals(x.getName()))
+					.map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+			if (CollectionUtils.isNotEmpty(featureValue) && StringUtils.isNotEmpty(featureValue.iterator().next().getValue()))
+			{
+				groupedString.append(featureValue.iterator().next().getValue() + ModelAttributetConstants.SINGLE_SPACE);
+			}
+
+			//for Details
+			final String featureDesc = ModelAttributetConstants.SET_COMPONENT_DETAILS + ModelAttributetConstants.SINGLE_SPACE + i
+					+ ModelAttributetConstants.SINGLE_SPACE + ModelAttributetConstants.DETAILS;
+			final Collection<FeatureValueData> featureValuedetails = featureColletion.stream()
+					.filter(x -> featureDesc.equals(x.getName())).map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+			if (CollectionUtils.isNotEmpty(featureValuedetails)
+					&& StringUtils.isNotEmpty(featureValuedetails.iterator().next().getValue()))
+			{
+				groupedString.append(ModelAttributetConstants.COLON + featureValuedetails.iterator().next().getValue()
+						+ ModelAttributetConstants.PIPE);
+			}
+
+
+		}
+
+		return groupedString.toString().substring(0, groupedString.toString().lastIndexOf('|') - 1);
+	}
 
 	/**
 	 * Displaying classification attributes in the Details tab of the PDP page
@@ -2418,7 +2952,15 @@ public class ProductPageController extends MidPageController
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
 		final Map<String, Map<String, String>> mapConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
+
+		// In which order the Values are inserting to this map ,In Same order the values will displayed in storeFront
+		final Map<String, Map<String, String>> mapWatchesConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
 		final List<String> warrentyList = new ArrayList<String>();
+		/* TPR-1996 START */
+		final List<String> specialFeaturesList = new ArrayList<String>();
+		final List<String> movementList = new ArrayList<String>();
+		final List<String> functionalityList = new ArrayList<String>();
+		/* TPR-1996 END */
 		try
 		{
 			/* Checking the presence of classification attributes */
@@ -2426,6 +2968,7 @@ public class ProductPageController extends MidPageController
 			{
 				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
 						productData.getClassifications());
+				final Map<String, String> mapFeaturesList = new LinkedHashMap<String, String>();
 				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 				{
 					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
@@ -2441,6 +2984,7 @@ public class ProductPageController extends MidPageController
 						 */
 						if (null != productData.getRootCategory())
 						{
+
 							final String properitsValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 
@@ -2449,6 +2993,7 @@ public class ProductPageController extends MidPageController
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
+
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2487,7 +3032,11 @@ public class ProductPageController extends MidPageController
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 
 							{
-								final String[] propertiesValues = properitsValue.split(",");
+								String[] propertiesValues = null;
+								if (null != properitsValue)
+								{
+									propertiesValues = properitsValue.split(",");
+								}
 								//for jwl certification
 								final String[] certificationValues = certificationValue.split(",");
 
@@ -2505,11 +3054,26 @@ public class ProductPageController extends MidPageController
 											{
 												productFeatureMap.clear();
 											}
-											productFeatureMap.put(featureValueData.getValue(),
-													productFeature != null && productFeature.getUnit() != null
-															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
-															.getSymbol() : "");
-											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+											// TPR-3878  START
+											if (FEATURE1.equalsIgnoreCase(value) || FEATURE2.equalsIgnoreCase(value)
+													|| FEATURE3.equalsIgnoreCase(value))
+											{
+												mapFeaturesList.put(featureValueData.getValue(),
+														productFeature != null && productFeature.getUnit() != null
+																&& productFeature.getUnit().getSymbol() != null
+																&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
+																.getSymbol() : "");
+											}
+											else
+											{
+												productFeatureMap.put(featureValueData.getValue(),
+														productFeature != null && productFeature.getUnit() != null
+																&& productFeature.getUnit().getSymbol() != null
+																&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
+																.getSymbol() : "");
+												mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+											}
+											// TPR-3878  END
 										}
 
 										/*
@@ -2540,10 +3104,6 @@ public class ProductPageController extends MidPageController
 
 								}
 
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-								{
-									warrentyList.add(featureValueData.getValue());
-								}
 								if (featureData.getName().equalsIgnoreCase("certification"))
 								{
 									final List<FeatureValueData> featureValueDataList = new ArrayList<FeatureValueData>(
@@ -2583,15 +3143,43 @@ public class ProductPageController extends MidPageController
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
 
+							}
+
+							/* TPR-1996 START */
+							if (null != featureData.getName())
+							{
 								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
 								{
 									warrentyList.add(featureValueData.getValue());
 								}
+								else if (featureData.getName().toLowerCase()
+										.contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
+								{
+									specialFeaturesList.add(featureValueData.getValue());
+								}
+								else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
+								{
+									movementList.add(featureValueData.getValue());
+								}
+								else if (featureData.getName().toLowerCase()
+										.contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
+								{
+									functionalityList.add(featureValueData.getValue());
+								}
 							}
+
+							/* TPR-1996 END */
 
 						}
 					}
 				}
+				// TPR-3878  START
+				//Values for the Attributes "Feature 1", "Feature 2" and "Feature 3" should be concatenated with comma as a separator and Label "Features"
+				if (MapUtils.isNotEmpty(mapFeaturesList))
+				{
+					mapConfigurableAttributes.put(ModelAttributetConstants.FEATURES, mapFeaturesList);
+				}
+				// TPR-3878  END
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
@@ -2602,8 +3190,39 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 
 			}
-			else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+			else if (ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				final String properitsValue = configurationService.getConfiguration().getString(
+						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+				String[] propertiesValues = null;
+				if (null != properitsValue)
+				{
+					propertiesValues = properitsValue.split(",");
+				}
+
+				//	final Map<String, Map<String, String>> mapConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
+
+				//	TPR-1999  START
+				// Inserting Values into mapWatchesConfigurableAttributes According to the order mentioned in Property "classification.attributes.Watches"
+				// The same order will be displayed storeFront
+				if (null != properitsValue && MapUtils.isNotEmpty(mapConfigurableAttributes))
+				{
+					for (final String value : propertiesValues)
+					{
+						if (mapConfigurableAttributes.keySet().contains(value))
+						{
+							mapWatchesConfigurableAttributes.put(value, mapConfigurableAttributes.get(value));
+						}
+					}
+				}
+				//	model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapWatchesConfigurableAttributes);
+				//	TPR-1999  END
+
+				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, treeMapConfigurableAttribute);
+			}
+			else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
@@ -2616,6 +3235,11 @@ public class ProductPageController extends MidPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.WARRANTY, warrentyList);
+			/* TPR-1996 START */
+			model.addAttribute(ModelAttributetConstants.SPECIAL_FEATURES_LIST, specialFeaturesList);
+			model.addAttribute(ModelAttributetConstants.MOVEMENT_LIST, movementList);
+			model.addAttribute(ModelAttributetConstants.FUNCTIONALITY, functionalityList);
+			/* TPR-1996 END */
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2782,6 +3406,7 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
+			final String pdpProductCode = productCode;
 			if (null != productCode)
 			{
 				if (!StringUtils.isEmpty(variantCode))
@@ -2806,6 +3431,17 @@ public class ProductPageController extends MidPageController
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
 
+				final String sellerIdentifier = getSellerID(buydata);
+				if (StringUtils.isNotEmpty(pdpProductCode) && StringUtils.isNotEmpty(sellerIdentifier))
+				{
+					final String message = buyBoxFacade.getSellerMonogrammingMsg(pdpProductCode, sellerIdentifier);
+					if (StringUtils.isNotEmpty(message))
+					{
+						LOG.debug("Seller Monogramming Message >> Seller>>" + sellerId + "Message" + message);
+						buyboxJson.put(ModelAttributetConstants.SELLERMESSAGE, message);
+					}
+				}
+
 			}
 			else
 			{
@@ -2826,6 +3462,23 @@ public class ProductPageController extends MidPageController
 			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
 		}
 		return buyboxJson;
+	}
+
+	/**
+	 * Gets Seller ID Data
+	 *
+	 * @param buydata
+	 * @return String
+	 */
+	private String getSellerID(final Map<String, Object> buydata)
+	{
+		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+
+		if (null != buyboxdata && StringUtils.isNotEmpty(buyboxdata.getSellerId()))
+		{
+			return buyboxdata.getSellerId();
+		}
+		return null;
 	}
 
 	@ResponseBody
@@ -2978,11 +3631,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -3002,76 +3655,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -3268,6 +3921,421 @@ public class ProductPageController extends MidPageController
 		return buyboxJson;
 	}
 
+
+
+	//CAR-327 starts here
+
+	/**
+	 * @Description Added for displaying offer messages for primary offer callout promotion
+	 * @param productCode
+	 * @return buyboxJson
+	 * @throws com.granule.json.JSONException
+	 */
+	@SuppressWarnings("boxing")
+	@ResponseBody
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/getPrimaryCalloutOfferMessage", method = RequestMethod.GET)
+	public JSONObject populatePrimaryCalloutOfferMessage(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLERID) final String sellerId)
+			throws com.granule.json.JSONException
+	{
+		LOG.debug("The productCode passed through parameter is : " + productCode + " The seller id passed through parameter is : "
+				+ sellerId);
+		String productSellerId = null;
+		final SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa");
+		final Map<String, Map<String, String>> offerMessageMap = new HashMap<String, Map<String, String>>();
+		final BaseSiteModel baseSiteModel = baseSiteService.getCurrentBaseSite();
+		final ProductModel productModel = productService.getProductForCode(productCode);
+		final JSONObject buyboxJson = new JSONObject();
+		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
+		try
+		{
+			if (baseSiteModel != null)
+			{
+				final PromotionGroupModel defaultPromotionGroup = baseSiteModel.getDefaultPromotionGroup();
+				final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+				if (defaultPromotionGroup != null)
+				{
+					final List<ProductPromotionModel> promotions = getPromotionsService().getProductPromotions(
+							Collections.singletonList(defaultPromotionGroup), productModel, true, currentTimeRoundedToMinute);
+
+					//excluded product check starts
+					boolean isFreeBee = false;
+					if (null != promotions)
+					{
+						final List<String> brands = new ArrayList<String>(productDetailsHelper.getBrandsForProduct(productModel));
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						promoCondn: for (final ProductPromotionModel productPromotion : promotions)
+						{
+
+							boolean isSellerIncluded = false;
+							final List<String> sellerMasterList = new ArrayList<String>();
+
+							//final boolean excludePromotion = false;
+							if (null != productPromotion)
+							{
+								if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								{
+									final List<ProductModel> excludedList = new ArrayList<ProductModel>(
+											productPromotion.getExcludedProducts());
+									for (final ProductModel product : excludedList)
+									{
+										if (null != product.getCode() && product.getCode().equalsIgnoreCase(productModel.getCode()))
+										{
+											continue promoCondn;
+										}
+									}
+								}
+
+								///brand restriction check
+
+								boolean isSellerRestrPresent = false;
+								isFreeBee = isFreeBeePromotionExists(productPromotion);//check bogo promotion present or not
+								final List<AbstractPromotionRestrictionModel> restrictionList = new ArrayList<AbstractPromotionRestrictionModel>(
+										productPromotion.getRestrictions());
+
+								if (isFreeBee && CollectionUtils.isEmpty(restrictionList))
+								{
+									continue promoCondn;
+								}
+
+								if (!productPromotion.getChannel().isEmpty()
+										&& !productPromotion.getChannel().contains(SalesApplication.WEB))
+								{
+									continue promoCondn;
+								}
+
+								for (final AbstractPromotionRestrictionModel restriction : restrictionList)//Restriction loop starts
+								{
+									if (restriction instanceof ExcludeManufacturersRestrictionModel)//checking Exclude brandRestriction
+									{
+										final ExcludeManufacturersRestrictionModel brandRestriction = (ExcludeManufacturersRestrictionModel) restriction;
+										final List<CategoryModel> brandRestrictions = new ArrayList<CategoryModel>(
+												brandRestriction.getManufacturers());
+										for (final CategoryModel retriction : brandRestrictions)
+										{
+											if (brands.contains(retriction.getCode()))
+											{
+												continue promoCondn;
+											}
+										}
+									}
+									else if (restriction instanceof ManufacturersRestrictionModel)//checking brandRestriction
+									{
+										boolean brandRestrictionPresent = false;
+										final ManufacturersRestrictionModel brandRestriction = (ManufacturersRestrictionModel) restriction;
+										final List<CategoryModel> brandRestrictions = new ArrayList<CategoryModel>(
+												brandRestriction.getManufacturers());
+										for (final CategoryModel retriction : brandRestrictions)
+										{
+											if (brands.contains(retriction.getCode()))
+											{
+												brandRestrictionPresent = true;
+												break;
+											}
+
+										}
+										if (CollectionUtils.isEmpty(brandRestrictions))
+										{
+											brandRestrictionPresent = true;
+										}
+										if (!brandRestrictionPresent)
+										{
+											continue promoCondn;
+										}
+									}
+									else if (restriction instanceof EtailLimitedStockRestrictionModel)/* TPR-4107 */
+									{
+										final int qualifyingCount = getQualifyingCount(productPromotion);
+										final EtailLimitedStockRestrictionModel stockRestrictrion = (EtailLimitedStockRestrictionModel) restriction;
+										if (productPromotion instanceof BuyAAboveXGetPercentageOrAmountOffModel)
+										{
+											final int totalOfferCount = stockPromoCheckService.getTotalOfferOrderCount(
+													productPromotion.getCode(), MarketplacecommerceservicesConstants.EMPTY);
+											if (totalOfferCount >= stockRestrictrion.getMaxStock().intValue())
+											{
+												continue promoCondn;
+											}
+										}
+										else if (productPromotion instanceof BuyAGetPrecentageDiscountCashbackModel)
+										{
+											final int totalOfferCount = stockPromoCheckService.getTotalOfferOrderCount(
+													productPromotion.getCode(), MarketplacecommerceservicesConstants.EMPTY);
+											if (totalOfferCount >= stockRestrictrion.getMaxStock().intValue())
+											{
+												continue promoCondn;
+											}
+										}
+										else if (!getDefaultPromotionsManager().checkForCategoryPromotion(productPromotion.getCode()))
+										{
+											final String productCodeLim = MarketplacecommerceservicesConstants.INVERTED_COMMA
+													+ productModel.getCode() + MarketplacecommerceservicesConstants.INVERTED_COMMA;
+											final Map<String, Integer> stockMap = stockPromoCheckService.getCumulativeStockMap(
+													productCodeLim, productPromotion.getCode(), false);
+											if (!stockMap.isEmpty())
+											{
+												final Integer stockQuantity = stockMap.get(productModel.getCode());
+												final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+												if (((stockRestrictrion.getMaxStock().intValue() * qualifyingCount) - stockValue) == 0)
+												{
+													continue promoCondn;
+												}
+											}
+										}
+										else
+										{
+											if (null != productModel && CollectionUtils.isNotEmpty(productModel.getSupercategories()))
+											{
+												final StringBuilder categoryCodes = new StringBuilder();
+												final Map<String, Integer> stockMap = new HashMap<>();
+												final List<CategoryModel> categoryList = getDefaultPromotionsManager().getSuperCategoryData(
+														productModel.getSupercategories());
+												final Map<String, String> dataMap = populateDataMap(categoryList,
+														productPromotion.getCategories(), productModel.getCode());
+												if (MapUtils.isNotEmpty(dataMap))
+												{
+													for (final Map.Entry<String, String> entry : dataMap.entrySet())
+													{
+														categoryCodes.append(MarketplacecommerceservicesConstants.INVERTED_COMMA
+																+ entry.getValue() + MarketplacecommerceservicesConstants.INVERTED_COMMA);
+														categoryCodes.append(MarketplacecommerceservicesConstants.COMMA_DELIMITER); //SONAR FIX
+													}
+
+													stockMap.putAll(stockPromoCheckService.getCumulativeCatLevelStockMap(categoryCodes
+															.toString().substring(0, categoryCodes.lastIndexOf(",")),
+															productPromotion.getCode(), dataMap));
+													if (MapUtils.isNotEmpty(stockMap))
+													{
+														final Integer stockQuantity = stockMap.get(productModel.getCode());
+														final int stockValue = stockQuantity == null ? 0 : stockQuantity.intValue();
+														if (((stockRestrictrion.getMaxStock().intValue() * qualifyingCount) - stockValue) == 0)
+														{
+															continue promoCondn;
+														}
+													}
+												}
+											}
+										}
+									}
+									else if (restriction instanceof EtailSellerSpecificRestrictionModel)//Check for SellerSpecificRestriction
+									{
+										isSellerRestrPresent = true;
+										isSellerIncluded = true;
+										for (final SellerMasterModel sellerMaster : ((EtailSellerSpecificRestrictionModel) restriction)
+												.getSellerMasterList())
+										{
+											sellerMasterList.add(sellerMaster.getId());
+										}
+
+									}
+									else if (restriction instanceof EtailExcludeSellerSpecificRestrictionModel)//Check for EtailExcludeSellerSpecificRestriction
+									{
+										for (final SellerMasterModel sellerMaster : ((EtailExcludeSellerSpecificRestrictionModel) restriction)
+												.getSellerMasterList())
+										{
+											sellerMasterList.add(sellerMaster.getId());
+										}
+									}
+								}//Restriction loop ends
+
+								if (!isSellerRestrPresent && isFreeBee)
+								{
+									continue promoCondn;
+								}
+
+								final Map<String, String> offerDetMap = new HashMap<String, String>();
+								for (final SellerInformationModel productSeller : sellerInfo)//SellerInformation loop starts
+								{
+									productSellerId = productSeller.getSellerID();
+									if (CollectionUtils.isEmpty(restrictionList) || CollectionUtils.isEmpty(sellerMasterList)
+											|| (isSellerIncluded && sellerMasterList.contains(productSellerId))
+											|| (!isSellerIncluded && !sellerMasterList.contains(productSellerId)))
+									{
+										LOG.debug("The highest Promotion type is : " + productPromotion.getPromotionType());
+										final String promoCode = productPromotion.getCode();
+										LOG.debug("The promoCode: " + promoCode);
+										final String promoTitle = productPromotion.getTitle();
+										LOG.debug("The promoTitle: " + promoTitle);
+
+
+										//final String promoEndDate = productPromotion.getEndDate().toString();
+										final String promoEndDate = dt.format(productPromotion.getEndDate()).toString();
+										LOG.debug("The promoEndDate: " + promoEndDate);
+
+										//final String promoStartDate = productPromotion.getStartDate().toString();
+										final String promoStartDate = dt.format(productPromotion.getStartDate()).toString();
+										LOG.debug("The promoStartDate: " + promoStartDate);
+
+										final String promoOfferDetails = productPromotion.getDescription();
+										LOG.debug("The promoOfferDetails: " + promoOfferDetails);
+										final String promoTermsConditions = productPromotion.getTermsAndCondition();
+										LOG.debug("The promoTermsConditions: " + promoTermsConditions);
+
+										String promourl = null;
+										String bundlePromoLinkText = null;
+
+										if (productPromotion instanceof BundlingPromotionWithPercentageSlabModel)
+										{
+											promourl = ((BundlingPromotionWithPercentageSlabModel) productPromotion).getPromourl();
+											bundlePromoLinkText = ((BundlingPromotionWithPercentageSlabModel) productPromotion)
+													.getBundlepromolinktext();
+										}
+										if (productPromotion instanceof MplProductSteppedMultiBuyPromotionModel)
+										{
+											promourl = ((MplProductSteppedMultiBuyPromotionModel) productPromotion).getPromourl();
+											bundlePromoLinkText = ((MplProductSteppedMultiBuyPromotionModel) productPromotion)
+													.getBundlepromolinktext();
+										}
+
+										if (StringUtils.isNotEmpty(promoTitle))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, promoTitle);
+										}
+										if (StringUtils.isNotEmpty(promoOfferDetails))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEDET, promoOfferDetails);
+										}
+										if (StringUtils.isNotEmpty(promoStartDate))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGESTARTDATE, promoStartDate);
+										}
+										if (StringUtils.isNotEmpty(promoEndDate))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGEENDDATE, promoEndDate);
+										}
+										if (StringUtils.isNotEmpty(promoTermsConditions))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.TERMSANDCONDITIONS, promoTermsConditions);
+										}
+
+										if (StringUtils.isNotEmpty(promourl))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.PROMOURL, promourl);
+										}
+										if (StringUtils.isNotEmpty(bundlePromoLinkText))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.BUNDLEPROMOLINKTEXT, bundlePromoLinkText);
+										}
+
+										if (!offerMessageMap.containsKey(productSellerId))
+										{
+											offerMessageMap.put(productSellerId, offerDetMap);
+										}
+									}
+								}////SellerInformation loop ends
+							}
+						}//promoCondn loop ends
+					}
+
+					if (MapUtils.isNotEmpty(offerMessageMap))
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRIMARYOFFERMESSAGEMAP, offerMessageMap);
+					}
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		return buyboxJson;
+	}
+
+	/**
+	 * checks for a BOGO promotion present in the product
+	 *
+	 * @param productPromotion
+	 * @return
+	 */
+	private boolean isFreeBeePromotionExists(final ProductPromotionModel productPromotion)
+	{
+		boolean isFreeBree = false;
+		if (productPromotion instanceof BuyXItemsofproductAgetproductBforfreeModel)
+		{
+			isFreeBree = true;
+		}
+		return isFreeBree;
+	}
+
+
+
+
+	/**
+	 * @param oModel
+	 * @return count
+	 */
+	private int getQualifyingCount(final ProductPromotionModel oModel)
+	{
+		int count = 1;
+		if (oModel instanceof BuyAPercentageDiscountModel)
+		{
+			count = ((BuyAPercentageDiscountModel) oModel).getQuantity().intValue();
+		}
+		else if (oModel instanceof BuyXItemsofproductAgetproductBforfreeModel)
+		{
+			count = ((BuyXItemsofproductAgetproductBforfreeModel) oModel).getQualifyingCount().intValue();
+		}
+		else if (oModel instanceof BuyABFreePrecentageDiscountModel)
+		{
+			count = ((BuyABFreePrecentageDiscountModel) oModel).getQuantity().intValue();
+		}
+		else if (oModel instanceof BuyAGetPrecentageDiscountCashbackModel)
+		{
+			count = ((BuyAGetPrecentageDiscountCashbackModel) oModel).getQuantity().intValue();
+		}
+
+		return count;
+	}
+
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
+
+
+	/**
+	 * @param categoryList
+	 * @param promoCategoryList
+	 * @param productCode
+	 * @return dataMap
+	 */
+	private Map<String, String> populateDataMap(final List<CategoryModel> categoryList,
+			final Collection<CategoryModel> promoCategoryList, final String productCode)
+	{
+		final Map<String, String> dataMap = new HashMap<String, String>();
+
+		if (CollectionUtils.isNotEmpty(categoryList))
+		{
+			for (final CategoryModel category : categoryList)
+			{
+				for (final CategoryModel promocategory : promoCategoryList)
+				{
+					if (StringUtils.equalsIgnoreCase(category.getCode(), promocategory.getCode()))
+					{
+						dataMap.put(productCode, promocategory.getCode());
+					}
+				}
+			}
+		}
+
+		return dataMap;
+	}
+
+	//CAR-327 ends here
+
+
+
 	/**
 	 * changes for TPR-1375 populating buybox details in json format
 	 *
@@ -3275,7 +4343,7 @@ public class ProductPageController extends MidPageController
 	 * @param buyboxJson
 	 * @throws com.granule.json.JSONException
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private JSONObject getPopulatedBuyBoxJson(final Map<String, Object> buydata, final JSONObject buyboxJson)
 			throws com.granule.json.JSONException
 	{
@@ -3292,6 +4360,7 @@ public class ProductPageController extends MidPageController
 			{
 				LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
 			}
+
 			if (StringUtils.isNotEmpty(displayConfigurableAttributeForPriceBreakup))
 			{
 				final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU(),
@@ -3384,7 +4453,7 @@ public class ProductPageController extends MidPageController
 
 	//TPR-978
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
-	public String fetchPageContents(@RequestParam(value = "productCode") String productCode, final Model model)
+	public String fetchPageContents(@RequestParam(value = PRODUCTCODE) String productCode, final Model model)
 			throws com.granule.json.JSONException
 	{
 
@@ -3564,7 +4633,7 @@ public class ProductPageController extends MidPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)
@@ -3752,6 +4821,7 @@ public class ProductPageController extends MidPageController
 		}
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
+
 		//		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 		//				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 		//				ProductOption.GALLERY, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
@@ -3881,7 +4951,6 @@ public class ProductPageController extends MidPageController
 	{
 		LOG.debug("***************************productClassAttribs call for*************" + productCode);
 		String returnStatement = null;
-		final Gson gson = new Gson();
 		MplAjaxProductData mplAjaxProductData = null;
 		LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		try
@@ -3894,9 +4963,20 @@ public class ProductPageController extends MidPageController
 			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
 					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
 			mplAjaxProductData = new MplAjaxProductData();
-			displayConfigurableAttribute(productData, model);
+
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+			//displayConfigurableAttribute(productData, model);
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
+
 			mplAjaxProductData.setValidTabs(validTabs);
 			mplAjaxProductData.setMapConfigurableAttribute((Map<String, String>) model.asMap().get(
 					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE));
@@ -3929,7 +5009,17 @@ public class ProductPageController extends MidPageController
 		}
 		finally
 		{
-			returnStatement = gson.toJson(mplAjaxProductData);
+			try
+			{
+				final ObjectMapper mapper = new ObjectMapper();
+				returnStatement = mapper.writeValueAsString(mplAjaxProductData);
+			}
+			catch (final Exception e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
+				mplAjaxProductData.setError(e.getMessage());
+			}
 		}
 		return returnStatement;
 	}
@@ -4046,6 +5136,23 @@ public class ProductPageController extends MidPageController
 	}
 
 	/**
+	 * @return the mplCartFacade
+	 */
+	public MplCartFacade getMplCartFacade()
+	{
+		return mplCartFacade;
+	}
+
+	/**
+	 * @param mplCartFacade
+	 *           the mplCartFacade to set
+	 */
+	public void setMplCartFacade(final MplCartFacade mplCartFacade)
+	{
+		this.mplCartFacade = mplCartFacade;
+	}
+
+	/**
 	 * @desc Returns nearby store location based on pincode.
 	 *
 	 * @return Store details
@@ -4054,10 +5161,8 @@ public class ProductPageController extends MidPageController
 	public String getAllStoreForPincode(
 			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PINCODE) final String pincode,
 			@PathVariable(value = ControllerConstants.Views.Fragments.Product.USSID) final String ussId,
-			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode
-
-			, final Model model)
-
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			final Model model)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -4069,35 +5174,40 @@ public class ProductPageController extends MidPageController
 		List<PointOfServiceData> posDatas = new ArrayList<>();
 		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
 		List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+		Boolean active = null;
 		try
 		{
-			//call service to get list of ATS and ussid
-			try
+			active = configurationService.getConfiguration().getBoolean(MarketplacecommerceservicesConstants.STORE_DISPLAY_PDP,
+					Boolean.FALSE);
+			if (active)
 			{
-				omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
-				if (omsResponse.size() > 0)
+				//call service to get list of ATS and ussid
+				try
 				{
-					posDatas = getProductWdPos(omsResponse, pincode);
-					//mplProductFacade.storeLocatorFilterdPDP(pincode, ussId);
-				}
-			}
-			catch (final ClientEtailNonBusinessExceptions e)
-			{
-				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
-				if (null != e.getErrorCode()
-						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
-								.equalsIgnoreCase(e.getErrorCode())))
-				{
-					storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
-					if (storeLocationRequestDataList.size() > 0)
+					omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
+					if (CollectionUtils.isNotEmpty(omsResponse))
 					{
-						//populates oms response to data object
-						posDatas = getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+						posDatas = pincodeServiceFacade.getProductWdPos(omsResponse, pincode);
 					}
 				}
+				catch (final ClientEtailNonBusinessExceptions e)
+				{
+					LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+					if (null != e.getErrorCode()
+							&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+									.equalsIgnoreCase(e.getErrorCode())))
+					{
+						storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
+						if (CollectionUtils.isNotEmpty(storeLocationRequestDataList))
+						{
+							//populates commerce response to data object
+							posDatas = pincodeServiceFacade.getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+						}
+					}
+				}
+				//sorting posdata
+				Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
 			}
-			//sorting posdata
-			Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, posDatas);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -4112,169 +5222,95 @@ public class ProductPageController extends MidPageController
 		return ControllerConstants.Views.Fragments.Product.StoreLocatorPopup;
 	}
 
-	/**
-	 * @author TCS This method populates List of Ats and ussid to the data object.
-	 * @param response
-	 * @return list of pos with product.
-	 */
-	@SuppressWarnings("boxing")
-	private List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode)
+	//MSD FOR HOME FURNISHING PDP
+	@ResponseBody
+	@RequestMapping(value = "/getMSDWidgets", method = RequestMethod.GET)
+	public JSONObject getMSDWidgetData(final HttpServletRequest request)
 	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getProductWdPos method which gets product with pos");
-		}
-		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		//iterate over oms response
-		Double distance = 0d;
-		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+
+		final JSONObject MSDJObject = new JSONObject();
+		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
+		String msdRecData = null;
+		String productCode = null;
 		try
 		{
-			for (final StoreLocationResponseData storeLocationResponseData : response)
+			if (msdUse.equalsIgnoreCase("true"))
 			{
-				final String ussId = storeLocationResponseData.getUssId();
-				final String pincodeSellerId = ussId.substring(0, 6);
-				//get stores from commerce
-				if (LOG.isDebugEnabled())
+				final MSDRequestdata msdRequest = new MSDRequestdata();
+
+
+				final String msdApiKey = configurationService.getConfiguration().getString("api.key");
+				final String msdDetails = configurationService.getConfiguration().getString("details.key");
+				final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
+				final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
+				final String num_results = configurationService.getConfiguration().getString("num_results.key");
+				final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
+				if (request.getParameterMap().containsKey("productCode"))
 				{
-					LOG.debug("Get stores from commerce");
+					productCode = request.getParameter("productCode").toString();
 				}
-				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
-				{
-					PointOfServiceModel posModel = null;
-					final int availableQty = atsResponseData.getQuantity();
-					if (availableQty >= 1)
-					{
-						posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
-						if (null != posModel)
-						{
-							posModelList.add(posModel);
-						}
-					}
-				}
-			}
-			//get stores from commerce from ats response
-			if (CollectionUtils.isNotEmpty(posModelList))
-			{
-				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
-				final LocationDTO dto = new LocationDTO();
-				Location myLocation = null;
-				if (null != pinCodeModelObj)
-				{
-					try
-					{
-						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-						myLocation = new LocationDtoWrapper(dto);
-						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						//populate model to data
-						for (final PointOfServiceModel pointOfServiceModel : posModelList)
-						{
-							PointOfServiceData posData = new PointOfServiceData();
-							if (null != pointOfServiceModel)
-							{
-								posData = pointOfServiceConverter.convert(pointOfServiceModel);
-								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
-								posData.setStatus(MarketplacecommerceservicesConstants.KM);
-								posDataList.add(posData);
-							}
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error(e);
-					}
-				}
+				msdRequest.setProduct_id(productCode);
+				msdRequest.setApi_key(msdApiKey);
+				msdRequest.setDetails(msdDetails);
+				msdRequest.setMad_uuid(msdMad_Uid);
+				msdRequest.setWidget_list(widget_list);
+				msdRequest.setNum_results(num_results);
+				msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
+				MSDJObject.put("responsedata", msdRecData);
+
 
 			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e);
+			LOG.error("Error during populating MSD >> for Home Furnishing >>" + "Error>>" + e);
 		}
-		return posDataList;
+		return MSDJObject;
+	}
+
+	//CAR-327 starts here
+
+	/**
+	 * @return the promotionsService
+	 */
+	public PromotionsService getPromotionsService()
+	{
+		return promotionsService;
 	}
 
 	/**
-	 * @author TECH This method populates List of stores and product to the data object if oms is down.
-	 * @param storeLocationRequestDataList
-	 * @return list of product with stores
+	 * @param promotionsService
+	 *           the promotionsService to set
 	 */
-	@SuppressWarnings("boxing")
-	private List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
-			final String pincode)
+	public void setPromotionsService(final PromotionsService promotionsService)
 	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getProductWdPos method if oms is down which gets product with pos");
-		}
-		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
-		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		Double distance = 0d;
-		try
-		{
-			for (final StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
-			{
-
-				final String ussId = storeLocationRequestData.getUssId();
-				final String pincodeSellerId = ussId.substring(0, 6);
-				if (null != storeLocationRequestData.getStoreId())
-				{
-					for (int i = 0; i < storeLocationRequestData.getStoreId().size(); i++)
-					{
-						final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId,
-								storeLocationRequestData.getStoreId().get(i));
-						posModelList.add(posModel);
-					}
-				}
-			}
-			//get stores from commerce from ats response
-			if (CollectionUtils.isNotEmpty(posModelList))
-			{
-				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
-				final LocationDTO dto = new LocationDTO();
-				Location myLocation = null;
-				if (null != pinCodeModelObj)
-				{
-					try
-					{
-						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-						myLocation = new LocationDtoWrapper(dto);
-						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						for (final PointOfServiceModel pointOfServiceModel : posModelList)
-						{
-							//prepare pos data objects
-							PointOfServiceData posData = new PointOfServiceData();
-							if (null != pointOfServiceModel)
-							{
-								posData = pointOfServiceConverter.convert(pointOfServiceModel);
-								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
-								posData.setStatus(MarketplacecommerceservicesConstants.KM);
-								posDataList.add(posData);
-							}
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error(e);
-					}
-				}
-			}
-
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-		return posDataList;
+		this.promotionsService = promotionsService;
 	}
+
+	/**
+	 * @return the timeService
+	 */
+	public TimeService getTimeService()
+	{
+		return timeService;
+	}
+
+	/**
+	 * @param timeService
+	 *           the timeService to set
+	 */
+	public void setTimeService(final TimeService timeService)
+	{
+		this.timeService = timeService;
+	}
+	
+	//CAR-327 ends here
+	
 	@RequireHardLogIn
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
 	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,

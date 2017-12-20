@@ -24,11 +24,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import com.tisl.mpl.model.AkamaiRefreshUrlListModel;
 
@@ -40,6 +40,11 @@ import com.tisl.mpl.model.AkamaiRefreshUrlListModel;
 public class AkamaiRefreshCronJob extends AbstractJobPerformable
 {
 	private static final Logger LOG = Logger.getLogger(AkamaiRefreshCronJob.class);
+
+	//Sonar fix
+	private static final String DEBUG_AFTER_4_TIMES = "DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: ";
+	private static final String TRY = " Try";
+	private static final String DEBUG_TRY_NOW = "DEBUG: Trying now after 4 Seconds........This is::";
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -68,10 +73,9 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 			final String password = configurationService.getConfiguration().getString("akamai.fast.purge.password"); //"Kolkata@1";
 			final String purgeStatusNeededFlag = configurationService.getConfiguration().getString(
 					"akamai.actual.prurge.status.needed");
-
-			if ((purgeUrl == null || purgeUrl.trim().length() == 0)
-					|| (purgeStatusUrl == null || purgeStatusUrl.trim().length() == 0)
-					|| (userName == null || userName.trim().length() == 0) || (password == null || password.trim().length() == 0))
+			//Sonar fix
+			if (StringUtils.isEmpty(purgeUrl) || StringUtils.isEmpty(purgeStatusUrl) || StringUtils.isEmpty(userName)
+					|| StringUtils.isEmpty(password))
 			{
 				LOG.error("ERROR: !! Any of the properties not found: purgeUrl/purgeStatusUrl/userName/password ... Exiting ...");
 				LOG.error("ERROR: Going to ABORT AkamaiRefreshCronJob .................");
@@ -90,7 +94,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 					gotSomeError = false;
 					urlListToBerefreshed = getURLListTobeRefreshed();
 
-					if (urlListToBerefreshed != null && urlListToBerefreshed.trim().length() > 0)
+					if (StringUtils.isNotEmpty(urlListToBerefreshed))
 					{
 						requestJSON = "{" + " \"type\" : \"arl\" ," + " \"action\" : \"remove\" ," + " \"domain\" : \"production\" ,"
 								+ " \"objects\": [" + urlListToBerefreshed + "]" + "}";
@@ -126,9 +130,9 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 							{
 								LOG.error("ERROR: !!! in gtting response(null or Empty) from ..");
 								LOG.error("ERROR: Request URL:: " + purgeUrl + " and requestJSON:: " + requestJSON);
-								LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
+								LOG.error(DEBUG_AFTER_4_TIMES + tryCount + TRY);
 								Thread.sleep(4000);
-								LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
+								LOG.error(DEBUG_TRY_NOW + tryCount + TRY);
 								gotSomeError = true;
 							}
 						}
@@ -136,9 +140,9 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 						{
 							LOG.error("ERROR: in getting Connection to Purge Request  URL:: " + purgeUrl + " and requestJSON:: "
 									+ requestJSON);
-							LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
+							LOG.error(DEBUG_AFTER_4_TIMES + tryCount + TRY);
 							Thread.sleep(4000);
-							LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
+							LOG.error(DEBUG_TRY_NOW + tryCount + TRY);
 							gotSomeError = true;
 						}
 					}
@@ -151,9 +155,9 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 				{
 					LOG.error("ERROR: in Conenction " + ex);
 					LOG.error("ERROR: Request URL:: " + purgeUrl + " and requestJSON:: " + requestJSON);
-					LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
+					LOG.error(DEBUG_AFTER_4_TIMES + tryCount + TRY);
 					Thread.sleep(4000);
-					LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
+					LOG.error(DEBUG_TRY_NOW + tryCount + TRY);
 					gotSomeError = true;
 					ex.printStackTrace();
 				}
@@ -227,8 +231,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 						+ "\n purgeStatus:: " + purgeStatus + "\n submissionTime:: " + submissionTime + "\n pingAfterSeconds:: "
 						+ pingAfterSeconds);
 
-				if (purgeStatusUrl != null && purgeStatusUrl.trim().length() > 0 && progressUri != null
-						&& progressUri.trim().length() > 0)
+				if (StringUtils.isNotEmpty(purgeStatusUrl) && StringUtils.isNotEmpty(progressUri))
 				{
 					if (((200 <= httpStatus) && (httpStatus <= 226)) || (detail != null && detail.contains("Request accepted")))
 					{
@@ -266,19 +269,18 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 								else
 								{
 									LOG.error("ERROR: in Getting Actual Purge Status, response is null or Empty::" + sb1);
-									LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount
-											+ " Try");
+									LOG.error(DEBUG_AFTER_4_TIMES + tryCount + TRY);
 									Thread.sleep(4000);
-									LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
+									LOG.error(DEBUG_TRY_NOW + tryCount + TRY);
 									gotSomeError = true;
 								}
 							}
 							catch (final Exception ex)
 							{
 								LOG.error("ERROR: Exception in Getting Actual Purge Status::" + ex);
-								LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
+								LOG.error(DEBUG_AFTER_4_TIMES + tryCount + TRY);
 								Thread.sleep(4000);
-								LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
+								LOG.error(DEBUG_TRY_NOW + tryCount + TRY);
 								gotSomeError = true;
 								ex.printStackTrace();
 							}
@@ -374,13 +376,13 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 					for (final AkamaiRefreshUrlListModel refreshUrlModel : akamaiRefreshUrlListModelList)
 					{
 						refreshUrl = refreshUrlModel.getRefreshUrl();
-						if (refreshUrl != null && refreshUrl.trim().length() > 0 && !urlSet.contains(refreshUrl.trim()))
+						if (StringUtils.isNotEmpty(refreshUrl) && !urlSet.contains(refreshUrl.trim()))
 						{
 							productString.append("\"" + refreshUrl.trim() + "\",");
 							urlSet.add(refreshUrl.trim());
 						}
 					}
-					if (productString != null && productString.length() > 0)
+					if (StringUtils.isNotEmpty(productString.toString()))
 					{
 						productString.deleteCharAt(productString.toString().lastIndexOf(",")); // remove the last `,` from the string.
 						LOG.error("DEBUG: The Akamai refresh to be done for the URLs ::" + productString);
@@ -433,7 +435,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 			final String authStringEnc = new String(Base64.getEncoder().encode(authString.getBytes()));
 			urlHTTPConn.setRequestProperty("Authorization", "Basic " + authStringEnc);
 
-			if (null != methodSent && methodSent.trim().length() > 0)
+			if (StringUtils.isNotEmpty(methodSent))
 			{
 				urlHTTPConn.setRequestMethod(methodSent);
 			}

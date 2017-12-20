@@ -207,5 +207,8 @@
 <!-- 	 <property name="mplWalletInitConvertor" ref="mplWalletInitConvertor" /> -->
 <!-- 	 </bean>  -->
 
+		<!-- Added for TPR-5989 -->
+		<bean id="clientIntegration" class="com.tisl.mpl.service.ClientIntegrationImpl" /> 
+		
 </beans>
 

@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -119,8 +120,24 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
 		final CommerceOrderResult result = new CommerceOrderResult();
 
-		final String agentId = agentIdForStore
+		String storeId = StringUtils.EMPTY;
+		String agentId = agentIdForStore
 				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
+
+		final JaloSession jSession = JaloSession.getCurrentSession();
+		if (jSession != null)
+		{
+			final String loginId = (String) jSession.getAttribute("sellerId");
+			if (StringUtils.isNotEmpty(loginId) && loginId.contains("-"))
+			{
+				storeId = loginId.split("-")[1];
+			}
+		}
 
 		try
 		{
@@ -352,6 +369,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 						orderModel.setAgentId(agentId);
 					}
+					if (StringUtils.isNotEmpty(storeId))
+					{
+						orderModel.setStoreId(storeId);
+					}
 					getModelService().save(orderModel);
 
 					/*
@@ -542,11 +563,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -603,20 +624,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	/*
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
-	 *
-	 *
+	 * 
+	 * 
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
-	 *
-	 *
+	 * 
+	 * 
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
-	 * oModel.getCartLevelDisc().doubleValue()); } }
-	 *
-	 *
-	 *
-	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
+	 * oModel.getCartLevelDisc().doubleValue()); } } discount = Double.valueOf(couponDiscount + promoDiscount); } return
+	 * discount; }
 	 */
 
 
@@ -914,6 +932,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			cartEntry.setIsPercentageDisc(Boolean.FALSE);
 			cartEntry.setTotalProductLevelDisc(Double.valueOf(0.00D));
 
+			//TPR-7408 starts here
+			cartEntry.setPromoProductCostCentreOnePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoProductCostCentreTwoPercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoProductCostCentreThreePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreOnePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreTwoPercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreThreePercentage(Double.valueOf(0.00D));
+			//TPR-7408 ends here
+
 			cartEntryList.add(cartEntry);
 		}
 
@@ -961,6 +988,22 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							//appliedCouponCode = cartEntry.getCouponCode();
 							orderEntry.setCouponCode(cartEntry.getCouponCode());
 							orderEntry.setCouponValue(cartEntry.getCouponValue());
+
+							//TPR-7408 starts here
+							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreOnePercentage())))
+							{
+								orderEntry.setCouponCostCentreOnePercentage(cartEntry.getCouponCostCentreOnePercentage());
+							}
+							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreTwoPercentage())))
+							{
+								orderEntry.setCouponCostCentreTwoPercentage(cartEntry.getCouponCostCentreTwoPercentage());
+							}
+							if (StringUtils.isNotEmpty(String.valueOf(cartEntry.getCouponCostCentreThreePercentage())))
+							{
+								orderEntry.setCouponCostCentreThreePercentage(cartEntry.getCouponCostCentreThreePercentage());
+							}
+							//TPR-7408 ends here
+
 						}
 					}
 				}

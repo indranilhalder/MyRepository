@@ -555,8 +555,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				{
 					buyboxData.setSpecialPriceMobile(productDetailsHelper.formPriceData(new Double(buyBoxMod.getSpecialPriceMobile()
 							.doubleValue())));
-				} 
-				
+				}
+
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
 				int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
@@ -937,7 +937,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						if (null != rich.getPaymentModes()
 								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
 										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
-
 						{
 							richData.setIsCod(MarketplaceFacadesConstants.Y);
 						}
@@ -988,8 +987,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 				}
 				//TPR-6907
-				if (!sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute()
-						&& codEligible != true)
+				if (!sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute() && !codEligible)
 				{
 					for (final RichAttributeModel rich : seller.getRichAttribute())
 					{
@@ -1110,10 +1108,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1336,7 +1334,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736
@@ -1411,4 +1409,19 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	{
 		return buyBoxService.findPussid(selectedUSSID);
 	}
+
+
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	@Override
+	public String getSellerMonogrammingMsg(final String productCode, final String sellerId)
+	{
+		return buyBoxService.getSellerMonogrammingMsg(productCode, sellerId);
+	}
+
 }

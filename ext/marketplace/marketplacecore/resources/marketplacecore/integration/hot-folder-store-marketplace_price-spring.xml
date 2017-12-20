@@ -101,11 +101,11 @@
      
     
      <!-- Transformer for Product Approval when price is given Import -->      
-    <bean id="batchHomedeliveryConverterMapping"
+    <!--<bean id="batchHomedeliveryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mplprice"
+    p:mapping="mplshippingprice"
     p:converter-ref="batchHomedeliveryConverter"/>
-    	 
+    	 -->
 
  	 <!-- Converters -->
  	
@@ -133,7 +133,7 @@
         
         
         <!-- Converter for Product Approval when price is given Import --> 
-        <bean id="batchHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <!--<bean id="batchHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -154,18 +154,18 @@
             </value>
         </property>
         <property name="impexRow">
-            <value>;{4};{+1};{+0};home-delivery
-            		;{5};{+1};{+0};express-delivery
-            		;{6};{+1};{+0};click-and-collect
+            <value>;{2};{+1};{+0};home-delivery
+            		;{3};{+1};{+0};express-delivery
+            		;{4};{+1};{+0};click-and-collect
             		</value>
-        </property>
+        </property> -->
         <!-- <property name="rowFilter">
 			<bean class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexRowFilter">
 				Row Filter to check Price Greater than 0 
 				<property name="expression" value="Double.valueOf(row[4]) > 0"/>
 			</bean>
-		</property> -->
-         </bean>
+		</property> 
+         </bean>-->
          
 
         </beans>

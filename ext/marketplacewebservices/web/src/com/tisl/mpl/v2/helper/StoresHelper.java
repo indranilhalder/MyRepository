@@ -256,11 +256,12 @@ public class StoresHelper extends AbstractHelper
 		{
 			LOG.debug("from storesAtCart method");
 		}
+
 		List<StoreLocationResponseData> storesLocationResponse = null;
 		StoreLocationResponseData storeLocationResData = new StoreLocationResponseData();
 		try
 		{
-			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, null, cartModel);
+			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincodeMobile(pincode, ussId, cartModel);
 			if (null != storesLocationResponse && storesLocationResponse.size() > 0)
 			{
 				storeLocationResData = storesLocationResponse.get(0);

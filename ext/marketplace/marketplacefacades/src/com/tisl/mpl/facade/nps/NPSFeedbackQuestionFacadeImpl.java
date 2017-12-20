@@ -7,15 +7,13 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Resource;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +26,8 @@ import com.tisl.mpl.facades.data.NPSFeedbackQRDetailData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService;
 import com.tisl.mpl.util.ExceptionUtil;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 /**
@@ -42,6 +42,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	private ExtendedUserService extendedUserService;
 	@Resource
 	private ModelService modelService;
+
+	private static final String DATEFORMAT = "dd/MM/yyyy hh:mm:ss a";
 
 	//sonar fix
 	/*
@@ -76,7 +78,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.nps.NPSFeedbackQuestionFacade#saveFeedbackQuestionAnswer()
 	 */
 	@Override
@@ -116,16 +118,21 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 					npsFeedbackModel.setLastName(customer.getLastName());
 				}
 			}
-			final Random rnd = new Random();
-			final int responseId = 100000 + rnd.nextInt(90000000);
+
+			//Blocked for SISA
+			//final Random rnd = new Random();
+			//final int responseId = 100000 + rnd.nextInt(90000000);
 			//sonar fix
 			//final Integer responseIdInt = new Integer(responseId);
+
+			final SecureRandom random = new SecureRandom(); // Added as a part of SISA FIX
+			final int responseId = 10000000 + random.nextInt(90000000);
 
 			final Integer responseIdInt = Integer.valueOf(responseId);
 
 			npsFeedbackModel.setResponseId(responseIdInt.toString());
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat(DATEFORMAT);
 			final Date date = new Date();
 			final String SurveyDate = dateFormat.format(date);
 
@@ -195,8 +202,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			npsFeedbackModel.setResponseTime(new Date());
 			//npsFeedbackModel.setOriginalSurveyDate();
 			//TISPRDT-2140 starts
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat(DATEFORMAT);
 			final Date date = new Date();
 			final String SurveyDate = dateFormat.format(date);
 			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));

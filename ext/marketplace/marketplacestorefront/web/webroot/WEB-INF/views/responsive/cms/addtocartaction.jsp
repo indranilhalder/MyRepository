@@ -46,7 +46,7 @@ $(document).ready(function(){
   	 
    	 //Changes for pdp CR
 
-   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
+   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='HomeFurnishing'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
   		/* alert("please select size !"+isShowSize); */
    		$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();

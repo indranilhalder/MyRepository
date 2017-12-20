@@ -213,6 +213,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
 			//TATA-823 end
+			//TPR-5954
+			ProductModel productModel = null;
+			//final String L2Cat = null;
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -221,7 +224,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
 					returnProductMap.put(subOrderEntry.getTransactionId(), returnOrderEntry);
 
-					final ProductModel productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
+					productModel = mplOrderFacade.getProductForCode(entry.getProduct().getCode());
 					List<RichAttributeModel> productRichAttributeModel = null;
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
@@ -281,6 +284,68 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				}
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 			}
+
+
+			//			//TPR-5954 || Category specific return reason || Start
+			//			Collection<CategoryModel> superCategories = productModel.getSupercategories();
+			//
+			//			outer: for (final CategoryModel category : superCategories)
+			//			{
+			//				if (category.getCode().startsWith("MPH"))
+			//				{
+			//					superCategories = category.getSupercategories();
+			//					for (final CategoryModel category1 : superCategories)
+			//					{
+			//						if (category1.getCode().startsWith("MPH"))
+			//						{
+			//							superCategories = category1.getSupercategories();
+			//							for (final CategoryModel category2 : superCategories)
+			//							{
+			//								if (category2.getCode().startsWith("MPH"))
+			//								{
+			//									L2Cat = category2.getCode();
+			//									break outer;
+			//								}
+			//							}
+			//						}
+			//					}
+			//
+			//				}
+			////			}
+			//			//TPR-5954 || Category specific return reason || End
+			//			List<ReturnReasonData> reasonDataList = null;
+			//			//reasonDataList = mplOrderFacade.getCatSpecificRetReason(L2Cat);
+			//			if (null != reasonDataList)
+			//			{
+			//				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			//				//TPR-5954
+			//				final String reasonDesc = mplOrderFacade.fetchReasonDesc(returnForm.getReturnReason());
+			//				if (null != reasonDesc)
+			//				{
+			//					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reasonDesc);
+			//				}
+			//			}
+			//			else
+			//			{ //Fall back for return reason code
+			//				reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
+			//				if (!reasonDataList.isEmpty())
+			//				{
+			//					for (final ReturnReasonData reason : reasonDataList)
+			//					{
+			//						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+			//						{
+			//							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+			//						}
+			//					}
+			//				}
+			//
+			//				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			//			}
+
+
+
+
+
 			final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
 
 
@@ -296,6 +361,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+
 			//JWLSPCUAT-282
 			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			//if logistic partner not available for the given pin code
@@ -438,7 +504,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 							ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG, null);
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
-
+					model.addAttribute("disableRsp", Boolean.TRUE);
 					return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
 				}
 
@@ -487,6 +553,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnData.setUssid(returnForm.getUssid());
 				returnData.setReturnMethod(returnForm.getReturnMethod());
 				returnData.setReturnFulfillmentMode(returnFulfillmentType);
+				//TPR-5954
+				if (null != returnForm.getComments())
+				{
+					returnData.setComments(returnForm.getComments());
+				}
+				if (null != returnForm.getSubReturnReason())
+				{
+					returnData.setSubReasonCode(returnForm.getSubReturnReason());
+				}
+				if (null != returnForm.getImagePath())
+				{
+					returnData.getImageUrl();
+				}
 
 				// TPR-4134
 				if (null != returnForm.getReverseSeal())
@@ -621,6 +700,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnInfoDataObj.setReasonCode(returnForm.getReturnReason());
 				returnInfoDataObj.setUssid(returnForm.getUssid());
 				returnInfoDataObj.setReturnMethod(returnForm.getReturnMethod());
+				//TPR-5954
+				if (null != returnForm.getComments())
+				{
+					returnInfoDataObj.setComments(returnForm.getComments());
+				}
+				if (null != returnForm.getSubReturnReason())
+				{
+					returnInfoDataObj.setSubReasonCode(returnForm.getSubReturnReason());
+				}
+				if (null != returnForm.getImagePath())
+				{
+					returnInfoDataObj.setImageUrl(returnForm.getImagePath());
+				}
 				final boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,
 						returnInfoDataObj, customerData, SalesApplication.WEB, returnAddrData);
 				if (!cancellationStatusForSelfShip)
@@ -982,6 +1074,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			if (!returnLogisticsCheck)
 			{
 				errorAddress.setTitle(ModelAttributetConstants.LPNOTAVAILABLE_ERRORMSG);
+
 				return errorAddress;
 			}
 
@@ -1437,5 +1530,91 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		this.accountAddressFacade = accountAddressFacade;
 	}
 
+	//TPR-5954
+	@ResponseBody
+	@RequireHardLogIn
+	@RequestMapping(value = "/fetchSubReason", method = RequestMethod.GET)
+	public List<ReturnReasonData> fetchSubReturnReason(@RequestParam final String parentReasonCode)
+	{
+		List<ReturnReasonData> returnReasonData = null;
+		try
+		{
+			returnReasonData = mplOrderFacade.getSubReasonCode(parentReasonCode);
+		}
+		catch (final Exception ex)
+		{
+			returnReasonData = new ArrayList<ReturnReasonData>();
+		}
+		return returnReasonData;
+	}
 
+	//TPR-5954
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	//@RequireHardLogIn
+	@ResponseBody
+	public String uploadImages(@RequestParam final ArrayList<MultipartFile> files, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException, Exception
+	{
+		try
+		{
+			//final List<MultipartFile> files = new ArrayList<MultipartFile>
+			System.out.println(files.size());
+			String fileUploadLocation = null;
+			String date = null;
+			Path path = null;
+			//TISRLUAT-50
+			if (null != configurationService)
+			{
+				fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.IMG_UPLOAD_PATH);
+				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
+				{
+					try
+					{
+
+						//HttpSession session = request.getSession();
+						//session.setAttribute("UserName", username);
+
+						for (final MultipartFile fileObj : files)
+						{
+
+							final byte barr[] = fileObj.getBytes();
+							final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+							date = sdf.format(new Date());
+							path = Paths.get(fileUploadLocation + File.separator + date);
+							if (!Files.exists(path))
+							{
+								try
+								{
+									Files.createDirectories(path);
+								}
+								catch (final IOException e)
+								{
+									//fail to create directory
+									LOG.error("Exception ,While creating the Directory " + e.getMessage());
+								}
+							}
+							final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
+									+ fileObj.getOriginalFilename()));
+							bout.write(barr);
+							bout.flush();
+							bout.close();
+							LOG.debug("FileUploadLocation   :" + fileUploadLocation);
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception is:" + e);
+					}
+				}
+
+			}
+
+
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getStackTrace());
+		}
+		return "OK";
+	}
 }

@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.bin.dao;
 
+import de.hybris.platform.core.model.user.CustomerModel;
+
 import java.util.List;
 
 import com.tisl.mpl.binDb.model.BinModel;
@@ -30,4 +32,8 @@ public interface BinDao
 	 * @return: List<String>
 	 */
 	public List<String> getBankDetails() throws EtailNonBusinessExceptions;
+
+	//TPR-7486
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel customer);
+
 }

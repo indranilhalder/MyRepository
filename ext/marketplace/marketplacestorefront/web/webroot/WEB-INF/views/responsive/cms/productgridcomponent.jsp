@@ -2,6 +2,7 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <div class="right-block">
 	<nav:pagination top="true" supportShowPaged="${isShowPageAllowed}"
@@ -59,6 +60,62 @@
 		searchUrl="${searchPageData.currentQuery.url}"
 		numberPagesShown="${numberPagesShown}" hide="true"/>
 </div>
+
+<%-- <div class="bottom-pagination pagination-search">
+<div class="">
+<c:if test="${searchPageData.pagination.numberOfPages > 1}">
+<span class="">
+<span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
+</span>
+</c:if>
+<c:choose>
+<c:when test="${searchPageData.pagination.numberOfPages > 1}">
+<div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
+    <ul class="pagination-block">
+    	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
+    	<c:choose>
+    		<c:when test="${loop.index eq 1}">
+    		<c:choose>
+    			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
+    			<c:set var="splittedURL" value="${fn:split(requestScope['javax.servlet.forward.request_uri'] , '/' )}"></c:set>
+    			<li class="pageNoLi"><a class="pageNo active" href="/${splittedURL[0]}/${splittedURL[1]}/page-${page}">${page}</a></li>
+    			</c:when>
+    			<c:otherwise>
+    			<li class="pageNoLi"><a class="pageNo active" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			</c:otherwise>
+    		</c:choose>
+    		
+    		</c:when>
+    		<c:otherwise>
+    		<c:choose>
+    			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
+    			<c:set var="splittedURL" value="${fn:split(requestScope['javax.servlet.forward.request_uri'] , '/' )}"></c:set>
+    			<li class="pageNoLi"><a class="pageNo" href="/${splittedURL[0]}/${splittedURL[1]}">${page}</a></li>
+    			</c:when>
+    			<c:otherwise>
+    			<li class="pageNoLi"><a class="pageNo" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			</c:otherwise>
+    		</c:choose>
+    		</c:otherwise>
+    	</c:choose>
+        </c:forEach>
+    </ul>
+    <div class="next-block"><a href="#next-page"><span>Next</span></a></div>
+</c:when>
+</c:choose>
+</div>
+</div> --%>
+
+<div class="bottom-pagination pagination-search">
+<c:if test="${searchPageData.pagination.numberOfPages > 1}">
+<span class="">
+<span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
+</span>
+</c:if>
+<ul class="pagination-blocks">
+</ul>
+</div>
+
 <script>
 	$(document).ready(function(){
 		$.each($(".facet-name js-facet-name").find("h3"),function(){
@@ -68,5 +125,6 @@
 		});
 		
 	});
+var currentPageNoFrom = "${pageNo}"; 	
 </script>
 <input type="hidden" name="productGrid" value="1"/>

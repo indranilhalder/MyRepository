@@ -54,6 +54,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.util.localization.Localization;
 
@@ -151,6 +152,7 @@ public class ProductsController extends BaseController
 	private static final Logger LOG = Logger.getLogger(ProductsController.class);
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
+	private static final String BACKSLASH_S = "\\s+";
 	/* SONAR FIX */
 	//private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 
@@ -984,7 +986,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)
@@ -1013,7 +1015,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)
@@ -1029,27 +1031,32 @@ public class ProductsController extends BaseController
 						//PR-23 end
 
 						final CategoryModel category = categoryService.getCategoryForCode(typeID);
-						if (CollectionUtils.isNotEmpty(category.getCrosssellBanners()))
+						final List<SimpleBannerComponentModel> crossSellBanners = category.getCrosssellBanners();
+						if (CollectionUtils.isNotEmpty(crossSellBanners))
 						{
-							final SimpleBannerComponentModel crossSellBannerModel = category.getCrosssellBanners().get(0);
+							final SimpleBannerComponentModel crossSellBannerModel = crossSellBanners.get(0);
 							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
 							bannerDto.setBannerUrl(crossSellBannerModel.getUrlLink());
-							if (null != crossSellBannerModel.getMedia())
+							final MediaModel media = crossSellBannerModel.getMedia();
+							if (null != media)
 							{
-								bannerDto.setBannerMedia(crossSellBannerModel.getMedia().getURL2());
-								bannerDto.setAltText(crossSellBannerModel.getMedia().getAltText());
+								bannerDto.setBannerMedia(media.getURL2());
+								bannerDto.setAltText(media.getAltText());
 							}
 							productSearchPage.setCrosssellBanner(bannerDto);
 						}
-						if (CollectionUtils.isNotEmpty(category.getDynamicBanners()))
+
+						final List<SimpleBannerComponentModel> dynamicBanner = category.getDynamicBanners();
+						if (CollectionUtils.isNotEmpty(dynamicBanner))
 						{
-							final SimpleBannerComponentModel dynamicBannerModel = category.getDynamicBanners().get(0);
+							final SimpleBannerComponentModel dynamicBannerModel = dynamicBanner.get(0);
 							final LuxHeroBannerWsDTO bannerDto = new LuxHeroBannerWsDTO();
 							bannerDto.setBannerUrl(dynamicBannerModel.getUrlLink());
+							final MediaModel media = dynamicBannerModel.getMedia();
 							if (null != dynamicBannerModel.getMedia())
 							{
-								bannerDto.setBannerMedia(dynamicBannerModel.getMedia().getURL2());
-								bannerDto.setAltText(dynamicBannerModel.getMedia().getAltText());
+								bannerDto.setBannerMedia(media.getURL2());
+								bannerDto.setAltText(media.getAltText());
 							}
 							productSearchPage.setPlpHeroBanner(bannerDto);
 						}
@@ -1065,7 +1072,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)
@@ -1097,7 +1104,7 @@ public class ProductsController extends BaseController
 							if (StringUtils.isNotEmpty(searchText))
 							{
 
-								final String[] elements = searchText.trim().split("\\s+");
+								final String[] elements = searchText.trim().split(BACKSLASH_S);
 
 								//if (elements.length == 2 || elements.length == 3)
 								if (elements.length >= 2)

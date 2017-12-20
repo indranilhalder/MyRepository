@@ -185,6 +185,44 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String CLIQ_CASH = "CliqCash";
 
 
+	//Added for HomeFurnishing
+	public static final String CONFIGURABLE_ATTRIBUTE = "classification.attributes.";
+	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
+
+	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
+	public static final String HOME_FURNISHING = "HomeFurnishing";
+	public static final String CLASSIFICATION_ATTR = "classification.attributes.";
+	public static final String CLASSIFICATION_ATTR_HF = "HomeFurnishing.";
+	public static final String CLASSIFICATION_ATTR_PD = "ProductDetails";
+	public static final String CLASSIFICATION_ATTR_SI = "SetInformation";
+	public static final String CLASSIFICATION_ATTR_SI_SPACE = "Set Information";
+	public static final String CLASSIFICATION_ATTR_SI_SIZE = "Size";
+	public static final String CLASSIFICATION_ATTR_CAINS = "CareInstructions";
+	public static final String CLASSIFICATION_ATTR_WASHCARE = "WashCare";
+	public static final String CLASSIFICATION_ATTR_PF = "ProductFeatures";
+	public static final String CLASSIFICATION_ATTR_CARE_INS = "Care Instructions";
+	public static final String CLASSIFICATION_ATTR_WASH_CARE = "Wash Care";
+	public static final String KEY_PROD_PTS = "Key Product Points";
+	public static final String SET_COMPONENT = "Set Component";
+	public static final String SET_COMPONENT_DETAILS = "Set Componenent";
+	public static final String NAME = "Name";
+	public static final String QTY = "Quantity";
+	public static final String DETAILS = "Details";
+	public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
+	public static final String SET = "Set";
+	public static final String YES = "Yes";
+	public static final String ALPHBET_REGEX = "[*a-zA-Z]";
+	public static final String SPACE_REGEX = "\\s";
+	public static final String PIPE_REGEX = "\\|";
+	public static final String NO_SPACE = "";
+	public static final String EMPTY = "";
+	public static final String SINGLE_SPACE = " ";
+	public static final String UNDER_SCORE = "_";
+	public static final String COMMA = ",";
+	public static final String PIPE = "|";
+	public static final String WARRANTY = "Warranty";
+	public static final String WARRANTY_DETAILS_HF = "Warranty Details";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty

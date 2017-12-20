@@ -106,6 +106,12 @@
 	<bean id="notifyCustomerAboutFraudAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.NotifyCustomerAboutFraudAction"  parent="abstractAction">
 		<property name="eventService" ref="eventService"/>
 	</bean>
-
+	<!-- TPR-5989 -->
+	<bean id="WebFormTicketAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.WebFormTicketAction"  parent="abstractAction">
+		<!-- <property name="modelService" ref="modelService" />
+		<property name="mplNotificationSaveService" ref="mplNotificationSaveService" />
+		<property name="mplPaymentService" ref="mplPaymentService" /> -->
+	</bean>
+	<!-- TPR-5989 Ends -->
 
 </beans>

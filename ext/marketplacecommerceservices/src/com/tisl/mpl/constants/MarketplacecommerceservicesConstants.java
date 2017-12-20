@@ -1,6 +1,7 @@
 /*
 
  *
+ * All rights reserved.
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
  *
@@ -2328,5 +2329,54 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 		public static final String PAYMENT_MODE_SPLIT = "split".trim();
 		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
+
+
+	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
+
+	public static final String REFUNDCLEARORDERQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.creationtime} >= ?startTime and {o.status}={os.pk} and {os.code} IN (?statusOne, ?statusTwo) and {o.type}=?type"
+			.intern();
+	public static final String ORDERSTATUSONE = "statusOne".intern();
+	public static final String ORDERSTATUSTWO = "statusTwo".intern();
+	public static final String REFUNDCLEARWEBHHOKQUERY = "select {js.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId and {js.status}='CHARGED' order by {js.creationtime} desc"
+			.intern();
+
+	public static final String REFUNDEVENTSTAUSJUSPAY = "webhook.refund.eventname";
+
+	public static final String ORDERFETCH_STARTTIME = "marketplace.refundorder.fetchStartTime".intern();
+
+	public static final String STARTTIME = "startTime".intern();
+	public static final String FINISHED = "FINISHED";
+	//SDI-2924
+	public static final String FPC_DURATION_SKIP = "mpl.forwardpaymentcleanup.duration.skip";
+	public static final String FPC_DURATION_THRESHOLD = "mpl.forwardpaymentcleanup.duration.threshold";
+	public static final String FPC_DURATION_OVERLAP = "mpl.forwardpaymentcleanup.duration.overlap";
+	//PR-4 || Refund sms cron job
+	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
+	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
+	public static final String BULK_CUSTOMER_SMS_3 = " to your bank account against Tata CLiQ order no ";
+	public static final String BULK_CUSTOMER_SMS_4 = " For delay over 5 days please contact your bank with ref number ";
+	public static final String BULK_CUSTOMER_SMS_5 = ".For few banks, It may take up to 10-15 days to reflect in your account.";
+	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
+
+	public static final String CRM_LO = "L0C1".intern();
+	public static final String CRM_FILE_UPLOAD_PATH = "crm.fileupload.path";
+
+	//TPR-7448
+	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String JUSPAYCARDSTATUSQRY = "select {pk} from {JuspayCardStatus} where {guid}=?guid and {customerId}=?customerId order by {creationtime} desc";
+	public static final String CARDREFERENCENO = "cardRefNo".intern();
+
+
+
+	public static final String RECEIVED = "RECEIVED";
+	public static final String SENT = "SENT";
+	public static final String OPEN = "Open";
+	public static final String CRM_WEBFORM_TICKET_TYPE = "W";
+	public static final String CRM_WEBFORM_TICKET_SUB = "crm.ticketsubtype.nodel1";
+	public static final String CRM_WEBFORM_TICKET_SUB_ORDER = "O";
+	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
+
+
 
 }

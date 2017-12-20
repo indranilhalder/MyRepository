@@ -206,12 +206,13 @@ $(document).on("click",".sizeNotSpecified_wl",function(e){
 	e.preventDefault();
 	/*TPR-646*/
 	var productCode = $(this).closest(".add_to_cart_wl_form").find("input[name='productCodePost']").val();
-	utag.link({
-		"link_obj" : this,
-	    "link_text": 'add_tobag_wishlist',
-	    "event_type": 'add_tobag_wishlist',
-	    "product_sku_wishlist" : "" + productCode
-	});
+	if(typeof(utag) != "undefined"){
+		utag.link({
+		    "link_text": 'add_tobag_wishlist',
+		    "event_type": 'add_tobag_wishlist',
+		    "product_sku_wishlist" : "" + productCode
+		});
+	}
 	/*TPR-646 ends*/
 	$("#redirectsToPdp_Wl").val($(this).parent().siblings(".redirectsToPdp_Wl").val());
 });
@@ -316,13 +317,14 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 			}
 			
 			/*TPR-646 Changes*/
-			utag.link({
-				"link_obj" : this,
-		        "link_text": 'remove_from_wishlist',
-		        "event_type": 'remove_from_wishlist',
-		        "product_sku_wishlist": "" + productCode
-		    });
-			
+			if(typeof(utag) != "undefined"){
+				utag.link({
+			        "link_text": 'remove_from_wishlist',
+			        "event_type": 'remove_from_wishlist',
+			        "product_sku_wishlist": "" + productCode
+			    });	
+			}
+		
 			//END MSD
 //			window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 			window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName+"&isLux="+isLuxury;

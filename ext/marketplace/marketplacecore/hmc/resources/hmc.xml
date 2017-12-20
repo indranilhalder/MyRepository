@@ -26,6 +26,7 @@
 		<group name="catalog" mode="append" description="group.catalog.description">
 			<typeref type="MplShopByLook" description="group.MplShopByLook.description" />
 			<typeref type="APlusContent" description="group.apluscontent.description" />
+			<typeref type="SizeGuideUpload" description="group.sizeguideupload.description" />
 		</group>
 		<group name="order" mode="append" >
   			<typeref type="BulkCancellation" description="group.bulkcancellation.description" />
@@ -731,9 +732,7 @@
 							<!-- TPR-3809-->							
 							<attribute name="forwardSealNum" />
 							<attribute name="reverseSealNum" /> 
-
-
-
+							<attribute name="refundDetails" /> 
 						</listlayout>
 					</section>
 				</tab>
@@ -922,6 +921,17 @@
 							    <!-- <text name="text.promotion.priority" /> -->
 								<attribute name="priority" labelwidth="100" width="224" />								
 							</row>
+							<!-- TPR-7408 starts here -->
+							<row>
+							<attribute name="promoCostCentreOnePercentage" labelwidth="100" />
+							</row>
+							<row>
+							<attribute name="promoCostCentreTwoPercentage" labelwidth="100" />
+							</row>
+							<row>
+							<attribute name="promoCostCentreThreePercentage" labelwidth="100" />
+							</row>
+							<!-- TPR-7408 ends here -->
 						</columnlayout>
 					</section>
 				</tab>
@@ -2724,6 +2734,68 @@
 	
 	<!-- Return Window Change  -->
 	
+	<!-- Size Guide Upload Start-->
+	<type name="SizeGuideUpload" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="creationtime" />
+				<condition attribute="identifiers" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="identifiers" width="200"></attribute>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="creationtime" width="100"></attribute>
+						<attribute name="status" width="600"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="identifiers"/>
+						<attribute name="csvFile" />
+						<attribute name="status" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="identifiers"/>
+							<attribute name="csvFile" />
+						</row>
+						<row>
+							<attribute name="status" />
+						</row>
+					</columnlayout>
+				</essentials>
+				<tab name="category.sizeguideupload.tab" position="0">
+					<section name="category.sizeguideupload.section">
+						<listlayout>
+						<attribute name="identifiers" width="200"></attribute>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="status" width="600"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="1">
+					<section name="section.metadata">
+						<listlayout>
+							<attribute name="identifiers" mode="delete"/>
+							<attribute name="csvFile" mode="delete" />
+							<attribute name="status" mode="delete" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
+	
+	
+	
+	
 		<!-- A Plus content TPR-978 -->
 	<type name="APlusContent" mode="append">
 		<organizer>
@@ -3558,6 +3630,17 @@
                      <row>
                         <attribute name="maxDiscountValue"/>
                      </row>
+                     <!-- TPR-7408 starts here -->
+                     <row>
+                        <attribute name="couponCostCentreOnePercentage"/>
+                     </row>
+                     <row>
+                        <attribute name="couponCostCentreTwoPercentage"/>
+                     </row>
+                     <row>
+                        <attribute name="couponCostCentreThreePercentage"/>
+                     </row>
+                     <!-- TPR-7408 ends here -->
                   </columnlayout>
                </section>
             </tab> 
@@ -5173,5 +5256,7 @@
 		</organizer>
 	</type>
 <!-- PR-15 starts here -->	
+
+
 	
 </configuration>

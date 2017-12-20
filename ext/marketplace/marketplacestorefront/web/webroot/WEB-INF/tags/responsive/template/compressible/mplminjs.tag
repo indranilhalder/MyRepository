@@ -13,7 +13,8 @@
 	
 	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js"></script>
 	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-tmpmain.min.js"></script>
-	
+	<!-- Added feedback js to resolve JS issues in Dec 1st week 2017 Build  -->
+	<script type="text/javascript" src="${themeResourcePath}/js/feedback.js"></script>
 	<script type="text/javascript" src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}"></script>
 	<c:if test="${isIAEnabled}">
 		<script type="text/javascript" src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}"></script>

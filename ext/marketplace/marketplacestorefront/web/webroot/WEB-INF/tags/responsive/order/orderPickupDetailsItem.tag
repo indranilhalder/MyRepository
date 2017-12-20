@@ -156,9 +156,12 @@
 									</c:when>
 									<c:otherwise>
 										<ycommerce:testId code="cart_product_size">
+										<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 											<div class="size">
+											
 												<spring:theme code="text.size" />${entry.product.size}
 											</div>
+										</c:if>
 										</ycommerce:testId>
 									</c:otherwise>
 								</c:choose>

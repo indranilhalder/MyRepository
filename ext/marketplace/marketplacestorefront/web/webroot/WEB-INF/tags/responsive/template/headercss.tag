@@ -4,7 +4,6 @@
 <%@ taglib prefix="g" uri="http://granule.com/tags/accelerator"%>
 <%@ taglib prefix="compressible" tagdir="/WEB-INF/tags/responsive/template/compressible" %>
 <%@ taglib prefix="cms" tagdir="/WEB-INF/tags/responsive/template/cms" %>
-
 <style id="onloadcss">
 body {
 	    font-family: "Montserrat";

@@ -287,6 +287,17 @@
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
 							<li><span class="capacity-list">Capacity: <span class="size-col">${product.capacity}</span></span></li>
 						</c:if>
+						
+						<c:if
+							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'HomeFurnishing'}">
+							<c:if test="${not empty product.displaySize && product.displaySize ne '[NO SIZE]'}">
+							<li class="product-size-list">
+							<span class="product-size">${product.displayLength}: <span class="size-col">${product.displaySize}</span>
+							</span>
+							</li>
+							</c:if>
+						</c:if>
+						
 						<c:if test="${not empty product.ratingCount}">
 							<li><span class="rating-list">Rating Count : <span class="size-col">${product.ratingCount}</span></span></li>
 						</c:if>

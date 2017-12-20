@@ -2297,29 +2297,6 @@ function getRating(key,productCode,category)
 			
 	
 	  }  
-	  
-	  gigya.comments.showRatingUI(ratingsParams);
-//	$.getJSON("https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=hello",
-//	         function(data) {
-//		
-//		$(".rate-details .after").each(function(count){
-//			var totalCount=data.streamInfo.ratingCount;
-//			var countIndiv=data.streamInfo.ratingDetails._overall.ratings[count];
-//			$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100});
-//			$(".rate-details .after").eq(count).text(data.streamInfo.ratingDetails._overall.ratings[count]);
-//			
-//		})
-//		
-//		var avgreview=data.streamInfo.avgRatings._overall;
-//		var raingcount=data.streamInfo.ratingCount;
-//		
-//		rating(avgreview,raingcount);
-//		
-//		$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-//		
-//	          });
-	
-
 }
 
 

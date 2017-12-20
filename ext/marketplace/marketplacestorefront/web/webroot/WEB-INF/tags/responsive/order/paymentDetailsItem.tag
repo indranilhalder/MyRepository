@@ -14,6 +14,9 @@
   		<c:when test="${(not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee') || (not empty qc_paymentMode && fn:toLowerCase(qc_paymentMode) eq 'cliq cash') }">	
   			<p class="title">  <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> Information:</p>
   		</c:when>
+  		<c:when test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'paytm'}">	
+  			<p class="title">  <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> Information:</p>
+  		</c:when>
   		<c:otherwise>
   			<p class="title">  ${order.mplPaymentInfo.paymentOption} Information:</p>
   		</c:otherwise>
@@ -24,6 +27,11 @@
     
    ${order.mplPaymentInfo.cardAccountHolderName}<br>
    </c:if>
+    <!-- new addition for paytm integration -->
+   <c:if test="${not empty order.mplPaymentInfo.paymentOption && order.mplPaymentInfo.paymentOption eq 'PAYTM'}">
+   ${order.mplPaymentInfo.paymentOption}<br>
+   </c:if> 
+   
    <c:if test="${not empty order.mplPaymentInfo.paymentOption && order.mplPaymentInfo.paymentOption eq 'Credit Card'}">
 
    		${order.mplPaymentInfo.cardAccountHolderName}<br>

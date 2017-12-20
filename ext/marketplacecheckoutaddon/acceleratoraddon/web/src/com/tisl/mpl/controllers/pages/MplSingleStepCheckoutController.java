@@ -119,6 +119,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import reactor.function.support.UriUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -166,6 +167,7 @@ import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
@@ -173,6 +175,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
@@ -441,6 +444,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			//This session attribute is required for responsive one page
 			getSessionService().setAttribute("isCheckoutPincodeServiceable", isServicable);
+
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
@@ -2725,6 +2729,110 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PickupLocationFragmentPanel;
 	}
 
+
+	/**
+	 * This method is called to show offers in payment page.
+	 *
+	 * @return if successful return list of pos for a product else null.
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERS, method = RequestMethod.GET)
+	public String getPaymentRelatedOffers(
+			@RequestParam(value = "isResposive", required = false, defaultValue = "false") final String isResponsive,
+			final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	{
+
+		try
+		{
+			final List<MplCartOfferVoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
+			final Map<String, Double> allOffersTotalData = mplCouponFacade.getPaymentModerelatedVoucherswithTotal();
+
+			/*
+			 * for (final Map<VoucherModel, String> offer : allOffersData) { for (final Map.Entry<VoucherModel, String>
+			 * entry : offer.entrySet()) {
+			 *
+			 * System.out.println(entry.getKey().getDescription()); System.out.println(entry.getValue()); final } }
+			 */
+
+			model.addAttribute("offerPageData", allOffersData);
+			model.addAttribute("offerPageDataTotal", allOffersTotalData);
+			if (CollectionUtils.isNotEmpty(allOffersData))
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(allOffersData.size()));
+			}
+			else
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(0));
+			}
+
+			model.addAttribute("offer_page_contain", "offers");
+			model.addAttribute("responsive_view", isResponsive);
+
+			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+
+
+
+	}
+
+	/**
+	 * This method is called to show offers terms and condition in payment page.
+	 *
+	 * @return if successful return list of pos for a product else null.
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERSTERMS, method = RequestMethod.GET)
+	public String getPaymentRelatedOffersTerms(
+			@RequestParam(value = "isResposive", required = false, defaultValue = "false") final String isResponsive,
+			final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	{
+
+		try
+		{
+			final List<MplCartOfferVoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
+
+
+			model.addAttribute("offerTermsConditionsData", allOffersData);
+
+			if (CollectionUtils.isNotEmpty(allOffersData))
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(allOffersData.size()));
+			}
+			else
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(0));
+			}
+			model.addAttribute("offer_page_contain", "terms");
+			model.addAttribute("responsive_view", isResponsive);
+
+			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+
+
+	}
+
 	/**
 	 * This method gets called when the "Proceed" button is clicked. It sets the selected delivery mode.
 	 *
@@ -2776,24 +2884,24 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			Double finalDeliveryCost = Double.valueOf(0.0);
 
-			{
-				//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
-				session.setAttribute("deliveryMethodForm", deliveryMethodForm);
-				//TISPT-400
-				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
-				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 
-			}
+			//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
+			session.setAttribute("deliveryMethodForm", deliveryMethodForm);
+			//TISPT-400
+			finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+			final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+
+
+
 
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-			if (isDelModeRestrictedPromoPresent)
-			{
-				applyPromotions();
-			}
-
+			//			if (isDelModeRestrictedPromoPresent)
+			//			{
+			//				applyPromotions();
+			//			}
+			getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 			//populate freebie data
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 
@@ -3515,6 +3623,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation starts here
 			mplCouponFacade.releaseVoucherInCheckout(cartModel);
 			commerceCartService.recalculateCart(cartModel);
+
+			//Fix starts for - Order cant be placed with freebie
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
+			//Fix ends for - Order cant be placed with freebie
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
@@ -3849,12 +3963,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 			jsonObj.put("validation", "success");
 			jsonObj.put("subTotalPrice", model.asMap().get("cartTotalMrp"));
+			jsonObj.put("totalDiscount", model.asMap().get("totalDiscount"));//TPR-7486
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("error in validate payment", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
@@ -4906,17 +5021,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						final DeliveryMethodForm deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
 						Double finalDeliveryCost = Double.valueOf(0.0);
 						//Re-populating delivery modes after recalculation of cart
-						{
-							finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
-							final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-							getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
-							//session.removeAttribute("deliveryMethodForm");
-						}
+
+						finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+						final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+						//TIS 400
+						//session.removeAttribute("deliveryMethodForm");
+
 						final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 						final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-						applyPromotions();
-
+						//	applyPromotions();
+						getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel);
 						//populate freebie data
 						populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 						//Re-populating delivery address after recalculation of cart
@@ -4980,7 +5095,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5038,7 +5153,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -5383,6 +5498,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		//Terms n Conditions Link
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				configurationService.getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
+		//TPR-7448
+		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYBASEURL,
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 
 	}
 

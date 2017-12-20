@@ -124,6 +124,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		//CR Changes : TPR-715
 		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
+		boolean isExhausted = false;
+
 		try
 		{
 			final boolean promotionAlreadyFired = getDefaultPromotionsManager().cartPromotionAlreadyFired(ctx, evalCtx.getOrder());
@@ -154,8 +156,20 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						.findEligibleProductsInBasketForCartPromo(ctx, evalCtx, this);
 				//PR-15 ends here
 
+
+				//Changes for TPR-7445
+
+				if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerOfferCount(restrictionList, this.getCode(),
+							order);
+					isExhausted = data.isExhausted();
+				}
+
+
 				if (rsr.isAllowedToContinue() && !rsr.getAllowedProducts().isEmpty() && checkRestrictions(ctx, evalCtx)
-						&& checkChannelFlag && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)//check added for PR-15
+						&& checkChannelFlag && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction
+						&& !isExhausted)//check added for PR-15
 				{
 					final boolean isPercentageDisc = false;
 					final double percentageDiscount = getPercentageDiscount() == null ? 0.0D : getPercentageDiscount().doubleValue();

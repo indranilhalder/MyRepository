@@ -34,7 +34,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.model.BankModel;
-import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 
 
 /**
@@ -300,9 +299,9 @@ public interface MplPaymentFacade
 	 */
 
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 
@@ -426,7 +425,7 @@ public interface MplPaymentFacade
 	 */
 	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
 			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
-			String returnUrl, String uid, String channel, double amount) throws EtailNonBusinessExceptions, AdapterException;
+			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions, AdapterException;
 
 
 	/**
@@ -501,17 +500,22 @@ public interface MplPaymentFacade
 	 */
 	public boolean validateBank(final List<BankModel> bankList, final String bank);
 
-	/**
-	 * @param guid
-	 * @param orderToBeUpdated
-	 * @return
-	 */
-	public QCRedeeptionResponse createQCOrderRequest(String guid, AbstractOrderModel orderToBeUpdated, final String WalletId,
-			String cliqCashPaymentMode, final String qcTransactionId, String channel, double walletTotal, double juspayAmount);
+	//TPR-7486
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer);
 
+	public String fetchBanknameFromBin(final String cardBinNo);//TPR-7486
 	/**
+	 * Added for paytm integration
+	 * 
+	 * @param juspayOrderId
+	 * @param paymentMethodType
+	 * @param paymentMethod
+	 * @param redirectAfterPayment
+	 * @param format
 	 * @return
+	 * @throws EtailNonBusinessExceptions
 	 */
-	public String generateQCCode();
+	public String getPaytmOrderStatus(String juspayOrderId, String paymentMethodType, String paymentMethod,
+			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
 
 }

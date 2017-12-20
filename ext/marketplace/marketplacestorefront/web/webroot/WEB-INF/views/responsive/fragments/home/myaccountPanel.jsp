@@ -33,8 +33,8 @@
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
 	<!-- Release 2 changes -->
-						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li> 
+				<%-- 		<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li>  --%> <!-- Closed as per SPRINT 13 requirement -->   
 										
 						<%-- 	<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 										code="header.flyout.myInterest" /></a></li> --%> <!--  UF-249 link hide -->
@@ -86,8 +86,8 @@
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
 	
-						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
-										code="header.flyout.review" /></a></li> 
+					<%-- 	<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li>  --%> <!-- commented as per sprint 13 requirement -->
 
 										
 							<%-- <li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme

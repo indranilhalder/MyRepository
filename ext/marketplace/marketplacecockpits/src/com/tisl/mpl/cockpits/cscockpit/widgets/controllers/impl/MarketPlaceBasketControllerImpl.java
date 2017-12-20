@@ -323,6 +323,7 @@ implements MarketPlaceBasketController {
 	public Boolean reserveCart(final CartModel cart)  throws ValidationException{
 		Boolean isCartReserved = Boolean.TRUE;
 		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
+
 		String fulfillmentType = null;
 		modelService.refresh(cart);
 
@@ -342,8 +343,14 @@ implements MarketPlaceBasketController {
 		}
 
 		// if store agent is logged in
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
 
 		for(AbstractOrderEntryModel entry : cart.getEntries()){
 			//CKD:TPR-3809
@@ -992,9 +999,14 @@ implements MarketPlaceBasketController {
 		/**
 		 * TPR-5712 : if store manager logged in
 		 */
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
-
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
+		
 		if (configurationService
 				.getConfiguration()
 				.getBoolean(
@@ -1290,6 +1302,13 @@ implements MarketPlaceBasketController {
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
+						
+						//TPR-7408 starts here
+						entry.setCouponCostCentreOnePercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreTwoPercentage(Double.valueOf(0.00D));
+						entry.setCouponCostCentreThreePercentage(Double.valueOf(0.00D));
+						//TPR-7408 ends here
+						
 						getModelService().save(entry);
 					}
 

@@ -157,6 +157,14 @@
 			$("#deliverySlotCostId"+entryNumber).val($(element).attr("data-deliveryCost"));
 			$("#deliverySlotDateId"+entryNumber).val($(element).attr("data-deliverySlotDate"));
 			$("#deliverySlotTimeId"+entryNumber).val($(element).attr("data-deliverySlotTime"));
+			//TPR-5275 starts
+		    var deliverySlotDate =	$("#deliverySlotDateId"+entryNumber).val($(element).attr("data-deliverySlotDate")).val();
+		    var deliverySlotTime = $("#deliverySlotTimeId"+entryNumber).val($(element).attr("data-deliverySlotTime")).val();
+			 //TPR-5275 | Delivery Slots 
+		    if(typeof utag !="undefined"){
+				 utag.link({ 	preferred_dod : deliverySlotDate,preferred_tod : deliverySlotTime  });
+			 }
+			//TPR-5275  ends
 		}
 	}
 </script>

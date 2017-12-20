@@ -63,4 +63,13 @@
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div>
+<div class="bottom-pagination pagination-search">
+<c:if test="${searchPageData.pagination.numberOfPages > 1}">
+<span class="">
+<span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
+</span>
+</c:if>
+<ul class="pagination-blocks">
+</ul>
+</div>
 <input type="hidden" name="searchPanel" value="1"/>

@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ attribute name="product" required="true"
 	type="de.hybris.platform.commercefacades.product.data.ProductData"%>
+<%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
 
 <!-- -EMI changes -->
@@ -17,6 +18,11 @@
 </p>
 <!-- TPR-630 -->
 <div id="EMImodal-content" class="modal-content">
+<a class="showEmi tab-emi active"> EMI Details <!-- TPR-7417 -->
+</a>
+<a class="emi-tnc tab-emi"> EMI T&C
+</a>
+<div class="emi-availability" id="emiAvailability">
 <span class="Close"></span>
   <div class="modal-header">   
     <h3 class="modal-title" id="myModalLabel"> <span class="Emi-tableTitle">EMI Details</span> <span class="Emi-subTitle">EMI for the product is provided by the following banks</span> </h3>  	<!-- UF-48 -->	 
@@ -47,4 +53,36 @@
     </div>
   </div>
 </div>
+<!-- TPR-7417 -->
+<div class="" id="emiTnC" style="display:none">
+<span class="Close"></span>
+  <div class="modal-header">   
+    <h3 class="modal-title" id="myModalLabel"> <span class="Emi-tableTitle">EMI T&C</span> <span class="Emi-subTitle tnc-subtitle">
+	    <cms:pageSlot position="EMITermsandConditionsSlot" var="component">
+			<cms:component component="${component}" />
+		</cms:pageSlot>	
+ 
+ </span> </h3>  	<!-- UF-48 -->	 
+  </div>
 </div>
+
+
+</div>
+
+
+</div>
+
+<script>
+$('.showEmi').click(function () {
+    $('#emiTnC').hide();
+    $('#emiAvailability').show();
+    $('.emi-tnc.active').removeClass('active');
+    $(this).addClass('active');
+}),
+$('.emi-tnc').click(function () {
+    $('#emiTnC').show();
+    $('#emiAvailability').hide();
+    $('.showEmi.active').removeClass('active');
+    $(this).addClass('active');
+});
+</script>

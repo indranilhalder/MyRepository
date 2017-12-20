@@ -65,6 +65,14 @@
 										<c:url value="/checkout/multi/checkoutlogin/checkoutRegister" var="registerAndCheckoutActionUrl" />
 										<multi-checkout:register actionNameKey="checkout.login.registerAndCheckout" action="${registerAndCheckoutActionUrl}" />
 									</li>
+									<li class="social_login_content" style="clear: both;">
+											<div class="social-login-btn-container">
+										    	<button class="fb-sign-btn" onclick="ACC.socialLogin.facebookSocialLogin()"></button>
+										    </div>
+										    <div class="social-login-btn-container">
+												<button id="customBtn" class="google-sign-btn"></button>
+											</div>
+							</li>				
 			
 								</ul>
 							</div>

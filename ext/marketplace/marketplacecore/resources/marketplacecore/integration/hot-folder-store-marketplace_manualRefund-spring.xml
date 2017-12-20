@@ -165,7 +165,7 @@
 	<bean id="batchRefundSmsMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update RefundTransactionEntry;transactionId[unique=true];utrNumber;amount;
+			<value>insert_update RefundTransactionEntry;transactionId[unique=true];utrNumber;amount;status[default='RECEIVED']
 			</value>
 		</property>
 		<property name="impexRow">
@@ -173,5 +173,68 @@
 		</property>
 	</bean>
 	<!-- Added for PR-4 -->
+	
+	<!--  TPR-7412 start -->
+      <!--  For REFUND_INITIATED start -->
+    <bean id="batchManualRefundConverterFollowOnInitConsignmentMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refuinit" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOnConsignment" />
+		
+		<bean id="batchManualRefundConverterFollowOnInitHistoryMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refuinit" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOnHistory" />
+	  <!--  For REFUND_INITIATED end -->
+	  
+	  <!--  For REFUND_IN_PROGRESS start -->
+		 <bean id="batchManualRefundConverterFollowOnInprgConsignmentMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refuinprg" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOnConsignment" />
+		
+		<bean id="batchManualRefundConverterFollowOnInprgHistoryMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refuinprg" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOnHistory" />
+		<!--  For REFUND_IN_PROGRESS end -->
+   
+     <!--  For RETURN_COMPLETED start -->
+     <!--Updating Order history entry for return   -->
+      <bean id="batchManualRefundOrderConverterFollowOnReturnCompleteMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_manual_refund" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOnHistory" />
+   
+   <!--  For  For RETURN_COMPLETED  end -->
+   
+	 <bean id="batchManualRefundOrderAttributeConverterFollowOnConsignment"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>Update Consignment;code[unique=true];status(code)[default='RETURN_COMPLETED'];
+			</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+3};{10}</value>
+		</property>
+	</bean>
+	<bean id="batchManualRefundOrderAttributeConverterFollowOnHistory"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>
+                  #% impex.enableCodeExecution( true );
+                  #% import java.lang.String;
+                  #% import java.util.*;
+                  #% import java.text.SimpleDateFormat;
+                  INSERT_Update OrderHistoryEntry;Order(code);LineId[unique=true];Description[unique=true];Timestamp
+                  "#% beforeEach:
+                  Calendar cal = Calendar.getInstance();
+                  Date result = cal.getTime();
+                  SimpleDateFormat formatter = new SimpleDateFormat(""MMM d, yyyy h:mm:ss a"");
+                  String strDate= formatter.format(result);
+                  line.put(Integer.valueOf(4), strDate);
+                  ";
+			</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+1};{+3};{+10}</value>
+		</property>
+	</bean>
+	<!--  TPR-7412 end -->
 
 </beans>

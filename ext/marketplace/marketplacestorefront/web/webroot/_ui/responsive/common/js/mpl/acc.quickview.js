@@ -21,8 +21,37 @@ ACC.quickview = {
 			$("#showPriceBreakupquick").slideToggle("fast");
 		})
 	},
-	
+	onQuantitySelectDropDownQuick: function ()
+	{
+		$("select#quantity_dropdown.variant-select").on('change',function(e){
+			//console.log("================>called while size is selected================>");
+		$('input[name="qty"]').val(this.value);
 
+		});
+	},
+	
+	onSizeSelectDropDownQuickView: function ()//First Method to be called in size select ajax call
+	{	//Attaching click event on size variant <li>
+		$("select#variant_dropdown.variant-select").on('change',function(e){
+			//console.log("================>called while size is selected================>");
+			
+			var currentSelectedElement=this;
+			var productCode="";
+			productCode=$(currentSelectedElement).find(':selected').attr('data-productCode');
+			
+			var href=this.value;
+			
+			
+			$.ajax({
+			    url: href,
+			    dataType: "html",
+			    success: function(data) {	
+			        $("#cboxLoadedContent").html(data);
+			        
+			    }
+			});	
+		});
+	},
 
 	bindToUiCarouselLink: function ()
 	{
@@ -37,6 +66,8 @@ ACC.quickview = {
 				ACC.quickview.refreshScreenReaderBuffer();
 				ACC.quickview.initQuickviewLightbox();
 				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
+				ACC.quickview.onSizeSelectDropDownQuickView();
+				ACC.quickview.onQuantitySelectDropDownQuick();
 				//UF-24 thumbnail image load
 				//Moved after quickviewGallery in case utag is undefined
 				
@@ -153,13 +184,15 @@ function setSizeforAkamai()
 			} 
 }
 function isOOSQuick(){
-	var totalOptions = $("ul[label=sizes] li").length;
-	//PRDI-445 fix starts
-	var stock = $("#stock").val();
-	if (totalOptions==0 && stock<1)
-	{
-		return true;
-	}
+	var totalOptions="";
+	if(productCategoryType!='HomeFurnishing')
+		{
+	totalOptions = $("ul[label=sizes] li").length;
+		}
+	else if(document.getElementById("variant_dropdown")!=null)
+		{
+		totalOptions=document.getElementById("variant_dropdown").length;
+		}
 	//PRDI-445 fix ends
 	totalOptions = totalOptions -1;
 	var disabledOption = $("ul[label=sizes] li.strike").length;
@@ -206,6 +239,8 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				var oosMicro=data['isOOsForMicro'];
 				var stockInfo = data['availibility'];
 				availibility = stockInfo;
+				if(productCategoryType!='HomeFurnishing')
+					{
 				$.each(stockInfo,function(key,value){
 					$("ul[label=sizes] li a").each(function(){
 						
@@ -233,6 +268,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					});
 				});
 				
+			}
 				//alert("...>>"+data['sellerArticleSKU']+"<<"+productCode+"..."+productCodeQuickView);
 				
 				if(typeof data['sellerArticleSKU'] === 'undefined')
@@ -291,27 +327,39 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				//alert("--"+ $(".quickViewSelect").html());
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-				if (isOOSQuick() && data['othersSellersCount']>0) {
+				if (isOOSQuick() && data['othersSellersCount']>0 && productCategoryType!='HomeFurnishing') {
 					$("#addToCartButtonQuick").hide();
 					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
-				}else if (isOOSQuick() && data['othersSellersCount']==0){
+				}else if (isOOSQuick() && data['othersSellersCount']==0 && productCategoryType!='HomeFurnishing'){
 					$("#addToCartButtonQuick").hide();
 					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
-				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0) { //TPR-465
+				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0 && productCategoryType!='HomeFurnishing') { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
 					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 					//}					
 				}
-				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0){
+				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0 && productCategoryType!='HomeFurnishing'){
 					//if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$('.js-add-to-cart-qv').hide();
 						$("#outOfStockIdQuick").show();
 					//}					
+				}
+				else if(allStockZero == 'Y' && data['othersSellersCount']>0  && productCategoryType=='HomeFurnishing')
+					{
+						$("#addToCartButton").hide();
+						$('.js-add-to-cart-qv').hide();
+						$("#outOfStockIdQuick").show();
+					}
+				else if(allStockZero == 'Y' && data['othersSellersCount']==0  && productCategoryType=='HomeFurnishing')
+				{
+					$("#addToCartButton").hide();
+					$('.js-add-to-cart-qv').hide();
+					$("#outOfStockIdQuick").show();
 				}
 				else
 					{
@@ -483,17 +531,17 @@ function getRichAttributeQuickView(sellerName)
 function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if(null!= mrp){
-		$("#quickMrpPriceId").append(mrp.formattedValueNoDecimal);
+		$("#quickMrpPriceId").html(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
-		$("#quickMopPriceId").append(mop.formattedValueNoDecimal);
+		$("#quickMopPriceId").html(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
-		$("#quickSpPriceId").append(spPrice.formattedValueNoDecimal);
+		$("#quickSpPriceId").html(spPrice.formattedValueNoDecimal);
 	} 
 ////TISPRM-33
 	if(null!= savingsOnProduct){
-		$("#savingsOnProductIdQV").append("(-"+savingsOnProduct+" %)");
+		$("#savingsOnProductIdQV").html("(-"+savingsOnProduct+" %)");
 	} 
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){
@@ -592,8 +640,15 @@ function addToWishlist_quick(alreadyAddedWlName_quick) {
     }
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
+    
     var sizeSelected=true;
-    if($("#isSizeSelectedQV").val()==''){
+	if(productCategoryType=='HomeFurnishing')
+	{
+	
+	sizeSelected=true;
+	}
+	
+     if($("#isSizeSelectedQV").val()==''){
     	sizeSelected=false;
 	}
     
@@ -1187,12 +1242,13 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);*/
 
 	
-	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' && isShowSize=='true' ){
+	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' && isShowSize=='true' && $("#categoryType").val()!='HomeFurnishing'){
 		$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
 		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
+ 	    //console.log("QucikView Here");
 	 }	 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
 

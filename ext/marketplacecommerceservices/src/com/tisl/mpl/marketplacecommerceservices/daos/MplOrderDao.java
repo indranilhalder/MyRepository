@@ -34,6 +34,15 @@ public interface MplOrderDao
 	 */
 	List<ReturnReasonModel> getReturnReasonForOrderItem();
 
+	//TPR-5954
+	public List<ReturnReasonModel> getCategorySpecificReturnReason(String L2CatCode) throws Exception;
+
+	//TPR-5954
+	public List<ReturnReasonModel> getSubReturnReason(String parentReturnReasonCode) throws Exception;
+
+	//TPR-5954
+	public String fetchReasonDesc(final String returnReasonCode) throws Exception;
+
 	/**
 	 * @param customerModel
 	 * @param store

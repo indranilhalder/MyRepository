@@ -80,12 +80,12 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.service.MplAwbStatusService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
+
 
 
 /**
@@ -136,8 +136,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
-	@Autowired
-	private MplAwbStatusService mplAwbStatusService;
+	//SONAR fix
+	//	@Autowired
+	//	private MplAwbStatusService mplAwbStatusService;
 
 	/* sonar fix */
 	/* private final int queryCount = 0; */
@@ -231,6 +232,27 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonData> getCatSpecificRetReason(final String L2CatCode) throws Exception
+	{
+		return mplOrderService.getCatspecificRetReason(L2CatCode);
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonData> getSubReasonCode(final String parentReturnReasonCode) throws Exception
+	{
+		return mplOrderService.fetchSubReturnReason(parentReturnReasonCode);
+	}
+
+	//TPR-5954
+	@Override
+	public String fetchReasonDesc(final String reasonCode) throws Exception
+	{
+		return mplOrderService.fetchReasonDesc(reasonCode);
 	}
 
 	@Override
@@ -411,7 +433,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -462,9 +484,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -501,11 +523,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -539,11 +561,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -918,7 +940,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override

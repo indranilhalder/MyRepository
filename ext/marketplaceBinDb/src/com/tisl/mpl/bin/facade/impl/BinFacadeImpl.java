@@ -103,8 +103,11 @@ public class BinFacadeImpl implements BinFacade
 			}
 
 			//Setting Bank Name in Session for Promotions : Code Change for TISPRO-175
-			getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN,
-					(null != bin && StringUtils.isNotEmpty(bin.getBankName())) ? bin.getBankName() : null);
+			//TPR-7486
+			/*
+			 * getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN, (null != bin &&
+			 * StringUtils.isNotEmpty(bin.getBankName())) ? bin.getBankName() : null);
+			 */
 
 
 			/////////////////TPR-4464///////////////////
@@ -114,6 +117,19 @@ public class BinFacadeImpl implements BinFacade
 
 			/////////////////TPR-4464///////////////////
 
+			//TPR-7486
+			/*
+			 * LOG.debug("From session=====Bank:::::::" +
+			 * getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
+			 * 
+			 * if (null == getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION))
+			 * { final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+			 * MarketplacecommerceservicesConstants.PAYMENTMODE); for (final Map.Entry<String, Double> entry :
+			 * paymentInfo.entrySet()) { if
+			 * (!(MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey()))) {
+			 * getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION,
+			 * entry.getKey()); break; } } }
+			 */
 
 			LOG.debug("From session=====Bank:::::::"
 					+ getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
@@ -146,6 +162,7 @@ public class BinFacadeImpl implements BinFacade
 		return binData;
 
 	}
+
 
 
 	/**

@@ -15,6 +15,11 @@
 		</cms:pageSlot>
 	</div>
 
+	<div class="row">
+		<cms:pageSlot position="SeoFooter" var="feature">
+			<cms:component component="${feature}"/>
+		</cms:pageSlot>
+	</div>
 	<storepickup:pickupStorePopup />
 
 </template:page>

@@ -16,6 +16,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 	@Autowired
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
+
 	//Sonar fix
 	private static final String PARENT_KEY = "Parent";
 	private static final String SUB_ORDER_KEY = "SubOrder";
@@ -69,6 +71,111 @@ public class DefaultMplOrderDao implements MplOrderDao
 
 			final List<ReturnReasonModel> listOfData = flexibleSearchService.<ReturnReasonModel> search(query).getResult();
 			return listOfData;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonModel> getCategorySpecificReturnReason(final String L2CatCode) throws Exception
+	{
+
+		ReturnReasonModel returnReasons = null;
+		final List<ReturnReasonModel> listOfData = new ArrayList<ReturnReasonModel>();
+		try
+		{
+			final String queryString = "select {reasonCodes},{reasonDesc} from {ReturnReasonCatChild} where {reasonCodes} in ({{select {reasonCode} from "
+					+ "{ReturnReasonCatMaster} where {prodCat}='" + L2CatCode + "' }})";
+
+
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.setResultClassList(Arrays.asList(String.class, String.class));
+			final SearchResult<List<Object>> rows = flexibleSearchService.search(fQuery);
+
+			for (final List<Object> row : rows.getResult())
+			{
+				returnReasons = new ReturnReasonModel();
+				if (null != row.get(0))
+				{
+					returnReasons.setReasonCode(String.valueOf(row.get(0)));
+				}
+				if (null != row.get(1))
+				{
+					returnReasons.setReasonDescription(String.valueOf(row.get(1)));
+				}
+				listOfData.add(returnReasons);
+				returnReasons = null; //for quick garbage collection
+			}
+			return listOfData;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonModel> getSubReturnReason(final String parentReturnReasonCode) throws Exception
+	{
+		ReturnReasonModel returnReasons = null;
+		final List<ReturnReasonModel> listOfData = new ArrayList<ReturnReasonModel>();
+		try
+		{
+			final String queryString = "select {reasonCodes}, {reasonDesc} from {ReturnReasonCatChild} where {parentRelation} = '"
+					+ parentReturnReasonCode + "' ";
+
+
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.setResultClassList(Arrays.asList(String.class, String.class));
+			final SearchResult<List<Object>> rows = flexibleSearchService.search(fQuery);
+
+			for (final List<Object> row : rows.getResult())
+			{
+				returnReasons = new ReturnReasonModel();
+				if (null != row.get(0))
+				{
+					returnReasons.setReasonCode(String.valueOf(row.get(0)));
+				}
+				if (null != row.get(1))
+				{
+					returnReasons.setReasonDescription(String.valueOf(row.get(1)));
+				}
+				listOfData.add(returnReasons);
+				returnReasons = null; //for quick garbage collection
+			}
+			return listOfData;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	//TPR-5954
+	@Override
+	public String fetchReasonDesc(final String returnReasonCode) throws Exception
+	{
+		String returnReasons = null;
+		try
+		{
+			final String queryString = "select {reasonCodes}, {reasonDesc} from {ReturnReasonCatChild} where {reasonCodes} = '"
+					+ returnReasonCode + "' ";
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.setResultClassList(Arrays.asList(String.class, String.class));
+			final SearchResult<List<Object>> rows = flexibleSearchService.search(fQuery);
+
+			for (final List<Object> row : rows.getResult())
+			{
+				if (null != row.get(1))
+				{
+					returnReasons = (String.valueOf(row.get(1)));
+				}
+			}
+			return returnReasons;
 		}
 		catch (final Exception e)
 		{

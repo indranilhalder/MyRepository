@@ -30,8 +30,8 @@
 					code="header.flyout.cards" /></a></li>
 		<li id="lnAddress" <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book')}">class="active"</c:if>><a href="<c:url value="/my-account/address-book?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.address" /></a></li>
-		<li id="lnReview" <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">class="active"</c:if>><a href="<c:url value="/my-account/reviews?isLux=${isLuxVal}"/>"><spring:theme
-						code="header.flyout.review" /></a></li>
+<%-- 		<li id="lnReview" <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">class="active"</c:if>><a href="<c:url value="/my-account/reviews?isLux=${isLuxVal}"/>"><spring:theme
+						code="header.flyout.review" /></a></li> --%><!-- Closed as per SPRINT 13 requirement -->
 		<%-- <li id="lnMyInterest"><a href="<c:url value="/my-account/myInterest?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.recommendations" /></a></li> --%>	<!--  UF-249 link hide -->
 		<%-- <li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme

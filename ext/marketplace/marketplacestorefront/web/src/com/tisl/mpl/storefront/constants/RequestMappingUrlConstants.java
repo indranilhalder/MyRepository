@@ -192,4 +192,8 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_WALLET = "/wallet";
 	public static final String LINK_WALLET_VIEW = "/view";
 
+
+	//TPR-5954
+	public static final String IMG_UPLOAD_PATH = "img.fileupload.path";
+
 }

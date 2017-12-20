@@ -398,7 +398,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>									
-								<c:if test="${not empty facetValue.name && facetValue.name ne 'NO SIZE'}">
+								<c:if test="${not empty facetValue.name && !fn:containsIgnoreCase(facetValue.name, 'No Size')}">
 									<label>
 										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" value="${facetValue.code}"/>
 										<span class="facet-label">

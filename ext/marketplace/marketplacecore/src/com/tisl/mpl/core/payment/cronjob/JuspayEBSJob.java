@@ -136,17 +136,25 @@ public class JuspayEBSJob extends AbstractJobPerformable<CronJobModel>
 					final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
 					if (null != oModel)
 					{
-						if (!isTAT1Expired)
+						//SDI-2922
+						if(oModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 						{
-							executeProcess(audit, oModel);
+							setAuditExpiredIfNoError(errorFlag, audit);
 						}
 						else
 						{
-							LOG.debug("OMS CALL TO APROVE ORDER");
+							if (!isTAT1Expired)
+							{
+								executeProcess(audit, oModel);
+							}
+							else
+							{
+								LOG.debug("OMS CALL TO APROVE ORDER");
 
-							getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
-							errorFlag = getJuspayEBSService().initiateProcess(oModel);
-							setAuditExpiredIfNoError(errorFlag, audit);
+								getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
+								errorFlag = getJuspayEBSService().initiateProcess(oModel);
+								setAuditExpiredIfNoError(errorFlag, audit);
+							}
 						}
 					}
 				}
@@ -255,26 +263,33 @@ public class JuspayEBSJob extends AbstractJobPerformable<CronJobModel>
 							modelService.save(audit);
 						}
 
-						if (isExpired)
+						//SDI-2922
+						if(null != audit.getCartGUID())
 						{
-							LOG.debug("OMS CALL TO APROVE ORDER");
-							if (null != audit.getCartGUID())
+							final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
+
+							//SDI-2922
+							if(null != oModel && oModel.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 							{
-								final OrderModel oModel = fetchOrderDetails(audit.getCartGUID());
-								if (null != oModel)
+								setAuditExpiredIfNoError(errorFlag, audit);
+							}
+							else
+							{
+								if (isExpired)
 								{
+									LOG.debug("OMS CALL TO APROVE ORDER");
+
 									getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.PAYMENT_SUCCESSFUL);
 									errorFlag = getJuspayEBSService().initiateProcess(oModel);
 									setAuditExpiredIfNoError(errorFlag, audit);
 								}
-							}
-
-						}
-						else
-						{
-							if (null != getOrderStatusResponse)
-							{
-								getJuspayEBSService().actionOnResponse(getOrderStatusResponse, audit);
+								else
+								{
+									if (null != getOrderStatusResponse)
+									{
+										getJuspayEBSService().actionOnResponse(getOrderStatusResponse, audit);
+									}
+								}
 							}
 						}
 					}

@@ -23,7 +23,7 @@
 			<li id="defaultKnowMoreLi4" style="display:none"><spring:theme code="know.more.sixth"/>&nbsp;</li>
 			<li><spring:theme code="know.more.fourth"/>&nbsp;${cliqCareNumber}&nbsp;<spring:theme code="know.more.fifth"/>&nbsp;${cliqCareMail}&nbsp;</li>
 
-			<c:if test="${productCategoryType eq 'FineJewellery' || productCategoryType eq 'FashionJewellery'}">
+			<c:if test="${productCategoryType eq 'FineJewellery' || productCategoryType eq 'FashionJewellery' || productCategoryType eq 'HomeFurnishing'}">
 				<c:forEach items="${Warranty}" var="warranty">
 					<li>${warranty}</li>
 				</c:forEach>

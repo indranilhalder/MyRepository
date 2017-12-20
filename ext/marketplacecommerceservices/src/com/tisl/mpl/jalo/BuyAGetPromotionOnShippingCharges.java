@@ -61,8 +61,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 	/**
 	 * @Description : Buy Product A and get Percentage/Amount Discount on shipping charges or Free Shipping
-	 * @param :
-	 *           SessionContext ctx ,PromotionEvaluationContext promotionEvalCtx
+	 * @param : SessionContext ctx ,PromotionEvaluationContext promotionEvalCtx
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -75,8 +74,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 		try
 		{
 			final AbstractOrder order = promotionEvalCtx.getOrder();
-			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
-					getRestrictions());//Adding restrictions to List
+			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
 
 			//final List<Product> excludedProductList = new ArrayList<Product>();
 			//final List<String> excludeManufactureList = new ArrayList<String>();
@@ -189,8 +187,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext paramSessionContext ,PromotionResult paramPromotionResult ,Locale paramLocale
+	 * @param : SessionContext paramSessionContext ,PromotionResult paramPromotionResult ,Locale paramLocale
 	 * @return : String
 	 */
 	@Override
@@ -220,8 +217,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 			discPerOrAmtStr.append(String.valueOf(adjustedDeliveryCharge));
 			discPerOrAmtStr.append('%');
 		}
-		else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT) && (getPriceForOrder(ctx,
-				getDiscountPrices(ctx), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+		else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
+				&& (getPriceForOrder(ctx, getDiscountPrices(ctx), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
 		{
 			adjustedDeliveryCharge = getPriceForOrder(ctx, getDiscountPrices(ctx), order,
 					MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
@@ -465,8 +462,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 					final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
 
-					final boolean flagForPincodeRestriction = getDefaultPromotionsManager()
-							.checkPincodeSpecificRestriction(restrictionList, order);
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList, order);
 
 
 					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction && flagForPaymentModeRestrEval) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
@@ -477,8 +474,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 						productAssociatedItemsFinalMap.putAll(productAssociatedItemsMap);
 
 						//Fetching product rich attribute
-						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager()
-								.fetchProductRichAttribute(validProductList, order);
+						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
+								validProductList, order);
 
 						final EnumerationValue discountType = getDiscTypesOnShippingCharges();
 						double adjustedDeliveryCharge = 0.00D;
@@ -494,8 +491,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 						{
 							final double amount = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
 									MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
-							final double totalDelCostForValidProds = getDefaultPromotionsManager()
-									.getTotalDelCostForValidProds(validProductUssidMap, validProductList);
+							final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
+									validProductUssidMap, validProductList);
 							adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
 						}
 						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
@@ -513,10 +510,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 							final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProductUSSID);
 
 							if ((isTShipAsPrimitive() && isSShipAsPrimitive())
-									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP)
-											&& isTShipAsPrimitive())
-											|| (fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP)
-													&& isSShipAsPrimitive())))
+									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
 							{
 								prodPrevCurrDelChargeMap = getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
 										adjustedDeliveryCharge, validProductUSSID, order, null);
