@@ -3481,6 +3481,7 @@
 		<property name="ticketAnswer" type="String" />
 		<property name="createTicketAllowed" type="boolean" />
 		<property name="nodeDisplayAllowed" type="boolean" />
+		<property name="nodeL0" type="String"></property>
 		<property name="children" type="java.util.List&lt;com.tisl.mpl.wsdto.CRMWsData>" />
 	</bean>
 	
