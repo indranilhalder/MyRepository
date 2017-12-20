@@ -59,8 +59,10 @@ function viewPaymentCredit(){
 	//TPR-7486
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
-	} else {
 		$('#continue_payment_after_validate').hide();
+	} else {
+		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate_responsive').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -113,8 +115,10 @@ function viewPaymentDebit(){
 	//TPR-7486
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
-	} else {
 		$('#continue_payment_after_validate').hide();
+	} else {
+		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate_responsive').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -152,9 +156,11 @@ function viewPaymentNetbanking(){
 	//TPR-7486
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
-	} else {
 		$('#continue_payment_after_validate').hide();
-	}	
+	} else {
+		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate_responsive').hide();
+	}		
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
 	$("#prepaidtermsconditions").show();
@@ -196,9 +202,11 @@ function viewPaymentCOD(){
 	//TPR-7486
 		if(ACC.singlePageCheckout.getIsResponsive()) {
 			$('#continue_payment_after_validate_responsive').show();
-		} else {
 			$('#continue_payment_after_validate').hide();
-		}	
+		} else {
+			$('#continue_payment_after_validate').show();
+			$('#continue_payment_after_validate_responsive').hide();
+		}		
 	$("#codtermsconditions").show();	
 	$("#prepaidtermsconditions").hide();
 		
@@ -234,8 +242,10 @@ function viewPaymentEMI(){
 	//TPR-7486
 		if(ACC.singlePageCheckout.getIsResponsive()) {
 			$('#continue_payment_after_validate_responsive').show();
-		} else {
 			$('#continue_payment_after_validate').hide();
+		} else {
+			$('#continue_payment_after_validate').show();
+			$('#continue_payment_after_validate_responsive').hide();
 		}	
 		resetConvChargeElsewhere(); //REMOVE CONV CHARGE 	
 		$("#codtermsconditions").hide();	
@@ -1807,8 +1817,10 @@ function savedCreditCardRadioChange(radioId){
 	   //TPR-7486
 	 	if(ACC.singlePageCheckout.getIsResponsive()) {
 	 		$('#continue_payment_after_validate_responsive').show();
-	 	} else {
 	 		$('#continue_payment_after_validate').hide();
+	 	} else {
+	 		$('#continue_payment_after_validate').show();
+	 		$('#continue_payment_after_validate_responsive').hide();
 	 	}	
  //});
 }
@@ -1873,12 +1885,14 @@ function savedDebitCardRadioChange(radioId){
 				$("#maestroMessage").css("display","none");
 	     }
 	     $("#paymentMode_newcard_savedcard").val("savedCard"); //for responsive --TPR-7486
-	     //TPR-7486
-		 	if(ACC.singlePageCheckout.getIsResponsive()) {
-		 		$('#continue_payment_after_validate_responsive').show();
-		 	} else {
-		 		$('#continue_payment_after_validate').hide();
-		 	}	
+	   //TPR-7486
+	 	if(ACC.singlePageCheckout.getIsResponsive()) {
+	 		$('#continue_payment_after_validate_responsive').show();
+	 		$('#continue_payment_after_validate').hide();
+	 	} else {
+	 		$('#continue_payment_after_validate').show();
+	 		$('#continue_payment_after_validate_responsive').hide();
+	 	}	
 	 //});
 }
   
