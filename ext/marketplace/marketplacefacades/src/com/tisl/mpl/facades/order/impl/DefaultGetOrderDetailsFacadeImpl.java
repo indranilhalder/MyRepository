@@ -156,7 +156,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		{
 
 			if (null != orderDetails && StringUtils.isNotEmpty(orderDetails.getType())
-					&& orderDetails.getType().equalsIgnoreCase("Parent"))
+					&& orderDetails.getType().equalsIgnoreCase("Parent")
+					&& CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
 			{
 				orderhistorydetailsWsDTO = new OrderDataWsDTO();
 
@@ -178,87 +179,87 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 
 
-				if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
+				//if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
+
+				for (final OrderData subOrder : orderDetails.getSellerOrderList())
 				{
-					for (final OrderData subOrder : orderDetails.getSellerOrderList())
+					for (final OrderEntryData entry : subOrder.getEntries())
 					{
-						for (final OrderEntryData entry : subOrder.getEntries())
+						final List<String> parentTransactionIds = new ArrayList<>();
+						orderproductdto = new OrderProductWsDTO();
+						//seller order no
+						orderproductdto.setSellerorderno(subOrder.getCode());
+						final ProductData product = entry.getProduct();
+						if (product != null)
 						{
-							final List<String> parentTransactionIds = new ArrayList<>();
-							orderproductdto = new OrderProductWsDTO();
-							//seller order no
-							orderproductdto.setSellerorderno(subOrder.getCode());
-							final ProductData product = entry.getProduct();
-							if (product != null)
+							final List<ImageData> images = (List<ImageData>) product.getImages();
+							if (null != images)
 							{
-								final List<ImageData> images = (List<ImageData>) product.getImages();
-								if (null != images)
+
+								for (final ImageData imageData : product.getImages())
 								{
-
-									for (final ImageData imageData : product.getImages())
+									if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
 									{
-										if (imageData.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
-										{
-											orderproductdto.setImageURL(imageData.getUrl());
-											break;
-										}
-
-									}
-									if (null == orderproductdto.getImageURL())
-									{
-										orderproductdto.setImageURL(images.get(0).getUrl());
+										orderproductdto.setImageURL(imageData.getUrl());
+										break;
 									}
 
-									if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
-									{
-
-										orderproductdto.setProductBrand(product.getBrand().getBrandname());
-									}
-									if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
-									{
-
-										orderproductdto.setProductcode(product.getCode());
-									}
-									if (StringUtils.isNotEmpty(product.getName()))
-									{
-
-										orderproductdto.setProductName(product.getName());
-									}
 								}
-								if (entry.getTransactionId() != null)
+								if (null == orderproductdto.getImageURL())
 								{
-									orderproductdto.setTransactionId(entry.getTransactionId());
-								}
-								else
-								{
-									orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
+									orderproductdto.setImageURL(images.get(0).getUrl());
 								}
 
+								if (null != product.getBrand() && StringUtils.isNotEmpty(product.getBrand().toString()))
+								{
+
+									orderproductdto.setProductBrand(product.getBrand().getBrandname());
+								}
+								if (null != product.getCode() && StringUtils.isNotEmpty(product.getCode()))
+								{
+
+									orderproductdto.setProductcode(product.getCode());
+								}
+								if (StringUtils.isNotEmpty(product.getName()))
+								{
+
+									orderproductdto.setProductName(product.getName());
+								}
 							}
-							if (entry.isGiveAway())
+							if (entry.getTransactionId() != null)
 							{
-								isGiveAway = "Y";
+								orderproductdto.setTransactionId(entry.getTransactionId());
 							}
 							else
 							{
-								isGiveAway = "N";
-							}
-							orderproductdto.setIsGiveAway(isGiveAway);
-
-							if (entry.getSelectedUssid() != null)
-							{
-								orderproductdto.setUSSID(entry.getSelectedUssid());
+								orderproductdto.setTransactionId(MarketplacecommerceservicesConstants.EMPTY);
 							}
 
-							if (entry.getAmountAfterAllDisc() != null)
-							{
-								orderproductdto.setPrice(entry.getAmountAfterAllDisc().getFormattedValue());
-							}
-
-							orderproductdtos.add(orderproductdto);
 						}
+						if (entry.isGiveAway())
+						{
+							isGiveAway = "Y";
+						}
+						else
+						{
+							isGiveAway = "N";
+						}
+						orderproductdto.setIsGiveAway(isGiveAway);
+
+						if (entry.getSelectedUssid() != null)
+						{
+							orderproductdto.setUSSID(entry.getSelectedUssid());
+						}
+
+						if (entry.getAmountAfterAllDisc() != null)
+						{
+							orderproductdto.setPrice(entry.getAmountAfterAllDisc().getFormattedValue());
+						}
+
+						orderproductdtos.add(orderproductdto);
 					}
 				}
+
 				orderhistorydetailsWsDTO.setProducts(orderproductdtos);
 			}
 
@@ -519,14 +520,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								/*
 								 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 								 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-								 *
+								 * 
 								 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-								 *
+								 * 
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-								 *
+								 * 
 								 * }
 								 */
 
@@ -664,9 +665,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											}
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
-											 *
+											 * 
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -959,15 +960,15 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							/*
 							 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 							 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-							 *
+							 * 
 							 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-							 *
+							 * 
 							 * if (null != orderproductdto.getUSSID()) {
-							 *
+							 * 
 							 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
-							 *
+							 * 
 							 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-							 *
+							 * 
 							 * }
 							 */
 
@@ -1079,9 +1080,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										}
 										/*
 										 * if (null != sellerEntry.getReplacement()) {
-										 *
+										 * 
 										 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-										 *
+										 * 
 										 * }
 										 */
 										//for return
@@ -1471,40 +1472,40 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * subOrder, final ConsignmentData consignment) { final AWBResponseData trackingData = new AWBResponseData();
 	 * List<StatusRecordData> statusRecords = new ArrayList<>(); StatusRecordData statusRecord = new StatusRecordData();
 	 * try {
-	 *
+	 * 
 	 * final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DATE_FORMAT_AWB); final
 	 * SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
-	 *
+	 * 
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue());
 	 * trackingData.setIsSelected(orderStatusCode.getDisplay().booleanValue());
-	 *
+	 * 
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
-	 *
+	 * 
 	 * statusRecord = new StatusRecordData();
-	 *
+	 * 
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
 	 * statusRecord.setTime(smdfTime.format(consignment.getStatusDate())); } else {
 	 * statusRecord.setDate(smdfDate.format(subOrder.getCreated()));
 	 * statusRecord.setTime(smdfTime.format(subOrder.getCreated())); }
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
-	 *
+	 * 
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * return trackingData; }
 	 */
 
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
@@ -2044,12 +2045,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								}
 								//Delivery date is the final delivery date
 								/*
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode()) {
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 *
+								 * 
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -2084,7 +2085,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -2186,9 +2187,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(subOrder.getStatus().getCode(),
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
-												 *
+												 * 
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -2216,9 +2217,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 *
+												 * 
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -2245,9 +2246,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											}
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
-											 *
+											 * 
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -2337,9 +2338,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 * consignmentModel.getCarrier()) {
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
-								 *
+								 * 
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 *
+								 * 
 								 * }
 								 */
 								//End
@@ -3013,7 +3014,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
