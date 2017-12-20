@@ -49,15 +49,17 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 	{
 		final PromotionOrderResults result = getPromotionsManager()
 				.updatePromotions(getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
+
+		refreshOrder(order);
 		//CAR-324
-		if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString("new.refreshOrder.flag")))
-		{
-			refreshOrderNew(order, result);
-		}
-		else
-		{
-			refreshOrder(order);
-		}
+		//		if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString("new.refreshOrder.flag")))
+		//		{
+		//			refreshOrderNew(order, result);
+		//		}
+		//		else
+		//		{
+		//			refreshOrder(order);
+		//		}
 		return result;
 	}
 
@@ -71,18 +73,20 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 				getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order), evaluateRestrictions,
 				productPromotionMode, orderPromotionMode, date);
 
-		if (result == null)
-		{
-			LOG.error("Failed to update promotion for orderId::" + order.getCode());
-		}
-		if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString("new.refreshOrder.flag")))
-		{
-			refreshOrderNew(order, result);
-		}
-		else
-		{
-			refreshOrder(order);
-		}
+		refreshOrder(order);
+
+		//		if (result == null)
+		//		{
+		//			LOG.error("Failed to update promotion for orderId::" + order.getCode());
+		//		}
+		//		if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString("new.refreshOrder.flag")))
+		//		{
+		//			refreshOrderNew(order, result);
+		//		}
+		//		else
+		//		{
+		//			refreshOrder(order);
+		//		}
 		return result;
 	}
 

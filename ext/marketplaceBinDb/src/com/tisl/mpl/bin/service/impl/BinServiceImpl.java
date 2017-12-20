@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.bin.service.impl;
 
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -26,6 +27,7 @@ import com.tisl.mpl.bin.dao.BinDao;
 import com.tisl.mpl.bin.pojo.BankDataPojo;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.binDb.model.BinModel;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.TypeOfError;
 import com.tisl.mpl.core.model.BinErrorModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -193,6 +195,37 @@ public class BinServiceImpl implements BinService
 			}
 		}
 		return csvBankDataList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.bin.service.BinService#fetchBankFromCustomerSavedCard(java.lang.String,
+	 * de.hybris.platform.core.model.user.CustomerModel)
+	 */
+	//TPR-7486
+	@Override
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer)
+	{
+		return getBinDao().fetchBankFromCustomerSavedCard(cardRefNum, Customer);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.bin.service.BinService#fetchBanknameFromBin(java.lang.String)
+	 */
+	//TPR-7486
+	@Override
+	public String fetchBanknameFromBin(final String bin) throws EtailNonBusinessExceptions
+	{
+		String bankname = MarketplacecommerceservicesConstants.EMPTY;
+		final BinModel binmodel = getBinDao().fetchBankFromBin(bin);
+		if (null != binmodel && StringUtils.isNotEmpty(binmodel.getBankName()))
+		{
+			bankname = binmodel.getBankName();
+		}
+		return bankname;
 	}
 
 	/**

@@ -419,6 +419,13 @@ function checkPopupDataOrderHistory() {
 					  	}
 				      if(validate == true){
 				    	  $('.saveBlockData').prop('disabled', 'disabled');
+				    	//TPR-5271 starts| save address
+				    	  if(typeof(utag) !="undefined"){
+				    			utag.link({
+				    				link_text: "save_shipping_address_clicked",
+				    				event_type : "save_shipping_address_clicked"
+				    			});
+				    		   }
 							var data = $("#deliveryAddressForm").serialize();
 						
 							var orderCode = $('#deliveryAddorderCode').val();

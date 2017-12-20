@@ -21,6 +21,7 @@ import de.hybris.platform.solrfacetsearch.provider.FieldValue;
 import de.hybris.platform.solrfacetsearch.provider.impl.ClassificationPropertyValueProvider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +49,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 	//private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 
+	private static final String ELECTRONICS = "Electronics".intern();
+
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
@@ -58,13 +61,15 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 			{
 				//Added for Tata-24 Start :::
 				final ProductModel productModel = (ProductModel) model;
+				final String classificationType = indexedProperty.getClassificationProductType();
+
 				/********** TISPRO-326 changes **********/
-				if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-						&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
+				if ((!ELECTRONICS.equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && (StringUtils
+						.isEmpty(classificationType) || isAllowedClassificationType(classificationType)))
 						||
 
-						("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
-								.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
+						(ELECTRONICS.equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && ELECTRONICS
+								.equalsIgnoreCase(classificationType)))
 				{
 
 					final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
@@ -227,6 +232,22 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		//throw new FieldValueProviderException("Cannot provide classification property of non-product item");
 	}
 
+
+	private boolean isAllowedClassificationType(final String classificationType)
+	{
+		final String categoryNameList = configurationService.getConfiguration().getString("classification.index.category", " ");
+		if (StringUtils.isNotEmpty(classificationType) && StringUtils.isNotEmpty(categoryNameList))
+		{
+			LOG.debug("Validating ClassificationType>> " + classificationType);
+			final List<String> categoryList = new ArrayList<String>(Arrays.asList(categoryNameList.split(" , ")));
+			if (categoryList.contains(classificationType))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	protected List<FieldValue> getFeaturesValues(final IndexConfig indexConfig, final Feature feature,
 			final IndexedProperty indexedProperty) throws FieldValueProviderException
@@ -255,8 +276,18 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 						{
 							value = ((ClassificationAttributeValue) value).getName();
 							//standardizing value
-							final Object temp;
-							if (indexedProperty.getIsNumeric().equals(Boolean.TRUE))
+							Object temp = null;
+							if (indexedProperty.getClassificationProductType()
+									.equalsIgnoreCase(MarketplaceCoreConstants.HOME_FURNISHING)
+									&& StringUtils.isNotEmpty(value.toString())
+									&& value.toString().equalsIgnoreCase(MarketplaceCoreConstants.NOSIZE))
+							{
+								//Assigning null for No Size for classification Attribute
+								value = null;
+
+							}
+
+							else if (indexedProperty.getIsNumeric().equals(Boolean.TRUE))
 							{
 								temp = sizeStandard.getStandardValue(value.toString(), indexedProperty.getUnitType());
 							}
@@ -269,6 +300,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 							{
 								value = temp;
 							}
+
+
 
 							singleFeatureValue.setValue(value);
 							//clearing the existing value
@@ -296,24 +329,24 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 			/*
 			 * if (indexedProperty.getIsNumericRange().equals(Boolean.TRUE)) { for (final LanguageModel language :
 			 * indexConfig.getLanguages()) {
-			 * 
+			 *
 			 * final Locale locale = this.i18nService.getCurrentLocale(); try { merge issue fixed.
 			 * this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-			 * 
+			 *
 			 * final List<FeatureValue> listFeatureValue = featureValues;
-			 * 
+			 *
 			 * for (final FeatureValue singleFeatureValue : listFeatureValue) { Object value =
 			 * singleFeatureValue.getValue(); //if (null != value && value instanceof String) SONAR FIX JEWELLERY if (value
 			 * instanceof String) { final String vString = (String) value; value = Double.valueOf(vString); }
 			 * singleFeatureValue.setValue(value); //clearing the existing value listFeatureValue.clear(); //adding the
 			 * standard value listFeatureValue.add(singleFeatureValue); }
-			 * 
+			 *
 			 * //result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
 			 * result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() :
 			 * featureValues)); } finally { this.i18nService.setCurrentLocale(locale); }
-			 * 
-			 * 
-			 * 
+			 *
+			 *
+			 *
 			 * } } //TPR-3548 End else {
 			 */
 			for (final LanguageModel language : indexConfig.getLanguages())

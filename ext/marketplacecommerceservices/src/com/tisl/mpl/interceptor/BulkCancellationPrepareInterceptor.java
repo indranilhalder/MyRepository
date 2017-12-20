@@ -37,17 +37,15 @@ import com.tisl.mpl.core.model.BulkCancellationModel;
  */
 public class BulkCancellationPrepareInterceptor implements PrepareInterceptor
 {
-	@SuppressWarnings("unused")
-	private static final String ERROR_PREFIX = "ERROR_";
-	@SuppressWarnings("unused")
-	private static final String PROCESSED_PREFIX = "PROCESSED_";
-	@SuppressWarnings("unused")
+	private static final String UNUSED = "unused";
+
+	@SuppressWarnings(UNUSED)
 	private static final String JOBCODE = "initiateCancelForOrderCronJob";
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private static final String CSVSPLITBY = ",";
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private static final String ZEROVALUE = "0";
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private static final String BULKCANCELLATIONBATCH = "mpl.bulkcancellation.use";
 
 	@Resource
@@ -59,8 +57,7 @@ public class BulkCancellationPrepareInterceptor implements PrepareInterceptor
 	private MediaService mediaService;
 	@Autowired
 	private ModelService modelService;
-	@Autowired
-	private CronJobModel cronJobModel;
+
 	@Autowired
 	private CronJobService cronJobService;
 	@Autowired

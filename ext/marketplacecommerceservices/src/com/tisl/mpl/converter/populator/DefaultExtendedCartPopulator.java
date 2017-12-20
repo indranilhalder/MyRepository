@@ -98,7 +98,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 				/*
 				 * else if (target != null) {
-				 * 
+				 *
 				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
 				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
 				 */
@@ -126,10 +126,10 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 						}
 					}
 
-					if (isShippingPromoApplied)
-					{
-						addDeliveryModePromotion(source, target);
-					}
+					//	if (isShippingPromoApplied)
+					//	{
+					//		addDeliveryModePromotion(source, target); commented as shipping promotion is leveraged for adding charge
+					//	}
 
 				}
 				if (null != source.getConvenienceCharges())

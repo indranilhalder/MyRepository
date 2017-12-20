@@ -34,8 +34,8 @@
 	   </c:choose>	
    </title>
 	<%-- Meta Content --%>
-	<meta name="apple-itunes-app" content="app-id=1101619385">
-<meta name="google-play-app" content="app-id=com.tul.tatacliq">
+	   <meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095”/>
+              <meta name="google-play-app" content="com.tataunistore.luxury">
 
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
 <meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
@@ -75,7 +75,8 @@
 	<htmlmeta:meta items="${metatags}"/>
 	
 	<!-- Tag for Google Webmaster Tool Verification -->
-	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
+	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
+	 <meta name="google-site-verification" content="BinPUCzYwsMCqMgbZ7Dxaik-cMOJPhoXkn4x7sJiM8c" />
 	
 	
 	<c:set var="host" value="${header.host}"/>
@@ -208,21 +209,22 @@
 	
 	
 	<meta property="og:description" content="${metaDescription}" />
-	<meta property="og:site_name" content="${siteName}" />
+	<meta property="og:site_name" content="Tata CLiQ Luxury" />
 	
 		<!-- Code Added For INC_11638 - Start -->
 		
-		<meta property="fb:app_id" content="484004418446735"/>
+		<meta property="fb:app_id" content="707798592741796"/>
 
 		<!-- For iOS  -->
-		<meta property="al:ios:app_store_id" content="1101619385" />
-		<meta property="al:ios:url" content="${canonical}" />
-		<meta property="al:ios:app_name" content="Tata Cliq" />
+                 <meta property="al:ios:app_store_id" content="1281494666" />
+                <meta property="al:ios:url" content="https://luxury.tatacliq.com/" />
+		<meta property="al:ios:app_name" content="Tata CLiQ Luxury" />
 		
 		<!-- For Android -->
-		<meta property="al:android:package" content="com.tul.tatacliq" />
-		<meta property="al:android:url" content="${canonical}" />
-		<meta property="al:android:app_name" content="Tata Cliq" />
+		<meta property="al:android:package" content="com.tataunistore.luxury" />
+		<meta property="al:android:url" content="https://luxury.tatacliq.com/" />
+		<meta property="al:android:app_name" content="Tata CLiQ Luxury" />
+
 		
 		<!-- Code Added For INC_11638 - End -->
 	
@@ -279,7 +281,12 @@
 
 <input type="hidden" id="isLuxury" value="true"/>
 
-
+<c:if test="${useNativeSocial=='Y'}">
+	<script type="text/javascript">
+	var fbid='${luxfbid}';
+	var gid='${luxgoogleid}';
+</script>
+</c:if>
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isLuxuryGigyaEnabled=='Y'}">
 		<c:choose>

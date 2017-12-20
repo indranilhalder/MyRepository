@@ -21,12 +21,15 @@ import java.util.Map;
 
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.juspay.request.AddCardRequest;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
+import com.tisl.mpl.juspay.response.AddCardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -419,6 +422,35 @@ public interface MplPaymentService
 
 	//CheckedInvalid PaymentInfo missing handled call
 	boolean createPaymentInfo(OrderModel order);
+
+	/**
+	 * @param addCardRequest
+	 * @return AddCardResponse
+	 * @throws Exception
+	 */
+	public AddCardResponse saveAndGetCardReferenceNo(AddCardRequest addCardRequest) throws Exception;
+
+	/**
+	 * @param cardToken
+	 * @param email
+	 * @param customerId
+	 * @return AddCardResponse
+	 * @throws Exception
+	 */
+	public AddCardResponse getCurrentCardReferenceNo(String cardToken, String email, String customerId) throws Exception;
+
+	/**
+	 * @param customerId
+	 */
+	public void rmvJuspayCardStatusForCustomer(String customerId);
+
+
+	/**
+	 * @param customerId
+	 * @param guid
+	 * @return JuspayCardStatusModel
+	 */
+	public JuspayCardStatusModel getJuspayCardStatusForCustomer(String customerId, String guid);
 
 
 }

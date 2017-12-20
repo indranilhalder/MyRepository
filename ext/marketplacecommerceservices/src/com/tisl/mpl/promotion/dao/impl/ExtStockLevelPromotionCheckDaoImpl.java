@@ -104,7 +104,7 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.dao.ExtStockLevelPromotionCheckDao#getPromoInvalidationList(java.lang.String)
 	 */
 	@Override
@@ -375,6 +375,98 @@ public class ExtStockLevelPromotionCheckDaoImpl extends AbstractItemDao implemen
 					{
 						orderList.add(oModel.getOrder().getCode());
 						count += 1;
+					}
+					else if (!(orderList.contains(oModel.getOrder().getCode())))
+					{
+						orderList.add(oModel.getOrder().getCode());
+						count += 1;
+					}
+				}
+			}
+
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.QUANTITYCOUNTEXCEPTIONLOG + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		return count;
+
+	}
+
+	/**
+	 * TISHS-143 Get Total Buy A Above Promo Offer for Customer
+	 *
+	 * @param promoCode
+	 * @param orginalUid
+	 */
+	@Override
+	public int getTotalOfferOrderCount(final String promoCode, final String orginalUid, final String guid)
+	{
+		int count = 0;
+		String queryString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		List<LimitedStockPromoInvalidationModel> dataList = null;
+		//final Map<String, Object> params = new HashMap<String, Object>(1);
+		boolean flag = false;
+		try
+		{
+			if (StringUtils.isNotEmpty(orginalUid))
+			{
+				queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData and {customerID}=?orginalUid";
+				//params.put("promoCodeData", promoCode);
+				//params.put("orginalUid", orginalUid);
+				flag = true;
+
+			}
+			else
+			{
+				queryString = "select {pK} from {LimitedStockPromoInvalidation} where {promoCode}=?promoCodeData";
+				//params.put("promoCodeData", promoCode);
+			}
+
+
+			//final SearchResult<LimitedStockPromoInvalidationModel> searchList = flexibleSearchService.search(queryString, params);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("promoCodeData", promoCode);
+			if (flag)
+			{
+				query.addQueryParameter("orginalUid", orginalUid);
+			}
+
+			dataList = flexibleSearchService.<LimitedStockPromoInvalidationModel> search(query).getResult();
+			if (CollectionUtils.isNotEmpty(dataList))
+			{
+				//For TISSQAUAT-681 + TISSQAUAT-679
+				//count = searchList.getCount();
+				final List<String> orderList = new ArrayList<String>();
+
+				for (final LimitedStockPromoInvalidationModel oModel : dataList)
+				{
+					if (CollectionUtils.isEmpty(orderList))
+					{
+						orderList.add(oModel.getOrder().getCode());
+						count += 1;
+					}
+					else if (oModel.getGuid().equalsIgnoreCase(guid))
+					{
+						//TISHS-143
+						//Ignore invalidation count if order is being placed for the same guid.
 					}
 					else if (!(orderList.contains(oModel.getOrder().getCode())))
 					{

@@ -195,10 +195,10 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 
 
-
+		//SDI-2038
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ pOrderCode;
+				+ "/" + pOrderCode;
 		/* Added in R2.3 for shortUrl START */
 		// final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
 		final String shortUrl = orderUpdateProcessModel.getOrderTrackUrl();

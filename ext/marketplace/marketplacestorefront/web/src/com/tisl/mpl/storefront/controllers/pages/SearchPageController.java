@@ -274,7 +274,7 @@ public class SearchPageController extends AbstractSearchPageController
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		if (dropDownValue != null)
 		{
-			searchCategory = dropDownValue;
+			searchCategory = XSSFilterUtil.filter(dropDownValue);
 		}
 		searchQueryData.setValue(XSSFilterUtil.filter(searchText));
 		searchState.setQuery(searchQueryData);

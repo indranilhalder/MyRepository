@@ -43,7 +43,7 @@
 				authentication-failure-handler-ref="loginCheckoutAuthenticationFailureHandler"
 				authentication-success-handler-ref="loginCheckoutGuidAuthenticationSuccessHandler" />
 
-		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" />
+		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" delete-cookies="JSESSIONID"/><!-- CAR-342 -->
 
 		<security:port-mappings>
 			<security:port-mapping http="#{configurationService.configuration.getProperty('tomcat.http.port')}"
@@ -98,7 +98,7 @@
 				authentication-failure-handler-ref="loginAuthenticationFailureHandler"
 				authentication-success-handler-ref="loginGuidAuthenticationSuccessHandler"  />
 
-		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" />
+		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" delete-cookies="JSESSIONID"/><!-- CAR-342 -->
 
 		<security:port-mappings>
 			<security:port-mapping http="#{configurationService.configuration.getProperty('tomcat.http.port')}"
@@ -119,7 +119,7 @@
 	<!-- POC -->
 	<bean id="keepAliveCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator" >
 		<property name="cookieName" value="keepAlive"/>
-		<property name="cookieSecure" value="true"/>
+		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('default.session.timeout')}"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="useDefaultDomain" value="false"/>
@@ -152,7 +152,7 @@
 	<!-- UF-93 -->
 	<bean id="lastUserLoggedInCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator" >
 		<property name="cookieName" value="LastUserLogedIn"/>
-		<property name="cookieSecure" value="true"/>
+		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('lastuserloggedIn.cookie.age')}"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
@@ -332,7 +332,7 @@
 	</bean>
 	<!-- TPR-6654 -->
 	<bean id="pdpPincodeCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator" >
-		<property name="cookieSecure" value="true" />
+		<property name="cookieSecure" value="false" />
 		<property name="cookieName" value="pdpPincode" />
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('pdpPincode.cookie.age')}"/>
 		<property name="useDefaultPath" value="false"/>

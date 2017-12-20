@@ -30,6 +30,6 @@ public interface MplMobileUserService
 	public FetchNewsLetterSubscriptionWsDTO fetchMplPreferenceContents();
 
 	public MplUserResultWsDto socialMediaRegistration(final String emailId, final String socialMedia,
-			final boolean tataTreatsEnable);
+			final boolean tataTreatsEnable, final int platformNumber); //SDI-639
 
 }

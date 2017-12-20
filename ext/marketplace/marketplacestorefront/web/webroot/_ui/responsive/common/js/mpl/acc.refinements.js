@@ -623,7 +623,7 @@ ACC.refinements = {
 				})
 				var browserUrlLazy = appendPageNo(browserURL[0]);
 				// generating postAjaxURL
-				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/:/g,"%3A");
+				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");		//SDI-2191 fix
 				var requiredUrl="";
 				var action = dummyForm.attr('action');
 				
@@ -1340,7 +1340,9 @@ function lazyPaginationFacet(response){
     $("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.custom-sku", response));
 	initPageLoad = true;
     innerLazyLoad({isSerp:true});
-    
+    settings.totalPages = $('input[name=noOfPages]').val();	
+    $(".pagination-blocks").twbsPagination('destroy');
+    $('.pagination-blocks').twbsPagination(settings);
 }
 
 //UF-15

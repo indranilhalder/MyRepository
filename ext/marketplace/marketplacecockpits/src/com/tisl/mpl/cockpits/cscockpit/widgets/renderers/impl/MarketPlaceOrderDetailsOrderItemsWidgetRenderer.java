@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +32,15 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Attributes.PaymentTransaction;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Attributes.PaymentTransactionEntry;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDefaultOrderController;
+import com.tisl.mpl.model.PaymentTypeModel;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.PropertyDescriptor;
@@ -58,6 +65,9 @@ import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.popup.PopupWindowCreator;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsOrderItemsWidgetRenderer;
+import de.hybris.platform.jalo.order.payment.PaymentMode;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.i18n.FormatFactory;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
@@ -171,12 +181,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		}
 		listheader = new Listheader(LabelUtils.getLabel(widget, "basePrice",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 
 		listheader = new Listheader(LabelUtils.getLabel(widget, "totalPrice",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 
 		listheader = new Listheader(LabelUtils.getLabel(widget, "qty",
@@ -187,16 +197,32 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		//CKD: TPR-3809
 		listheader = new Listheader(LabelUtils.getLabel(widget, "panCardStatus",
 				new Object[0]));
+		listheader.setWidth("80px");
+		row.appendChild(listheader);
+		// TPR-7412 start
+		listheader = new Listheader(LabelUtils.getLabel(widget, "utrNoORarnNo",
+				new Object[0]));
+		listheader.setWidth("95px");
+		row.appendChild(listheader);
+		
+		listheader = new Listheader(LabelUtils.getLabel(widget, "bankDetails",
+				new Object[0]));
 		listheader.setWidth("120px");
 		row.appendChild(listheader);
-
+		
+		listheader = new Listheader(LabelUtils.getLabel(widget, "chargeBack",
+				new Object[0]));
+		listheader.setWidth("75px");
+		row.appendChild(listheader);
+		
+		// TPR-7412 end
 		return row;
 	}
 
 	protected void populateMasterRow(ListboxWidget widget, Listitem row,
 			Object context, TypedObject item) {
 		
-		row.setHeight("80px");
+		row.setHeight("120px");
 		PropertyDescriptor entryNumberPD = getCockpitTypeService()
 				.getPropertyDescriptor("AbstractOrderEntry.entryNumber");
 		PropertyDescriptor basePricePD = getCockpitTypeService()
@@ -372,14 +398,103 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		row.appendChild(new Listcell(qtyString));
 		
 		//CKD-TPR-3809
-		String panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		String panCardStatus=null;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
+		{
+		 panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		}
 		if (StringUtils.isNotBlank(panCardStatus)){
 			row.appendChild(new Listcell(panCardStatus));
 		}
 		else{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
-
+      //	TPR-7412 start	
+		String utrNoORarnNo=StringUtils.EMPTY;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId()))
+		{
+		 utrNoORarnNo = ((MplDefaultOrderController)widget.getWidgetController()).getUtrNoArnNo(entrymodel.getOrderLineId());
+		}
+		if(StringUtils.isNotBlank(utrNoORarnNo))
+		{
+			row.appendChild(new Listcell(utrNoORarnNo));
+		}
+		else
+		{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
+    //TPR-7412 end
+		//TPR-7412 bank details start
+		boolean needToShowBankDetails = false;
+		OrderModel order=null;
+		if(null!=entrymodel.getOrder())
+		{
+		 order=(OrderModel) entrymodel.getOrder();
+		}
+		
+		if(null!=order && null!=order.getUser() &&StringUtil.isNotEmpty(order.getUser().getUid()) )
+		{
+			MplCustomerBankAccountDetailsModel customerBankDetails = null;
+			String st=StringUtils.EMPTY;
+			
+			final List<PaymentTransactionModel> PaymentTransaction = order.getPaymentTransactions();
+			if(CollectionUtils.isNotEmpty(PaymentTransaction))
+			{
+				for(PaymentTransactionModel pt:order.getPaymentTransactions())
+				{
+				  for(final PaymentTransactionEntryModel ptE : pt.getEntries())
+				   {
+					  if(null != ptE)
+					  {
+						  String paymentMode = ptE.getPaymentMode().getMode();
+						  if(paymentMode.equalsIgnoreCase("COD"))
+						  {
+							needToShowBankDetails = true;
+							break;
+						 }
+					  }
+				  }
+				}
+			}
+			
+			if(needToShowBankDetails)
+			{
+				customerBankDetails=((MplDefaultOrderController)widget.getWidgetController()).getCustomerBankdetails(order.getUser().getUid());
+			    if(null !=customerBankDetails)
+			    {
+				 st = customerBankDetails.getAccountHolderName()+","+customerBankDetails.getBankName()+", A/C NO:"+customerBankDetails.getAccountNumber()+", IFSC:"+customerBankDetails.getIfscCode();
+				 row.appendChild(new Listcell(st));
+			    }
+			    else
+			    {
+			    	needToShowBankDetails = false;
+			    }
+			}
+		    if(!needToShowBankDetails)
+			{
+		    	row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+			}  
+		    
+		}
+		
+		else
+		{
+		row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
+		//TPR-7412 bank details end
+		 // ChargeBack start
+		String chargeback = StringUtils.EMPTY; 
+		if(null!=entrymodel.getChargeback())
+		{
+			chargeback = entrymodel.getChargeback().toString();
+		}
+		if (StringUtils.isNotBlank(chargeback)){
+			row.appendChild(new Listcell(chargeback));
+		}
+		else{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		} 
+	// ChargeBack End 
 	}
 
 	

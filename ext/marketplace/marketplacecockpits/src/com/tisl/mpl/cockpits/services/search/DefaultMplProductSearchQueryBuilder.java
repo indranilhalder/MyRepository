@@ -9,13 +9,14 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.daos.impl.BuyBoxDaoImpl;
+
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 
 import de.hybris.platform.cscockpit.services.search.generic.query.AbstractCsFlexibleSearchQueryBuilder;
 import de.hybris.platform.cscockpit.services.search.impl.DefaultCsTextFacetSearchCommand;
-import de.hybris.platform.jalo.JaloSession;
+
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
@@ -31,6 +32,9 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	@Resource
 	StoreAgentUserRole storeAgentUserRole;
 	
+	@Resource
+	private AgentIdForStore agentIdForStore;
+	
 	private final String PERCENTAGE = "%"; 
 	
 	protected FlexibleSearchQuery buildFlexibleSearchQuery(DefaultCsTextFacetSearchCommand command) 
@@ -39,9 +43,10 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		String sellerID = StringUtils.EMPTY;
 		FlexibleSearchQuery searchQuery = null;
 		//getting seller id from session in case csr agent for store order
-		if(JaloSession.getCurrentSession() != null && 
-				storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)){
-			sellerID = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		if(storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)){
+			sellerID = agentIdForStore
+					.getAgentIdForStore(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+			LOG.debug("seller id ::: "+sellerID );
 		}
 		try
 		{

@@ -114,7 +114,7 @@
 
 								<div class="mobile_main">
 									<form:input path="mobileNumber" id="profileMobileNumber"
-										onkeyup="kpressmob()" maxlength="10" />
+										 maxlength="10" />
 									<div class="errorMessage">
 										<div id="errMob"></div>
 									</div>
@@ -278,6 +278,16 @@
 			    onSelect: function() {
 		        }
 			    });
+		    $('#profileMobileNumber').on('keyup', function(ev) {
+				var regex = /^[1-9]\d{0,9}$/g;
+				var data= $.trim($(this).val());
+				if(!regex.test(data))
+				{
+					event.preventDefault();	
+				    $(this).val(data.slice(1));					                
+				}
+				});
+
 		});
 	   
 	</script>

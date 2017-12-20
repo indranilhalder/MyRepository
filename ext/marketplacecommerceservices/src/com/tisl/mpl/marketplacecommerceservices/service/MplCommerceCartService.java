@@ -599,7 +599,11 @@ public interface MplCommerceCartService
 			String selectedUSSID, String code);
 
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList);
+			final List<StoreLocationRequestData> storeLocationRequestDataList, String sellerUssId);
+
+	public List<StoreLocationResponseData> getStoreLocationsforCnCMobile(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, String sellerUssId, final CartModel cartModel);
+
 
 	public String populatePriceDisclaimerCart(final CartModel cartModel);
 }
