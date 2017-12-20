@@ -1463,6 +1463,11 @@
     left: 0;
     clear: both;
 }
+.global-alerts button.close{
+    float: left !imporatnt;
+    left: -7px !imporatnt;
+    top: 4px !important;
+}
 </style>
 
 <script>
