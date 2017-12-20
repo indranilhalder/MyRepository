@@ -3401,8 +3401,10 @@ ACC.singlePageCheckout = {
 		//$("#"+radioId).addClass("promoapplied");
 		$("#juspayconnErrorDiv").css("display","none");
 		document.getElementById("juspayErrorMsg").innerHTML="";
+	       if(ACC.singlePageCheckout.getIsResponsive()) {
 		$("#offer_section_responsive_error_msgDiv").css("display","none");
 		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
+		}
 		
 		
 			
@@ -3546,8 +3548,10 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.showAjaxLoader();
 		$("#juspayconnErrorDiv").css("display","none");
 		document.getElementById("juspayErrorMsg").innerHTML="";
+		if(ACC.singlePageCheckout.getIsResponsive()) {
 		$("#offer_section_responsive_error_msgDiv").css("display","none");
 		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
+		}	
 		
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";
 		var guid = $('#guid').val();
