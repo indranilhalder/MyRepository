@@ -10,7 +10,7 @@ ACC.WebForm = {
 				$.ajax({
 					url : ACC.config.encodedContextPath + "/ticketForm",
 					data : dataStr,
-					type : 'POST',
+					method : 'POST',
 					success : function(data) {
 						ACC.colorbox.open("", {
 							html : data,
@@ -131,7 +131,8 @@ ACC.WebForm = {
 							// mobile validation
 							if ($(this).attr("name") == 'contactMobile') {
 								var mobNum = $(this).val();
-								var filter = /^\d*(?:\.\d{1,2})?$/;
+								//TISPRDT-7857
+								var filter = /^[1-9]{1}[0-9]{9}$/;
 								if (filter.test(mobNum)) {
 									if (mobNum.length == 10) {
 										$(this).parent(".formGroup")
@@ -166,7 +167,7 @@ ACC.WebForm = {
 										$(this)
 												.parent()
 												.append(
-														'<span class="help-block">Please fill Mobile No.!!</span>');
+														'<span class="help-block">Mobile No should be 10 digit!!</span>'); //TISPRDT-7897
 									}
 									// console.log("mobile 2");
 								}
@@ -193,6 +194,32 @@ ACC.WebForm = {
 												.parent()
 												.append(
 														'<span class="help-block">Please fill correct Email!!</span>');
+									}
+									// console.log("email");
+								}
+							}
+							// name validation TISPRDT-7860
+							if ($(this).attr("name") == 'contactName') {
+								var email = $(this).val();
+								var nameRef = /^[A-Za-z ]+$/;
+								if (nameRef.test(email)) {
+									$(this).parent(".formGroup").removeClass(
+											"has-error");
+									$(this).parent(".formGroup").addClass(
+											"has-success");
+								} else if (email === '' || email !== undefined) {
+									isValid = false;
+									$(this).parent(".formGroup").removeClass(
+											"has-success");
+									$(this).parent(".formGroup").addClass(
+											"has-error");
+									$(this).focus();
+									if ($(this).parent()
+											.children(".help-block").length <= 0) {
+										$(this)
+												.parent()
+												.append(
+														'<span class="help-block">Please fill correct Name!!</span>');
 									}
 									// console.log("email");
 								}
@@ -234,106 +261,76 @@ ACC.WebForm = {
 
 	},
 	simpleAjaxUpload : function() {
-		var uploadurl = ACC.config.encodedContextPath
-				+ "/ticketForm/fileUpload";
-		$.ajaxSetup({
-			headers : {
-				'X-CSRF-TOKEN' : ACC.config.CSRFToken
-			}
+		var uploadurl = ACC.config.encodedContextPath+ "/ticketForm/fileUpload";
+		
+		$("#attachmentFile").on("change",function(e) {
+			e.preventDefault();
+			// Disable submit button
+			$(".webfromTicketSubmit").prop('disabled', true);
+
+			var file = $(this)[0].files[0];
+			var formData = new FormData();
+			formData.append('uploadFile', file);
+			formData.append('CSRFToken',ACC.config.CSRFToken);
+
+			// Ajax call for file uploaling
+			var ajaxReq = $.ajax({
+				url : uploadurl,
+				method : 'POST',
+				data : formData,
+				async : false,
+				cache : false,
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				datatype : "json",
+				xhr : function() {
+					// Get XmlHttpRequest object
+					var xhr = $.ajaxSettings.xhr();
+
+					// Set onprogress event handler
+					xhr.upload.onprogress = function(event) {
+						var perc = Math.round((event.loaded / event.total) * 100);
+						$('#progressBar').text(perc + '%');
+						$('#progressBar').css('width',perc + '%');
+					};
+					return xhr;
+				},
+				beforeSend : function(xhr) {
+					// Reset alert message and progress
+					// bar
+					$('#file_success_message').text('');
+					$('#progressBar').text('');
+					$('#progressBar').css('width', '0%');
+				}
+			});
+
+			// Called on success of file upload
+			ajaxReq.done(function(data) {
+				$('#attachmentFile').val('');
+				$('.webfromTicketSubmit').prop('disabled', false);
+				console.log(data);
+				if (data !== 'error') {
+					// the uploaded file
+					var inputHidden = '<input id="attachmentFiles" type="hidden" name="attachmentFiles" value="'+data+'"/>';
+					$(".uploadFile").append(inputHidden);
+					$("#file_success_message").text("File uploaded Sucessfully.");
+					$("#file_success_message").show();
+				} else {
+					// our application returned an error
+					var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
+					$("#file_success_message").append(errorDiv);
+					$("#file_success_message").show();
+				}
+				$('.webfromTicketSubmit').prop('disabled',false);
+			});
+
+			// Called on failure of file upload
+			ajaxReq.fail(function(jqXHR) {
+				console.log(jqXHR.responseText + '(' + jqXHR.status	+ ' - ' + jqXHR.statusText+ ')');
+				$('.webfromTicketSubmit').prop('disabled',false);
+			});
 		});
-
-		$("#attachmentFile")
-				.on(
-						"change",
-						function(e) {
-							e.preventDefault();
-							// Disable submit button
-							$(".webfromTicketSubmit").prop('disabled', true);
-
-							var file = $(this)[0].files[0];
-							var formData = new FormData();
-							formData.append('uploadFile', file);
-							// formData.append('CSRFToken',ACC.config.CSRFToken);
-
-							// Ajax call for file uploaling
-							var ajaxReq = $
-									.ajax({
-										url : uploadurl,
-										method : 'POST',
-										type : 'POST', // For jQuery < 1.9
-										data : formData,
-										async : false,
-										cache : false,
-										contentType : false,
-										enctype : 'multipart/form-data',
-										processData : false,
-										datatype : "json",
-										xhr : function() {
-											// Get XmlHttpRequest object
-											var xhr = $.ajaxSettings.xhr();
-
-											// Set onprogress event handler
-											xhr.upload.onprogress = function(
-													event) {
-												var perc = Math
-														.round((event.loaded / event.total) * 100);
-												$('#progressBar').text(
-														perc + '%');
-												$('#progressBar').css('width',
-														perc + '%');
-											};
-											return xhr;
-										},
-										beforeSend : function(xhr) {
-											// Reset alert message and progress
-											// bar
-											$('#customCareError').text('');
-											$('#progressBar').text('');
-											$('#progressBar')
-													.css('width', '0%');
-										}
-									});
-
-							// Called on success of file upload
-							ajaxReq
-									.done(function(data) {
-										$('#attachmentFile').val('');
-										$('.webfromTicketSubmit').prop(
-												'disabled', false);
-
-										if (data !== 'error') {
-											// the uploaded file
-											var inputHidden = $(
-													'<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />')
-													.val(data);
-											$("#customerWebForm").append(
-													inputHidden);
-											$("#file_success_message")
-													.text(
-															"File uploaded Sucessfully.");
-											$("#file_success_message").show();
-										} else {
-											// our application returned an error
-											var errorDiv = $(
-													'<div class="error"></div>')
-													.text(
-															"File not uploaded!!!");
-											$("#customCareError").append(
-													errorDiv);
-											$("#file_success_message").hide();
-										}
-									});
-
-							// Called on failure of file upload
-							ajaxReq.fail(function(jqXHR) {
-								$('#customCareError').text(
-										jqXHR.responseText + '(' + jqXHR.status
-												+ ' - ' + jqXHR.statusText
-												+ ')');
-								$('.webfromTicketSubmit').prop('disabled',
-										false);
-							});
-						});
 
 	},
 	loadOrderLines : function(currentPage) {
@@ -341,77 +338,80 @@ ACC.WebForm = {
 		//performance fix
 		if ($(".selectOrderSec").length) {
 		$.ajax({
-					url : ACC.config.encodedContextPath
-							+ "/ticketForm/webOrderlines?page="
-							+ parseInt(currentPage),
-					type : 'GET',
-					success : function(data) {
-						if ($.isArray(data.orderLineDatas)
-								&& data.orderLineDatas.length) {
-							$.each(data.orderLineDatas, function(index,
-									dataLine) {
+				url : ACC.config.encodedContextPath
+						+ "/ticketForm/webOrderlines",
+				method : 'POST',
+				data : {"page": parseInt(currentPage)},
+				success : function(data) {
+					if ($.isArray(data.orderLineDatas)
+							&& data.orderLineDatas.length) {
+						$.each(data.orderLineDatas, function(index,
+								dataLine) {
 
-								htmlOption += "<li data-orderCode='"
-										+ dataLine.orderCode + "' "
-										+ "data-subOrderCode='"
-										+ dataLine.subOrderCode + "' "
-										+ "data-transactionId='"
-										+ dataLine.transactionId + "'>"
-										+ "<div class='prodImg'><img src='"
-										+ dataLine.prodImageURL
-										+ "' alt='' /></div>"
-										+ "<div class='prodInfo'>"
-										+ "<div class='prodTxt'>"
-										+ "<p class='orderDate'>Order on: "
-										+ dataLine.orderDate + "</p>"
-										+ "<p class='prodName'>"
-										+ dataLine.prodTitle + "</p>"
-										+ "<p class='prodPrice'>Price: "
-										+ dataLine.prodTotalPrice + "</p>";
-								if (dataLine.customerOrderStatus !== 'null') {
-									htmlOption += "<span class='prodShiping'>"
-											+ dataLine.customerOrderStatus
-											+ "</span>";
-								}
-								htmlOption += "</div></div></li>";
+							htmlOption += "<li data-orderCode='"
+									+ dataLine.orderCode + "' "
+									+ "data-subOrderCode='"
+									+ dataLine.subOrderCode + "' "
+									+ "data-transactionId='"
+									+ dataLine.transactionId + "'>"
+									+ "<div class='prodImg'><img src='"
+									+ dataLine.prodImageURL
+									+ "' alt='' /></div>"
+									+ "<div class='prodInfo'>"
+									+ "<div class='prodTxt'>"
+									+ "<p class='orderDate'>Order on: "
+									+ dataLine.orderDate + "</p>"
+									+ "<p class='prodName'>"
+									+ dataLine.prodTitle + "</p>"
+									+ "<p class='prodPrice'>Price: "
+									+ dataLine.prodTotalPrice + "</p>";
+							if (dataLine.customerOrderStatus !== 'null') {
+								htmlOption += "<span class='prodShiping'>"
+										+ dataLine.customerOrderStatus
+										+ "</span>";
+							}
+							htmlOption += "</div></div></li>";
 
-							});
-							// call default first page
-							// call default first page
-							$(".orderDrop").html(htmlOption);
-							$("#totalPages").val(data.totalOrderLines);
-							
-							ACC.WebForm.attachOrderDropEvent();
-							ACC.WebForm.loadPaginationLink();
-
-						}
+						});
+						// call default first page
+						// call default first page
+						$(".orderDrop").html(htmlOption);
+						$("#totalPages").val(data.totalOrderLines);
 						
+						ACC.WebForm.attachOrderDropEvent();
+						ACC.WebForm.loadPaginationLink(data.totalOrderLines);
 
-					},
-					error : function(resp) {
-						console.log("Error in loadOrderLines" + resp);
 					}
-				});
+					
+
+				},
+				error : function(resp) {
+					console.log("Error in loadOrderLines" + resp);
+				}
+			});
 		}
 	},
-	loadPaginationLink : function() {
+	loadPaginationLink : function(total) {
 		var current = $('#currentPage').val();
-		var total = $('#totalPages').val();
 		// TISPRDT-7759
-		
-		if (parseInt(total) <= parseInt(current)) {
+		//console.log("total"+total+"current"+current);
+		if (parseInt(total) >= parseInt(current)) {
+			//console.log("View more");
 			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
 			$('#viewMoreLink').show();
 			$('#currentPage').val(parseInt(current) + 1);
 		} else {
+			//console.log("View more hide");
 			$('#viewMoreLink').hide();
 		}
 
 		if (parseInt(current) >= 1) {
+			//console.log("View back");
 			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
 			$('#viewBackLink').show();
 			$('#currentPage').val(parseInt(current) - 1);
 		} else {
+			//console.log("View back hide");
 			$('#viewBackLink').hide();
 		}
 
@@ -477,9 +477,10 @@ ACC.WebForm = {
 			var htmlOption = "<option value=''>Select</option>";
 			$.ajax({
 				url : ACC.config.encodedContextPath
-						+ "/ticketForm/crmChildrenNodes?nodeParent="
-						+ nodeValue,
-				type : 'GET',
+						+ "/ticketForm/crmChildrenNodes",
+				method : 'POST',
+				type : 'POST', // For jQuery < 1.9
+				data : {"nodeParent":nodeValue},
 				success : function(data) {
 					if (nodeType.startsWith("nodeL1")) {
 						$.each(data.nodes, function(index, data) {

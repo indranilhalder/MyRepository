@@ -47,7 +47,17 @@
 							searchUrl="${searchPageData.currentQuery.url}"
 							numberPagesShown="${numberPagesShown}" />
 					</div>
-
+					
+					<div class="bottom-pagination pagination-search">
+					<c:if test="${searchPageData.pagination.numberOfPages > 1}">
+					<span class="">
+					<span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
+					</span>
+					</c:if>
+					<ul class="pagination-blocks">
+					</ul>
+					</div>
+					
 					<!-- INC144315462 and INC144315104 and TISSQAUAT-4105 -->
 
 					<input type="hidden" name="customSkuUrl" value="/CustomSkuCollection/${component.labelOrId}/page-1?q="/>

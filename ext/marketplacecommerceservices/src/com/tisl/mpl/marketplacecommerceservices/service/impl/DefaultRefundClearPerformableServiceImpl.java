@@ -7,6 +7,7 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
@@ -94,7 +95,9 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	{
 		// YTODO Auto-generated method stub
 
-		List<OrderModel> orderList = new ArrayList<OrderModel>();
+		//		final List<OrderModel> orderList = new ArrayList<OrderModel>();
+		List<ConsignmentModel> consignmentModelList = new ArrayList<ConsignmentModel>();
+
 		//final List<OrderModel> doRefundOrderList = new ArrayList<OrderModel>();
 
 		final String refundClearTAT = getConfigurationService().getConfiguration().getString(
@@ -126,41 +129,41 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		cal_order.add(Calendar.DATE, -skipPendingOrdersTAT.intValue());
 		final Date queryStartTime = cal_order.getTime();
 
-
-		orderList = refundClearPerformableDao.getRefundClearOrders(queryTAT, queryStartTime);
-		if (CollectionUtils.isNotEmpty(orderList))
+		consignmentModelList = refundClearPerformableDao.getRefundClearConsignments(queryTAT, queryStartTime);
+		if (CollectionUtils.isNotEmpty(consignmentModelList))
 		{
-			for (final OrderModel order : orderList)
+			for (final ConsignmentModel consignment : consignmentModelList)
 			{
-				final Set consignments = order.getConsignments();
+				final OrderModel order = (OrderModel) consignment.getOrder();
+				//				final Set consignments = consignment.getConsignments();
 				final ArrayList<String> refundRequestIdList = new ArrayList<String>();
-				if (CollectionUtils.isNotEmpty(consignments))
+				//				if (CollectionUtils.isNotEmpty(consignments))
+				//				{
+				//					for (final Iterator iterator = consignments.iterator(); iterator.hasNext();)
+				//					{
+
+				//						final ConsignmentModel consignment = (ConsignmentModel) iterator.next();
+
+				if (consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())
+						|| consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_INITIATED.getCode()))
 				{
-					for (final Iterator iterator = consignments.iterator(); iterator.hasNext();)
+
+					final Set consignmentEntries = consignment.getConsignmentEntries();
+					for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
 					{
-
-						final ConsignmentModel consignment = (ConsignmentModel) iterator.next();
-
-						if (consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())
-								|| consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_INITIATED.getCode()))
+						final ConsignmentEntryModel consignmentEntry = (ConsignmentEntryModel) iteratorC.next();
+						final String requestID = fetchRefundRequestID(consignmentEntry.getOrderEntry());
+						if (null != requestID)
 						{
-
-							final Set consignmentEntries = consignment.getConsignmentEntries();
-							for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
-							{
-								final ConsignmentEntryModel consignmentEntry = (ConsignmentEntryModel) iteratorC.next();
-								final String requestID = fetchRefundRequestID(consignmentEntry.getOrderEntry());
-								if (null != requestID)
-								{
-									refundRequestIdList.add(requestID);
-								}
-							}
-
+							refundRequestIdList.add(requestID);
 						}
 					}
+
 				}
+				//}
+				//}
 				LOG.error("Going to process the Order NO:" + order.getCode());
-				checkWebhookEntryForRefund(order, refundRequestIdList);
+				checkWebhookEntryForRefund(order, refundRequestIdList, consignment);
 
 			}
 		}
@@ -189,7 +192,8 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		return reqid;
 	}
 
-	private void checkWebhookEntryForRefund(final OrderModel order, final ArrayList<String> refundRequestIdList)
+	private void checkWebhookEntryForRefund(final OrderModel order, final ArrayList<String> refundRequestIdList,
+			final ConsignmentModel consignment)
 	{
 		String juspayOrderID = null;
 		for (final PaymentTransactionModel paymentTransaction : order.getPaymentTransactions())
@@ -209,7 +213,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		}
 		if (StringUtils.isNotEmpty(juspayOrderID))
 		{
-			fetchPostingStatusTakeAction(juspayOrderID, order, refundRequestIdList);
+			fetchPostingStatusTakeAction(juspayOrderID, order, refundRequestIdList, consignment);
 		}
 
 	}
@@ -219,7 +223,8 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	 * @param order
 	 * @param uniqRequestID
 	 */
-	private void checkStatusMakeRefund(final String juspayOrderID, final OrderModel order, final String uniqRequestID)
+	private void checkStatusMakeRefund(final String juspayOrderID, final OrderModel order, final String uniqRequestID,
+			final ConsignmentModel consignment)
 	{
 		// YTODO Auto-generated method stub
 
@@ -268,7 +273,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				{
 					//update order status only
 					final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(uniqRequestID);
-					updateStatusOnly(refundTransactionModel, uniqRequestID, order);
+					updateStatusOnly(refundTransactionModel, uniqRequestID, order, consignment);
 				}
 				else if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("FAILURE")
 						&& refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
@@ -299,7 +304,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	 * @param order
 	 */
 	private void updateStatusOnly(final RefundTransactionMappingModel refundTransactionModel, final String uniqRequestID,
-			final OrderModel order)
+			final OrderModel order, final ConsignmentModel consignment)
 	{
 		if (null != refundTransactionModel)
 		{
@@ -313,12 +318,14 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 					&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
 			{
 				paymentTransactionType = PaymentTransactionType.CANCEL;
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
 
 			}
 			else if (null != refundTransactionModel.getRefundType()
 					&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
 			{
 				paymentTransactionType = PaymentTransactionType.RETURN;
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
 			}
 			else if (null != refundTransactionModel.getRefundType()
 					&& refundTransactionModel.getRefundType().toString()
@@ -326,6 +333,25 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			{
 				paymentTransactionType = PaymentTransactionType.CANCEL;
 				riskFlag = true;
+			}
+			else
+			{
+				final List<OrderHistoryEntryModel> orderHistoryEntryList = order.getHistoryEntries();
+				for (final OrderHistoryEntryModel ohe : orderHistoryEntryList)
+				{
+					if (ohe.getLineId().equals(consignment.getCode()) && ohe.getDescription().contains("CANCEL"))
+					{
+						paymentTransactionType = PaymentTransactionType.CANCEL;
+						updateOrderStatusCancelled(order);
+
+					}
+					else
+					{
+						paymentTransactionType = PaymentTransactionType.RETURN;
+						updateOrderStatusReturn(order);
+
+					}
+				}
 			}
 
 			try
@@ -345,14 +371,17 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			{
 				updateOrderStatusCancelledForRisk(order);
 			}
-			else if (refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
+			else if (null != refundTransactionModel.getRefundType()
+					&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
 			{
 				updateOrderStatusCancelled(order, refundTransactionModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
-			else if (refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
+			else if (null != refundTransactionModel.getRefundType()
+					&& refundTransactionModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
 			{
 				updateOrderStatusReturn(order, refundTransactionModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
+
 
 		}
 		else
@@ -510,7 +539,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		try
 		{
 			// YTODO Auto-generated method stub
-			orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
+			//orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
 			mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel, orderEntry.getNetAmountAfterAllDisc(),
 					ConsignmentStatus.RETURN_COMPLETED, null);
 		}
@@ -531,7 +560,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		try
 		{
 			// YTODO Auto-generated method stub
-			orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
+			//orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
 			mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel, orderEntry.getNetAmountAfterAllDisc(),
 					ConsignmentStatus.ORDER_CANCELLED, null);
 		}
@@ -557,6 +586,32 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		}
 	}
 
+	private void updateOrderStatusCancelled(final OrderModel order)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	private void updateOrderStatusReturn(final OrderModel order)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
 	/**
 	 * @param auditId
 	 * @param order
@@ -564,7 +619,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	 * @return
 	 */
 	private void fetchPostingStatusTakeAction(final String auditId, final OrderModel order,
-			final ArrayList<String> refundRequestIdList)
+			final ArrayList<String> refundRequestIdList, final ConsignmentModel consignment)
 	{
 		List<JuspayOrderStatusModel> orderStatusList = new ArrayList<JuspayOrderStatusModel>();
 		// YTODO Auto-generated method stub
@@ -595,7 +650,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 						if (null != refundTransactionModel)
 						{
 
-							updateStatusOnly(refundTransactionModel, juspayRefundResponseModel.getUniqueRequestId(), order);
+							updateStatusOnly(refundTransactionModel, juspayRefundResponseModel.getUniqueRequestId(), order, consignment);
 						}
 
 					}
@@ -603,7 +658,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("PENDING"))
 					{
 						LOG.error("PENDING post from juspay, chekstatus and making refund for order: " + order.getCode());
-						checkStatusMakeRefund(auditId, order, juspayRefundResponseModel.getUniqueRequestId());
+						checkStatusMakeRefund(auditId, order, juspayRefundResponseModel.getUniqueRequestId(), consignment);
 					}
 				}
 			}
@@ -616,7 +671,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				{
 					for (final String reqid : refundRequestIdList)
 					{
-						checkStatusMakeRefund(auditId, order, reqid);
+						checkStatusMakeRefund(auditId, order, reqid, consignment);
 					}
 				}
 			}
@@ -625,7 +680,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			{
 				for (final String reqid : refundRequestIdList)
 				{
-					checkStatusMakeRefund(auditId, order, reqid);
+					checkStatusMakeRefund(auditId, order, reqid, consignment);
 				}
 			}
 

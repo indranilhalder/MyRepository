@@ -5,6 +5,9 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 import de.hybris.platform.cockpit.services.values.ValueHandlerException;
 import de.hybris.platform.core.model.ItemModel;
 import de.hybris.platform.cscockpit.services.config.impl.AbstractSimpleCustomColumnConfiguration;
@@ -24,8 +27,9 @@ public class ChargeBackStatus extends AbstractSimpleCustomColumnConfiguration <S
 			final PaymentTransactionEntryModel paymentEntry = (PaymentTransactionEntryModel) itemModel;
 			final PaymentTransactionModel paymentTransMod = paymentEntry.getPaymentTransaction();
 			
-			if(paymentEntry != null && paymentEntry.getAmount() !=null && (paymentEntry.getAmount().compareTo(new BigDecimal(0.00)) == 0)){
-				
+			if(paymentEntry != null && paymentEntry.getAmount() !=null 
+					&& !paymentEntry.getPaymentMode().getMode().equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_MODE_COD)
+					&& paymentEntry.getAmount() == new BigDecimal(0.00)){
 				paymentstatus = PAYMENT_STATUS;
 			}
 			else

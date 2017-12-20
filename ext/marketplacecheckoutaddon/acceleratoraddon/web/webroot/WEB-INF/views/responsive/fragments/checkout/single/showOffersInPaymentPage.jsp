@@ -167,9 +167,10 @@
 </c:if>	
 
 <script>
-
-$("#accordion-tnc > li > span").click(function() {
-    $(this).toggleClass("active").next('div').slideToggle(250)
-    .closest('li').siblings().find('span').removeClass('active').next('div').slideUp(250);
+$( document ).ready(function() {
+	$("#accordion-tnc > li > span").click(function() {
+	    $(this).addClass('active').next('div').show(250)
+	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+	});
 });
 </script>

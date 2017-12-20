@@ -23,7 +23,7 @@
 			<cms:component component="${com}" />
 		</cms:pageSlot>  --%>
 		<div class="content">
-			<center>Web Form</center>
+			<%-- <center>Web Form</center> --%>
 		</div>
 		<div class="content">
 			<div class="custmCareHelp">
@@ -114,9 +114,9 @@
 								</select>
 							</div>
 							<div class="formGroup" id="subIssueDiv" style="display: none;">
-								<h3 class="secLabel">Select a sub-issue.</h3>
+								<h3 class="secLabel">Select issue details</h3>
 								<select class="node formControl customSelect" name="nodeL3">
-									<option value="">Select your exact problem</option>
+									<option value="">Select issue details</option>
 									<c:forEach items="${formFields.nodes}" var="l3Node">
 										<c:if test="${l3Node.nodeType eq 'L3'}">
 											<option value="${l3Node.nodeCode}"
@@ -165,8 +165,8 @@
 									<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 										upload size 5MB)</p>
 									<div class="uploadFile">
-										<span>Upload File</span> <span id="file_success_message"
-											style="display: none"></span> <input id="attachmentFile"
+										<span>Upload File</span> 
+										<input id="attachmentFile"
 											type="file" name="uploadFile" multiple />
 										<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 									</div>
@@ -175,10 +175,13 @@
 											class="progress-bar progress-bar-success" role="progressbar"
 											aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
 											style="width: 0%"></div>
+											<div id="alert_message" ></div>
+											
+											<div id="file_success_message"></div> 
 									</div>
 								</div>
 								<div class="formGroup">
-									<button class="needHelpBtn webfromTicketSubmit" type="submit">Submit</button>
+									<button class="needHelpBtn webfromTicketSubmit" type="submit">Email Us</button>
 								</div>
 							</div>
 						</div>

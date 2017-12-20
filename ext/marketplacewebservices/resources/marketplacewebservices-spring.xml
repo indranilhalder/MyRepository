@@ -464,6 +464,23 @@
         <property name="pickupOverrideStatusMapping" ref="pickupOverrideConsignmentStatusMapping" />
 	</bean>
 	
+	
+		<bean id="sendNotificationEventListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+
+	<!--R2.3 Secondary Status Listener -->
+	<bean id="sendNotificationSecondaryStatusListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationSecondaryStatusListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
 				
 </beans>
 
