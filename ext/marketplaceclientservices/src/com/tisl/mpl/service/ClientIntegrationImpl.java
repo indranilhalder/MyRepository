@@ -34,7 +34,7 @@ import com.tisl.mpl.wsdto.DuplicateCheckResponse;
 
 public class ClientIntegrationImpl implements ClientIntegration
 {
-	private static final Logger LOG = Logger.getLogger(TicketCreationCRMserviceImpl.class);
+	private static final Logger LOG = Logger.getLogger(ClientIntegrationImpl.class);
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -44,7 +44,7 @@ public class ClientIntegrationImpl implements ClientIntegration
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.ClientIntegration#sendWebFormTicket()
 	 */
 	@Override
