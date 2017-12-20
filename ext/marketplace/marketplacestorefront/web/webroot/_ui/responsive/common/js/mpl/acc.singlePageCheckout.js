@@ -3401,8 +3401,10 @@ ACC.singlePageCheckout = {
 		//$("#"+radioId).addClass("promoapplied");
 		$("#juspayconnErrorDiv").css("display","none");
 		document.getElementById("juspayErrorMsg").innerHTML="";
+	       if(ACC.singlePageCheckout.getIsResponsive()) {
 		$("#offer_section_responsive_error_msgDiv").css("display","none");
 		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
+		}
 		
 		
 			
@@ -3546,8 +3548,10 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.showAjaxLoader();
 		$("#juspayconnErrorDiv").css("display","none");
 		document.getElementById("juspayErrorMsg").innerHTML="";
+		if(ACC.singlePageCheckout.getIsResponsive()) {
 		$("#offer_section_responsive_error_msgDiv").css("display","none");
 		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
+		}	
 		
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";
 		var guid = $('#guid').val();
@@ -3642,6 +3646,10 @@ ACC.singlePageCheckout = {
 	showPaymentSpecificOffersTermsConditions:function(){	
 		if($("#offer_terms_container_poppup").html() != "") {
 	    	ACC.singlePageCheckout.paymentTermsConditionsOffersPopup($(".offer_terms_container_poppup").html());
+	    	$("#accordion-tnc > li > span").click(function() {
+	    	    $(this).addClass('active').next('div').show(250)
+	    	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+	    	});
 		}
 
 	},
