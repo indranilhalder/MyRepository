@@ -577,6 +577,26 @@
 				</attribute>
 			</attributes>
 		</itemtype>
+		
+		
+		
+		
+		<itemtype code="HomePageTypes" autocreate="true" generate="true" >
+		<deployment table="HPTTable" typecode="13021" />
+		<attributes>
+			
+			<attribute qualifier='code' type="java.lang.String" >
+			<modifiers read="true" write="true" search="true" optional="false"/>
+               	<persistence type="property"/>
+			</attribute>
+			
+			<attribute qualifier='discription' type="java.lang.String" >
+			<modifiers read="true" write="true" search="true" optional="false"/>
+               	<persistence type="property"/>
+			</attribute>
+			
+	  </attributes>
+	  </itemtype>
 
 	</itemtypes>
 </items>
