@@ -165,7 +165,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -735,6 +735,11 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					LOG.info("Order History entry created for" + orderModel.getCode() + "Line ID" + consignmentModel.getCode());
 
 					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
+					if (shipment.getDelivery() != null && StringUtils.isNotEmpty(shipment.getDelivery().getTrackingID()))
+					{
+						consignmentModel.setTrackingID(shipment.getDelivery().getTrackingID());
+						modelService.saveAll(consignmentModel);
+					}
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 					//}

@@ -30,6 +30,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -445,8 +446,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -735,13 +736,19 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 		boolean sendNotification = false;
 		for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 		{
-
-			if (awbNumber.equals(orderEntry.getConsignmentEntries().iterator().next().getConsignment().getTrackingID()))
+			if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
 			{
-				++sameAWBRows;
-				if (status.equals(orderEntry.getConsignmentEntries().iterator().next().getConsignment().getStatus()))
+				final Set<ConsignmentEntryModel> conEntry = orderEntry.getConsignmentEntries();
+				final ConsignmentModel consignment = conEntry.iterator().next().getConsignment();
+
+				if (consignment != null && StringUtils.isNotEmpty(consignment.getTrackingID())
+						&& awbNumber.equals(consignment.getTrackingID()))
 				{
-					++sameAWBStatus;
+					++sameAWBRows;
+					if (consignment.getStatus() != null && status.equals(consignment.getStatus()))
+					{
+						++sameAWBStatus;
+					}
 				}
 			}
 		}
