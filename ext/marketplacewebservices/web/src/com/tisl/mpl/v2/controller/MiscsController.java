@@ -2705,20 +2705,18 @@ public class MiscsController extends BaseController
 	/**
 	 * This method is for web form ticket status update (TPR-5989)
 	 */
-	@RequestMapping(value = "/{baseSiteId}/webformTicketStatus", method = RequestMethod.POST, consumes = APPLICATION_JSON)
+	@RequestMapping(value = "/{baseSiteId}/webformTicketStatus", method = RequestMethod.POST, consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
 	@ResponseBody
-	public String webformTicketStatusUpdate(@RequestBody final TicketStatusUpdate ticketStatusUpdate)
+	public void webformTicketStatusUpdate(@RequestBody final TicketStatusUpdate ticketStatusUpdate)
 			throws EtailNonBusinessExceptions
 	{
 		try
 		{
 			mplWebFormFacade.webFormticketStatusUpdate(ticketStatusUpdate);
-			return SUCCESS;
 		}
 		catch (final Exception exc)
 		{
 			LOG.error(exc);
-			return FAILURE;
 		}
 
 	}

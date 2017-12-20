@@ -442,7 +442,7 @@
 												</c:forEach>
 											</div>
 		
-											<div id="savedEMICard"></div>
+											<%-- <div id="savedEMICard"></div> <!-- TISPRDT-7890 -->--%>
 		
 										</form> <!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
 									</li>
@@ -598,7 +598,7 @@
 												</c:forEach>
 											</div>
 		
-											<div id="savedEMICard"></div>
+											<%-- <div id="savedEMICard"></div> <!-- TISPRDT-7890 -->--%>
 		
 										</form> <!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
 									</li>
