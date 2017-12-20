@@ -60,7 +60,7 @@ function viewPaymentCredit(){
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
 	} else {
-		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -114,7 +114,7 @@ function viewPaymentDebit(){
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
 	} else {
-		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -153,7 +153,7 @@ function viewPaymentNetbanking(){
 	if(ACC.singlePageCheckout.getIsResponsive()) {
 		$('#continue_payment_after_validate_responsive').show();
 	} else {
-		$('#continue_payment_after_validate').show();
+		$('#continue_payment_after_validate').hide();
 	}	
 	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 	$("#codtermsconditions").hide();	
@@ -197,7 +197,7 @@ function viewPaymentCOD(){
 		if(ACC.singlePageCheckout.getIsResponsive()) {
 			$('#continue_payment_after_validate_responsive').show();
 		} else {
-			$('#continue_payment_after_validate').show();
+			$('#continue_payment_after_validate').hide();
 		}	
 	$("#codtermsconditions").show();	
 	$("#prepaidtermsconditions").hide();
@@ -235,7 +235,7 @@ function viewPaymentEMI(){
 		if(ACC.singlePageCheckout.getIsResponsive()) {
 			$('#continue_payment_after_validate_responsive').show();
 		} else {
-			$('#continue_payment_after_validate').show();
+			$('#continue_payment_after_validate').hide();
 		}	
 		resetConvChargeElsewhere(); //REMOVE CONV CHARGE 	
 		$("#codtermsconditions").hide();	
@@ -1806,6 +1806,12 @@ function savedCreditCardRadioChange(radioId){
 	     var bankName=$('.card_bank').val();
 	     setBankForSavedCard(bankName);
 	     $("#paymentMode_newcard_savedcard").val("savedCard"); //for responsive - TPR-7486
+	   //TPR-7486
+	 	if(ACC.singlePageCheckout.getIsResponsive()) {
+	 		$('#continue_payment_after_validate_responsive').show();
+	 	} else {
+	 		$('#continue_payment_after_validate').hide();
+	 	}	
  //});
 }
  
@@ -1869,6 +1875,12 @@ function savedDebitCardRadioChange(radioId){
 				$("#maestroMessage").css("display","none");
 	     }
 	     $("#paymentMode_newcard_savedcard").val("savedCard"); //for responsive --TPR-7486
+	     //TPR-7486
+		 	if(ACC.singlePageCheckout.getIsResponsive()) {
+		 		$('#continue_payment_after_validate_responsive').show();
+		 	} else {
+		 		$('#continue_payment_after_validate').hide();
+		 	}	
 	 //});
 }
   
@@ -8860,10 +8872,10 @@ $("#couponSubmitButton").click(function(){
 		if(typeof utag !="undefined"){
 			utag.link({ coupon_code : couponCode });
 			}
-		
+		ACC.singlePageCheckout.showAjaxLoader();
 		/*start changes for INC_11738*/
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+		//$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		//$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		/*end changes for INC_11738*/
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
@@ -8873,7 +8885,8 @@ $("#couponSubmitButton").click(function(){
 	 		success : function(response) {
 	 			
 	 			//console.log(response.redeemErrorMsg);
-	 			$("#no-click,.loaderDiv").remove(); //add for INC_11738
+	 			//$("#no-click,.loaderDiv").remove(); //add for INC_11738
+	 			ACC.singlePageCheckout.hideAjaxLoader();
 
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			if(document.getElementById("outstanding-amount")!=null)
@@ -9004,7 +9017,8 @@ $("#couponSubmitButton").click(function(){
 	 		error : function(resp) {
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
-	 			$("#no-click,.loaderDiv").remove(); //changes for INC_11738
+	 			//$("#no-click,.loaderDiv").remove(); //changes for INC_11738
+	 			ACC.singlePageCheckout.hideAjaxLoader();
 	 			/*TPR-4746*/
 	 			if(typeof utag !="undefined"){
 	 				   utag.link({error_type : 'offer_error'});

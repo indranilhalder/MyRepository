@@ -1540,6 +1540,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//For cart
 				releaseCartVoucher(voucherCode, cartModel, null); //Releases voucher
 				recalculateCartForCoupon(cartModel, null); //Recalculates cart after releasing voucher
+
+				modifyDiscountValues(cartModel);
+				final Double total = setTotalPrice(cartModel);
+				cartModel.setTotalPrice(total);
 				getModelService().save(cartModel);
 
 				discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(0)));
@@ -1562,6 +1566,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//For order
 				releaseCartVoucher(voucherCode, null, orderModel); //Releases voucher
 				recalculateCartForCoupon(null, orderModel); //Recalculates cart after releasing voucher
+
+				modifyDiscountValues(orderModel);
+				final Double total = setTotalPrice(orderModel);
+				orderModel.setTotalPrice(total);
+
 				getModelService().save(orderModel); //TPR-1079
 
 				discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(0))); //TPR-1079/
