@@ -78331,6 +78331,9 @@ button#continue_payment_after_validate {
     width: 216px ! important;
     margin: 30px ! important;
 }
+.offer label.numbers {
+    cursor: pointer;
+}
 /* TPR 7486 END */
 /* TISHS-105 start */
 .offer_des li {
