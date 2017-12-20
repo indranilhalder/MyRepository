@@ -911,6 +911,26 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	@Override
+	public double getReviewOrderDelCost(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		double totalDelPrice = 0.0;
+		if (cartModel != null)
+		{
+			double delCharge = 0.0;
+			double sdCharge = 0.0;
+			final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				delCharge += entry.getCurrDelCharge().doubleValue();
+				sdCharge += entry.getScheduledDeliveryCharge().doubleValue();
+			}
+			totalDelPrice = delCharge + sdCharge;
+		}
+		return totalDelPrice;
+	}
+
+
+	@Override
 	public boolean setCartSubTotal2(final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
 		double subtotal = 0.0;
@@ -4558,9 +4578,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#populatePriceDisclaimerCart(de.hybris.platform.core.model.order.
-	 * CartModel )
+	 * 
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCartFacade#populatePriceDisclaimerCart(de.hybris.platform.core.model.order.CartModel
+	 * )
 	 */
 	@Override
 	public String populatePriceDisclaimerCart(final CartModel cartModel)

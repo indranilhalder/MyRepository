@@ -780,7 +780,13 @@
 	        <li id="discount"><spring:theme code="text.account.order.savings"/><span class="amt">
 	        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${totalDiscount}"/></ycommerce:testId>
         </c:if>
-			
+			 <c:if test="${deliveryPrice.doubleValue > 0}">
+	        <li class="shipping">
+			<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
+			<span id="deliveryCostReviewSpanId">
+	        <ycommerce:testId code="Order_Totals_Savings">${deliveryPrice.formattedValue}</ycommerce:testId>
+	        </span>
+        </c:if> 
 
 			<li id="total"><spring:theme code="basket.page.totals.total" /><span
 				class="amt"><ycommerce:testId code="cart_totalPrice_label">
