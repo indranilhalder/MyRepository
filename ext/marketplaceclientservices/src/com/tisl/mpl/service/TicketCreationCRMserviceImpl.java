@@ -39,7 +39,7 @@ import com.tisl.mpl.wsdto.UploadImage;
 
 
 /**
- * @author TCS
+ * @author TCSp
  * @Description: Generate XML Data when ticket has been created
  * @param sendTicketRequestData
  * @retun void
@@ -634,7 +634,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		}
 		if (null != mplWebCrmTicketModel.getOrderCode())
 		{
-			duplicateTicketRequestData.setParentOrderId(mplWebCrmTicketModel.getOrderCode());
+			duplicateTicketRequestData.setHSOOrderID(mplWebCrmTicketModel.getOrderCode());
 		}
 		if (null != mplWebCrmTicketModel.getSubOrderCode())
 		{
