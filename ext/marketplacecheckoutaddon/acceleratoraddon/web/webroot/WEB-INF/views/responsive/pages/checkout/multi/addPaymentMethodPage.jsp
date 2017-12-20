@@ -1455,6 +1455,14 @@
  .checkout-paymentmethod {
 	display: none;
 }
+@media (min-width: 791px){
+.mainContent-wrapper footer {
+    position: absolute;
+    width: 100%;
+    bottom: -160px;
+    left: 0;
+    clear: both;
+}
 </style>
 
 <script>
