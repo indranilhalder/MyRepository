@@ -507,12 +507,11 @@ public class HomePageController extends AbstractPageController
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 */
-	@RequestMapping(name = "/amp", method = RequestMethod.GET)
-	public String ampHome(final HttpServletRequest request, final HttpServletResponse response, final Model model,
-			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
-	{
-		return home(false, model, redirectModel, request);
-	}
+	/*
+	 * @RequestMapping(name = "/amp", method = RequestMethod.GET) public String ampHome(final HttpServletRequest request,
+	 * final HttpServletResponse response, final Model model, final RedirectAttributes redirectModel) throws
+	 * CMSItemNotFoundException { return home(false, model, redirectModel, request); }
+	 */
 
 	@Override
 	protected ContentPageModel getContentPageForLabelOrId(final String labelOrId) throws CMSItemNotFoundException
@@ -1728,9 +1727,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1834,7 +1833,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
