@@ -257,7 +257,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -370,7 +370,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -634,7 +634,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		}
 		if (null != mplWebCrmTicketModel.getOrderCode())
 		{
-			duplicateTicketRequestData.setParentOrderId(mplWebCrmTicketModel.getOrderCode());
+			duplicateTicketRequestData.setHSOOrderID(mplWebCrmTicketModel.getOrderCode());
 		}
 		if (null != mplWebCrmTicketModel.getSubOrderCode())
 		{
