@@ -277,7 +277,6 @@ ACC.WebForm = {
 			var ajaxReq = $.ajax({
 				url : uploadurl,
 				method : 'POST',
-				type : 'POST', // For jQuery < 1.9
 				data : formData,
 				async : false,
 				cache : false,
@@ -313,17 +312,17 @@ ACC.WebForm = {
 				console.log(data);
 				if (data !== 'error') {
 					// the uploaded file
-					var inputHidden = $('<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />').val(data);
-					$("#customerWebForm").append(inputHidden);
+					var inputHidden = '<input id="attachmentFiles" type="hidden" name="attachmentFiles" value="'+data+'"/>';
+					$(".uploadFile").append(inputHidden);
 					$("#file_success_message").text("File uploaded Sucessfully.");
 					$("#file_success_message").show();
 				} else {
 					// our application returned an error
-					var errorDiv = $('<div class="error"></div>')
-							.text("File not uploaded!!!");
+					var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
 					$("#file_success_message").append(errorDiv);
-					$("#file_success_message").hide();
+					$("#file_success_message").show();
 				}
+				$('.webfromTicketSubmit').prop('disabled',false);
 			});
 
 			// Called on failure of file upload

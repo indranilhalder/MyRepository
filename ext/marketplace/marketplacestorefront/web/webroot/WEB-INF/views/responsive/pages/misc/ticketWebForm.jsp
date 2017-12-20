@@ -165,8 +165,8 @@
 									<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 										upload size 5MB)</p>
 									<div class="uploadFile">
-										<span>Upload File</span> <span id="file_success_message"
-											style="display: none"></span> <input id="attachmentFile"
+										<span>Upload File</span> 
+										<input id="attachmentFile"
 											type="file" name="uploadFile" multiple />
 										<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 									</div>
@@ -175,7 +175,9 @@
 											class="progress-bar progress-bar-success" role="progressbar"
 											aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
 											style="width: 0%"></div>
-											<div id="file_success_message" ></div>
+											<div id="alert_message" ></div>
+											
+											<div id="file_success_message"></div> 
 									</div>
 								</div>
 								<div class="formGroup">
