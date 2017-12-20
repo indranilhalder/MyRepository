@@ -377,7 +377,7 @@ ACC.WebForm = {
 						// call default first page
 						$(".orderDrop").html(htmlOption);
 						$("#totalPages").val(data.totalOrderLines);
-						
+						$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
 						ACC.WebForm.loadPaginationLink(data.totalOrderLines);
 
@@ -393,9 +393,12 @@ ACC.WebForm = {
 	},
 	loadPaginationLink : function(total) {
 		var current = $('#currentPage').val();
+		var pageSize = $('#pageSize').val();
+		
+		var page=(parseInt(total) / parseInt(pageSize));
 		// TISPRDT-7759
 		//console.log("total"+total+"current"+current);
-		if (parseInt(total) >= parseInt(current)) {
+		if (parseInt(page) >= parseInt(current)) {
 			//console.log("View more");
 			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
 			$('#viewMoreLink').show();
@@ -474,7 +477,7 @@ ACC.WebForm = {
 
 		if (nodeValue !== '' && nodeValue !== undefined
 				&& nodeValue.indexOf("Select") == -1) {
-			var htmlOption = "<option value=''>Select</option>";
+			var htmlOption = "<option value=''>Select issue</option>";
 			$.ajax({
 				url : ACC.config.encodedContextPath
 						+ "/ticketForm/crmChildrenNodes",
