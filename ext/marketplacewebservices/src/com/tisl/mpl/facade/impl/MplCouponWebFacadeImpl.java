@@ -146,8 +146,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
 						//Price data new calculation for 2 decimal values
-						applycouponDto.setCouponDiscount(
-								String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
+								.setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 					}
 
@@ -260,6 +260,14 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9304);
 			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.SELLER_RESTRICTION))
+			{
+				throw new EtailNonBusinessExceptions(e, "B95131");
+			}
+			else if (e.getMessage().contains("order"))
+			{
+				throw new EtailNonBusinessExceptions(e, "B95141");
+			}
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -325,8 +333,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getMbDiscountAftrCVoucher() != null
 							&& data.getMbDiscountAftrCVoucher().getValue() != null)
 					{
-						applycouponDto.setDiscount(
-								String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
+								.setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 
 					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -371,8 +379,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					applycouponDto.setDiscount(
-							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
+							.setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
@@ -554,8 +562,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					try
 					{
 						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
-						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus, true,
-								couponCode);
+						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus,
+								true, couponCode);
 
 						data = newData;
 						//data.setTotalDiscount(newData.getTotalDiscount());
