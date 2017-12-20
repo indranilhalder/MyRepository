@@ -38,8 +38,8 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR)
 	{
 		if (typeof options.data === "undefined")
 		    options.data = "";
-		else
-		    options.data += "&CSRFToken=" + ACC.config.CSRFToken;
+		else if(options.enctype!='multipart/form-data')
+		    options.data += "&CSRFToken=" + ACC.config.CSRFToken; 
 		//options.data = (!noData ? options.data + "&" : "") + "CSRFToken=" + ACC.config.CSRFToken;
 		
 	}
