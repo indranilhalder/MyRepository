@@ -2341,7 +2341,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
 
-	public static final String REFUNDCLEARORDERQUERY = "SELECT {con.pk} FROM {Consignment AS con} WHERE {con.creationtime} <= ?queryTAT AND {con.creationtime} >= ?startTime AND {con.status} IN (?statusOne,?statusTwo)"
+	public static final String REFUNDCLEARORDERQUERY = "SELECT {con.pk} FROM {Consignment AS con}, {Order as o} , {ComposedType as com} , {PaymentInfo as pf} WHERE {o.paymentInfo} ={pf.pk} and {pf.itemtype} = {com.pk} and {com.code} <> 'CODPaymentInfo' and {con.creationtime} <= ?queryTAT AND {con.creationtime} >= ?startTime AND {con.status} IN (?statusOne,?statusTwo)"
 			.intern();
 	public static final String ORDERSTATUSONE = "statusOne".intern();
 	public static final String ORDERSTATUSTWO = "statusTwo".intern();
