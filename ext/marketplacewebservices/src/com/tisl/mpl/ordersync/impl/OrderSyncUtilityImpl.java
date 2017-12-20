@@ -165,7 +165,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -617,16 +617,10 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		modelService.save(consigmnetEntry);
 
 		// added for merging TCS_PROD_SUPPORT with SAP
-		boolean createHistoryEntry = false;
-		for (final OrderHistoryEntryModel entry : childOrder.getHistoryEntries())
-		{
-			if (consignmentModel.getStatus().toString().equalsIgnoreCase(entry.getDescription())
-					&& consignmentModel.getCode().equalsIgnoreCase(entry.getLineId()))
-			{
-				createHistoryEntry = true;
-			}
+		final boolean createHistoryEntry = isOrderHistoryPresent(childOrder, consignmentModel.getStatus().toString(),
+				consignmentModel.getCode());
 
-		}
+
 		if (!createHistoryEntry)
 		{
 
@@ -730,7 +724,15 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					consignmentModel.setStatus(shipmentNewStatus);
 					LOG.info("Consignment Status::" + consignmentModel.getStatus());
 					saveAndNotifyConsignment(consignmentModel);
-					modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+					final boolean createHistoryEntry = isOrderHistoryPresent(orderModel, consignmentModel.getStatus().toString(),
+							consignmentModel.getCode());
+
+
+					if (!createHistoryEntry)
+					{
+
+						modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+					}
 
 					LOG.info("Order History entry created for" + orderModel.getCode() + "Line ID" + consignmentModel.getCode());
 
@@ -1728,6 +1730,21 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 
 		return null;
+	}
+
+	private boolean isOrderHistoryPresent(final OrderModel childOrder, final String consignmentStatus, final String consignmentCode)
+	{
+		boolean isOrderHistoryPresent = false;
+
+		for (final OrderHistoryEntryModel entry : childOrder.getHistoryEntries())
+		{
+			if (consignmentStatus.equalsIgnoreCase(entry.getDescription()) && consignmentCode.equalsIgnoreCase(entry.getLineId()))
+			{
+				isOrderHistoryPresent = true;
+			}
+
+		}
+		return isOrderHistoryPresent;
 	}
 
 	/**
