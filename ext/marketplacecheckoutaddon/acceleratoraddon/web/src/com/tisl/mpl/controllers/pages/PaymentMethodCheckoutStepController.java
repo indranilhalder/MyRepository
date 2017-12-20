@@ -4517,31 +4517,38 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 					//TPR-7448 Starts here
-					final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved, cardRefNo,
-							cardToken);
-					if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
 					{
-						final String failureCode = (String) tuple3.getSecond();
-						final Double priceDiff = (Double) tuple3.getThird();
-						double totalDiscount = 0.0;
-						for (final AbstractOrderEntryModel oModel : cart.getEntries())
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved, cardRefNo,
+								cardToken);
+						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
-							final Double mrp = oModel.getMrp();
-							final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0) : oModel
-									.getNetAmountAfterAllDisc());
-							final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
+							final String failureCode = (String) tuple3.getSecond();
+							final Double priceDiff = (Double) tuple3.getThird();
+							double totalDiscount = 0.0;
+							for (final AbstractOrderEntryModel oModel : cart.getEntries())
+							{
+								final Double mrp = oModel.getMrp();
+								final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+										: oModel.getNetAmountAfterAllDisc());
+								final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-							final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-									: entryPrice.doubleValue();
+								final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
+										: entryPrice.doubleValue();
 
-							totalDiscount += (mrp.doubleValue() - value);
+								totalDiscount += (mrp.doubleValue() - value);
+							}
+							final PriceData totalDisc = getMplCheckoutFacade().createPrice(cart, Double.valueOf(totalDiscount));
+							final PriceData totalPrice = getMplCheckoutFacade().createPrice(cart, cart.getTotalPriceWithConv());
+
+							final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(cart, priceDiff);
+							return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
+									+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
 						}
-						final PriceData totalDisc = getMplCheckoutFacade().createPrice(cart, Double.valueOf(totalDiscount));
-						final PriceData totalPrice = getMplCheckoutFacade().createPrice(cart, cart.getTotalPriceWithConv());
-
-						final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(cart, priceDiff);
-						return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
-								+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
+					}
+					else
+					{
+						LOG.error("Both token and cardRefNo are empty");
 					}
 					//TPR-7448 Ends here
 
@@ -4850,31 +4857,39 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 
 					//TPR-7448 Starts here
-					final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(orderModel, token, cardSaved,
-							cardRefNo, cardToken);
-					if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
 					{
-						final String failureCode = (String) tuple3.getSecond();
-						final Double priceDiff = (Double) tuple3.getThird();
-						double totalDiscount = 0.0;
-						for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(orderModel, token, cardSaved,
+								cardRefNo, cardToken);
+						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
-							final Double mrp = oModel.getMrp();
-							final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0) : oModel
-									.getNetAmountAfterAllDisc());
-							final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
+							final String failureCode = (String) tuple3.getSecond();
+							final Double priceDiff = (Double) tuple3.getThird();
+							double totalDiscount = 0.0;
+							for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
+							{
+								final Double mrp = oModel.getMrp();
+								final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+										: oModel.getNetAmountAfterAllDisc());
+								final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-							final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-									: entryPrice.doubleValue();
+								final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
+										: entryPrice.doubleValue();
 
-							totalDiscount += (mrp.doubleValue() - value);
+								totalDiscount += (mrp.doubleValue() - value);
+							}
+							final PriceData totalDisc = getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount));
+							final PriceData totalPrice = getMplCheckoutFacade().createPrice(orderModel,
+									orderModel.getTotalPriceWithConv());
+
+							final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(orderModel, priceDiff);
+							return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
+									+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
 						}
-						final PriceData totalDisc = getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount));
-						final PriceData totalPrice = getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv());
-
-						final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(orderModel, priceDiff);
-						return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
-								+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
+					}
+					else
+					{
+						LOG.error("Both token and cardRefNo are empty");
 					}
 					//TPR-7448 Ends here
 				}
