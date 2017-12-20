@@ -11479,5 +11479,10 @@ function hideloaderAndEnableButton(){
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 }
-
-
+function selectRadioSavedCard(radioId,name)
+{
+	if(ACC.singlePageCheckout.getIsResponsive()) {
+		$("#"+radioId).prop("checked",true);
+		var radioValue = $("input[name='"+name+"']:checked").trigger("change");
+	}
+}

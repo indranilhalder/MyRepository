@@ -1969,6 +1969,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			if (restrictionModel instanceof PaymentModeRestrictionModel)
 			{
+				modelService.refresh(restrictionModel);
 				List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = null;
 				final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
 						? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
@@ -2025,6 +2026,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 							promotionVoucherModel, addCardResponse.getCardReference());
 					tuple3Resp = checkCardPerOfferMaxCntAmtValidation(voucherInvalidationModel, maxAvailCount,
 							maxAmountAllTransactions, getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
+					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
 					{
 						failureCode = flag + (String) tuple3Resp.getSecond();
