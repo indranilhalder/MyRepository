@@ -475,7 +475,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 								{
 									consignmentStatus = line.getConsignment().getStatus().getCode();
 									customerStatusModel = orderStatusCodeMap.get(consignmentStatus);
-									if (customerStatusModel != null)
+									if (null != customerStatusModel && null != customerStatusModel.getResponseStatus())
 									{
 										//TISPRDT-7895
 										currentStatus = customerStatusModel.getResponseStatus();
