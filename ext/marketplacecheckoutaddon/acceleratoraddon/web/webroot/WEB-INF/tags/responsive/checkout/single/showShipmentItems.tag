@@ -206,6 +206,7 @@
 									
 									<!-- <li class="delivery"> -->
 									<div>
+										<c:set var='disclaimerIsset'  value='false' />
 										<ul class="delivery-modes">
 										<c:if test="${not empty deliveryModeData}">
 												<c:forEach items="${deliveryModeData}" var="deliveryModeDataMap">
@@ -239,7 +240,10 @@
 																			<!-- UF-306 ends -->
 																			
 																		<p>${delMode.description }</p>
+																		<c:if test="${!disclaimerIsset}">
 																		<p>Shipping Charges subject to change depending on final Order Value</p>
+																		<c:set var='disclaimerIsset'  value='true' />
+																		</c:if>
 																		</label></li>
 																		<%-- <c:set var='delModeChecked'  value='true' /> --%>			
 																	</c:when>
@@ -251,7 +255,12 @@
 																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.clickandcollect.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.clickandcollect.delivery"/> (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			<!-- UF-306 ends -->
-																		<p>${delMode.description }</p></label></li>
+																		<p>${delMode.description }</p>
+																		<c:if test="${!disclaimerIsset}">
+																		<p>Shipping Charges subject to change depending on final Order Value</p>
+																		<c:set var='disclaimerIsset'  value='true' />
+																		</c:if>
+																		</label></li>
 																		<c:set var="isCncPresentInSinglePageCart" value="true"></c:set>
 																		<%-- <c:if test="${delMode.isSelected eq true}">
 																			<script>
@@ -270,7 +279,12 @@
 																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.express.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.express.shipping"/> (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			<!-- UF-306 ends -->
-																		<p>${delMode.description }</p></label></li>
+																		<p>${delMode.description }</p>
+																		<c:if test="${!disclaimerIsset}">
+																		<p>Shipping Charges subject to change depending on final Order Value</p>
+																		<c:set var='disclaimerIsset'  value='true' />
+																		</c:if>
+																		</label></li>
 																		<%-- <c:set var='delModeChecked'  value='true' /> --%>
 																	</c:otherwise>
 															</c:choose>
