@@ -99,6 +99,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import reactor.function.support.UriUtils;
 
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -284,6 +285,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Autowired
 	private DiscountUtility discountUtility;
+
+	@Autowired
+	private CommonUtils utils;
 
 	/**
 	 * This is the GET method which renders the Payment Page. Custom method written instead of overridden method to
@@ -4548,7 +4552,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
-						LOG.error("Both token and cardRefNo are empty");
+						if (!utils.isLuxurySite())
+						{
+							LOG.error("Both token and cardRefNo cannot be empty for marketplace");
+							return "stayInPayment";
+						}
+						else
+						{
+							LOG.debug("Both token and cardRefNo are empty");
+						}
 					}
 					//TPR-7448 Ends here
 
@@ -4889,7 +4901,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
-						LOG.error("Both token and cardRefNo are empty");
+						if (!utils.isLuxurySite())
+						{
+							LOG.error("Both token and cardRefNo cannot be empty for marketplace");
+							return "stayInPayment";
+						}
+						else
+						{
+							LOG.debug("Both token and cardRefNo are empty");
+						}
 					}
 					//TPR-7448 Ends here
 				}
