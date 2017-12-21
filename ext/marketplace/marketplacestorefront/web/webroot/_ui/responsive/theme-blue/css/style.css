@@ -78385,3 +78385,8 @@ button#continue_payment_after_validate {
 	 /* word-break: break-all; */
 }
 /* TISHS-166 End  */
+/* TISPRDT-7991 */
+span#offer_section_responsive_error_msg {
+    margin-left: :19px;
+}
+/* TISPRDT-7991 */
