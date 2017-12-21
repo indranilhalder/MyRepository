@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -288,16 +289,26 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	/**
 	 * @return List<AmpServiceworkerModel>
 	 */
-	public List<AmpServiceworkerModel> getAllAmpServiceworkers()
+	public AmpServiceworkerModel getAmpServiceworkers()
 	{
-		return mplCmsPageDao.getAllAmpServiceworkers();
+		final List<AmpServiceworkerModel> serviceworkerModelList = mplCmsPageDao.getAllAmpServiceworkers();
+		if (CollectionUtils.isNotEmpty(serviceworkerModelList))
+		{
+			return serviceworkerModelList.get(0);
+		}
+		return null;
 	}
 
 	/**
 	 * @return List<AmpServiceworkerModel>
 	 */
-	public List<AmpMenifestModel> getAllAmpMenifestJsons()
+	public AmpMenifestModel getAmpMenifestJsons()
 	{
-		return mplCmsPageDao.getAllAmpMenifestJsons();
+		final List<AmpMenifestModel> ampMenifestModelList = mplCmsPageDao.getAllAmpMenifestJsons();
+		if (CollectionUtils.isNotEmpty(ampMenifestModelList))
+		{
+			return ampMenifestModelList.get(0);
+		}
+		return null;
 	}
 }
