@@ -3327,6 +3327,9 @@ ACC.singlePageCheckout = {
         	}
 		if(typeof selectedOffer !== "undefined" && selectedOffer != "") {
 		        ACC.singlePageCheckout.selectPaymentSpecificOffers(selectedOffer);
+	        }else {
+		   $('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
+	           $('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
 	        }
 
             	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
