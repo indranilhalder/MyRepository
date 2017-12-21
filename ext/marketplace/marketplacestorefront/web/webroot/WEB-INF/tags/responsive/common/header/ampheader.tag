@@ -73,17 +73,6 @@
 <%-- <meta property="al:android:url" content="${canonical}" /> --%>
 <meta property="al:android:app_name" content="Tata Cliq" />
 
-<c:choose>
-	<c:when test="${fn:contains(reqURI,'/p-')}">	
-	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
-	<meta property="og:image" content="${container.thumbnail.url}" />
-	</c:forEach>	
-	</c:when>
-	<c:otherwise>
-	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
-	</c:otherwise>
-	</c:choose>
-
 <style amp-custom>
 @font-face {
   font-family: 'Montserrat';
