@@ -60,6 +60,7 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,7 +166,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -216,7 +217,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		catch (final Exception e)
 		{
 
-			callTrace.append("Error in Sync Order" + e.getStackTrace());
+			callTrace.append("Error in Sync Order" + ExceptionUtils.getStackTrace(e));
 
 		}
 		finally
@@ -324,7 +325,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Consignment Status RollBack because of Invoice :" + e.getStackTrace());
+			callTrace.append("Consignment Status RollBack because of Invoice :" + ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 		return createInvoice;
@@ -408,7 +409,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append(e.getStackTrace());
+			callTrace.append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -560,7 +561,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				catch (final Exception e)
 				{
 					callTrace.append("Could Not able to update Order From OMS for imeiDetails");
-					callTrace.append(e.getStackTrace());
+					callTrace.append(ExceptionUtils.getStackTrace(e));
 					isError = true;
 				}
 			}
@@ -569,7 +570,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		catch (final Exception e)
 		{
 			callTrace.append("Some Issue in Updating order");
-			callTrace.append(e.getStackTrace());
+			callTrace.append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -668,7 +669,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e)
 				{
-					callTrace.append("Exception during CRM Ticket for Cancel Initiated Order Id >>" + e.getStackTrace());
+					callTrace.append("Exception during CRM Ticket for Cancel Initiated Order Id >>" + ExceptionUtils.getStackTrace(e));
 					isError = true;
 				}
 				try
@@ -680,7 +681,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e)
 				{
-					callTrace.append("Exception during Refund Initiation  for Un-Collected Orders >> " + e.getStackTrace());
+					callTrace.append("Exception during Refund Initiation  for Un-Collected Orders >> "
+							+ ExceptionUtils.getStackTrace(e));
 					isError = true;
 				}
 
@@ -787,7 +789,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Exception either in consignment update or sending notification " + e.getStackTrace());
+			callTrace.append("Exception either in consignment update or sending notification " + ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -826,7 +828,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			catch (final ParseException e)
 			{
-				callTrace.append(e.getStackTrace());
+				callTrace.append(ExceptionUtils.getStackTrace(e));
 				isError = true;
 			}
 		}
@@ -1004,7 +1006,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Unable to send Notification..!! " + e.getStackTrace());
+			callTrace.append("Unable to send Notification..!! " + ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -1079,7 +1081,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					catch (final Exception e)
 					{
 						callTrace.append("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> "
-								+ e.getStackTrace());
+								+ ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 
@@ -1099,7 +1101,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					}
 					catch (final Exception e)
 					{
-						callTrace.append("Exception occurred while  refund info call to oms " + e.getStackTrace());
+						callTrace.append("Exception occurred while  refund info call to oms " + ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 					/* R2.3 REFUND INFO CALL TO OMS END */
@@ -1161,7 +1163,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					}
 					catch (final Exception e)
 					{
-						callTrace.append("Exception occurred while  refund info call to oms " + e.getStackTrace());
+						callTrace.append("Exception occurred while  refund info call to oms " + ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 					/* R2.3 REFUND INFO CALL TO OMS END */
@@ -1187,7 +1189,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					catch (final Exception e)
 					{
 						callTrace.append("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> "
-								+ e.getStackTrace());
+								+ ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 					isSDBCheck = Boolean.FALSE;
@@ -1215,7 +1217,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						catch (final Exception e)
 						{
 							callTrace.append("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> "
-									+ e.getStackTrace());
+									+ ExceptionUtils.getStackTrace(e));
 							isError = true;
 						}
 						try
@@ -1226,7 +1228,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						}
 						catch (final Exception e)
 						{
-							callTrace.append("Exception during Refund Initiation  SSB Order Cancel Initiated  >> " + e.getStackTrace());
+							callTrace.append("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "
+									+ ExceptionUtils.getStackTrace(e));
 							isError = true;
 						}
 					}
@@ -1302,7 +1305,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append(e.getStackTrace());
+			callTrace.append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -1486,7 +1489,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append(e.getStackTrace());
+			callTrace.append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 	}
@@ -1506,7 +1509,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #");
+			callTrace.append("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #"
+					+ ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 	}
