@@ -17,8 +17,16 @@ import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.search.ProductSearchFacade;
+import de.hybris.platform.commercefacades.search.data.AutocompleteSuggestionData;
+import de.hybris.platform.commercefacades.search.data.SearchQueryData;
+import de.hybris.platform.commercefacades.search.data.SearchStateData;
+import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -31,6 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -42,12 +51,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
@@ -60,7 +71,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.web.data.MplAutocompleteAmpData;
+import com.tisl.mpl.storefront.web.data.MplAutocompleteResultData;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.DepartmentHierarchyData;
@@ -86,6 +100,9 @@ public class HomePagePwAmpController extends AbstractPageController
 	private static final String EXCEPTION_MESSAGE_SHOWCASE = "Exception  in getJSONForShowCaseItem";
 	private static final String EXCEPTION_MESSAGE_NEWEXCLUSIVE = "Exception in getNewAndExclusive";
 	private static final String Y = "Y";
+	private static final String COMPONENT_UID_PATH_VARIABLE_PATTERN = "{componentUid:.*}";
+	private static final String DROPDOWN_BRAND = "MBH";
+	private static final String DROPDOWN_CATEGORY = "MSH";
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService cmsPageService;
@@ -100,7 +117,10 @@ public class HomePagePwAmpController extends AbstractPageController
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
 
-
+	@Resource(name = "productSearchFacade")
+	private ProductSearchFacade<ProductData> productSearchFacade;
+	@Resource(name = "defaultMplProductSearchFacade")
+	private DefaultMplProductSearchFacade searchFacade;
 
 	private static final List<ProductOption> PRODUCT_OPTIONS2 = Arrays.asList(ProductOption.HOMEPAGEPRODUCTS);
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
@@ -1307,5 +1327,159 @@ public class HomePagePwAmpController extends AbstractPageController
 			throw new EtailNonBusinessExceptions(e, ControllerConstants.B9004);
 		}
 		return shopByDeptData;
+	}
+
+	/**
+	 *
+	 * @param componentUid
+	 * @param term
+	 * @param category
+	 * @return AutocompleteResultData
+	 * @throws CMSItemNotFoundException
+	 */
+	@SuppressWarnings("boxing")
+	@ResponseBody
+	@RequestMapping(value = "/autocomplete/" + COMPONENT_UID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	public MplAutocompleteAmpData getAutocompleteSuggestions(@PathVariable final String componentUid,
+			@RequestParam("term") final String term, @RequestParam("category") final String category)
+			throws CMSItemNotFoundException
+	{
+		final MplAutocompleteResultData resultData = new MplAutocompleteResultData();
+		final MplAutocompleteAmpData ampResultData = new MplAutocompleteAmpData();
+		try
+		{
+			final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(term);
+			if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+			{
+
+				resultData.setSuggestions(suggestions);
+			}
+			else
+			{
+				String substr = "";
+				substr = term.substring(0, term.length() - 1);
+
+				resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+
+
+			}
+
+			//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
+			final SearchStateData searchState = new SearchStateData();
+			final SearchQueryData searchQueryData = new SearchQueryData();
+			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 Start */
+			String tempSuggestion = "";
+			final List<AutocompleteSuggestionData> suggestionsList = resultData.getSuggestions();
+			if (CollectionUtils.isNotEmpty(suggestionsList))
+			{
+				final String firstSuggestion = suggestionsList.get(0).getTerm();
+
+				final StringTokenizer termWordCount = new StringTokenizer(term, " ");
+				final int count = termWordCount.countTokens();
+
+				final String[] suggestedTerm = firstSuggestion.split(" ");
+				for (int i = 0; i < count; i++)
+				{
+					if (i > 0)
+					{
+						tempSuggestion = tempSuggestion + " " + suggestedTerm[i];
+					}
+					else
+					{
+						tempSuggestion = suggestedTerm[i];
+					}
+				}
+			}
+			else
+			{
+				tempSuggestion = term;
+			}
+
+			searchQueryData.setValue(tempSuggestion);
+			/*********** Fixing for Defect TISPRO-58 and TISPRD-346 End */
+			//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
+			searchState.setQuery(searchQueryData);
+			searchState.setSns(true);
+
+			final PageableData pageableData = null;
+
+			ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
+
+			if (CollectionUtils.isNotEmpty(resultData.getSuggestions()))
+			{
+
+				if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
+				{
+					searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+							.textSearch(searchState, pageableData);
+					resultData.setCategories(searchPageData.getSnsCategories());
+					resultData.setBrands(searchPageData.getAllBrand());
+					//allSearchFlag = true;
+				}
+				else
+				//if (!allSearchFlag)
+				{
+					if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
+					{
+						searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
+					}
+					else
+					{
+						searchPageData = searchFacade.dropDownSearch(searchState, category, "sellerId", pageableData);
+					}
+					resultData.setCategories(searchPageData.getSnsCategories());
+					resultData.setBrands(searchPageData.getAllBrand());
+
+				}
+
+
+
+
+				final List<ProductData> suggestedProducts = searchPageData.getResults();
+
+				//this is done to remove some of the data issues where we
+				//have null images or price
+				if (suggestedProducts != null)
+				{
+					cleanSearchResults(suggestedProducts);
+					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
+					resultData.setProducts(suggestedProducts);
+					resultData.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
+							: term);
+				}
+
+
+			}
+		}
+		catch (final EtailNonBusinessExceptions eb)
+		{
+			LOG.debug("Error occured in getAutocompleteSuggestions :" + eb.getMessage());
+		}
+		final List<MplAutocompleteResultData> listAmp = new ArrayList<MplAutocompleteResultData>();
+		listAmp.add(resultData);
+		ampResultData.setItems(listAmp);
+		return ampResultData;
+	}
+
+	/**
+	 *
+	 * @param resultData
+	 *
+	 */
+	private void cleanSearchResults(final List<ProductData> resultData)
+	{
+		for (final ProductData productData : resultData)
+		{
+			if (productData.getImages() == null)
+			{
+				final List<ImageData> images = new ArrayList<ImageData>(Arrays.asList(new ImageData()));
+				productData.setImages(images);
+			}
+			if (productData.getPrice() == null)
+			{
+				productData.setPrice(new PriceData());
+			}
+		}
 	}
 }
