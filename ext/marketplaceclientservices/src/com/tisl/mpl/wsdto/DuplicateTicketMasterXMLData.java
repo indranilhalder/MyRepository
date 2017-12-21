@@ -14,12 +14,12 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "DuplicateTicketCheck")
 @XmlType(propOrder =
-{ "customerID", "parentOrderId", "subOrderId", "ticketType", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "l4CatCode",
+{ "customerID", "hsoOrderId", "subOrderId", "ticketType", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "l4CatCode",
 		"transactionId" })
 public class DuplicateTicketMasterXMLData
 {
 	private String customerID;
-	private String parentOrderId;
+	private String hsoOrderId;
 	private String subOrderId;
 	private String ticketType;
 	private String transactionId;
@@ -175,24 +175,6 @@ public class DuplicateTicketMasterXMLData
 	}
 
 	/**
-	 * @return the parentOrderId
-	 */
-	@XmlElement(name = "parentOrderId")
-	public String getParentOrderId()
-	{
-		return parentOrderId;
-	}
-
-	/**
-	 * @param parentOrderId
-	 *           the parentOrderId to set
-	 */
-	public void setParentOrderId(final String parentOrderId)
-	{
-		this.parentOrderId = parentOrderId;
-	}
-
-	/**
 	 * @return the transactionId
 	 */
 	@XmlElement(name = "transactionId")
@@ -209,6 +191,27 @@ public class DuplicateTicketMasterXMLData
 	{
 		this.transactionId = transactionId;
 	}
+
+	/**
+	 * @return the hSOOrderID
+	 */
+	@XmlElement(name = "hsoOrderId")
+	public String getHsoOrderId()
+	{
+		return hsoOrderId;
+	}
+
+	/**
+	 * @param hsoOrderId
+	 *           the hsoOrderId to set
+	 */
+	public void setHsoOrderId(final String hsoOrderId)
+	{
+		this.hsoOrderId = hsoOrderId;
+	}
+
+
+
 
 
 

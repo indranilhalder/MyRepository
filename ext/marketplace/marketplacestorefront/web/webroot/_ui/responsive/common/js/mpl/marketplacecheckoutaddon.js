@@ -1433,6 +1433,8 @@ function displayEMICards(){
 				$(".card_token").parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
 				$(".card_token").parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 				$(".card_token").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+				
+				$("#savedEMICard").hide();//TISPRDT-7890
 			}
 		},
 		error : function(resp) {
@@ -11396,6 +11398,7 @@ function tokenizeJuspayCard(paymentMode)
 	var card_exp_year="";
 	var card_exp_month="";
 	var card_security_code="";
+	var name_on_card="";
 	if(paymentMode=="CC")
 	{
 		merchant_id=$("#newCardCC #merchant_id").val();
@@ -11403,6 +11406,7 @@ function tokenizeJuspayCard(paymentMode)
 		card_exp_year=$("#newCardCC select[name=expyy] option:selected").val();
 		card_exp_month=$("#newCardCC select[name=expmm] option:selected").val();
 		card_security_code=$("#newCardCC input[name=cvv]").val();
+		name_on_card=$("#newCardCC input[name=memberName]").val();
 	}
 	else if(paymentMode=="DC")
 	{
@@ -11411,6 +11415,7 @@ function tokenizeJuspayCard(paymentMode)
 		card_exp_year=$("#debitCard select[name=expyy] option:selected").val();
 		card_exp_month=$("#debitCard select[name=expmm] option:selected").val();
 		card_security_code=$("#debitCard input[name=cvv]").val();
+		name_on_card=$("#debitCard input[name=memberName]").val();
 	}
 	else if(paymentMode=="EM")
 	{
@@ -11419,6 +11424,7 @@ function tokenizeJuspayCard(paymentMode)
 		card_exp_year=$("#newCardCCEmi select[name=expyy] option:selected").val();
 		card_exp_month=$("#newCardCCEmi select[name=expmm] option:selected").val();
 		card_security_code=$("#newCardCCEmi input[name=cvv]").val();
+		name_on_card=$("#newCardCCEmi input[name=memberName]").val();
 	}
 	
 	var url=$("#juspayBaseUrl").val();
@@ -11428,7 +11434,7 @@ function tokenizeJuspayCard(paymentMode)
 		$.ajax({
 			url: url+"/card/tokenize",
 			type: "POST",
-			data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code},
+			data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code,'name_on_card':name_on_card},
 			cache: false,
 			async:false,
 			success : function(response) {
@@ -11511,5 +11517,10 @@ function hideloaderAndEnableButton(){
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").prop("disabled",false);
 	$("#continue_payment_after_validate_responsive, #continue_payment_after_validate").css("opacity","1");
 }
-
-
+function selectRadioSavedCard(radioId,name)
+{
+	if(ACC.singlePageCheckout.getIsResponsive()) {
+		$("#"+radioId).prop("checked",true);
+		var radioValue = $("input[name='"+name+"']:checked").trigger("change");
+	}
+}

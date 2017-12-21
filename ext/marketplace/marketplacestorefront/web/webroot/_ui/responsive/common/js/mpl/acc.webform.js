@@ -377,9 +377,9 @@ ACC.WebForm = {
 						// call default first page
 						$(".orderDrop").html(htmlOption);
 						$("#totalPages").val(data.totalOrderLines);
-						
+						//$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
-						ACC.WebForm.loadPaginationLink(data.totalOrderLines);
+						ACC.WebForm.loadPaginationLink(data.totalOrderLines,currentPage);
 
 					}
 					
@@ -391,15 +391,17 @@ ACC.WebForm = {
 			});
 		}
 	},
-	loadPaginationLink : function(total) {
-		var current = $('#currentPage').val();
+	loadPaginationLink : function(total,currentPage) {
+		var pageSize = $('#pageSize').val();
+		$('#currentPage').val(currentPage);
+		
+		var page=(parseInt(total) / parseInt(pageSize));
 		// TISPRDT-7759
 		//console.log("total"+total+"current"+current);
-		if (parseInt(total) >= parseInt(current)) {
+		if (parseInt(page) > parseInt(current)) {
 			//console.log("View more");
 			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
 			$('#viewMoreLink').show();
-			$('#currentPage').val(parseInt(current) + 1);
 		} else {
 			//console.log("View more hide");
 			$('#viewMoreLink').hide();
@@ -409,7 +411,6 @@ ACC.WebForm = {
 			//console.log("View back");
 			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
 			$('#viewBackLink').show();
-			$('#currentPage').val(parseInt(current) - 1);
 		} else {
 			//console.log("View back hide");
 			$('#viewBackLink').hide();
@@ -474,7 +475,7 @@ ACC.WebForm = {
 
 		if (nodeValue !== '' && nodeValue !== undefined
 				&& nodeValue.indexOf("Select") == -1) {
-			var htmlOption = "<option value=''>Select</option>";
+			var htmlOption = "<option value=''>Select issue</option>";
 			$.ajax({
 				url : ACC.config.encodedContextPath
 						+ "/ticketForm/crmChildrenNodes",

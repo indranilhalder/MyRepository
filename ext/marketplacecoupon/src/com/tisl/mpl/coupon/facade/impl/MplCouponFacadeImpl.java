@@ -274,8 +274,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		//Sorts the voucherDataList based on coupon discount value
 		getMplCouponService().getSortedVoucher(voucherDataList);//TODO remove assignment
 
-		final int couponCount = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.COUPONTOPCOUNT, MarketplacecommerceservicesConstants.COUPONTOPCOUNTDEFVAL), 0);
+		final int couponCount = Integer.parseInt(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.COUPONTOPCOUNT,
+						MarketplacecommerceservicesConstants.COUPONTOPCOUNTDEFVAL), 0);
 		//to display only top 5 or configured coupons
 		if (voucherDataList.size() > couponCount)
 		{
@@ -402,8 +403,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							final String error = checkViolatedRestrictions(voucher, cartModel);
 							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.SELLERVIOLATION))
 							{
@@ -415,38 +416,37 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 							}
 							/* TPR-1075 Changes Start */
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST
+										+ voucherCode);
 							}
 							/* TPR-1075 Changes End */
 							//TPR-4460 Changes
 							else if (null != error
 									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+										+ voucherCode);
 							}
 							else if (null != error
 									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+										+ voucherCode);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+										+ voucherCode);
 							}
 							else
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
+										+ voucherCode);
 							}
 						}
 
@@ -523,18 +523,17 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							final String error = checkViolatedRestrictions(voucher, orderModel);
 							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 							}
 							else
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
+										+ voucherCode);
 							}
 						}
 
@@ -574,8 +573,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 								applicableOrderEntryList);
 						if (null != discountData)
 						{
-							voucherInvalidationModel.setSavedAmount(null != discountData.getCouponDiscount()
-									? discountData.getCouponDiscount().getDoubleValue() : Double.valueOf(0.0D));
+							voucherInvalidationModel.setSavedAmount(null != discountData.getCouponDiscount() ? discountData
+									.getCouponDiscount().getDoubleValue() : Double.valueOf(0.0D));
 							getModelService().save(voucherInvalidationModel);
 						}
 
@@ -633,8 +632,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			if (data.getRedeemErrorMsg().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCFREEBIE))
 			{
-				throw new VoucherOperationException(
-						MarketplacecommerceservicesConstants.VOUCHER + voucherCode + MarketplacecommerceservicesConstants.FREEBIEERROR);
+				throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHER + voucherCode
+						+ MarketplacecommerceservicesConstants.FREEBIEERROR);
 			}
 			else if (data.getRedeemErrorMsg().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRICEEXCEEDED))
 			{
@@ -1070,8 +1069,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					offer.setOfferCode(coupon.getCode());
 					offer.setOfferTitle(coupon.getName());
 					offer.setOfferDescription(coupon.getDescription());
-					offer.setOfferMaxDiscount(String.valueOf(coupon.getMaxDiscountValue()));
+					//TISPRDT-7921
+					if ((coupon.getMaxDiscountValue() != null))
+					{
+						offer.setOfferMaxDiscount(String.valueOf(coupon.getMaxDiscountValue()));
 
+					}
 					for (final Map.Entry<String, Double> entry : allOffersTotalData.entrySet())
 					{
 
@@ -1290,8 +1293,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public String getCouponMessageInfo(final AbstractOrderModel orderModel)
 	{
 		String couponMessageInformation = null;
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-				getVoucherService().getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
 
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -1623,43 +1626,42 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							final String error = checkViolatedRestrictions(voucher, cartModel);
 							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 							}
 							/* TPR-1075 Changes Start */
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.NEWCUSTOMER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST
+										+ voucherCode);
 							}
 							/* TPR-1075 Changes End */
 							//TPR-4460 Changes
 							else if (null != error
 									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+										+ voucherCode);
 							}
 							else if (null != error
 									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+										+ voucherCode);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+										+ voucherCode);
 							}
 							else
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
+										+ voucherCode);
 							}
 						}
 
@@ -1734,18 +1736,17 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							final String error = checkViolatedRestrictions(voucher, orderModel);
 							if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.DATE))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTREDEEMABLE
+										+ voucherCode);
 							}
 							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.USER))
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 							}
 							else
 							{
-								throw new VoucherOperationException(
-										MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
+										+ voucherCode);
 							}
 						}
 
@@ -1785,8 +1786,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 								applicableOrderEntryList);
 						if (null != discountData)
 						{
-							voucherInvalidationModel.setSavedAmount(null != discountData.getCouponDiscount()
-									? discountData.getCouponDiscount().getDoubleValue() : Double.valueOf(0.0D));
+							voucherInvalidationModel.setSavedAmount(null != discountData.getCouponDiscount() ? discountData
+									.getCouponDiscount().getDoubleValue() : Double.valueOf(0.0D));
 							getModelService().save(voucherInvalidationModel);
 						}
 
@@ -1844,16 +1845,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (!oModel.getGiveAway().booleanValue())
 					{
 						final Double mrp = oModel.getMrp();
-						final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
-								? oModel.getCartLevelDisc() : Double.valueOf(0);
-						final Double couponDiscount = (null != oModel.getCartCouponValue()
-								&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
+						final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0) ? oModel
+								.getCartLevelDisc() : Double.valueOf(0);
+						final Double couponDiscount = (null != oModel.getCartCouponValue() && oModel.getCartCouponValue().doubleValue() > 0) ? oModel
+								.getCartCouponValue() : Double.valueOf(0);
 						final Double totalPrice = oModel.getTotalPrice();
 						final int quantity = oModel.getQuantity().intValue();
 
-						final Double productDiscount = (null != oModel.getTotalProductLevelDisc()
-								&& oModel.getTotalProductLevelDisc().doubleValue() > 0) ? oModel.getTotalProductLevelDisc()
-										: Double.valueOf(0);
+						final Double productDiscount = (null != oModel.getTotalProductLevelDisc() && oModel.getTotalProductLevelDisc()
+								.doubleValue() > 0) ? oModel.getTotalProductLevelDisc() : Double.valueOf(0);
 
 						final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
@@ -1882,16 +1882,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (!oModel.getGiveAway().booleanValue())
 					{
 						final Double mrp = oModel.getMrp();
-						final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0)
-								? oModel.getCartLevelDisc() : Double.valueOf(0);
-						final Double couponDiscount = (null != oModel.getCartCouponValue()
-								&& oModel.getCartCouponValue().doubleValue() > 0) ? oModel.getCartCouponValue() : Double.valueOf(0);
+						final Double cartDiscount = (null != oModel.getCartLevelDisc() && oModel.getCartLevelDisc().doubleValue() > 0) ? oModel
+								.getCartLevelDisc() : Double.valueOf(0);
+						final Double couponDiscount = (null != oModel.getCartCouponValue() && oModel.getCartCouponValue().doubleValue() > 0) ? oModel
+								.getCartCouponValue() : Double.valueOf(0);
 						final Double totalPrice = oModel.getTotalPrice();
 						final int quantity = oModel.getQuantity().intValue();
 
-						final Double productDiscount = (null != oModel.getTotalProductLevelDisc()
-								&& oModel.getTotalProductLevelDisc().doubleValue() > 0) ? oModel.getTotalProductLevelDisc()
-										: Double.valueOf(0);
+						final Double productDiscount = (null != oModel.getTotalProductLevelDisc() && oModel.getTotalProductLevelDisc()
+								.doubleValue() > 0) ? oModel.getTotalProductLevelDisc() : Double.valueOf(0);
 
 						final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 

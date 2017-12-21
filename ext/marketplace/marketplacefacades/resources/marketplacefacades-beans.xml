@@ -1356,6 +1356,7 @@
 		<property name="orderLineDatas" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.WebFormOrderLine>" />
 		<property name="status" type="String" />
 		<property name="totalOrderLines" type="String" />
+		<property name="pageSize" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.facades.cms.data.WebFormOrderLine">

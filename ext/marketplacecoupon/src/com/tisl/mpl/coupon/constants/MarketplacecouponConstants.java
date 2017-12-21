@@ -102,6 +102,7 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 
 	public static final String CARTCOUPONREDEEM = "/usevoucher";
 	public static final String CARTCOUPONRELEASE = "/releasevoucher";
+	public static final String SELLER_RESTRICTION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart";
 
 	private MarketplacecouponConstants()
 	{

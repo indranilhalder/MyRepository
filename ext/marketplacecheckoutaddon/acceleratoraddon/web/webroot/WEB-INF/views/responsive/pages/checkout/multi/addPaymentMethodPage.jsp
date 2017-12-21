@@ -429,7 +429,7 @@
 										       			</div>
 										        		<div class="cvv right-align-form digits">
 										        			<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" />
+												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" onfocus="selectRadioSavedCard('cc${status.index}','creditCards');"/>
 										        			<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
 																<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
 															</div>
@@ -759,7 +759,7 @@
 										        			</div>
 										        			<div class="cvv right-align-form digits">
 										        				<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-										            			<input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)" />		
+										            			<input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)"  onfocus="selectRadioSavedCard('dc${status.index}','debitCards');"/>		
 										        				<br>
 										        				<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
@@ -1454,6 +1454,19 @@
 <style>
  .checkout-paymentmethod {
 	display: none;
+}
+@media (min-width: 791px){
+.mainContent-wrapper footer {
+    position: absolute;
+    width: 100%;
+    bottom: -160px;
+    left: 0;
+    clear: both;
+}
+.global-alerts button.close{
+    float: left !imporatnt;
+    left: -7px !imporatnt;
+    top: 4px !important;
 }
 </style>
 

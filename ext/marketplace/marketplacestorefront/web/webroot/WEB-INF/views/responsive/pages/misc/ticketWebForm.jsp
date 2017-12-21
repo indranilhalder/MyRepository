@@ -26,7 +26,7 @@
 			<%-- <center>Web Form</center> --%>
 		</div>
 		<div class="content">
-			<div class="custmCareHelp">
+			<div class="custmCareHelp" style="margin-top:0px;">
 
 				<!-- <div class="custmCareHeadSec">
 					<div class="secSide">
@@ -92,9 +92,11 @@
 										</ul>
 
 									</div>
-									<input type="hidden" id="currentPage" value="0"
-										name="currentPage" /> <input type="hidden" id="totalPages"
-										value="0" name="totalPages" /> <a href="#" id="viewMoreLink"
+									<input type="hidden" id="currentPage" value="0" name="currentPage" /> 
+									<input type="hidden" id="totalPages" value="0" name="totalPages" /> 
+									<input type="hidden" id="pageSize" value="${pageSizeWebForm}" name="pageSize" />
+										
+									<a href="#" id="viewMoreLink"
 										style="display: none;">View more orders</a> <a href="#"
 										id="viewBackLink" style="display: none;">Back</a>
 								</div>
@@ -175,8 +177,8 @@
 											class="progress-bar progress-bar-success" role="progressbar"
 											aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
 											style="width: 0%"></div>
-											<div id="alert_message" ></div>
 											
+											<div id="alert_message" ></div>
 											<div id="file_success_message"></div> 
 									</div>
 								</div>
