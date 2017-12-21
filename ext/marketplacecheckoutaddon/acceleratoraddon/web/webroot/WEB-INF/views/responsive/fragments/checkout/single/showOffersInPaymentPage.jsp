@@ -33,7 +33,7 @@
 
 			<c:forEach items="${offerPageData}" var="offerPageData" begin="0"
 				end="2" varStatus="status">
-				<li class="offer" id="offer${status.index}" style="cursor: pointer;">
+				<li class="offer" id="offer${status.index}">
 					<div class="offerchoosesection">
 						<input type="radio" name="offer_name"
 							id="offer_name${status.index}" value="${offerPageData.code}"
@@ -79,8 +79,7 @@
 		<ul class="offerui">
 			<c:forEach items="${offerPageData}" var="offerPageData"
 				varStatus="status">
-				<li class="offer" id="offerpop${status.index}"
-					style="cursor: pointer;">
+				<li class="offer" id="offerpop${status.index}">
 					<div class="offerchoosesection">
 						<input type="radio" name="offer_name_more"
 							id="offer_name_pop${status.index}" value="${offerPageData.code}"
