@@ -9891,7 +9891,9 @@ public class UsersController extends BaseCommerceController
 
 		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
-		int orderCount = 0, start = 0, end = 0;
+		OrderDataWsDTO order = null;
+		final int orderCount = 0;
+		final int start = 0, end = 0;
 		OrderData orderDetails = null;
 		try
 		{
@@ -9916,35 +9918,21 @@ public class UsersController extends BaseCommerceController
 					{
 						continue;
 					}
-					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);
-						orderCount++;
 					}
 				}
-				if (orderTrackingListWsDTO.size() > 0)
+				if (searchPageDataParentOrder.getPagination() != null
+						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
 				{
-					orderHistoryListData.setTotalNoOfOrders(Integer.valueOf(orderCount));
-
+					final int totalNum = Integer.parseInt(String.valueOf(searchPageDataParentOrder.getPagination()
+							.getTotalNumberOfResults()));
+					orderHistoryListData.setTotalNoOfOrders(totalNum);
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-
-					start = currentPage * pageSizeConFig;
-					end = start + pageSizeConFig;
-
-					if (end > orderTrackingListWsDTO.size())
-					{
-						end = orderTrackingListWsDTO.size();
-					}
-					if (start < orderTrackingListWsDTO.size() && start <= end)
-					{
-						orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
-						orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-					else
-					{
-						orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
-					}
+					orderHistoryListData.setOrderData(orderTrackingListWsDTO);
+					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else
 				{
@@ -9989,7 +9977,6 @@ public class UsersController extends BaseCommerceController
 		}
 		return orderHistoryListData;
 	}
-
 
 	/**
 	 * @return the mplProductWebService
