@@ -1,3 +1,6 @@
+<%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <head>
 <title>${pageTitle}</title>
 <meta charset="utf-8">
@@ -29,7 +32,57 @@
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 <!-- Latest compiled JavaScript -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<c:choose>
+			<c:when test="${isCategoryPage}">
+			
+			<c:set var="titleSocialTags" value="${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}"/>
+			 
+			</c:when>
+			<c:otherwise>
+			<c:set var="titleSocialTags" value="${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}"/>
+				 
+			</c:otherwise>
+</c:choose>	
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
+<meta name="apple-itunes-app" content="app-id=1101619385">
+<meta name="google-play-app" content="app-id=com.tul.tatacliq">
+<meta http-equiv="Content-Type" content="text/html"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="keywords" content="${keywords}">
+<meta name="description" content="${description}">
+<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
+<meta itemprop="name" content="${titleSocialTags}">
+<%-- <meta itemprop="description" content="${metaDescription}"> --%>
+<meta name="twitter:card" content="summary_large_image">	
+<meta name="twitter:title" content="${titleSocialTags}">
+<meta name="twitter:site" content="${twitterHandle}">	
+<%-- <meta name="twitter:description" content="${metaDescription}"> --%>
+<meta property="og:title" content="${titleSocialTags}" />
+<%-- <meta property="og:url" content="${canonical}" /> --%>
+
+<%-- <meta property="og:description" content="${metaDescription}" /> --%>
+<meta property="og:site_name" content="${siteName}" />
+<meta property="fb:app_id" content="484004418446735"/>
+<meta property="al:ios:app_store_id" content="1101619385" />
+<%-- <meta property="al:ios:url" content="${canonical}" /> --%>
+<meta property="al:ios:app_name" content="Tata Cliq" />
+<meta property="al:android:package" content="com.tul.tatacliq" />
+<%-- <meta property="al:android:url" content="${canonical}" /> --%>
+<meta property="al:android:app_name" content="Tata Cliq" />
+
+<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta property="og:image" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
+	<meta property="og:image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
 
 <style amp-custom>
 @font-face {
