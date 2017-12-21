@@ -69,9 +69,9 @@
 						<amp-list class="autosuggest-box"
 							layout="fixed-height"
 							height="140"
-							src="https://www.tatacliq.com/search/autocomplete/MplEnhancedSearchBox?term="
+							src="/search/autocomplete/MplEnhancedSearchBox?term="
 							[src]="term.length>2 ?
-								autosuggest.endpoint :
+								autosuggest.endpoint + term + '&category=' + categoryId :
 								autosuggest.emptyAndInitialTemplateJson"
 							id="autosuggest-list">
 							<template type="amp-mustache">
@@ -92,7 +92,7 @@
 										tabindex="0"
 										on="tap:autosuggest-list.hide"
 										option="{{name}}">
-                    <a href="https://www.tatacliq.com/search/page-1?q={{searchTerm}}%3Arelevance%3Abrand%3A{{code}}%3AisLuxuryProduct%3Afalse&text={{searchTerm}}&searchCategory=all">in {{name}}</a>
+                    <a href="/search/page-1?q={{searchTerm}}%3Arelevance%3Abrand%3A{{code}}%3AisLuxuryProduct%3Afalse&text={{searchTerm}}&searchCategory=all">in {{name}}</a>
                   </div>
 									{{/brands}} {{^brands}}
 									{{/brands}}
@@ -103,7 +103,7 @@
 										tabindex="0"
 										on="tap:autosuggest-list.hide"
 										option="{{name}}">
-                    <a href="https://www.tatacliq.com/search/page-1?q={{searchTerm}}%3Arelevance%3Acategory%3A{{code}}%3AisLuxuryProduct%3Afalse&text={{searchTerm}}&searchCategory=all">in {{name}}</a>
+                    <a href="/search/page-1?q={{searchTerm}}%3Arelevance%3Acategory%3A{{code}}%3AisLuxuryProduct%3Afalse&text={{searchTerm}}&searchCategory=all">in {{name}}</a>
                   </div>
 									{{/categories}} {{^categories}}
 									{{/categories}}
@@ -116,15 +116,15 @@
 					<script type="application/json">
 						{
 							"category": "",
-							"endpoint": "/json/searchdata.json",
+							"endpoint": "/search/autocomplete/MplEnhancedSearchBox?term=",
 							"emptyAndInitialTemplateJson": {"items": [{
 								"suggestions": [],
 								"products": [],
-                "categories": [],
-                "searchTerm": "",
-                "brands": []
+                				"categories": [],
+                				"searchTerm": "",
+                				"brands": []
 							}]},
-              "searchInBrand": "https://www.tatacliq.com/search/page-1?q="
+              				"searchInBrand": "/search/page-1?q="
 						}
 					</script>
 				</amp-state>
