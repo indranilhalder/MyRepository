@@ -247,6 +247,8 @@ import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
+import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
+import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -492,6 +494,20 @@ public class UsersController extends BaseCommerceController
 	
 	@Autowired
 	private MplEGVCartService mplEGVCartService;
+	
+	@Resource(name = "mplWebFormFacade")
+	private MplWebFormFacade mplWebFormFacade;
+
+	@Autowired
+	private ExtendedUserServiceImpl userexService;
+	
+	@Resource(name = "oauthTokenService")
+	private OAuthTokenService oauthTokenService;
+	@Autowired
+	private MplCustomerProfileFacade mplCustomerProfileFacade;
+
+	@Resource(name = "i18NFacade")
+	private I18NFacade i18NFacade;
 
 
 	//Sonar Fix
@@ -10082,7 +10098,7 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @param emailId
 	 * @throws RequestParameterException
-	 * @throws WebserviceValidationException
+	 * @throws WebserviceValidationException	
 	 * @throws MalformedURLException
 	 */
 

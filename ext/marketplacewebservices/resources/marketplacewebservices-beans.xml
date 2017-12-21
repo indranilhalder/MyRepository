@@ -1488,7 +1488,6 @@
 		<property name="resendAttemptedCount" type="int"/>
 		<property name="egvCardNumber" type="String" />
 		<property name="giftCardStatus" type="String" />
-		<property name="isCDA" type="boolean" />
 		<property name="isWalletPay" type="boolean" />
 		<property name="walletTransactionId" type="String" />
 

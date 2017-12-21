@@ -36,6 +36,18 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 { "PMD", "deprecation" })
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
+	
+	//TPR-7408 starts here
+		public static final String COSTCENTREONE = "promoCostCentreOnePercentage".intern();
+		public static final String COSTCENTRETWO = "promoCostCentreTwoPercentage".intern();
+		public static final String COSTCENTRETHREE = "promoCostCentreThreePercentage".intern();
+		
+		public static final String PRODUCTPROMOCOSTCENTREONE = "promoProductCostCentreOnePercentage".intern();
+		public static final String PRODUCTPROMOCOSTCENTRETWO = "promoProductCostCentreTwoPercentage".intern();
+		public static final String PRODUCTPROMOCOSTCENTRETHREE = "promoProductCostCentreThreePercentage".intern();
+		public static final String CARTPROMOCOSTCENTREONE = "promoCartCostCentreOnePercentage".intern();
+		public static final String CARTPROMOCOSTCENTRETWO = "promoCartCostCentreTwoPercentage".intern();
+		public static final String CARTPROMOCOSTCENTRETHREE = "promoCartCostCentreThreePercentage".intern();
 
 	//TPR-6272 starts here IQA
 	public static final String COMMACONSTANT = ",";
@@ -1181,6 +1193,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CODE = "code".intern();
 	public static final String MPL = "mpl".intern();
 	public static final String FREE = "Free".intern();
+	public static final String FORCED = "Forced".intern();
 	public static final String JUSPAYMERCHANTKEYNOTFOUND = "No juspay MerchantKey is defined in local properties";
 	public static final String JUSPAYMERCHANTIDNOTFOUND = "No juspay MerchantId is defined in local properties";
 	public static final String FACEBOOK = "Facebook";
@@ -1913,6 +1926,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGEDET = "messageDet".intern();
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
+	
+	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+	public static final String PROMOURL = "promoUrl".intern();
+	public static final String BUNDLEPROMOLINKTEXT = "bundlePromoLinkText".intern();
 
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
@@ -2376,7 +2393,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CRM_WEBFORM_TICKET_SUB = "crm.ticketsubtype.nodel1";
 	public static final String CRM_WEBFORM_TICKET_SUB_ORDER = "O";
 	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
-
-
-
+	public static final String PAYTM = "Paytm".intern();//Paytm
+	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId} in ("
+			.intern();
+   public static final String POS_QUERY_FOR_SELLER_AND_SLAVE2 = ") and {pos.active}=?active".intern();
+   public static final String POS_ACTIVE = "active".intern();
+	public final static String PINCODE_MODEL_PDP = "PincodeModelPDP".intern();
+	public static final String STORE_DISPLAY_PDP = "pdp.store.display".intern();
 }

@@ -38,6 +38,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -161,7 +162,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 				if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
 				{
-					final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerOfferCount(restrictionList, this.getCode(),
+					 MplLimitedOfferData data = getMplPromotionHelper().checkCustomerOfferCount(restrictionList, this.getCode(),
 							order);
 					isExhausted = data.isExhausted();
 				}

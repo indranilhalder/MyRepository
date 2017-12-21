@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
+
 import java.util.List;
 
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -16,7 +18,9 @@ public interface MplDeliveryCostDao
 {
 	MplZoneDeliveryModeValueModel getDeliveryCost(String deliveryCode, String currencyIsoCode, String sellerArticleSku);
 
-	List<MplZoneDeliveryModeValueModel> getDeliveryModesAndCost(final String currencyIsoCode, String sellerArticleSku);
+	MplZoneDeliveryModeValueModel getDeliveryCost(String deliveryCode, String currencyIsoCode, String sellerArticleSku,
+			String fulfillmentType);
 	
 	public DeliveryModeModel getDelieveryMode(String deliveryCode);
+	List<MplZoneDeliveryModeValueModel> getDeliveryModesAndCost(final String currencyIsoCode, String sellerArticleSku);
 }

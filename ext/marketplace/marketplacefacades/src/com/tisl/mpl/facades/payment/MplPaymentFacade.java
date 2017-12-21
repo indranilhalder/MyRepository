@@ -34,6 +34,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 
 
 /**
@@ -425,7 +426,7 @@ public interface MplPaymentFacade
 	 */
 	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
 			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
-			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions, AdapterException;
+			String returnUrl, String uid, String channel, double amount) throws EtailNonBusinessExceptions, AdapterException;
 
 
 	/**
@@ -517,5 +518,19 @@ public interface MplPaymentFacade
 	 */
 	public String getPaytmOrderStatus(String juspayOrderId, String paymentMethodType, String paymentMethod,
 			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
+	
+	
+	/**
+	 * @param guid
+	 * @param orderToBeUpdated
+	 * @return
+	 */
+	public QCRedeeptionResponse createQCOrderRequest(String guid, AbstractOrderModel orderToBeUpdated, final String WalletId,
+			String cliqCashPaymentMode, final String qcTransactionId, String channel, double walletTotal, double juspayAmount);
+
+	/**
+	 * @return
+	 */
+	public String generateQCCode();
 
 }
