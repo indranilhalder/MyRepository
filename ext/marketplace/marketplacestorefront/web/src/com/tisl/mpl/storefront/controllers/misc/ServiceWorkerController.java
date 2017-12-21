@@ -24,8 +24,8 @@ import com.tisl.mpl.facade.cms.MplCmsFacade;
 public class ServiceWorkerController
 {
 
-	@Resource(name = "mplCmsFacade")
-	private MplCmsFacade mplCmsFacade;
+	//@Resource(name = "mplCmsFacade")
+	//private MplCmsFacade mplCmsFacade;
 
 	/**
 	 * Data needs to be fetched from persistence layer
