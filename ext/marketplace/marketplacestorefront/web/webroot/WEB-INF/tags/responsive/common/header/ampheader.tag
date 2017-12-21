@@ -18,8 +18,8 @@
 <script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
 <!--AMP HTML files require a canonical link pointing to the regular HTML. If no HTML version exists, it should point to itself.-->
 <link rel="canonical" href="/pwamp">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+<!-- <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> -->
 <link rel="manifest" href="/manifest.json">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black">
 
@@ -31,7 +31,48 @@
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
 
-<style amp-custom>body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFFFFF;}
+<style amp-custom>
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Montserrat Regular'), local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v12/zhcz-_WihjSQC0oHJ9TCYL3hpw3pgy2gAi-Ip7WPMi0.woff) format('woff');
+}
+body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFFFFF;}
+/*ICONS CSS*/
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0');
+    src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+.fa-navicon:before, .fa-reorder:before, .fa-bars:before {content: "\f0c9";}
+.fa-search:before {content: "\f002";}
+.fa-user:before {content: "\f007";}
+.fa-heart:before {content: "\f004";}
+.fa-mobile-phone:before, .fa-mobile:before {content: "\f10b";}
+.fa-angle-right:before {content: "\f105";}
+.fa-angle-down:before {content: "\f107";}
+/*social icons*/
+.fa-google-plus:before {content: "\f0d5";}
+.fa-facebook-f:before, .fa-facebook:before {content: "\f09a";}
+.fa-twitter:before {content: "\f099";}
+.fa-instagram:before {content: "\f16d";}
+.fa-youtube:before {content: "\f167";}
+.fa-android:before {content: "\f17b";}
+.fa-apple:before {content: "\f179";}
+/*ICONS CSS*/
 
 p a{display:inline;}
 
@@ -57,12 +98,30 @@ p{
 
 a{text-decoration:none;}
 
+.top-header {display: -webkit-box; border-bottom: 2px solid #000;}
+
+.top-header > a {
+  width: 50%;
+  display: inline;
+  padding: 4px 0;
+  float: left;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  font-size: 11px;
+}
+
+.top-header > a:first-child {color: #a9143c;}
+.top-header > a:last-child {color: #fff; background-color: #000;}
+
 header{
-	position:fixed;
+	position:sticky;
 	/*height:60px;*/
 	background-color:#fff;
+  display: table;
 	width:100%;
-	z-index:99999;
+	z-index:99;
+  top: 0;
 }
 
 .header-icon-1, .header-icon-2, .header-icon-3, .header-search-section{
@@ -84,7 +143,30 @@ header{
   display: inline-block;
 }
 
+.header-icon-2 a {
+  background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -383px -145px;
+  width: 20px;
+  line-height: 30px;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.header-icon-2 a span {
+  margin-left: -20px;
+  width: 22px;
+  display: inline-block;
+  background-color: #000;
+  line-height: 16px;
+  font-size: 11px;
+  color: #fff;
+  text-align: center;
+  border: 2px solid #fff;
+  border-radius: 10px;
+}
+
 .header-icon-1 {z-index: 10;}
+
+.header-icon-1 .fa-navicon {font-size: 20px;}
 
 .header-icon-2{
 	right:0px;
@@ -131,7 +213,7 @@ header{
 
 .l3-accordian { background-color: #c5c4c4;}
 
-.sidebar-menu amp-accordion ul li {padding-left: 35px; line-height: 40px; background-color: #b9b8b8; border-bottom: 1px solid #e6e6e6;}
+.sidebar-menu amp-accordion > section > ul > li {padding-left: 35px; line-height: 40px; background-color: #b9b8b8; border-bottom: 1px solid #e6e6e6;}
 
 .l1-options {padding-left: 15px;}
 .l2-options {padding-left: 20px;}
@@ -522,12 +604,12 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 }
 
 @media (max-width: 480px) {
-	#topDealsCompCarousel amp-carousel, #whatToBuyCompCarousel amp-carousel, #hotNowCompCarousel amp-carousel {
+	#topDealsCompCarousel amp-carousel, #topDealsCompCarousel amp-list, #hotNowCompCarousel amp-carousel, #hotNowCompCarousel amp-list {
 		/*give important*/
-		max-height: 180px;
+		max-height: 220px;
 	}
 
-  #topDealsCompCarousel amp-list, #whatToBuyCompCarousel amp-list, #hotNowCompCarousel amp-list {
+  #whatToBuyCompCarousel amp-carousel, #whatToBuyCompCarousel amp-list {
 		/*give important*/
 		max-height: 180px;
 	}
@@ -558,7 +640,7 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 
 @media(max-width: 480px) {
 	#topDealsComp {padding: 5px 0px 15px;}
-	.topDealsItem {width: 120px; height: 180px;}
+	.topDealsItem {width: 140px; height: 200px;}
 }
 
 /*Brand Studio CSS*/
@@ -619,7 +701,7 @@ p {margin: 0;}
 
 @media(max-width: 480px) {
 	#whatToBuyComp {padding: 5px 0px;}
-	.whatToBuyItem {width: 128px; height: 160px;}
+	.whatToBuyItem {width: 140px; height: 180px;}
 }
 
 /*New In*/
@@ -706,34 +788,45 @@ p {margin: 0;}
 	.inspireMeThree {display: none;}
 }
 
-.ampTabContainer {
+.a2z-section {
+  color: #3a3a3a;
+  font-weight: 600;
+}
+
+.a2zTabContainer {
     display: flex;
     flex-wrap: wrap;
+    margin: 0;
 }
 
-.tabButton[selected] {
+.a2zTabButton[selected] {
     outline: none;
-    border-bottom: 2px solid grey;
+    color: #a9133d;
+    border-bottom: 2px solid #a9133d;
 }
 
-.tabButton {
-		margin: 10px 20px;
+.a2zTabButton {
     list-style: none;
     flex-grow: 1;
     text-align: center;
     cursor: pointer;
 }
 
-.tabContent {
-		margin: 10px 20px;
-		padding: 20px;
+.a2zTabContent {
+		padding-left: 10px;
     display: none;
-    width: 100%;
+    width: -webkit-fill-available;
     order: 1; /* must be greater than the order of the tab buttons to flex to the next line */
-    border: 1px solid #ccc;
+    border-top: 2px solid #000;
+    max-height: 300px;
+    overflow: auto;
 }
 
-.tabButton[selected]+.tabContent {
+.a2zTabContent ul li {list-style-type: none; padding-left: 15px;}
+
+.a2zTabContent ul h3 {font-size: 24px; font-weight: 600; margin: 0;}
+
+.a2zTabButton[selected]+.a2zTabContent {
     display: block;
 }
 

@@ -3,12 +3,16 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
-<html ⚡>
+<html amp>
 <header:ampheader/>
 <body on="tap:AMP.setState({visible: false})" role="menu" tabindex="0">
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.host.adobe')" var="host"/>
 <c:set var="base" value="https://${host}"/>
 <!-- <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker> -->
+	<div class="top-header">
+	    <a href="#">Marketplace</a>
+	    <a href="#">Luxury</a>
+	  </div>
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
 		<!-- <a href="index.php" class="header-logo"><img src="./images/logo.png" /></a> -->
@@ -19,7 +23,7 @@
 					<amp-img class="logo-image" width="50" height="30" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
 				</section>
 			</section>
-      <section class="header-search-center desktop-item" [class]="visible ? 'header-search-center mobile-item' : 'desktop-item'">
+      <section class="header-search-center desktop-item" [class]="visible ? 'header-search-center mobile-item' : 'header-search-center desktop-item'">
 					<!-- <input class="header-search-input" autocomplete placeholder="Search in Marketplace" /> -->
 					<section class="department-menu desktop-item">
 						<span><span [text]="category">All</span> <i class="fa fa-angle-down"></i></span>
@@ -62,7 +66,6 @@
 						[class]="(showDropdown && term) ?
 							'autosuggest-container' :
 							'autosuggest-container hidden'">
-							<!-- autosuggest.endpoint + term + '&category=' + categoryId -->
 						<amp-list class="autosuggest-box"
 							layout="fixed-height"
 							height="140"
@@ -127,11 +130,10 @@
 				</amp-state>
       </section>
 		</section>
-		<a href="#" class="header-icon-2 mobile-item"><i class="fa fa-shopping-bag"></i></a>
+		<p class="header-icon-2 mobile-item"><a href="/cart"><span class="responsive-bag">0</span></a></p>
 		<p class="header-icon-3 mobile-item"><i tabindex="1" role="main" on="tap:AMP.setState({visible: !visible}), search_autocomplete.focus" class="">&nbsp;</i></p>
 	</header>
 
-	<div class="header-clear"></div>
 	<amp-sidebar id="sidebar" layout="nodisplay" side="left">
 		<amp-accordion class="sidebar-menu l1-accordian">
 			<section>
@@ -172,6 +174,117 @@
 				<h4 class="l1-options">Brand<i class="fa fa-angle-right"></i></h4>
         <amp-accordion class="sidebar-menu l2-accordian">
         <c:forEach items="${shopByBrandDataList}" var="shopByBrands">
+        <c:choose>
+        	<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
+        	          <section>
+            <h4 class="l2-options">A-Z List<i class="fa fa-angle-right"></i></h4>
+            <div class="a2z-section">
+              <amp-selector role="tablist"
+        				layout="container"
+        				class="a2zTabContainer">
+        				<div role="tab"
+        					class="a2zTabButton"
+        					selected
+        					option="a">A-E</div>
+        				<div role="tabpanel"
+        					class="a2zTabContent">
+        					<div>
+                    <ul class="a-z-ul">
+                				<h3>A</h3>
+                				<li class="a-z-li"><a href="/apple/c-mbh12e00008">Apple</a></li>
+                				<li class="a-z-li"><a href="/asics/c-mbh13f00013">Asics</a></li>
+                				<li class="a-z-li"><a href="/asus/c-mbh12e00093">Asus</a></li>
+                				<li class="a-z-li"><a href="/and/c-mbh11a00015">AND</a></li>
+                				<li class="a-z-li"><a href="/allen-solly/c-mbh11a00023">Allen Solly</a></li>
+                				<li class="a-z-li"><a href="/ascot/c-mbh11a00248">Ascot</a></li>
+                				<li class="a-z-li"><a href="/aurelia/c-mbh11a00005">Aurelia</a></li>
+                				<li class="a-z-li"><a href="/avirat/c-mbh11a00272">Aviraté</a></li>
+                				<li class="a-z-li"><a href="/amante/c-mbh11a00038">Amante</a></li>
+                		</ul>
+                		<ul class="a-z-ul">
+                				<h3>B</h3>
+                				<li class="a-z-li"><a href="/bajaj/c-mbh12e00055">Bajaj</a></li>
+                				<li class="a-z-li"><a href="/blue-star/c-mbh12e00068">Blue Star</a></li>
+                				<li class="a-z-li"><a href="/basics/c-mbh11a00103">Basics</a></li>
+                				<li class="a-z-li"><a href="/bang-olufsen/c-mbh12e00494">Bang &amp; Olufsen</a></li>
+                				<li class="a-z-li"><a href="/bissell/c-mbh12e00261">Bissell</a></li>
+                				<li class="a-z-li"><a href="/bombay-paisley/c-mbh11a00174">Bombay Paisley</a></li>
+                				<li class="a-z-li"><a href="/bosch/c-mbh12e00026">Bosch</a></li>
+                				<li class="a-z-li"><a href="/braun/c-mbh12e00041">Braun</a></li>
+                				<li class="a-z-li"><a href="/buckaroo/c-mbh13f00020">Buckaroo</a></li>
+                				<li class="a-z-li"><a href="/breaking-bad/c-mbh11a00310">Breaking Bad</a></li>
+                				<li class="a-z-li"><a href="/bodybasics/c-mbh11a00273">Bodybasics</a></li>
+                				</ul>
+                		<ul class="a-z-ul">
+                				<h3>C</h3>
+                				<li class="a-z-li"><a href="/croma/c-mbh12e00048">Croma</a></li>
+                				<li class="a-z-li"><a href="/colorplus/c-mbh11a00094">ColorPlus</a></li>
+                				<li class="a-z-li"><a href="/converse/c-mbh13a00142">Converse</a></li>
+                				<li class="a-z-li"><a href="/cottonworld/c-mbh11a00008">Cottonworld</a></li>
+                				<li class="a-z-li"><a href="/crocs/c-mbh13f00032">Crocs</a></li>
+                				<li class="a-z-li"><a href="/calvin-klein/c-mbh11a00059">Calvin Klein</a></li>
+                				<li class="a-z-li"><a href="/chef-pro/c-mbh12e00257">Chef Pro</a></li>
+                				<li class="a-z-li"><a href="/canon/c-mbh12e00010">Canon</a></li>
+                				<li class="a-z-li"><a href="/circle/c-mbh12e00081">Circle</a></li>
+                				<li class="a-z-li"><a href="/corioliss/c-mbh12e00857">Corioliss</a></li>
+                				</ul>
+                		<ul class="a-z-ul">
+                				<h3>D</h3>
+                				<li class="a-z-li"><a href="/dell/c-mbh12e00011">Dell</a></li>
+                				<li class="a-z-li"><a href="/dlink/c-mbh12e00074">Dlink</a></li>
+                				<li class="a-z-li"><a href="/dr-morepen/c-mbh12e00364">Dr Morepen</a></li>
+                				<li class="a-z-li"><a href="/disney/c-mbh11a00145">Disney</a></li>
+                				<li class="a-z-li"><a href="/da-vinchi/c-mbh13f00091">Da Vinchi</a></li>
+                				<li class="a-z-li"><a href="/duracell/c-mbh12e00590">Duracell</a></li>
+                				<li class="a-z-li"><a href="/digisol/c-mbh12e00127">DigiSol</a></li>
+            				</ul>
+                		<ul class="a-z-ul">
+                				<h3>E</h3>
+                				<li class="a-z-li"><a href="/eureka-forbes/c-mbh12e00014">Eureka Forbes</a></li>
+                				<li class="a-z-li"><a href="/easies/c-mbh11a00190">Easies</a></li>
+                				<li class="a-z-li"><a href="/eta/c-mbh11a00175">ETA</a></li>
+                				<li class="a-z-li"><a href="/electrolux/c-mbh12e00100">Electrolux</a></li>
+                				<li class="a-z-li"><a href="/eveready/c-mbh12e00286">Eveready</a></li>
+                				<li class="a-z-li"><a href="/energizer/c-mbh12e00382">Energizer</a></li>
+                				<li class="a-z-li"><a href="/elac/c-mbh12e01528">Elac</a></li>
+                				<li class="a-z-li"><a href="/envent/c-mbh12e01152">Envent</a></li>
+            				</ul>
+                  </div>
+        				</div>
+        				<div role="tab"
+        					class="a2zTabButton"
+        					option="b">F-J</div>
+                <div role="tabpanel"
+        					class="a2zTabContent">
+        					F to J
+          			</div>
+        				<div role="tab"
+        					class="a2zTabButton"
+        					option="c">K-O</div>
+                <div role="tabpanel"
+        					class="a2zTabContent">
+        					K to O
+        				</div>
+                <div role="tab"
+        					class="a2zTabButton"
+        					option="d">P-T</div>
+                <div role="tabpanel"
+        					class="a2zTabContent">
+        					P to T
+        				</div>
+                <div role="tab"
+        					class="a2zTabButton"
+        					option="e">U-Z</div>
+                <div role="tabpanel"
+        					class="a2zTabContent">
+        					U to Z
+        				</div>
+        			</amp-selector>
+            </div>
+          </section>
+        	
+        	</c:when>
+        <c:otherwise>
           <section>
             <h4 class="l2-options">${shopByBrands.masterBrandName}<i class="fa fa-angle-right"></i></h4>
             <ul>
@@ -179,7 +292,10 @@
               <li><a href="${subShopByBrand.subBrandUrl}">${subShopByBrand.subBrandName}</a></li>
              </c:forEach>
             </ul>
-          </section>
+          </section>        
+        </c:otherwise>
+        </c:choose>
+
           </c:forEach>
         </amp-accordion>
 			</section>
@@ -223,9 +339,9 @@
 		</div>
 		<div>
 			<div id="topDealsCompCarousel">
-			<amp-list src="/pwamp/getBestPicks?version=Online" height="320" layout="fixed-height">
+			<amp-list src="/pwamp/getBestPicks?version=Online" height="360" layout="fixed-height">
 			<template type="amp-mustache">
-				<amp-carousel height="320" layout="fixed-height" type="carousel">
+				<amp-carousel height="360" layout="fixed-height" type="carousel">
 				{{#subItems}}
 					<div class="topDealsItem">
 						<div class="topDealsItemImg">
@@ -279,7 +395,6 @@
 		</div> -->
 	</div>
 
-  <br />&nbsp;
 	<!-- What To Buy Now -->
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
