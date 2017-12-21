@@ -3370,9 +3370,8 @@ ACC.singlePageCheckout = {
 		
 	  if(ACC.singlePageCheckout.getIsResponsive()) { //for responsive view	
 		   if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
-			  recalculateCart();
-		      ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
-			  setTimeout(function(){ ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId); }, 3000);
+			   recalculateCart(false,offerID,radioId);
+
 		   } else {
 			   //ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
 			   if($( "#"+radioId ).hasClass( "promoapplied" )) { // need release
