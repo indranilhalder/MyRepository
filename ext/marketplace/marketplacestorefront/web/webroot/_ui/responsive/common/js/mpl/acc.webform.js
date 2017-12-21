@@ -377,7 +377,7 @@ ACC.WebForm = {
 						// call default first page
 						$(".orderDrop").html(htmlOption);
 						$("#totalPages").val(data.totalOrderLines);
-						$("#pageSize").val(data.pageSize);
+						//$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
 						ACC.WebForm.loadPaginationLink(data.totalOrderLines);
 
