@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
 public class DuplicateTicketMasterXMLData
 {
 	private String customerID;
-	private String HSOOrderID;
+	private String hsoOrderId;
 	private String subOrderId;
 	private String ticketType;
 	private String transactionId;
@@ -196,19 +196,22 @@ public class DuplicateTicketMasterXMLData
 	 * @return the hSOOrderID
 	 */
 	@XmlElement(name = "hsoOrderId")
-	public String getHSOOrderID()
+	public String getHsoOrderId()
 	{
-		return HSOOrderID;
+		return hsoOrderId;
 	}
 
 	/**
-	 * @param hSOOrderID
-	 *           the hSOOrderID to set
+	 * @param hsoOrderId
+	 *           the hsoOrderId to set
 	 */
-	public void setHSOOrderID(final String hSOOrderID)
+	public void setHsoOrderId(final String hsoOrderId)
 	{
-		HSOOrderID = hSOOrderID;
+		this.hsoOrderId = hsoOrderId;
 	}
+
+
+
 
 
 
