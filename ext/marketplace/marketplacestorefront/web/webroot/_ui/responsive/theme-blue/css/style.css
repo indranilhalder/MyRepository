@@ -78390,3 +78390,13 @@ span#offer_section_responsive_error_msg {
     margin-left: :19px;
 }
 /* TISPRDT-7991 */
+/* TISPRDT-8004 */
+
+@media screen and (max-width: 767px) {
+	textarea#comments,
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnSubReason,
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason
+ {
+   	 width: 80%;
+	}
+}
