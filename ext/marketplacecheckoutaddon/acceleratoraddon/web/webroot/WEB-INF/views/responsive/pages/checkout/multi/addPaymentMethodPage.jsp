@@ -1463,6 +1463,13 @@
     left: 0;
     clear: both;
 }
+}
+span#juspayErrorMsg {
+    margin-left: 17px !important;
+}
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
+    min-height: 0px !important;
+}
 .global-alerts button.close{
     float: left !imporatnt;
     left: -7px !imporatnt;

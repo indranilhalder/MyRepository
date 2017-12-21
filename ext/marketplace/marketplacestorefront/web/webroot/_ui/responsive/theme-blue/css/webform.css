@@ -655,3 +655,10 @@ div#textarea_feedback {
     color: #999;
     font-size: 12px;
 }
+/* TISPRDT-8001 */
+@media ( max-width :768px) {
+	.selectOrders .prodInfo .prodTxt .prodShiping {
+		width:20%;
+	}
+}
+/* TISPRDT-8001 */
