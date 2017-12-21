@@ -199,7 +199,86 @@
 				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive">
 				      <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			       </button>	
+			     <button type="button" class="button topPlaceOrderBtn cliqCashPlaceOrderBtnMobile"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')" var="walletEnable"/>
+<!-- Added for Wallet -->
+<c:if test="${walletEnable}">
+<div class="giftCheckoutContainer">
+  <div id="walletContainerId" class="giftCheckoutContainerTable">
+		<div class="clearfix">
+			<div class="col-md-3">
+				<div class="giftInfoLeft">
+					<table>
+						<tr>
+							<td class="giftWalletImg"><img src="\_ui\responsive\common\images\walletImg.png" alt="wallet" /></td>
+							<td class="cliqTotalBalance"><p><strong><spring:theme code="text.cliq.cash.payment.cliqcash.label" /></strong></p><p class="cliqTotalBalanceLabel"><spring:theme code="text.cliq.cash.payment.total.label" /><strong>&#8377; 0</strong></p></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="col-md-9 giftCheckoutInfoMiddle">
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p>&#8377; <span id="qcCashId"><strong>0</strong></span></label></div>
+				</div>
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p>&#8377; <span id="qcGiftCardId"><strong>0</strong></span></label></div>
+				</div>
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols3"><label for="rewardPoints"><p><spring:theme code="text.cliq.cash.payment.points.label"/></p><p id="qcPointsId"><strong>0</strong></p></label></div>
+				</div>
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols4">
+						<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
+							<span id="useGiftBtnText"><spring:theme code="text.cliq.cash.payment.use.label"/></span>
+							<span id="unUseGiftBtnText"><spring:theme code="text.cliq.cash.payment.remove.label" /></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="giftInfoBottom">
+					<div class="addNewGiftCard">
+					
+					<div class="modal fade" id="singlePageAddEGVPopup">
+						<div class="content">
+							<span id="modalBody"></span>
+							<!-- <button class="close" data-dismiss="modal"></button> -->
+						</div>
+						<div class="overlay" data-dismiss="modal">
+						</div>
+					</div>
+					<c:choose>
+				<c:when test="${isCustomerWalletActive}">
+						<span class="addNewCard" onclick="showAddEGV();"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
+				</c:when>
+				<c:otherwise>
+				       <span class="addNewCard" style="display: none;"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
+				</c:otherwise>
+				</c:choose>
+					
+						
+						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
+					</div>
+					<br />
+					<spring:theme code="text.cliq.cash.payment.addcash.label"  var="addCliqCash"/>
+					<spring:theme code="text.cliq.cash.usecash.label" var="useCliqCash" /> 
+					<spring:theme code="text.cliq.cash.payment.juspyamt.label" var="useJuspay" /> 
+					<spring:theme code="text.cliq.cash.payment.juspyamt1.label" var="useJuspay1" />
+					<spring:theme code="text.cliq.cash.loadingcash.label" var="loadingCliqCash" /> 
+					<div class="payRemainingDesc" data-addCliqCash="${addCliqCash}" data-useCliqCash="${useCliqCash}" data-useJuspay="${useJuspay}" 
+					     data-useJuspay1="${useJuspay1}" data-loadingCliqCash="${loadingCliqCash}">
+						<i id="addCliqCashId"> </i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
+<br />&nbsp; <br />
+</c:if>
+<!-- End for Wallet -->
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
