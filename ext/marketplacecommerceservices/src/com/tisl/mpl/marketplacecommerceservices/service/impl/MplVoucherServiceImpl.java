@@ -1389,9 +1389,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				double discountCalcValue = 0.0;
 				List<DiscountValue> discountList = orderModel.getGlobalDiscountValues(); //Discount values against the cart
 				String voucherCode = null;
-				if (lastVoucher instanceof PromotionVoucherModel)
+				if (lastVoucher instanceof MplCartOfferVoucherModel)
 				{
-					voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
+					voucherCode = ((MplCartOfferVoucherModel) lastVoucher).getVoucherCode();
 					discountData.setVoucherCode(voucherCode);
 				}
 
@@ -1400,7 +1400,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					for (final DiscountValue discount : discountList)
 					{
-						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(voucherCode))
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
 						{
 							voucherCalcValue = discount.getValue();
 						}
