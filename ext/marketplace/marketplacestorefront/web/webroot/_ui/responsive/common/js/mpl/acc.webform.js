@@ -398,11 +398,12 @@ ACC.WebForm = {
 		var page=(parseInt(total) / parseInt(pageSize));
 		// TISPRDT-7759
 		//console.log("total"+total+"current"+current);
-		if (parseInt(page) >= parseInt(current)) {
+		$('#currentPage').val(parseInt(current) + 1);
+		
+		if (parseInt(page) > parseInt(current)) {
 			//console.log("View more");
 			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
 			$('#viewMoreLink').show();
-			$('#currentPage').val(parseInt(current) + 1);
 		} else {
 			//console.log("View more hide");
 			$('#viewMoreLink').hide();
@@ -412,7 +413,6 @@ ACC.WebForm = {
 			//console.log("View back");
 			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
 			$('#viewBackLink').show();
-			$('#currentPage').val(parseInt(current) - 1);
 		} else {
 			//console.log("View back hide");
 			$('#viewBackLink').hide();
