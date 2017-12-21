@@ -78338,6 +78338,7 @@ button#continue_payment_after_validate {
 /* TISHS-105 start */
 .offer_des li {
     list-style-type: disc !important;
+    line-height: 1.8;
 }
 #paymentoffersPopup .offer_title,
 .offerui .offer_title{
