@@ -43,6 +43,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,8 +153,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
 		OrderProductWsDTO orderproductdto = null;
 		String isGiveAway = "N";
+		String consignmentStatus = null;
+		String currentStatus = null;
+		OrderStatusCodeMasterModel customerStatusModel = null;
 		try
 		{
+			final Map<String, OrderStatusCodeMasterModel> orderStatusCodeMap = orderModelService.getOrderStatusCodeMasterList();
 
 			if (null != orderDetails && StringUtils.isNotEmpty(orderDetails.getType())
 					&& orderDetails.getType().equalsIgnoreCase("Parent")
@@ -256,14 +261,38 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							orderproductdto.setPrice(entry.getAmountAfterAllDisc().getFormattedValue());
 						}
 
-						orderproductdtos.add(orderproductdto);
+						if (entry.getConsignment() != null && entry.getConsignment().getStatus() != null
+								&& StringUtils.isNotEmpty(entry.getConsignment().getStatus().getCode())
+								&& MapUtils.isNotEmpty(orderStatusCodeMap))
+						{
+							consignmentStatus = entry.getConsignment().getStatus().getCode();
+							customerStatusModel = orderStatusCodeMap.get(consignmentStatus);
+							if (null != customerStatusModel && null != customerStatusModel.getResponseStatus())
+							{
+								//TISPRDT-7895
+								currentStatus = customerStatusModel.getResponseStatus();
+							}
+							else
+							{
+								currentStatus = MarketplacecommerceservicesConstants.EMPTY;
+							}
+						}
+						else
+						{
+							currentStatus = MarketplacecommerceservicesConstants.EMPTY;
+						}
+						orderproductdto.setStatusDisplay(currentStatus);
 					}
-				}
 
-				orderhistorydetailsWsDTO.setProducts(orderproductdtos);
+					orderproductdtos.add(orderproductdto);
+				}
 			}
 
+			orderhistorydetailsWsDTO.setProducts(orderproductdtos);
 		}
+
+
+
 
 		catch (final EtailBusinessExceptions e)
 		{
