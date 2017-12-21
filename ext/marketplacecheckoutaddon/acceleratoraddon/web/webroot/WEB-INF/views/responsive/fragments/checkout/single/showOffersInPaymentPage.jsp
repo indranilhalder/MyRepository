@@ -121,9 +121,10 @@
 
 	<!-- 	Desktop tnc popup -->
 <c:choose>
- <c:when test="${responsive_view=='false'}">	
-		<span class="offer_heading">Terms & Conditions</span>
+ <c:when test="${responsive_view=='false'}">
+ <span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
 		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+	</span>	
 		<ul class="offertermsui" id="accordion-tnc">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >
@@ -144,8 +145,9 @@
 		
 	<!-- 	Mobile tnc popup -->
 	
-		<span class="offer_heading">Terms & Conditions</span>
+		<span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
 		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+	</span>
 		<ul class="offertermsui" id="">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >

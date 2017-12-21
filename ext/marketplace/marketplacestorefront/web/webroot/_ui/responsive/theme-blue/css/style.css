@@ -78155,7 +78155,7 @@ ul.offerui {
     padding: 31px 0px 75px 55px !important 
 }
 #paymenttermsoffersPopup .content.offer-content {
-    padding: 31px 47px 75px 44px !important;
+    padding: 21px 47px 75px 44px !important;
     overflow-y: auto;
     width: 733px !important;
     text-align: left;
@@ -78391,6 +78391,7 @@ span#offer_section_responsive_error_msg {
     margin-left: :19px;
 }
 /* TISPRDT-7991 */
+
 /* TISPRDT-8004 */
 
 @media screen and (max-width: 767px) {
@@ -78401,3 +78402,25 @@ span#offer_section_responsive_error_msg {
    	 width: 80%;
 	}
 }
+/* TISPRDT-8004 */
+/* TISPRDT-7983 */
+.tnc-fixed-header{
+	width: 48%;
+    display: inline-block;
+    background: #fff;
+    position: fixed;
+    z-index: 1;
+}
+#paymenttermsoffersPopup ul.offertermsui {
+    margin-top: 86px;
+}
+@media screen and (max-width: 767px) {
+	.tnc-fixed-header{
+	width: 76%;
+    padding-top: 8px;
+	}
+	.tnc-fixed-header button.close {
+		top: 8px !important;
+	}
+}
+/* TISPRDT-7983 */
