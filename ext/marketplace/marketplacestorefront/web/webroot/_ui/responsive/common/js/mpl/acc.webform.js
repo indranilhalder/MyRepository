@@ -379,7 +379,7 @@ ACC.WebForm = {
 						$("#totalPages").val(data.totalOrderLines);
 						//$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
-						ACC.WebForm.loadPaginationLink(data.totalOrderLines);
+						ACC.WebForm.loadPaginationLink(data.totalOrderLines,currentPage);
 
 					}
 					
@@ -391,15 +391,13 @@ ACC.WebForm = {
 			});
 		}
 	},
-	loadPaginationLink : function(total) {
-		var current = $('#currentPage').val();
+	loadPaginationLink : function(total,currentPage) {
 		var pageSize = $('#pageSize').val();
+		$('#currentPage').val(currentPage);
 		
 		var page=(parseInt(total) / parseInt(pageSize));
 		// TISPRDT-7759
 		//console.log("total"+total+"current"+current);
-		$('#currentPage').val(parseInt(current) + 1);
-		
 		if (parseInt(page) > parseInt(current)) {
 			//console.log("View more");
 			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
