@@ -397,19 +397,19 @@ ACC.WebForm = {
 		
 		var page=(parseInt(total) / parseInt(pageSize));
 		// TISPRDT-7759
-		//console.log("total"+total+"current"+current);
-		if (parseInt(page) > parseInt(current)) {
+		console.log("page"+page+"pageSize"+pageSize+"currentPage"+currentPage);
+		if (parseInt(page) > parseInt(currentPage)) {
 			//console.log("View more");
-			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
+			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(currentPage) + 1) + "');");
 			$('#viewMoreLink').show();
 		} else {
 			//console.log("View more hide");
 			$('#viewMoreLink').hide();
 		}
 
-		if (parseInt(current) >= 1) {
+		if (parseInt(currentPage) >= 1) {
 			//console.log("View back");
-			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
+			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(currentPage) - 1) + "');");
 			$('#viewBackLink').show();
 		} else {
 			//console.log("View back hide");
