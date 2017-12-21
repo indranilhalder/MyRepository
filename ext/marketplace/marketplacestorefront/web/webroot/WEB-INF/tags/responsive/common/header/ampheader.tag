@@ -1,6 +1,7 @@
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <head>
 <title>${pageTitle}</title>
 <meta charset="utf-8">
@@ -72,7 +73,16 @@
 <meta property="al:android:package" content="com.tul.tatacliq" />
 <%-- <meta property="al:android:url" content="${canonical}" /> --%>
 <meta property="al:android:app_name" content="Tata Cliq" />
-
+	<c:choose>
+	<c:when test="${fn:contains(reqURI,'/p-')}">	
+	<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" end="0">
+	<meta itemprop="image" content="${container.thumbnail.url}" />
+	</c:forEach>	
+	</c:when>
+	<c:otherwise>
+	<meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}" />
+	</c:otherwise>
+	</c:choose>
 <style amp-custom>
 @font-face {
   font-family: 'Montserrat';
