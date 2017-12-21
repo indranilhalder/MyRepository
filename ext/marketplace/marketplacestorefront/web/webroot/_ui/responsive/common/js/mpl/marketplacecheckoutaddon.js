@@ -11052,7 +11052,7 @@ function getlistofEMIbanks(){
 
 //recalculate cart after review page
 
-function recalculateCart(loadOffer) {
+function recalculateCart(loadOffer,chooseOfferId,offerradioID) {
 
 	var staticHost=$('#staticHost').val();
 	var paymentMode=$("#paymentMode").val();
@@ -11090,15 +11090,20 @@ function recalculateCart(loadOffer) {
 		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 				
-				
-				if(null!=response.voucherDiscount && null!=response.voucherDiscount.loadOffer)
-				{
-					var offerID = response.voucherDiscount.loadOffer; 
-					 ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
-				}else{
-					ACC.singlePageCheckout.populatePaymentSpecificOffers();
+				if(loadOffer) {
+					if(null!=response.voucherDiscount && null!=response.voucherDiscount.loadOffer)
+					{
+						var offerID = response.voucherDiscount.loadOffer; 
+						 ACC.singlePageCheckout.populatePaymentSpecificOffers(offerID);
+					}else{
+						ACC.singlePageCheckout.populatePaymentSpecificOffers();
+					}
 				}
-				
+				if(chooseOfferId != undefined && chooseOfferId != "" && offerradioID != undefined && offerradioID != "") {
+					//apply offer in responsive first time
+					ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
+					ACC.singlePageCheckout.chooseOfferAjaxCall(chooseOfferId,offerradioID);
+				}
 				
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
@@ -11200,7 +11205,22 @@ function recalculateCart(loadOffer) {
 
 		},
 		error : function(resp) {
-          
+			if(ACC.singlePageCheckout.getIsResponsive())
+			{
+				$("#juspayErrorMsg").html("Oops, something went wrong!");
+				$("#juspayconnErrorDiv").css("display","block");
+			}
+		else
+			{
+			   if ( $( "#reviewOrder" ).length ) {
+				   ACC.singlePageCheckout.showAccordion("#reviewOrder"); 			 
+			   }
+			   if($( ".error_msg_backfrom_payment" ).length) {
+				   $('.error_msg_backfrom_payment').html("Oops, something went wrong!");
+				   $('.error_msg_backfrom_payment').css("display","block");
+			   }		
+				
+			}
 		}
 	});
 

@@ -3327,6 +3327,9 @@ ACC.singlePageCheckout = {
         	}
 		if(typeof selectedOffer !== "undefined" && selectedOffer != "") {
 		        ACC.singlePageCheckout.selectPaymentSpecificOffers(selectedOffer);
+	        }else {
+		   $('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
+	           $('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
 	        }
 
             	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
@@ -3367,9 +3370,8 @@ ACC.singlePageCheckout = {
 		
 	  if(ACC.singlePageCheckout.getIsResponsive()) { //for responsive view	
 		   if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
-			  recalculateCart();
-		      ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
-			  setTimeout(function(){ ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId); }, 3000);
+			   recalculateCart(false,offerID,radioId);
+
 		   } else {
 			   //ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
 			   if($( "#"+radioId ).hasClass( "promoapplied" )) { // need release
