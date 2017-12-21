@@ -13817,6 +13817,104 @@
     </typegroup>
 		<!-- END TPR-5733 -->
 		
+		<typegroup name="AMP"> 
+			<itemtype code="AmpServiceworker" autocreate="true" generate="true">
+				<description>Adds new serviceworker details</description>
+				<deployment table="MplAmpServiceworker" typecode="21201" />
+				<attributes>
+				
+					<attribute qualifier="code" type="java.lang.String">
+						<modifiers optional="false" unique="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the cache code</description>
+					</attribute>
+					
+					<attribute qualifier="cacheName" type="java.lang.String">
+						<modifiers optional="false" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the cache name</description>
+					</attribute>
+					
+					<attribute qualifier="cacheVersion" type="java.lang.String">
+						<modifiers optional="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the cache version</description>
+					</attribute>
+					
+					<attribute qualifier="filesToCache" type="java.lang.String">
+						<modifiers optional="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the files to cache</description>
+					</attribute>
+					
+					<attribute qualifier="cachingStrategy" type="java.lang.String">
+						<modifiers optional="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the caching strategy</description>
+					</attribute>
+					
+					<attribute qualifier="serviceworkerJs" type="java.lang.String">
+						<modifiers optional="false" write="true" read="true"/>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Attribute contains the serviceworker</description>
+					</attribute>
+				</attributes>
+				
+			</itemtype>
+			
+			<itemtype code="AmpMenifest" autocreate="true" generate="true">
+				<description>Adds new serviceworker details</description>
+				<deployment table="MplAmpMenifest" typecode="21202" />
+				<attributes>
+				
+					<attribute qualifier="code" type="java.lang.String">
+						<modifiers optional="false" unique="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the menifest code</description>
+					</attribute>
+					
+					<attribute qualifier="menifestJson" type="java.lang.String">
+						<modifiers optional="false" write="true" read="true"/>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Attribute contains the menifest JSON</description>
+					</attribute>
+
+				</attributes>
+				
+			</itemtype>
+		</typegroup>
 
 		
 		<typegroup name="SellerMonograming">
