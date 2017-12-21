@@ -37,7 +37,7 @@
 					<div class="offerchoosesection">
 						<input type="radio" name="offer_name"
 							id="offer_name${status.index}" value="${offerPageData.code}"
-							 onclick="ACC.singlePageCheckout.chooseOffer(this.id,'${offerPageData.code}')">
+							 onclick="ACC.singlePageCheckout.chooseOffer(this.id,this.value)">
 						<label for="offer_name${status.index}" data-id="offercode"
 							class="numbers"> <span class="offer_title">${offerPageData.name}</span></label>
 						<br>
@@ -84,7 +84,7 @@
 					<div class="offerchoosesection">
 						<input type="radio" name="offer_name_more"
 							id="offer_name_pop${status.index}" value="${offerPageData.code}"
-							 onclick="ACC.singlePageCheckout.chooseOffer(this.id,'${offerPageData.code}')">
+							 onclick="ACC.singlePageCheckout.chooseOffer(this.id,this.value)">
 						<label for="offer_name_pop${status.index}" data-id="offercodepop"
 							class="numbers Popup-radio"> <span class="offer_title">${offerPageData.name}</span></label>
 						<br>
