@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -153,7 +155,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -348,21 +350,21 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	/*
 	 * @Override public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final
 	 * PageableData pageableData) {
-	 * 
+	 *
 	 * final CatalogVersionModel catalogmodel =
 	 * catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
 	 * .getString("internal.campaign.catelog"),
 	 * configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
-	 * 
+	 *
 	 * final Map params = new HashMap(); params.put("uid", pageUid); params.put("version", catalogmodel);
-	 * 
+	 *
 	 * final String query =
 	 * "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version"
 	 * ;
-	 * 
+	 *
 	 * return getPagedFlexibleSearchService().search(query, params, pageableData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -472,9 +474,9 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * Fetches all footerLink models
-	 * 
+	 *
 	 * @param void
-	 * 
+	 *
 	 * @return List<MplFooterLinkModel>
 	 */
 
@@ -485,5 +487,38 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStr);
 		final List<MplFooterLinkModel> footerLinks = flexibleSearchService.<MplFooterLinkModel> search(query).getResult();
 		return footerLinks;
+	}
+
+	/*
+	 * Fetches all AmpServiceworker models
+	 *
+	 * @param void
+	 *
+	 * @return List<AmpServiceworkerModel>
+	 */
+	@Override
+	public List<AmpServiceworkerModel> getAllAmpServiceworkers()
+	{
+		final String queryStr = MarketplacecommerceservicesConstants.AMP_SERVICEWORKER_QUERY;
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStr);
+		final List<AmpServiceworkerModel> serviceworkerModels = flexibleSearchService.<AmpServiceworkerModel> search(query)
+				.getResult();
+		return serviceworkerModels;
+	}
+
+	/*
+	 * Fetches all AmpServiceworker models
+	 *
+	 * @param void
+	 *
+	 * @return List<AmpServiceworkerModel>
+	 */
+	@Override
+	public List<AmpMenifestModel> getAllAmpMenifestJsons()
+	{
+		final String queryStr = MarketplacecommerceservicesConstants.AMP_MENIFEST_JSON_QUERY;
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStr);
+		final List<AmpMenifestModel> menifestJsonModels = flexibleSearchService.<AmpMenifestModel> search(query).getResult();
+		return menifestJsonModels;
 	}
 }

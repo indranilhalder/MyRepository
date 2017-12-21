@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -283,4 +285,19 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return mplCmsPageDao.getAllFooterLinks();
 	}
 
+	/**
+	 * @return List<AmpServiceworkerModel>
+	 */
+	public List<AmpServiceworkerModel> getAllAmpServiceworkers()
+	{
+		return mplCmsPageDao.getAllAmpServiceworkers();
+	}
+
+	/**
+	 * @return List<AmpServiceworkerModel>
+	 */
+	public List<AmpMenifestModel> getAllAmpMenifestJsons()
+	{
+		return mplCmsPageDao.getAllAmpMenifestJsons();
+	}
 }
