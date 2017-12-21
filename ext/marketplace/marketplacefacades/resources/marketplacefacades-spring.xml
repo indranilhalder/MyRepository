@@ -1181,8 +1181,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			</property>
 			<!-- TPR-5733 -->
 			<property name="footerLinkConverter" ref="mplFooterLinkConverter" />
-			<property name="ampServiceworkerConverter" ref="ampServiceworkerConverter" />
-			<property name="ampMenifestJsonConverter" ref="ampMenifestJsonConverter" />
+			<!-- <property name="ampServiceworkerConverter" ref="ampServiceworkerConverter" />
+			<property name="ampMenifestJsonConverter" ref="ampMenifestJsonConverter" /> -->
 			</bean>
 			
 			<bean id="luxCmsFacade" class="com.tisl.mpl.facade.cms.LuxCmsFacadeImpl">
