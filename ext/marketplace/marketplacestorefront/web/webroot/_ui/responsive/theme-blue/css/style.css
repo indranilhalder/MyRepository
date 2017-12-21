@@ -73240,7 +73240,7 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
     width: 100%;
     margin: 0px auto;
     padding: 15px;
-    font-size: 12px;/* TISPRDT-7845 */
+    font-size: 12px;
     min-height: 45px;
     height: auto !important;
 }
@@ -78341,8 +78341,8 @@ button#continue_payment_after_validate {
 }
 #paymentoffersPopup .offer_title,
 .offerui .offer_title{
-    width: 92%;
-    word-break: break-all;
+    width: 97%;
+   /*  word-break: break-all; */
     display: inline-block;
     padding-left: 25px;
     vertical-align: sub;
@@ -78354,7 +78354,7 @@ button#continue_payment_after_validate {
 .offerui .offer_des {
     position: relative;
     top: -14px;
-    word-break: break-all;
+    /* word-break: break-all; */
 }
 /* #paymentoffersPopup .max-min-value {
     position: absolute;
@@ -78382,6 +78382,11 @@ button#continue_payment_after_validate {
 /* TISHS-115 end */
 /* TISHS-166 start  */
 .custmCareHelp .issueQuryPopUp p{
-	 word-break: break-all;
+	 /* word-break: break-all; */
 }
 /* TISHS-166 End  */
+/* TISPRDT-7991 */
+span#offer_section_responsive_error_msg {
+    margin-left: :19px;
+}
+/* TISPRDT-7991 */
