@@ -122,7 +122,7 @@
 					type="application/json">
 						{
 							"category": "",
-							"endpoint": "/search/autocomplete/MplEnhancedSearchBox?term=",
+							"endpoint": "/pwamp/autocomplete/MplEnhancedSearchBox?term=",
 							"emptyAndInitialTemplateJson": {"items": [{
 								"suggestions": [],
 								"products": [],
