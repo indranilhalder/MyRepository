@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -36,9 +37,29 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+	@Autowired
+	private ConfigurationService configurationService;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao#getCronDetails(java.lang.String)
 	 */
 	@Override
@@ -77,7 +98,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 		try
 		{
 
-			final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARORDERQUERY;
+			final String queryString = getConfigurationService().getConfiguration().getString("payment.refundclearorderquery");
 			//forming the flexible search query
 			final FlexibleSearchQuery consignmentListQuery = new FlexibleSearchQuery(queryString);
 			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
@@ -223,7 +244,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao#getRefundClearOrders(java.util.Date,
 	 * java.util.Date)
 	 */

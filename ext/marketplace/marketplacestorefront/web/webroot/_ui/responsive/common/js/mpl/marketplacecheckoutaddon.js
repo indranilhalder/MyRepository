@@ -10804,10 +10804,10 @@ function validateCreditAndDebitAndEMICardType(paymentMode) {  //step2 --card no 
 	else if(cardType=='AMEX' && value.length!=15){
 		return false;
 	}
-	else if(cardType=='AMEX' && value.length==15 && ( PaymentMode=='DEBIT')){
+	else if(cardType=='AMEX' && value.length==15 && ( paymentMode=='DEBIT')){
 		return false;
 	}
-	else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || PaymentMode=='CREDIT')){
+	else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || paymentMode=='CREDIT')){
 		return false;
 	}
 	else if(cardType==""){
