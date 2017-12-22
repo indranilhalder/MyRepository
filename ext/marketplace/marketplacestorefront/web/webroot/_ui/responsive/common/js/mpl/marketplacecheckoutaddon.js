@@ -11063,9 +11063,10 @@ function recalculateCart(loadOffer,chooseOfferId,offerradioID) {
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
 	var guid=$("#guid").val();
+	var isResponsive = ACC.singlePageCheckout.getIsResponsive();
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-		data: { 'paymentMode' : paymentMode , 'bankName' : "" , 'guid' : guid , 'isNewCard' : false},
+		data: { 'paymentMode' : paymentMode , 'bankName' : "" , 'guid' : guid , 'isNewCard' : false,'isResponsive':isResponsive},
 		type: "GET",
 		cache: false,
 		dataType:'json',
