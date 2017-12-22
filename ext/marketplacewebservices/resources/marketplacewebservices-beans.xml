@@ -2559,6 +2559,7 @@
 		<property name="errorCode" type="String" />
 
 		<property name="total" type="String" />
+		<property name="discount" type="String" />
 	</bean>
 
 	<!-- TPR-816 -->
