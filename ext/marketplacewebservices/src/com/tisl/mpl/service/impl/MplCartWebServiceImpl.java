@@ -2585,6 +2585,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				cartDetailsData.setDelistedMessage(delistMessage);
 			}
 			cartDataOrdered = mplCartFacade.getSessionCartWithEntryOrderingMobile(cartModel, true, true, false);
+			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			/**** Pincode check Details ***/
 			try
 			{
@@ -3159,8 +3160,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
