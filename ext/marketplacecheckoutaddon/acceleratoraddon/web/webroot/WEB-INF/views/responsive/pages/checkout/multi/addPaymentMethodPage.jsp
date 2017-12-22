@@ -1475,6 +1475,9 @@ span#juspayErrorMsg {
     left: -7px !imporatnt;
     top: 4px !important;
 }
+#accordion-tnc>li>div {
+    overflow: inherit ! important;
+}
 </style>
 
 <script>
