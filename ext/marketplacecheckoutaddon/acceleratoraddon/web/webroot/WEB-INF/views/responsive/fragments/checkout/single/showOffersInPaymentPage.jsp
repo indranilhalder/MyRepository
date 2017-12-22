@@ -171,11 +171,3 @@
   </c:if>	
 </c:if>	
 
-<script>
-$( document ).ready(function() {
-	$("#accordion-tnc > li > span").click(function() {
-	    $(this).addClass('active').next('div').show(250)
-	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
-	});
-});
-</script>
