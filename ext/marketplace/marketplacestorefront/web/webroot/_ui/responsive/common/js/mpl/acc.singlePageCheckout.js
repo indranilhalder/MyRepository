@@ -3738,7 +3738,7 @@ $(document).ready(function(){
 			$("#makePaymentDiv").html("");
 			
 			//TPR-7486
-			$('#continue_payment_after_validate_responsive').show();
+			$('#continue_payment_after_validate_responsive').hide();
 			$('#continue_payment_after_validate').hide();
 			ACC.singlePageCheckout.populatePaymentSpecificOffers();
 			//Fetch CNC stores in responsive if CNC is selected on page load
