@@ -142,6 +142,16 @@
 					            </c:forEach>
 					        </div>
 					        
+					        <span>Home Page Preference:</span>
+					        <div class="select gender  le-radio clearfix">
+					        	<c:forEach items="${homePageTypes}" var="varhomePageTypes" varStatus="i">
+					        	<div class="le-radio halfwidth">
+						        	 <form:radiobutton path="homePrefrence" value="${varhomePageTypes.code}"/>
+						             <label for="homePrefrence${i.count}">${varhomePageTypes.discription}</label>
+					             </div>
+					            </c:forEach>
+					        </div>
+					        
 					        <div class="row">
 					        
 							

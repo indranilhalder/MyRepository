@@ -25,5 +25,17 @@
 		<property name="flag" type="boolean"/>
 	</bean>
 	-->
+	<bean class="com.tisl.lux.facades.homepagetypes.data.HomePageTypesData">
+	<property name="code" type="java.lang.String"></property>
+	<property name="discription" type="java.lang.String"></property>
+	</bean>
+	
+	
+	
+	<bean class="com.tisl.mpl.facades.product.data.MplCustomerProfileData"
+		extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
+		<property name="homePagePrefernce"
+			type="java.lang.String" />
+	</bean>
 
 </beans>

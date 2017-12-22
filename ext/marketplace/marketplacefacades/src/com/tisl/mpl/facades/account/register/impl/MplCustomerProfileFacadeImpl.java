@@ -33,11 +33,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tils.luxury.service.HomePageTypesService;
+import com.tisl.lux.facade.CommonUtils;
+import com.tisl.lux.model.HomePageTypesModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.CustomerOldEmailDetailsModel;
 import com.tisl.mpl.core.model.SendUpdateProcessModel;
@@ -84,6 +89,12 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 	private I18NService i18NService;
 	private static final String PASSWORDENCODING = "default.password.encoder.key";
 	private final SimpleDateFormat sdf = new SimpleDateFormat(MarketplacecommerceservicesConstants.DMY_DATE_FORMAT);
+
+	@Resource
+	HomePageTypesService homePageTypesService;
+
+	@Autowired
+	private CommonUtils commonUtils;
 
 	/**
 	 * @return the mplCustomerProfileService
@@ -451,8 +462,16 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 			{
 				oCustomerModel.setGender(null);
 			}
+			///
+			if (commonUtils.isLuxurySite() && null != mplCustomerProfileData.getHomePagePrefernce())
+			{
+				final HomePageTypesModel homepagetype = homePageTypesService
+						.getHomePageTypesCode(mplCustomerProfileData.getHomePagePrefernce());
+				oCustomerModel.setHomePagePrefernce(homepagetype);
+			}
 			//	calling service to save the customer detail
 			mplCustomerProfileService.updateCustomerProfile(oCustomerModel, name, mplCustomerProfileData.getUid());
+
 		}
 		catch (final ParseException ex)
 		{
@@ -664,8 +683,8 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 	 * @Description : To change Uid of customer
 	 */
 	@Override
-	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
-			PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword)
+			throws DuplicateUidException, PasswordMismatchException
 	{
 		try
 		{
@@ -713,10 +732,11 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 			//creating PaymentService of Juspay
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-			juspayService.withKey(
-					configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+			juspayService
+					.setBaseUrl(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService
+					.withKey(configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 					.withMerchantId(
 							configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -734,8 +754,8 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplCustomerProfileFacade#getYearAnniversaryList()
 	 */
 	@Override
@@ -764,7 +784,7 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplCustomerProfileFacade#changePassword(java.lang.String,
 	 * java.lang.String)
 	 */
