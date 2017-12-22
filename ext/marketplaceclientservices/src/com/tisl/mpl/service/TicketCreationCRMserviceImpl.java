@@ -26,7 +26,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.data.SendTicketLineItemData;
@@ -258,7 +257,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -371,7 +370,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -708,11 +707,15 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setCustomerID(mplWebCrmTicketModel.getCustomerId());
 			}
-			if (null != mplWebCrmTicketModel.getOrderCode() && mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
+			if (null != mplWebCrmTicketModel.getOrderCode()
+					&& mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+							MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
 			{
 				ticket.setOrderId(mplWebCrmTicketModel.getOrderCode());
 			}
-			if (null != mplWebCrmTicketModel.getSubOrderCode() && mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
+			if (null != mplWebCrmTicketModel.getSubOrderCode()
+					&& mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+							MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
 			{
 				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
 			}
@@ -779,7 +782,9 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			//Line item details loop
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();
-			if (null != mplWebCrmTicketModel.getTransactionId() && mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
+			if (null != mplWebCrmTicketModel.getTransactionId()
+					&& mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+							MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
 			{
 				ticketLineObj.setLineItemId(mplWebCrmTicketModel.getTransactionId());
 			}
