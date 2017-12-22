@@ -334,6 +334,7 @@ ACC.WebForm = {
 
 	},
 	loadOrderLines : function(currentPage) {
+		var orderLineFound=false;
 		var htmlOption = "";
 		//performance fix
 		if ($(".selectOrderSec").length) {
@@ -371,7 +372,8 @@ ACC.WebForm = {
 										+ "</span>";
 							}
 							htmlOption += "</div></div></li>";
-
+							
+							orderLineFound=true;
 						});
 						// call default first page
 						// call default first page
@@ -386,7 +388,10 @@ ACC.WebForm = {
 					if(data.totalOrderLines!=undefined){
 						$("#totalPages").val(data.totalOrderLines);
 					}
-
+					
+					if(orderLineFound==false){
+						ACC.WebForm.loadOrderLines(currentPage+1);
+					}
 				},
 				error : function(resp) {
 					console.log("Error in loadOrderLines" + resp);
