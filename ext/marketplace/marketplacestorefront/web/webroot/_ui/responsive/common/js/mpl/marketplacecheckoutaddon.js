@@ -9687,8 +9687,13 @@ $('#popUpExpAddress').on('hidden.bs.modal', function () {
 //TPR-629
 $(".juspayCloseButton").on("click", function(){
 	$("#juspayconnErrorDiv").hide();
+	//$("#offer_section_responsive_error_msgDiv").hide();
 });
-
+//TISPRDT-8041
+$(document).on('click','.offerresponsiveCloseButton',function(e){
+	$("#offer_section_responsive_error_msgDiv").hide();
+	    
+});
 $(document).on("click",".radio input[type='radio']",function(){
 	$(".radio input[type='radio']").removeAttr("checked");
 	$(this).prop("checked","true");
@@ -10804,10 +10809,10 @@ function validateCreditAndDebitAndEMICardType(paymentMode) {  //step2 --card no 
 	else if(cardType=='AMEX' && value.length!=15){
 		return false;
 	}
-	else if(cardType=='AMEX' && value.length==15 && ( PaymentMode=='DEBIT')){
+	else if(cardType=='AMEX' && value.length==15 && ( paymentMode=='DEBIT')){
 		return false;
 	}
-	else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || PaymentMode=='CREDIT')){
+	else if(cardType=='MAESTRO' && (value.length==16 || value.length==18 || value.length==19) && ($("#paymentMode").val()=='EMI' || paymentMode=='CREDIT')){
 		return false;
 	}
 	else if(cardType==""){

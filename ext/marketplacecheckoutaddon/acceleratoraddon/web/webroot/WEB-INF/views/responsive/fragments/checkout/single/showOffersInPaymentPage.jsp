@@ -16,7 +16,7 @@
 		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.responsive.description"/>
 			<a class="tnc-link tnc-link-mob" onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
 		    <div style="display:none;top: 0 ! important; margin-top: 0px !important;" class="alert alert-danger alert-dismissable" id="offer_section_responsive_error_msgDiv">	<!-- TPR-629 changes for error -->
-					<button class="close juspayCloseButton" type="button">&times;</button>
+					<button class="close offerresponsiveCloseButton" type="button" style="right:12px">&times;</button>
 					<span id="offer_section_responsive_error_msg">Some issues are there with payment</span>
 	         </div>
 		    </c:when>    
@@ -123,7 +123,7 @@
 <c:choose>
  <c:when test="${responsive_view=='false'}">
  <span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
-		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;top: 27px !important;right: 31px;">X</button>
 	</span>	
 		<ul class="offertermsui" id="accordion-tnc">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
@@ -146,8 +146,8 @@
 	<!-- 	Mobile tnc popup -->
 	
 		<span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
-		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
-	</span>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;top: 1px !important;">X</button>
+	</span>	
 		<ul class="offertermsui" id="">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >
@@ -171,11 +171,3 @@
   </c:if>	
 </c:if>	
 
-<script>
-$( document ).ready(function() {
-	$("#accordion-tnc > li > span").click(function() {
-	    $(this).addClass('active').next('div').show(250)
-	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
-	});
-});
-</script>

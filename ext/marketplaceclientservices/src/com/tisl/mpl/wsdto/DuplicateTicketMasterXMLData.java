@@ -14,20 +14,17 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "DuplicateTicketCheck")
 @XmlType(propOrder =
-{ "customerID", "hsoOrderId", "subOrderId", "ticketType", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "l4CatCode",
-		"transactionId" })
+{ "customerID", "hsoOrderId", "subOrderId", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "transactionId" })
 public class DuplicateTicketMasterXMLData
 {
 	private String customerID;
 	private String hsoOrderId;
 	private String subOrderId;
-	private String ticketType;
 	private String transactionId;
 	private String L0CatCode;
 	private String L1CatCode;
 	private String L2CatCode;
 	private String L3CatCode;
-	private String L4CatCode;
 
 	/**
 	 * @return the l0CatCode
@@ -101,29 +98,13 @@ public class DuplicateTicketMasterXMLData
 		L3CatCode = l3CatCode;
 	}
 
-	/**
-	 * @return the l4CatCode
-	 */
-	@XmlElement(name = "L4CatCode")
-	public String getL4CatCode()
-	{
-		return L4CatCode;
-	}
 
-	/**
-	 * @param l4CatCode
-	 *           the l4CatCode to set
-	 */
-	public void setL4CatCode(final String l4CatCode)
-	{
-		L4CatCode = l4CatCode;
-	}
 
 
 	/**
 	 * @return the customerID
 	 */
-	@XmlElement(name = "customerID")
+	@XmlElement(name = "CustomerId")
 	public String getCustomerID()
 	{
 		return customerID;
@@ -141,7 +122,7 @@ public class DuplicateTicketMasterXMLData
 	/**
 	 * @return the subOrderId
 	 */
-	@XmlElement(name = "subOrderId")
+	@XmlElement(name = "SubOrderId")
 	public String getSubOrderId()
 	{
 		return subOrderId;
@@ -157,27 +138,9 @@ public class DuplicateTicketMasterXMLData
 	}
 
 	/**
-	 * @return the ticketType
-	 */
-	@XmlElement(name = "ticketType")
-	public String getTicketType()
-	{
-		return ticketType;
-	}
-
-	/**
-	 * @param ticketType
-	 *           the ticketType to set
-	 */
-	public void setTicketType(final String ticketType)
-	{
-		this.ticketType = ticketType;
-	}
-
-	/**
 	 * @return the transactionId
 	 */
-	@XmlElement(name = "transactionId")
+	@XmlElement(name = "TransactionID")
 	public String getTransactionId()
 	{
 		return transactionId;
@@ -195,7 +158,7 @@ public class DuplicateTicketMasterXMLData
 	/**
 	 * @return the hSOOrderID
 	 */
-	@XmlElement(name = "hsoOrderId")
+	@XmlElement(name = "HSOOrderID")
 	public String getHsoOrderId()
 	{
 		return hsoOrderId;
