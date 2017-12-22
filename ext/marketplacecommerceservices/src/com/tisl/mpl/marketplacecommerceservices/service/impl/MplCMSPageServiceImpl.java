@@ -31,7 +31,7 @@ import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerMasterModel;
-
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 
 /**
  * @author 765463
@@ -281,6 +281,13 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	public List<MplFooterLinkModel> getAllMplFooterLinks()
 	{
 		return mplCmsPageDao.getAllFooterLinks();
+	}
+	
+	@Override
+	public LuxuryHomePagePreferenceModel getHomePagePreference(final String gender, final String category)
+	{
+		// YTODO Auto-generated method stub
+		return mplCmsPageDao.getHomePagePreference(gender, category);
 	}
 
 }

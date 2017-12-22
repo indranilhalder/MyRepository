@@ -28,7 +28,6 @@ import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductD
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -57,6 +56,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.BrandModel;
@@ -145,7 +145,7 @@ import com.tisl.mpl.wsdto.TextComponentWsDTO;
 
 /**
  * @author TCS
- *
+ * 
  */
 public class MplCmsFacadeImpl implements MplCmsFacade
 {
@@ -1542,10 +1542,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 									productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
 								}
 								// changes for INC144318868 - Offer prize is not coming for WCMS component
-								/*if (buyboxdata.getPrice() != null)
-								{
-									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
-								}*/
+								/*
+								 * if (buyboxdata.getPrice() != null) {
+								 * productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue()); }
+								 */
 								if (null != buyboxdata.getSpecialPriceMobile())
 								{
 									productComp.setSlashedPrice(buyboxdata.getSpecialPriceMobile().getFormattedValue());
@@ -1553,7 +1553,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								else if (null != buyboxdata.getPrice())
 								{
 									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
-								}  
+								}
 
 								if (productModel != null)
 								{
@@ -3018,7 +3018,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/**
 	 * Fetched the shop by department component
-	 *
+	 * 
 	 * @return DepartmentCollectionComponentModel
 	 * @throws CMSItemNotFoundException
 	 */
@@ -3311,9 +3311,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	}
 
 	/**
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param void
 	 * @return Map<Integer, Map<Integer, FooterLinkData>>
 	 */
@@ -3355,6 +3355,18 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		}
 
 		return outerMap;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePagePreferece(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public LuxuryHomePagePreferenceModel getHomePagePreference(final String gender, final String category)
+	{
+		// YTODO Auto-generated method stub
+		return mplCMSPageService.getHomePagePreference(gender, category);
 	}
 
 }

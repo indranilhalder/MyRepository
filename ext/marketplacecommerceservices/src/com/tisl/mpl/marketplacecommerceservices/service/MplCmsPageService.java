@@ -22,6 +22,7 @@ import java.util.List;
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 
 
 /**
@@ -77,4 +78,6 @@ public interface MplCmsPageService extends CMSPageService
 	 * @CAR-285
 	 */
 	public CMSSiteModel getSiteforId(String siteUid) throws CMSItemNotFoundException;
+	
+	public LuxuryHomePagePreferenceModel getHomePagePreference(String gender, String category);
 }

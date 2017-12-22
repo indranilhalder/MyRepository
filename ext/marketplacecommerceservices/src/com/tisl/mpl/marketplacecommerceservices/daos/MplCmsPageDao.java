@@ -21,6 +21,7 @@ import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 
 
 /**
@@ -80,4 +81,6 @@ public interface MplCmsPageDao extends CMSPageDao
 	 * @return List<MplFooterLinkModel>
 	 */
 	List<MplFooterLinkModel> getAllFooterLinks();
+	
+	public LuxuryHomePagePreferenceModel getHomePagePreference(String gender, String category);
 }

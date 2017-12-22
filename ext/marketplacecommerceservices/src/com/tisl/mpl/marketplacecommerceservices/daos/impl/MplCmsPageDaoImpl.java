@@ -19,6 +19,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 
 
 
@@ -485,5 +487,34 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStr);
 		final List<MplFooterLinkModel> footerLinks = flexibleSearchService.<MplFooterLinkModel> search(query).getResult();
 		return footerLinks;
+	}
+	
+	@Override
+	public LuxuryHomePagePreferenceModel getHomePagePreference(final String gender, final String category)
+	{
+		
+		StringBuilder queryString = new StringBuilder();
+	
+		if(category!=null){
+			queryString = new StringBuilder("SELECT {L.pk}  FROM {LuxuryHomePagePreference as L JOIN Gender as G ON {L.customerGender} = {G.PK} JOIN HomePageTypes as H ON {L.homePageType} = {H.PK}} WHERE {G.code} = ?gender and {H.code} = ?category");
+			
+		}
+		else{
+			queryString = new StringBuilder("SELECT {L.pk}  FROM {LuxuryHomePagePreference as L JOIN Gender as G ON {L.customerGender} = {G.PK} } WHERE {G.code} = ?gender and {L.homePageType} is null");
+
+		}
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("gender", gender);
+		if(category!=null){
+		query.addQueryParameter("category", category);
+		}
+		final SearchResult<LuxuryHomePagePreferenceModel> searchResult = flexibleSearchService.search(query);
+		//if (shopByLookList != null && shopByLookList.size() > 0)
+		if (CollectionUtils.isNotEmpty(searchResult.getResult()))
+		{
+			return searchResult.getResult().iterator().next();
+		}
+
+		return null;
 	}
 }

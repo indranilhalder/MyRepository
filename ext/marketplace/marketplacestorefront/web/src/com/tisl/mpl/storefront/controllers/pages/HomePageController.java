@@ -31,6 +31,7 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -72,6 +73,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
@@ -96,7 +98,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
-import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -387,25 +388,17 @@ public class HomePageController extends AbstractPageController
 		final String siteId = getSiteConfigService().getProperty("luxury.site.id");
 		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
 		{
-			final String gender = getCustomerFacade().getCurrentCustomer().getGender();
-			if (gender != null && !(gender.isEmpty()))
+			final CustomerData currentCustomer = getCustomerFacade().getCurrentCustomer();
+			final String gender = currentCustomer.getGender();
+			final String homePagePreference = currentCustomer.getHomePagePreference();
+			if (gender != null && !gender.isEmpty())
 			{
-				switch (gender)
+				final LuxuryHomePagePreferenceModel homePagePreferenceModel = mplCmsFacade.getHomePagePreference(gender,
+						homePagePreference);
+				final String label = homePagePreferenceModel.getPageID();
+				if (label != null)
 				{
-					case MessageConstants.MALE:
-					{
-						final String key = getSiteConfigService().getProperty(MessageConstants.MENLANDING);
-						return super.getContentPageForLabelOrId(key);
-					}
-					case MessageConstants.FEMALE:
-					{
-						final String key = getSiteConfigService().getProperty(MessageConstants.WOMENLANDING);
-						return super.getContentPageForLabelOrId(key);
-					}
-					default:
-					{
-						return super.getContentPageForLabelOrId(labelOrId);
-					}
+					return super.getContentPageForLabelOrId(label);
 				}
 			}
 
@@ -1595,9 +1588,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1701,7 +1694,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 

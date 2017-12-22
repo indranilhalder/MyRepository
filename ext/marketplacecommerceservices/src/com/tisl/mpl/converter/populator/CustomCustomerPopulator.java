@@ -108,6 +108,10 @@ public class CustomCustomerPopulator implements Populator<CustomerModel, Custome
 		target.setContactNumber(source.getMobileNumber());
 		target.setRegistrationDate(source.getCreationtime());
 		setUid(source, target);
+		if(source.getHomePagePrefernce()!=null)
+		{
+			target.setHomePagePreference(source.getHomePagePrefernce().getCode());
+		}
 	}
 
 	protected void setUid(final UserModel source, final CustomerData target)
