@@ -376,13 +376,16 @@ ACC.WebForm = {
 						// call default first page
 						// call default first page
 						$(".orderDrop").html(htmlOption);
-						$("#totalPages").val(data.totalOrderLines);
+						
 						//$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
 						ACC.WebForm.loadPaginationLink(data.totalOrderLines,currentPage);
 
 					}
-					
+					//TISPRDT-8060
+					if(data.totalOrderLines!=undefined){
+						$("#totalPages").val(data.totalOrderLines);
+					}
 
 				},
 				error : function(resp) {
@@ -468,6 +471,7 @@ ACC.WebForm = {
 		var ticketAnswer = $("option:selected", div).attr("ticketAnswer");
 		var nodeType = $(div).attr("name");
 		var nodcheck = $(div).attr("nodcheck");
+		var parentNode=$(div).attr("parentNode");
 		// for radio
 		if (nodeValue == undefined) {
 			nodeValue = $(div).val();
@@ -498,17 +502,22 @@ ACC.WebForm = {
 							htmlOption += " >" + data.nodeDesc + "</option>";
 
 						});
+						
+						$("input[name=nodeL0]").val(parentNode);
+						
 						$("select[name=nodeL2]").html(htmlOption);
-						$("select[name=nodeL2]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL2]").parent().children(".holder")
-								.removeClass('active');
-						$("select[name=nodeL3]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL3]").parent().children(".holder")
-								.removeClass('active');
+						$("select[name=nodeL2]").parent().children(".holder").html("");
+						$("select[name=nodeL2]").parent().children(".holder").removeClass('active');
+						
+						$("select[name=nodeL3]").parent().children(".holder").html("");
+						$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 						$("select[name=nodeL3]").html("");
+						
 						$("input[name=nodeL4]").val("");
+						$("input[name=ticketType]").val("");
+						$("input[name=orderCode]").val("");
+						$("input[name=subOrderCode]").val("");
+						$("input[name=transactionId]").val("");
 
 						if (nodcheck === 'true') {
 							$(".selectOrderSec").show();
@@ -540,10 +549,8 @@ ACC.WebForm = {
 						});
 
 						$("select[name=nodeL3]").html(htmlOption);
-						$("select[name=nodeL3]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL3]").parent().children(".holder")
-								.removeClass('active');
+						$("select[name=nodeL3]").parent().children(".holder").html("");
+						$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 						$("input[name=nodeL4]").val("");
 						$("#nodeL2Text").val(nodeText);
 

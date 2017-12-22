@@ -46,14 +46,13 @@
 					<form name="customerWebForm" id="customerWebForm" action="#"
 						method="POST">
 
-						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> <input
-							type="hidden" name="ticketType" value="" id="ticketType" /> <input
-							type="hidden" name="orderCode" value="" id="orderCode" /> <input
-							type="hidden" name="subOrderCode" value="" id="subOrderCode" />
-						<input type="hidden" name="transactionId" value=""
-							id="transactionId" /> <input type="hidden" name="nodeL2Text"
-							value="" id="nodeL2Text" /> <input type="hidden"
-							name="nodeL3Text" value="" id="nodeL3Text" />
+						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> 
+						<input type="hidden" name="ticketType" value="" id="ticketType" />
+						<input type="hidden" name="orderCode" value="" id="orderCode" />
+						<input type="hidden" name="subOrderCode" value="" id="subOrderCode" />
+						<input type="hidden" name="transactionId" value="" id="transactionId" />
+						<input type="hidden" name="nodeL2Text" value="" id="nodeL2Text" />
+						<input type="hidden" name="nodeL3Text" value="" id="nodeL3Text" />
 
 
 						<div class="custmCareForms">
@@ -65,21 +64,22 @@
 											<label> <c:choose>
 													<c:when test="${l1Node.nodeCode eq tiketL1Check}">
 														<input type="radio" name="nodeL1" class="node formControl"
-															nodcheck="true" value="${l1Node.nodeCode}" checked>
+															nodcheck="true" value="${l1Node.nodeCode}" checked parentNode="${l1Node.parentNode}">
+															
 													</c:when>
 													<c:otherwise>
 														<input type="radio" name="nodeL1" class="node formControl"
-															nodcheck="false" value="${l1Node.nodeCode}">
+															nodcheck="false" value="${l1Node.nodeCode}" parentNode="${l1Node.parentNode}">
 													</c:otherwise>
 												</c:choose> <span></span> ${l1Node.nodeDesc}
 											</label>
 										</div>
-										<c:set var="nodeL0" value="${l1Node.parentNode}"></c:set>
+										
 									</c:if>
 								</c:forEach>
 							</div>
 
-							<input type="hidden" name="nodeL0" value="${nodeL0}" />
+							<input id="nodeL0" type="hidden" name="nodeL0" value="" />
 
 							<div class="formGroup">
 								<div class="selectOrderSec">
