@@ -9687,6 +9687,7 @@ $('#popUpExpAddress').on('hidden.bs.modal', function () {
 //TPR-629
 $(".juspayCloseButton").on("click", function(){
 	$("#juspayconnErrorDiv").hide();
+	$("#offer_section_responsive_error_msgDiv").hide();
 });
 
 $(document).on("click",".radio input[type='radio']",function(){
