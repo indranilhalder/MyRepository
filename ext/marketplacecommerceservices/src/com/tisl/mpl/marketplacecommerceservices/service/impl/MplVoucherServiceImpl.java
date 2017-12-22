@@ -146,7 +146,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				//recalculating cart
 				final Double deliveryCost = cartModel.getDeliveryCost();
-				Double modDeliveryCost = Double.valueOf(0);
+				//final Double modDeliveryCost = Double.valueOf(0);
 
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
@@ -155,21 +155,24 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				//Code for Shipping Promotion & Voucher Integration
 				//TPR-1702
-				if (validateForShippingPromo(cartModel.getAllPromotionResults()))
-				{
-					modDeliveryCost = Double.valueOf(deliveryCost.doubleValue() - getModifiedDeliveryCost(cartModel.getEntries()));
-				}
+				//				if (validateForShippingPromo(cartModel.getAllPromotionResults()))
+				//				{
+				//					modDeliveryCost = Double.valueOf(deliveryCost.doubleValue() - getModifiedDeliveryCost(cartModel.getEntries()));
+				//				}
 				//TPR-1702 : Changes Ends
 
 				cartModel.setDeliveryCost(deliveryCost);
+
 				//				cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
 				//						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue())));
 				//TPR-1702 : Changes for Shipping + Coupon
-				cartModel.setTotalPrice(
-						Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice().doubleValue())
-								+ (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
+				//				cartModel.setTotalPrice(
+				//						Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice().doubleValue())
+				//								+ (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
 				//TPR-1702 : Changes for Shipping + Coupon
 
+				final Double totalPrice = setTotalPrice(cartModel);
+				cartModel.setTotalPrice(totalPrice);
 				// Freebie item changes
 				getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 
@@ -193,7 +196,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				//recalculating cart
 				final Double deliveryCost = orderModel.getDeliveryCost();
-				Double modDeliveryCost = Double.valueOf(0);
+				//				final Double modDeliveryCost = Double.valueOf(0);
 
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
@@ -202,18 +205,21 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				//Code for Shipping Promotion & Voucher Integration
 				//TPR-1702
-				if (validateForShippingPromo(orderModel.getAllPromotionResults()))
-				{
-					modDeliveryCost = Double.valueOf(deliveryCost.doubleValue() - getModifiedDeliveryCost(orderModel.getEntries()));
-				}
+				//				if (validateForShippingPromo(orderModel.getAllPromotionResults()))
+				//				{
+				//					modDeliveryCost = Double.valueOf(deliveryCost.doubleValue() - getModifiedDeliveryCost(orderModel.getEntries()));
+				//				}
 				//TPR-1702 : Changes Ends
 
 				orderModel.setDeliveryCost(deliveryCost);
 				//TPR-1702 : Changes for Shipping + Coupon
-				orderModel.setTotalPrice(
-						Double.valueOf((null == orderModel.getTotalPrice() ? 0.0d : orderModel.getTotalPrice().doubleValue())
-								+ (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
-				//TPR-1702 : Changes for Shipping + Coupon
+				//				orderModel.setTotalPrice(
+				//						Double.valueOf((null == orderModel.getTotalPrice() ? 0.0d : orderModel.getTotalPrice().doubleValue())
+				//								+ (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
+				//				//TPR-1702 : Changes for Shipping + Coupon
+
+				final Double totalPrice = setTotalPrice(orderModel);
+				orderModel.setTotalPrice(totalPrice);
 
 				// Freebie item changes
 				getMplCommerceCartService().saveDeliveryMethForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
