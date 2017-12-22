@@ -123,7 +123,7 @@
 <c:choose>
  <c:when test="${responsive_view=='false'}">
  <span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
-		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;top: 27px !important;">X</button>
 	</span>	
 		<ul class="offertermsui" id="accordion-tnc">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
@@ -146,8 +146,8 @@
 	<!-- 	Mobile tnc popup -->
 	
 		<span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
-		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
-	</span>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;top: 1px !important;">X</button>
+	</span>	
 		<ul class="offertermsui" id="">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >
