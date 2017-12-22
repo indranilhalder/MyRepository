@@ -3657,7 +3657,16 @@ ACC.singlePageCheckout = {
 	},
 	paymentTermsConditionsOffersPopup:function(data){		
   	   $("body").append('<div class="modal fade" id="paymenttermsoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
-       $("#paymenttermsoffersPopup").modal('show');
+           $("#paymenttermsoffersPopup").modal('show');
+		$("#accordion-tnc > li > span").click(function() {
+	   		if($(this).hasClass('active')) {
+	   			    $(this).removeClass('active').next('div').hide(250)
+	   			    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+	   		} else {
+	   			    $(this).addClass('active').next('div').show(250)
+	   			    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+	   		}
+   		});
 	}
 	
 	
