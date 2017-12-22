@@ -16,6 +16,7 @@ ACC.WebForm = {
 							html : data,
 							width : "500px"
 						});
+						$('#colorbox').attr('style','display: block !important');
 					},
 					error : function(resp) {
 						console.log("Error in Submit Ticket" + resp);

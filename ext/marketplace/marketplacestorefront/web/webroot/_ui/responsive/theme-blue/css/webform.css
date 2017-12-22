@@ -638,9 +638,9 @@
 }
 /* TISHS-137 end */
 @media ( max-width :970px) {
-	.page-faq #colorbox{
+	/* .page-faq #colorbox{
 		display:block ! important;
-	}
+	} */
 }
 .page-faq #textarea{
 		width:100%;
