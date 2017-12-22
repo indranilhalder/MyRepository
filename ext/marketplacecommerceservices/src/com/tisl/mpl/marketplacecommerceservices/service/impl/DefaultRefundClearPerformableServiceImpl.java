@@ -511,7 +511,11 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
 				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
-
+			else if (!StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+			{
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.REFUND_IN_PROGRESS);
+				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
+			}
 
 		}
 		catch (final Exception e)
