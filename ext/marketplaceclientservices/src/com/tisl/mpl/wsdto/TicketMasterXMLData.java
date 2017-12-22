@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder =
 { "ecomRequestId", "customerID", "orderId", "subOrderId", "ticketType", "refundType", "ticketSubType", "returnCategory",
 		"lineItemDataList", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "l4CatCode", "ticketCat", "comments",
-		"uploadImage", "alternateContactName", "alternatePhoneNo", "source", "lineItemId", "addressInfo" })
+		"alternateContactName", "alternatePhoneNo", "source", "lineItemId", "addressInfo" })
 public class TicketMasterXMLData
 {
 	private String customerID;
@@ -43,7 +43,8 @@ public class TicketMasterXMLData
 	private String L4CatCode;
 	private String TicketCat;
 	private String Comments;
-	private List<UploadImage> uploadImage;
+
+	//private List<UploadImage> uploadImage;
 
 
 
@@ -431,19 +432,14 @@ public class TicketMasterXMLData
 	/**
 	 * @return the uploadImage
 	 */
-	@XmlElement(name = "UploadImage")
-	public List<UploadImage> getUploadImage()
-	{
-		return uploadImage;
-	}
-
-	/**
+	/*
+	 * @XmlElement(name = "UploadImage") public List<UploadImage> getUploadImage() { return uploadImage; }
+	 *//**
 	 * @param uploadImage
 	 *           the uploadImage to set
 	 */
-	public void setUploadImage(final List<UploadImage> uploadImage)
-	{
-		this.uploadImage = uploadImage;
-	}
+	/*
+	 * public void setUploadImage(final List<UploadImage> uploadImage) { this.uploadImage = uploadImage; }
+	 */
 
 }
