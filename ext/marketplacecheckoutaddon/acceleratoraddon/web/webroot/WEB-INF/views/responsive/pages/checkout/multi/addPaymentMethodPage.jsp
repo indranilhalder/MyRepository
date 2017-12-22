@@ -1465,7 +1465,8 @@
 }
 }
 span#juspayErrorMsg {
-    margin-left: 17px !important;
+    margin-left: 23px !important;	/* change for TISPRDT-7845 */
+    line-height: inherit !important;	/* add for TISPRDT-7845 */
 }
 .page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
     min-height: 0px !important;
@@ -1478,6 +1479,11 @@ span#juspayErrorMsg {
 #accordion-tnc>li>div {
     overflow: inherit ! important;
 }
+/* start change for TISPRDT-7845 */
+#juspayconnErrorDiv button.close{
+	left: 16px !important;		
+}
+/* end change for TISPRDT-7845 */
 </style>
 
 <script>
