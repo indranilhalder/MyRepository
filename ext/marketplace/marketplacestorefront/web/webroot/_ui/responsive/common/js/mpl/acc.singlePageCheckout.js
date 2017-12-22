@@ -3648,10 +3648,10 @@ ACC.singlePageCheckout = {
 	showPaymentSpecificOffersTermsConditions:function(){	
 		if($("#offer_terms_container_poppup").html() != "") {
 	    	ACC.singlePageCheckout.paymentTermsConditionsOffersPopup($(".offer_terms_container_poppup").html());
-	    	$("#accordion-tnc > li > span").click(function() {
-	    	    $(this).addClass('active').next('div').show(250)
-	    	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
-	    	});
+//	    	$("#accordion-tnc > li > span").click(function() {
+//	    	    $(this).addClass('active').next('div').show(250)
+//	    	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+//	    	});
 		}
 
 	},
