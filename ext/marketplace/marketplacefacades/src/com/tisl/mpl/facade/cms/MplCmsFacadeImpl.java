@@ -58,6 +58,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
@@ -72,6 +74,8 @@ import com.tisl.mpl.core.model.SignColComponentModel;
 import com.tisl.mpl.core.model.SignColItemComponentModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.facades.cms.data.AmpMenifestData;
+import com.tisl.mpl.facades.cms.data.AmpServiceWorkerData;
 import com.tisl.mpl.facades.cms.data.BannerComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionHeroComponentData;
@@ -422,12 +426,12 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	}
 
 
-	//private Converter<AmpServiceworkerModel, AmpServiceWorkerData> ampServiceworkerConverter;
-	//private Converter<AmpMenifestModel, AmpMenifestData> ampMenifestJsonConverter;
+	private Converter<AmpServiceworkerModel, AmpServiceWorkerData> ampServiceworkerConverter;
+	private Converter<AmpMenifestModel, AmpMenifestData> ampMenifestJsonConverter;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -452,7 +456,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1615,7 +1619,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1731,7 +1735,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1782,7 +1786,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1929,7 +1933,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1941,7 +1945,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -2015,7 +2019,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -2056,7 +2060,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 *
+				 * 
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2114,7 +2118,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2126,7 +2130,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2142,7 +2146,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2159,7 +2163,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -3003,7 +3007,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
@@ -3259,7 +3263,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getContentSlotData(java.lang.String)
 	 */
 	@Override
@@ -3363,50 +3367,72 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	/**
 	 * @return AmpServiceWorkerData
 	 */
-	/*
-	 * @Override public AmpServiceWorkerData getAmpServiceWorkerData() { // The call for fetching list of serviceworker
-	 * models final AmpServiceworkerModel ampServiceWorkerModel = getMplCMSPageService().getAmpServiceworkers();
-	 *
-	 * //The data object to convert model to data AmpServiceWorkerData ampServiceWorkerData = null; if (null !=
-	 * ampServiceWorkerModel) { ampServiceWorkerData = getAmpServiceworkerConverter().convert(ampServiceWorkerModel); }
-	 * return ampServiceWorkerData; }
-	 *//**
+	@Override
+	public AmpServiceWorkerData getAmpServiceWorkerData()
+	{
+		// The call for fetching list of serviceworker models
+		final AmpServiceworkerModel ampServiceWorkerModel = getMplCMSPageService().getAmpServiceworkers();
+
+		//The data object to convert model to data
+		AmpServiceWorkerData ampServiceWorkerData = null;
+		if (null != ampServiceWorkerModel)
+		{
+			ampServiceWorkerData = getAmpServiceworkerConverter().convert(ampServiceWorkerModel);
+		}
+		return ampServiceWorkerData;
+	}
+
+	/**
 	 * @return the ampServiceworkerConverter
 	 */
-	/*
-	 * public Converter<AmpServiceworkerModel, AmpServiceWorkerData> getAmpServiceworkerConverter() { return
-	 * ampServiceworkerConverter; }
-	 *//**
+	public Converter<AmpServiceworkerModel, AmpServiceWorkerData> getAmpServiceworkerConverter()
+	{
+		return ampServiceworkerConverter;
+	}
+
+	/**
 	 * @param ampServiceworkerConverter
 	 *           the ampServiceworkerConverter to set
 	 */
-	/*
-	 * public void setAmpServiceworkerConverter(final Converter<AmpServiceworkerModel, AmpServiceWorkerData>
-	 * ampServiceworkerConverter) { this.ampServiceworkerConverter = ampServiceworkerConverter; }
-	 *//**
+	public void setAmpServiceworkerConverter(final Converter<AmpServiceworkerModel, AmpServiceWorkerData> ampServiceworkerConverter)
+	{
+		this.ampServiceworkerConverter = ampServiceworkerConverter;
+	}
+
+	/**
 	 * @return the ampMenifestJsonConverter
 	 */
-	/*
-	 * public Converter<AmpMenifestModel, AmpMenifestData> getAmpMenifestJsonConverter() { return
-	 * ampMenifestJsonConverter; }
-	 *//**
+	public Converter<AmpMenifestModel, AmpMenifestData> getAmpMenifestJsonConverter()
+	{
+		return ampMenifestJsonConverter;
+	}
+
+	/**
 	 * @param ampMenifestJsonConverter
 	 *           the ampMenifestJsonConverter to set
 	 */
-	/*
-	 * public void setAmpMenifestJsonConverter(final Converter<AmpMenifestModel, AmpMenifestData>
-	 * ampMenifestJsonConverter) { this.ampMenifestJsonConverter = ampMenifestJsonConverter; }
-	 *//**
+	public void setAmpMenifestJsonConverter(final Converter<AmpMenifestModel, AmpMenifestData> ampMenifestJsonConverter)
+	{
+		this.ampMenifestJsonConverter = ampMenifestJsonConverter;
+	}
+
+	/**
 	 * @return AmpMenifestData
 	 */
-	/*
-	 * @Override public AmpMenifestData getAmpMenifestData() { // The call for fetching list of AmpMenifest models final
-	 * AmpMenifestModel ampMenifestModel = getMplCMSPageService().getAmpMenifestJsons();
-	 *
-	 * //The data object to convert model to data AmpMenifestData ampMenifestData = null; if (null != ampMenifestModel) {
-	 * ampMenifestData = getAmpMenifestJsonConverter().convert(ampMenifestModel); }
-	 *
-	 * return ampMenifestData; }
-	 */
+	@Override
+	public AmpMenifestData getAmpMenifestData()
+	{
+		// The call for fetching list of AmpMenifest models
+		final AmpMenifestModel ampMenifestModel = getMplCMSPageService().getAmpMenifestJsons();
+
+		//The data object to convert model to data
+		AmpMenifestData ampMenifestData = null;
+		if (null != ampMenifestModel)
+		{
+			ampMenifestData = getAmpMenifestJsonConverter().convert(ampMenifestModel);
+		}
+
+		return ampMenifestData;
+	}
 
 }

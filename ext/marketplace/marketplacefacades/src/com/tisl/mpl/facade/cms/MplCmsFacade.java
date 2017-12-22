@@ -12,6 +12,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tisl.mpl.facades.cms.data.AmpMenifestData;
+import com.tisl.mpl.facades.cms.data.AmpServiceWorkerData;
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
@@ -109,10 +111,10 @@ public interface MplCmsFacade
 	/**
 	 * @return AmpServiceWorkerData
 	 */
-	//AmpServiceWorkerData getAmpServiceWorkerData();
+	AmpServiceWorkerData getAmpServiceWorkerData();
 
 	/**
 	 * @return AmpMenifestData
 	 */
-	//AmpMenifestData getAmpMenifestData();
+	AmpMenifestData getAmpMenifestData();
 }
