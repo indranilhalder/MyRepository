@@ -16,7 +16,7 @@
 		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.responsive.description"/>
 			<a class="tnc-link tnc-link-mob" onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
 		    <div style="display:none;top: 0 ! important; margin-top: 0px !important;" class="alert alert-danger alert-dismissable" id="offer_section_responsive_error_msgDiv">	<!-- TPR-629 changes for error -->
-					<button class="close juspayCloseButton" type="button">&times;</button>
+					<button class="close offerresponsiveCloseButton" type="button" style="right:12px">&times;</button>
 					<span id="offer_section_responsive_error_msg">Some issues are there with payment</span>
 	         </div>
 		    </c:when>    
