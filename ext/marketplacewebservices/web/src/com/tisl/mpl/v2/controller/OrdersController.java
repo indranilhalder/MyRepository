@@ -1483,7 +1483,7 @@ public class OrdersController extends BaseCommerceController
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
-	@RequestMapping(value = "/users/{userId}`", method = RequestMethod.GET)
+	@RequestMapping(value = "/users/{userId}/orderhistorylist", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrders(@RequestParam(required = false) final String statuses,
 			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
