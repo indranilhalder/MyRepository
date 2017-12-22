@@ -75,6 +75,8 @@ public class PaymentService
 	private String environmentSet;
 
 
+
+
 	/**
 	 * @return the baseUrl
 	 */
@@ -448,6 +450,8 @@ public class PaymentService
 	{
 		final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		params.put(MarketplaceJuspayServicesConstants.ORDERID, orderStatusRequest.getOrderId());
+		final String juspayVersion = getConfigurationService().getConfiguration().getString("payment.juspay.version");
+		params.put(MarketplaceJuspayServicesConstants.VERSION, juspayVersion);
 
 		final String serializedParams = serializeParams(params);
 		final String url = baseUrl + "/order_status";
