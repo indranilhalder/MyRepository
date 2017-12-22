@@ -3279,7 +3279,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody MplPromoPriceData applyPromotions(final String ModeofPayment, final String Nameofbank, final String guid,
-			final boolean isNewCard) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
+			final boolean isNewCard,final boolean isResponsive) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
 			ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
 			JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
 	{
@@ -3309,7 +3309,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
 				//Remove existing vouchers
-				mplCouponFacade.releaseVoucherInCheckout(cart);
+				if (isResponsive == false)
+				{
+					mplCouponFacade.releaseVoucherInCheckout(cart);
+				}
 
 
 				//TISEE-510 ,TISEE-5555
