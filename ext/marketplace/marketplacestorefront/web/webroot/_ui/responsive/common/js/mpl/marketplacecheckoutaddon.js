@@ -9687,9 +9687,13 @@ $('#popUpExpAddress').on('hidden.bs.modal', function () {
 //TPR-629
 $(".juspayCloseButton").on("click", function(){
 	$("#juspayconnErrorDiv").hide();
-	$("#offer_section_responsive_error_msgDiv").hide();
+	//$("#offer_section_responsive_error_msgDiv").hide();
 });
-
+//TISPRDT-8041
+$(document).on('click','.offerresponsiveCloseButton',function(e){
+	$("#offer_section_responsive_error_msgDiv").hide();
+	    
+});
 $(document).on("click",".radio input[type='radio']",function(){
 	$(".radio input[type='radio']").removeAttr("checked");
 	$(this).prop("checked","true");
