@@ -87,6 +87,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -214,9 +215,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 *
+	 * 
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -439,9 +440,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 *
+	 * 
 	 * @param orderNumber
-	 *
+	 * 
 	 * @param lineID
 	 */
 
@@ -1078,11 +1079,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1482,7 +1483,7 @@ public class OrdersController extends BaseCommerceController
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
-	@RequestMapping(value = "/users/{userId}/orderhistorylist", method = RequestMethod.GET)
+	@RequestMapping(value = "/users/{userId}`", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOrderHistoryListWsDTO getOrders(@RequestParam(required = false) final String statuses,
 			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
