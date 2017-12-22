@@ -78411,7 +78411,7 @@ span#offer_section_responsive_error_msg {
     position: fixed;
     z-index: 1;
     padding-top: 31px;
-    padding-left: 45px;
+    padding-left: 31px;
 }
 #paymenttermsoffersPopup ul.offertermsui {
     margin-top: 86px;
@@ -78419,7 +78419,7 @@ span#offer_section_responsive_error_msg {
 }
 @media screen and (max-width: 767px) {
 	.tnc-fixed-header{
-		width: 76%;
+		width: 81%;
 	    padding-top: 8px;
 	}
 	.tnc-fixed-header button.close {
