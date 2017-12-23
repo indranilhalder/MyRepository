@@ -453,10 +453,25 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 			PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 			LOG.error("Going to make refund for Order: " + order.getCode());
-			paymentTransactionModel = mplJusPayRefundService.doRefund(order, refundAmount, paymentTransactionType, uniqueRequestId);
+			try
+			{
+				paymentTransactionModel = mplJusPayRefundService.doRefund(order, refundAmount, paymentTransactionType,
+						uniqueRequestId);
+			}
+			catch (final Exception e)
+			{
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.REFUND_IN_PROGRESS);
+				LOG.error("Refund failed" + e);
+			}
+
 			if (null != paymentTransactionModel)
 			{
 				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			}
+			else
+			{
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.REFUND_IN_PROGRESS);
+				LOG.error("Refund failed");
 			}
 
 			//h2refund Added to know the refund type
@@ -487,14 +502,20 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			else if (refundReason.equalsIgnoreCase(JuspayRefundType.CANCELLED.toString())
 					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
 			{
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
 				updateOrderStatusCancelled(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
 			else if (refundReason.equalsIgnoreCase(JuspayRefundType.RETURN.toString())
 					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
 			{
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
 				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
-
+			else if (!StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+			{
+				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.REFUND_IN_PROGRESS);
+				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
+			}
 
 		}
 		catch (final Exception e)

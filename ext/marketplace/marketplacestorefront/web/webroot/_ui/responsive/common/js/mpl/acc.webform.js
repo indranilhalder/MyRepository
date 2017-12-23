@@ -16,6 +16,7 @@ ACC.WebForm = {
 							html : data,
 							width : "500px"
 						});
+						$('#colorbox').attr('style','display: block !important');
 					},
 					error : function(resp) {
 						console.log("Error in Submit Ticket" + resp);
@@ -334,6 +335,7 @@ ACC.WebForm = {
 
 	},
 	loadOrderLines : function(currentPage) {
+		var orderLineFound=false;
 		var htmlOption = "";
 		//performance fix
 		if ($(".selectOrderSec").length) {
@@ -371,19 +373,26 @@ ACC.WebForm = {
 										+ "</span>";
 							}
 							htmlOption += "</div></div></li>";
-
+							
+							orderLineFound=true;
 						});
 						// call default first page
 						// call default first page
 						$(".orderDrop").html(htmlOption);
-						$("#totalPages").val(data.totalOrderLines);
+						
 						//$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
 						ACC.WebForm.loadPaginationLink(data.totalOrderLines,currentPage);
 
 					}
+					//TISPRDT-8060
+					if(data.totalOrderLines!=undefined){
+						$("#totalPages").val(data.totalOrderLines);
+					}
 					
-
+					if(orderLineFound==false){
+						ACC.WebForm.loadOrderLines(currentPage+1);
+					}
 				},
 				error : function(resp) {
 					console.log("Error in loadOrderLines" + resp);
@@ -468,6 +477,7 @@ ACC.WebForm = {
 		var ticketAnswer = $("option:selected", div).attr("ticketAnswer");
 		var nodeType = $(div).attr("name");
 		var nodcheck = $(div).attr("nodcheck");
+		var parentNode=$(div).attr("parentNode");
 		// for radio
 		if (nodeValue == undefined) {
 			nodeValue = $(div).val();
@@ -498,17 +508,22 @@ ACC.WebForm = {
 							htmlOption += " >" + data.nodeDesc + "</option>";
 
 						});
+						
+						$("input[name=nodeL0]").val(parentNode);
+						
 						$("select[name=nodeL2]").html(htmlOption);
-						$("select[name=nodeL2]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL2]").parent().children(".holder")
-								.removeClass('active');
-						$("select[name=nodeL3]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL3]").parent().children(".holder")
-								.removeClass('active');
+						$("select[name=nodeL2]").parent().children(".holder").html("");
+						$("select[name=nodeL2]").parent().children(".holder").removeClass('active');
+						
+						$("select[name=nodeL3]").parent().children(".holder").html("");
+						$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 						$("select[name=nodeL3]").html("");
+						
 						$("input[name=nodeL4]").val("");
+						$("input[name=ticketType]").val("");
+						$("input[name=orderCode]").val("");
+						$("input[name=subOrderCode]").val("");
+						$("input[name=transactionId]").val("");
 
 						if (nodcheck === 'true') {
 							$(".selectOrderSec").show();
@@ -540,10 +555,8 @@ ACC.WebForm = {
 						});
 
 						$("select[name=nodeL3]").html(htmlOption);
-						$("select[name=nodeL3]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL3]").parent().children(".holder")
-								.removeClass('active');
+						$("select[name=nodeL3]").parent().children(".holder").html("");
+						$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 						$("input[name=nodeL4]").val("");
 						$("#nodeL2Text").val(nodeText);
 

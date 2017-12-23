@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.wsdto;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -15,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "lineItems")
 @XmlType(propOrder =
 { "lineItemId", "returnReasonCode", "cancelReasonCode", "timeSlotFrom", "timeSlotTo", "reverseSealLostflag",
-		"subReturnReasonCode" })
+		"subReturnReasonCode", "uploadImage" })
 public class TicketlineItemsXMLData
 {
 	private String lineItemId;
@@ -25,6 +27,7 @@ public class TicketlineItemsXMLData
 	private String timeSlotFrom;
 	private String timeSlotTo;
 	private String subReturnReasonCode;
+	private List<UploadImage> uploadImage;
 
 	//R2.3 Changes END
 
@@ -155,5 +158,23 @@ public class TicketlineItemsXMLData
 	public void setSubReturnReasonCode(final String subReturnReasonCode)
 	{
 		this.subReturnReasonCode = subReturnReasonCode;
+	}
+
+	/**
+	 * @return the uploadImage
+	 */
+	@XmlElement(name = "UploadImage")
+	public List<UploadImage> getUploadImage()
+	{
+		return uploadImage;
+	}
+
+	/**
+	 * @param uploadImage
+	 *           the uploadImage to set
+	 */
+	public void setUploadImage(final List<UploadImage> uploadImage)
+	{
+		this.uploadImage = uploadImage;
 	}
 }

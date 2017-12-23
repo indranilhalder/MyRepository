@@ -1502,8 +1502,8 @@ public class OrdersController extends BaseCommerceController
 			final int pageSizeConFig = Integer.parseInt(configurationService.getConfiguration()
 					.getString(MarketplacewebservicesConstants.ORDER_HISTORY_PAGESIZE_WEBSERVICE, "10").trim());
 
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSizeConFig, sort,
-					showMode);
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+					pageSizeConFig, sort, showMode);
 			if (null == searchPageDataParentOrder.getResults())
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9046);

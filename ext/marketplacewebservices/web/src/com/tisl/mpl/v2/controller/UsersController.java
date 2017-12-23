@@ -9159,25 +9159,116 @@ public class UsersController extends BaseCommerceController
 	{
 		CRMWebFormDataResponse crmWebFormDTO = new CRMWebFormDataResponse();
 		final CRMWebFormDataRequest crmTicket = new CRMWebFormDataRequest();
+		boolean errorFlag = false;
+		String errorMessage = null;
 		try
 		{
-			crmTicket.setContactMobile(contactMobile);
-			crmTicket.setContactEmail(contactEmail);
-			crmTicket.setContactName(contactName);
-			crmTicket.setNodeL0(nodeL0);
-			crmTicket.setNodeL1(nodeL1);
-			crmTicket.setNodeL2(nodeL2);
-			crmTicket.setNodeL3(nodeL3);
-			crmTicket.setNodeL4(nodeL4);
-			crmTicket.setTicketType(ticketType);
+			if (StringUtils.isNotEmpty(ticketType))
+			{
+				crmTicket.setTicketType(ticketType);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :ticketType";
+			}
 
+			if (StringUtils.isNotEmpty(contactEmail))
+			{
+				crmTicket.setContactEmail(contactEmail);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :contactEmail";
+			}
+
+			if (StringUtils.isNotEmpty(contactName))
+			{
+				crmTicket.setContactName(contactName);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :contactName";
+			}
+
+			if (StringUtils.isNotEmpty(contactMobile))
+			{
+				crmTicket.setContactMobile(contactMobile);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :contactMobile";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL0))
+			{
+				crmTicket.setNodeL0(nodeL0);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L0 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL1))
+			{
+				crmTicket.setNodeL1(nodeL1);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L1 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL2))
+			{
+				crmTicket.setNodeL2(nodeL2);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L2 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL3))
+			{
+				crmTicket.setNodeL3(nodeL3);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L3 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL4))
+			{
+				crmTicket.setNodeL4(nodeL4);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L4 ";
+			}
 			crmTicket.setOrderCode(orderCode);
 			crmTicket.setSubOrderCode(subOrderCode);
 			crmTicket.setTransactionId(transactionId);
 			crmTicket.setComment(comment);
 			crmTicket.setAttachmentFiles(attachmentFiles);
+			if (errorFlag)
+			{
 
-			crmWebFormDTO = mplWebFormFacade.getTicketSubmitForm(crmTicket);
+				crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				crmWebFormDTO.setErrorMessage(errorMessage);
+				crmWebFormDTO.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			}
+			else
+			{
+				crmWebFormDTO = mplWebFormFacade.getTicketSubmitForm(crmTicket);
+				crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
 
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -9891,7 +9982,7 @@ public class UsersController extends BaseCommerceController
 
 		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
-		OrderDataWsDTO order = null;
+
 		final int orderCount = 0;
 		final int start = 0, end = 0;
 		OrderData orderDetails = null;
@@ -9918,11 +10009,8 @@ public class UsersController extends BaseCommerceController
 					{
 						continue;
 					}
-					order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
-					if (null != order)
-					{
-						orderTrackingListWsDTO.add(order);
-					}
+					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					orderTrackingListWsDTO.add(order);
 				}
 				if (searchPageDataParentOrder.getPagination() != null
 						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
@@ -9930,8 +10018,9 @@ public class UsersController extends BaseCommerceController
 					final int totalNum = Integer.parseInt(String.valueOf(searchPageDataParentOrder.getPagination()
 							.getTotalNumberOfResults()));
 					orderHistoryListData.setTotalNoOfOrders(totalNum);
+
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-					orderHistoryListData.setOrderData(orderTrackingListWsDTO);
+					orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else

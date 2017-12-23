@@ -257,7 +257,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -370,7 +370,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -707,11 +707,15 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setCustomerID(mplWebCrmTicketModel.getCustomerId());
 			}
-			if (null != mplWebCrmTicketModel.getOrderCode())
+			if (null != mplWebCrmTicketModel.getOrderCode()
+					&& mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+							MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
 			{
 				ticket.setOrderId(mplWebCrmTicketModel.getOrderCode());
 			}
-			if (null != mplWebCrmTicketModel.getSubOrderCode())
+			if (null != mplWebCrmTicketModel.getSubOrderCode()
+					&& mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+							MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
 			{
 				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
 			}
@@ -758,16 +762,12 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setComments(mplWebCrmTicketModel.getComment());
 			}
-			if (null != mplWebCrmTicketModel.getAttachments())
-			{
-				final List<String> items = Arrays.asList(mplWebCrmTicketModel.getAttachments().split(","));
-				for (final String path : items)
-				{
-					uploadImage.setImagePath(path);
-					uploadImageList.add(uploadImage);
-				}
-				ticket.setUploadImage(uploadImageList);
-			}
+			/*
+			 * if (null != mplWebCrmTicketModel.getAttachments()) { final List<String> items =
+			 * Arrays.asList(mplWebCrmTicketModel.getAttachments().split(",")); for (final String path : items) {
+			 * uploadImage.setImagePath(path); uploadImageList.add(uploadImage); } ticket.setUploadImage(uploadImageList);
+			 * }
+			 */
 			if (null != mplWebCrmTicketModel.getCustomerMobile())// to -do
 			{
 				addressInfo.setPhoneNo(mplWebCrmTicketModel.getCustomerMobile());
@@ -786,9 +786,23 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticketLineObj.setLineItemId(mplWebCrmTicketModel.getTransactionId());
 			}
+			if (null != mplWebCrmTicketModel.getAttachments())
+			{
+				final List<String> items = Arrays.asList(mplWebCrmTicketModel.getAttachments().split(","));
+				for (final String path : items)
+				{
+					uploadImage.setImagePath(path);
+					uploadImageList.add(uploadImage);
+				}
+				ticketLineObj.setUploadImage(uploadImageList);
+			}
 			ticketlineItemsXMLDataList.add(ticketLineObj);
-			ticket.setLineItemDataList(ticketlineItemsXMLDataList);
 
+			if (mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+					MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
+			{
+				ticket.setLineItemDataList(ticketlineItemsXMLDataList);
+			}
 			//call for sending it to PI
 			//ticketCreationCRM(ticket);
 		}

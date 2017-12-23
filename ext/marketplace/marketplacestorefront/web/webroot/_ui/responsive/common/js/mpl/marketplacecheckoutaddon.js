@@ -10500,8 +10500,9 @@ function proceedToNextStep(pmode,cardinfo,refno) {
 	else{
      dataString = formatPaymentInfo(pmode,cardinfo,refno);
 		if(dataString != "") {
-			
-			placeAnOrder(dataString);
+			showloaderAndDisableButton();
+			setTimeout(placeAnOrder, 0,dataString);
+			//placeAnOrder(dataString);
 		}
 	  }
 }
@@ -11319,7 +11320,6 @@ function loadTermsAsperEmiBank()
 
 //Place order button from payment page
 function placeAnOrder(dataString){
-	   showloaderAndDisableButton();
 	   var modeofPayment  = $("#paymentMode").val();
 	   if(modeofPayment == 'Credit Card') {
 		   
