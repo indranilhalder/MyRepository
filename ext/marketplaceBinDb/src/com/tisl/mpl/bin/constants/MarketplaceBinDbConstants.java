@@ -26,6 +26,10 @@ public final class MarketplaceBinDbConstants /* extends GeneratedMarketplaceBinD
 	}
 
 	public static final String BANKFORBINQUERY = "select {b:pk} from {Bin As b} WHERE {b.binno}=?bin and {b.version}=?version";
+	public static final String BANKFORSAVEDCARDBINQUERY = "select {b:bankName} from {Bin As b},{SavedCard As s} WHERE {s.cardReferenceNumber}=?cardrefno and {s.cardBinNumber} = {b.BinNo} and {b.version}=?version and {s.customer} =?bincustomer";
+	public static final String CARDREFNO = "cardrefno"; //TPR-7486
+	public static final String BINCUSTOMER = "bincustomer"; //TPR-7486
+
 	public static final String BINNO = "bin";
 	public static final String BINDAO = "binDao";
 	public static final String BINSERVICE = "binService";

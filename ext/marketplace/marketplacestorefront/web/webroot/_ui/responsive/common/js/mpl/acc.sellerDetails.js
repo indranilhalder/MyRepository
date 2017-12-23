@@ -666,7 +666,7 @@ function focusOnElement() {
 	    function  populateOfferMsgWrapper(productCode, sellerId, divId ){
 			var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			                  + "/getOfferMessage";		
-			var dataString = 'productCode=' + productCode;	
+			var dataString = 'productCode=' + productCode + '&sellerId=' + sellerId;		
 			$.ajax({
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
@@ -691,12 +691,22 @@ function focusOnElement() {
 							//TISSQAUAT-472 starts here
 							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
 								$("#promolist").val(offerMessageMap);
-								$(".pdp-promo-title-link").css("display", "block");		
+								//$(".pdp-promo-title-link").css("display", "block");		
+								if($(".pdp-promoDesc").text() == "")
+								{									
+								$(".pdp-promo-title-link").css("display", "none");
+								}
+							    else
+								{									
+								$(".pdp-promo-title-link").css("display", "block");
+								}
 							} 
 									
 												
 							$.each( offerMessageMap, function(key,value){		
 								
+							if(sellerId == key)
+							{
 								$.each(value, function(keyInternal,valueInternal){
 									 if(keyInternal == 'message'){
 										 message = valueInternal;
@@ -716,10 +726,10 @@ function focusOnElement() {
 									//$("otherseller_"+key).val(message);
 									
 								//}
-								 if(sellerId == key)
-								 {	
+								 	
 									if(!$.isEmptyObject(offerMessageMap)){	
 										    $(".pdp-promo-title-link").show();
+										    if($("#offerDetailIdSecondDiv").length < 1){
 											if($(".pdp-promo-title").length > 0){
 												$(pagelevelOffer).insertAfter(".pdp-promo-block");
 												$(modallevelOffer).insertAfter(".pdp-promoDesc");
@@ -727,7 +737,8 @@ function focusOnElement() {
 												//$(".pdp-promo-block").append(pagelevelOffer);
 												$(pagelevelOffer).insertAfter(".pdp-promo-block");
 												$(".offer-block").append(modallevelOffer);					
-											}			
+											}
+										}
 									}	
 									if(divId != null)
 									{
@@ -773,13 +784,13 @@ function focusOnElement() {
 				              $(".offerendyear-time,#offerendyearTime").html(resEdfirstpart);
 				              $(".offerendhour-time,#offerendhourTime").html(offEnd);            
 								 }
-								 else
+								 /*else
 								 {
 									// if($(".pdp-promo-title").length == 0) {
 										// $(".pdp-promo-title-link").css("display","none");		
 									// }
 									 x.append("<p>"+message+"</p>");								 
-								 }				
+								 }	*/			
 								})	
 								//Other Seller offer message details
 								/* if($("#otherSellerInfoId").is(':visible'))
@@ -797,8 +808,8 @@ function focusOnElement() {
 								}						
 				}
 			});	
-		}		
-		// End of TPR-589
+	    }		
+	    // End of TPR-589
 	    
 	    //Start of CAR-327
 	    function populatePrimaryOfrMsgWrapperOtherSellers(productCode, sellerId, divId )

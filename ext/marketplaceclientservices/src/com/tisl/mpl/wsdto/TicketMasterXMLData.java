@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
-{  "ecomRequestId","customerID", "orderId", "subOrderId", "ticketType", "refundType", "ticketSubType", "returnCategory", "lineItemDataList",
+{ "ecomRequestId", "customerID", "orderId", "subOrderId", "ticketType", "refundType", "ticketSubType", "returnCategory",
+		"lineItemDataList", "l0CatCode", "l1CatCode", "l2CatCode", "l3CatCode", "l4CatCode", "ticketCat", "comments",
 		"alternateContactName", "alternatePhoneNo", "source", "lineItemId", "addressInfo" })
 public class TicketMasterXMLData
 {
@@ -34,6 +35,144 @@ public class TicketMasterXMLData
 	private String ticketSubType;
 	private AddressInfoDTO addressInfo;
 	private String ecomRequestId;
+	//New addition for TPR-5989
+	private String L0CatCode;
+	private String L1CatCode;
+	private String L2CatCode;
+	private String L3CatCode;
+	private String L4CatCode;
+	private String TicketCat;
+	private String Comments;
+
+	//private List<UploadImage> uploadImage;
+
+
+
+	/**
+	 * @return the l0CatCode
+	 */
+	@XmlElement(name = "L0CatCode")
+	public String getL0CatCode()
+	{
+		return L0CatCode;
+	}
+
+	/**
+	 * @param l0CatCode
+	 *           the l0CatCode to set
+	 */
+	public void setL0CatCode(final String l0CatCode)
+	{
+		L0CatCode = l0CatCode;
+	}
+
+	/**
+	 * @return the l1CatCode
+	 */
+	@XmlElement(name = "L1CatCode")
+	public String getL1CatCode()
+	{
+		return L1CatCode;
+	}
+
+	/**
+	 * @param l1CatCode
+	 *           the l1CatCode to set
+	 */
+	public void setL1CatCode(final String l1CatCode)
+	{
+		L1CatCode = l1CatCode;
+	}
+
+	/**
+	 * @return the l2CatCode
+	 */
+	@XmlElement(name = "L2CatCode")
+	public String getL2CatCode()
+	{
+		return L2CatCode;
+	}
+
+	/**
+	 * @param l2CatCode
+	 *           the l2CatCode to set
+	 */
+	public void setL2CatCode(final String l2CatCode)
+	{
+		L2CatCode = l2CatCode;
+	}
+
+	/**
+	 * @return the l3CatCode
+	 */
+	@XmlElement(name = "L3CatCode")
+	public String getL3CatCode()
+	{
+		return L3CatCode;
+	}
+
+	/**
+	 * @param l3CatCode
+	 *           the l3CatCode to set
+	 */
+	public void setL3CatCode(final String l3CatCode)
+	{
+		L3CatCode = l3CatCode;
+	}
+
+	/**
+	 * @return the l4CatCode
+	 */
+	@XmlElement(name = "L4CatCode")
+	public String getL4CatCode()
+	{
+		return L4CatCode;
+	}
+
+	/**
+	 * @param l4CatCode
+	 *           the l4CatCode to set
+	 */
+	public void setL4CatCode(final String l4CatCode)
+	{
+		L4CatCode = l4CatCode;
+	}
+
+	/**
+	 * @return the ticketCat
+	 */
+	@XmlElement(name = "TicketCat")
+	public String getTicketCat()
+	{
+		return TicketCat;
+	}
+
+	/**
+	 * @param ticketCat
+	 *           the ticketCat to set
+	 */
+	public void setTicketCat(final String ticketCat)
+	{
+		TicketCat = ticketCat;
+	}
+
+	/**
+	 * @return the comments
+	 */
+	@XmlElement(name = "Comments")
+	public String getComments()
+	{
+		return Comments;
+	}
+
+	/**
+	 * @param comments
+	 *           the comments to set
+	 */
+	public void setComments(final String comments)
+	{
+		Comments = comments;
+	}
 
 	/**
 	 * @return the lineItemId
@@ -263,9 +402,10 @@ public class TicketMasterXMLData
 	}
 
 	/**
-	 * @param addressInfo the addressInfo to set
+	 * @param addressInfo
+	 *           the addressInfo to set
 	 */
-	public void setAddressInfo(AddressInfoDTO addressInfo)
+	public void setAddressInfo(final AddressInfoDTO addressInfo)
 	{
 		this.addressInfo = addressInfo;
 	}
@@ -273,7 +413,7 @@ public class TicketMasterXMLData
 	/**
 	 * @return the ecomRequestId
 	 */
-	
+
 	@XmlElement(name = "EcomRequestId")
 	public String getEcomRequestId()
 	{
@@ -281,11 +421,25 @@ public class TicketMasterXMLData
 	}
 
 	/**
-	 * @param ecomRequestId the ecomRequestId to set
+	 * @param ecomRequestId
+	 *           the ecomRequestId to set
 	 */
-	public void setEcomRequestId(String ecomRequestId)
+	public void setEcomRequestId(final String ecomRequestId)
 	{
 		this.ecomRequestId = ecomRequestId;
 	}
+
+	/**
+	 * @return the uploadImage
+	 */
+	/*
+	 * @XmlElement(name = "UploadImage") public List<UploadImage> getUploadImage() { return uploadImage; }
+	 *//**
+	 * @param uploadImage
+	 *           the uploadImage to set
+	 */
+	/*
+	 * public void setUploadImage(final List<UploadImage> uploadImage) { this.uploadImage = uploadImage; }
+	 */
 
 }

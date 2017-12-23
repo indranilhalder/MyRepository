@@ -4,6 +4,9 @@
 package com.tisl.mpl.storefront.web.forms;
 
 import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -49,6 +52,7 @@ public class MplReturnsForm
 	private String comments;
 	private String subReturnReason;
 	private String imagePath;
+	private List<MultipartFile> images;
 
 	/**
 	 * @return the comments
@@ -657,7 +661,7 @@ public class MplReturnsForm
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -672,6 +676,23 @@ public class MplReturnsForm
 				+ ", state=" + state + ", country=" + country + ", isDefault=" + isDefault + ", scheduleReturnDate="
 				+ scheduleReturnDate + ", scheduleReturnTime=" + scheduleReturnTime + ", isCODorder=" + isCODorder + ", orderCode="
 				+ orderCode + ", transactionId=" + transactionId + ", ussid=" + ussid + ", reverseSeal=" + reverseSeal + "]";
+	}
+
+	/**
+	 * @return the images
+	 */
+	public List<MultipartFile> getImages()
+	{
+		return images;
+	}
+
+	/**
+	 * @param images
+	 *           the images to set
+	 */
+	public void setImages(final List<MultipartFile> images)
+	{
+		this.images = images;
 	}
 
 }

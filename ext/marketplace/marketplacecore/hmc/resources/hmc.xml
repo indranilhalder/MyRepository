@@ -732,9 +732,7 @@
 							<!-- TPR-3809-->							
 							<attribute name="forwardSealNum" />
 							<attribute name="reverseSealNum" /> 
-
-
-
+							<attribute name="refundDetails" /> 
 						</listlayout>
 					</section>
 				</tab>
@@ -5212,5 +5210,7 @@
 		</organizer>
 	</type>
 <!-- PR-15 starts here -->	
+
+
 	
 </configuration>

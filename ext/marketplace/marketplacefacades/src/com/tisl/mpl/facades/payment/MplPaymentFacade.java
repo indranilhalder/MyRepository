@@ -500,6 +500,10 @@ public interface MplPaymentFacade
 	 */
 	public boolean validateBank(final List<BankModel> bankList, final String bank);
 
+	//TPR-7486
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer);
+
+	public String fetchBanknameFromBin(final String cardBinNo);//TPR-7486
 	/**
 	 * Added for paytm integration
 	 * 

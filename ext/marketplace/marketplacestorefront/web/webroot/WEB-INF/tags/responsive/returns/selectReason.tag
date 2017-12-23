@@ -118,7 +118,9 @@
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
 							<b><spring:theme code="text.order.returns.reasonvalidation.message"></spring:theme></b> <br/><br/>
 							
-							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" >
+							
+							
+							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" onchange="fetchCatSpecificReason(this)">
 								    <option selected='selected' value="NA"><spring:theme code="text.requestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
@@ -130,6 +132,39 @@
 						<br/><br/>
 						<br/><br/>
 						<br/><br/>
+						
+						<!-- TPR-5954 || start -->
+						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
+						<c:choose> 
+						<c:when  test="${not empty subReasonDataList}">
+							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason">
+								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
+									<c:forEach items="${subReasonDataList}" var="subReason"
+										varStatus="reasonStatus">
+										<form:option value="${subReason.code}">${subReason.reasonDescription}</form:option>	
+									</c:forEach>									
+							</form:select>	
+						</c:when>
+						<c:otherwise>
+							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason" style="display:none">
+								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
+									<c:forEach items="${subReasonDataList}" var="subReason"
+										varStatus="reasonStatus">
+										<form:option value="${subReason.code}">${subReason.reasonDescription}</form:option>	
+									</c:forEach>									
+							</form:select>
+							</c:otherwise>
+						</c:choose> 
+							<br/><br/>
+										
+							<div>
+								<form:textarea maxlength="250"  rows="3" cols="45" path="comments" name="returnComments" placeholder="Comments" />
+							</div>
+									
+						<!-- TPR-5954 || end -->			
+											
+						</div>
+					
 						
 						<!-- TPR-4134 -->
 						<input type="hidden" id="ifShowReverseSeal" value="${showReverseSeal}">

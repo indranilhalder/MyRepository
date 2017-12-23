@@ -25,6 +25,7 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 
 
 /**
@@ -291,26 +293,25 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 	@Override
 	protected double getOrderDiscountsAmount(final AbstractOrderModel source)
 	{
+		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
+
 		double discounts = 0.0d;
-		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
-		final List<DiscountModel> voucherList = source.getDiscounts();
-		if (CollectionUtils.isNotEmpty(discountList))
+
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(source.getEntries());
+
+		if (CollectionUtils.isNotEmpty(entryList))
 		{
-			for (final DiscountValue discount : discountList)
+			for (final AbstractOrderEntryModel entry : entryList)
 			{
-				//if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-				//Changed for TISSTRT-194
-				if (CollectionUtils.isEmpty(voucherList) || CollectionUtils.isNotEmpty(voucherList)
-						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //if no voucher is applied
-				{
-					final double value = discount.getAppliedValue();
-					if (value > 0.0d)
-					{
-						discounts += value;
-					}
-				}
+				final Double cartDiscount = (null != entry.getCartLevelDisc() && entry.getCartLevelDisc().doubleValue() > 0)
+						? entry.getCartLevelDisc() : Double.valueOf(0);
+				final Double cartCouponDiscount = (null != entry.getCartCouponValue() && entry.getCartCouponValue().doubleValue() > 0)
+						? entry.getCartCouponValue() : Double.valueOf(0);
+
+				discounts += cartDiscount.doubleValue() + cartCouponDiscount.doubleValue();
 			}
 		}
+
 
 		return discounts;
 	}
@@ -321,25 +322,48 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 	{
 		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
-		double discounts = 0.0d;
+
+		double userCouponDiscounts = 0.0d;
+		double cartCouponDiscounts = 0.0d;
+
 		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
 		final List<DiscountModel> voucherList = source.getDiscounts();
 		if (CollectionUtils.isNotEmpty(discountList))
 		{
 			for (final DiscountValue discount : discountList)
 			{
-				if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+				for (final DiscountModel voucher : voucherList)
 				{
-					final double value = discount.getAppliedValue();
-					if (value > 0.0d)
+					if (discount.getCode().equalsIgnoreCase(voucher.getCode()))
 					{
-						discounts += value;
+
+						final double value = discount.getAppliedValue();
+						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel))
+						{
+							if (value > 0.0d)
+							{
+								userCouponDiscounts += value;
+							}
+						}
+						else if (voucher instanceof MplCartOfferVoucherModel)
+						{
+							if (value > 0.0d)
+							{
+								cartCouponDiscounts += value;
+							}
+						}
+
+
 					}
 				}
+
 			}
 		}
 
-		target.setCouponDiscount(createPrice(source, Double.valueOf(discounts)));
+		target.setCouponDiscount(createPrice(source, Double.valueOf(userCouponDiscounts)));
+
+		target.setCartCouponDiscount(createPrice(source, Double.valueOf(cartCouponDiscounts)));
+
 	}
 
 	private void addPickupPersonDetails(final OrderModel source, final OrderData target)
@@ -348,19 +372,19 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		target.setPickupPhoneNumber(source.getPickupPersonMobile());
 	}
 
-	private void addDeliverryAddressList(OrderModel source, OrderData target)
+	private void addDeliverryAddressList(final OrderModel source, final OrderData target)
 	{
 		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
 
-		List<AddressData> addressDataList = new ArrayList<AddressData>();
-	
-		Collection<AddressModel> addressModelListsource = 	source.getUser().getAddresses();
+		final List<AddressData> addressDataList = new ArrayList<AddressData>();
+
+		final Collection<AddressModel> addressModelListsource = source.getUser().getAddresses();
 		if (addressModelListsource != null)
 		{
-			for (AddressModel addressModel : addressModelListsource)
+			for (final AddressModel addressModel : addressModelListsource)
 			{
-				AddressData addressData = getAddressConverter().convert(addressModel);
+				final AddressData addressData = getAddressConverter().convert(addressModel);
 				addressDataList.add(addressData);
 			}
 		}

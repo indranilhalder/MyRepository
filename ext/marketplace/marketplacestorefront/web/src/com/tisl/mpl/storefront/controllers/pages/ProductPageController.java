@@ -3873,7 +3873,8 @@ public class ProductPageController extends MidPageController
 	@ResponseBody
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/getOfferMessage", method = RequestMethod.GET)
 	public JSONObject populateOfferMessage(
-			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLERID) final String sellerId)
 			throws com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
@@ -3967,7 +3968,8 @@ public class ProductPageController extends MidPageController
 							//final boolean excludePromotion = false;
 							if (null != productPromotion)
 							{
-								if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								//if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								if (CollectionUtils.isNotEmpty(productPromotion.getExcludedProducts()))//EQA fix
 								{
 									final List<ProductModel> excludedList = new ArrayList<ProductModel>(
 											productPromotion.getExcludedProducts());

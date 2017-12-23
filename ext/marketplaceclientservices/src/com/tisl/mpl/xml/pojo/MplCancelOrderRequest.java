@@ -136,7 +136,7 @@ public class MplCancelOrderRequest
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder =
 	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks", "pinCode",
-			"returnFulfillmentMode", "subReasonCode", "comments", "imageUrl" })
+			"returnFulfillmentMode", "subReasonCode", "comments", "uploadImg" })
 	public static class OrderLine
 	{
 
@@ -162,8 +162,8 @@ public class MplCancelOrderRequest
 		protected String subReasonCode;
 		@XmlElement(name = "Comments")
 		protected String comments;
-		@XmlElement(name = "ImageUrl")
-		protected String imageUrl;
+		@XmlElement(name = "UploadImage")
+		protected uploadImage uploadImg;
 
 		/**
 		 * @return the subReasonCode
@@ -200,20 +200,20 @@ public class MplCancelOrderRequest
 		}
 
 		/**
-		 * @return the imageUrl
+		 * @return the uploadImg
 		 */
-		public String getImageUrl()
+		public uploadImage getUploadImg()
 		{
-			return imageUrl;
+			return uploadImg;
 		}
 
 		/**
-		 * @param imageUrl
-		 *           the imageUrl to set
+		 * @param uploadImg
+		 *           the uploadImg to set
 		 */
-		public void setImageUrl(final String imageUrl)
+		public void setUploadImg(final uploadImage uploadImg)
 		{
-			this.imageUrl = imageUrl;
+			this.uploadImg = uploadImg;
 		}
 
 		/**
@@ -388,6 +388,34 @@ public class MplCancelOrderRequest
 		{
 			this.pinCode = pinCode;
 		}
+
+	}
+
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder =
+	{ "imgPath" })
+	public static class uploadImage
+	{
+		@XmlElement(name = "ImagePath")
+		private List<String> imgPath;
+
+		/**
+		 * @return the imgPath
+		 */
+		public List<String> getImgPath()
+		{
+			return imgPath;
+		}
+
+		/**
+		 * @param imgPath
+		 *           the imgPath to set
+		 */
+		public void setImgPath(final List<String> imgPath)
+		{
+			this.imgPath = imgPath;
+		}
+
 
 	}
 

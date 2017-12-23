@@ -509,6 +509,8 @@ public final class ModelAttributetConstants
 	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
 	public static final String BASEPRICEMAP = "basePriceMap";
 	public static final String MRPPRICEMAP = "mrpPriceMap";
+	public static final String DELCHARGE = "deliveryPrice";
+
 	//Add to Cart
 	public static final String WISHLISTDATA = "wishlistDatas";
 	public static final String QUANTITY = "quantity";
@@ -985,5 +987,6 @@ public final class ModelAttributetConstants
 	public static final String SPECIAL_FEATURES = "special Features";
 	public static final String FEATURES = "Features";
 	// TPR-3878 END
-
+	public static final String SUB_REASON = "subReason";
+	public static final String NEW_COMMENTS = "newComments";
 }

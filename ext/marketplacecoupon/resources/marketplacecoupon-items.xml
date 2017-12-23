@@ -57,6 +57,15 @@
 			<value code="cartAbanPmtPage"/>
 			<value code="cartAbanCartPage"/>
         </enumtype>
+        <!-- TPR-7448 Starts here -->
+        <enumtype code="timeLimitTypeEnum" autocreate="true"
+			generate="true">
+			<value code="day" />
+			<value code="week" />
+			<value code="month" />
+			<value code="year" />
+		</enumtype>
+		<!-- TPR-7448 Ends here -->
     </enumtypes>
 
 	<itemtypes>
@@ -119,6 +128,36 @@
 						optional="true" />
 					<persistence type="property" />
 				</attribute>
+				<!-- TPR-7448 Starts here-->
+				<attribute autocreate="true" qualifier="maxAvailCount"
+					type="java.lang.Integer">
+					<description>Max. count that can be availed for One card per offer</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="maxAmountPerTimeLimit"
+					type="java.lang.Double">
+					<description>Max. amount that can be availed per time limit for One card per offer</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="timeLimit"
+					type="timeLimitTypeEnum">
+					<description>configurable time limit to be used with maxAmountPerTimeLimit</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="maxAmountAllTransaction"
+					type="java.lang.Double">
+					<description>Max. amount that can be availed across all transactions.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<!-- TPR-7448 Ends here-->
 			</attributes>
 
 		</itemtype> 
@@ -457,6 +496,90 @@
 				 </attribute>
 		 	</attributes>
 		 </itemtype>
+		 
+		 <!-- New Coupon created for Promotion Sequencing-->
+		 
+		 <itemtype code="MplCartOfferVoucher" 
+			extends="PromotionVoucher" 
+			jaloclass="com.tisl.mpl.jalo.MplCartOfferVoucher"
+			autocreate="true" 
+			generate="true">
+			
+			<attributes>
+			<attribute qualifier="termsAndCondition" type="localized:java.lang.String">
+ 				<description>The message to show configurable text in Offer Section</description>
+ 				<modifiers read="true" write="true" optional="true" />
+ 					<persistence type="property">
+ 						<columntype database="oracle">
+ 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
+ 						</columntype>
+ 						<columntype database="mysql">
+ 							<value>text</value>
+ 						</columntype>
+ 						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+ 						</columntype>
+ 						<columntype database="hsqldb">
+ 							<value>LONGVARCHAR</value>
+ 						</columntype>
+ 					<columntype>
+ 							<value>varchar</value>
+ 						</columntype>
+ 					</persistence>
+ 			</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="MplOrderRestriction"
+			extends="OrderRestriction"
+			jaloclass="com.tisl.mpl.jalo.MplOrderRestriction"
+			autocreate="true"
+			generate="true">
+		</itemtype>
+		 
+		 
+		 <!-- New Coupon created for Promotion Sequencing ends -->
+		 
+		 <!-- TPR-7448 Starts here -->
+		 <itemtype code="VoucherCardPerOfferInvalidation" autocreate="true" generate="false">
+		 	<deployment table="MplCardOfferInvalidation" typecode="16002"/>
+			<attributes>
+				<attribute qualifier="guid" type="java.lang.String"  generate="false">
+					<description>the cart guid against which the voucher is being redeemed</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+				<attribute qualifier="cardRefNo" type="java.lang.String"  generate="false">
+					<description>the card reference number returned by juspay</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+				<attribute qualifier="voucher" type="PromotionVoucher" generate="false">
+					<description>voucher code</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+				<attribute qualifier="discount" type="java.lang.Double"  generate="false">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>discount received</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+			</attributes>
+		</itemtype>
+		<!-- TPR-7448 Ends here -->
 		
 	</itemtypes>
 </items>

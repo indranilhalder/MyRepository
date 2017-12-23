@@ -153,6 +153,17 @@
 		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/autorefundinitiate-process.xml"/>
 	</bean>
 	<!-- TPR-1348 -->
+	
+	<!-- TPR-5989 :: Web form -->
+	<bean id="WebFormProcessDefinitionResource" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/WebFormTicket-process.xml"/>
+	</bean>
+	<!-- TPR-5989 :: Web form -->
    	
+   	<!-- SDI 3591 -->
+	<bean id="codreturnomssyncProcessDefinitionResource" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/codreturnomssync-process.xml"/>
+	</bean>
+	<!-- SDI 3591 -->
 	
 </beans>

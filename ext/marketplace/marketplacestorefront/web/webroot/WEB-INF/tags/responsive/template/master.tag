@@ -84,9 +84,8 @@
 	<!-- PRDI-422 ends-->
 	
 	
-	<!-- <meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" /> -->
-	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
- 	 <meta name="google-site-verification" content="BinPUCzYwsMCqMgbZ7Dxaik-cMOJPhoXkn4x7sJiM8c" />
+	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU"/>
+	 
 	
 	
 	<c:set var="host" value="${header.host}"/>
@@ -458,7 +457,8 @@
  					&& $("#pageType").val() != "productsearch" 
  					&& $("input[name=productGrid]").length == 0
  					&& $("input[name=apparelCategoryLandingPage]").length == 0
-					&& $("input[name=BrandLayoutPage]").length == 0){
+					&& $("input[name=BrandLayoutPage]").length == 0
+					&& $("#pageType").val() != "/faq"){
  			callGigya();
  			}
  		});

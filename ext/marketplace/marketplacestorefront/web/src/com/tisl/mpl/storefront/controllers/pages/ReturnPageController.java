@@ -7,6 +7,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.i18n.I18NFacade;
@@ -41,6 +42,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -181,6 +183,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	public String initiateReturn(final MplReturnsForm returnForm, final Model model, final HttpServletRequest request,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
 	{
+		//TPR-5954
+		if (null != returnForm.getSubReturnReason() && !returnForm.getSubReturnReason().isEmpty())
+		{
+			if (returnForm.getSubReturnReason().equalsIgnoreCase("NA"))
+			{
+				returnForm.setSubReturnReason("");
+			}
+		}
+		if (null != returnForm.getComments() && !returnForm.getComments().isEmpty() && returnForm.getComments().length() >= 250) //server side length check
+		{
+			final String comments = returnForm.getComments().substring(0, 249);
+			returnForm.setComments(comments);
+		}
 		boolean cancellationStatus;
 		LOG.info(returnForm);
 		boolean quickdrop = false;
@@ -215,7 +230,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			//TATA-823 end
 			//TPR-5954
 			ProductModel productModel = null;
-			//final String L2Cat = null;
+			String L2Cat = null;
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
@@ -285,24 +300,87 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 			}
 
-			final List<ReturnReasonData> reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
 
-
-			if (!reasonDataList.isEmpty())
+			//TPR-5954 || Category specific return reason || Start
+			Collection<CategoryModel> superCategories = productModel.getSupercategories();
+			if (CollectionUtils.isNotEmpty(superCategories)) //IQA comments
 			{
-				for (final ReturnReasonData reason : reasonDataList)
+				outer: for (final CategoryModel category : superCategories)
 				{
-					if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+					if (category.getCode().startsWith("MPH"))
 					{
-						model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+						superCategories = category.getSupercategories();
+						for (final CategoryModel category1 : superCategories)
+						{
+							if (category1.getCode().startsWith("MPH"))
+							{
+								superCategories = category1.getSupercategories();
+								for (final CategoryModel category2 : superCategories)
+								{
+									if (category2.getCode().startsWith("MPH"))
+									{
+										L2Cat = category2.getCode();
+										break outer;
+									}
+								}
+							}
+						}
+
 					}
 				}
 			}
+			//TPR-5954 || Category specific return reason || End
+			List<ReturnReasonData> reasonDataList = null;
+			List<ReturnReasonData> subReasonDataList = null;
+			reasonDataList = mplOrderFacade.getCatSpecificRetReason(L2Cat);
+			if (null != reasonDataList && !reasonDataList.isEmpty())
+			{
+				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+				//TPR-5954
+				final String reasonDesc = mplOrderFacade.fetchReasonDesc(returnForm.getReturnReason());
+				if (null != reasonDesc)
+				{
+					model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reasonDesc);
+				}
+				subReasonDataList = fetchSubReturnReason(returnForm.getReturnReason());
+				if (!subReasonDataList.isEmpty())
+				{
+					for (final ReturnReasonData reason : subReasonDataList)
+					{
+						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+						{
+							model.addAttribute("subReasonDescription", reason.getReasonDescription());
+						}
+					}
+				}
 
-			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+				model.addAttribute("subReasonDataList", subReasonDataList);
+			}
+			else
+			{ //Fall back for return reason code
+				reasonDataList = mplOrderFacade.getReturnReasonForOrderItem();
+				if (!reasonDataList.isEmpty())
+				{
+					for (final ReturnReasonData reason : reasonDataList)
+					{
+						if (null != reason.getCode() && reason.getCode().equalsIgnoreCase(returnForm.getReturnReason()))
+						{
+							model.addAttribute(ModelAttributetConstants.REASON_DESCRIPTION, reason.getReasonDescription());
+						}
+					}
+				}
 
-
-
+				model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			}
+			if (null != returnForm.getSubReturnReason())
+			{
+				model.addAttribute(ModelAttributetConstants.SUB_REASON,
+						cancelReturnFacade.fetchSubReasonDesc(returnForm.getSubReturnReason()));
+			}
+			if (null != returnForm.getComments())
+			{
+				model.addAttribute(ModelAttributetConstants.NEW_COMMENTS, returnForm.getComments());
+			}
 			//JWLSPCUAT-282
 			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			//if logistic partner not available for the given pin code
@@ -494,6 +572,20 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnData.setUssid(returnForm.getUssid());
 				returnData.setReturnMethod(returnForm.getReturnMethod());
 				returnData.setReturnFulfillmentMode(returnFulfillmentType);
+				//TPR-5954
+				if (null != returnForm.getComments())
+				{
+					returnData.setComments(returnForm.getComments());
+				}
+				if (null != returnForm.getSubReturnReason())
+				{
+					returnData.setSubReasonCode(returnForm.getSubReturnReason());
+				}
+				//				if (null != returnForm.getImagePath())
+				//				{
+				//					returnData.getImageUrl();
+				//				}
+
 				// TPR-4134
 				if (null != returnForm.getReverseSeal())
 				{
@@ -627,6 +719,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnInfoDataObj.setReasonCode(returnForm.getReturnReason());
 				returnInfoDataObj.setUssid(returnForm.getUssid());
 				returnInfoDataObj.setReturnMethod(returnForm.getReturnMethod());
+				//TPR-5954
+				if (null != returnForm.getComments())
+				{
+					returnInfoDataObj.setComments(returnForm.getComments());
+				}
+				if (null != returnForm.getSubReturnReason())
+				{
+					returnInfoDataObj.setSubReasonCode(returnForm.getSubReturnReason());
+				}
+				//				if (null != returnForm.getImagePath())
+				//				{
+				//					returnInfoDataObj.setImageUrl(returnForm.getImagePath());
+				//				}
 				final boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,
 						returnInfoDataObj, customerData, SalesApplication.WEB, returnAddrData);
 				if (!cancellationStatusForSelfShip)
@@ -1444,5 +1549,22 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		this.accountAddressFacade = accountAddressFacade;
 	}
 
-
+	//TPR-5954
+	@ResponseBody
+	@RequireHardLogIn
+	@RequestMapping(value = "/fetchSubReason", method = RequestMethod.GET)
+	public List<ReturnReasonData> fetchSubReturnReason(@RequestParam final String parentReasonCode)
+	{
+		List<ReturnReasonData> returnReasonData = null;
+		try
+		{
+			returnReasonData = mplOrderFacade.getSubReasonCode(parentReasonCode);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex); //IQA comments
+			returnReasonData = new ArrayList<ReturnReasonData>();
+		}
+		return returnReasonData;
+	}
 }

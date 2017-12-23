@@ -35,6 +35,8 @@ public class CartSaveInterceptor implements PrepareInterceptor
 			final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) object;
 			final Double convinienceCharge = abstractOrderModel.getConvenienceCharges();
 			final Double totalPrice = abstractOrderModel.getTotalPrice();
+			//			final Double deliveryCost = (null != abstractOrderModel.getDeliveryCost()) ? abstractOrderModel.getDeliveryCost()
+			//					: Double.valueOf(0);
 
 			if (null != convinienceCharge)
 			{
@@ -43,7 +45,7 @@ public class CartSaveInterceptor implements PrepareInterceptor
 			else
 			{
 				abstractOrderModel.setConvenienceCharges(Double.valueOf(0.0));
-				abstractOrderModel.setTotalPriceWithConv(totalPrice);
+				abstractOrderModel.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue()));
 			}
 		}
 

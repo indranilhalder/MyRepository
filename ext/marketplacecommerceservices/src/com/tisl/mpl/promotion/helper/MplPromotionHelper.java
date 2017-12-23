@@ -617,20 +617,20 @@ public class MplPromotionHelper
 	 * public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final
 	 * AbstractOrder order, final List<AbstractPromotionRestriction> restrictionList) { //CR Changes final Map<String,
 	 * AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-	 *
+	 * 
 	 * final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new
 	 * ArrayList<AbstractOrderEntry>();
-	 *
+	 * 
 	 * // if (CollectionUtils.isNotEmpty(entries)) // { boolean isFreebie = false; boolean isofValidSeller = false;
 	 * String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final AbstractOrderEntry entry : entries) { isFreebie = validateEntryForFreebie(entry); if (!isFreebie) {
 	 * isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry); if
 	 * (isofValidSeller) { try { selectedUSSID = (String) entry.getAttribute(arg0,
 	 * MarketplacecommerceservicesConstants.SELECTEDUSSID); } catch (JaloInvalidParameterException |
 	 * JaloSecurityException e) { LOG.error(e); } validProductUssidMap.put(selectedUSSID, entry); } } } //}
-	 *
+	 * 
 	 * return validProductUssidMap; }
 	 */
 	//commented for PR-15 ends here
@@ -657,10 +657,7 @@ public class MplPromotionHelper
 	{
 
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-
 		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
-
-
 
 		boolean isFreebie = false;
 		boolean isofValidSeller = false;
@@ -669,9 +666,13 @@ public class MplPromotionHelper
 
 		for (final AbstractOrderEntry entry : entries)
 		{
+
 			isFreebie = validateEntryForFreebie(entry);
 			if (!isFreebie)
 			{
+
+				//final String fulfillmentType = (String) entry.getAttribute(arg0, "fulfillmentType"); // Blocked for TISPRDT-7819
+
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(entry.getProduct()))
 				{
 					if (CollectionUtils.isEmpty(restrictionList))
@@ -703,6 +704,71 @@ public class MplPromotionHelper
 
 		return validProductUssidMap;
 	}
+
+	@SuppressWarnings("deprecation")
+	public Map<String, AbstractOrderEntry> getCartTshipSellerEligibleProducts(final SessionContext arg0,
+			final AbstractOrder order, final List<AbstractPromotionRestriction> restrictionList,
+			final List<Product> allowedProductList) throws JaloInvalidParameterException, JaloSecurityException
+	{
+
+		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
+
+		boolean isFreebie = false;
+		boolean isofValidSeller = false;
+		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+
+		for (final AbstractOrderEntry entry : entries)
+		{
+
+			isFreebie = validateEntryForFreebie(entry);
+			if (!isFreebie)
+			{
+
+				final String fulfillmentType = (String) entry.getAttribute(arg0, "fulfillmentType");
+				if (fulfillmentType.equalsIgnoreCase("TSHIP") && CollectionUtils.isNotEmpty(allowedProductList)
+						&& allowedProductList.contains(entry.getProduct()))
+				{
+					if (CollectionUtils.isEmpty(restrictionList))
+					{
+						selectedUSSID = entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
+						validProductUssidMap.put(selectedUSSID, entry);
+					}
+					else
+					{
+						isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
+						if (isofValidSeller)
+						{
+							try
+							{
+								selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+							}
+							catch (JaloInvalidParameterException | JaloSecurityException e)
+							{
+								LOG.error(e);
+							}
+							validProductUssidMap.put(selectedUSSID, entry);
+						}
+					}
+
+				}
+			}
+		}
+
+
+		return validProductUssidMap;
+	}
+
+
+
+
+
+
+
+
+
+
 
 	// PR-15 ends here
 
@@ -1284,18 +1350,22 @@ public class MplPromotionHelper
 	{
 		final MplLimitedOfferData data = new MplLimitedOfferData();
 		String orginalUid = MarketplacecommerceservicesConstants.EMPTY;
+		String guid = StringUtils.EMPTY;
+		guid = getGUID(order);
 
 		final int totalOrderPlaced = getStockService().getTotalOfferOrderCount(promoCode,
-				MarketplacecommerceservicesConstants.EMPTY);
+				MarketplacecommerceservicesConstants.EMPTY, guid);
 		final int totalOfferCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList);
 		final int maxCustomerOfferCount = getStockCustomerRedeemCount(restrictionList);
+
+
 
 		if (totalOrderPlaced < totalOfferCount)
 		{
 			orginalUid = getOriginalUID(order);
 			if (StringUtils.isNotEmpty(orginalUid))
 			{
-				final int offerReceiveCount = getStockService().getTotalOfferOrderCount(promoCode, orginalUid);
+				final int offerReceiveCount = getStockService().getTotalOfferOrderCount(promoCode, orginalUid, guid);//TISHS-143
 				if (offerReceiveCount == 0)
 				{
 					data.setExhausted(false);
@@ -1563,5 +1633,16 @@ public class MplPromotionHelper
 	@Autowired
 	private CategoryService categoryService;
 
+	/**
+	 * Get GUID
+	 *
+	 * @param order
+	 * @return guid
+	 */
+	private String getGUID(final AbstractOrder order)
+	{
+		final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) modelService.get(order);
+		return abstractOrderModel.getGuid();
+	}
 
 }

@@ -658,6 +658,7 @@
 		<property name="externalTaxesService" ref="externalTaxesService" />
 		<property name="commercePlaceOrderMethodHooks" ref="commercePlaceOrderMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
+		<property name="mplVoucherService" ref="mplVoucherService" />
 		<!-- TPR-3782 -->
  		<property name="priceBreakupService" ref="priceBreakupService" />
 
@@ -1981,13 +1982,13 @@
 		</bean>
 		
 	<!-- TPR-3487 -->	
-	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+<!-- 	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
 
 	<bean id="SaveDeliveryCostInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="DeliveryCostInterceptor" />
 		<property name="typeCode" value="AbstractOrder" />	
-	</bean>	
+	</bean>	 -->
 	<!-- TPR-3487 -->		
 		
 	<!-- Bean for Promotion Job starts-->
@@ -2430,6 +2431,35 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
+	
+	<bean id="mplWebFormDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplWebFormDaoImpl" >
+	</bean>
+	
+	<bean id="mplWebFormService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplWebFormServiceImpl" >
+	</bean>
+
+	<bean id="refundClearPerformableDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
+
+	<bean id="refundClearPerformableService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultRefundClearPerformableServiceImpl">
+			<property name="modelService" ref="modelService" />
+	</bean>
+
+  <!-- TPR-7412 start -->   
+  <alias name="mplUtrNoArnNoService" alias="mplUtrNoArnNoService" />
+	<bean id="mplUtrNoArnNoService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplUtrNoArnNoSeviceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplUtrNoArnNoDao" alias="mplUtrNoArnNoDao" />
+	<bean id="mplUtrNoArnNoDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplUtrNoArnNoDaoImpl"
+			autowire="byName">
+	</bean>
+	<!--  TPR-7412 end -->
 
 	<!-- SDI-2924 -->
 	<bean id="forwardPaymentCleanUpService"

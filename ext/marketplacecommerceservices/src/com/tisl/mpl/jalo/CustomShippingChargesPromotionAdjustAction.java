@@ -1,5 +1,6 @@
 package com.tisl.mpl.jalo;
 
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -54,21 +55,33 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 	public boolean apply(final SessionContext ctx)
 	{
 		boolean needsCalc = false;
+		final PromotionResult promotionResult = getPromotionResult(ctx);
+		final AbstractOrder order = promotionResult.getOrder(ctx);
 
-		final PromotionResult result = getPromotionResult(ctx);
-		final AbstractOrder order = result.getOrder(ctx);
-		final Integer orderEntryNumber = getOrderEntryNumber(ctx);
-		final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
-
-		if (LOG.isDebugEnabled())
+		final boolean isShippingCartPromo = (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? true
+				: false;
+		if (isShippingCartPromo)
 		{
-			LOG.debug("(" + getPK() + ") apply: Applying OrderEntry adjustment action for order [" + order.getPK() + "]");
+			//			final Map<String, AbstractOrderEntry> validProductUssidMap = ctx.getAttributes().get(
+			//					MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
+			final List<AbstractOrderEntry> validProductUssidList = getValidProductUssidList();
+
+			for (final AbstractOrderEntry entry : validProductUssidList)
+			{
+				calculateApportionedDiscount(entry, ctx, promotionResult);
+			}
+		}
+		else
+		{
+			final Integer orderEntryNumber = getOrderEntryNumber(ctx);
+			final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
+			if (orderEntry != null)
+			{
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx, promotionResult);
+			}
 		}
 
-		if (orderEntry != null)
-		{
-			needsCalc = calculateApportionedDiscount(orderEntry, ctx, result);
-		}
 
 		return needsCalc;
 	}
@@ -85,31 +98,39 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
 		final Integer orderEntryNumber = getOrderEntryNumber(ctx);
-		final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
-
-		if (order != null)
+		if (orderEntryNumber != null)
 		{
-			//final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = null;
+			final AbstractOrderEntry orderEntry = findOrderEntry(order, ctx, orderEntryNumber);
 			if (ctx.getAttributes() != null)
 			{
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
 
-
-				calculate = true;
-
-				//				prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
-				//						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
-				//				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
-				//				{
-				//					getDefaultPromotionsManager().undoDeliveryCharges(order, prodPrevCurrDelChargeMap, ctx);
-				//					calculate = true;
-				//				}
-
-
 				calculate = true;
 			}
 		}
+		else
+		{
+			final List<AbstractOrderEntry> validProductUssidList = getValidProductUssidList();
+			for (final AbstractOrderEntry entry : validProductUssidList)
+			{
+				final Double zoneDeliveryCharge = getDefaultPromotionsManager().undoDeliveryCharges(entry);
+
+				entry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
+				entry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, zoneDeliveryCharge);
+			}
+
+			//			if (order != null)
+			//			{
+			//				for (final AbstractOrderEntry oe : order.getEntries())
+			//				{
+			//					oe.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
+			//					oe.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
+			//				}
+			//			}
+
+		}
+
 		setMarkedApplied(ctx, false);
 
 		return calculate;
@@ -410,9 +431,11 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 		return needsCalc;
 	}
-	//	protected DefaultPromotionManager getDefaultPromotionsManager()
-	//	{
-	//		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
-	//	}
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
+
 
 }
