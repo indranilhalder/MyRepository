@@ -158,6 +158,7 @@ public class MarketplacewebservicesConstants
 	public static final String COD = "COD".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public static final String WALLET = "Wallet".intern();
+	public static final String CLIQ_CASH = "Cliq Cash".intern();
 	public static final String PAYMENTMODE = "paymentMode".intern();
 
 	public static final String DECIMALULLCHK = "0.0".intern();
@@ -305,6 +306,7 @@ public class MarketplacewebservicesConstants
 	public static final String CREATEENTRYINAUDITURL = "/createEntryInAudit";
 	public static final String SAVEDCARDS = "/savedCards";
 	public static final String REMOVESAVEDCARDS = "/removeSavedCards";
+	public static final String CREATEJUSPAYEGVORDER = "/{userId}/createJuspayEgvOrder";
 	public static final String CREATEJUSPAYORDER = "/{userId}/createJuspayOrder";
 	public static final String GETPAYMENTMODE = "/getPaymentModes";
 	public static final String APPORJSON = "application/json";
@@ -541,6 +543,14 @@ public class MarketplacewebservicesConstants
 
 	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
 	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
+	public static final String APPLY_CLIQCASH = "/{userId}/applyCliqCash";
+	public static final String REMOVE_CLIQCASH = "/{userId}/removeCliqCash";
+	public static final String REDEEM_CLIQ_VOUCHER = "/{userId}/cliqcash/redeemCliqVoucher";
+	public static final String CREATE_ELECTRONICS_GIFTCARD_GUID = "/{userId}/createElectronicsGiftCardCartGuid";
+	public static final String RESEND_NOTIFICATION_EGV = "/{userId}/resendEGV";
+	public static final String CREATE_ELECTRONICS_GIFTCARD_GUID_ID = "/{userId}/createElectronicsGiftCardCartGuidId";
+	public static final String CREATE_ELECTRONICS_GIFTCARD_AMOUNT = "/{userId}/calculateElectronicsGiftCardAmount";
+	
 	public static final String CRMNODES = "/{userId}/getWebCRMNodes";
 	public static final String MRUPEE = "MRUPEE".intern();
 
@@ -592,7 +602,7 @@ public class MarketplacewebservicesConstants
 	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
 	public static final String PRICE_DISCLAIMER_JEWELLERY = "*Price and Weight are subject to change basis availability.";
-
+	public static final String CHANNEL_WEB = "WEB";
 	//CKD:TPR-6804
 	public static final String HOME_FURNISHING = "HomeFurnishing";
 	public static final String CLASSIFICATION_ATTR = "classification.attributes.";
@@ -622,6 +632,19 @@ public class MarketplacewebservicesConstants
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
+	public static final String PAYMENT_MODE_CLIQ_CASH = "CliqCash";
+	public static final String PAYMENT_MODE_SPLIT = "split";
+	public static final String PAYMENT__MODE_JUSPAY = "Juspay";
+	public static final String USER_CLIQCASH_DETAILS = "/{userId}/cliqcash/getUserCliqCashDetails";
+	public static final String BUCKET_DETAILS = "getBucketDetails";
+	
+	public static final String BUYING_EGV_MIN_PRICE = "mpl.buyingEgv.minPrice".intern();
+
+	public static final String BUYING_EGV_MAX_PRICE = "mpl.buyingEgv.maxPrice".intern();
+
+	public static final String BUYING_EGV_PRICE_OPTIONS = "mpl.buyingEgv.priceOptions".intern();
+	public static final String BUYING_EGV_PRODUCT_DISCLAIMER="SoldbyQwikCilverSolutionsPvt.Ltd.anddeliveredbyTataCliQ.CGiftCardsaresubjecttoTermsandConditions.HaveTataCliQGiftCard(s)?Redeemyourgiftcard.";
+
 	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
 	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
 	public static final String E0000 = "E0000";
