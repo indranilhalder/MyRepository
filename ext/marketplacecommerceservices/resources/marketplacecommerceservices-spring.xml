@@ -119,6 +119,11 @@
 				<ref bean="commerceSearchSortPopulator" />
 				<ref bean="commerceSearchTextPopulator" />
 				<ref bean="commerceSearchFiltersPopulator" />
+				<ref bean="mplSearchSolrQueryTypeFacetsPopulator"/>
+                                <ref bean="boostSearchQueryPopulator"/>
+                                <ref bean="conditionalSortFilteringIndexedTypePopulator" />
+                                <ref bean="facetReconfigurationPopulator"/>
+
 			</list>
 		</property>
 	</bean>
