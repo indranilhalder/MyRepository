@@ -14,6 +14,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CalculationService;
@@ -36,6 +37,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -234,6 +236,45 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
 					{
 						orderModel.setIsWallet(WalletEnum.MRUPEE);
+
+			if (!isValidOrder)
+			{
+				LOG.error("****** MplCommercePlaceOrderStrategyImpl : placeOrder :Order is not Valid!!"
+						+ (orderModel != null && StringUtils.isNotEmpty(orderModel.getGuid()) ? orderModel.getGuid()
+								: MarketplacecommerceservicesConstants.EMPTY));
+			}
+
+
+			if (orderModel != null && isValidOrder)
+			{
+				try
+				{
+					//It is moved below //PRDI-70
+					//result.setOrder(orderModel);
+					// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
+					//				afterPlaceOrder(parameter, result);
+					//INC144315079
+					orderIdGenerator(orderModel);
+					orderModel.setDate(new Date());
+
+					orderModel.setSite(getBaseSiteService().getCurrentBaseSite());
+					orderModel.setStore(getBaseStoreService().getCurrentBaseStore());
+					orderModel.setLanguage(getCommonI18NService().getCurrentLanguage());
+
+					if (parameter.getSalesApplication() != null)
+					{
+						orderModel.setSalesApplication(parameter.getSalesApplication());
+					}
+
+					//orderModel.setAllPromotionResults(Collections.<PromotionResultModel> emptySet());
+
+					//PRDI-70
+					LOG.info("Mode of Payment in placeOrder is -- " + modeOfPayment);
+					orderModel.setModeOfOrderPayment(modeOfPayment);
+					orderModel.setType(MarketplacecommerceservicesConstants.PARENTORDER);
+					if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
+					{
+						orderModel.setIsWallet(WalletEnum.MRUPEE);
 					}
 
 					else
@@ -260,12 +301,21 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					//getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 
 					//Changes for CAR-262 + INC_10922, Update order for Promotion & Coupon
-					updateOrderForPromotion(cartModel, orderModel);
-					updateOrderForCoupon(cartModel, orderModel);
+					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+						LOG.info("Igonre Promotions for EGV Order");
+					}else {
+					        updateOrderForPromotion(cartModel, orderModel);
+					        updateOrderForCoupon(cartModel, orderModel);
+                                        }
 
 					final Double subTotal = orderModel.getSubtotal();
 					LOG.info("order subTotal is -- " + subTotal);
-					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
+ boolean deliveryCostPromotionApplied = false;
+					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+						LOG.info("Igonre Promotions for EGV Order");
+					}else {
+						  deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
+					}
 					Double totalPrice = Double.valueOf(0.0);
 
 
