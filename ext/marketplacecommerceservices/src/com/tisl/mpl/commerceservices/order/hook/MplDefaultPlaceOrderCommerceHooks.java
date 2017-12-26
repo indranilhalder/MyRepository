@@ -9,19 +9,23 @@ import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
+import de.hybris.platform.core.model.VoucherCardPerOfferInvalidationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
@@ -31,13 +35,16 @@ import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 
 import java.math.BigDecimal;
@@ -71,12 +78,17 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.WalletEnum;
+import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
@@ -93,9 +105,16 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.request.Customer;
+import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
+import com.tisl.mpl.pojo.response.PurchaseEGVResponse;
+import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.OrderStatusSpecifier;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -108,6 +127,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 {
 
 
+	private static final String SUCCESS = "success";
+	private static final String CLIQ_CASH_DOWN = "Cliq Cash Down...";
+	private static final String FAIL = "fail";
+	private static final String SOME_ERROR_WHILE_SENDING_REQUEST_QC = "Some Error While sending Request QC.......";
+	private static final String CLIQ_CASH_SERVICE_ERROR_RESPONSE_CODE_0 = "Cliq Cash Service Error response code != 0";
 	private static final Logger LOG = Logger.getLogger(MplDefaultPlaceOrderCommerceHooks.class);
 	private CloneAbstractOrderStrategy cloneAbstractOrderStrategy;
 
@@ -140,7 +164,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource
 	private MplCommerceCartService mplCommerceCartService;
 
-
+	@Autowired
+	private EventService eventService;
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
@@ -173,6 +198,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private BaseStoreService baseStoreService;
 
+	@Autowired
+	private SessionService sessionService;
+
+	@Autowired
+	private MplWalletServices mplWalletServices;
+
+	@Autowired
+	MplEGVCartService mplEGVCartService;
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
@@ -378,7 +411,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					LOG.error("Exception in Setting Mode of Payment >>>" + exception.getMessage());
 				}
 
-
+				if (null != orderModel.getSplitModeInfo()
+						&& (orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH)
+								|| orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)))
+				{
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.CLIQ_CASH);
+				}
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
@@ -844,10 +882,36 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
+atus.PAYMENT_SUCCESSFUL);
+					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))			
 
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-			}
+				 */
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+
+				/**
+				 * EGV CARD PURCHASE
+				 */
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+				{
+
+					mplEGVCartService.removeOldEGVCartCurrentCustomer();
+					final String response = getPurchaseEGVRequestPopulate(orderModel);
+					if (response.equalsIgnoreCase(SUCCESS))
+					{
+						sendNotifiactionForEGVOrder(orderModel);
+					}
+					else
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						LOG.error(CLIQ_CASH_DOWN);
+					}
+				}
+				/**
+				 * EGV CARD PURCHASE END
+				 */
+
 			else
 			{
 
@@ -887,7 +951,107 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
 	 *
 	 *
-	 *
+	/**
+	 * @param orderModel
+	 */
+	private void sendNotifiactionForEGVOrder(final OrderModel orderModel)
+	{
+		final OrderProcessModel orderProcessModel = new OrderProcessModel();
+		orderProcessModel.setOrder(orderModel);
+		final OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+		eventService.publishEvent(orderEGVRecipientEmailEvent);
+	}
+
+	/**
+	 * @param orderModel
+	 */
+	private String getPurchaseEGVRequestPopulate(final OrderModel orderModel)
+	{
+
+		String status = FAIL;
+		try
+		{
+			if (null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+			{
+				final Customer customer = new Customer();
+				final PurchaseEGVRequest purchaseEGVRequest = new PurchaseEGVRequest();
+				purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
+				purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
+				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
+				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
+				customer.setEmail(orderModel.getUser().getUid());
+				customer.setFirstname(orderModel.getFromFirstName());
+				customer.setLastName(orderModel.getFromLastName());
+				customer.setPhoneNumber(orderModel.getFromPhoneNo());
+				customer.setAddressLine1("Address1");
+				customer.setAddressLine2("Address2");
+				customer.setAddressLine3("Address3");
+				purchaseEGVRequest.setCustomer(customer);
+				purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
+				final PurchaseEGVResponse data = mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
+
+				final AbstractOrderEntryModel orderEntry = orderModel.getEntries().get(0);
+
+				if (null != data && data.getResponseCode() != null && data.getResponseCode().intValue() == 0)
+				{
+
+					final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
+							.create(WalletApportionPaymentInfoModel.class);
+					walletApportionPaymentInfo.setOrderId(orderModel.getCode());
+					walletApportionPaymentInfo.setTransactionId(orderModel.getCode());
+
+					final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+							.create(WalletCardApportionDetailModel.class);
+					chlidCardApportionDetail.setOrderId(orderModel.getCode());
+
+					if (data.getAmount() != null)
+					{
+
+						chlidCardApportionDetail.setCardAmount(data.getAmount().toString());
+					}
+					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
+					chlidCardApportionDetail.setCardExpiry(data.getCardExpiry());
+					chlidCardApportionDetail.setCardPinNumber(data.getCardPIN());
+					cardQtyWiseList.add(chlidCardApportionDetail);
+
+					walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+
+					orderEntry.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+					final AbstractOrderEntryModel AbstractOrderEntryChild = orderModel.getChildOrders().get(0).getEntries().get(0);
+
+					AbstractOrderEntryChild.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+					getModelService().save(AbstractOrderEntryChild);
+
+					getModelService().save(orderEntry);
+
+					getModelService().save(orderModel);
+
+					status = SUCCESS;
+
+				}
+				else
+				{
+
+					status = FAIL;
+					LOG.error(CLIQ_CASH_SERVICE_ERROR_RESPONSE_CODE_0);
+				}
+
+				return status;
+
+			}
+		}
+		catch (final Exception exceeption)
+		{
+			LOG.error(SOME_ERROR_WHILE_SENDING_REQUEST_QC);
+		}
+		return status;
+
+	}
+
 	 * @param subOrderList
 	 *
 	 *
@@ -1187,8 +1351,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
 								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(), ussid);
+		//EGV Order change
+						if (null !=sellerOrderList.getIsEGVCart() && !sellerOrderList.getIsEGVCart().booleanValue())
+						{
+final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
+								entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
+								sellerOrderList.getCurrency().getIsocode(), ussid);
 
-						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
+						
+						
+if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
 								&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDT-1226
 						{
 							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(), valueModel.getDeliveryFulfillModes()
@@ -2598,6 +2770,32 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					abstractOrderEntryModel.getUnit(), -1, false);
 
 			orderEntryModel.setBasePrice(abstractOrderEntryModel.getBasePrice());
+		/**
+		 * WALLET CHANGES
+		 */
+
+
+		int splitQty = 0;
+		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+				||(clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
+		{
+			splitQty = abstractOrderEntryModel.getQuantity().intValue();
+
+			System.out.println(abstractOrderEntryModel.getQuantity().intValue() + " -&&&&&&& Product Code- "
+					+ abstractOrderEntryModel.getProduct().getCode());
+
+			if (null != abstractOrderEntryModel.getFreeCount() && abstractOrderEntryModel.getFreeCount().intValue() > 0)
+			{
+				splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
+			}
+			System.out.println("*********** Hook Apportion Logic ---- Qty " + quantity + " & Spliit Qty" + splitQty);
+
+		}
+
+		/**
+		 * WALLET CHANGES END
+		 */
+
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
 
@@ -2909,6 +3107,21 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 *
 	 * @param oModel
 	 * @return orderEntryModel
+			/**
+			 * WALLET CHANGES
+			 */
+
+
+			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+					|| (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
+			{
+				setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
+				//setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
+			}
+
+			/**
+			 * WALLET CHANGES END
+			 */
 	 */
 
 	private OrderEntryModel setAdditionalDetails(final OrderEntryModel oModel)
