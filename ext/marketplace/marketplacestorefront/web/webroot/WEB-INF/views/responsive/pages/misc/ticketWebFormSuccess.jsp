@@ -5,29 +5,43 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<div class="custmCareHelp">
+<div class="custmCareHelp custmCareHelp-success">
 	<div class="issueQuryPopUp">
 		<div class="issueQuryPopBox">
-			<button class="closeBtn" id="closeCustCarePopBox">X</button>
-			<div class="headingSec">
-				<div class="querySubmitIcon"></div>
-				<div class="querySubmitInfo">
+			<button class="closeBtn" id="closeCustCarePopBox" onclick="ACC.WebForm.closeWebForm();">X</button>
+			
+				
 				<c:choose>
-				<c:when test="${not empty ticketRefId}" >
-					<h2>Your query is submitted successfully!</h2>
-					<p>Reference Number: ${ticketRefId}</p>
-				</div>
+				<c:when test="${not empty ticketRefId && ticketRefId ne 'duplicate'}" >
+				<div class="headingSec">
+					<div class="querySubmitIcon"></div>
+					<div class="querySubmitInfo">
+						<h2>Your query is submitted successfully!</h2>
+					</div>
+					</div>
+					<p class="summryQuery">
+						<spring:theme code="webform.query.success"
+							arguments="${ticketForm.contactEmail}">
+						</spring:theme>
+					</p>
+				</c:when>
+				<c:when test="${not empty ticketRefId && ticketRefId eq 'duplicate'}" >
+					<div class="headingSec">
+					<div class="queryErrorIcon"></div>
+					<div class="querySubmitInfo">
+						<h2>Ticket is already submitted! Please wait for Customer Care to contact</h2>
+					</div></div>
 				</c:when>
 				<c:otherwise>
+				<div class="headingSec">
+					<div class="queryErrorIcon"></div>
+					<div class="querySubmitInfo">
 					<h2>Your query is not submitted!</h2>
+					</div>
+					</div>
 				</c:otherwise>
 				</c:choose>
-			</div>
-			<p class="summryQuery">
-				<spring:theme code="webform.query.success"
-					arguments="${ticketForm.contactEmail}">
-				</spring:theme>
-			</p>
+			
 			<div class="issueCommentSec">
 				<div class="issueCommentDiv">
 					<h3 class="secLabel">issue</h3>

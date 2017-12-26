@@ -101,10 +101,12 @@
 }
 
 .custmCareHelp .needHelpBtn {
-	line-height: 12px;
+	text-align: center;
+    line-height: 12px;
+    text-decoration: none !important;
 	height: 42px;
 	font-size: 12px;
-	padding: 6px 30px;
+	padding: 15px 30px;
 	font-weight: 500;
 	background-color: #a9143c;
 	color: #fff;
@@ -137,7 +139,7 @@
 	font-weight: normal;
 	width: 10px;
 	height: 10px;
-	background: url('/_ui/responsive/common/images/custHelpCloseBtn.png') no-repeat 0 0;
+	background: url(../images/custHelpCloseBtn.png) no-repeat 0 0;
 	color: #000;
 	border: 0;
 	outline: 0;
@@ -386,7 +388,7 @@
 	-moz-appearance: none;
 	appearance: none;
 	width: 100%;
-	background: #fff url('/_ui/responsive/common/images/selectArrow.png')
+	background: #fff url(../images/selectArrow.png)
 		no-repeat right 0;
 	width: 100%;
 }
@@ -467,10 +469,19 @@
 	height: 43px;
 	float: left;
 	margin: -3px 0 0;
-	background: url('/_ui/responsive/common/images/querySubmitDone.png')
+	background: url(../images/querySubmitDone.png)
 		no-repeat 0 0;
 }
-
+.custmCareHelp .issueQuryPopUp .issueQuryPopBox .headingSec .queryErrorIcon
+{
+	content: "";
+    background: url(../images/Sprite-combined.png) no-repeat scroll -94px -130px;
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    position: relative;
+    top: 20px;
+}
 .custmCareHelp .issueQuryPopUp .issueQuryPopBox .headingSec .querySubmitInfo
 	{
 	margin-left: 72px;
@@ -509,7 +520,7 @@
 	border: 1px solid #bbbbbb;
 	color: #d0d0d0;
 	width: 100%;
-	background: #fff url('/_ui/responsive/common/images/selectArrow.png')
+	background: #fff url(../images/selectArrow.png)
 		no-repeat right 0;
 	width: 100%;
 	float: left;
@@ -559,7 +570,16 @@
 	color: #d0d0d0;
 }
 
+.content .fab-content{
+    margin-left: 174px;
+    width: 96%
+} 
+
+
 @media ( max-width :767px) {
+	.content .fab-content{
+    	margin-left: 0px;
+	} 
 	.custmCareHelp .secHeading {
 		text-align: left !important;
 	}
@@ -604,3 +624,41 @@
 		width: 100%;
 	}
 }
+.selectOrders .prodImg img {
+    width: 48px;
+    height: 78px;
+}
+/* TISHS-137 start */
+.custmCareHelp-success{
+	border:0px solid transparent !important;
+}
+.page-faq #cboxContent{
+	max-height: 0px !important;
+	height:0px !important;
+}
+/* TISHS-137 end */
+@media ( max-width :970px) {
+	/* .page-faq #colorbox{
+		display:block ! important;
+	} */
+}
+.page-faq #textarea{
+		width:100%;
+}
+/* TISPDRT-7803  */
+p.summryQuery{
+	word-break: normal !important;
+}
+/* TISPDRT-7803  */
+div#textarea_feedback {
+    float: right;
+    color: #999;
+    font-size: 12px;
+}
+/* TISPRDT-8001 */
+@media ( max-width :768px) {
+	.selectOrders .prodInfo .prodTxt .prodShiping {
+		width:20%;
+	}
+}
+/* TISPRDT-8001 */
