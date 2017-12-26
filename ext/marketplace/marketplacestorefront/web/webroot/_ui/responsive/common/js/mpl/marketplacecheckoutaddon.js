@@ -1936,15 +1936,26 @@ function savedDebitCardRadioChange(radioId){
 			//Juspay.startSecondFactor();
 		//}
 		//TPR-7486
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 		ACC.singlePageCheckout.showAjaxLoader();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
 			success : function(response) {
 				ACC.singlePageCheckout.hideAjaxLoader();
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2148,15 +2159,27 @@ function savedDebitCardRadioChange(radioId){
 		var selectedIndex=$('input[name=debitCards]:checked').attr("id");
 		var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
 		var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 		//TPR-7448 Ends here
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
 			success : function(response) {
 				ACC.singlePageCheckout.hideAjaxLoader();
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2389,14 +2412,25 @@ function savedDebitCardRadioChange(radioId){
 			token=tokenizeJuspayCard("CC");
 		}
 		
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'token':token},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'token':token,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
 			success : function(response) {
 				ACC.singlePageCheckout.hideAjaxLoader();
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2642,15 +2676,26 @@ function savedDebitCardRadioChange(radioId){
 		//TPR-7448
 		var token="";
 		token=tokenizeJuspayCard("EM");
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'token':token},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'token':token,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
 			success : function(response) {
 				ACC.singlePageCheckout.hideAjaxLoader();
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -5735,12 +5780,23 @@ function submitPaytmForm(){
 		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=false;
 		var guid=$("#guid").val();
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : null, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : null, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			success : function(response) {
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -5921,13 +5977,24 @@ function submitNBForm(paymentInfo){
 		var guid=$("#guid").val();
 		//TPR-7486
 		ACC.singlePageCheckout.showAjaxLoader();
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'paymentinfo':paymentInfo},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'paymentinfo':paymentInfo,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			success : function(response) {
 				ACC.singlePageCheckout.hideAjaxLoader();
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
