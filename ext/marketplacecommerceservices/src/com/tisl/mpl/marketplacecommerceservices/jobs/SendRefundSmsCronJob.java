@@ -60,14 +60,18 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				final int batch = configurationService.getConfiguration().getInt("bulksms.perbatch.sms"); //50
 				final int dbPerformBatch = configurationService.getConfiguration().getInt("bulksms.perbatch.dbperformance", 300);
 				final StringBuilder queryString = new StringBuilder();
+				int superCheckLoop = 0;
 
 				final int totCount = refundSmsDao.eligibleSmsCount(); //300
-				final int superCheckLoop = (totCount / dbPerformBatch) + 1;
+				if (totCount > 0)
+				{
+					superCheckLoop = (totCount / dbPerformBatch) + 1;
+				}
 				for (int superLoop = 1; superLoop <= superCheckLoop; superLoop++)
 				{
 					queryString.setLength(0);// Making query string empty
-					//					queryString.append("select {transactionId} from {RefundTransactionEntry} WHERE {status}= '"
-					//							+ MarketplacecommerceservicesConstants.RECEIVED + "' order by {creationtime} limit ");
+					//queryString.append("select {transactionId} from {RefundTransactionEntry} WHERE {status}= '"
+					//		+ MarketplacecommerceservicesConstants.RECEIVED + "' order by {creationtime} limit ");
 					queryString.append("select {transactionId} from {RefundTransactionEntry} where ");
 					queryString.append("{status}='" + MarketplacecommerceservicesConstants.RECEIVED + "'");
 					queryString.append(" AND ");
@@ -77,7 +81,6 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 					//SDI-2578 || Changes end
 
 					final String query = refundSmsDao.getAllTransactionsForSms(queryString.toString());
-
 					final List<BulkSmsPerBatch> result = refundSmsDao.searchResultsForRefund(query);
 					final int rowCount = result.size();
 					int dividedValue = 0;
