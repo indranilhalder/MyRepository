@@ -116,7 +116,7 @@
 		<extension name="marketplacecaptchaaddon" />
 
 
-		<extension name="marketplaceatssync" />
+		<!-- <extension name="marketplaceatssync" /> -->
 
 		<!--Luxury packages -->
 		<extension name="luxuryinitialdata" />

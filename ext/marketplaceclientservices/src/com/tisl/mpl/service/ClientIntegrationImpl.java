@@ -22,6 +22,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.wsdto.DuplicateCheckResponse;
 
 
 /**
@@ -33,7 +34,7 @@ import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 
 public class ClientIntegrationImpl implements ClientIntegration
 {
-	private static final Logger LOG = Logger.getLogger(TicketCreationCRMserviceImpl.class);
+	private static final Logger LOG = Logger.getLogger(ClientIntegrationImpl.class);
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -74,6 +75,8 @@ public class ClientIntegrationImpl implements ClientIntegration
 	public String checkDuplicateWebFormTicket(final String stringXml) throws JAXBException
 	{
 		LOG.info("Executing method checkDuplicateWebFormTicket in clientIntegrationImpl java class >>>>>>>");
+		DuplicateCheckResponse duplicateCheckResponse = null;
+		String responseMsg = "success";
 		try
 		{
 			final String globalResponse = configurationService.getConfiguration().getString("global.client.reponse");
@@ -96,14 +99,19 @@ public class ClientIntegrationImpl implements ClientIntegration
 			LOG.debug("========== Step:2==========");
 			final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
 					.entity(stringXml).post(ClientResponse.class);
+			LOG.debug("========== Step:3==========" + response.getStatus());
 			if (checkResponseStatus(String.valueOf(response.getStatus()), globalResponse))
 			{
-				return "success";
+				duplicateCheckResponse = response.getEntity(DuplicateCheckResponse.class);
+				if (null != duplicateCheckResponse && null != duplicateCheckResponse.getTicketPresent()
+						&& duplicateCheckResponse.getTicketPresent().equalsIgnoreCase("Y"))
+				{
+					responseMsg = "failure";
+				}
+
 			}
-			else
-			{
-				return "failure";
-			}
+			return responseMsg;
+
 		}
 		catch (final Exception ex)
 		{

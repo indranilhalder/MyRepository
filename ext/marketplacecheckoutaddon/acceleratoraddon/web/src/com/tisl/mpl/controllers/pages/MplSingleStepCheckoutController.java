@@ -119,7 +119,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import reactor.function.support.UriUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -2751,7 +2750,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			/*
 			 * for (final Map<VoucherModel, String> offer : allOffersData) { for (final Map.Entry<VoucherModel, String>
 			 * entry : offer.entrySet()) {
-			 *
+			 * 
 			 * System.out.println(entry.getKey().getDescription()); System.out.println(entry.getValue()); final } }
 			 */
 
@@ -3632,6 +3631,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
+			final double totdelCostd = mplCartFacade.getReviewOrderDelCost(cartModel);
+			final BigDecimal totdelCostbd = new BigDecimal(totdelCostd);
+			final PriceData totdelCost = priceDataFactory.create(PriceDataType.BUY, totdelCostbd, MarketplaceFacadesConstants.INR);
 			//UF-260
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 			final List<PinCodeResponseData> responseData = getSessionService().getAttribute(
@@ -3666,6 +3668,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
 			model.addAttribute(ModelAttributetConstants.CART_FULFILMENTDATA, fullfillmentDataMap);
 			model.addAttribute(ModelAttributetConstants.MRPPRICEMAP, mrpPriceMap);
+			model.addAttribute(ModelAttributetConstants.DELCHARGE, totdelCost);
 		}
 		catch (final Exception e)
 		{
@@ -5095,7 +5098,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5153,7 +5156,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

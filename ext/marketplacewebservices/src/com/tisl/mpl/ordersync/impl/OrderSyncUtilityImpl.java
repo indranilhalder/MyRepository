@@ -41,6 +41,9 @@ import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.storelocator.pos.PointOfServiceService;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,9 +52,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,18 +70,22 @@ import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
+import com.tisl.mpl.core.model.InitiateRefundProcessModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.OrderSyncLogModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderCollectedByPersonEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusEvent;
 import com.tisl.mpl.order.DeliveryAddressDTO;
 import com.tisl.mpl.order.DeliveryDTO;
 import com.tisl.mpl.order.OrderLineDTO;
+import com.tisl.mpl.order.OrderStatusUpdateDTO;
 import com.tisl.mpl.order.SellerOrderDTO;
 import com.tisl.mpl.order.ShipmentDTO;
 import com.tisl.mpl.ordersync.OrderSyncUtility;
@@ -142,42 +155,120 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private Map<String, OrderStatus> orderStatusMapping;
 
-	private static final String LOG_MSG_STRING = " ::";
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+	private final StringBuffer callTrace = new StringBuffer(5000);
+
+	private boolean isError = false;
+
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
-	public void syncOrder(final SellerOrderDTO sellerOrder, final String orderUpdateTime)
+	public OrderSyncLogModel syncOrder(final InputStream orderSyncXML) throws IOException
 	{
+		final OrderSyncLogModel log = modelService.create(OrderSyncLogModel.class);
+
+		OrderStatusUpdateDTO orderUpdate = null;
 		try
 		{
-			OrderModel sOrder = null;
 
 
-			sOrder = orderService.getOrder(sellerOrder.getSellerOrderId());
-			if (!(OrderStatus.CANCELLING.equals(sOrder.getStatus())))
+			final JAXBContext jaxbContext = JAXBContext.newInstance(OrderStatusUpdateDTO.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			callTrace.append("Unmarshalling XML:->");
+			orderUpdate = (OrderStatusUpdateDTO) jaxbUnmarshaller.unmarshal(orderSyncXML);
+
+			final SellerOrderDTO sellerOrder = orderUpdate.getSellerOrder();
+			callTrace.append("Fetching Seller Order:->");
+			final String orderUpdateTime = orderUpdate.getOrderUpdateTime();
+
+			if (sellerOrder != null && StringUtils.isNotEmpty(orderUpdateTime))
 			{
-				updateOrCreateConsignment(sellerOrder, sOrder);
+				OrderModel sOrder = null;
+				callTrace.append("Fetch Order From Database:->");
+				sOrder = orderService.getOrder(sellerOrder.getSellerOrderId());
+				if (!(OrderStatus.CANCELLING.equals(sOrder.getStatus())))
+				{
+					callTrace.append("Create/Update Consignment");
+					updateOrCreateConsignment(sellerOrder, sOrder);
 
+				}
+
+				//update order time if it succeeds
+				if (StringUtils.isNotBlank(orderUpdateTime))
+				{
+					sOrder.setOrderUpdateRemoteTime(dateFormat.parse(orderUpdateTime));
+				}
+				modelService.save(sOrder);
 			}
-
-			//update order time if it succeds
-			if (StringUtils.isNotBlank(orderUpdateTime))
+			else
 			{
-				sOrder.setOrderUpdateRemoteTime(dateFormat.parse(orderUpdateTime));
+				isError = true;
+				callTrace.append("Missing Seller Order or OrderUpdate Time:->");
 			}
-			modelService.save(sOrder);
 
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error in Sync Order", e);
+
+			callTrace.append("Error in Sync Order" + ExceptionUtils.getStackTrace(e));
+
 		}
+		finally
+		{
+			//TO_DO config read
+			if (isError
+					&& "Y".equalsIgnoreCase(getConfigurationService().getConfiguration()
+							.getString(MarketplacewebservicesConstants.OMS_SYNC_SAVE_LOG,
+									MarketplacewebservicesConstants.OMS_SYNC_SAVE_LOG_DEFAULT)))
+			{
+				try
+				{
+					if (orderUpdate != null && StringUtils.isNotEmpty(orderUpdate.getSellerOrder().getOrderLine().getOrderLineId())
+							&& StringUtils.isNotEmpty(orderUpdate.getSellerOrder().getOrderLine().getShipment().getOlqsStatus()))
+					{
+						log.setTransactionId(orderUpdate.getSellerOrder().getOrderLine().getOrderLineId() + "_" + new Date().toString());
+						log.setOrderStatus(orderUpdate.getSellerOrder().getOrderLine().getShipment().getOlqsStatus());
+
+					}
+					else
+					{
+
+						callTrace.append("Missing Order Line or Order Line Id Or XML unmarshalling error");
+					}
+
+					if (StringUtils.isEmpty(log.getTransactionId()))
+					{
+						log.setTransactionId(new Date().toString());
+					}
+					log.setErrorLog(callTrace.toString());
+					final JAXBContext jaxbContext = JAXBContext.newInstance(OrderStatusUpdateDTO.class);
+					final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+					jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+					callTrace.append("Marshalling Object:->");
+					final StringWriter sw = new StringWriter();
+					jaxbMarshaller.marshal(orderUpdate, sw);
+					log.setStatusUpdateXML(sw.toString());
+					modelService.save(log);
+				}
+				catch (final Exception e)
+				{
+					e.printStackTrace();
+					LOG.error("Error while writing Log");
+				}
+			}
+		}
+
+		//Resetting the values of the class variable
+		callTrace.delete(0, callTrace.length() - 1);
+		isError = false;
+		return log;
 
 
 	}
@@ -194,7 +285,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	private boolean validateAndUpdateInvoice(final ConsignmentModel existingConsignment, final String invoiceNo,
 			final String invoiceUrl, final OrderModel orderModel)
 	{
-
+		callTrace.append("validateAndUpdateInvoice:->");
 		boolean createInvoice = true;
 		final InvoiceDetailModel invoice = findMatchedInvoice(orderModel, invoiceNo);
 		if (invoice != null)
@@ -217,6 +308,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	private boolean updateInvoice(final InvoiceDetailModel invoice, final String invoiceNo, final String invoiceUrl,
 			final ConsignmentModel consignment)
 	{
+		callTrace.append("updateInvoice:->");
 		boolean createInvoice = true;
 		// YTODO Auto-generated method stub
 		//	final List<ConsignmentModel> consignments = new ArrayList<ConsignmentModel>(invoice.getConsignment());
@@ -233,7 +325,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			LOG.info("Consignment Status RollBack because of Invoice :" + invoice.getInvoiceNo(), e);
+			callTrace.append("Consignment Status RollBack because of Invoice :" + ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 		return createInvoice;
 
@@ -246,7 +339,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	 */
 	private InvoiceDetailModel findMatchedInvoice(final OrderModel orderModel, final String invoiceNo)
 	{
-		// YTODO Auto-generated method stub
+		callTrace.append("findMatchedInvoice:->");
 		final InvoiceDetailModel matchedInvoice = null;
 		for (final ConsignmentModel cons : orderModel.getConsignments())
 		{
@@ -264,50 +357,63 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	@Override
 	public void updateOrCreateConsignment(final SellerOrderDTO sellerOrder, final OrderModel childOrder)
 	{
-
-		final ShipmentDTO shipment = sellerOrder.getOrderLine().getShipment();
-		final DeliveryDTO delivery = shipment.getDelivery();
-		ConsignmentModel consignmentFinal = null;
-
-		if (shipment != null && shipment.getOlqsStatus() != null && delivery.getDeliveryMode() != null)
+		try
 		{
+			callTrace.append("updateOrCreateConsignment:->");
+			final ShipmentDTO shipment = sellerOrder.getOrderLine().getShipment();
+			final DeliveryDTO delivery = shipment.getDelivery();
+			ConsignmentModel consignmentFinal = null;
 
-			if ((delivery.getDeliveryMode().equalsIgnoreCase(MarketplacewebservicesConstants.CNC))
-					&& ((shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.HOTCOURI)
-							|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.OTFRDLVY)
-							|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERD)
-							|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.RETTOORG)
-							|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.LOSTINTT) || shipment
-							.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.UNDLVERD))))
+			if (shipment != null && shipment.getOlqsStatus() != null && delivery.getDeliveryMode() != null)
 			{
 
-				LOG.debug("Delivery Mode CNC and Order Status  :" + shipment.getOlqsStatus() + " :Not Required to update Consignment");
+				if ((delivery.getDeliveryMode().equalsIgnoreCase(MarketplacewebservicesConstants.CNC))
+						&& ((shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.HOTCOURI)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.OTFRDLVY)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERD)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.RETTOORG)
+								|| shipment.getOlqsStatus().equalsIgnoreCase(MarketplacewebservicesConstants.LOSTINTT) || shipment
+								.getOlqsStatus().equalsIgnoreCase(MarketplaceomsservicesConstants.UNDLVERD))))
+				{
 
+					LOG.debug("Delivery Mode CNC and Order Status  :" + shipment.getOlqsStatus()
+							+ " :Not Required to update Consignment");
+
+				}
+				else
+				{
+					final ConsignmentModel existingConsignmentModel = getConsignmentByShipment(shipment.getShipmentId(), childOrder);
+					if (existingConsignmentModel == null)
+
+					{
+
+						consignmentFinal = createNewConsignment(shipment, childOrder);
+
+
+					}
+					else if (updateConsignment(shipment, existingConsignmentModel, childOrder))
+					{
+						consignmentFinal = existingConsignmentModel;
+					}
+				}
 			}
-			else
+			modelService.refresh(childOrder);
+			updateOrderLines(sellerOrder.getOrderLine(), sellerOrder, childOrder);
+			//TPR-7448 Starts here
+			if (StringUtils.isNotEmpty(shipment.getOlqsStatus())
+					&& getConsignmentStatusMapping().get(shipment.getOlqsStatus()).equals(ConsignmentStatus.ORDER_CANCELLED))
 			{
-				final ConsignmentModel existingConsignmentModel = getConsignmentByShipment(shipment.getShipmentId(), childOrder);
-				if (existingConsignmentModel == null)
-
-				{
-
-					consignmentFinal = createNewConsignment(shipment, childOrder);
-
-
-				}
-				else if (updateConsignment(shipment, existingConsignmentModel, childOrder))
-				{
-					consignmentFinal = existingConsignmentModel;
-				}
+				mplVoucherService.removeCPOVoucherInvalidation(childOrder);
 			}
+			//TPR-7448 Ends here
 		}
-		modelService.refresh(childOrder);
-		updateOrderLines(sellerOrder.getOrderLine(), sellerOrder, childOrder);
-
-
+		catch (final Exception e)
+		{
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
+		}
 
 	}
-
 
 	private void updateOrderLines(final OrderLineDTO orderLine, final SellerOrderDTO sellerOrder, final OrderModel childOrder)
 	{
@@ -381,7 +487,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 
 
-				if (orderLine.getInvoiceNo() != null || orderLine.getInvoiceUrl() != null)
+				if (StringUtils.isNotEmpty(orderLine.getInvoiceNo()) || StringUtils.isNotEmpty(orderLine.getInvoiceUrl()))
 				{
 					final boolean isInvoiceToBeCreated = validateAndUpdateInvoice(existingConsignmentModel, orderLine.getInvoiceNo(),
 							orderLine.getInvoiceUrl(), childOrder);
@@ -454,15 +560,18 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Could Not able to update Order From OMS for imeiDetails", e);
-					//e.printStackTrace();
+					callTrace.append("Could Not able to update Order From OMS for imeiDetails");
+					callTrace.append(ExceptionUtils.getStackTrace(e));
+					isError = true;
 				}
 			}
 
 		}
 		catch (final Exception e)
 		{
-			LOG.info("Some Issue in Updating order " + sellerOrder.getSellerOrderId());
+			callTrace.append("Some Issue in Updating order");
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 
 
@@ -474,16 +583,16 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	 */
 	private void updateOrderStatus(final String sellerOrderStatus, final OrderModel orderModel)
 	{
-		// YTODO Auto-generated method stub
+		callTrace.append("updateOrderStatus:->");
 		final OrderStatus orderStatus = getOrderStatusMapping().get(sellerOrderStatus);
 		orderModel.setStatus(orderStatus);
 		modelService.save(orderModel);
-
 
 	}
 
 	protected ConsignmentModel getConsignmentByShipment(final String shipmentId, final OrderModel orderModel)
 	{
+		callTrace.append("getConsignmentByShipment:->");
 		for (final ConsignmentModel consignment : orderModel.getConsignments())
 		{
 			if (consignment.getCode().equals(shipmentId))
@@ -497,6 +606,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	protected ConsignmentModel createNewConsignment(final ShipmentDTO shipment, final OrderModel childOrder)
 	{
+		callTrace.append("createNewConsignment:->");
 		final ConsignmentModel consignmentModel = (ConsignmentModel) getModelService().create(ConsignmentModel.class);
 		shipment.setLocation(MarketplacecommerceservicesConstants.WAREHOUSE); // HardCode as one WareHouse in Commerce.
 		populateConsignmentModel(shipment, consignmentModel, childOrder);
@@ -508,16 +618,10 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		modelService.save(consigmnetEntry);
 
 		// added for merging TCS_PROD_SUPPORT with SAP
-		boolean createHistoryEntry = false;
-		for (final OrderHistoryEntryModel entry : childOrder.getHistoryEntries())
-		{
-			if (consignmentModel.getStatus().toString().equalsIgnoreCase(entry.getDescription())
-					&& consignmentModel.getCode().equalsIgnoreCase(entry.getLineId()))
-			{
-				createHistoryEntry = true;
-			}
+		final boolean createHistoryEntry = isOrderHistoryPresent(childOrder, consignmentModel.getStatus().toString(),
+				consignmentModel.getCode());
 
-		}
+
 		if (!createHistoryEntry)
 		{
 
@@ -537,6 +641,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 		try
 		{
+			callTrace.append("updateConsignment:->");
 			if (null != consignmentModel)
 			{
 				LOG.info("=======Before =========Consignment code :  " + consignmentModel.getCode()
@@ -555,27 +660,30 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,
 						consignmentModel, orderModel, shipmentNewStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE);
 				final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent = new UnCollectedOrderToInitiateRefundEvent(
-						shipment, consignmentModel, orderModel, shipmentNewStatus, eventService, configurationService);
+						shipment, consignmentModel, orderModel, shipmentNewStatus, eventService, getConfigurationService());
 				try
 				{
 					LOG.debug("Create CRM Ticket for Cancel Initiated Orders");
+					callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
 					eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception during CRM Ticket for Cancel Initiated Order Id >> " + orderModel.getCode() + LOG_MSG_STRING
-							+ e.getMessage());
+					callTrace.append("Exception during CRM Ticket for Cancel Initiated Order Id >>" + ExceptionUtils.getStackTrace(e));
+					isError = true;
 				}
 				try
 				{
 					checkConsignmentStatus = true;
 					LOG.debug("Refund Initiation  for Cancel Initiated Orders");
+					callTrace.append("publishEvent::unCollectedOrderToInitiateRefundEvent->");
 					eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> " + orderModel.getCode()
-							+ LOG_MSG_STRING + e.getMessage());
+					callTrace.append("Exception during Refund Initiation  for Un-Collected Orders >> "
+							+ ExceptionUtils.getStackTrace(e));
+					isError = true;
 				}
 
 			}
@@ -588,13 +696,15 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				final OrderCollectedByPersonEvent orderCollectedByPersonEvent = new OrderCollectedByPersonEvent(orderProcessModel);
 				try
 				{
+					callTrace.append("publishEvent::orderCollectedByPersonEvent->");
 					eventService.publishEvent(orderCollectedByPersonEvent);
+
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 				}
 				catch (final Exception e1)
 				{
-					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode() + LOG_MSG_STRING
-							+ e1.getMessage());
+					callTrace.append("Exception during sending mail or SMS >> " + e1.getMessage());
+					isError = true;
 				}
 
 			}
@@ -616,22 +726,36 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					consignmentModel.setStatus(shipmentNewStatus);
 					LOG.info("Consignment Status::" + consignmentModel.getStatus());
 					saveAndNotifyConsignment(consignmentModel);
-					modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+					final boolean createHistoryEntry = isOrderHistoryPresent(orderModel, consignmentModel.getStatus().toString(),
+							consignmentModel.getCode());
+
+
+					if (!createHistoryEntry)
+					{
+
+						modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+					}
 
 					LOG.info("Order History entry created for" + orderModel.getCode() + "Line ID" + consignmentModel.getCode());
 
 					LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
+					if (shipment.getDelivery() != null && StringUtils.isNotEmpty(shipment.getDelivery().getTrackingID()))
+					{
+						consignmentModel.setTrackingID(shipment.getDelivery().getTrackingID());
+						modelService.saveAll(consignmentModel);
+					}
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 					//}
 				}
 
 				//Added TPR-1348
-				if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
+				if ("Y".equalsIgnoreCase(getConfigurationService().getConfiguration().getString(
 						MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
 						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus) && !isOrderCOD(orderModel)) //Changed for SDI-930
 				{
-					startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
+					//TISHS-87
+					startAutomaticRefundProcess(orderModel, consignmentModel.getCode()); //Start the new Automatic Process
 				}
 
 				return true;
@@ -658,14 +782,15 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			catch (final Exception exception)
 			{
-				LOG.info("Exception ouccer trigger email " + exception.getMessage());
+				callTrace.append("Exception ouccer trigger email " + exception.getMessage());
+				isError = true;
 			}
 			//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 END
 		}
 		catch (final Exception e)
 		{
-			LOG.info("Exception either in consignment update or sending notification " + e.getMessage());
-
+			callTrace.append("Exception either in consignment update or sending notification " + ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 
 
@@ -675,15 +800,9 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	protected void populateConsignmentModel(final ShipmentDTO source, final ConsignmentModel target, final OrderModel childOrder)
 
 	{
-		try
-		{
-			final PointOfServiceModel pointOfService = getPointOfServiceService().getPointOfServiceForName(source.getLocation());
-			target.setDeliveryPointOfService(pointOfService);
-		}
-		catch (final Exception e)
-		{
-			LOG.debug("Error Setting Point of Service");
-		}
+		callTrace.append("populateConsignmentModel:->");
+		final PointOfServiceModel pointOfService = getPointOfServiceService().getPointOfServiceForName(source.getLocation());
+		target.setDeliveryPointOfService(pointOfService);
 
 		final AddressModel addressModel = (AddressModel) getModelService().create(AddressModel.class);
 		if (addressModel != null)
@@ -709,8 +828,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			catch (final ParseException e)
 			{
-				// YTODO Auto-generated catch block
-				e.printStackTrace();
+				callTrace.append(ExceptionUtils.getStackTrace(e));
+				isError = true;
 			}
 		}
 
@@ -754,9 +873,9 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	}
 
-
 	private void populateAdress(final DeliveryAddressDTO source, final AddressModel target)
 	{
+		callTrace.append("populateAdress:->");
 		target.setLine1(source.getAddressLine1());
 		target.setLine2(source.getAddressLine2());
 		target.setTown(source.getCityName());
@@ -783,6 +902,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private CountryModel getCountryModel(final String isocode)
 	{
+		callTrace.append("getCountryModel:->");
 		CountryModel countryModel = null;
 		if (isocode != null)
 		{
@@ -792,11 +912,15 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			catch (final UnknownIdentifierException e)
 			{
+				isError = true;
 				throw new ConversionException("No country with the code " + isocode + " found.", e);
+
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
+				isError = true;
 				throw new ConversionException("More than one country with the code " + isocode + " found.", e);
+
 			}
 
 		}
@@ -809,6 +933,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private RegionModel getRegionModel(final CountryModel countryModel, final String isocode)
 	{
+		callTrace.append("getRegionModel:->");
 		RegionModel regionModel = null;
 		if (isocode != null)
 		{
@@ -829,6 +954,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
+				isError = true;
 				throw new ConversionException("More than one region with the code " + isocode + " found.", e);
 			}
 		}
@@ -838,6 +964,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private ConsignmentEntryModel createNewConsigmnetEntry(final String lineId, final OrderModel orderModel)
 	{
+		callTrace.append("createNewConsigmnetEntry:->");
 		final ConsignmentEntryModel newConsignmentEntry = (ConsignmentEntryModel) getModelService().create(
 				ConsignmentEntryModel.class);
 
@@ -849,7 +976,9 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private void saveAndNotifyConsignment(final ConsignmentModel consignmentModel)
 	{
+		callTrace.append("saveAndNotifyConsignment:->");
 		getModelService().save(consignmentModel);
+		callTrace.append("getConsignmentProcessNotifier:->");
 		getConsignmentProcessNotifier().notify(consignmentModel);
 		LOG.debug("Consignment updated with::" + consignmentModel.getStatus());
 	}
@@ -866,17 +995,19 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	{
 		try
 		{
+			callTrace.append("sendOrderNotification:->");
 			LOG.info("*************Send Notification Start *******************");
 			final SendNotificationEvent sendNotificationEvent = new SendNotificationEvent(shipment, consignmentModel, orderModel,
 					shipmentNewStatus);
 			LOG.info("*************Send Notification publish event *******************");
+			callTrace.append("publishEvent::sendOrderNotification:->");
 			eventService.publishEvent(sendNotificationEvent);
 			LOG.info("*************Send Notification Done *******************");
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Unable to send Notification..!! " + e.getMessage());
-			throw e;
+			callTrace.append("Unable to send Notification..!! " + ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 
 
@@ -890,7 +1021,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private AbstractOrderEntryModel getOrderEntryByLine(final String lineId, final OrderModel orderModel)
 	{
-		// YTODO Auto-generated method stub
+		callTrace.append("getOrderEntryByLine:->");
 		for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 		{
 			if (orderEntry.getOrderLineId().equals(lineId))
@@ -904,7 +1035,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{
-
+		callTrace.append("createHistoryLog:->");
 		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
 		historyEntry.setTimestamp(getTimeService().getCurrentTime());
 		historyEntry.setOrder(order);
@@ -918,6 +1049,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	{
 		try
 		{
+			callTrace.append("createRefundEntry:->");
 			Boolean isEDtoHDCheck = Boolean.FALSE;
 			Boolean isSDBCheck = Boolean.FALSE;
 			Boolean isRetrunInitiatedCheck = Boolean.FALSE;
@@ -943,12 +1075,14 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
 								newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
 						LOG.debug("Create CRM Ticket for EDtoHD Order Cancel Initiated ");
+						callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
 						eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> " + orderModel.getCode()
-								+ LOG_MSG_STRING + e.getMessage());
+						callTrace.append("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> "
+								+ ExceptionUtils.getStackTrace(e));
+						isError = true;
 					}
 
 					final AbstractOrderEntryModel entry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
@@ -967,7 +1101,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Exception occurred while  refund info call to oms " + e.getMessage());
+						callTrace.append("Exception occurred while  refund info call to oms " + ExceptionUtils.getStackTrace(e));
+						isError = true;
 					}
 					/* R2.3 REFUND INFO CALL TO OMS END */
 					if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
@@ -1028,7 +1163,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Exception occurred while  refund info call to oms " + e.getMessage());
+						callTrace.append("Exception occurred while  refund info call to oms " + ExceptionUtils.getStackTrace(e));
+						isError = true;
 					}
 					/* R2.3 REFUND INFO CALL TO OMS END */
 					if (entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
@@ -1047,12 +1183,14 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
 								newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
 						LOG.debug("Create CRM Ticket for SDB Order Cancel Initiated ");
+						callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
 						eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()
-								+ LOG_MSG_STRING + e.getMessage());
+						callTrace.append("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> "
+								+ ExceptionUtils.getStackTrace(e));
+						isError = true;
 					}
 					isSDBCheck = Boolean.FALSE;
 				}
@@ -1073,33 +1211,36 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 							sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
 									newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE);
 							LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
+							callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
 							eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 						}
 						catch (final Exception e)
 						{
-							LOG.error("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> " + orderModel.getCode()
-									+ LOG_MSG_STRING + e.getMessage());
+							callTrace.append("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> "
+									+ ExceptionUtils.getStackTrace(e));
+							isError = true;
 						}
 						try
 						{
 							LOG.debug("Refund Initiation  for SSB Order Cancel Initiated");
+							callTrace.append("publishEvent::unCollectedOrderToInitiateRefundEvent->");
 							eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
 						}
 						catch (final Exception e)
 						{
-							LOG.error("Exception during Refund Initiation  SSB Order Cancel Initiated  >> " + orderModel.getCode()
-									+ LOG_MSG_STRING + e.getMessage());
+							callTrace.append("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "
+									+ ExceptionUtils.getStackTrace(e));
+							isError = true;
 						}
 					}
 
 				}
 			}
-			if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
-					.equals(newStatus))
-					|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
-					|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
-					|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
-					|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
+			//TISPRDT-7871 Duplicate return request data are getting generated in commerce DB
+
+			if ((ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
+					|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus)) || (ConsignmentStatus.QC_FAILED.equals(newStatus))
+					|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus)) || (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
 					&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 			{
 				LOG.debug("************************In " + newStatus + " Check .......");
@@ -1111,22 +1252,20 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				{
 					if (null != orderModel.getReturnRequests())
 					{
-						if (null != orderModel.getReturnRequests())
+
+						for (final ReturnRequestModel returnRequest : orderModel.getReturnRequests())
 						{
-							for (final ReturnRequestModel returnRequest : orderModel.getReturnRequests())
+							if (null != returnRequest.getReturnEntries())
 							{
-								if (null != returnRequest.getReturnEntries())
+								for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
 								{
-									for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
+									if (null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID())
 									{
-										if (null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID())
+										if (returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
 										{
-											if (returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
-											{
-												refundEntryModel = (RefundEntryModel) returnEntry;
-												refundEntryModelExists = true;
-												break;
-											}
+											refundEntryModel = (RefundEntryModel) returnEntry;
+											refundEntryModelExists = true;
+											break;
 										}
 									}
 								}
@@ -1155,7 +1294,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception occurred while checking return requests for order entry" + shipment.getShipmentId());
+					callTrace.append("Exception occurred while checking return requests for order entry" + shipment.getShipmentId());
+					isError = true;
 				}
 
 				consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
@@ -1165,7 +1305,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getMessage(), e);
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 
 
@@ -1180,6 +1321,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	 */
 	private void refundInfoCallToOMS(final AbstractOrderEntryModel orderEntry, final String refundcategoryType)
 	{
+		callTrace.append("refundInfoCallToOMS:->");
 		PaymentTransactionModel paymentTransactionModel = null;
 
 		final double totalRefundAmount = null != orderEntry.getCurrDelCharge() ? orderEntry.getCurrDelCharge().doubleValue() : 0.0D;
@@ -1207,6 +1349,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	{
 		try
 		{
+			callTrace.append("createRefundEntryModel:->");
 			final AbstractOrderEntryModel orderEntry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
 			RefundEntryModel refundEntryModel = new RefundEntryModel();
 			boolean returnAndRefundStatus = false;
@@ -1346,24 +1489,29 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getMessage(), e);
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 	}
 
-	private void startAutomaticRefundProcess(final OrderModel orderModel)
+	private void startAutomaticRefundProcess(final OrderModel orderModel, final String refundTransactionId)
 	{
 		try
 		{
-			final OrderProcessModel orderProcessModel = (OrderProcessModel) businessProcessService.createProcess(
-					"autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
-			orderProcessModel.setOrder(orderModel);
-			businessProcessService.startProcess(orderProcessModel);
+			//TISHS-87
+			final InitiateRefundProcessModel initiateRefundProcessModel = (InitiateRefundProcessModel) businessProcessService
+					.createProcess("autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
+			initiateRefundProcessModel.setOrder(orderModel);
+			initiateRefundProcessModel.setRefundTransactionId(refundTransactionId);
+			businessProcessService.startProcess(initiateRefundProcessModel);
 			LOG.error("CustomOmsShipmentSyncAdapter: in the CustomOmsShipmentSyncAdapter.startAutomaticRefundProcess() for Order #"
 					+ orderModel.getCode());
 		}
 		catch (final Exception e)
 		{
-			LOG.error("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #" + orderModel.getCode());
+			callTrace.append("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #"
+					+ ExceptionUtils.getStackTrace(e));
+			isError = true;
 		}
 	}
 
@@ -1373,6 +1521,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	 */
 	private boolean checkIsOrderCod(final List<PaymentTransactionModel> tranactions)
 	{
+		callTrace.append("checkIsOrderCod:->");
 		boolean flag = false;
 		if (CollectionUtils.isNotEmpty(tranactions))
 		{
@@ -1402,6 +1551,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private boolean isOrderCOD(final OrderModel order)
 	{
+		callTrace.append("isOrderCOD:->");
 		final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(order.getPaymentTransactions());
 		boolean flag = false;
 		if (CollectionUtils.isNotEmpty(tranactions))
@@ -1439,7 +1589,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private ConsignmentModel getConsignmentByLine(final OrderLineDTO line, final OrderModel orderModel)
 	{
-		// YTODO Auto-generated method stub
+		callTrace.append("getConsignmentByLine:->");
 		for (final ConsignmentModel consignment : orderModel.getConsignments())
 		{
 			if (consignment.getCode().equals(line.getOrderLineId()))
@@ -1455,6 +1605,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	// R2.3 SendNotification for SecondaryStatus
 	private void sendNotification(final OrderLineDTO line, final String oldAwbSecondaryStatus, final OrderModel orderModel)
 	{
+		callTrace.append("sendNotification:->");
 		LOG.info(" old awbSecondary status " + oldAwbSecondaryStatus + " and new awbSecondary status"
 				+ line.getAwbSecondaryStatus() + " for order line id" + line.getOrderLineId());
 		if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
@@ -1466,6 +1617,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			final SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
 					line.getAwbSecondaryStatus(), line.getOrderLineId(), orderModel);
 			eventService.publishEvent(sendNotificationSecondaryStatusEvent);
+			callTrace.append("publishEvent:->sendNotificationSecondaryStatusEvent");
 		}
 		else if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
 				&& (MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus()) || MarketplacecommerceservicesConstants.RTO_INITIATED
@@ -1483,6 +1635,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	{
 		try
 		{
+			callTrace.append("sendSecondarySms:->");
 			String mobileNumber = null;
 			String content = null;
 			final String productName = getProductName(entry.getOrderLineId(), orderModel);
@@ -1515,14 +1668,15 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception exption)
 		{
-			LOG.error("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS " + exption.getMessage());
+			callTrace.append("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS " + exption.getMessage());
+			isError = true;
 		}
 	}
 
 
 	private void updateReturnReason(final OrderLineDTO line, final OrderModel orderModel)
 	{
-		// YTODO Auto-generated method stub
+		callTrace.append("updateReturnReason:->");
 		for (final ReturnRequestModel returnRequest : orderModel.getReturnRequests())
 		{
 			for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
@@ -1548,7 +1702,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private InvoiceDetailModel createInvoice(final String invoiceNo, final String invoiceUrl, final ConsignmentModel consignment)
 	{
-
+		callTrace.append("createInvoice:->");
 		final InvoiceDetailModel invoice = getModelService().create(InvoiceDetailModel.class);
 		//invoice.setConsignment(consignments);
 		invoice.setInvoiceNo(invoiceNo);
@@ -1564,6 +1718,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	{
 		try
 		{
+			callTrace.append("getProductName:->");
 			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 			{
 				if (orderLine.equalsIgnoreCase(entry.getTransactionID()))
@@ -1574,10 +1729,26 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final NullPointerException nullPointer)
 		{
-			LOG.error("CustomOmsShipmentSyncAdapte::::" + nullPointer.getMessage());
+			callTrace.append("CustomOmsShipmentSyncAdapte::::" + nullPointer.getMessage());
+			isError = true;
 		}
 
 		return null;
+	}
+
+	private boolean isOrderHistoryPresent(final OrderModel childOrder, final String consignmentStatus, final String consignmentCode)
+	{
+		boolean isOrderHistoryPresent = false;
+
+		for (final OrderHistoryEntryModel entry : childOrder.getHistoryEntries())
+		{
+			if (consignmentStatus.equalsIgnoreCase(entry.getDescription()) && consignmentCode.equalsIgnoreCase(entry.getLineId()))
+			{
+				isOrderHistoryPresent = true;
+			}
+
+		}
+		return isOrderHistoryPresent;
 	}
 
 	/**
@@ -1751,6 +1922,25 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 	public void setOrderStatusMapping(final Map<String, OrderStatus> orderStatusMapping)
 	{
 		this.orderStatusMapping = orderStatusMapping;
+	}
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 
 }

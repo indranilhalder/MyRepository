@@ -106,8 +106,8 @@ public class GenericUtilityMethods
 		return status;
 	}
 
-	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException,
-			JsonMappingException, IOException
+	public static Object jsonToObject(final Class<?> classType, final String stringJson)
+			throws JsonParseException, JsonMappingException, IOException
 	{
 		final ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(stringJson, classType);
@@ -115,7 +115,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param : date
+	 * @param :
+	 *           date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -140,7 +141,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param : date,yeartoModify
+	 * @param :
+	 *           date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -239,7 +241,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param : date
+	 * @param :
+	 *           date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -278,7 +281,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param : List<AbstractPromotionRestriction> restrictionLists
+	 * @param :
+	 *           List<AbstractPromotionRestriction> restrictionLists
 	 * @param restrictionList
 	 * @return manufactureList
 	 */
@@ -667,7 +671,8 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param :
+	 *           SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	//	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 	//			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -714,8 +719,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
-				.checkMinimumBrandAmount(validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
+				&& getDefaultPromotionsManager().checkMinimumBrandAmount(validProductUssidMap, restrictionList));
 
 	}
 
@@ -749,11 +754,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1033,8 +1038,8 @@ public class GenericUtilityMethods
 	public static String getMissingImageUrl()
 
 	{
-		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext().getBean(
-				"configurationService");
+		final ConfigurationService configService = (ConfigurationService) Registry.getApplicationContext()
+				.getBean("configurationService");
 		String missingImageUrl = MISSING_IMAGE_URL;
 		String staticHost = null;
 		if (null != configService)
@@ -1139,7 +1144,8 @@ public class GenericUtilityMethods
 									&& null != currencySymbol)
 							{
 
-								order_shipping_charge = appendQuote(currencySymbol.concat(entry.getCurrDelCharge().getValue().toString()));
+								order_shipping_charge = appendQuote(
+										currencySymbol.concat(entry.getCurrDelCharge().getValue().toString()));
 							}
 						}
 
@@ -1683,11 +1689,14 @@ public class GenericUtilityMethods
 				PriceDataFactory.class);
 		Long cartTotalMrp = Long.valueOf(0);
 		double cartTotalNetSelPrice = 0.0D;
-		double couponDiscount = 0.0D;
+		//double couponDiscount = 0.0D;
 		double cartEntryNetSellPrice = 0.0D;
 		final DecimalFormat df = new DecimalFormat("#.##");
 		double totalDeliveryCharge = 0;
 		Long cartEntryMrp = Long.valueOf(0);
+		double cartDiscount = 0.0D;
+
+		double cartCouponDiscount = 0;
 
 		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
 		{
@@ -1700,22 +1709,28 @@ public class GenericUtilityMethods
 
 					cartTotalMrp = Long.valueOf(cartTotalMrp.longValue() + cartEntryMrp.longValue());
 
-					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
-					{
-						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
-					}
-					else
-					{
-						cartEntryNetSellPrice = Double
-								.parseDouble(df.format((null == entry.getBasePrice() ? 0.0d : entry.getBasePrice().doubleValue())
-										* (null == entry.getQuantity() ? 0.0d : entry.getQuantity().doubleValue())));
-					}
+					//					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					//					{
+					//						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
+					//					}
+					//					else
+					//					{
+					//						cartEntryNetSellPrice = Double
+					//								.parseDouble(df.format((null == entry.getBasePrice() ? 0.0d : entry.getBasePrice().doubleValue())
+					//										* (null == entry.getQuantity() ? 0.0d : entry.getQuantity().doubleValue())));
+					//					}
+
+					cartEntryNetSellPrice = entry.getTotalPrice().doubleValue();
 					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
 
-					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
+					//couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
 
-					totalDeliveryCharge += ((null == entry.getCurrDelCharge() ? 0.0d : entry.getCurrDelCharge().doubleValue()) + (null == entry
-							.getScheduledDeliveryCharge() ? 0.0d : entry.getScheduledDeliveryCharge().doubleValue()));
+					cartDiscount += (null == entry.getCartLevelDisc() ? 0.0d : entry.getCartLevelDisc().doubleValue());
+
+					cartCouponDiscount += (null == entry.getCartCouponValue() ? 0.0d : entry.getCartCouponValue().doubleValue());
+
+					totalDeliveryCharge += ((null == entry.getCurrDelCharge() ? 0.0d : entry.getCurrDelCharge().doubleValue())
+							+ (null == entry.getScheduledDeliveryCharge() ? 0.0d : entry.getScheduledDeliveryCharge().doubleValue()));
 
 				}
 			}
@@ -1731,7 +1746,9 @@ public class GenericUtilityMethods
 		//couponDiscount = 0.0D;
 		//}
 
-		final BigDecimal totalDiscount = new BigDecimal(cartTotalMrp.longValue() - cartTotalNetSelPrice - couponDiscount);
+		final BigDecimal totalDiscount = new BigDecimal(
+				(cartTotalMrp.longValue() - cartTotalNetSelPrice) + cartDiscount + cartCouponDiscount);
+
 		final PriceData totalDiscountVal = priceDataFactory.create(PriceDataType.BUY, totalDiscount,
 				MarketplacecommerceservicesConstants.INR);
 		if (null != model)
@@ -1746,8 +1763,8 @@ public class GenericUtilityMethods
 			////TISSTRT-1605
 			if (totalDeliveryCharge > 0)
 			{
-				final PriceData totalDeliveryChargeVal = priceDataFactory.create(PriceDataType.BUY, new BigDecimal(
-						totalDeliveryCharge), MarketplacecommerceservicesConstants.INR);
+				final PriceData totalDeliveryChargeVal = priceDataFactory.create(PriceDataType.BUY,
+						new BigDecimal(totalDeliveryCharge), MarketplacecommerceservicesConstants.INR);
 				responseData.setDeliveryCost(totalDeliveryChargeVal);
 			}
 		}
@@ -1905,8 +1922,8 @@ public class GenericUtilityMethods
 							}
 						}
 						if (CollectionUtils.isNotEmpty(sellerIdList)
-								&& ((sellerIdList.contains(sellerInformationId) && isSellerIncluded) || (!sellerIdList
-										.contains(sellerInformationId) && !isSellerIncluded)))
+								&& ((sellerIdList.contains(sellerInformationId) && isSellerIncluded)
+										|| (!sellerIdList.contains(sellerInformationId) && !isSellerIncluded)))
 						{
 							checkFlag = true;
 

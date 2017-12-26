@@ -3,10 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.core.model.order.OrderModel;
-
 import javax.xml.bind.JAXBException;
 
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
@@ -62,7 +58,6 @@ public interface TicketCreationCRMservice
 	 * @return TicketMasterXMLData
 	 * @throws Exception
 	 */
-	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
-			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception;
+	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
 
 }

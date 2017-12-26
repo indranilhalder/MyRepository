@@ -42,18 +42,18 @@
 	<div class="checkout-headline" id="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
-	<div class="checkout-content checkout-payment cart checkout wrapper">
+	<div class="checkout-content checkout-payment cart checkout wrapper" style="max-width: 1264px !important;">
 	<div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
 		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
 			<jsp:body> --%>
 				<script>
     				$(document).ready(function(){
-    					recalculateCart();
+    					recalculateCart(true);
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
     					var updateItHereLink=window.location.href;
     	
     					//TPR-7486
-    					ACC.singlePageCheckout.populatePaymentSpecificOffers();
+    					//ACC.singlePageCheckout.populatePaymentSpecificOffers();
     					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{
     						displayCODForm();
@@ -191,7 +191,7 @@
 				<!-- TISCR-305 starts -->	
 
 				<!--TPR-7486  -->
-				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive">
+				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive" style="display:none">
 				      <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			       </button>				
 
@@ -319,11 +319,10 @@
 										</c:if>
 									</c:forEach> --%>
 									
-									<!-- Newly addded for paytm integration -->
-										<c:forEach var="map" items="${paymentModes}">
+									<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-			    							<c:when test="${map.key eq 'TW'}">
+			    							<c:when test="${map.key eq 'PAYTM'}">
 			    								<input type="hidden" id="TW" value="${map.value}" />
 			       								<li>
 				       								<span id="viewPaymentPaytm" onclick="viewPaymentPaytm();">
@@ -335,7 +334,6 @@
 											</c:choose>
 										</c:if>
 									</c:forEach>
-									<!-- Newly addded for paytm integration -->
 									
 									
 					</ul>
@@ -424,6 +422,7 @@
 									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 									                  			<input type="hidden" name="creditCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 									                  			<input type="hidden" name="creditCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
+									                  			<input type="hidden" name="creditCardsRefno" id="creditCardsRefnocc${status.index}" class="card_bank" value="${map.value.cardReferenceNumber}" />
 									                  			<input type="hidden" name="creditIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
 									                  			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
@@ -432,7 +431,7 @@
 										       			</div>
 										        		<div class="cvv right-align-form digits">
 										        			<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" />
+												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" onfocus="selectRadioSavedCard('cc${status.index}','creditCards');"/>
 										        			<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
 																<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
 															</div>
@@ -470,10 +469,7 @@
 											
 										
 									</li>
-									<div class="terms">
-									<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>
+									
 								</c:if> 
 								<!-- END SAVED CREDIT CARD -->
 								<!--  CREDIT CARD SECTION  -->
@@ -571,8 +567,10 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
-						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
+						                           
 												</fieldset>
+												<div class="consent-disclaimer"><spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/>
+												</div><!-- TPR-7448 -->
 		            							<div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
 					                             <c:choose>
@@ -673,10 +671,7 @@
 			            		
 							</li>
 						</ul>
-						<div class="terms">
-						<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>					
+									
 					</li>				
 
 				<!-- Card ends -->
@@ -757,6 +752,7 @@
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 										                   			<input type="hidden" name="debitCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 										                   			<input type="hidden" name="debitCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
+										                   			<input type="hidden" name="debitCardsBanksRefno" id="debitCardsBanksRefnodc${status.index}" class="card_bank" value="${map.value.cardReferenceNumber}" />
 										                   			<input type="hidden" name="debitIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
 										            			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
@@ -765,7 +761,7 @@
 										        			</div>
 										        			<div class="cvv right-align-form digits">
 										        				<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-										            			<input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)" />		
+										            			<input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)"  onfocus="selectRadioSavedCard('dc${status.index}','debitCards');"/>		
 										        				<br>
 										        				<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
@@ -804,10 +800,7 @@
 											
 										
 									</li>
-									<div class="terms">
-									<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>
+								
 								</c:if> 
 								<!-- DEBIT NEW CARD -->
 								<li id="debitCard" class="item new-form active">
@@ -898,8 +891,10 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorDc"></span> 
 						                            </div>
-						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
+						                           
 												</fieldset>
+												<div class="consent-disclaimer"><spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/>
+												</div><!-- TPR-7448 -->
 		            							<%-- <div class="controls remember" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
 					                            <c:forEach var="cartItem" items="${cartData.entries}">
@@ -929,10 +924,7 @@
 			            		
 							</li>
 						</ul>	
-						<div class="terms">
-						<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>				
+							
 					</li>	
 					<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -959,10 +951,7 @@
 									<!-- Terms & Conditions Link -->
 									<div class="pay top-padding nbButton">
 
-										<div class="terms">
-										<p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p>
-										<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
-										</div>
+										
 										
 									</div> 
 								</li>
@@ -1098,8 +1087,10 @@
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
 						                            </div>
-						                            <spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/><!-- TPR-7448 -->
+						                           
 												</fieldset>
+												<div class="consent-disclaimer"><spring:theme code="checkout.payment.savecard.disclaimer" text="We will save your card details for a faster checkout. To remove your details, visit My Account."/>
+												</div><!-- TPR-7448 -->
 		            							<div class="controls remember" id="billingAddressEmi">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
 					                             <c:choose>
@@ -1189,10 +1180,7 @@
 									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 								    </div>
 								    <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
-								    <div class="terms">
-								    <p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>	
+								 
 			            			</div>
 			            			</div>
 			            			</c:when>
@@ -1339,7 +1327,7 @@
 													
 									</li>
 									</ul>	
-									<div class="terms cod"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /> <a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
+									
 								</li>
 														
 
@@ -1383,91 +1371,80 @@
 										</c:if>
 						</c:forEach>
 									
-						<!-- paytm Changes -->
-						<li id="PAYTM">
-						<ul class="product-block blocks">
-						 <c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'PAYTM'}">
-												<input type="hidden" id="PAYTM" value="${map.value}" />
-												
+						<c:forEach var="map" items="${paymentModes}">
+							<c:if test="${map.value eq true}">
+								<c:choose>
+								<c:when test="${map.key eq 'PAYTM'}">	
+									<li id="PAYTM">
+										<ul class="product-block blocks">
+											<input type="hidden" id="PAYTM" value="${map.value}" />
 												<div class="radio">
 													 <input type="radio" name="priority_paytm" id="radioButton_Paytm" value="paytm" checked/>
-													 <label for="priority_paytm" class="numbers creditLabel"> <span><img src="${commonResourcePath}/images/paytm.png" alt=""></span></label>
-									   			<span id="paytmInfo" style="display:none">
-														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
-													</span>
+													 <label for="priority_paytm"  class="numbers creditLabel"><img src="${commonResourcePath}/images/paytm.png" alt=""></label>
 									   			</div>
-	
 												<li>
 													<span id="viewPaymentPaytm"  onclick="viewPaymentPaytm();">
 														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
 													</span>
 												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-						</c:forEach>
-						
-						<div class="pay newCardPaymentCC">
-									<button type="submit" class="make_payment button btn-block payment-button" id="make_paytm_payment" onclick="submitPaytmForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-						</div>
-						</ul>
-						</li>		
-						<!-- paytm Changes -->		
+												
+										</ul>
+									</li>
+								</c:when>
+								</c:choose>
+							</c:if>
+						</c:forEach>	
 									
-							 <li id="MRUPEE">
-							<ul class="product-block blocks">
-							<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'MRupee'}">
-												<input type="hidden" id="MRupee" value="${map.value}" />
-	
-								<!-- <li id="tpWallet"> -->
+						<c:forEach var="map" items="${paymentModes}">
+							<c:if test="${map.value eq true}">
+								<c:choose>
+									<c:when test="${map.key eq 'MRupee'}">
+							 			<li id="MRUPEE">
+										<ul class="product-block blocks">
+											<input type="hidden" id="MRupee" value="${map.value}" />
 												<div class="radio">
 													 <input type="radio" name="priority_wallet" id="radioButton_MRupee" value="mRupee" checked/>
 													 <label for="radioButton_MRupee" class="numbers creditLabel"><span><img src="${commonResourcePath}/images/mRupeeLogo.PNG" alt=""></span></label>
-									   			<span id="mRupeeInfo" style="display:none">
-														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
+									   				<span id="mRupeeInfo" style="display:none">
+															<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
 													</span>
 									   			</div>
-									<form id="tpWallt_payment_form" autocomplete="off" action="${mRupeeUrl}">
-										<ycommerce:testId code="paymentDetailsWalletForm">
-										<input type="hidden" name="MCODE" value="${mCode}">
-										<input type="hidden" name="NARRATION" value="${narration}">
-										<input type="hidden" name="TXNTYPE" value="P">
-										<input type="hidden" name="AMT" id = "AMT">
-										<input type="hidden" name="RETURL" id = "RETURL">
-										<input type="hidden" name="REFNO" id = "REFNO">
-										<input type="hidden" name="CHECKSUM" id = "CHECKSUM">
-										
-
-
-
-											    
-									    </ycommerce:testId>
-									</form>
-		            			<!-- </li> -->
-		            			</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-						</ul>
-						<div class="terms">
-						<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>					
-					</li>
-					<!-- mRupee Changes ends -->
-						
-			</ul>
-				</div>
-				<!-- TPR-7486 one single Place orde button for all the payment mode -->
+										<form id="tpWallt_payment_form" autocomplete="off" action="${mRupeeUrl}">
+											<ycommerce:testId code="paymentDetailsWalletForm">
+												<input type="hidden" name="MCODE" value="${mCode}">
+												<input type="hidden" name="NARRATION" value="${narration}">
+												<input type="hidden" name="TXNTYPE" value="P">
+												<input type="hidden" name="AMT" id = "AMT">
+												<input type="hidden" name="RETURL" id = "RETURL">
+												<input type="hidden" name="REFNO" id = "REFNO">
+												<input type="hidden" name="CHECKSUM" id = "CHECKSUM">
+									    	</ycommerce:testId>
+										</form>
+		            					</ul>
+										</li>
+		            				</c:when>
+								</c:choose>
+							</c:if>
+					</c:forEach>
+									<!-- TPR-7486 one single Place orde button for all the payment mode -->
 				<button class="button validatepayment" type="button" id="continue_payment_after_validate">
 				<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			   </button>
+			    <div class="terms" id="prepaidtermsconditions">
+										<p class="redirect">You will be redirected to secure payment
+											gateway.</p>
+										<p onclick="teliumTrack()">
+											<spring:theme
+												code="checkout.multi.paymentMethod.selectMode.tnc.pretext" />
+											<a href="<c:url value="${tncLink}"/>" target="_blank"
+												class="conditions"><spring:theme
+													code="checkout.multi.paymentMethod.selectMode.tnc" /></a>
+										<p>
+						</div>
+						<div class="terms cod" id="codtermsconditions" style="display:none"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /> <a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
+			</ul>
+				</div>
+	
 				</div>				
 				<%-- </jsp:body>
 		</multiCheckout:checkoutSteps> --%>	
@@ -1482,6 +1459,35 @@
  .checkout-paymentmethod {
 	display: none;
 }
+@media (min-width: 791px){
+.mainContent-wrapper footer {
+    position: absolute;
+    width: 100%;
+    bottom: -160px;
+    left: 0;
+    clear: both;
+}
+}
+span#juspayErrorMsg {
+    margin-left: 23px !important;	/* change for TISPRDT-7845 */
+    line-height: inherit !important;	/* add for TISPRDT-7845 */
+}
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
+    min-height: 0px !important;
+}
+.global-alerts button.close{
+    float: left !imporatnt;
+    left: -7px !imporatnt;
+    top: 4px !important;
+}
+#accordion-tnc>li>div {
+    overflow: inherit ! important;
+}
+/* start change for TISPRDT-7845 */
+#juspayconnErrorDiv button.close{
+	left: 16px !important;		
+}
+/* end change for TISPRDT-7845 */
 </style>
 
 <script>

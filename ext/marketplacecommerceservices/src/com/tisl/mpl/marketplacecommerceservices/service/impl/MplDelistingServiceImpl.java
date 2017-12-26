@@ -101,7 +101,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#getAllUSSIDforSeller(java.util.List)
 	 */
 	@Override
@@ -125,18 +125,18 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#delistSeller(java.util.List,
 	 * java.lang.String, java.lang.String)
-	 *
+	 * 
 	 * @Javadoc
-	 *
+	 * 
 	 * @ Description : Delist Based on Seller Id
-	 *
+	 * 
 	 * @param : sellerModelList(List<SellerInformationModel>)
-	 *
+	 * 
 	 * @param : delisting(String)
-	 *
+	 * 
 	 * @param : blockOMS(String)
 	 */
 	@Override
@@ -183,16 +183,16 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#delistUSSID(java.util.List,
 	 * java.lang.String, java.lang.String)
-	 *
+	 * 
 	 * @Javadoc
-	 *
+	 * 
 	 * @ Description : Delist Based on USSID
-	 *
+	 * 
 	 * @param : sellerModelList(List<SellerInformationModel>)
-	 *
+	 * 
 	 * @param : delisting(String)
 	 */
 
@@ -250,7 +250,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#getModelforUSSID(java.lang.String)
 	 */
 	@Override
@@ -291,7 +291,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService#FindUnprocessedRecord()
 	 */
 	@Override
@@ -316,7 +316,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 	/*
 	 * @Javadoc This method would return a date deffered by minutes defined in the local.properties by variable
 	 * etail.delist.date.deffered or else by default it would deffer by 15minutes if the variable is not defined
-	 *
+	 * 
 	 * @return defferedTime
 	 */
 	private Date defferedDate()
@@ -330,6 +330,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 
 	}
 
+	//SDI-2814 --- De-listing and Re-listing through xml from PI Start
 	@Override
 	public void delistProduct(final ProductDelistingDTO delistDTO) throws JAXBException
 	{
@@ -339,51 +340,54 @@ public class MplDelistingServiceImpl implements MplDelistingService
 		{
 			for (final RecordsetDTO eachRecord : recordSetList)
 			{
-				boolean isSuccess = true;
-				final DelistDTO delist = eachRecord.getDelist();
-				final List<String> ussidList = delist.getUssid();
-				//final List<SellerInformationModel> sellerList = mplDelistingDao.getSellerModel(ussidList,getCatalogVersion());
-				if (CollectionUtils.isNotEmpty(ussidList))
+				if (StringUtils.isNotEmpty(eachRecord.getDelisting()))
 				{
-					for (final String sku : ussidList)
+					final List<String> NoSellerUssid = new ArrayList();
+					final List<SellerInformationModel> sellerSavingList = new ArrayList();
+					boolean isSuccess = false;
+					final DelistDTO delist = eachRecord.getDelist();
+					final List<String> ussidList = delist.getUssid();
+					final List<SellerInformationModel> sellerList = mplDelistingDao.getSellerModel(ussidList, getCatalogVersion(),
+							NoSellerUssid);
+
+					if (CollectionUtils.isNotEmpty(sellerList))
 					{
-						final SellerInformationModel sellerInfo = mplDelistingDao.getSellerModel(sku, getCatalogVersion());
-						if (null != sellerInfo)
+						try
 						{
-							if (StringUtils.isNotEmpty(eachRecord.getDelisting()))
+							for (final SellerInformationModel sellerInfo : sellerList)
 							{
 								if (StringUtils.equalsIgnoreCase(eachRecord.getDelisting(), MarketplacecommerceservicesConstants.Y))
 								{
 									sellerInfo.setSellerAssociationStatus(SellerAssociationStatusEnum.NO);
 									sellerInfo.setDelistDate(defferedDate());
-									modelService.save(sellerInfo);
-									isSuccess = true;
+									sellerSavingList.add(sellerInfo);
 								}
 								else
 								{
 									sellerInfo.setSellerAssociationStatus(SellerAssociationStatusEnum.YES);
 									sellerInfo.setDelistDate(defferedDate());
-									modelService.save(sellerInfo);
-									isSuccess = true;
+									sellerSavingList.add(sellerInfo);
 								}
 							}
-							else
-							{
-								LOG.error("either delist status empty");
-								isSuccess = false;
-							}
+							modelService.saveAll(sellerSavingList);
+							isSuccess = true;
 						}
-						else
+						catch (final Exception e)
 						{
-							LOG.error("no seller for ussid : " + sku);
-							isSuccess = false;
+							LOG.error("The exception is " + e);
 						}
-						createUpdateDelistModel(eachRecord.getSellerID(), eachRecord.getDelisting(), sku, isSuccess);
 					}
+					else
+					{
+						NoSellerUssid.addAll(ussidList);
+						LOG.error("empty seller information for ussids");
+					}
+					createUpdateDelistModel(sellerSavingList, ussidList, eachRecord.getSellerID(), isSuccess,
+							eachRecord.getDelisting(), NoSellerUssid);
 				}
 				else
 				{
-					LOG.error("empty seller for ussids");
+					LOG.error("status empty");
 				}
 			}
 		}
@@ -393,32 +397,62 @@ public class MplDelistingServiceImpl implements MplDelistingService
 		}
 	}
 
-	private void createUpdateDelistModel(final String sellerId, final String status, final String ussid, final boolean isSuccess)
+	private void createUpdateDelistModel(final List<SellerInformationModel> sellerSavingList, final List<String> ussidList,
+			final String sellerId, final boolean isSuccess, final String status, final List<String> NoSellerUssid)
 	{
-		final MarketplaceDelistModel ExistingDelistDetails = mplDelistingDao.fetchDelistDetails(ussid);
-		if (null != ExistingDelistDetails)
+		final List<MarketplaceDelistModel> savingList = new ArrayList();
+		final List<MarketplaceDelistModel> ExistingDelistDetailsList = mplDelistingDao.fetchDelistDetails(ussidList);
+		if (CollectionUtils.isNotEmpty(ExistingDelistDetailsList))
 		{
-			if (isSuccess)
+			for (final MarketplaceDelistModel delistM : ExistingDelistDetailsList)
 			{
-				ExistingDelistDetails.setDelistingStatus(status);
-				modelService.save(ExistingDelistDetails);
+				if (NoSellerUssid.contains(delistM.getDelistUssid()))
+				{
+					delistM.setDelistingStatus("Y");
+					savingList.add(delistM);
+				}
+				else
+				{
+					for (final SellerInformationModel seller : sellerSavingList)
+					{
+						if (seller.equals(delistM.getDelistUssid()))
+						{
+							delistM.setDelistingStatus(status);
+							savingList.add(delistM);
+						}
+					}
+				}
 			}
+			modelService.saveAll(savingList);
 		}
 		else
 		{
-			final MarketplaceDelistModel delistInfo = new MarketplaceDelistModel();
-			delistInfo.setSellerID(sellerId);
-			delistInfo.setDelistingStatus(status);
-			delistInfo.setDelistUssid(ussid);
-			if (isSuccess)
+			for (final String sku : NoSellerUssid)
 			{
-				delistInfo.setIsProcessed(Boolean.TRUE);
+				final MarketplaceDelistModel delistNInfo = new MarketplaceDelistModel();
+				delistNInfo.setSellerID(sellerId);
+				delistNInfo.setDelistingStatus("Y");
+				delistNInfo.setDelistUssid(sku);
+				delistNInfo.setIsProcessed(Boolean.FALSE);
+				savingList.add(delistNInfo);
 			}
-			else
+			for (final SellerInformationModel seller : sellerSavingList)
 			{
-				delistInfo.setIsProcessed(Boolean.FALSE);
+				final MarketplaceDelistModel delistInfo = new MarketplaceDelistModel();
+				delistInfo.setSellerID(sellerId);
+				delistInfo.setDelistingStatus(status);
+				delistInfo.setDelistUssid(seller.getSellerArticleSKU());
+				if (isSuccess)
+				{
+					delistInfo.setIsProcessed(Boolean.TRUE);
+				}
+				else
+				{
+					delistInfo.setIsProcessed(Boolean.FALSE);
+				}
+				savingList.add(delistInfo);
 			}
-			modelService.save(delistInfo);
+			modelService.saveAll(savingList);
 		}
 	}
 
@@ -447,8 +481,7 @@ public class MplDelistingServiceImpl implements MplDelistingService
 		}
 	}
 
-	private void delistOrRelistAllUssid(final List<SellerInformationModel> Ussidlist, final String blockOMS,
-			final String delisting)
+	private void delistOrRelistAllUssid(final List<SellerInformationModel> Ussidlist, final String blockOMS, final String delisting)
 	{
 		final List<SellerInformationModel> sellerModelSavingList = new ArrayList<>();
 		for (final SellerInformationModel sellerModel : Ussidlist)
@@ -500,5 +533,6 @@ public class MplDelistingServiceImpl implements MplDelistingService
 			delistOrRelistAllUssid(Ussidlist, blockOMS, delisting);
 		}
 	}
+	//SDI-2814 --- De-listing and Re-listing through xml from PI END --------------
 
 }

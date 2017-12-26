@@ -1321,10 +1321,12 @@
 	<!-- TPR-5989: Web Form -->
 	<bean class="com.tisl.mpl.facades.cms.data.WebForm">
 		<property name="nodes" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.NodeFormData>" />
-		<property name="orderDatas" type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
 		<property name="name" type="String" />
 		<property name="emailId" type="String" />
 		<property name="mobile" type="String" />
+		<property name="orderLineDatas" type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderEntryData>" />
+		<property name="totalOrderLines" type="String" />
+		
 	</bean>
 	<bean class="com.tisl.mpl.facades.cms.data.NodeFormData">
 		<property name="nodeCode" type="String" />
@@ -1334,6 +1336,7 @@
 		<property name="nodeDisplayAllowed" type="Boolean" />
 		<property name="ticketAnswer" type="String" />
 		<property name="ticketType" type="String" />
+		<property name="parentNode" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.facades.cms.data.WebFormData">
@@ -1362,6 +1365,24 @@
 		<property name="ecommRequestId" type="String" />
 		<property name="crmTicketID" type="String" />
 		<property name="status" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.WebFormOrder">
+		<property name="orderLineDatas" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.WebFormOrderLine>" />
+		<property name="status" type="String" />
+		<property name="totalOrderLines" type="String" />
+		<property name="pageSize" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.WebFormOrderLine">
+		<property name="orderCode" type="String" />
+		<property name="subOrderCode" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="prodImageURL" type="String" />
+		<property name="orderDate" type="String" />
+		<property name="prodTitle" type="String" />
+		<property name="prodTotalPrice" type="String" />
+		<property name="customerOrderStatus" type="String" />
 	</bean>
 	
 </beans>

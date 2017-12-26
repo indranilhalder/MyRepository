@@ -128,9 +128,6 @@
 
 					<ul class="headerUl">		
 
-
-						
-
 						<c:if test="${empty showOnlySiteLogo }">
 							<c:if test="${empty hideHeaderLinks}">
 								<cms:pageSlot position="MiniCart" var="component">
@@ -169,6 +166,7 @@
 								<%-- <li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li> //commented for UF-353--%>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 								<li class="enter-pincode"><a data-toggle="modal" data-target="#pincode-modal">Enter Your Pincode</a></li>
+								<li class="helpservices"><a href="${request.contextPath}/faq" title="Customer Service">Customer Service</a></li>
 							</c:if>
 						</c:if>
 						

@@ -63,6 +63,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String USERINVALID = "User_Invalid".intern();
 	public static final String FREEBIE = "Freebie".intern();
 	public static final String RELEASEISSUE = "Release Issue".intern();
+	public static final String SELLERVIOLATION = "sellerViolated".intern();
+	public static final String ORDERVIOLATION = "orderViolated".intern();
 	//TPR-1075
 	public static final String FIRSTPURUSERINVALID = "First_Purchase_User_Invalid".intern();
 	//Coupon Exception Message
@@ -100,6 +102,7 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 
 	public static final String CARTCOUPONREDEEM = "/usevoucher";
 	public static final String CARTCOUPONRELEASE = "/releasevoucher";
+	public static final String SELLER_RESTRICTION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart";
 
 	private MarketplacecouponConstants()
 	{

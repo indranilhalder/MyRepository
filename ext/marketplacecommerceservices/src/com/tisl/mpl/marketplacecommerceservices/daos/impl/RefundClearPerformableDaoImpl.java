@@ -3,12 +3,14 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +21,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -36,6 +37,26 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+	@Autowired
+	private ConfigurationService configurationService;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -44,8 +65,10 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public MplConfigurationModel getCronDetails(final String code)
 	{
+		MplConfigurationModel mplConfigurationModel = new MplConfigurationModel();
 		try
 		{
+
 			final String queryString = //
 			"SELECT {cm:" + MplConfigurationModel.PK
 					+ "} "//
@@ -54,12 +77,14 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
-			return getFlexibleSearchService().<MplConfigurationModel> searchUnique(query);
+			mplConfigurationModel = getFlexibleSearchService().<MplConfigurationModel> searchUnique(query);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+
+		return mplConfigurationModel;
 
 	}
 
@@ -67,32 +92,34 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 
 	@Override
-	public List<OrderModel> getRefundClearOrders(final Date date, final Date startDate)
+	public List<ConsignmentModel> getRefundClearConsignments(final Date date, final Date startDate)
 	{
+		List<ConsignmentModel> consignmentModelList = new ArrayList<ConsignmentModel>();
 		try
 		{
 
-			final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARORDERQUERY;
+			final String queryString = getConfigurationService().getConfiguration().getString("payment.refundclearorderquery");
 			//forming the flexible search query
-			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
-					OrderStatus.REFUND_INITIATED.getCode());
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSTWO,
-					OrderStatus.REFUND_IN_PROGRESS.getCode());
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, date);
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startDate);
-			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
-					MarketplacecommerceservicesConstants.SUBORDER);
+			final FlexibleSearchQuery consignmentListQuery = new FlexibleSearchQuery(queryString);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
+					ConsignmentStatus.REFUND_INITIATED);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSTWO,
+					ConsignmentStatus.REFUND_IN_PROGRESS);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, date);
+			consignmentListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startDate);
+			//			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
+			//					MarketplacecommerceservicesConstants.SUBORDER);
 
 			//fetching order list from DB using flexible search query
-			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
+			consignmentModelList = getFlexibleSearchService().<ConsignmentModel> search(consignmentListQuery).getResult();
 
-			return orderList;
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+
+		return consignmentModelList;
 	}
 
 
@@ -100,6 +127,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditDataList(final String guid)
 	{
+		List<MplPaymentAuditModel> paymentAuditModelList = new ArrayList<MplPaymentAuditModel>();
 		try
 		{
 			final String queryString = //
@@ -109,12 +137,13 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 					+ MplPaymentAuditModel.CARTGUID + "} = ?guid";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("guid", guid);
-			return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
+			paymentAuditModelList = getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+		return paymentAuditModelList;
 
 	}
 
@@ -146,6 +175,8 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<RefundTransactionMappingModel> fetchRefundTransactionMapping(final String juspayRefundId)
 	{
+
+		List<RefundTransactionMappingModel> refundTransactionMappingList = new ArrayList<RefundTransactionMappingModel>();
 		try
 		{
 			final String queryString = //
@@ -155,19 +186,21 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 					+ "{rtm." + RefundTransactionMappingModel.JUSPAYREFUNDID + "} = ?juspayRefundId";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("juspayRefundId", juspayRefundId);
-			return getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
+			refundTransactionMappingList = getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
-	}
 
+		return refundTransactionMappingList;
+	}
 
 	@Override
 	public RefundTransactionMappingModel fetchRefundTransactionByEntry(final AbstractOrderEntryModel orderEntry)
 	{
 
+		RefundTransactionMappingModel refundTransactionMappingModel = new RefundTransactionMappingModel();
 		try
 		{
 			final String queryString = //
@@ -178,12 +211,14 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("orderEntry", orderEntry.getPk());
 
-			return getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
+			refundTransactionMappingModel = getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
+
+		return refundTransactionMappingModel;
 	}
 
 
@@ -203,6 +238,16 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao#getRefundClearOrders(java.util.Date,
+	 * java.util.Date)
+	 */
 
 
 

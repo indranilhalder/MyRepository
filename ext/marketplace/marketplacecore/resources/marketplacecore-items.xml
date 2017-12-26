@@ -1397,6 +1397,11 @@
 			</targetElement>
 		</relation>
 		<!-- TPR-6665 : relation betwwen slave urls with solr server config end -->
+		<!-- gigya rating-review response to the user comments using googleplus site for a listing id -->											   
+		<relation code="GigyaResp2GooglePlusSiteUserRelation" autocreate="true" generate="true" localized="false" >
+			<sourceElement qualifier ="gigyaResponseCapture" type="GigyaResponseCapture" cardinality="one"></sourceElement>
+			<targetElement qualifier = "gigyaGooglePlusUserInfo" type="GigyaGooglePlusUserInfo" cardinality="many"></targetElement>
+		</relation>	
 
 	</relations>
 	<itemtypes>
@@ -6034,6 +6039,24 @@
 				</attributes>
 			</itemtype>
 
+	<!--SDI 3591  -->
+			
+			<itemtype code="CODReturnOMSSyncProcess" extends="OrderProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.CODReturnOMSSyncProcess">
+				<description>Represents process that is used to initiate OMS call for COD Return Orders from FICO</description>
+				<attributes>
+					<attribute qualifier="transactionStatus" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction status to pass to OMS</description>
+					</attribute>
+					<attribute qualifier="transactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction Id to pass to OMS</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 		</typegroup>
 		<!-- Blacklist Model -->
 		<typegroup name="Marketplace">
@@ -8261,6 +8284,32 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Added for TPR-5954 || Start -->
+					<attribute qualifier="subReason" type="java.lang.String">
+						<description>Sub reason value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="subReasonCode" type="java.lang.String">
+						<description>Sub reason code</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnRemarks" type="java.lang.String">
+						<description>remarks for return</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="imgUrl" type="java.lang.String">
+						<description>url of the uploaded image</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(2000)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- Added for TPR-5954 || End -->
 				</attributes>
 			</itemtype>
 			<itemtype code="RefundEntry" autocreate="false" generate="true">
@@ -14455,8 +14504,8 @@
 				<description>Takes Business Configured CRM mapping</description>
 				<deployment table="MplWebCrm" typecode="11890" />
 				<attributes>
-					<attribute qualifier="nodeType" type="java.lang.String">
-						<modifiers optional="false" />
+					<attribute qualifier="serialNum" type="java.lang.String">
+						<modifiers optional="false" unique="true"/>
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="nodeText" type="java.lang.String">
@@ -14465,7 +14514,11 @@
 					</attribute>
 					<attribute qualifier="nodeCrmCode" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers optional="false" unique="true" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="nodeType" type="java.lang.String">
+						<modifiers optional="false" />
+						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="nodeParent" type="java.lang.String">
 						<persistence type="property" />
@@ -14558,7 +14611,24 @@
 						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="comment" type="java.lang.String">
-						<persistence type="property" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(1100)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Comments</description>					
 						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="crmTicketRef" type="java.lang.String">				
@@ -14626,7 +14696,23 @@
 					<description>The reason descriptions</description>
 					<modifiers optional="true" unique="false" write="true"
 							read="true" />
-					<persistence type="property" />
+					<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
 				</attribute>
 				<attribute qualifier="orderStatus" type="java.lang.String">
 					<description>The parent child relation</description>
@@ -14713,8 +14799,23 @@
 				</attribute>
 			</attributes>
 		</itemtype>
-	</typegroup>
-			
+	<!-- table to store info for user commented from google plus site for a listing id-->
+		<itemtype code="GigyaGooglePlusUserInfo" autocreate="true" generate="true">
+			<deployment table="GigyaGooglePlusUserInfo" typecode="25390" />
+			<attributes>
+				<attribute autocreate="true" qualifier="uid" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="googleEmailId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>		
   </itemtypes>
 
 </items>

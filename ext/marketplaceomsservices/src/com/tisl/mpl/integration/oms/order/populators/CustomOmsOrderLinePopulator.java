@@ -342,6 +342,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 
 
+
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
 			{

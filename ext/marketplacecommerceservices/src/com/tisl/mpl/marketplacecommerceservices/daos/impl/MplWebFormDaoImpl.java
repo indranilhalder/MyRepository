@@ -11,8 +11,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facades.cms.data.WebFormData;
@@ -33,14 +35,15 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMParentNodes()
 	 */
 	@Override
 	public List<MplWebCrmModel> getWebCRMParentNodes()
 	{
 		final String queryString = "SELECT {form: " + MplWebCrmModel.PK + " } " + " FROM { " + MplWebCrmModel._TYPECODE
-				+ " AS form}" + "where " + " { form." + MplWebCrmModel.NODETYPE + " }  = ?nodeType ";
+				+ " AS form}" + "where " + " { form." + MplWebCrmModel.NODETYPE + " }  = ?nodeType order by " + "{"
+				+ MplWebCrmModel.SERIALNUM + "}";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("nodeType", "L1");
@@ -50,14 +53,15 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
 	public List<MplWebCrmModel> getWebCRMByNodes(final String nodeParent)
 	{
 		final String queryString = "SELECT {form: " + MplWebCrmModel.PK + " } " + " FROM { " + MplWebCrmModel._TYPECODE
-				+ " AS form} " + "where " + " { form." + MplWebCrmModel.NODEPARENT + " }  = ?nodeParent ";
+				+ " AS form} " + "where " + " { form." + MplWebCrmModel.NODEPARENT + " }  = ?nodeParent order by {"
+				+ MplWebCrmModel.SERIALNUM + "}";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("nodeParent", nodeParent);
@@ -68,7 +72,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -86,7 +90,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
@@ -95,26 +99,28 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 	public boolean checkDuplicateWebCRMTickets(final WebFormData formData)
 	{
 		boolean returnResult = false;
-		final String queryString = "SELECT {form: " + MplWebCrmTicketModel.PK + " } " 
-				+ " FROM { " + MplWebCrmTicketModel._TYPECODE + " AS form } "
-				+ " where { form." + MplWebCrmTicketModel.L0CODE + " }  = ?L0code "
-				+ " AND { form."+ MplWebCrmTicketModel.L1CODE + " }  = ?L1code "
-				+ " AND { form." + MplWebCrmTicketModel.L2CODE + " }  = ?L2code "
-				+ " AND { form." + MplWebCrmTicketModel.L3CODE + " }  = ?L3code "
-				+ " AND { form." + MplWebCrmTicketModel.L4CODE+ " }  = ?L4code "
-				+ " AND { form." + MplWebCrmTicketModel.CUSTOMERNAME + " }  = ?customerName "
-				+ " AND { form." + MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail "
-				+ " OR ( { form."+ MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode "
-				+ " AND { form." + MplWebCrmTicketModel.SUBORDERCODE+ " }  = ?subOrderCode "
-				+ " AND { form." + MplWebCrmTicketModel.TRANSACTIONID + " }  = ?transactionId )";
-
-
-
+		String queryString = "SELECT {form: " + MplWebCrmTicketModel.PK + " } " + " FROM { " + MplWebCrmTicketModel._TYPECODE
+				+ " AS form } " + " where { form." + MplWebCrmTicketModel.L0CODE + " }  = ?L0code " + " AND { form."
+				+ MplWebCrmTicketModel.L1CODE + " }  = ?L1code " + " AND { form." + MplWebCrmTicketModel.L2CODE + " }  = ?L2code "
+				+ " AND { form." + MplWebCrmTicketModel.L3CODE + " }  = ?L3code " + " AND { form." + MplWebCrmTicketModel.L4CODE
+				+ " }  = ?L4code " + " AND { form." + MplWebCrmTicketModel.CUSTOMEREMAIL + " }  = ?customerEmail ";
+		//TISHS-172
+		if (StringUtils.isNotEmpty(formData.getOrderCode()))
+		{
+			queryString += " AND  { form." + MplWebCrmTicketModel.ORDERCODE + " }  = ?orderCode ";
+		}
+		if (StringUtils.isNotEmpty(formData.getSubOrderCode()))
+		{
+			queryString += " AND { form." + MplWebCrmTicketModel.SUBORDERCODE + " }  = ?subOrderCode ";
+		}
+		if (StringUtils.isNotEmpty(formData.getTransactionId()))
+		{
+			queryString += " AND { form." + MplWebCrmTicketModel.TRANSACTIONID + " }  = ?transactionId ";
+		}
+		//status check
+		queryString += " AND { form." + MplWebCrmTicketModel.STATUS + " }  = ?status ";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("orderCode", formData.getOrderCode());
-		query.addQueryParameter("subOrderCode", formData.getSubOrderCode());
-		query.addQueryParameter("transactionId", formData.getTransactionId());
 		query.addQueryParameter("L0code", formData.getL0code());
 		query.addQueryParameter("L1code", formData.getL1code());
 		query.addQueryParameter("L2code", formData.getL2code());
@@ -122,6 +128,21 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 		query.addQueryParameter("L4code", formData.getL4code());
 		query.addQueryParameter("customerName", formData.getCustomerName());
 		query.addQueryParameter("customerEmail", formData.getCustomerEmail());
+		query.addQueryParameter("status", MarketplacecommerceservicesConstants.OPEN);
+
+		if (StringUtils.isNotEmpty(formData.getOrderCode()))
+		{
+			query.addQueryParameter("orderCode", formData.getOrderCode());
+		}
+		if (StringUtils.isNotEmpty(formData.getSubOrderCode()))
+		{
+			query.addQueryParameter("subOrderCode", formData.getSubOrderCode());
+		}
+		if (StringUtils.isNotEmpty(formData.getTransactionId()))
+		{
+			query.addQueryParameter("transactionId", formData.getTransactionId());
+		}
+
 
 		final List<MplWebCrmTicketModel> result = flexibleSearchService.<MplWebCrmTicketModel> search(query).getResult();
 		if (CollectionUtils.isNotEmpty(result) && result.size() > 0)
@@ -131,6 +152,4 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 
 		return returnResult;
 	}
-
-
 }

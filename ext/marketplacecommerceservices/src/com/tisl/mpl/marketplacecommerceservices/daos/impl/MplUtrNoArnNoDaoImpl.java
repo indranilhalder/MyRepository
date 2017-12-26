@@ -42,7 +42,7 @@ public class MplUtrNoArnNoDaoImpl implements MplUtrNoArnNoDao
 
 		try
 		{
-			String utrNoArnNo = null;
+			String utrNoArnNo = StringUtils.EMPTY;
 			List<RefundTransactionEntryModel> UtrNoArnNopk = null;
 			final String query = "select {pk} from {RefundTransactionEntry} where {transactionid}=?orderLineId";
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
@@ -50,13 +50,18 @@ public class MplUtrNoArnNoDaoImpl implements MplUtrNoArnNoDao
 			UtrNoArnNopk = flexibleSearchService.<RefundTransactionEntryModel> search(fQuery).getResult();
 			if (CollectionUtils.isNotEmpty(UtrNoArnNopk))
 			{
-				if (StringUtils.isNotEmpty(UtrNoArnNopk.get(0).getUtrNumber()))
+				final RefundTransactionEntryModel reftrentry = UtrNoArnNopk.get(0);
+				if (null != reftrentry)
 				{
-					utrNoArnNo = UtrNoArnNopk.get(0).getUtrNumber();
-				}
-				if (StringUtils.isNotEmpty(UtrNoArnNopk.get(0).getArnNumber()))
-				{
-					utrNoArnNo = UtrNoArnNopk.get(0).getArnNumber();
+
+					if (StringUtils.isNotEmpty(reftrentry.getUtrNumber()))
+					{
+						utrNoArnNo = reftrentry.getUtrNumber();
+					}
+					if (StringUtils.isNotEmpty(reftrentry.getArnNumber()))
+					{
+						utrNoArnNo = reftrentry.getArnNumber();
+					}
 				}
 			}
 			return utrNoArnNo;

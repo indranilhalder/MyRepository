@@ -37,14 +37,16 @@ public interface MplVoucherDao
 	 * @param cardReferenceNo
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAvailCnt(VoucherModel voucher, String cardReferenceNo);
+	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(String guid, VoucherModel voucher,
+			String cardReferenceNo);
 
 	/**
 	 * @param voucher
 	 * @param cardReferenceNo
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
-	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(VoucherModel voucher, String cardReferenceNo);
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(String guid, VoucherModel voucher,
+			String cardReferenceNo);
 
 	/**
 	 * @param guid
@@ -52,6 +54,30 @@ public interface MplVoucherDao
 	 * @return List<JuspayCardStatus>
 	 */
 	public List<JuspayCardStatusModel> findJuspayCardStatus(String guid, String customerId);
+
+	/**
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return List<VoucherCardPerOfferInvalidationModel>
+	 */
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPDay(String guid, VoucherModel voucher,
+			String cardReferenceNo);
+
+	/**
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return List<VoucherCardPerOfferInvalidationModel>
+	 */
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPWeek(String guid, VoucherModel voucher,
+			String cardReferenceNo);
+
+	/**
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return List<VoucherCardPerOfferInvalidationModel>
+	 */
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPYear(String guid, VoucherModel voucher,
+			String cardReferenceNo);
 
 
 
