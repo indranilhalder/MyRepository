@@ -66,8 +66,11 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -84,6 +87,9 @@ import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -253,6 +259,10 @@ import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 @RequestMapping(value = RequestMappingUrlConstants.LINK_MY_ACCOUNT)
 public class AccountPageController extends AbstractMplSearchPageController
 {
+	/**
+	 * 
+	 */
+	private static final String CLIQ_CASH = "Cliq Cash";
 	// Internal Redirects
 	private static final String REDIRECT_MY_ACCOUNT = REDIRECT_PREFIX + "/my-account";
 	private static final String REDIRECT_TO_ADDRESS_BOOK_PAGE = REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT
@@ -680,6 +690,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<OrderHistoryData> orderHistoryList = null;
 		final List<OrderData> subOrderDetailsList = new ArrayList<OrderData>();
 		final Map<String, String> orderFormattedDateMap = new HashMap<String, String>();
+		final Map<String, String> orderForEGVMap = new HashMap<String, String>();
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		List<OrderEntryData> cancelProduct = new ArrayList<OrderEntryData>();
 		final Map<String, Map<String, AWBResponseData>> orderWithStatus = new HashMap<String, Map<String, AWBResponseData>>();
@@ -784,9 +795,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 								+ orderHistoryData.getCode());
 						//setting cancel product for BOGO
 
+						 if(null!= orderEntryData.getOrderLineId()){
 						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 								orderEntryData.getOrderLineId());
 						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+                        }
 
 						//TPR-6013
 						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
@@ -867,6 +880,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 				formattedOrderDate = getFormattedDate(orderDetails.getCreated());
 				orderFormattedDateMap.put(orderDetails.getCode(), formattedOrderDate);
 				orderDataList.add(orderDetails);
+				if( null !=  orderDetails.getStatus()){
+				if(orderDetails.getStatus().equals(de.hybris.platform.core.enums.OrderStatus.REDEEMED)){
+					orderForEGVMap.put(orderDetails.getCode(), "REDEEMED");
+				}
+				}
 			}
 			LOG.debug("Step16-************************Order History: Finished:");
 
@@ -897,7 +915,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			//TPR-6013
 			model.addAttribute(ModelAttributetConstants.RETURN_POPOVER, returnMessagePopOver);
 			model.addAttribute(ModelAttributetConstants.CANCEL_POPOVER, cancelMessagePopOver);
-
+			model.addAttribute("egvStatusMap", orderForEGVMap);
 			// LW-225,230
 			if (CollectionUtils.isEmpty(orderHistoryList))
 			{
@@ -1018,7 +1036,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 	/**
-	 * @description method is called to get the order details page
+	 * @description method is called to get the order details page
 	 * @param orderCode
 	 * @param model
 	 * @return String
@@ -8429,5 +8447,103 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.error("Excception ouucer while changing index postion");
 		}
 
+	}
+	  /*EGV changes for email*/
+	@RequestMapping(value = RequestMappingUrlConstants.SEND_NOTIFICATION_EGV_ORDER, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public void sendNotificationRecipient(@RequestParam(value = "orderId") final String orderId)
+	{
+		if (orderId != null)
+		{
+			LOG.info("SendNotificationRecipient  ");
+			mplOrderFacade.sendNotificationEGVOrder(orderId);
+		}
+	}
+	
+	
+	@RequestMapping(value = RequestMappingUrlConstants.GET_ORDER_STATEMENT, method = RequestMethod.GET)
+	public String getOrderStatement(@RequestParam(value = "orderId") final String orderId,Model model)
+	{
+		
+		System.out.println("Get Statement for order"+orderId);
+		
+		OrderModel orderModel = orderModelService.getOrderModel(orderId); 
+		OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+		
+		
+		if("Juspay".equalsIgnoreCase(orderModel.getSplitModeInfo())){
+			boolean isCanAndReturn = false;
+			if(CollectionUtils.isNotEmpty(orderDetail.getSellerOrderList())){
+			for (OrderData sellerOrder : orderDetail.getSellerOrderList())
+			{
+				for (OrderEntryData entry : sellerOrder.getEntries())
+				{
+					for (OrderModel chaildOrder : orderModel.getChildOrders())
+					{
+						if(CollectionUtils.isNotEmpty(chaildOrder.getHistoryEntries())){
+						for (OrderHistoryEntryModel orderHistoryEntryModel : chaildOrder.getHistoryEntries())
+						{
+							if ((StringUtils.isNotEmpty(orderHistoryEntryModel.getLineId())
+									&& entry.getOrderLineId().equalsIgnoreCase(orderHistoryEntryModel.getLineId()))
+									&& "REFUND_INITIATED".equalsIgnoreCase(orderHistoryEntryModel.getDescription()))
+							{
+								entry.setIsCanAndReturn(true);
+								isCanAndReturn = true;
+								break;
+							}
+						}
+						}
+						if (isCanAndReturn)
+						{
+							isCanAndReturn = false;
+							break;
+						}
+						else
+						{
+							entry.setIsCanAndReturn(false);
+						}
+					}
+
+				}
+			}
+			}
+			model.addAttribute("juspayMode", Boolean.TRUE);
+		}else{
+			model.addAttribute("juspayMode", Boolean.FALSE);
+		}
+		
+		if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+		{
+			for (PaymentTransactionModel paymentTransactionModel : orderModel.getPaymentTransactions())
+			{
+				if (CLIQ_CASH.equalsIgnoreCase(paymentTransactionModel.getPaymentProvider()))
+				{
+					model.addAttribute("cliqCashAmount", roundBigDecimal(paymentTransactionModel.getPlannedAmount()).toPlainString());
+				}
+				else
+				{
+					model.addAttribute("juspayAmount", roundBigDecimal(paymentTransactionModel.getPlannedAmount()).toPlainString());
+				}
+			}
+		}
+		model.addAttribute("orderDetail",orderDetail);
+		
+		return ControllerConstants.Views.Pages.Account.GET_Statement_Page;
+	}
+	
+	private BigDecimal roundBigDecimal(final BigDecimal input){
+		try
+		{
+	    return input.round(
+	        new MathContext(
+	            input.toBigInteger().toString().length(),
+	            RoundingMode.HALF_UP
+	        )
+	    );
+		}catch(Exception excepton){
+			LOG.error("Error While Getting amount"+excepton.getMessage());
+		}
+		return null;
 	}
 }
