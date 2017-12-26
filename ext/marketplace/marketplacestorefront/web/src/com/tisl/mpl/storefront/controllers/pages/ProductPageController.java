@@ -60,7 +60,6 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
@@ -138,6 +137,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import atg.taglib.json.util.JSONException;
+
 import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
@@ -210,12 +211,9 @@ import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
-import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-
-import atg.taglib.json.util.JSONException;
 
 
 
@@ -229,17 +227,15 @@ import atg.taglib.json.util.JSONException;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
-	
-	private static final String PLEASE_PROVIDE_CORRECT_INFORMATION = "Please provide correct information ";
-
-	private static final String ERRO_MSG = "erroMsg";
-
-	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
-
+	/**
+	 *
+	 */
 	private static final String FOOTWEAR = "Footwear";
 
-	
+	/**
+	 *
+	 */
 	//SONAR FIX JEWELLERY
 	//private static final String CLOTHING = "Clothing";
 
@@ -518,13 +514,6 @@ public class ProductPageController extends MidPageController
 			if (null != productCode)
 			{
 				productCode = productCode.toUpperCase();
-			}
-			
-			try{
-			   CustomerModel currentCustomer =(CustomerModel) userService.getCurrentUser();			   
-			   
-			}catch(Exception exception){
-				LOG.error("getting ");
 			}
 
 			LOG.debug("**************************************opening pdp for*************" + productCode);
@@ -3884,7 +3873,8 @@ public class ProductPageController extends MidPageController
 	@ResponseBody
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/getOfferMessage", method = RequestMethod.GET)
 	public JSONObject populateOfferMessage(
-			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLERID) final String sellerId)
 			throws com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
@@ -3978,7 +3968,8 @@ public class ProductPageController extends MidPageController
 							//final boolean excludePromotion = false;
 							if (null != productPromotion)
 							{
-								if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								//if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+								if (CollectionUtils.isNotEmpty(productPromotion.getExcludedProducts()))//EQA fix
 								{
 									final List<ProductModel> excludedList = new ArrayList<ProductModel>(
 											productPromotion.getExcludedProducts());
@@ -5308,96 +5299,9 @@ public class ProductPageController extends MidPageController
 	{
 		this.timeService = timeService;
 	}
-	
+
+
 	//CAR-327 ends here
-	
-	@RequireHardLogIn
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
-	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			final Model model, final HttpServletRequest request,@RequestParam(value = "egvErrorMsg", required = false) final String egvErrorMsg)
-	{
-		try
-		{
 
-			if (null != productCode)
-			{
-				productCode = productCode.toUpperCase();
-			}
-			
-			try
-			{
-				CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-				if(currentCustomer ==null){
-					return REDIRECT_PREFIX + "/login";
-				}
-				if(currentCustomer.getOriginalUid()==null){
-					return REDIRECT_PREFIX + "/login";
-				}
-			}
-			catch (Exception exception)
-			{
-				LOG.error("Getting Excpetion While getting current customer ");
-				return REDIRECT_PREFIX + "/login";
-			}
 
-			final ProductModel productModel = productService.getProductForCode(productCode);
-			populateProductDetailForDisplay(productModel, model, request);
-
-			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
-			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
-			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
-			model.addAttribute(new ReviewForm());
-			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
-			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
-			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
-			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
-			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-			try{
-			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
-			 String [] amountList = productPrice.split(",");
-			 model.addAttribute("amountList", amountList);
-			}catch(Exception exception){
-				LOG.error("Exception Occur while getting product price  ");
-			}
-			 
-			 model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-			if (productModel instanceof PcmProductVariantModel)
-			{
-				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
-				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE, variantProductModel.getSize());
-			}
-			getViewForPage(model);
-
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
-		}
-		final EgvDetailForm egvDetailsform = new EgvDetailForm();
-		model.addAttribute("egvDetailsform", egvDetailsform);
-		if (StringUtils.isNotEmpty(egvErrorMsg))
-		{
-			 if(egvErrorMsg.equalsIgnoreCase("formValidation")){
-			     model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
-			 }
-			 else if(egvErrorMsg.equalsIgnoreCase("EGVOderError")){
-				 GlobalMessages.addMessage(model, GlobalMessages.CONF_MESSAGES_HOLDER, "mpl.gift.error.message",
-							new Object[] {});
-			 }
-		}
-		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
-		storeCmsPageInModel(model, contentPage);
-		setUpMetaDataForContentPage(model, contentPage);
-		return PAGES_LAYOUT_EGV_PDP_RESPONSIVE;
-	}
 }

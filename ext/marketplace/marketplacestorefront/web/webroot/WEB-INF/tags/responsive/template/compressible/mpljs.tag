@@ -300,6 +300,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 	src="${commonResourcePath}/js/mpl/acc.singlePageCheckout.js"></script>	
 </c:if>
 <!-- Web form TPR-5989 -->
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/simpleUpload.min.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.webform.js"></script>	
 
 

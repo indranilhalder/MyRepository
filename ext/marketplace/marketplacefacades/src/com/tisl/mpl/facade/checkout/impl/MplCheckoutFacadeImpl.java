@@ -66,8 +66,6 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -110,6 +108,8 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 
 
 /**
@@ -118,11 +118,6 @@ import com.tisl.mpl.wsdto.PushNotificationData;
  */
 public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplCheckoutFacade
 {
-
-	/**
-	 * 
-	 */
-	private static final String GETTING_EXCEPTION_FOR_EGV_DATA_POPULATE = "Getting Exception for EGV Data Populate ";
 
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
@@ -207,7 +202,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Autowired
 	private ShortUrlService googleShortUrlService;
 
-	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
 	/*
 	 * @Resource(name = "stockPromoCheckService") private ExtStockLevelPromotionCheckService stockPromoCheckService;
 	 */
@@ -335,15 +329,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -379,13 +373,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 * 
+	 *
 	 * @ Selected Address set for express checkout
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -415,7 +409,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -433,11 +427,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -468,11 +462,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -620,13 +614,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -738,9 +732,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			if (code != null)
 			{
 				final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
-				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
-						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(
-						(CustomerModel) getUserService().getCurrentUser(), code, baseStoreModel);
+				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout()
+						? getCustomerAccountService().getOrderDetailsForGUID(code, baseStoreModel)
+						: getCustomerAccountService().getOrderForCode((CustomerModel) getUserService().getCurrentUser(), code,
+								baseStoreModel);
 
 
 				LOG.info("Step--1 ----- Order Codes For User " + orderModel.getCode());
@@ -771,8 +766,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
 					{
-						LOG.info("************************Skipping order history for order :" + orderModel.getCode()
-								+ " and for user: " + orderModel.getUser().getName() + " **************************");
+						LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
+								+ orderModel.getUser().getName() + " **************************");
 						return null;
 					}
 				}
@@ -802,18 +797,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					sellerOrderList.add(sellerOrderData);
 				}
 				orderData.setSellerOrderList(sellerOrderList);
-				
-				//EGV Changes  start 
-				try {
-					LOG.debug("Populating EGV Data For Order"+orderModel.getCode());
-					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
-						orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
-						getEGVData(orderData, orderModel);
-					}
-				}catch (Exception e) {
-					LOG.error("Exception ocurred while populating EGV Data for Order id "+orderModel.getCode()+ " "+e.getMessage());
-				}
-				//EGV Changes  END 
 			}
 			return orderData;
 		}
@@ -834,51 +817,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-		}
-	}
-
-
-
-	/**
-	 * @param orderData
-	 * @param orderModel
-	 */
-	private void getEGVData(OrderData orderData, final OrderModel orderModel)
-	{
-		try
-		{
-			if(CollectionUtils.isNotEmpty(orderModel.getEntries()) &&
-					orderModel.getEntries().get(0).getWalletApportionPaymentInfo()!=null &&
-					CollectionUtils.isNotEmpty(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList())){
-				orderData.setEgvCardNumber(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
-				
-				String date=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry();
-				orderData.setEgvCardExpDate(getCardExpDate(date));
-				
-			
-				String resendEmailValue = getConfigurationServiceDetails().getConfiguration().getString(
-						MarketplaceFacadesConstants.EGV_RESEND_EMAILAVAILABLE);
-				if(null != resendEmailValue ) {
-					boolean resendEmailAvalilble = Boolean.valueOf(resendEmailValue).booleanValue();
-					if(resendEmailAvalilble) {
-						orderData.setResendEgvMailAvailable(true);
-					}else{
-						orderData.setResendEgvMailAvailable(false);
-					}
-				}else {
-					orderData.setResendEgvMailAvailable(false);
-				}
-				
-				if(null != orderModel.getStatus()){
-					orderData.setStatus(orderModel.getStatus());
-				}
-				
-			//	orderData.setre
-			}
-		}
-		catch (Exception e)
-		{
-			LOG.info(GETTING_EXCEPTION_FOR_EGV_DATA_POPULATE);
 		}
 	}
 
@@ -911,11 +849,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -984,11 +922,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1008,8 +946,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					{
 
 						//Changed to handle promotion for both cart and order
-						if (promo.getPromotion() != null && (promo.getPromotion().getEnabled().booleanValue())
-								|| getSellerBasedPromotionService().getPromoDetails(promo.getPromotion().getCode()))
+						if (promo.getPromotion() != null
+								&& getSellerBasedPromotionService().getPromoDetails(promo.getPromotion().getCode()))
 						{
 							final java.util.Date endDate = promo.getPromotion().getEndDate();
 							if (endDate.before(new Date()))
@@ -1091,15 +1029,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			throws EtailNonBusinessExceptions
 	{
 		List<PinCodeResponseData> pincoderesponseDataList = null;
-		pincoderesponseDataList = getSessionService().getAttribute(
-				MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		pincoderesponseDataList = getSessionService()
+				.getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
 
 		LOG.debug("******responceData******** " + pincoderesponseDataList);
 
 		if (!deliveryModeDataMap.isEmpty() && cartData != null)
 		{
-			String tshipThresholdValue = getConfigurationServiceDetails().getConfiguration().getString(
-					MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+			String tshipThresholdValue = getConfigurationServiceDetails().getConfiguration()
+					.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
 			tshipThresholdValue = (StringUtils.isNotEmpty(tshipThresholdValue)) ? tshipThresholdValue : Integer.toString(0);
 
 			final Iterator deliveryModeMapIterator = deliveryModeDataMap.entrySet().iterator();
@@ -1110,10 +1048,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 				for (final MarketplaceDeliveryModeData marketplaceDeliveryModeData : list)
 				{
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-							marketplaceDeliveryModeData.getSellerArticleSKU());
-					if (sellerInfoModel != null
-							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
+					final SellerInformationModel sellerInfoModel = getMplSellerInformationService()
+							.getSellerDetail(marketplaceDeliveryModeData.getSellerArticleSKU());
+					if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
@@ -1141,8 +1078,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 														.parseDouble(tshipThresholdValue))
 
 										{
-											marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
-													Double.valueOf(0.0)));
+											marketplaceDeliveryModeData
+													.setDeliveryCost(createPrice(getCartService().getSessionCart(), Double.valueOf(0.0)));
 										}
 									}
 								}
@@ -1151,9 +1088,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 * 
+						 *
 						 * {
-						 * 
+						 *
 						 * //******New Code Added for TPR-579 : TSHIP Shipping Charges****************** if
 						 * (validate(fulfillmentType, marketplaceDeliveryModeData.getFulfillmentType())) {
 						 * marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
@@ -1161,7 +1098,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						 * marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
 						 * Double.valueOf(0.0))); } //******************New Code Added for TPR-579 : TSHIP Shipping Charges
 						 * ends*********** } }
-						 * 
+						 *
 						 * marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
 						 * Double.valueOf(0.0))); }
 						 */
@@ -1182,7 +1119,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 */
 	//sonar fix
 	/*
-	 * 
+	 *
 	 * private boolean validate(final String fulfillmentType, final String fulfillmentTypeData) { boolean flag = false;
 	 * if (fulfillmentType.equalsIgnoreCase(fulfillmentTypeData)) { flag = true; } return flag; }
 	 */
@@ -1191,7 +1128,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@SuppressWarnings("javadoc")
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1360,8 +1297,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					pushData = new PushNotificationData();
 					if (null != orderReferenceNumber)
 					{
-						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED.replace(
-								MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
+						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
 						pushData.setOrderId(orderReferenceNumber);
 					}
 					if (null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
@@ -1383,7 +1320,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1398,17 +1335,18 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		//		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
 		//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
 		//				+ orderReferenceNumber;
-		String trackingUrl = getConfigurationServiceDetails().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
-		final String shortTrackingUrl = googleShortUrlService.genearateShortURL(order.getParentReference() == null ? order
-				.getCode() : order.getParentReference().getCode());
+		String trackingUrl = getConfigurationServiceDetails().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+		final String shortTrackingUrl = googleShortUrlService
+				.genearateShortURL(order.getParentReference() == null ? order.getCode() : order.getParentReference().getCode());
 
 		//print parent order number in the url
-		trackingUrl = order.getParentReference() == null ? (getConfigurationServiceDetails().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ "/" + order.getCode()) : getConfigurationServiceDetails().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ "/" + order.getParentReference().getCode();
+		trackingUrl = order.getParentReference() == null
+				? (getConfigurationServiceDetails().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + "/" + order.getCode())
+				: getConfigurationServiceDetails().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + "/"
+						+ order.getParentReference().getCode();
 		if (order.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 		{
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
@@ -1428,30 +1366,20 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			}
 			catch (final Exception e1)
 			{ // YTODO
-			  // Auto-generated catch block
+				  // Auto-generated catch block
 				LOG.error("Exception during sending mail >> " + e1.getMessage());
 			}
 
 			try
 			{
-				String url;
-				if (null != order.getIsEGVCart() && order.getIsEGVCart().booleanValue())
-				{
-					url = "My Account";
-				}
-				else
-				{
-					url = null != shortTrackingUrl ? shortTrackingUrl : trackingUrl;
-				}
-				
-				getSendSMSFacade().sendSms(
-						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+				getSendSMSFacade().sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 
 						MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
-										url), mobileNumber);
+										null == shortTrackingUrl ? trackingUrl : shortTrackingUrl),
+						mobileNumber);
 
 			}
 			catch (final EtailNonBusinessExceptions ex)
@@ -1464,15 +1392,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1485,11 +1413,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Description to check coupon expired or not for Pay now
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1533,8 +1461,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			OrderData orderData = null;
 
-			final PriceData deliveryCost = createPrice(orderModel, null == orderModel.getDeliveryCost() ? Double.valueOf(0.0)
-					: orderModel.getDeliveryCost());
+			final PriceData deliveryCost = createPrice(orderModel,
+					null == orderModel.getDeliveryCost() ? Double.valueOf(0.0) : orderModel.getDeliveryCost());
 			//TISBOX-1417 Displaying COD value in order confirmation page
 			PriceData convenienceCharge = null;
 			PriceData totalPriceWithConvenienceCharge = null;
@@ -1555,8 +1483,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
 					{
-						LOG.info("************************Skipping order history for order :" + orderModel.getCode()
-								+ " and for user: " + orderModel.getUser().getName() + " **************************");
+						LOG.info("************************Skipping order history for order :" + orderModel.getCode() + " and for user: "
+								+ orderModel.getUser().getName() + " **************************");
 						return null;
 					}
 
@@ -1584,28 +1512,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
 				//orderData.setDeliveryCost(childDeliveryCost);
 				sellerOrderData.setDeliveryCost(childDeliveryCost);
-				sellerOrderData.setPickupName(StringUtils.isNotEmpty(orderModel.getPickupPersonName()) ? orderModel
-						.getPickupPersonName() : "");
-				sellerOrderData.setPickupPhoneNumber(StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()) ? orderModel
-						.getPickupPersonMobile() : "");
+				sellerOrderData.setPickupName(
+						StringUtils.isNotEmpty(orderModel.getPickupPersonName()) ? orderModel.getPickupPersonName() : "");
+				sellerOrderData.setPickupPhoneNumber(
+						StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()) ? orderModel.getPickupPersonMobile() : "");
 				sellerOrderList.add(sellerOrderData);
 			}
 			orderData.setSellerOrderList(sellerOrderList);
-			
-			//EGV Changes  start 
-			try {
-				LOG.debug("Populating EGV Data For Order"+orderModel.getCode());
-				if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
-					orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
-					getEGVData(orderData, orderModel);
-				}
-			}catch (Exception e) {
-				LOG.error("Exception ocurred while populating EGV Data for Order id "+orderModel.getCode()+ " "+e.getMessage());
-			}
-			//EGV Changes  END 
-			
-			
-			  
 			return orderData;
 		}
 		catch (final IllegalArgumentException ex)
@@ -1698,28 +1611,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 */
 	@Override
 	public OrderModel placeOrder(final CartModel cartModel) throws InvalidCartException
-	{
-		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
-		parameter.setEnableHooks(true);
-		parameter.setCart(cartModel);
-		// For TPR-5667 : setting salesapplication
-		if (cartModel.getChannel() != null)
-		{
-			parameter.setSalesApplication(cartModel.getChannel());
-		}
-		else
-		{
-			parameter.setSalesApplication(SalesApplication.WEB);
-		}
-
-		final CommerceOrderResult commerceOrderResult = getCommerceCheckoutService().placeOrder(parameter);
-		return commerceOrderResult.getOrder();
-	}
-
-	
-	
-	@Override
-	public OrderModel placeEGVOrder(final CartModel cartModel) throws InvalidCartException
 	{
 		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
 		parameter.setEnableHooks(true);
@@ -2138,9 +2029,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			if (code != null)
 			{
 				final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
-				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
-						.getOrderDetailsForGUID(code, baseStoreModel) : getCustomerAccountService().getOrderForCode(customerModel,
-						code, baseStoreModel);
+				final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout()
+						? getCustomerAccountService().getOrderDetailsForGUID(code, baseStoreModel)
+						: getCustomerAccountService().getOrderForCode(customerModel, code, baseStoreModel);
 
 				LOG.info("Step--1 ----- Order Codes For User " + orderModel.getCode());
 
@@ -2473,24 +2364,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			modelService.saveAll(cartEntryList);
 		}
-	}
-	
-	@SuppressWarnings("javadoc")
-	private String getCardExpDate(String cardExpDate) 
-	{
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		if(StringUtils.isNotEmpty(cardExpDate)){
-		Date date = null;
-		try {
-			date = format1.parse(cardExpDate);
-			LOG.info("Card Exp converting");
-			return format2.format(date);
-		} catch (ParseException e) {
-			LOG.error(ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT);
-		}
-		}
-		return null;
 	}
 
 }

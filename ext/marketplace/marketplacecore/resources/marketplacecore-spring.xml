@@ -583,12 +583,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
-<!-- Added EGV -->
-	<bean id="orderEGVRecipientEmailEventListener" class="com.tisl.mpl.core.event.OrderEGVRecipientEmailEventListener"
-		parent="abstractSiteEventListener">
-		<property name="modelService" ref="modelService" />
-		<property name="businessProcessService" ref="businessProcessService" />
-	</bean>
+
 
 
 	<!-- Added For Order Collected From Store Conformation Mail -->
@@ -607,15 +602,15 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 
 
-	<bean id="sendNotificationEventListener"
-		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener"
+	<!-- <bean id="sendNotificationEventListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
 
-	<!--R2.3 Secondary Status Listener -->
+	R2.3 Secondary Status Listener
 	<bean id="sendNotificationSecondaryStatusListener"
 		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusListener"
 		parent="abstractSiteEventListener">
@@ -623,7 +618,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
-
+ -->
 
 
 	<bean id="sendOrderToCRMEventListner"
@@ -656,13 +651,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			value="classpath:/marketplacecore/processes/orderConfirmationEmailProcess.xml" />
 	</bean>
 
-<!-- Added For EGV-->
-	<bean id="egvOrderEmailProcessDefinitionResource"
-		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
-		<property name="resource"
-			value="classpath:/marketplacecore/processes/orderEgvRecipientEmailProcess.xml" />
-	</bean>
-	
 
 
 	<!-- pan card reject -->
@@ -888,11 +876,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 	<!-- pan card reject end -->
 
-<!-- Added For Order EGV -->
-	<bean id="generateEGVRecipientOrderEmail" parent="abstractGenerateEmailAction">
-		<property name="frontendTemplateName" value="EGVOrderRecipientEmailTemplate" />
-	</bean>
-	
+
 	<!-- TPR-815 -->
 	<bean id="generatePaymentPendingEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="PaymentPendingEmailTemplate" />
@@ -2075,21 +2059,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="defaultStandaloneSolrService">
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
 	</bean>
-		<!-- TPR-6665: solr server : synonyms injection end -->
-	<bean id="QcPaymentFailCronJob" class="com.tisl.mpl.core.payment.cronjob.QcPaymentFailCronJob">
-	<property name="modelService" ref="modelService" />
-	<property name="flexibleSearchService" ref="flexibleSearchService" />
-	<property name="sessionService" ref="sessionService" />
-</bean>
-
-<alias name="mplQcProgramConfigService" alias="mplQcProgramConfigService" /> 
-	<bean id="mplQcProgramConfigService" class="com.tisl.mpl.core.mplqcprogram.serviceimpl.MplQCProgramServiceImpl">
-    </bean>
-	
-	<alias name="mplQcProgramConfigDao" alias="mplQcProgramConfigDao" />
-	<bean id="mplQcProgramConfigDao" class="com.tisl.mpl.core.mplqcprogram.daoimpl.MplQCProgramDaoImpl" >
-    </bean>
-
+	<!-- TPR-6665: solr server : synonyms injection end -->
 	
 	<!-- SDI-2924 -->
 	<bean id="forwardPaymentCleanUpJob" class="com.tisl.mpl.core.payment.cronjob.ForwardPaymentCleanUpJob"
