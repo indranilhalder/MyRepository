@@ -23,10 +23,10 @@
 			<cms:component component="${com}" />
 		</cms:pageSlot>  --%>
 		<div class="content">
-			<center>Web Form</center>
+			<%-- <center>Web Form</center> --%>
 		</div>
 		<div class="content">
-			<div class="custmCareHelp">
+			<div class="custmCareHelp" style="margin-top:0px;">
 
 				<!-- <div class="custmCareHeadSec">
 					<div class="secSide">
@@ -46,14 +46,13 @@
 					<form name="customerWebForm" id="customerWebForm" action="#"
 						method="POST">
 
-						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> <input
-							type="hidden" name="ticketType" value="" id="ticketType" /> <input
-							type="hidden" name="orderCode" value="" id="orderCode" /> <input
-							type="hidden" name="subOrderCode" value="" id="subOrderCode" />
-						<input type="hidden" name="transactionId" value=""
-							id="transactionId" /> <input type="hidden" name="nodeL2Text"
-							value="" id="nodeL2Text" /> <input type="hidden"
-							name="nodeL3Text" value="" id="nodeL3Text" />
+						<input type="hidden" name="nodeL4" value="" id="nodeL4" /> 
+						<input type="hidden" name="ticketType" value="" id="ticketType" />
+						<input type="hidden" name="orderCode" value="" id="orderCode" />
+						<input type="hidden" name="subOrderCode" value="" id="subOrderCode" />
+						<input type="hidden" name="transactionId" value="" id="transactionId" />
+						<input type="hidden" name="nodeL2Text" value="" id="nodeL2Text" />
+						<input type="hidden" name="nodeL3Text" value="" id="nodeL3Text" />
 
 
 						<div class="custmCareForms">
@@ -65,21 +64,22 @@
 											<label> <c:choose>
 													<c:when test="${l1Node.nodeCode eq tiketL1Check}">
 														<input type="radio" name="nodeL1" class="node formControl"
-															nodcheck="true" value="${l1Node.nodeCode}" checked>
+															nodcheck="true" value="${l1Node.nodeCode}" checked parentNode="${l1Node.parentNode}">
+															
 													</c:when>
 													<c:otherwise>
 														<input type="radio" name="nodeL1" class="node formControl"
-															nodcheck="false" value="${l1Node.nodeCode}">
+															nodcheck="false" value="${l1Node.nodeCode}" parentNode="${l1Node.parentNode}">
 													</c:otherwise>
 												</c:choose> <span></span> ${l1Node.nodeDesc}
 											</label>
 										</div>
-										<c:set var="nodeL0" value="${l1Node.parentNode}"></c:set>
+										
 									</c:if>
 								</c:forEach>
 							</div>
 
-							<input type="hidden" name="nodeL0" value="${nodeL0}" />
+							<input id="nodeL0" type="hidden" name="nodeL0" value="" />
 
 							<div class="formGroup">
 								<div class="selectOrderSec">
@@ -92,9 +92,11 @@
 										</ul>
 
 									</div>
-									<input type="hidden" id="currentPage" value="0"
-										name="currentPage" /> <input type="hidden" id="totalPages"
-										value="0" name="totalPages" /> <a href="#" id="viewMoreLink"
+									<input type="hidden" id="currentPage" value="0" name="currentPage" /> 
+									<input type="hidden" id="totalPages" value="0" name="totalPages" /> 
+									<input type="hidden" id="pageSize" value="${pageSizeWebForm}" name="pageSize" />
+										
+									<a href="#" id="viewMoreLink"
 										style="display: none;">View more orders</a> <a href="#"
 										id="viewBackLink" style="display: none;">Back</a>
 								</div>
@@ -114,9 +116,9 @@
 								</select>
 							</div>
 							<div class="formGroup" id="subIssueDiv" style="display: none;">
-								<h3 class="secLabel">Select a sub-issue.</h3>
+								<h3 class="secLabel">Select issue details</h3>
 								<select class="node formControl customSelect" name="nodeL3">
-									<option value="">Select your exact problem</option>
+									<option value="">Select issue details</option>
 									<c:forEach items="${formFields.nodes}" var="l3Node">
 										<c:if test="${l3Node.nodeType eq 'L3'}">
 											<option value="${l3Node.nodeCode}"
@@ -165,8 +167,8 @@
 									<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
 										upload size 5MB)</p>
 									<div class="uploadFile">
-										<span>Upload File</span> <span id="file_success_message"
-											style="display: none"></span> <input id="attachmentFile"
+										<span>Upload File</span> 
+										<input id="attachmentFile"
 											type="file" name="uploadFile" multiple />
 										<!-- <input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" /> -->
 									</div>
@@ -175,10 +177,13 @@
 											class="progress-bar progress-bar-success" role="progressbar"
 											aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
 											style="width: 0%"></div>
+											
+											<div id="alert_message" ></div>
+											<div id="file_success_message"></div> 
 									</div>
 								</div>
 								<div class="formGroup">
-									<button class="needHelpBtn webfromTicketSubmit" type="submit">Submit</button>
+									<button class="needHelpBtn webfromTicketSubmit" type="submit">Email Us</button>
 								</div>
 							</div>
 						</div>

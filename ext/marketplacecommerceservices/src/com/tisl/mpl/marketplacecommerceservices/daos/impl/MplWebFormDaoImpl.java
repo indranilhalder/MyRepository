@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facades.cms.data.WebFormData;
@@ -116,7 +117,8 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 		{
 			queryString += " AND { form." + MplWebCrmTicketModel.TRANSACTIONID + " }  = ?transactionId ";
 		}
-
+		//status check
+		queryString += " AND { form." + MplWebCrmTicketModel.STATUS + " }  = ?status ";
 		LOG.debug("Fetching MplWebCrmModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("L0code", formData.getL0code());
@@ -126,6 +128,7 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 		query.addQueryParameter("L4code", formData.getL4code());
 		query.addQueryParameter("customerName", formData.getCustomerName());
 		query.addQueryParameter("customerEmail", formData.getCustomerEmail());
+		query.addQueryParameter("status", MarketplacecommerceservicesConstants.OPEN);
 
 		if (StringUtils.isNotEmpty(formData.getOrderCode()))
 		{

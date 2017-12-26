@@ -1069,8 +1069,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					offer.setOfferCode(coupon.getCode());
 					offer.setOfferTitle(coupon.getName());
 					offer.setOfferDescription(coupon.getDescription());
-					offer.setOfferMaxDiscount(String.valueOf(coupon.getMaxDiscountValue()));
+					//TISPRDT-7921
+					if ((coupon.getMaxDiscountValue() != null))
+					{
+						offer.setOfferMaxDiscount(String.valueOf(coupon.getMaxDiscountValue()));
 
+					}
 					for (final Map.Entry<String, Double> entry : allOffersTotalData.entrySet())
 					{
 
@@ -1826,6 +1830,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final VoucherDiscountData data = new VoucherDiscountData();
 
 		double totalDiscount = 0.0;
+		double mobileTotalDiscount = 0.0;
 		//final double couponDiscount = 0.0;
 		//final double totalMRP = 0.0;
 
@@ -1847,9 +1852,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						final Double totalPrice = oModel.getTotalPrice();
 						final int quantity = oModel.getQuantity().intValue();
 
+						final Double productDiscount = (null != oModel.getTotalProductLevelDisc() && oModel.getTotalProductLevelDisc()
+								.doubleValue() > 0) ? oModel.getTotalProductLevelDisc() : Double.valueOf(0);
+
 						final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
 						totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
+
+						mobileTotalDiscount += productDiscount.doubleValue() + cartDiscount.doubleValue()
+								+ couponDiscount.doubleValue();
 					}
 				}
 			}
@@ -1857,6 +1868,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			data.setTotalDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
+
+			data.setMbDiscountAftrCVoucher(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(mobileTotalDiscount)));
 		}
 		else if (null != orderModel)
 		{
@@ -1876,9 +1889,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						final Double totalPrice = oModel.getTotalPrice();
 						final int quantity = oModel.getQuantity().intValue();
 
+						final Double productDiscount = (null != oModel.getTotalProductLevelDisc() && oModel.getTotalProductLevelDisc()
+								.doubleValue() > 0) ? oModel.getTotalProductLevelDisc() : Double.valueOf(0);
+
 						final double value = (mrp.doubleValue() * quantity) - totalPrice.doubleValue();
 
 						totalDiscount += value + cartDiscount.doubleValue() + couponDiscount.doubleValue();
+
+						mobileTotalDiscount += productDiscount.doubleValue() + cartDiscount.doubleValue()
+								+ couponDiscount.doubleValue();
 					}
 
 				}
@@ -1887,6 +1906,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv()));
 			data.setTotalDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
+
+			data.setMbDiscountAftrCVoucher(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(mobileTotalDiscount)));
 		}
 
 

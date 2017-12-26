@@ -602,15 +602,15 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 
 
-	<bean id="sendNotificationEventListener"
-		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener"
+	<!-- <bean id="sendNotificationEventListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
 
-	<!--R2.3 Secondary Status Listener -->
+	R2.3 Secondary Status Listener
 	<bean id="sendNotificationSecondaryStatusListener"
 		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusListener"
 		parent="abstractSiteEventListener">
@@ -618,7 +618,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
-
+ -->
 
 
 	<bean id="sendOrderToCRMEventListner"

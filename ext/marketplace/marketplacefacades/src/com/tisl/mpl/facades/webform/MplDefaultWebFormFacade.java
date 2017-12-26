@@ -265,6 +265,8 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 				nodeL1.setTicketType(crmModel.getTicketType());
 				nodeL1.setCreateTicketAllowed(crmModel.isCreateTicketAllowed());
 				nodeL1.setNodeDisplayAllowed(crmModel.isNodeDisplayAllowed());
+				//setting L0 node
+				nodeL1.setNodeL0(crmModel.getNodeParent());
 				//crmData.add(nodeL1);
 				//L2
 				final List<MplWebCrmModel> webCrmL2Models = mplWebFormService.getWebCRMByNodes(crmModel.getNodeCrmCode());
@@ -475,9 +477,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 								{
 									consignmentStatus = line.getConsignment().getStatus().getCode();
 									customerStatusModel = orderStatusCodeMap.get(consignmentStatus);
-									if (customerStatusModel != null)
+									if (null != customerStatusModel && null != customerStatusModel.getResponseStatus())
 									{
-										currentStatus = customerStatusModel.getStage();
+										//TISPRDT-7895
+										currentStatus = customerStatusModel.getResponseStatus();
 									}
 									else
 									{

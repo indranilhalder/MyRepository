@@ -1143,10 +1143,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
 					double delCost = 0.0d;
-					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D
+					if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D
 							&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
 					{
-						totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
+						//	totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
+						totalDeliveryPrice += entryModelList.getCurrDelCharge().doubleValue();
 					}
 					else if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D
 							&& entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
@@ -1198,7 +1199,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							}
 
 							totalDeliveryPrice += delCost; // TISPRDT-1649
-							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							//entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							entryModelList.setCurrDelCharge(entryModelList.getCurrDelCharge());
 						}
 						else if (entryModelList.getIsBOGOapplied() != null && entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
 						{
@@ -1216,7 +1218,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						else
 						{
 							delCost = 0.0d;
-							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							entryModelList.setCurrDelCharge(entryModelList.getCurrDelCharge());
 							totalDeliveryPrice += delCost; //TISPRDT-1649
 
 							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
@@ -2765,7 +2767,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
 			final double netAmountAfterAllDisc = Double.parseDouble(df.format(price - cartApportionValue - productApportionvalue
 					- couponApportionValue - cartcouponApportionValue));
-
+			LOG.debug("setCurrDelCharge" + deliveryCharge);
 			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
 			orderEntryModel.setCartCouponValue(Double.valueOf(cartcouponApportionValue));
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));

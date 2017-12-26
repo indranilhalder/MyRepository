@@ -10,12 +10,13 @@ ACC.WebForm = {
 				$.ajax({
 					url : ACC.config.encodedContextPath + "/ticketForm",
 					data : dataStr,
-					type : 'POST',
+					method : 'POST',
 					success : function(data) {
 						ACC.colorbox.open("", {
 							html : data,
 							width : "500px"
 						});
+						$('#colorbox').attr('style','display: block !important');
 					},
 					error : function(resp) {
 						console.log("Error in Submit Ticket" + resp);
@@ -167,7 +168,7 @@ ACC.WebForm = {
 										$(this)
 												.parent()
 												.append(
-														'<span class="help-block">Please fill Mobile No.!!</span>');
+														'<span class="help-block">Mobile No should be 10 digit!!</span>'); //TISPRDT-7897
 									}
 									// console.log("mobile 2");
 								}
@@ -261,116 +262,87 @@ ACC.WebForm = {
 
 	},
 	simpleAjaxUpload : function() {
-		var uploadurl = ACC.config.encodedContextPath
-				+ "/ticketForm/fileUpload";
-		/*$.ajaxSetup({
-			headers : {
-				'X-CSRF-TOKEN' : ACC.config.CSRFToken
-			}
-		});*/
+		var uploadurl = ACC.config.encodedContextPath+ "/ticketForm/fileUpload";
+		
+		$("#attachmentFile").on("change",function(e) {
+			e.preventDefault();
+			// Disable submit button
+			$(".webfromTicketSubmit").prop('disabled', true);
 
-		$("#attachmentFile")
-				.on(
-						"change",
-						function(e) {
-							e.preventDefault();
-							// Disable submit button
-							$(".webfromTicketSubmit").prop('disabled', true);
+			var file = $(this)[0].files[0];
+			var formData = new FormData();
+			formData.append('uploadFile', file);
+			formData.append('CSRFToken',ACC.config.CSRFToken);
 
-							var file = $(this)[0].files[0];
-							var formData = new FormData();
-							formData.append('uploadFile', file);
-							// formData.append('CSRFToken',ACC.config.CSRFToken);
+			// Ajax call for file uploaling
+			var ajaxReq = $.ajax({
+				url : uploadurl,
+				method : 'POST',
+				data : formData,
+				async : false,
+				cache : false,
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				datatype : "json",
+				xhr : function() {
+					// Get XmlHttpRequest object
+					var xhr = $.ajaxSettings.xhr();
 
-							// Ajax call for file uploaling
-							var ajaxReq = $
-									.ajax({
-										url : uploadurl,
-										method : 'POST',
-										type : 'POST', // For jQuery < 1.9
-										data : formData,
-										async : false,
-										cache : false,
-										contentType : false,
-										enctype : 'multipart/form-data',
-										processData : false,
-										datatype : "json",
-										xhr : function() {
-											// Get XmlHttpRequest object
-											var xhr = $.ajaxSettings.xhr();
+					// Set onprogress event handler
+					xhr.upload.onprogress = function(event) {
+						var perc = Math.round((event.loaded / event.total) * 100);
+						$('#progressBar').text(perc + '%');
+						$('#progressBar').css('width',perc + '%');
+					};
+					return xhr;
+				},
+				beforeSend : function(xhr) {
+					// Reset alert message and progress
+					// bar
+					$('#file_success_message').text('');
+					$('#progressBar').text('');
+					$('#progressBar').css('width', '0%');
+				}
+			});
 
-											// Set onprogress event handler
-											xhr.upload.onprogress = function(
-													event) {
-												var perc = Math
-														.round((event.loaded / event.total) * 100);
-												$('#progressBar').text(
-														perc + '%');
-												$('#progressBar').css('width',
-														perc + '%');
-											};
-											return xhr;
-										},
-										beforeSend : function(xhr) {
-											// Reset alert message and progress
-											// bar
-											$('#customCareError').text('');
-											$('#progressBar').text('');
-											$('#progressBar')
-													.css('width', '0%');
-										}
-									});
+			// Called on success of file upload
+			ajaxReq.done(function(data) {
+				$('#attachmentFile').val('');
+				$('.webfromTicketSubmit').prop('disabled', false);
+				console.log(data);
+				if (data !== 'error') {
+					// the uploaded file
+					var inputHidden = '<input id="attachmentFiles" type="hidden" name="attachmentFiles" value="'+data+'"/>';
+					$(".uploadFile").append(inputHidden);
+					$("#file_success_message").text("File uploaded Sucessfully.");
+					$("#file_success_message").show();
+				} else {
+					// our application returned an error
+					var errorDiv = $('<div class="error"></div>').text("File not uploaded!!!");
+					$("#file_success_message").append(errorDiv);
+					$("#file_success_message").show();
+				}
+				$('.webfromTicketSubmit').prop('disabled',false);
+			});
 
-							// Called on success of file upload
-							ajaxReq
-									.done(function(data) {
-										$('#attachmentFile').val('');
-										$('.webfromTicketSubmit').prop(
-												'disabled', false);
-
-										if (data !== 'error') {
-											// the uploaded file
-											var inputHidden = $(
-													'<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" />')
-													.val(data);
-											$("#customerWebForm").append(
-													inputHidden);
-											$("#file_success_message")
-													.text(
-															"File uploaded Sucessfully.");
-											$("#file_success_message").show();
-										} else {
-											// our application returned an error
-											var errorDiv = $(
-													'<div class="error"></div>')
-													.text(
-															"File not uploaded!!!");
-											$("#customCareError").append(
-													errorDiv);
-											$("#file_success_message").hide();
-										}
-									});
-
-							// Called on failure of file upload
-							ajaxReq.fail(function(jqXHR) {
-								$('#customCareError').text(
-										jqXHR.responseText + '(' + jqXHR.status
-												+ ' - ' + jqXHR.statusText
-												+ ')');
-								$('.webfromTicketSubmit').prop('disabled',
-										false);
-							});
-						});
+			// Called on failure of file upload
+			ajaxReq.fail(function(jqXHR) {
+				console.log(jqXHR.responseText + '(' + jqXHR.status	+ ' - ' + jqXHR.statusText+ ')');
+				$('.webfromTicketSubmit').prop('disabled',false);
+			});
+		});
 
 	},
 	loadOrderLines : function(currentPage) {
+		var orderLineFound=false;
 		var htmlOption = "";
 		//performance fix
 		if ($(".selectOrderSec").length) {
 		$.ajax({
 				url : ACC.config.encodedContextPath
 						+ "/ticketForm/webOrderlines",
-				type : 'POST',
+				method : 'POST',
 				data : {"page": parseInt(currentPage)},
 				success : function(data) {
 					if ($.isArray(data.orderLineDatas)
@@ -401,19 +373,26 @@ ACC.WebForm = {
 										+ "</span>";
 							}
 							htmlOption += "</div></div></li>";
-
+							
+							orderLineFound=true;
 						});
 						// call default first page
 						// call default first page
 						$(".orderDrop").html(htmlOption);
-						$("#totalPages").val(data.totalOrderLines);
 						
+						//$("#pageSize").val(data.pageSize);
 						ACC.WebForm.attachOrderDropEvent();
-						ACC.WebForm.loadPaginationLink(data.totalOrderLines);
+						ACC.WebForm.loadPaginationLink(data.totalOrderLines,currentPage);
 
 					}
+					//TISPRDT-8060
+					if(data.totalOrderLines!=undefined){
+						$("#totalPages").val(data.totalOrderLines);
+					}
 					
-
+					if(orderLineFound==false){
+						ACC.WebForm.loadOrderLines(currentPage+1);
+					}
 				},
 				error : function(resp) {
 					console.log("Error in loadOrderLines" + resp);
@@ -421,27 +400,28 @@ ACC.WebForm = {
 			});
 		}
 	},
-	loadPaginationLink : function(total) {
-		var current = $('#currentPage').val();
+	loadPaginationLink : function(total,currentPage) {
+		var pageSize = $('#pageSize').val();
+		$('#currentPage').val(currentPage);
+		
+		var page=(parseInt(total) / parseInt(pageSize));
 		// TISPRDT-7759
-		console.log("total"+total+"current"+current);
-		if (parseInt(total) <= parseInt(current)) {
-			console.log("View more");
-			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) + 1) + "');");
+		console.log("page"+page+"pageSize"+pageSize+"currentPage"+currentPage);
+		if (parseInt(page) > parseInt(currentPage)) {
+			//console.log("View more");
+			$('#viewMoreLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(currentPage) + 1) + "');");
 			$('#viewMoreLink').show();
-			$('#currentPage').val(parseInt(current) + 1);
 		} else {
-			console.log("View more hide");
+			//console.log("View more hide");
 			$('#viewMoreLink').hide();
 		}
 
-		if (parseInt(current) >= 1) {
-			console.log("View back");
-			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(current) - 1) + "');");
+		if (parseInt(currentPage) >= 1) {
+			//console.log("View back");
+			$('#viewBackLink').attr("href","javascript:ACC.WebForm.loadOrderLines('"+ (parseInt(currentPage) - 1) + "');");
 			$('#viewBackLink').show();
-			$('#currentPage').val(parseInt(current) - 1);
 		} else {
-			console.log("View back hide");
+			//console.log("View back hide");
 			$('#viewBackLink').hide();
 		}
 
@@ -497,6 +477,7 @@ ACC.WebForm = {
 		var ticketAnswer = $("option:selected", div).attr("ticketAnswer");
 		var nodeType = $(div).attr("name");
 		var nodcheck = $(div).attr("nodcheck");
+		var parentNode=$(div).attr("parentNode");
 		// for radio
 		if (nodeValue == undefined) {
 			nodeValue = $(div).val();
@@ -504,11 +485,12 @@ ACC.WebForm = {
 
 		if (nodeValue !== '' && nodeValue !== undefined
 				&& nodeValue.indexOf("Select") == -1) {
-			var htmlOption = "<option value=''>Select</option>";
+			var htmlOption = "<option value=''>Select issue</option>";
 			$.ajax({
 				url : ACC.config.encodedContextPath
 						+ "/ticketForm/crmChildrenNodes",
-				type : 'POST',
+				method : 'POST',
+				type : 'POST', // For jQuery < 1.9
 				data : {"nodeParent":nodeValue},
 				success : function(data) {
 					if (nodeType.startsWith("nodeL1")) {
@@ -526,17 +508,22 @@ ACC.WebForm = {
 							htmlOption += " >" + data.nodeDesc + "</option>";
 
 						});
+						
+						$("input[name=nodeL0]").val(parentNode);
+						
 						$("select[name=nodeL2]").html(htmlOption);
-						$("select[name=nodeL2]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL2]").parent().children(".holder")
-								.removeClass('active');
-						$("select[name=nodeL3]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL3]").parent().children(".holder")
-								.removeClass('active');
+						$("select[name=nodeL2]").parent().children(".holder").html("");
+						$("select[name=nodeL2]").parent().children(".holder").removeClass('active');
+						
+						$("select[name=nodeL3]").parent().children(".holder").html("");
+						$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 						$("select[name=nodeL3]").html("");
+						
 						$("input[name=nodeL4]").val("");
+						$("input[name=ticketType]").val("");
+						$("input[name=orderCode]").val("");
+						$("input[name=subOrderCode]").val("");
+						$("input[name=transactionId]").val("");
 
 						if (nodcheck === 'true') {
 							$(".selectOrderSec").show();
@@ -568,10 +555,8 @@ ACC.WebForm = {
 						});
 
 						$("select[name=nodeL3]").html(htmlOption);
-						$("select[name=nodeL3]").parent().children(".holder")
-								.html("");
-						$("select[name=nodeL3]").parent().children(".holder")
-								.removeClass('active');
+						$("select[name=nodeL3]").parent().children(".holder").html("");
+						$("select[name=nodeL3]").parent().children(".holder").removeClass('active');
 						$("input[name=nodeL4]").val("");
 						$("#nodeL2Text").val(nodeText);
 

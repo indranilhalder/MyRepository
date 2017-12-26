@@ -24,6 +24,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.wsdto.DuplicateCheckResponse;
 
+
 /**
  * @author TCS
  *
@@ -33,7 +34,7 @@ import com.tisl.mpl.wsdto.DuplicateCheckResponse;
 
 public class ClientIntegrationImpl implements ClientIntegration
 {
-	private static final Logger LOG = Logger.getLogger(TicketCreationCRMserviceImpl.class);
+	private static final Logger LOG = Logger.getLogger(ClientIntegrationImpl.class);
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -75,7 +76,7 @@ public class ClientIntegrationImpl implements ClientIntegration
 	{
 		LOG.info("Executing method checkDuplicateWebFormTicket in clientIntegrationImpl java class >>>>>>>");
 		DuplicateCheckResponse duplicateCheckResponse = null;
-		String responseMsg = "failure";
+		String responseMsg = "success";
 		try
 		{
 			final String globalResponse = configurationService.getConfiguration().getString("global.client.reponse");
@@ -105,12 +106,12 @@ public class ClientIntegrationImpl implements ClientIntegration
 				if (null != duplicateCheckResponse && null != duplicateCheckResponse.getTicketPresent()
 						&& duplicateCheckResponse.getTicketPresent().equalsIgnoreCase("Y"))
 				{
-					responseMsg = "success";
+					responseMsg = "failure";
 				}
 
 			}
 			return responseMsg;
-		
+
 		}
 		catch (final Exception ex)
 		{

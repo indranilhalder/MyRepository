@@ -445,12 +445,14 @@ public interface MplPaymentService
 	public void rmvJuspayCardStatusForCustomer(String customerId);
 
 
+
 	/**
 	 * @param customerId
 	 * @param guid
 	 * @return JuspayCardStatusModel
 	 */
 	public JuspayCardStatusModel getJuspayCardStatusForCustomer(String customerId, String guid);
+
 
 
 }

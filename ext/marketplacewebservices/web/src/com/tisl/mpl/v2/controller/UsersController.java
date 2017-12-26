@@ -9148,13 +9148,35 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER, ROLE_CLIENT })
 	@RequestMapping(value = "/{userId}/submitTicket", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public CRMWebFormDataResponse getTicketSubmitForm(@PathVariable final String userId,
-			@RequestParam(required = false) final CRMWebFormDataRequest crmTicket) throws RequestParameterException,
+	public CRMWebFormDataResponse getTicketSubmitForm(@PathVariable final String userId, @RequestParam final String ticketType,
+			@RequestParam(required = false) final String orderCode, @RequestParam(required = false) final String subOrderCode,
+			@RequestParam(required = false) final String transactionId, @RequestParam final String contactEmail,
+			@RequestParam final String contactMobile, @RequestParam final String contactName, @RequestParam final String nodeL0,
+			@RequestParam final String nodeL1, @RequestParam final String nodeL2, @RequestParam final String nodeL3,
+			@RequestParam final String nodeL4, @RequestParam(required = false) final String comment,
+			@RequestParam(required = false) final String attachmentFiles) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
 		CRMWebFormDataResponse crmWebFormDTO = new CRMWebFormDataResponse();
+		final CRMWebFormDataRequest crmTicket = new CRMWebFormDataRequest();
 		try
 		{
+			crmTicket.setContactMobile(contactMobile);
+			crmTicket.setContactEmail(contactEmail);
+			crmTicket.setContactName(contactName);
+			crmTicket.setNodeL0(nodeL0);
+			crmTicket.setNodeL1(nodeL1);
+			crmTicket.setNodeL2(nodeL2);
+			crmTicket.setNodeL3(nodeL3);
+			crmTicket.setNodeL4(nodeL4);
+			crmTicket.setTicketType(ticketType);
+
+			crmTicket.setOrderCode(orderCode);
+			crmTicket.setSubOrderCode(subOrderCode);
+			crmTicket.setTransactionId(transactionId);
+			crmTicket.setComment(comment);
+			crmTicket.setAttachmentFiles(attachmentFiles);
+
 			crmWebFormDTO = mplWebFormFacade.getTicketSubmitForm(crmTicket);
 
 		}
@@ -9869,7 +9891,9 @@ public class UsersController extends BaseCommerceController
 
 		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
-		int orderCount = 0, start = 0, end = 0;
+		OrderDataWsDTO order = null;
+		final int orderCount = 0;
+		final int start = 0, end = 0;
 		OrderData orderDetails = null;
 		try
 		{
@@ -9894,40 +9918,27 @@ public class UsersController extends BaseCommerceController
 					{
 						continue;
 					}
-					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);
-						orderCount++;
 					}
 				}
-				if (orderTrackingListWsDTO.size() > 0)
+				if (searchPageDataParentOrder.getPagination() != null
+						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
 				{
-					orderHistoryListData.setTotalNoOfOrders(Integer.valueOf(orderCount));
-
+					final int totalNum = Integer.parseInt(String.valueOf(searchPageDataParentOrder.getPagination()
+							.getTotalNumberOfResults()));
+					orderHistoryListData.setTotalNoOfOrders(totalNum);
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-
-					start = currentPage * pageSizeConFig;
-					end = start + pageSizeConFig;
-
-					if (end > orderTrackingListWsDTO.size())
-					{
-						end = orderTrackingListWsDTO.size();
-					}
-					if (start < orderTrackingListWsDTO.size() && start <= end)
-					{
-						orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
-						orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-					else
-					{
-						orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
-					}
+					orderHistoryListData.setOrderData(orderTrackingListWsDTO);
+					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else
 				{
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
 				}
+				orderHistoryListData.setPageSize(pageSizeConFig);
 
 			}
 		}
@@ -9966,7 +9977,6 @@ public class UsersController extends BaseCommerceController
 		}
 		return orderHistoryListData;
 	}
-
 
 	/**
 	 * @return the mplProductWebService

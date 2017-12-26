@@ -509,6 +509,8 @@ public final class ModelAttributetConstants
 	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
 	public static final String BASEPRICEMAP = "basePriceMap";
 	public static final String MRPPRICEMAP = "mrpPriceMap";
+	public static final String DELCHARGE = "deliveryPrice";
+
 	//Add to Cart
 	public static final String WISHLISTDATA = "wishlistDatas";
 	public static final String QUANTITY = "quantity";

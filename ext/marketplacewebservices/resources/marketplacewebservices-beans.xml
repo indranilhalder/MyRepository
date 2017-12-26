@@ -1598,6 +1598,7 @@
 		<property name="orderData"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.OrderDataWsDTO>" />
 		<property name="totalNoOfOrders" type="Integer" />
+		<property name="pageSize" type="Integer" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.OrderDataWsDTO">
 		<!-- cardHolderName -->
@@ -2558,6 +2559,7 @@
 		<property name="errorCode" type="String" />
 
 		<property name="total" type="String" />
+		<property name="discount" type="String" />
 	</bean>
 
 	<!-- TPR-816 -->
@@ -3480,6 +3482,7 @@
 		<property name="ticketAnswer" type="String" />
 		<property name="createTicketAllowed" type="boolean" />
 		<property name="nodeDisplayAllowed" type="boolean" />
+		<property name="nodeL0" type="String"></property>
 		<property name="children" type="java.util.List&lt;com.tisl.mpl.wsdto.CRMWsData>" />
 	</bean>
 	

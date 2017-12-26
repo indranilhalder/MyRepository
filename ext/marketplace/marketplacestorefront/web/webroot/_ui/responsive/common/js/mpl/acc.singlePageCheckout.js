@@ -2708,6 +2708,9 @@ ACC.singlePageCheckout = {
     	var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
 		var isCncPresent=$("#selectDeliveryMethodFormMobile #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
 		var cncSelected="false";
+		if(entryNumbersId == undefined) {
+			return false
+		}
     	var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
@@ -2923,6 +2926,9 @@ ACC.singlePageCheckout = {
 		else
 		{	
 			//validate here
+			if(entryNumbersId == undefined)  {
+				return false;
+			}
 			var entryNumbers=entryNumbersId.split("#");
 			for(var i=0;i<entryNumbers.length-1;i++)
 			{
@@ -3263,7 +3269,7 @@ ACC.singlePageCheckout = {
 		    $(this).prop('checked', true);
 		    $(this).addClass("promoapplied");
 		    var SelectedOfferRadioId = $(this).attr("id");
-		    var title_text   = $("#"+SelectedOfferRadioId+" + label").text();
+		    var title_text   = $("#"+SelectedOfferRadioId+" + label").html();
 			var title_desc   = $("#"+SelectedOfferRadioId).parent().find('.offer_des').html();
 			var title_maxmin = $("#"+SelectedOfferRadioId).parent().find('.max-min-value').html();
 			
@@ -3311,8 +3317,8 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
-        	
-        	if(ACC.singlePageCheckout.getIsResponsive()) {
+        	var path = window.location.pathname;
+        	if(ACC.singlePageCheckout.getIsResponsive() && (path.indexOf("multi/payment-method") == -1)) {
             	$('.offer_section_responsive').css("display","block");
             	$('.offer_section_responsive').html(response);
         	} else {
@@ -3321,6 +3327,9 @@ ACC.singlePageCheckout = {
         	}
 		if(typeof selectedOffer !== "undefined" && selectedOffer != "") {
 		        ACC.singlePageCheckout.selectPaymentSpecificOffers(selectedOffer);
+	        }else {
+		   $('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
+	           $('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
 	        }
 
             	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
@@ -3354,20 +3363,37 @@ ACC.singlePageCheckout = {
 		});
 	
 	},	
-	chooseOffer:function(offerID,radioId){
+	chooseOffer:function(id,value){
 		
+		var radioId	= id;
+		var offerID =  value;
 		
 	  if(ACC.singlePageCheckout.getIsResponsive()) { //for responsive view	
 		   if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
-			  recalculateCart();
-		      ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
-			  setTimeout(function(){ ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId); }, 3000);
+			   recalculateCart(false,offerID,radioId);
+
 		   } else {
-			   ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+			   //ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+			   if($( "#"+radioId ).hasClass( "promoapplied" )) { // need release
+					var releaseCode = offerID;
+					if(releaseCode != undefined && releaseCode != "") {
+				 		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
+				 	}
+				} else { //apply coupon
+					ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+				}
 		   }	
 		} else {
-			ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
-		}
+			//ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+			 if($( "#"+radioId ).hasClass( "promoapplied" )) { // need release
+					var releaseCode = offerID;
+					if(releaseCode != undefined && releaseCode != "") {
+				 		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
+				 	}
+				} else { ////apply coupon
+					ACC.singlePageCheckout.chooseOfferAjaxCall(offerID,radioId);
+				}
+		}	
 		
 	},	
 	chooseOfferAjaxCall:function(offerID,radioId){
@@ -3377,6 +3403,12 @@ ACC.singlePageCheckout = {
 		//$("#"+radioId).addClass("promoapplied");
 		$("#juspayconnErrorDiv").css("display","none");
 		document.getElementById("juspayErrorMsg").innerHTML="";
+	       if(ACC.singlePageCheckout.getIsResponsive()) {
+		$("#offer_section_responsive_error_msgDiv").css("display","none");
+		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
+		}
+		
+		
 			
 		$('input:radio[name=offer_name]').each(function () { 
 			if($(this).val() == offerID) {
@@ -3406,6 +3438,17 @@ ACC.singlePageCheckout = {
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			//internet issue
+			$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
+			$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+			if(ACC.singlePageCheckout.getIsResponsive()) {
+				$("#offer_section_responsive_error_msg").html("Oops, something went wrong! Please re-select the offer and complete your purchase.");
+				$("#offer_section_responsive_error_msgDiv").css("display","block");
+			} else {
+				$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select the offer and complete your purchase.");
+				$("#juspayconnErrorDiv").css("display","block");
+			}
+
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
@@ -3428,7 +3471,7 @@ ACC.singlePageCheckout = {
 	 			
 	 			//offer applied from view more section Not top 3 offer | shall be the first Bank Offer visible
 	 			if(ACC.singlePageCheckout.getTopoffers(offerID) == false) {
-	 				var title_text = $("#"+radioId+" + label").text();
+	 				var title_text = $("#"+radioId+" + label").html();
 	 				var title_desc = $("#"+radioId).parent().find('.offer_des').html();
 	 				var title_maxmin = $("#"+radioId).parent().find('.max-min-value').html();
 	 				
@@ -3451,7 +3494,7 @@ ACC.singlePageCheckout = {
 	
 	 			
         	} else { // not applied
-			if(response.totalPrice.formattedValue != null) {
+			   if(response.totalPrice !=null && response.totalPrice.formattedValue != null) {
         			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
     	 			if(document.getElementById("outstanding-amount")!=null)
     	 			{
@@ -3467,8 +3510,14 @@ ACC.singlePageCheckout = {
 				} else {
 					$("#promotionApplied").css("display","none");
 				}
-        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
-				$("#juspayconnErrorDiv").css("display","block");
+	 			if(ACC.singlePageCheckout.getIsResponsive()) {
+	        		document.getElementById("offer_section_responsive_error_msg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+					$("#offer_section_responsive_error_msgDiv").css("display","block");
+	 			} else {
+	        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+	 			}
+
 				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
 				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
         	}
@@ -3501,6 +3550,10 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.showAjaxLoader();
 		$("#juspayconnErrorDiv").css("display","none");
 		document.getElementById("juspayErrorMsg").innerHTML="";
+		if(ACC.singlePageCheckout.getIsResponsive()) {
+		$("#offer_section_responsive_error_msgDiv").css("display","none");
+		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
+		}	
 		
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";
 		var guid = $('#guid').val();
@@ -3509,6 +3562,27 @@ ACC.singlePageCheckout = {
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			//internet issue
+			$('input:radio[name=offer_name]').each(function () { 
+				if($(this).val() == offerID) {
+				  $(this).prop('checked', true);
+				  $(this).addClass("promoapplied");
+				} 
+			});
+			$('input:radio[name=offer_name_more]').each(function () { 
+				if($(this).val() == offerID) {
+				  $(this).prop('checked', true);
+				  $(this).addClass("promoapplied");
+				 } 
+			});
+			if(ACC.singlePageCheckout.getIsResponsive()) {
+				$("#offer_section_responsive_error_msg").html("Oops, something went wrong! Please de-select the offer and complete your purchase.");
+				$("#offer_section_responsive_error_msgDiv").css("display","block");
+			} else {
+				$("#juspayErrorMsg").html("Oops, something went wrong! Please de-select the offer and complete your purchase.");
+				$("#juspayconnErrorDiv").css("display","block");
+			}
+
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
@@ -3574,11 +3648,28 @@ ACC.singlePageCheckout = {
 	showPaymentSpecificOffersTermsConditions:function(){	
 		if($("#offer_terms_container_poppup").html() != "") {
 	    	ACC.singlePageCheckout.paymentTermsConditionsOffersPopup($(".offer_terms_container_poppup").html());
+//	    	$("#accordion-tnc > li > span").click(function() {
+//	    	    $(this).addClass('active').next('div').show(250)
+//	    	    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+//	    	});
 		}
+
 	},
-	paymentTermsConditionsOffersPopup:function(data){		
+	paymentTermsConditionsOffersPopup:function(data){
+	    if($("#paymenttermsoffersPopup").length) {
+	        $("#paymenttermsoffersPopup").remove();
+            }
   	   $("body").append('<div class="modal fade" id="paymenttermsoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
-       $("#paymenttermsoffersPopup").modal('show');
+           $("#paymenttermsoffersPopup").modal('show');
+		$("#accordion-tnc > li > span").click(function() {
+	   		if($(this).hasClass('active')) {
+	   			    $(this).removeClass('active').next('div').hide(250)
+	   			    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+	   		} else {
+	   			    $(this).addClass('active').next('div').show(250)
+	   			    .closest('li').siblings().find('span').removeClass('active').next('div').hide(250);
+	   		}
+   		});
 	}
 	
 	
@@ -3588,6 +3679,7 @@ ACC.singlePageCheckout = {
 }
 //Calls to be made on dom ready.
 $(document).ready(function(){
+	
 	var pageType=$("#pageType").val();
 	if(pageType=="multistepcheckoutsummary")
 	{
@@ -3645,12 +3737,13 @@ $(document).ready(function(){
 			//For responsive site we are removing payment page laoded for web view inorder to keep unique id's in the view
 			$("#makePaymentDiv").html("");
 			
-			//Fetch CNC stores in responsive if CNC is selected on page load
-			ACC.singlePageCheckout.fetchStoresResponsive();
 			//TPR-7486
-			$('#continue_payment_after_validate_responsive').show();
+			$('#continue_payment_after_validate_responsive').hide();
 			$('#continue_payment_after_validate').hide();
 			ACC.singlePageCheckout.populatePaymentSpecificOffers();
+			//Fetch CNC stores in responsive if CNC is selected on page load
+			ACC.singlePageCheckout.fetchStoresResponsive();
+			
 		}
 		else
 		{
@@ -3673,14 +3766,14 @@ $(document).ready(function(){
 	
 });
 
-$(document).on('click','.promoapplied',function(e){
+/*$(document).on('click','.promoapplied',function(e){
 	event.preventDefault();
 	var releaseCode = $('.promoapplied').val();
  	if(releaseCode != undefined && releaseCode != "") {
  		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
  	}
 	    
-});
+});*/
 
 
 

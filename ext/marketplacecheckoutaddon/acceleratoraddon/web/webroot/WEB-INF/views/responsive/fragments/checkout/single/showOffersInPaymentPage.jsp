@@ -15,6 +15,10 @@
 			<span class="offer_heading"><spring:theme code="payment.cart.offer.responsive.title"/></span>
 		    <span class="offer_heading_sub"><spring:theme code="payment.cart.offer.responsive.description"/>
 			<a class="tnc-link tnc-link-mob" onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">T & C</a></span>
+		    <div style="display:none;top: 0 ! important; margin-top: 0px !important;" class="alert alert-danger alert-dismissable" id="offer_section_responsive_error_msgDiv">	<!-- TPR-629 changes for error -->
+					<button class="close offerresponsiveCloseButton" type="button" style="right:12px">&times;</button>
+					<span id="offer_section_responsive_error_msg">Some issues are there with payment</span>
+	         </div>
 		    </c:when>    
 		    <c:otherwise>
 			<span class="offer_heading"><spring:theme code="payment.cart.offer.web.title"/></span>
@@ -29,11 +33,11 @@
 
 			<c:forEach items="${offerPageData}" var="offerPageData" begin="0"
 				end="2" varStatus="status">
-				<li class="offer" id="offer${status.index}" style="cursor: pointer;">
+				<li class="offer" id="offer${status.index}">
 					<div class="offerchoosesection">
 						<input type="radio" name="offer_name"
 							id="offer_name${status.index}" value="${offerPageData.code}"
-							onchange="ACC.singlePageCheckout.chooseOffer(this.value,'offer_name${status.index}')">
+							 onclick="ACC.singlePageCheckout.chooseOffer(this.id,this.value)">
 						<label for="offer_name${status.index}" data-id="offercode"
 							class="numbers"> <span class="offer_title">${offerPageData.name}</span></label>
 						<br>
@@ -75,12 +79,11 @@
 		<ul class="offerui">
 			<c:forEach items="${offerPageData}" var="offerPageData"
 				varStatus="status">
-				<li class="offer" id="offerpop${status.index}"
-					style="cursor: pointer;">
+				<li class="offer" id="offerpop${status.index}">
 					<div class="offerchoosesection">
 						<input type="radio" name="offer_name_more"
 							id="offer_name_pop${status.index}" value="${offerPageData.code}"
-							onchange="ACC.singlePageCheckout.chooseOffer(this.value,'offer_name_pop${status.index}')">
+							 onclick="ACC.singlePageCheckout.chooseOffer(this.id,this.value)">
 						<label for="offer_name_pop${status.index}" data-id="offercodepop"
 							class="numbers Popup-radio"> <span class="offer_title">${offerPageData.name}</span></label>
 						<br>
@@ -118,9 +121,10 @@
 
 	<!-- 	Desktop tnc popup -->
 <c:choose>
- <c:when test="${responsive_view=='false'}">	
-		<span class="offer_heading">Terms & Conditions</span>
-		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+ <c:when test="${responsive_view=='false'}">
+ <span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;top: 27px !important;right: 31px;">X</button>
+	</span>	
 		<ul class="offertermsui" id="accordion-tnc">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >
@@ -141,8 +145,9 @@
 		
 	<!-- 	Mobile tnc popup -->
 	
-		<span class="offer_heading">Terms & Conditions</span>
-		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;">X</button>
+		<span class="tnc-fixed-header"><span class="offer_heading">Terms & Conditions</span>
+		<button class="close" data-dismiss="modal" style="border: 0px !important; margin: 0px !important;top: 1px !important;">X</button>
+	</span>	
 		<ul class="offertermsui" id="">	
 		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
 				<li class="offer" id="offertermspop${status.index}" >
@@ -166,10 +171,3 @@
   </c:if>	
 </c:if>	
 
-<script>
-
-$("#accordion-tnc > li > span").click(function() {
-    $(this).toggleClass("active").next('div').slideToggle(250)
-    .closest('li').siblings().find('span').removeClass('active').next('div').slideUp(250);
-});
-</script>

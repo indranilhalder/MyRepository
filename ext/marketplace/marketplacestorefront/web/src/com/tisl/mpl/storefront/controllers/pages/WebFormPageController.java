@@ -88,8 +88,11 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		model.addAttribute("ticketForm", form);
 		final String ticketSubType = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CRM_WEBFORM_TICKET_SUB, "L1C1");
+		final Integer pageSize = configurationService.getConfiguration().getInt(
+				MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
 		model.addAttribute("tiketL1Check", ticketSubType);
 		model.addAttribute("formFields", mplWebFormFacade.getWebCRMForm());
+		model.addAttribute("pageSizeWebForm", pageSize);
 
 		storeCmsPageInModel(model, getContentPageForLabelOrId(WEB_FORM));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(WEB_FORM));
