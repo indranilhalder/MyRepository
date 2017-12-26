@@ -98,7 +98,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 				/*
 				 * else if (target != null) {
-				 * 
+				 *
 				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
 				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
 				 */
@@ -126,10 +126,10 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 						}
 					}
 
-					if (isShippingPromoApplied)
-					{
-						addDeliveryModePromotion(source, target);
-					}
+					//	if (isShippingPromoApplied)
+					//	{
+					//		addDeliveryModePromotion(source, target); commented as shipping promotion is leveraged for adding charge
+					//	}
 
 				}
 				if (null != source.getConvenienceCharges())
@@ -333,26 +333,19 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 	protected double getOrderDiscountsAmount(final AbstractOrderModel source)
 	{
 		double discounts = 0.0d;
-		try
+		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
+		if (discountList != null && !discountList.isEmpty())
 		{
-			List<DiscountValue> discountList = new ArrayList<>();
-			discountList = source.getGlobalDiscountValues();
-			if (discountList != null && !discountList.isEmpty())
+			for (final DiscountValue discount : discountList)
 			{
-				for (final DiscountValue discount : discountList)
+				final double value = discount.getValue();
+				if (value > 0.0d)
 				{
-					final double value = discount.getValue();
-					if (value > 0.0d)
-					{
-						discounts += value;
-					}
+					discounts += value;
 				}
 			}
 		}
-		catch (Exception exception)
-		{
-			LOG.info("Error occureing while getting discount order level " + exception.getMessage());
-		}
+
 		return discounts;
 
 	}

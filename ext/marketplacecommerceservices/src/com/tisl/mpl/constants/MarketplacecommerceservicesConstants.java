@@ -3,7 +3,6 @@
  *
  * All rights reserved.
  * Copyright (c) 2000-2013 hybris AG
- * All rights reserved.
  *
  * This software is the confidential and proprietary information of hybris
  * ("Confidential Information"). You shall not disclose such Confidential
@@ -36,18 +35,20 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 { "PMD", "deprecation" })
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
-	
+
 	//TPR-7408 starts here
-		public static final String COSTCENTREONE = "promoCostCentreOnePercentage".intern();
-		public static final String COSTCENTRETWO = "promoCostCentreTwoPercentage".intern();
-		public static final String COSTCENTRETHREE = "promoCostCentreThreePercentage".intern();
-		
-		public static final String PRODUCTPROMOCOSTCENTREONE = "promoProductCostCentreOnePercentage".intern();
-		public static final String PRODUCTPROMOCOSTCENTRETWO = "promoProductCostCentreTwoPercentage".intern();
-		public static final String PRODUCTPROMOCOSTCENTRETHREE = "promoProductCostCentreThreePercentage".intern();
-		public static final String CARTPROMOCOSTCENTREONE = "promoCartCostCentreOnePercentage".intern();
-		public static final String CARTPROMOCOSTCENTRETWO = "promoCartCostCentreTwoPercentage".intern();
-		public static final String CARTPROMOCOSTCENTRETHREE = "promoCartCostCentreThreePercentage".intern();
+	public static final String COSTCENTREONE = "promoCostCentreOnePercentage".intern();
+	public static final String COSTCENTRETWO = "promoCostCentreTwoPercentage".intern();
+	public static final String COSTCENTRETHREE = "promoCostCentreThreePercentage".intern();
+
+	public static final String PRODUCTPROMOCOSTCENTREONE = "promoProductCostCentreOnePercentage".intern();
+	public static final String PRODUCTPROMOCOSTCENTRETWO = "promoProductCostCentreTwoPercentage".intern();
+	public static final String PRODUCTPROMOCOSTCENTRETHREE = "promoProductCostCentreThreePercentage".intern();
+	public static final String CARTPROMOCOSTCENTREONE = "promoCartCostCentreOnePercentage".intern();
+	public static final String CARTPROMOCOSTCENTRETWO = "promoCartCostCentreTwoPercentage".intern();
+	public static final String CARTPROMOCOSTCENTRETHREE = "promoCartCostCentreThreePercentage".intern();
+	//TPR-7408 ends here
+
 
 	//TPR-6272 starts here IQA
 	public static final String COMMACONSTANT = ",";
@@ -59,7 +60,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final int PLATFORM_FIVE = 5;
 	//TPR-6272 ends here
 	//TPR-4461 STARTS HERE
-	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
+	public static final String COUPONFAILUREMESSAGE = "Sorry! This coupon can't be used with this card/bank. Please use either the applicable card/bank or coupon.";
+	public static final String CARTCOUPONFAILUREMESSAGE = "Sorry! The bank offer selected can't be applied with this card/bank. Please use the applicable card/bank.";
+	public static final String CARTANDCOUPONBOTHFAILUREMESSAGE = "Sorry! The bank offer and coupon can't be applied with this card/bank. Please use the applicable card/bank.";
+
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
@@ -197,8 +201,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEBIT = "Debit Card".intern();
 	public static final String CREDIT = "Credit Card".intern();
 	public static final String COD = "COD".intern();
-	public static final String CLIQ_CASH = "Cliq Cash".intern();
-	public static final String CLIQCASH = "CliqCash".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
@@ -401,6 +403,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String articleSKUID = "articleSKUID";
 
 	public static final String USER_NOT_FOUND = "No user found for the current Email ID";
+
+	public static final String OFFER_NOT_FOUND = "No offer found in the system";
+
 	public static final String WISHLIST_NOT_FOUND = "No wishlist found for the current User";
 	public static final String PRODUCT_NOT_FOUND = "Product not found in the wishlist";
 	public static final String WISHLIST_FOUND_EMPTY = "Wishlist is Empty";
@@ -986,6 +991,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B6006 = "B6006";
 	public static final String B6007 = "B6007";
 	public static final String B6008 = "B6008";
+	//TPR-7448 Starts here
+	public static final String B6009 = "B6009";
+	//TPR-7448 Ends here
 
 	//Search error codes starts
 	public static final String B7000 = "B7000";
@@ -1063,12 +1071,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2000 = "B2000";
 	public static final String B2001 = "B2001";
 	public static final String B2002 = "B2002";
-
-
-	// Codes For EGV Functionaity START
-	public static final String B5001 = "B5001";
-	public static final String B5002 = "B5002";
-	// Codes For EGV Functionaity END
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
@@ -1294,7 +1296,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String DATEFORMAT = "yyyy-MM-dd".intern();
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
-	public static final String ORDER = "order".intern();
+	public static final String ORDERTHRESHOLD = "order".intern();
+	//public static final String ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -1637,12 +1640,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String USER = "user".intern();
 	public static final String DATE = "Date".intern();
-	//TPR-1075
+	public static final String ORDER = "Order".intern();
+	//TPR-1075SELLERVIOLATION
 	public static final String NEWCUSTOMER = "NewCustomer".intern();
 	public static final String NEWUSERRESTVIOLATION = "Voucher for New Customer is violated".intern();
 	public static final String VOUCHERINVALIDNEWCUST = "Voucher for New Customer : ".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
 	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
+	public static final String COUPONNOTREDEEMABLE = "This coupon has expired".intern();
 	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
 	public static final String VOUCHERINAPPLICABLE = "Voucher is not applicable: ".intern();
 	public static final String VOUCHERNOTRESERVABLE = "Voucher is not reservable: ".intern();
@@ -1653,6 +1658,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FREEBIEERROR = " cannot be redeemed: freebie".intern();
 	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
 	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
+	public static final String ORDERRESTRICTION = "Order restriction is violated".intern();
 	public static final String USERRESTVIOLATION = "User restriction is violated".intern();
 	public static final String VOUCHERCODE = "voucherCode".intern();
 	public static final String SYSDATE = "sysdate".intern();
@@ -1926,10 +1932,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGEDET = "messageDet".intern();
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
-	
+
 	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
 	public static final String PROMOURL = "promoUrl".intern();
 	public static final String BUNDLEPROMOLINKTEXT = "bundlePromoLinkText".intern();
+
 
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
@@ -2160,6 +2167,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
 
 	//Agent specific order search query
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
@@ -2214,8 +2222,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
-	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
-			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type and {b:VersionID} is null"//SDI-2553
+	.intern();
 	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
 			.intern();
 
@@ -2304,9 +2312,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PR-15 (Rainbow)
 	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
 
-	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
-	public static final String KM = "km";
-	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP".intern();
+	public static final String KM = "km".intern();
+	public final static String PINCODE_MODEL_PDP = "PincodeModelPDP".intern();
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId} in ("
+			.intern();
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE2 = ") and {pos.active}=?active".intern();
+	public static final String POS_SLAVEID = "slaveId".intern();
+	public static final String POS_ACTIVE = "active".intern();
+	public static final String STORE_DISPLAY_PDP = "pdp.store.display".intern();
+
+	public static final String PAYTM = "Paytm".intern();//Paytm
 
 	//Return Window Increase
 	public static final String FetchConsignmentList = "SELECT {c.pk} FROM {Order as o}, {Consignment as c}, {EnumerationValue as en} WHERE {c.order} ={o.pk} and {c.status} = {en.pk} and {en.code}='DELIVERED' and {o.versionid} IS NULL AND {o.type}  ='SubOrder' AND {c.code} IN (?code)";
@@ -2322,36 +2338,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
-	
-	// EGV  changes Start
-
-		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
-		public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
-		public static final String QC_REFUND_TYPE_RETURN = "RETURN";
-		public static final String QC_REFUND_TYPE_REFUND = "REFUND";
-		
-		
-		public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
-		public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
-		public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
-		public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
-		// EGV Changes End
-		public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
-		
-		public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
-		
-		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
-		
-		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
-
-		public static final String PAYMENT_MODE_SPLIT = "split".trim();
-		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
-
 
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
 
-	public static final String REFUNDCLEARORDERQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.creationtime} >= ?startTime and {o.status}={os.pk} and {os.code} IN (?statusOne, ?statusTwo) and {o.type}=?type"
+	public static final String REFUNDCLEARORDERQUERY = "SELECT {con.pk} FROM {Consignment AS con}, {Order as o} , {ComposedType as com} , {PaymentInfo as pf} WHERE {o.paymentInfo} ={pf.pk} and {pf.itemtype} = {com.pk} and {com.code} <> 'CODPaymentInfo' and {con.creationtime} <= ?queryTAT AND {con.creationtime} >= ?startTime AND {con.status} IN (?statusOne,?statusTwo)"
 			.intern();
+
 	public static final String ORDERSTATUSONE = "statusOne".intern();
 	public static final String ORDERSTATUSTWO = "statusTwo".intern();
 	public static final String REFUNDCLEARWEBHHOKQUERY = "select {js.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId and {js.status}='CHARGED' order by {js.creationtime} desc"
@@ -2379,26 +2371,27 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CRM_FILE_UPLOAD_PATH = "crm.fileupload.path";
 
 	//TPR-7448
-	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
-	public static final String VOUCHERCARDPEROFRMXAMTQUERY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYMNTH = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYDAY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'DD') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYWEEK = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'IW') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYYEAR = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'YY') AND SYSDATE";
 	public static final String JUSPAYCARDSTATUSQRY = "select {pk} from {JuspayCardStatus} where {guid}=?guid and {customerId}=?customerId order by {creationtime} desc";
 	public static final String CARDREFERENCENO = "cardRefNo".intern();
+	public static final String PROMO01 = "Unfortunately, the coupon has already been used and cannot be applied for this transaction.";
+	public static final String PROMO02 = "Unfortunately, the discount is not applicable for this transaction.";
+	public static final String CARTV01 = "Unfortunately, the bank offer has been availed and cannot be applied for this transaction.";
 
 
 
 	public static final String RECEIVED = "RECEIVED";
 	public static final String SENT = "SENT";
 	public static final String OPEN = "Open";
-	public static final String CRM_WEBFORM_TICKET_TYPE = "W";
 	public static final String CRM_WEBFORM_TICKET_SUB = "crm.ticketsubtype.nodel1";
 	public static final String CRM_WEBFORM_TICKET_SUB_ORDER = "O";
 	public static final String CRM_WEBFORM_TICKET_SUB_NONORDER = "NO";
-	public static final String PAYTM = "Paytm".intern();//Paytm
-	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
-	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId} in ("
+	public static final String WEBFORM_ORDER_HISTORY_PAGESIZE = "webform.order.pagesize.defaultValue";
+
+	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
-   public static final String POS_QUERY_FOR_SELLER_AND_SLAVE2 = ") and {pos.active}=?active".intern();
-   public static final String POS_ACTIVE = "active".intern();
-	public final static String PINCODE_MODEL_PDP = "PincodeModelPDP".intern();
-	public static final String STORE_DISPLAY_PDP = "pdp.store.display".intern();
 }
