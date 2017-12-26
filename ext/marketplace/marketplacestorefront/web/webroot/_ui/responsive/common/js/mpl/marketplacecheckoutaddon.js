@@ -1977,7 +1977,7 @@ function savedDebitCardRadioChange(radioId){
 		var selectedIndex=$('input[name=creditCards]:checked').attr("id");
 		//var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
 		//var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
-		var cardFingerPrint=$('input[name=cardsFingerprintcc'+selectedIndex+']').val();
+		var cardFingerPrint=$('input[name=cardsFingerprint'+selectedIndex+']').val();
 		//TPR-7448 Ends here
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
@@ -2205,7 +2205,7 @@ function savedDebitCardRadioChange(radioId){
 		var selectedIndex=$('input[name=debitCards]:checked').attr("id");
 		//var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
 		//var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
-		var cardFingerPrint=$('input[name=cardsFingerprintdc'+selectedIndex+']').val();
+		var cardFingerPrint=$('input[name=cardsFingerprint'+selectedIndex+']').val();
 		//TPR-7448 Ends here
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
