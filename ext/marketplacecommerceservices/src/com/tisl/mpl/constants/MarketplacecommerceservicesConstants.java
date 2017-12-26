@@ -2371,13 +2371,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CRM_FILE_UPLOAD_PATH = "crm.fileupload.path";
 
 	//TPR-7448
-	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher ";
-	public static final String VOUCHERCARDPEROFRMXAMTQUERYMNTH = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
-	public static final String VOUCHERCARDPEROFRMXAMTQUERYDAY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'DD') AND SYSDATE";
-	public static final String VOUCHERCARDPEROFRMXAMTQUERYWEEK = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'IW') AND SYSDATE";
-	public static final String VOUCHERCARDPEROFRMXAMTQUERYYEAR = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardRefNo}=?cardRefNo and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'YY') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFFERQUERY = "select {pk} from {VoucherCardPerOfferInvalidation} where {guid}<>?guid and {cardFingerprint}=?cardFingerprint and {voucher}=?voucher ";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYMNTH = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardFingerprint}=?cardFingerprint and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'MM') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYDAY = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardFingerprint}=?cardFingerprint and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'DD') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYWEEK = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardFingerprint}=?cardFingerprint and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'IW') AND SYSDATE";
+	public static final String VOUCHERCARDPEROFRMXAMTQUERYYEAR = "select {v:pk} from {VoucherCardPerOfferInvalidation as v} where {guid}<>?guid and {cardFingerprint}=?cardFingerprint and {voucher}=?voucher and {v:creationtime} BETWEEN trunc(sysdate, 'YY') AND SYSDATE";
 	public static final String JUSPAYCARDSTATUSQRY = "select {pk} from {JuspayCardStatus} where {guid}=?guid and {customerId}=?customerId order by {creationtime} desc";
 	public static final String CARDREFERENCENO = "cardRefNo".intern();
+	public static final String CARDFINGERPRINT1 = "cardFingerprint".intern();
 	public static final String PROMO01 = "Unfortunately, the coupon has already been used and cannot be applied for this transaction.";
 	public static final String PROMO02 = "Unfortunately, the discount is not applicable for this transaction.";
 	public static final String CARTV01 = "Unfortunately, the bank offer has been availed and cannot be applied for this transaction.";

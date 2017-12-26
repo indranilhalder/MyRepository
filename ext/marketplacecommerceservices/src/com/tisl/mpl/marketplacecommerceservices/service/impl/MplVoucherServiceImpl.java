@@ -282,10 +282,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final List<PromotionResultModel> promotionList = new ArrayList<PromotionResultModel>(allPromotionResults);
 			for (final PromotionResultModel oModel : promotionList)
 			{
-				if (oModel.getCertainty().floatValue() == 1.0F && null != oModel.getPromotion()
+				if (oModel.getCertainty().floatValue() == 1.0F
+						&& null != oModel.getPromotion()
 						&& (oModel.getPromotion() instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel
-								|| oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
+								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
 				{
 					flag = true;
 					break;
@@ -361,8 +361,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
 				{
 					LOG.debug("Step 13:::Inside max discount block");
-					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
-							lastVoucher.getMaxDiscountValue().doubleValue());
+					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
+							.getMaxDiscountValue().doubleValue());
 					cartModel.setGlobalDiscountValues(discountList);
 
 					getMplDefaultCalculationService().calculateTotals(cartModel, false);
@@ -393,10 +393,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 						{
-							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
-									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
-									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
-											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
+									.getProductPromoCode())) || (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry
+									.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
+									.doubleValue();
 
 							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 						}
@@ -406,12 +406,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
 						{
-							LOG.debug(
-									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							LOG.debug("Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 							discountData = releaseVoucherAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
 									applicableOrderEntryList, voucherList);
 						}
-						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
+						else if (voucherCalcValue != 0
+								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
 								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
 										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 						{
@@ -478,8 +478,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
 				{
 					LOG.debug("Step 13:::Inside max discount block");
-					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
-							lastVoucher.getMaxDiscountValue().doubleValue());
+					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
+							.getMaxDiscountValue().doubleValue());
 					orderModel.setGlobalDiscountValues(discountList);
 					getMplDefaultCalculationService().calculateTotals(orderModel, false);
 					getModelService().save(orderModel);
@@ -490,8 +490,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
 				{
 					LOG.debug("Step 14:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
-					discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList,
-							voucherList);
+					discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList, voucherList);
 				}
 				else
 				//In other cases
@@ -510,10 +509,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 						{
-							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
-									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
-									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
-											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
+									.getProductPromoCode())) || (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry
+									.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
+									.doubleValue();
 
 							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 						}
@@ -523,12 +522,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
 						{
-							LOG.debug(
-									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							LOG.debug("Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 							discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
 									applicableOrderEntryList, voucherList);
 						}
-						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
+						else if (voucherCalcValue != 0
+								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
 								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
 										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 						{
@@ -539,8 +538,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						else
 						//In other cases, just set the coupon discount for the discount data
 						{
-							discountData
-									.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+							discountData.setCouponDiscount(getDiscountUtility()
+									.createPrice(orderModel, Double.valueOf(voucherCalcValue)));
 						}
 					}
 					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
@@ -858,7 +857,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel,
-			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
+			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList)
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -941,8 +941,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 					{
-						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D
-								: entry.getNetAmountAfterAllDisc().doubleValue();
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D : entry
+								.getNetAmountAfterAllDisc().doubleValue();
 						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
 					}
 					else
@@ -1031,8 +1031,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	private double getCurrNetAmtAftrAllDisc(final double amount, final BigDecimal entryLevelApportionedPrice)
 	{
-		return (amount > entryLevelApportionedPrice.doubleValue()) ? (amount - entryLevelApportionedPrice.doubleValue())
-				: Double.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
+		return (amount > entryLevelApportionedPrice.doubleValue()) ? (amount - entryLevelApportionedPrice.doubleValue()) : Double
+				.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
 	}
 
 
@@ -1341,10 +1341,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 						{
-							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
-									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
-									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
-											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
+									.getProductPromoCode())) || (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry
+									.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
+									.doubleValue();
 
 							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 						}
@@ -1354,12 +1354,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
 						{
-							LOG.debug(
-									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							LOG.debug("Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 							discountData = releaseCartVoucherAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
 									applicableOrderEntryList, voucherList);
 						}
-						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
+						else if (voucherCalcValue != 0
+								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
 								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
 										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 						{
@@ -1455,10 +1455,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 						{
-							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
-									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
-									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
-											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
+									.getProductPromoCode())) || (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry
+									.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
+									.doubleValue();
 
 							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 						}
@@ -1468,12 +1468,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
 						{
-							LOG.debug(
-									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							LOG.debug("Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 							discountData = releaseCartVoucherAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
 									applicableOrderEntryList, voucherList);
 						}
-						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
+						else if (voucherCalcValue != 0
+								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
 								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
 										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 						{
@@ -1484,8 +1484,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						else
 						//In other cases, just set the coupon discount for the discount data
 						{
-							discountData
-									.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+							discountData.setCouponDiscount(getDiscountUtility()
+									.createPrice(orderModel, Double.valueOf(voucherCalcValue)));
 						}
 					}
 					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
@@ -1715,8 +1715,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode()))
 							|| StringUtils.isNotEmpty(entry.getCouponCode()))
 					{
-						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D
-								: entry.getNetAmountAfterAllDisc().doubleValue();
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D : entry
+								.getNetAmountAfterAllDisc().doubleValue();
 						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
 					}
 					else
@@ -1839,9 +1839,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public Tuple3<?, ?, ?> checkCardPerOfferValidationMobile(final AbstractOrderModel abstractOrderModel, final String token,
-			final String cardSaved, final String cardRefNo) throws Exception
+			final String cardSaved, final String cardRefNo, final String cardFingerPrint, final String channel) throws Exception
 	{
-		final Tuple3<?, ?, ?> tuple3 = checkCardPerOfferValidation(abstractOrderModel, token, cardSaved, cardRefNo, "");
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Inside checkCardPerOfferValidationMobile");
+			LOG.debug("With cardRefNo=" + cardRefNo);
+			LOG.debug("With cardFingerPrint=" + cardFingerPrint);
+		}
+		final Tuple3<?, ?, ?> tuple3 = checkCardPerOfferValidation(abstractOrderModel, token, cardSaved, cardFingerPrint, channel);
 		if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 		{
 			final String failureCode = (String) tuple3.getSecond();
@@ -1893,17 +1899,29 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public Tuple3<?, ?, ?> checkCardPerOfferValidation(final AbstractOrderModel abstractOrderModel, final String token,
-			final String cardSaved, final String cardRefNo, final String cardToken) throws Exception
+			final String cardSaved, final String cardFingerPrint, final String channel) throws Exception
 	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Inside checkCardPerOfferValidation");
+			LOG.debug("With guid=" + abstractOrderModel.getGuid());
+			LOG.debug("With cardSaved=" + cardSaved);
+			LOG.debug("With cardFingerPrint=" + cardFingerPrint);
+		}
 		Boolean response = Boolean.TRUE;
 		boolean savedCardBoolean = false;
 		//final String failureCode = CODE00;
 		//final Double priceDiff = new Double(0.0);
 		Tuple3<?, ?, ?> tuple3 = null;
 		boolean tokenRequired = false;
+		String channelMobileWeb = StringUtils.EMPTY;
 		if (StringUtils.isNotEmpty(cardSaved))
 		{
 			savedCardBoolean = Boolean.parseBoolean(cardSaved);
+		}
+		if (StringUtils.isNotEmpty(channel))
+		{
+			channelMobileWeb = channel;
 		}
 		try
 		{
@@ -1914,6 +1932,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					final CustomerModel user = (CustomerModel) abstractOrderModel.getUser();
 					addCardResponse = mplPaymentService.getCurrentCardReferenceNo(token, user.getOriginalUid(), user.getUid());
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("For new cards");
+						LOG.debug("Token=" + addCardResponse.getCardToken());
+						LOG.debug("Reference=" + addCardResponse.getCardReference());
+						LOG.debug("CardFingerPrint=" + addCardResponse.getCardFingerprint());
+					}
 				}
 				else
 				{//For new cards token is required in order to save the card and fetch its reference no.
@@ -1923,23 +1948,30 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			else
 			{//This will be called for saved cards
 				addCardResponse = new AddCardResponse();
-				addCardResponse.setCardReference(cardRefNo);
-				addCardResponse.setCardToken(cardToken);
+				addCardResponse.setCardReference(StringUtils.EMPTY);
+				addCardResponse.setCardToken(StringUtils.EMPTY);
+				addCardResponse.setCardFingerprint(cardFingerPrint);
 			}
-			final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-					getVoucherService().getAppliedVouchers(abstractOrderModel));
+			final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+					abstractOrderModel));
 
 			if (CollectionUtils.isNotEmpty(voucherList))
 			{
 				for (final DiscountModel discount : voucherList)
 				{
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("With VoucherCode=" + discount.getCode());
+					}
 					if (discount instanceof MplCartOfferVoucherModel)
 					{
-						tuple3 = promoVoucherForCardPerOfr(tokenRequired, abstractOrderModel, discount, addCardResponse, CODEC);
+						tuple3 = promoVoucherForCardPerOfr(tokenRequired, abstractOrderModel, discount, addCardResponse, CODEC,
+								channelMobileWeb);
 					}
 					else if (discount instanceof PromotionVoucherModel)
 					{
-						tuple3 = promoVoucherForCardPerOfr(tokenRequired, abstractOrderModel, discount, addCardResponse, CODEP);
+						tuple3 = promoVoucherForCardPerOfr(tokenRequired, abstractOrderModel, discount, addCardResponse, CODEP,
+								channelMobileWeb);
 					}
 					response = (Boolean) tuple3.getFirst();
 					if (!response.booleanValue())
@@ -1963,7 +1995,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * amount per time limit, But will get offer for lesser amount
 	 */
 	private Tuple3<?, ?, ?> promoVoucherForCardPerOfr(final boolean tokenRequired, final AbstractOrderModel abstractOrderModel,
-			final DiscountModel discount, final AddCardResponse addCardResponse, final String flag) throws CalculationException
+			final DiscountModel discount, final AddCardResponse addCardResponse, final String flag, final String channel)
+			throws CalculationException
 	{
 		Boolean response = Boolean.TRUE;
 		String failureCode = flag + CODE00;
@@ -1977,14 +2010,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			{
 				modelService.refresh(restrictionModel);
 				List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = null;
-				final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
-						? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
-				final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-						.getMaxAmountPerTimeLimit() != null
-								? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
-				final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-						.getMaxAmountAllTransaction() != null
-								? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction().doubleValue() : 0.0D;
+				final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+						.getMaxAvailCount().intValue() : 0;
+				final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+						.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
+				final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+						.getMaxAmountAllTransaction().doubleValue() : 0.0D;
 				final TimeLimitTypeEnum timeLimitTypeEnum = ((PaymentModeRestrictionModel) restrictionModel).getTimeLimit();
 				if (tokenRequired && (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0))
 				{
@@ -1994,7 +2025,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				if (maxAvailCount > 0 && maxAmountPerTimeLimit == 0.0D && maxAmountAllTransactions == 0.0D)
 				{
 					voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(abstractOrderModel.getGuid(),
-							promotionVoucherModel, addCardResponse.getCardReference());
+							promotionVoucherModel, addCardResponse.getCardFingerprint());
 					response = checkCardPerOfferMaxCountValidation(voucherInvalidationModel, maxAvailCount);
 					if (!response.booleanValue())
 					{
@@ -2004,7 +2035,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (maxAvailCount == 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions == 0.0D)
 				{
 					voucherInvalidationModel = getCardPerOfrInvalidationModel(abstractOrderModel.getGuid(), promotionVoucherModel,
-							timeLimitTypeEnum, addCardResponse.getCardReference());
+							timeLimitTypeEnum, addCardResponse.getCardFingerprint());
 					tuple3Resp = checkCardPerOfferMaxAmtValidation(voucherInvalidationModel, maxAmountPerTimeLimit,
 							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
@@ -2017,7 +2048,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (maxAvailCount > 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions == 0.0D)
 				{
 					tuple3Resp = checkCardPerOfferMaxCntAmtPValidation(abstractOrderModel.getGuid(), maxAvailCount,
-							maxAmountPerTimeLimit, promotionVoucherModel, timeLimitTypeEnum, addCardResponse.getCardReference(),
+							maxAmountPerTimeLimit, promotionVoucherModel, timeLimitTypeEnum, addCardResponse.getCardFingerprint(),
 							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
@@ -2029,7 +2060,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (maxAvailCount > 0 && maxAmountPerTimeLimit == 0.0D && maxAmountAllTransactions > 0.0D)
 				{
 					voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(abstractOrderModel.getGuid(),
-							promotionVoucherModel, addCardResponse.getCardReference());
+							promotionVoucherModel, addCardResponse.getCardFingerprint());
 					tuple3Resp = checkCardPerOfferMaxCntAmtValidation(voucherInvalidationModel, maxAvailCount,
 							maxAmountAllTransactions, getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
@@ -2042,7 +2073,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (maxAvailCount == 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions > 0.0D)
 				{
 					tuple3Resp = checkCPOMaxAmtLmtAllTrnxValidation(abstractOrderModel.getGuid(), promotionVoucherModel,
-							timeLimitTypeEnum, addCardResponse.getCardReference(), maxAmountPerTimeLimit, maxAmountAllTransactions,
+							timeLimitTypeEnum, addCardResponse.getCardFingerprint(), maxAmountPerTimeLimit, maxAmountAllTransactions,
 							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
@@ -2054,7 +2085,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (maxAvailCount > 0 && maxAmountPerTimeLimit > 0.0D && maxAmountAllTransactions > 0.0D)
 				{
 					tuple3Resp = checkCPOMaxCntAmtLmtAllTrnxValidation(abstractOrderModel.getGuid(), promotionVoucherModel,
-							timeLimitTypeEnum, addCardResponse.getCardReference(), maxAvailCount, maxAmountPerTimeLimit,
+							timeLimitTypeEnum, addCardResponse.getCardFingerprint(), maxAvailCount, maxAmountPerTimeLimit,
 							maxAmountAllTransactions, getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
 					if (!response.booleanValue())
@@ -2066,7 +2097,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (maxAvailCount == 0 && maxAmountPerTimeLimit == 0.0D && maxAmountAllTransactions > 0.0D)
 				{
 					voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(abstractOrderModel.getGuid(),
-							promotionVoucherModel, addCardResponse.getCardReference());
+							promotionVoucherModel, addCardResponse.getCardFingerprint());
 					tuple3Resp = checkCardPerOfferMaxAmtValidation(voucherInvalidationModel, maxAmountAllTransactions,
 							getVoucherDiscountValue(abstractOrderModel, promotionVoucherModel));
 					response = (Boolean) tuple3Resp.getFirst();
@@ -2081,7 +2112,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					if (response.booleanValue())
 					{
 						//Save card ref no in db
-						saveCardRefNoInDb(addCardResponse, abstractOrderModel);
+						saveCardFingerPrintNoInDb(addCardResponse, abstractOrderModel, channel);
 					}
 					if (Boolean.FALSE.booleanValue() && priceDiff.doubleValue() > 0.0)//Disabling this code for H2_SPRINT2 as price update will not go in sprint 2
 					{
@@ -2100,7 +2131,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 *
 	 * @param promotionVoucherModel
 	 * @param timeLimitTypeEnum
-	 * @param cardRefNo
+	 * @param cardFingerprint
 	 * @param maxAvailCount
 	 * @param maxAmountPerTimeLimit
 	 * @param maxAmountAllTransactions
@@ -2108,7 +2139,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @return tuple3
 	 */
 	private Tuple3<?, ?, ?> checkCPOMaxCntAmtLmtAllTrnxValidation(final String guid, final VoucherModel promotionVoucherModel,
-			final TimeLimitTypeEnum timeLimitTypeEnum, final String cardRefNo, final int maxAvailCount,
+			final TimeLimitTypeEnum timeLimitTypeEnum, final String cardFingerprint, final int maxAvailCount,
 			final double maxAmountPerTimeLimit, final double maxAmountAllTransactions, final double currentDiscountPrice)
 	{
 		Boolean check = Boolean.FALSE;
@@ -2116,13 +2147,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		Tuple3<?, ?, ?> tuple3 = null;
 		String failureCode = CODE01;//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
 		List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(guid,
-				promotionVoucherModel, cardRefNo);
+				promotionVoucherModel, cardFingerprint);
 		if (CollectionUtils.isNotEmpty(voucherInvalidationModel) && maxAvailCount > voucherInvalidationModel.size())
 		{
 			tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountAllTransactions, currentDiscountPrice);
 			if (((Boolean) tuple3.getFirst()).booleanValue())
 			{
-				voucherInvalidationModel = getCardPerOfrInvalidationModel(guid, promotionVoucherModel, timeLimitTypeEnum, cardRefNo);
+				voucherInvalidationModel = getCardPerOfrInvalidationModel(guid, promotionVoucherModel, timeLimitTypeEnum,
+						cardFingerprint);
 				if (CollectionUtils.isNotEmpty(voucherInvalidationModel))
 				{
 					tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerTimeLimit, currentDiscountPrice);
@@ -2154,14 +2186,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 *
 	 * @param promotionVoucherModel
 	 * @param timeLimitTypeEnum
-	 * @param cardRefNo
+	 * @param cardFingerprint
 	 * @param maxAmountPerTimeLimit
 	 * @param maxAmountAllTransactions
 	 * @param currentDiscountPrice
 	 * @return tuple3
 	 */
 	private Tuple3<?, ?, ?> checkCPOMaxAmtLmtAllTrnxValidation(final String guid, final VoucherModel promotionVoucherModel,
-			final TimeLimitTypeEnum timeLimitTypeEnum, final String cardRefNo, final double maxAmountPerTimeLimit,
+			final TimeLimitTypeEnum timeLimitTypeEnum, final String cardFingerprint, final double maxAmountPerTimeLimit,
 			final double maxAmountAllTransactions, final double currentDiscountPrice)
 	{
 		Boolean check = Boolean.FALSE;
@@ -2169,13 +2201,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		Tuple3<?, ?, ?> tuple3 = null;
 		String failureCode = CODE01;//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
 		List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(guid,
-				promotionVoucherModel, cardRefNo);
+				promotionVoucherModel, cardFingerprint);
 		if (CollectionUtils.isNotEmpty(voucherInvalidationModel))
 		{
 			tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountAllTransactions, currentDiscountPrice);
 			if (((Boolean) tuple3.getFirst()).booleanValue())
 			{
-				voucherInvalidationModel = getCardPerOfrInvalidationModel(guid, promotionVoucherModel, timeLimitTypeEnum, cardRefNo);
+				voucherInvalidationModel = getCardPerOfrInvalidationModel(guid, promotionVoucherModel, timeLimitTypeEnum,
+						cardFingerprint);
 				if (CollectionUtils.isNotEmpty(voucherInvalidationModel))
 				{
 					tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerTimeLimit, currentDiscountPrice);
@@ -2202,28 +2235,28 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 	private List<VoucherCardPerOfferInvalidationModel> getCardPerOfrInvalidationModel(final String guid,
-			final VoucherModel promotionVoucherModel, final TimeLimitTypeEnum timeLimitTypeEnum, final String cardReference)
+			final VoucherModel promotionVoucherModel, final TimeLimitTypeEnum timeLimitTypeEnum, final String cardFingerPrint)
 	{
 		List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = null;
 		if (null == timeLimitTypeEnum)
 		{
-			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPMnth(guid, promotionVoucherModel, cardReference);
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPMnth(guid, promotionVoucherModel, cardFingerPrint);
 		}
 		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("day"))
 		{
-			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPDay(guid, promotionVoucherModel, cardReference);
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPDay(guid, promotionVoucherModel, cardFingerPrint);
 		}
 		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("month"))
 		{
-			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPMnth(guid, promotionVoucherModel, cardReference);
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPMnth(guid, promotionVoucherModel, cardFingerPrint);
 		}
 		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("week"))
 		{
-			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPWeek(guid, promotionVoucherModel, cardReference);
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPWeek(guid, promotionVoucherModel, cardFingerPrint);
 		}
 		else if (timeLimitTypeEnum.getCode().equalsIgnoreCase("year"))
 		{
-			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPYear(guid, promotionVoucherModel, cardReference);
+			voucherInvalidationModel = mplVoucherDao.findInvalidationMaxAmtPYear(guid, promotionVoucherModel, cardFingerPrint);
 		}
 		return voucherInvalidationModel;
 	}
@@ -2289,10 +2322,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param addCardResponse
 	 * @param abstractOrderModel
 	 */
-	private void saveCardRefNoInDb(final AddCardResponse addCardResponse, final AbstractOrderModel abstractOrderModel)
+	private void saveCardFingerPrintNoInDb(final AddCardResponse addCardResponse, final AbstractOrderModel abstractOrderModel,
+			final String channel)
 	{
 		final UserModel user = abstractOrderModel.getUser();
-		if (StringUtils.isNotEmpty(addCardResponse.getCardReference()) && null != user && StringUtils.isNotEmpty(user.getUid()))
+		if (StringUtils.isNotEmpty(addCardResponse.getCardFingerprint()) && null != user && StringUtils.isNotEmpty(user.getUid()))
 		{
 			final JuspayCardStatusModel juspayCardStatusModel = mplPaymentService.getJuspayCardStatusForCustomer(user.getUid(),
 					abstractOrderModel.getGuid());
@@ -2301,6 +2335,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			juspayCardStatusModel.setCard_fingerprint(addCardResponse.getCardFingerprint());
 			juspayCardStatusModel.setCustomerId(user.getUid());
 			juspayCardStatusModel.setGuid(abstractOrderModel.getGuid());
+			juspayCardStatusModel.setChannel(channel);
 			modelService.save(juspayCardStatusModel);
 		}
 	}
@@ -2312,23 +2347,24 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param maxAmountPerTimeLimit
 	 * @param promotionVoucherModel
 	 * @param timeLimitTypeEnum
-	 * @param cardRefNo
+	 * @param cardFingerprint
 	 * @param currentDiscountPrice
 	 * @return tuple3
 	 */
 	private Tuple3<?, ?, ?> checkCardPerOfferMaxCntAmtPValidation(final String guid, final int maxAvailCount,
 			final double maxAmountPerTimeLimit, final VoucherModel promotionVoucherModel, final TimeLimitTypeEnum timeLimitTypeEnum,
-			final String cardRefNo, final double currentDiscountPrice)
+			final String cardFingerprint, final double currentDiscountPrice)
 	{
 		Boolean check = Boolean.FALSE;
 		final Double priceDiff = new Double(0.0);
 		Tuple3<?, ?, ?> tuple3 = null;
 		String failureCode = CODE01;//If default value of check i.e false is returned failure code will be 01=maxAvailCount<=voucherInvalidationModel.size()
 		List<VoucherCardPerOfferInvalidationModel> voucherInvalidationModel = mplVoucherDao.findCardPerOfferInvalidation(guid,
-				promotionVoucherModel, cardRefNo);
+				promotionVoucherModel, cardFingerprint);
 		if (CollectionUtils.isNotEmpty(voucherInvalidationModel) && maxAvailCount > voucherInvalidationModel.size())
 		{
-			voucherInvalidationModel = getCardPerOfrInvalidationModel(guid, promotionVoucherModel, timeLimitTypeEnum, cardRefNo);
+			voucherInvalidationModel = getCardPerOfrInvalidationModel(guid, promotionVoucherModel, timeLimitTypeEnum,
+					cardFingerprint);
 			if (CollectionUtils.isNotEmpty(voucherInvalidationModel))
 			{
 				tuple3 = validateCardPerOfferDiscountPrice(voucherInvalidationModel, maxAmountPerTimeLimit, currentDiscountPrice);
@@ -2568,11 +2604,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				final Double netAmountAfterAllDisc = (null == entry.getNetAmountAfterAllDisc() ? Double.valueOf(0)
-						: entry.getNetAmountAfterAllDisc());
+				final Double netAmountAfterAllDisc = (null == entry.getNetAmountAfterAllDisc() ? Double.valueOf(0) : entry
+						.getNetAmountAfterAllDisc());
 
-				subtotal += (netAmountAfterAllDisc.doubleValue() > 0) ? netAmountAfterAllDisc.doubleValue()
-						: entry.getTotalPrice().doubleValue();
+				subtotal += (netAmountAfterAllDisc.doubleValue() > 0) ? netAmountAfterAllDisc.doubleValue() : entry.getTotalPrice()
+						.doubleValue();
 			}
 		}
 		return subtotal;
@@ -2616,14 +2652,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			{
 				if (BooleanUtils.isFalse(entry.getGiveAway()) || BooleanUtils.isFalse(entry.getIsBOGOapplied()))
 				{
-					subtotal += (null != entry.getTotalPrice() && entry.getTotalPrice().doubleValue() > 0)
-							? entry.getTotalPrice().doubleValue() : 0;
+					subtotal += (null != entry.getTotalPrice() && entry.getTotalPrice().doubleValue() > 0) ? entry.getTotalPrice()
+							.doubleValue() : 0;
 				}
 			}
 		}
 
-		final double deliveryCost = (null != abstractOrderModel.getDeliveryCost()
-				&& abstractOrderModel.getDeliveryCost().doubleValue() > 0) ? abstractOrderModel.getDeliveryCost().doubleValue() : 0;
+		final double deliveryCost = (null != abstractOrderModel.getDeliveryCost() && abstractOrderModel.getDeliveryCost()
+				.doubleValue() > 0) ? abstractOrderModel.getDeliveryCost().doubleValue() : 0;
 
 		final double totalPriceData = (subtotal + deliveryCost) - discount;
 
@@ -2715,8 +2751,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				final double val = (null != entry.getCouponValue() && entry.getCouponValue().doubleValue() > 0)
-						? entry.getCouponValue().doubleValue() : 0;
+				final double val = (null != entry.getCouponValue() && entry.getCouponValue().doubleValue() > 0) ? entry
+						.getCouponValue().doubleValue() : 0;
 				couponvalue += val;
 			}
 		}
@@ -2731,8 +2767,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				final double val = (null != entry.getCartCouponValue() && entry.getCartCouponValue().doubleValue() > 0)
-						? entry.getCartCouponValue().doubleValue() : 0;
+				final double val = (null != entry.getCartCouponValue() && entry.getCartCouponValue().doubleValue() > 0) ? entry
+						.getCartCouponValue().doubleValue() : 0;
 				couponvalue += val;
 			}
 		}
@@ -2893,8 +2929,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	@Override
 	public void cardPerOfferVoucherEntry(final OrderModel orderModel)
 	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-				getVoucherService().getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -2907,27 +2943,26 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
 					{
-						String cardReferenceNo = "";
+						String cardFingerPrint = "";
+						String channel = "";
 						if (CollectionUtils.isNotEmpty(cardList))
 						{
-							cardReferenceNo = cardList.get(0).getCard_reference();
-							LOG.debug("cardReferenceNo=" + cardReferenceNo);
+							cardFingerPrint = cardList.get(0).getCard_fingerprint();
+							channel = cardList.get(0).getChannel();
+							LOG.debug("card_fingerprint=" + cardFingerPrint);
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
-											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null
-													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue()
-													: 0.0D;
+											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
 									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null
-													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction()
-															.doubleValue()
-													: 0.0D;
+											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 									{
 										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
@@ -2937,8 +2972,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 											final double discountValue = getVoucherDiscountValue(orderModel, promotionVoucherModel);
 											voucherInvalidationModel.setVoucher(promotionVoucherModel);
 											voucherInvalidationModel.setGuid(orderModel.getGuid());
-											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											voucherInvalidationModel.setCardFingerPrint(cardFingerPrint);
 											voucherInvalidationModel.setDiscount(Double.valueOf(discountValue));
+											voucherInvalidationModel.setChannel(channel);
 											getModelService().save(voucherInvalidationModel);
 										}
 									}
@@ -2967,8 +3003,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	@Override
 	public void updateCardPerOfferVoucherEntry(final OrderModel orderModel)
 	{
-		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-				getVoucherService().getAppliedVouchers(orderModel));
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+				.getAppliedVouchers(orderModel));
 		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -2992,27 +3028,24 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
 					{
-						String cardReferenceNo = "";
+						String cardFingerPrint = "";
 						if (CollectionUtils.isNotEmpty(cardList))
 						{
-							cardReferenceNo = cardList.get(0).getCard_reference();
-							LOG.debug("cardReferenceNo=" + cardReferenceNo);
+							cardFingerPrint = cardList.get(0).getCard_fingerprint();
+							LOG.debug("cardFingerPrint=" + cardFingerPrint);
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
-											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null
-													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue()
-													: 0.0D;
+											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
 									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null
-													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction()
-															.doubleValue()
-													: 0.0D;
+											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 									{
 										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
@@ -3022,7 +3055,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 											final double discountValue = getVoucherDiscountValue(orderModel, promotionVoucherModel);
 											voucherInvalidationModel.setVoucher(promotionVoucherModel);
 											voucherInvalidationModel.setGuid(orderModel.getGuid());
-											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											voucherInvalidationModel.setCardFingerPrint(cardFingerPrint);
 											voucherInvalidationModel.setDiscount(Double.valueOf(discountValue));
 											getModelService().save(voucherInvalidationModel);
 										}
@@ -3064,16 +3097,16 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final List<JuspayCardStatusModel> cardList = findJuspayCardStatus(abstractOrderModel.getGuid(), userModel.getUid());
 			//final DiscountModel discount = voucherList.get(0);
 
-			String cardReferenceNo = "";
+			String cardFingerPrint = "";
 			if (CollectionUtils.isNotEmpty(cardList))
 			{
-				cardReferenceNo = cardList.get(0).getCard_reference();
-				LOG.debug("cardReferenceNo=" + cardReferenceNo);
+				cardFingerPrint = cardList.get(0).getCard_fingerprint();
+				LOG.debug("cardFingerPrint=" + cardFingerPrint);
 
 				voucherInvalidationModel = new VoucherCardPerOfferInvalidationModel();
 
 				voucherInvalidationModel.setGuid(abstractOrderModel.getGuid());
-				voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+				voucherInvalidationModel.setCardFingerPrint(cardFingerPrint);
 				removeCardPerOfferInvalidation(voucherInvalidationModel);
 
 			}
@@ -3105,7 +3138,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			success = false;
 			LOG.error("VoucherCardPerOfferInvalidationModel not found for=>VoucherCode=" + ",Guid="
-					+ voucherInvalidationModel.getGuid() + ",CardReferenceNo=" + voucherInvalidationModel.getCardRefNo());
+					+ voucherInvalidationModel.getGuid() + ",CardFingerPrint=" + voucherInvalidationModel.getCardFingerPrint());
 		}
 		return success;
 	}
@@ -3121,8 +3154,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		try
 		{
 			final OrderModel orderModel = mplPaymentService.fetchOrderOnGUID(subOrderDetails.getGuid());
-			final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-					getVoucherService().getAppliedVouchers(orderModel));
+			final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+					orderModel));
 			VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
 			boolean allCancelled = false;
 			if (CollectionUtils.isNotEmpty(voucherList))
@@ -3189,25 +3222,19 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						//						}
 						if (allCancelled /* && CollectionUtils.isNotEmpty(cardList) */)
 						{
-							//String cardReferenceNo = "";
-							//cardReferenceNo = cardList.get(0).getCard_reference();
-							//LOG.debug("cardReferenceNo=" + cardReferenceNo);
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
 							{
 								if (restrictionModel instanceof PaymentModeRestrictionModel)
 								{
-									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
-											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAvailCount().intValue() : 0;
 									final double maxAmountPerTimeLimit = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountPerTimeLimit() != null
-													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerTimeLimit().doubleValue()
-													: 0.0D;
+											.getMaxAmountPerTimeLimit() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerTimeLimit().doubleValue() : 0.0D;
 									final double maxAmountAllTransactions = ((PaymentModeRestrictionModel) restrictionModel)
-											.getMaxAmountAllTransaction() != null
-													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountAllTransaction()
-															.doubleValue()
-													: 0.0D;
+											.getMaxAmountAllTransaction() != null ? ((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountAllTransaction().doubleValue() : 0.0D;
 									if (maxAvailCount > 0 || maxAmountPerTimeLimit > 0.0 || maxAmountAllTransactions > 0.0)
 									{
 										voucherInvalidationModel = new VoucherCardPerOfferInvalidationModel();
@@ -3216,7 +3243,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 										{
 											voucherInvalidationModel.setVoucher(promotionVoucherModel);
 											voucherInvalidationModel.setGuid(subOrderDetails.getGuid());
-											//voucherInvalidationModel.setCardRefNo(cardReferenceNo);
 											removeCardPerOfferInvalidation(voucherInvalidationModel);
 										}
 									}
@@ -3282,8 +3308,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			{
 				if (discountVal.getCode().equalsIgnoreCase(couponCode))
 				{
-					data.setCouponDiscount(
-							getDiscountUtility().createPrice(abstractOrderModel, Double.valueOf(discountVal.getAppliedValue())));
+					data.setCouponDiscount(getDiscountUtility().createPrice(abstractOrderModel,
+							Double.valueOf(discountVal.getAppliedValue())));
 					data.setCouponRedeemed(true);
 				}
 			}

@@ -34,19 +34,19 @@ public interface MplVoucherDao
 
 	/**
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
 	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(String guid, VoucherModel voucher,
-			String cardReferenceNo);
+			String cardFingerprint);
 
 	/**
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(String guid, VoucherModel voucher,
-			String cardReferenceNo);
+			String cardFingerprint);
 
 	/**
 	 * @param guid
@@ -57,27 +57,27 @@ public interface MplVoucherDao
 
 	/**
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPDay(String guid, VoucherModel voucher,
-			String cardReferenceNo);
+			String cardFingerprint);
 
 	/**
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPWeek(String guid, VoucherModel voucher,
-			String cardReferenceNo);
+			String cardFingerprint);
 
 	/**
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return List<VoucherCardPerOfferInvalidationModel>
 	 */
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPYear(String guid, VoucherModel voucher,
-			String cardReferenceNo);
+			String cardFingerprint);
 
 
 

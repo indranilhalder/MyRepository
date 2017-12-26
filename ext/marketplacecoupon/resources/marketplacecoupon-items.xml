@@ -577,6 +577,16 @@
 						<property name="hmcIndexField"><value>"thefield"</value></property>
 					</custom-properties>
 				</attribute>
+				<attribute qualifier="cardFingerPrint" type="java.lang.String"  generate="false">
+					<description>the card finger print returned by juspay</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+				</attribute>
+				<attribute qualifier="channel" type="java.lang.String"  generate="false">
+					<description>channel for which entry is made</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+				</attribute>
 			</attributes>
 		</itemtype>
 		<!-- TPR-7448 Ends here -->

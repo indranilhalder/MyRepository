@@ -6768,8 +6768,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String sameAsShipping, @PathVariable final String userId, @RequestParam final String cartGuid,
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
 			@RequestBody(required = false) final InventoryReservListRequestWsDTO item,
-			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo)
-			throws EtailNonBusinessExceptions
+			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo,
+			@RequestParam(required = false) final String cardFingerPrint) throws EtailNonBusinessExceptions
 	{
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
@@ -6985,10 +6985,10 @@ public class UsersController extends BaseCommerceController
 						//ERROR MESSAGE FOR COUPON AND VOUCHER
 
 						//TPR-7448 Starts here
-						if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
+						if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 						{
 							final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(cart, token, cardSaved,
-									cardRefNo);
+									cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
 							if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 							{
 								failFlag = true;
@@ -6998,6 +6998,10 @@ public class UsersController extends BaseCommerceController
 									orderCreateInJusPayWsDto.setErrorMessage((String) tuple3.getThird());
 								}
 							}
+						}
+						else
+						{
+							LOG.error("Both token and cardFingerPrint are empty for mobile(cart)");
 						}
 						//TPR-7448 Ends here
 					}
@@ -7265,10 +7269,10 @@ public class UsersController extends BaseCommerceController
 					//ERROR MESSAGE FOR COUPON AND VOUCHER
 
 					//TPR-7448 Starts here
-					if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
+					if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 					{
 						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token,
-								cardSaved, cardRefNo);
+								cardSaved, cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
 						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
 							failFlag = true;
@@ -7278,6 +7282,10 @@ public class UsersController extends BaseCommerceController
 								orderCreateInJusPayWsDto.setErrorMessage((String) tuple3.getThird());
 							}
 						}
+					}
+					else
+					{
+						LOG.error("Both token and cardFingerPrint are empty for mobile(order)");
 					}
 					//TPR-7448 Ends here
 				}
