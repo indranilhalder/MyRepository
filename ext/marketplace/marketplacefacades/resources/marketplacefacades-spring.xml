@@ -2086,6 +2086,22 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
+	<alias name="defaultHomePageTypesConverter" alias="homePageTypesConverter" />
+	<bean id="defaultHomePageTypesConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.tisl.lux.facades.homepagetypes.data.HomePageTypesData" />
+		<property name="populators">
+			<list>
+				<ref bean="homePageTypesPopulators" />
+			</list>
+		</property>
+	</bean>
+	<bean id="homePageTypesPopulators"
+		class="com.tils.luxury.populator.HomePageTypesPopulators"></bean>
+
+	<alias name="defaultHomePageTypesFacadeImpl" alias="homePageTypesFacade" />
+	<bean id="defaultHomePageTypesFacadeImpl" class="com.tisl.luxury.facade.impl.HomePageTypesFacadeImpl"></bean>
+	
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
 </beans>
 

@@ -2408,6 +2408,16 @@
 		autowire="byName">
 	</bean>
 	
+	
+	<alias name="defaultHomePageTypesDaoImpl" alias="homePageTypesDao" />
+	<bean id="defaultHomePageTypesDaoImpl" class="com.tils.luxury.dao.impl.HomePageTypesDaoImpl">
+	</bean>
+
+	<alias name="defaultHomePageTypesServiceImpl" alias="homePageTypesService" />
+	<bean id="defaultHomePageTypesServiceImpl"
+		class="com.tils.luxury.service.impl.HomePageTypesServiceImpl"></bean>
+
+	
 	<!--  End TPR-6945 -->
 
     
