@@ -727,11 +727,8 @@ public class SearchPageController extends AbstractSearchPageController
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
 		String searchCode = searchCategory;
-		final String searchCategories = Config.getParameter(LUX_SEARCH_CATEGORIES);
-		final String[] searchCategoryArray = searchCategories.split(",");
 
-		if ((searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY))
-				|| (searchCategory != null && StringUtils.startsWithAny(searchCategory, searchCategoryArray)))
+		if (!commonUtils.isLuxurySite() && (searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY)))
 		{
 			if (searchCategory.substring(0, 5).equals(searchCategory))
 			{
