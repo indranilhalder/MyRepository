@@ -8994,6 +8994,22 @@ $("#couponSubmitButton").click(function(){
 		 				couponApplied=true;
 		 			}
 		 			if(couponApplied==true){
+		 				
+		 				if(response.cartcouponRedeemError != null && response.cartcouponRedeemError != undefined && response.cartcouponRedeemError == "ERROR") {
+		 					$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false);$(this).removeClass("promoapplied");  });
+		 					$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+		 					if(ACC.singlePageCheckout.getIsResponsive()) {
+		 						$("#offer_section_responsive_error_msg").html("Unfortunately, we can’t apply the bank offer to your order as the purchase value falls below the limit.");
+		 						$("#offer_section_responsive_error_msgDiv").css("display","block");
+		 					} else {
+		 						$("#juspayErrorMsg").html("Unfortunately, we can’t apply the bank offer to your order as the purchase value falls below the limit.");
+		 						$("#juspayconnErrorDiv").css("display","block");
+		 					}
+		 					if(null!= response.totalDiscount && undefined!= response.totalDiscount && response.totalDiscount.value != 0){
+		 						$("#promotionApplied").css("display","block");
+		 						document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;
+		 					}
+		 				}
 		 				if(response.couponDiscount.doubleValue>0)
 			 			{
 		 					//TPR-4461 starts here
