@@ -254,7 +254,7 @@
 					$uidGroup=admingroup,marketplaceGroup,ETAILREAD
 					$catalogVersion2=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$catalogVersion=catalogVersion(catalog(id),version)[unique=true]
-				INSERT_UPDATE category;code[unique=true];name[lang=en];supercategories(code,$catalogVersion)[cellDecorator=com.tisl.lux.core.celldecorator.LuxurySuperCategoryDecorator];$catalogVersion2;allowedPrincipals(uid);
+				INSERT_UPDATE category;code[unique=true];name[lang=en];supercategories(code,$catalogVersion2)[cellDecorator=com.tisl.lux.core.celldecorator.LuxurySuperCategoryDecorator];$catalogVersion2;allowedPrincipals(uid);
            </value>
         </property>
         <property name="impexRow">
