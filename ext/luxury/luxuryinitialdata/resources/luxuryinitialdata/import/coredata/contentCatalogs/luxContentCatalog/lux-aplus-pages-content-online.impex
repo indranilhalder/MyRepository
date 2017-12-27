@@ -1,0 +1,46 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$lang=en
+
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$associatedproducts=associatedProducts(code, $productCV)
+$picture=media(code, $contentCV)
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false'];$associatedproducts;title[lang=$lang]
+;;MP000000000390478-ContentPage;Content Page for Product MP000000000390478;ProductContentTemplate3;MP000000000390478-ContentPage;;;;MP000000000390478;Content Page for Product MP000000000390478
+
+# CMS Paragraph Components
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;content[lang=$lang]
+;;pdp-aplus-3-MP000000000390478-Section2A;MP000000000390478-Section2A;MP000000000390478-Section2A;;;;"<ul>
+					<li><span>Authentic and <br> Genuine Brands</br> </span></li>
+					<li><span>Tata Promise </span></li>
+					<li><span>Easy Returns And <br> Exchanges</br> </span></li>
+				</ul>"
+;;pdp-aplus-3-MP000000000390478-Section2B;MP000000000390478-Section2B;MP000000000390478-Section2B;;;;"<ul>
+					<li><span>Authentic and <br> Genuine Brands</br> </span></li>
+					<li><span>Tata Promise </span></li>
+					<li><span>Easy Returns And <br> Exchanges</br> </span></li>
+				</ul>"
+
+				
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position;page(uid,$contentCV)[unique=true][default='MP000000000390478-ContentPage'];contentSlot(uid,$contentCV);
+;;MP000000000390478-pageTemplate3-section2A;Section2A;;MP000000000390478-pageTemplate3-section2A
+;;MP000000000390478-pageTemplate3-section2B;Section2B;;MP000000000390478-pageTemplate3-section2B
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;MP000000000390478-pageTemplate3-section2A;MP000000000390478 Section 2A;true;pdp-aplus-3-MP000000000390478-Section2A
+;;MP000000000390478-pageTemplate3-section2B;MP000000000390478 Section 2B;true;pdp-aplus-3-MP000000000390478-Section2B
