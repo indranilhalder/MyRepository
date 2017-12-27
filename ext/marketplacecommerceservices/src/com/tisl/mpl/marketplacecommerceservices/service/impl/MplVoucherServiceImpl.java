@@ -2263,7 +2263,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	/*
 	 * TPR-7448 (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#getVoucherDiscountValue(de.hybris.platform.
 	 * core.model.order.AbstractOrderModel, de.hybris.platform.voucher.model.VoucherModel)
@@ -3029,9 +3029,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
 					{
 						String cardFingerPrint = "";
+						String channel = "";
 						if (CollectionUtils.isNotEmpty(cardList))
 						{
 							cardFingerPrint = cardList.get(0).getCard_fingerprint();
+							channel = cardList.get(0).getChannel();
 							LOG.debug("cardFingerPrint=" + cardFingerPrint);
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
@@ -3056,6 +3058,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 											voucherInvalidationModel.setVoucher(promotionVoucherModel);
 											voucherInvalidationModel.setGuid(orderModel.getGuid());
 											voucherInvalidationModel.setCardFingerPrint(cardFingerPrint);
+											voucherInvalidationModel.setChannel(channel);
 											voucherInvalidationModel.setDiscount(Double.valueOf(discountValue));
 											getModelService().save(voucherInvalidationModel);
 										}

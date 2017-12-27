@@ -27,6 +27,7 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
+import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -160,11 +161,11 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 	 */
 	private void populateOrderData()
 	{
-		final List<OrderModel> orderModels = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss();
-		if (null != orderModels && !orderModels.isEmpty())
+		final SearchResult<List<Object>> result = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss();
+		if (null != result)
 		{
 			LOG.debug("all orders db fetch successful in populateOrderData");
-			writeItemsToCSV(orderModels);
+			writeItemsToCSV(result);
 		}
 	}
 
@@ -174,13 +175,13 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 	 */
 	private void populateSpecifiedData(final Date mplConfigDate, final Date startTime)
 	{
-		List<OrderModel> orderModels = null;
-		orderModels = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss(mplConfigDate, startTime);
-		if (CollectionUtils.isNotEmpty(orderModels))
+		SearchResult<List<Object>> result = null;
+		result = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss(mplConfigDate, startTime);
+		if (null != result)
 		{
 			LOG.debug("all orders db fetch successful in populateSpecifiedData");
 			///Convert order data and write into CSV
-			writeItemsToCSV(orderModels);
+			writeItemsToCSV(result);
 		}
 		else
 		{
@@ -233,9 +234,9 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 	/**
 	 * This method takes the list of SalesReportData and set in the CSV file to be generated in a specified location
 	 *
-	 * @param orderModels
+	 * @param result
 	 */
-	void writeItemsToCSV(final List<OrderModel> orderModels)
+	void writeItemsToCSV(final SearchResult<List<Object>> result)
 	{
 		FileWriter fileWriter = null;
 		String CSVHeader = StringUtils.EMPTY;
@@ -252,60 +253,56 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			//Add a new line separator after the header
 			fileWriter.append(NEW_LINE_SEPARATOR);
 
-
-			for (final OrderModel subOrder : orderModels)
+			for (final List<Object> row : result.getResult())
 			{
-				final OrderModel parentReference = subOrder.getParentReference();
-				List<OrderModel> childOrders = null;
-				if (null != parentReference)
+				if (CollectionUtils.isNotEmpty(row))
 				{
-					childOrders = parentReference.getChildOrders();
-				}
-				if (null != childOrders && childOrders.contains(subOrder))//Condition to ignore orphan child
-				{
-					for (final AbstractOrderEntryModel subOrderEntry : subOrder.getEntries())
+					final OrderModel subOrder = (OrderModel) row.get(0);
+					final AbstractOrderEntryModel orderEntry = (AbstractOrderEntryModel) row.get(1);
+					final String orderEntryStatus = (String) row.get(2);
+
+
+
+					final AddressModel delAddress = subOrder.getDeliveryAddress();
+					final Map<String, String> map = categoryList(orderEntry);
+					fileWriter.append(csvFormat(formatter.format(subOrder.getCreationtime())));//Order date
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(subOrder.getParentReference().getCode()));//ORN
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(orderEntryStatus));//Order Status
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(subOrder.getCode()));//Seller Order Id
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(orderEntry.getOrderLineId()));//Transaction Id
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(getPaymentMode(subOrder.getPaymentInfo())));//Payment Type
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L1)));//l1
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L2)));//l2
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L3)));//l3
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L4)));//l4
+					fileWriter.append(COMMA_DELIMITER);
+					//final String fullName = setFirstAndLastName(subOrder);
+					String fullName = "";
+					if (null != delAddress)
 					{
-						final AddressModel delAddress = subOrder.getDeliveryAddress();
-						final Map<String, String> map = categoryList(subOrderEntry);
-						fileWriter.append(csvFormat(formatter.format(subOrder.getCreationtime())));//Order date
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrder.getParentReference().getCode()));//ORN
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrder.getStatus().getCode()));//Order Status
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrder.getCode()));//Seller Order Id
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrderEntry.getOrderLineId()));//Transaction Id
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(getPaymentMode(subOrder.getPaymentInfo())));//Payment Type
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get(L1)));//l1
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get(L2)));//l2
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get(L3)));//l3
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get(L4)));//l4
-						fileWriter.append(COMMA_DELIMITER);
-						//final String fullName = setFirstAndLastName(subOrder);
-						String fullName = "";
-						if (null != delAddress)
-						{
-							fullName = setFirstAndLastName(delAddress);
-						}
-						fileWriter.append(csvFormat(fullName == null ? "" : fullName));//Customer Name
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(((CustomerModel) subOrder.getUser()).getOriginalUid()));//Customer EmailId
-						fileWriter.append(COMMA_DELIMITER);
-						if (null != delAddress)
-						{
-							fileWriter
-									.append(csvFormat(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2()));//Phone Number
-						}
-						fileWriter.append(COMMA_DELIMITER);
-						//fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(NEW_LINE_SEPARATOR);
+						fullName = setFirstAndLastName(delAddress);
 					}
+					fileWriter.append(csvFormat(fullName == null ? "" : fullName));//Customer Name
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(((CustomerModel) subOrder.getUser()).getOriginalUid()));//Customer EmailId
+					fileWriter.append(COMMA_DELIMITER);
+					if (null != delAddress)
+					{
+						fileWriter.append(csvFormat(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2()));//Phone Number
+					}
+					fileWriter.append(COMMA_DELIMITER);
+					//fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
 				}
 			}
 		}

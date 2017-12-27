@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.util.Date;
 import java.util.List;
@@ -50,17 +51,17 @@ public interface FetchSalesOrderDao
 
 	/**
 	 * TPR-7415
-	 * 
+	 *
 	 * @param mplConfigDate
 	 * @param startTime
 	 * @return List<OrderModel>
 	 */
-	public List<OrderModel> getOmsSubmissionPendingOrderList(Date mplConfigDate, Date startTime);
+	public SearchResult<List<Object>> getOmsSubmissionPendingOrderList(Date mplConfigDate, Date startTime);
 
 	/**
 	 * TPR-7415
-	 * 
+	 *
 	 * @return List<OrderModel>
 	 */
-	public List<OrderModel> getOmsSubmissionPendingOrderList();
+	public SearchResult<List<Object>> getOmsSubmissionPendingOrderList();
 }
