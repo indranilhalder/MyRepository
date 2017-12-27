@@ -1422,6 +1422,7 @@ function setDetailsForStock() {
 }
 
 function getProductContents() {
+	console.log("Get Product Contents");
     var requiredUrl = ACC.config.encodedContextPath + "/p-fetchPageContents", dataString = "productCode=" + productCode;
     $.ajax({
         url: requiredUrl,
@@ -1458,9 +1459,24 @@ function getProductContents() {
     });
 }
 
-function lazyLoadProductContents() {
-    $(window).scrollTop() + $(window).height() >= $("#productContentDivId").offset().top && ($("#productContentDivId").attr("loaded") || ($("#productContentDivId").attr("loaded", !0), 
-    0 == $("#productContentDivId").children().length && getProductContents()));
+function lazyLoadProductContents(){
+	if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
+		if(!$('#productContentDivId').attr('loaded')) {
+		    //not in ajax.success due to multiple sroll events
+		    $('#productContentDivId').attr('loaded', true);
+
+		
+		    //ajax goes here
+		    //by theory, this code still may be called several times
+		    if ($('#productContentDivId').children().length == 0) {
+		    	console.log("load the contents");
+		    	getProductContents();
+		    }
+		    else{
+		    	console.log("not loaded");
+		    }
+		}
+	}
 }
 
 function populateFreebieMsg(ussId) {
@@ -17285,8 +17301,8 @@ TATA.CommonFunctions = {
             type: "GET",
             cache: !1,
             success: function(data) {
-                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus, 
-                TATA.CommonFunctions.setHeader(data);
+                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus;
+                //TATA.CommonFunctions.setHeader(data);
             }
         });
     },
@@ -18574,7 +18590,7 @@ $(document).ready(function() {
     }), $("a.otherSellersFont").click(function() {
         $("#sellerForm").submit();
     });
-}), "ProductDetailsPageTemplate" == $("#pageTemplateId").val() && $(window).on("scroll load", function() {
+}), "LuxuryProductDetailsPageTemplate" == $("#pageTemplateId").val() && $(window).on("scroll load", function() {
     lazyLoadProductContents();
 }), $(document).ready(function() {
     var width = 0;

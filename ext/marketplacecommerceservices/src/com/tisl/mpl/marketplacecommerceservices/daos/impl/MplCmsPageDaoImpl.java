@@ -39,6 +39,8 @@ import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
+import com.tisl.mpl.util.CatalogUtils;
+
 
 
 
@@ -56,6 +58,9 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	@Resource
 	private CatalogVersionService catalogVersionService;
 
+	@Autowired
+	private CatalogUtils catalogUtils;
+
 
 	private static final String SELECT_CLASS = "Select {";
 
@@ -67,6 +72,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	private static final String LEFT_JOIN = " as cp left join ";
 
+	private static final String CATALOG_VERSION_KEY = "catalogVersion";
 
 
 	@Override
@@ -407,20 +413,21 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	@Override
 	public ContentPageModel getContentPageForProduct(final ProductModel product)
 	{
+		final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForContent();
 
 		final StringBuilder queryString = getProductContentQuery();
 
 		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)")
+				.append(" and {cp.catalogVersion}=?catalogVersion")
 				.append(" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
 
-		System.out.println("Query:::::::::::::" + queryString.toString());
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		//query.addQueryParameter("category", category);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
+		query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);
 
+		System.out.println("Query:::::::::::::" + query.toString());
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		//if (contentPages != null && contentPages.size() > 0)
 		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
@@ -506,7 +513,6 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		{
 			queryString.append("{G.code} is null ");
 		}
-
 		if (!StringUtils.isBlank(category))
 		{
 			queryString.append(" and {H.code} = ?category ");
