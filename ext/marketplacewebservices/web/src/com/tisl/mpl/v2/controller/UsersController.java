@@ -6808,7 +6808,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo)
 			throws EtailNonBusinessExceptions
 	{
-		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
+	   OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
 		String failErrorCode = "";
 		boolean failFlag = false;
@@ -11073,7 +11073,7 @@ public class UsersController extends BaseCommerceController
 				{
 					final int totalNum = Integer.parseInt(String.valueOf(searchPageDataParentOrder.getPagination()
 							.getTotalNumberOfResults()));
-					orderHistoryListData.setTotalNoOfOrders(totalNum);
+					orderHistoryListData.setTotalNoOfOrders(Integer.valueOf(totalNum));
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
 					orderHistoryListData.setOrderData(orderTrackingListWsDTO);
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -11082,7 +11082,7 @@ public class UsersController extends BaseCommerceController
 				{
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
 				}
-				orderHistoryListData.setPageSize(pageSizeConFig);
+				orderHistoryListData.setPageSize(Integer.valueOf(pageSizeConFig));
 
 			}
 		}

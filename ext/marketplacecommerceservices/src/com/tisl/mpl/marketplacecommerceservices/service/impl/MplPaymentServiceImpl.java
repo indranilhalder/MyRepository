@@ -3,68 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
-import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
-import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
-import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
-import de.hybris.platform.core.enums.CreditCardType;
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.c2l.CountryModel;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
-import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.jalo.JaloInvalidParameterException;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
-import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
-import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.promotions.PromotionsService;
-import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
-import de.hybris.platform.promotions.model.OrderPromotionModel;
-import de.hybris.platform.promotions.model.ProductPromotionModel;
-import de.hybris.platform.promotions.model.PromotionResultModel;
-import de.hybris.platform.returns.model.RefundEntryModel;
-import de.hybris.platform.returns.model.ReturnEntryModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
-import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.i18n.I18NService;
-import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
-import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
-import de.hybris.platform.servicelayer.session.SessionService;
-import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.util.DiscountValue;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import de.hybris.platform.voucher.model.VoucherModel;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -83,7 +21,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -110,6 +47,8 @@ import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.SavedCardModel;
+import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
@@ -134,7 +73,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionSer
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.BankModel;
-import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
@@ -145,6 +83,62 @@ import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.util.MplEMICalculator;
 import com.tisl.mpl.util.OrderStatusSpecifier;
+
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
+import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.enums.CreditCardType;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.c2l.CountryModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.AdapterException;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.OrderPromotionModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 
 /**
@@ -223,7 +217,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
-
+   @Autowired
+	private OrderModelService orderModelService;
+   
+   @Autowired
+   private MplWalletServices mplWalletServices;
 	/**
 	 * @return the mplJusPayRefundService
 	 */
@@ -4910,7 +4908,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Override
 	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel, final BigDecimal amountToRefund)
 	{
-		Double totalRefundAmount = 0d;
+		double totalRefundAmount = 0.0D;
 		PaymentTransactionModel paymentTransactionModel = null;
 		WalletApportionReturnInfoModel returnModel = null;
 		List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = null;
@@ -4922,7 +4920,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			for (final OrderEntryModel orderEntry : orderEntryModel)
 			{
-				totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
+				totalRefundAmount += orderEntry.getNetAmountAfterAllDisc().doubleValue();
 			}
 		}
 		//		Mrupee implementation
@@ -4964,7 +4962,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						// If CosignmentEnteries are present then update OMS with
 						// the state.
 						ConsignmentStatus newStatus = null;
-						if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+						if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
 						{
 							// ConsignmentModel consignmentModel = orderEntry
 							// .getConsignmentEntries().iterator().next()
@@ -5005,7 +5003,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 				else
 				{
-					LOG.error(e.getMessage(), e);
 
 					//TISSIT-1801
 					LOG.error("Manual Refund Failed");
@@ -5019,7 +5016,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					//TISSIT-1801
 
@@ -5048,7 +5045,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				// TISSIT-1784 Code addition ended
 
 				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
+						FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 
 			}
@@ -5100,7 +5097,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							}
 						}
 						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
-								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
+								.getOrder(), FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG",
 								uniqueRequestId);
 						mplJusPayRefundService
 								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
@@ -5117,7 +5114,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 					}
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 				}
 			}
@@ -5132,7 +5129,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
 				}
 				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
+						FAILURE_KEY, Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 			}
 		}

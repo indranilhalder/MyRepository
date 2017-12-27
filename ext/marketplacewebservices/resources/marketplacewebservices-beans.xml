@@ -1215,12 +1215,21 @@
 		<property name="otpStatus" type="String" />
 		<property name="errorMessage" type="String" />
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
+				<property name="paymentOffers" type="com.tisl.mpl.wsdto.OfferListWsData" />
 		<property name="listofPotentialRestriction"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-		<property name="paymentOffers" type="com.tisl.mpl.wsdto.OfferListWsData" />
+		<!-- Added For CLiq Cash Functionality  Start -->
+		
+		<property name="savedCardResponse"
+			type="com.tisl.mpl.wsdto.MplSavedCardDTO"/>
+		<property name="cliqCash"
+			type="com.tisl.mpl.wsdto.CliqCashWsDto"/>	
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="paybleAmount" type="java.lang.Double" />
+		<property name="CliqCashAmountDeducted" type="java.lang.Double" />
+			
+	   <!-- Added For CLiq Cash Functionality  End -->		
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -3533,6 +3542,25 @@
 
 	</bean>
 	
+	<!-- <bean class="com.tisl.mpl.wsdto.CRMWsData">
+		<property name="nodeCode" type="String"></property>
+		<property name="nodeDesc" type="String"></property>
+		<property name="ticketType" type="String"></property>
+		<property name="nodeType" type="String" />
+		<property name="ticketAnswer" type="String" />
+		<property name="createTicketAllowed" type="boolean" />
+		<property name="nodeDisplayAllowed" type="boolean" />
+		<property name="nodeL0" type="String"></property>
+		<property name="children" type="java.util.List&lt;com.tisl.mpl.wsdto.CRMWsData>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CRMWsDataParent">
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />
+	<property name="nodes" type="java.util.List&lt;com.tisl.mpl.wsdto.CRMWsData>" />
+	</bean> -->
 	  <!-- Added  For Buying Of EGV Functionality Start  -->
 	
 	<bean class="com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">

@@ -2427,4 +2427,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+
+	
 }

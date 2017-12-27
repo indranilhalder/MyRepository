@@ -24,15 +24,11 @@ import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
-import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -55,7 +51,6 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
@@ -63,7 +58,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -73,7 +67,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -96,16 +89,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.granule.json.JSONException;
-import com.granule.json.JSONObject;
+
 import reactor.function.support.UriUtils;
 
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -121,7 +111,6 @@ import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
-import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -137,7 +126,6 @@ import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
@@ -145,7 +133,6 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
@@ -160,26 +147,16 @@ import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.pojo.request.Customer;
-import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
-import com.tisl.mpl.pojo.response.BalanceBucketWise;
-import com.tisl.mpl.pojo.response.Bucket;
-import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
-import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
-import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
-import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
-import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplEgvFormValidator;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
-import reactor.function.support.UriUtils;
 
 /**
  *
@@ -3087,7 +3064,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				return getEGVOrderStatus(model, redirectAttributes, guid);
 			}
-			catch (final CalculationException e)
+			catch (final Exception e)
 			{
 				LOG.error("Exception while creating EGV Child Order:: " + e.getMessage());
 				mplEGVCartService.removeOldEGVCartCurrentCustomer();
@@ -3359,6 +3336,95 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	/**
+	 * @param model
+	 * @param redirectAttributes
+	 * @param guid
+	 * @return
+	 */
+	private String getEGVOrderStatus(final Model model, final RedirectAttributes redirectAttributes, final String guid)
+	{
+		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+		String orderStatusResponse = null;
+		orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
+		//Redirection when transaction is successful i.e. CHARGED
+		if (null != orderStatusResponse)
+		{
+			if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+			{
+				model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+				setCheckoutStepLinksForModel(model, getCheckoutStep());
+				try
+				{
+					return updateOrder(orderToBeUpdated, redirectAttributes);
+				}
+				catch (InvalidCartException e)
+				{
+					// YTODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (CalculationException e)
+				{
+					// YTODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (EtailNonBusinessExceptions e)
+				{
+					// YTODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+			else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+					|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+					|| MarketplacecheckoutaddonConstants.PENDING_VBV.equalsIgnoreCase(orderStatusResponse))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.VBVERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+			else
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.TRANERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+		}
+		else
+		{
+			try
+			{
+				return updateOrder(orderToBeUpdated, redirectAttributes);
+			}
+			catch (final InvalidCartException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (final CalculationException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return orderStatusResponse;
+
+	}
+
+
+	/**
 	 * This method is used to set the shipping address when the field is checked true by the customer(code added as per
 	 * TPR-629)
 	 *
@@ -3515,9 +3581,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody MplPromoPriceData applyPromotions(final String ModeofPayment, final String Nameofbank, final String guid,
-			final boolean isNewCard,final boolean isResponsive) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
-			ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
+			final boolean isNewCard, final boolean isResponsive) throws CMSItemNotFoundException, InvalidCartException,
+			CalculationException, ModelSavingException, NumberFormatException, JaloInvalidParameterException,
+			VoucherOperationException, JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
@@ -5219,24 +5285,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT; //IQA for TPR-629
 					}
+						else
+						{
+							orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
+									paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+									cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
+									returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
+						}
+					}
+					else if (null != orderModel.getPaymentInfo())
+					{
+						LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
+						return "redirect_with_details";
+					}
 					else
 					{
-						orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
-								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
-								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-						mplVoucherService.updateCardPerOfferVoucherEntry(orderModel);//TPR-7448
+						LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
+						return "redirect_with_details";
 					}
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
-				{
-					LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
-					return "redirect_with_details";
-				}
-				else
-				{
-					LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
-					return "redirect_with_details";
-				}
 			}
 
 			orderId = orderId + "|" + guid;
@@ -5269,7 +5335,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return orderId;
 	}
-
 
 	/**
 	 * This method is used to get the banks for EMI
@@ -5516,12 +5581,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 
 
-				if (orderToBeUpdated.getIsEGVCart().booleanValue())
-				{
-					mplEGVCartService.removeOldEGVCartCurrentCustomer();
-					return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
-							+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE);
-				}
+			if (orderToBeUpdated.getIsEGVCart().booleanValue())
+			{
+				mplEGVCartService.removeOldEGVCartCurrentCustomer();
+				return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+						+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE);
+			}
 
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}

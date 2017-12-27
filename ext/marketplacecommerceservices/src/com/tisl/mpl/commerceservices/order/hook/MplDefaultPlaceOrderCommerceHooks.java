@@ -209,6 +209,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
+	/**
+	 * @return the sessionService
+	 */
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
+	}
+
 	private static final String middleDigits = "000";
 
 	private static final String threeZero = "000";
@@ -881,14 +898,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//SDI-2922
 			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
-atus.PAYMENT_SUCCESSFUL);
-					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))			
 
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				 */
-				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
 
 				/**
 				 * EGV CARD PURCHASE
@@ -942,6 +956,7 @@ atus.PAYMENT_SUCCESSFUL);
 		else
 		{
 			LOG.error("MplDefaultPlaceOrderCommerceHooks--beforeSubmitOrder--Without parent trying to create suborder");
+		}
 		}
 	}
 
@@ -1052,7 +1067,7 @@ atus.PAYMENT_SUCCESSFUL);
 
 	}
 
-	 * @param subOrderList
+	 /* @param subOrderList
 	 *
 	 *
 	 *
@@ -1354,9 +1369,9 @@ atus.PAYMENT_SUCCESSFUL);
 		//EGV Order change
 						if (null !=sellerOrderList.getIsEGVCart() && !sellerOrderList.getIsEGVCart().booleanValue())
 						{
-final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
-								entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
-								sellerOrderList.getCurrency().getIsocode(), ussid);
+//final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
+//								entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
+//								sellerOrderList.getCurrency().getIsocode(), ussid);
 
 						
 						
@@ -1448,6 +1463,7 @@ if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().boolea
 				modelService.refresh(sellerOrderList);
 			}
 
+		}
 		}
 
 		catch (final ModelSavingException e)
@@ -3099,14 +3115,6 @@ if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().boolea
 			// End Order line  Code for OrderLine
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
 
-		}
-	}
-
-	/**
-	 * Set FullFillment Type and Return Window
-	 *
-	 * @param oModel
-	 * @return orderEntryModel
 			/**
 			 * WALLET CHANGES
 			 */
@@ -3122,6 +3130,14 @@ if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().boolea
 			/**
 			 * WALLET CHANGES END
 			 */
+		}
+	}
+
+	/**
+	 * Set FullFillment Type and Return Window
+	 *
+	 * @param oModel
+	 * @return orderEntryModel
 	 */
 
 	private OrderEntryModel setAdditionalDetails(final OrderEntryModel oModel)
@@ -3758,7 +3774,223 @@ if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().boolea
 		return isPresent;
 
 	}
+	/**
+	 * TPR-7448 Starts here Checking or card per offer restriction
+	 *
+	 * @param orderModel
+	 */
+	private void cardPerOfferVoucherExists(final OrderModel orderModel)
+	{
+		final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+				getVoucherService().getAppliedVouchers(orderModel));
+		VoucherCardPerOfferInvalidationModel voucherInvalidationModel = null;
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			try
+			{
+				final UserModel userModel = orderModel.getUser();
+				final List<JuspayCardStatusModel> cardList = mplVoucherService.findJuspayCardStatus(orderModel.getGuid(),
+						userModel.getUid());
+				//final DiscountModel discount = voucherList.get(0);
+				for (final DiscountModel discount : voucherList)
 
+				{
+					if (discount instanceof PromotionVoucherModel || discount instanceof MplCartOfferVoucherModel)
+					{
+						String cardReferenceNo = "";
+						if (CollectionUtils.isNotEmpty(cardList))
+						{
+							cardReferenceNo = cardList.get(0).getCard_reference();
+							LOG.debug("cardReferenceNo=" + cardReferenceNo);
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							for (final RestrictionModel restrictionModel : ((PromotionVoucherModel) discount).getRestrictions())
+							{
+								if (restrictionModel instanceof PaymentModeRestrictionModel)
+								{
+									final int maxAvailCount = ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount() != null
+											? ((PaymentModeRestrictionModel) restrictionModel).getMaxAvailCount().intValue() : 0;
+									final double maxAmountPerMonth = 0.0D;/*((PaymentModeRestrictionModel) restrictionModel)
+											.getMaxAmountPerMonth() != null
+													? ((PaymentModeRestrictionModel) restrictionModel).getMaxAmountPerMonth().doubleValue()
+													: 0.0D;*/
+									if (maxAvailCount > 0 || maxAmountPerMonth > 0.0)
+									{
+										voucherInvalidationModel = modelService.create(VoucherCardPerOfferInvalidationModel.class);
+										LOG.error(null != discount.getCode() ? discount.getCode() : "Discount Code is null");
+										if (StringUtils.isNotEmpty(discount.getCode()))
+										{
+											voucherInvalidationModel.setVoucher(promotionVoucherModel);
+											voucherInvalidationModel.setGuid(orderModel.getGuid());
+											voucherInvalidationModel.setCardRefNo(cardReferenceNo);
+											voucherInvalidationModel.setDiscount(discount.getValue());
+											getModelService().save(voucherInvalidationModel);
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+			catch (final Exception e)
+			{
+				discountUtility.releaseVoucherAndInvalidation(orderModel);
+				LOG.error("Error in cardPerOfferVoucherExists=", e);
+				throw e;
+			}
+
+		}
+	}
+	//TPR-7448 Ends here
+	public void setPaymentModeApporsionValue(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
+			final OrderEntryModel orderEntryModel, final OrderModel clonedSubOrder)
+	{
+
+		final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
+				.create(WalletApportionPaymentInfoModel.class);
+
+		if (null != orderEntryModel.getIsBOGOapplied() && orderEntryModel.getIsBOGOapplied().booleanValue()
+				|| null != orderEntryModel.getGiveAway() && orderEntryModel.getGiveAway().booleanValue())
+		{
+
+			System.out.println(" **************** Hook BOGO PRODUCT FOUND " + orderEntryModel.getIsBOGOapplied().booleanValue()
+					+ " free bi product -" + (null != orderEntryModel.getFreeCount() ? orderEntryModel.getFreeCount().intValue() : 0));
+
+			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+
+			walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
+
+			walletApportionPaymentInfo.setQcApportionPartValue("0");
+			walletApportionPaymentInfo.setQcDeliveryPartValue("0");
+			walletApportionPaymentInfo.setQcShippingPartValue("0");
+			walletApportionPaymentInfo.setQcSchedulingPartValue("0");
+			walletApportionPaymentInfo.setJuspayApportionValue("0");
+			walletApportionPaymentInfo.setJuspayDeliveryValue("0");
+			walletApportionPaymentInfo.setJuspayShippingValue("0");
+			walletApportionPaymentInfo.setJuspaySchedulingValue("0");
+
+			final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+			final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+					.create(WalletCardApportionDetailModel.class);
+			chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+			cardQtyWiseList.add(chlidCardApportionDetail);
+			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+		}
+		else
+		{
+
+			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+
+			walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcApportionPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcDeliveryPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcShippingPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcSchedulingPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayApportionValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayDeliveryValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayShippingValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
+								/ quantity));
+			}
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspaySchedulingValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
+								/ quantity));
+			}
+
+			final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+			if (abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList().size() > 0)
+			{
+
+				for (final WalletCardApportionDetailModel cardList : abstractOrderEntryModel.getWalletApportionPaymentInfo()
+						.getWalletCardList())
+				{
+					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+							.create(WalletCardApportionDetailModel.class);
+
+					chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+					chlidCardApportionDetail.setCardNumber(cardList.getCardNumber());
+					chlidCardApportionDetail.setCardExpiry(cardList.getCardExpiry());
+					chlidCardApportionDetail.setBucketType(cardList.getBucketType());
+
+					if (Double.parseDouble(cardList.getCardAmount()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail.setCardAmount("" + (Double.parseDouble(cardList.getCardAmount()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcApportionValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcApportionValue("" + (Double.parseDouble(cardList.getQcApportionValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcDeliveryValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcDeliveryValue("" + (Double.parseDouble(cardList.getQcDeliveryValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcShippingValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcShippingValue("" + (Double.parseDouble(cardList.getQcShippingValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcSchedulingValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcSchedulingValue("" + (Double.parseDouble(cardList.getQcSchedulingValue()) / quantity));
+					}
+					cardQtyWiseList.add(chlidCardApportionDetail);
+				}
+			}
+			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+		}
+	}
 
 
 }

@@ -1629,6 +1629,28 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		return commerceOrderResult.getOrder();
 	}
 
+	
+	
+	@Override
+	public OrderModel placeEGVOrder(final CartModel cartModel) throws InvalidCartException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setCart(cartModel);
+		// For TPR-5667 : setting salesapplication
+		if (cartModel.getChannel() != null)
+		{
+			parameter.setSalesApplication(cartModel.getChannel());
+		}
+		else
+		{
+			parameter.setSalesApplication(SalesApplication.WEB);
+		}
+
+		final CommerceOrderResult commerceOrderResult = getCommerceCheckoutService().placeOrder(parameter);
+		return commerceOrderResult.getOrder();
+	}
+
 
 	public VoucherModelService getVoucherModelService()
 	{
@@ -2365,5 +2387,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			modelService.saveAll(cartEntryList);
 		}
 	}
+
 
 }

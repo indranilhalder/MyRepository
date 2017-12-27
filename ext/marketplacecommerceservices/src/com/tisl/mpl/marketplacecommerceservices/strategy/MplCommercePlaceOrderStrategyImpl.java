@@ -236,45 +236,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
 					{
 						orderModel.setIsWallet(WalletEnum.MRUPEE);
-
-			if (!isValidOrder)
-			{
-				LOG.error("****** MplCommercePlaceOrderStrategyImpl : placeOrder :Order is not Valid!!"
-						+ (orderModel != null && StringUtils.isNotEmpty(orderModel.getGuid()) ? orderModel.getGuid()
-								: MarketplacecommerceservicesConstants.EMPTY));
-			}
-
-
-			if (orderModel != null && isValidOrder)
-			{
-				try
-				{
-					//It is moved below //PRDI-70
-					//result.setOrder(orderModel);
-					// OrderIssues:- 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved here
-					//				afterPlaceOrder(parameter, result);
-					//INC144315079
-					orderIdGenerator(orderModel);
-					orderModel.setDate(new Date());
-
-					orderModel.setSite(getBaseSiteService().getCurrentBaseSite());
-					orderModel.setStore(getBaseStoreService().getCurrentBaseStore());
-					orderModel.setLanguage(getCommonI18NService().getCurrentLanguage());
-
-					if (parameter.getSalesApplication() != null)
-					{
-						orderModel.setSalesApplication(parameter.getSalesApplication());
-					}
-
-					//orderModel.setAllPromotionResults(Collections.<PromotionResultModel> emptySet());
-
-					//PRDI-70
-					LOG.info("Mode of Payment in placeOrder is -- " + modeOfPayment);
-					orderModel.setModeOfOrderPayment(modeOfPayment);
-					orderModel.setType(MarketplacecommerceservicesConstants.PARENTORDER);
-					if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
-					{
-						orderModel.setIsWallet(WalletEnum.MRUPEE);
 					}
 
 					else

@@ -4811,7 +4811,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 	return cartData;
 	}
-}
 
 
 	/*

@@ -1289,7 +1289,7 @@ public class PaymentServicesController extends BaseController
 			LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
 					userId, juspayOrderID));
 		}
-		OrderModel orderToBeUpdated = null;
+		OrderModel orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 		String statusResponse = "";
 		boolean alreadyProcessed = false;
 		
@@ -1664,11 +1664,6 @@ public class PaymentServicesController extends BaseController
 					cart.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(cart);
 					modelService.refresh(cart);
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
 			}
 			else
 			{
