@@ -1,0 +1,202 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$lang=en
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$picture=media(code, $contentCV)
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+$medias=medias(code, $contentCV);
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+$mediaResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;ProductContentTemplate1;Luxury Product Content Template One;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate1;ContentPage
+;;ProductContentTemplate2;Luxury Product Content Template Two;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate2;ContentPage
+;;ProductContentTemplate3;Luxury Product Content Template Three;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate3;ContentPage
+;;ProductContentTemplate4;Luxury Product Content Template Four;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate4;ContentPage
+;;ProductContentTemplate5;Luxury Product Content Template Five;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate5;ContentPage
+;;ProductContentTemplate6;Luxury Product Content Template Six;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate6;ContentPage
+;;ProductContentTemplate7;Luxury Product Content Template Seven;$luxuryStoreAddonPrefix/pages/layout/productContentTemplate7;ContentPage
+
+
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ProductContentTemplate1 ;$jarResourceCms/structure-view/structure_productContentPageTemplate1.vm
+;;ProductContentTemplate2 ;$jarResourceCms/structure-view/structure_productContentPageTemplate2.vm
+;;ProductContentTemplate3 ;$jarResourceCms/structure-view/structure_productContentPageTemplate3.vm
+;;ProductContentTemplate4 ;$jarResourceCms/structure-view/structure_productContentPageTemplate4.vm
+;;ProductContentTemplate5 ;$jarResourceCms/structure-view/structure_productContentPageTemplate5.vm
+;;ProductContentTemplate6 ;$jarResourceCms/structure-view/structure_productContentPageTemplate6.vm
+;;ProductContentTemplate7 ;$jarResourceCms/structure-view/structure_productContentPageTemplate7.vm
+
+###################################### productcontenttemplate1.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate1'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;SimpleBannerComponent
+;Section1B;;CMSParagraphComponent
+;Section2A;;CMSParagraphComponent
+;Section2B;;SimpleBannerComponent
+;Section3A;;SimpleBannerComponent
+;Section3B;;CMSParagraphComponent
+;Section4A;;CMSParagraphComponent
+;Section5A;;SimpleBannerComponent
+;Section5B;;SimpleBannerComponent
+;Section5C;;SimpleBannerComponent
+;Section6A;;CMSParagraphComponent
+;Section6B;;CMSParagraphComponent
+;Section6C;;CMSParagraphComponent
+;Section7A;;CMSParagraphComponent
+;Section8A;;VideoComponent
+;Section8B;;VideoComponent
+;Section8C;;VideoComponent
+;Section9A;;CMSParagraphComponent
+;Section9B;;CMSParagraphComponent
+;Section9C;;CMSParagraphComponent
+###################################### productcontenttemplate1.impex ContentSlot Ends ##############################################
+
+###################################### productcontenttemplate2.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate2'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;SimpleBannerComponent
+;Section1B;;CMSParagraphComponent
+;Section2A;;CMSParagraphComponent
+;Section2B;;SimpleBannerComponent
+;Section3A;;SimpleBannerComponent
+;Section3B;;CMSParagraphComponent
+;Section4A;;CMSParagraphComponent
+;Section4B;;SimpleBannerComponent
+;Section5A;;SimpleBannerComponent
+;Section5B;;CMSParagraphComponent
+;Section6A;;CMSParagraphComponent
+;Section6B;;SimpleBannerComponent
+;Section7A;;CMSParagraphComponent
+###################################### productcontenttemplate2.impex ContentSlot Ends ##############################################
+
+
+###################################### productcontenttemplate3.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate3'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;SimpleBannerComponent
+;Section1B;;SimpleBannerComponent
+;Section2A;;CMSParagraphComponent
+;Section2B;;CMSParagraphComponent
+;Section3A;;CMSParagraphComponent
+;Section4A;;SimpleBannerComponent
+;Section4B;;SimpleBannerComponent
+;Section4C;;SimpleBannerComponent
+;Section5A;;CMSParagraphComponent
+;Section5B;;CMSParagraphComponent
+;Section5C;;CMSParagraphComponent
+;Section6A;;CMSParagraphComponent
+;Section7A;;VideoComponent
+###################################### productcontenttemplate3.impex ContentSlot Ends ##############################################
+
+
+###################################### productcontenttemplate4.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate4'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;SimpleBannerComponent
+;Section1B;;CMSParagraphComponent
+;Section1C;;SimpleBannerComponent
+;Section1D;;CMSParagraphComponent
+;Section2A;;SimpleBannerComponent
+;Section2B;;CMSParagraphComponent
+;Section3A;;CMSParagraphComponent
+;Section3B;;SimpleBannerComponent
+;Section3C;;CMSParagraphComponent
+;Section3D;;SimpleBannerComponent
+###################################### productcontenttemplate4.impex ContentSlot Ends ##############################################
+
+
+
+
+
+###################################### productcontenttemplate5.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate5'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;CMSParagraphComponent
+;Section2A;;SimpleBannerComponent
+;Section2B;;SimpleBannerComponent
+;Section2C;;SimpleBannerComponent
+;Section2D;;SimpleBannerComponent
+;Section2E;;SimpleBannerComponent
+;Section2F;;SimpleBannerComponent
+;Section2G;;SimpleBannerComponent
+;Section2H;;SimpleBannerComponent
+;Section3A;;SimpleBannerComponent
+;Section3B;;CMSParagraphComponent
+;Section4A;;CMSParagraphComponent
+;Section5A;;SimpleBannerComponent
+;Section5B;;SimpleBannerComponent
+;Section5C;;SimpleBannerComponent
+;Section6A;;CMSParagraphComponent
+;Section6B;;CMSParagraphComponent
+;Section6C;;CMSParagraphComponent
+;Section7A;;SimpleBannerComponent
+;Section8A;;CMSParagraphComponent
+###################################### productcontenttemplate5.impex ContentSlot Ends ##############################################
+
+
+
+###################################### productcontenttemplate6.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate6'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;CMSParagraphComponent
+;Section1B;;SimpleBannerComponent
+;Section2A;;SimpleBannerComponent
+;Section2B;;CMSParagraphComponent
+;Section3A;;CMSParagraphComponent
+;Section3B;;SimpleBannerComponent
+;Section4A;;SimpleBannerComponent
+;Section4B;;CMSParagraphComponent
+;Section5A;;CMSParagraphComponent
+;Section5B;;SimpleBannerComponent
+;Section6A;;SimpleBannerComponent
+;Section6B;;CMSParagraphComponent
+;Section7A;;CMSParagraphComponent
+;Section7B;;SimpleBannerComponent
+;Section8A;;SimpleBannerComponent
+;Section8B;;CMSParagraphComponent
+;Section9A;;CMSParagraphComponent
+###################################### productcontenttemplate6.impex ContentSlot Ends ##############################################
+
+###################################### productcontenttemplateseven.impex ContentSlot Start ##############################################
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductContentTemplate7'];validComponentTypes(code);compTypeGroup(code)
+;Section1A;;CMSParagraphComponent;
+;Section2A;;SimpleBannerComponent;
+;Section2B;;SimpleBannerComponent;
+;Section2C;;SimpleBannerComponent;
+;Section3A;;CMSParagraphComponent;
+;Section3B;;CMSParagraphComponent;
+;Section3C;;CMSParagraphComponent;
+;Section4A;;SimpleBannerComponent;
+;Section4B;;SimpleBannerComponent;
+;Section4C;;SimpleBannerComponent;
+;Section5A;;CMSParagraphComponent;
+;Section5B;;CMSParagraphComponent;
+;Section5C;;CMSParagraphComponent;
+;Section6A;;CMSParagraphComponent;
+;Section7A;;VideoComponent;
+;Section7B;;VideoComponent;
+;Section7C;;VideoComponent;
+###################################### productcontenttemplateseven.impex ends ##############################################
