@@ -96,18 +96,14 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 		try
 		{
 			final StringBuilder query = new StringBuilder();
-			//final String queryString = "select {transactionId} from {RefundTransactionEntry}";
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 			fQuery.setResultClassList(Arrays.asList(String.class));
 			final SearchResult<String> rows = search(fQuery);
 			for (final String row : rows.getResult())
 			{
-				//query.append("'");
 				query.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
 				query.append(row);
-				//query.append("'");
 				query.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
-				//query.append(",");
 				query.append(MarketplacecommerceservicesConstants.COMMA);
 			}
 			dynamicQuery = query.substring(0, query.length() - 1);

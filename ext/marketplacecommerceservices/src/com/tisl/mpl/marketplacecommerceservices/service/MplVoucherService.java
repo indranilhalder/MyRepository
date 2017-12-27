@@ -156,14 +156,13 @@ public interface MplVoucherService
 
 	/**
 	 * @param abstractOrderModel
-	 * @param cardToken2
-	 * @param cardRefNo
 	 * @param cardSaved
+	 * @param cardFingerPrint
 	 * @return boolean
 	 * @throws Exception
 	 */
-	public Tuple3<?, ?, ?> checkCardPerOfferValidation(AbstractOrderModel abstractOrderModel, String cardToken, String cardSaved,
-			String cardRefNo, String cardToken2) throws Exception;
+	public Tuple3<?, ?, ?> checkCardPerOfferValidation(AbstractOrderModel abstractOrderModel, String token, String cardSaved,
+			String cardFingerPrint, String channel) throws Exception;
 
 	/**
 	 * @param guid
@@ -268,5 +267,5 @@ public interface MplVoucherService
 	 * @throws Exception
 	 */
 	public Tuple3<?, ?, ?> checkCardPerOfferValidationMobile(AbstractOrderModel abstractOrderModel, String token,
-			String cardSaved, String cardRefNo) throws Exception;
+			String cardSaved, String cardRefNo, final String cardFingerPrint, final String channel) throws Exception;
 }

@@ -779,7 +779,8 @@ public class PaymentService
 										MarketplaceJuspayServicesConstants.NAMEONCARD).toString() : "")
 						.withCardToken((String) cardObject.get(MarketplaceJuspayServicesConstants.CARDTOKEN))
 						.withCardBrand((String) cardObject.get("card_brand")).withCardIssuer((String) cardObject.get("card_issuer"))
-						.withCardType((String) cardObject.get("card_type")).withNickname((String) cardObject.get("nickname"));
+						.withCardType((String) cardObject.get("card_type")).withNickname((String) cardObject.get("nickname"))
+						.withCardFingerprint((String) cardObject.get("card_fingerprint"));
 
 				cards.add(card);
 			}

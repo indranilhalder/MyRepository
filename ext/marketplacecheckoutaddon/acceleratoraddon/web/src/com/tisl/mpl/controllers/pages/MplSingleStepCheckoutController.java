@@ -118,6 +118,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import reactor.function.support.UriUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -3940,7 +3941,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//UF-260
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 			jsonObj.put("validation", "success");
-			jsonObj.put("subTotalPrice", model.asMap().get("cartTotalMrp"));
+			//CAR-343 Starts
+			//jsonObj.put("subTotalPrice", model.asMap().get("cartTotalMrp"));
+			final ObjectMapper mapper = new ObjectMapper();
+			jsonObj.put("subTotalPrice", mapper.writeValueAsString(model.asMap().get("cartTotalMrp")));
+			//CAR-343 Ends
 			jsonObj.put("totalDiscount", model.asMap().get("totalDiscount"));//TPR-7486
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");

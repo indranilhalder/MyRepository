@@ -1975,8 +1975,9 @@ function savedDebitCardRadioChange(radioId){
 		
 		//TPR-7448 Starts here
 		var selectedIndex=$('input[name=creditCards]:checked').attr("id");
-		var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
-		var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		//var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
+		//var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		var cardFingerPrint=$('input[name=cardsFingerprint'+selectedIndex+']').val();
 		//TPR-7448 Ends here
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
@@ -1986,7 +1987,7 @@ function savedDebitCardRadioChange(radioId){
 		//ACC.singlePageCheckout.showAjaxLoader();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'paymentinfo':paymentInfo,'cardFingerPrint':cardFingerPrint},
 			type: "POST",
 			cache: false,
 			async: false,
@@ -2202,12 +2203,13 @@ function savedDebitCardRadioChange(radioId){
 		
 		//TPR-7448 Starts here
 		var selectedIndex=$('input[name=debitCards]:checked').attr("id");
-		var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
-		var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		//var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
+		//var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		var cardFingerPrint=$('input[name=cardsFingerprint'+selectedIndex+']').val();
 		//TPR-7448 Ends here
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'cardFingerPrint':cardFingerPrint},
 			type: "POST",
 			cache: false,
 			async: false,

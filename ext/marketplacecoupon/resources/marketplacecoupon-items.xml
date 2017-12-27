@@ -547,7 +547,7 @@
 				<attribute qualifier="guid" type="java.lang.String"  generate="false">
 					<description>the cart guid against which the voucher is being redeemed</description>
 					<persistence type="property"/>
-					<modifiers read="true" write="true" optional="false"/>
+					<modifiers read="true" write="true" optional="true"/>
 					<custom-properties>
 						<property name="hmcIndexField"><value>"thefield"</value></property>
 					</custom-properties>
@@ -555,7 +555,7 @@
 				<attribute qualifier="cardRefNo" type="java.lang.String"  generate="false">
 					<description>the card reference number returned by juspay</description>
 					<persistence type="property"/>
-					<modifiers read="true" write="true" optional="false"/>
+					<modifiers read="true" write="true" optional="true"/>
 					<custom-properties>
 						<property name="hmcIndexField"><value>"thefield"</value></property>
 					</custom-properties>
@@ -563,7 +563,7 @@
 				<attribute qualifier="voucher" type="PromotionVoucher" generate="false">
 					<description>voucher code</description>
 					<persistence type="property"/>
-					<modifiers read="true" write="true" optional="false"/>
+					<modifiers read="true" write="true" optional="true"/>
 					<custom-properties>
 						<property name="hmcIndexField"><value>"thefield"</value></property>
 					</custom-properties>
@@ -572,10 +572,20 @@
 					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
 					<description>discount received</description>
 					<persistence type="property"/>
-					<modifiers read="true" write="true" optional="false"/>
+					<modifiers read="true" write="true" optional="true"/>
 					<custom-properties>
 						<property name="hmcIndexField"><value>"thefield"</value></property>
 					</custom-properties>
+				</attribute>
+				<attribute qualifier="cardFingerPrint" type="java.lang.String"  generate="false">
+					<description>the card finger print returned by juspay</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="true"/>
+				</attribute>
+				<attribute qualifier="channel" type="java.lang.String"  generate="false">
+					<description>channel for which entry is made</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="true"/>
 				</attribute>
 			</attributes>
 		</itemtype>

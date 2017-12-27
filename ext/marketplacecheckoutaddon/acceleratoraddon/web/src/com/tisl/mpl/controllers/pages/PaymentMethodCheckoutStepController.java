@@ -3279,9 +3279,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody MplPromoPriceData applyPromotions(final String ModeofPayment, final String Nameofbank, final String guid,
-			final boolean isNewCard,final boolean isResponsive) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
-			ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
+			final boolean isNewCard, final boolean isResponsive) throws CMSItemNotFoundException, InvalidCartException,
+			CalculationException, ModelSavingException, NumberFormatException, JaloInvalidParameterException,
+			VoucherOperationException, JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
@@ -4292,6 +4292,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @param firstName
 	 * @param lastName
+	 * @param netBankName
 	 * @param addressLine1
 	 * @param addressLine2
 	 * @param addressLine3
@@ -4302,6 +4303,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param cardSaved
 	 * @param sameAsShipping
 	 * @param guid
+	 * @param paymentinfo
+	 * @param token
+	 * @param cardFingerPrint
+	 *           //Card finger print of saved card.
+	 * @param model
 	 * @return String
 	 * @throws EtailNonBusinessExceptions
 	 */
@@ -4311,8 +4317,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
 			final String guid, final String paymentinfo, @RequestParam(required = false) final String token,
-			@RequestParam(required = false) final String cardRefNo, @RequestParam(required = false) final String cardToken,
-			final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			@RequestParam(required = false) final String cardFingerPrint, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 
@@ -4353,6 +4358,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				returnUrlBuilder.append("/").append(guid);
 			}
+
 			String paymentAddressLine1 = "";
 			String paymentAddressLine2 = "";
 			String paymentAddressLine3 = "";
@@ -4524,10 +4530,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 					//TPR-7448 Starts here
-					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
+					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 					{
-						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved, cardRefNo,
-								cardToken);
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved,
+								cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_WEB);
 						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
 							final String failureCode = (String) tuple3.getSecond();
@@ -4557,12 +4563,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						if (!utils.isLuxurySite())
 						{
-							LOG.error("Both token and cardRefNo cannot be empty for marketplace");
+							LOG.error("Both token and cardFingerPrint cannot be empty for marketplace");
 							return "stayInPayment";
 						}
 						else
 						{
-							LOG.debug("Both token and cardRefNo are empty");
+							LOG.debug("Both token and cardFingerPrint are empty");
 						}
 					}
 					//TPR-7448 Ends here
@@ -4872,10 +4878,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 
 					//TPR-7448 Starts here
-					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardRefNo)))
+					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 					{
 						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(orderModel, token, cardSaved,
-								cardRefNo, cardToken);
+								cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_WEB);
 						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
 							final String failureCode = (String) tuple3.getSecond();
@@ -4906,12 +4912,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						if (!utils.isLuxurySite())
 						{
-							LOG.error("Both token and cardRefNo cannot be empty for marketplace");
+							LOG.error("Both token and cardFingerPrint cannot be empty for marketplace");
 							return "stayInPayment";
 						}
 						else
 						{
-							LOG.debug("Both token and cardRefNo are empty");
+							LOG.debug("Both token and cardFingerPrint are empty");
 						}
 					}
 					//TPR-7448 Ends here
@@ -5816,7 +5822,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
