@@ -391,17 +391,13 @@ public class HomePageController extends AbstractPageController
 			final CustomerData currentCustomer = getCustomerFacade().getCurrentCustomer();
 			final String gender = currentCustomer.getGender();
 			final String homePagePreference = currentCustomer.getHomePagePreference();
-			if (gender != null && !gender.isEmpty())
+			final LuxuryHomePagePreferenceModel homePagePreferenceModel = mplCmsFacade.getHomePagePreference(gender,
+					homePagePreference);
+			final String label = homePagePreferenceModel.getPageID();
+			if (label != null)
 			{
-				final LuxuryHomePagePreferenceModel homePagePreferenceModel = mplCmsFacade.getHomePagePreference(gender,
-						homePagePreference);
-				final String label = homePagePreferenceModel.getPageID();
-				if (label != null)
-				{
-					return super.getContentPageForLabelOrId(label);
-				}
+				return super.getContentPageForLabelOrId(label);
 			}
-
 		}
 		return super.getContentPageForLabelOrId(labelOrId);
 	}
@@ -563,8 +559,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return homePageBannerJson;
 	}
@@ -619,8 +615,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 
@@ -713,8 +709,8 @@ public class HomePageController extends AbstractPageController
 						{
 							JSONObject showCaseItemDetailJson = new JSONObject();
 							MplShowcaseItemComponentModel showcaseItemDetail = null;
-							showcaseItemDetail = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(showcaseItem
-									.getUid());
+							showcaseItemDetail = (MplShowcaseItemComponentModel) cmsComponentService
+									.getSimpleCMSComponent(showcaseItem.getUid());
 							showCaseItemDetailJson = getJSONForShowCaseItem(showcaseItemDetail, ShowCaseLayout.COLLECTIONSHOWCASE);
 							showCaseItemJson.put("details", showCaseItemDetailJson);
 						}
@@ -736,8 +732,8 @@ public class HomePageController extends AbstractPageController
 						}
 						catch (final Exception e)
 						{
-							ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-									MarketplacecommerceservicesConstants.E0000));
+							ExceptionUtil.etailNonBusinessExceptionHandler(
+									new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 						}
 						//UF-420 ends
 					}
@@ -796,8 +792,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return showCaseItemJson;
 	}
@@ -808,7 +804,8 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
+			final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -959,8 +956,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getBestPicksJson;
 	}
@@ -988,8 +985,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getProductsYouCareJson;
 	}
@@ -1347,8 +1344,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getPromoBannerHomepageJson;
 	}
@@ -1382,8 +1379,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return getStayQuedHomepageJson;
@@ -1441,8 +1438,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return collectionShowcase;
@@ -1483,8 +1480,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return showCaseItemJson;
 	}
@@ -1515,8 +1512,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getBestOffersJson;
 	}
@@ -1588,9 +1585,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 * 
+			 *
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 * 
+			 *
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1604,8 +1601,8 @@ public class HomePageController extends AbstractPageController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsMarketplace() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsMarketplace() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsMarketplace(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
@@ -1694,7 +1691,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1769,8 +1766,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		//return getBestPicksJson;
 
@@ -1822,8 +1819,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return ControllerConstants.Views.Fragments.Home.FooterPanel;
 	}

@@ -627,7 +627,7 @@
 						<attribute type="java.lang.String" qualifier="pageID"
 							autocreate="true" generate="true" >
 							<persistence type="property"></persistence>
-							<modifiers optional="false"  />
+							<modifiers optional="true"  />
 						</attribute>
 					</attributes>
 		</itemtype>		

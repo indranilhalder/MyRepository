@@ -28,8 +28,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.BrandComponentModel;
@@ -37,7 +39,6 @@ import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
-import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 
 
 
@@ -293,14 +294,15 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 	@Override
-	public ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion)
+	public ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId,
+			final String catalogVersion)
 	{
 		final String queryString = "Select {cs." + ContentSlotModel.PK + "} from {" + ContentSlotForPageModel._TYPECODE
 				+ " as csp join " + ContentSlotModel._TYPECODE + " as cs on {csp." + ContentSlotForPageModel.CONTENTSLOT + "}={cs."
-				+ ContentSlotModel.PK + "} " + "join " + ContentPageModel._TYPECODE + " as cp on {csp."
-				+ ContentSlotForPageModel.PAGE + "}={cp.pk} join " + CatalogVersionModel._TYPECODE + " as cv on {cp."
-				+ ContentPageModel.CATALOGVERSION + "}={cv." + CatalogVersionModel.PK + "}} " + "where {cp." + ContentPageModel.UID
-				+ "}=?uid and {cs." + ContentSlotModel.UID + "}=?contentUid and {cv." + CatalogVersionModel.VERSION + "}=?catVersion";
+				+ ContentSlotModel.PK + "} " + "join " + ContentPageModel._TYPECODE + " as cp on {csp." + ContentSlotForPageModel.PAGE
+				+ "}={cp.pk} join " + CatalogVersionModel._TYPECODE + " as cv on {cp." + ContentPageModel.CATALOGVERSION + "}={cv."
+				+ CatalogVersionModel.PK + "}} " + "where {cp." + ContentPageModel.UID + "}=?uid and {cs." + ContentSlotModel.UID
+				+ "}=?contentUid and {cv." + CatalogVersionModel.VERSION + "}=?catVersion";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(UID, pageId);
@@ -350,21 +352,21 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	/*
 	 * @Override public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final
 	 * PageableData pageableData) {
-	 * 
+	 *
 	 * final CatalogVersionModel catalogmodel =
 	 * catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
 	 * .getString("internal.campaign.catelog"),
 	 * configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
-	 * 
+	 *
 	 * final Map params = new HashMap(); params.put("uid", pageUid); params.put("version", catalogmodel);
-	 * 
+	 *
 	 * final String query =
 	 * "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version"
 	 * ;
-	 * 
+	 *
 	 * return getPagedFlexibleSearchService().search(query, params, pageableData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -379,8 +381,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final PageableData pageableData)
 	{
 
-		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.MPLCATELOG),
+		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATELOG),
 				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATALOGNNAME));
 
 		//final String query = MarketplacecommerceservicesConstants.WCMSPAGINATIONQUERY;
@@ -408,8 +410,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 		final StringBuilder queryString = getProductContentQuery();
 
-		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)").append(
-				" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
+		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)")
+				.append(" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
 
 		System.out.println("Query:::::::::::::" + queryString.toString());
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
@@ -446,8 +448,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	@Override
 	public List<BrandComponentModel> getBrandsForShopByBrand()
 	{
-		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.MPLCATELOG),
+		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATELOG),
 				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATALOGNNAME));
 
 		final String queryString = "Select {" + BrandComponentModel.PK + "} from {" + BrandComponentModel._TYPECODE + "} where {"
@@ -461,8 +463,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/**
 	 * @param siteUid
-	 * @return CMSSite
-	 * @CAR-285
+	 * @return CMSSite @CAR-285
 	 */
 	@Override
 	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException
@@ -474,9 +475,9 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * Fetches all footerLink models
-	 * 
+	 *
 	 * @param void
-	 * 
+	 *
 	 * @return List<MplFooterLinkModel>
 	 */
 
@@ -488,25 +489,41 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		final List<MplFooterLinkModel> footerLinks = flexibleSearchService.<MplFooterLinkModel> search(query).getResult();
 		return footerLinks;
 	}
-	
+
 	@Override
 	public LuxuryHomePagePreferenceModel getHomePagePreference(final String gender, final String category)
 	{
-		
-		StringBuilder queryString = new StringBuilder();
-	
-		if(category!=null){
-			queryString = new StringBuilder("SELECT {L.pk}  FROM {LuxuryHomePagePreference as L JOIN Gender as G ON {L.customerGender} = {G.PK} JOIN HomePageTypes as H ON {L.homePageType} = {H.PK}} WHERE {G.code} = ?gender and {H.code} = ?category");
-			
-		}
-		else{
-			queryString = new StringBuilder("SELECT {L.pk}  FROM {LuxuryHomePagePreference as L JOIN Gender as G ON {L.customerGender} = {G.PK} } WHERE {G.code} = ?gender and {L.homePageType} is null");
 
+		StringBuilder queryString = new StringBuilder();
+		queryString = new StringBuilder(
+				"SELECT {L.pk}  FROM {LuxuryHomePagePreference as L LEFT OUTER JOIN Gender as G ON {L.customerGender} = {G.PK} LEFT OUTER JOIN HomePageTypes as H ON {L.homePageType} = {H.PK}} WHERE ");
+
+		if (!StringUtils.isBlank(gender))
+		{
+			queryString.append("{G.code} = ?gender ");
 		}
+		else
+		{
+			queryString.append("{G.code} is null ");
+		}
+
+		if (!StringUtils.isBlank(category))
+		{
+			queryString.append(" and {H.code} = ?category ");
+		}
+		else
+		{
+			queryString.append(" and {H.code} is null ");
+		}
+
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("gender", gender);
-		if(category!=null){
-		query.addQueryParameter("category", category);
+		if (!StringUtils.isBlank(gender))
+		{
+			query.addQueryParameter("gender", gender);
+		}
+		if (!StringUtils.isBlank(category))
+		{
+			query.addQueryParameter("category", category);
 		}
 		final SearchResult<LuxuryHomePagePreferenceModel> searchResult = flexibleSearchService.search(query);
 		//if (shopByLookList != null && shopByLookList.size() > 0)
