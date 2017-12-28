@@ -231,6 +231,7 @@
 	<div class="modal fade text-center signin-box" id="mypopUpModal" >
 		 <div class="modal-dialog">
 			<div class="modal-content">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 				<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
 					<div class="header-account-inner clearfix" id="login-container">
 						<div class="header-account-section header-forget-pass"></div>
