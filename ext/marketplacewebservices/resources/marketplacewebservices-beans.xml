@@ -1206,6 +1206,8 @@
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
 		<property name="paymentOffers" type="com.tisl.mpl.wsdto.OfferListWsData" />
+		<property name="merchantID" type="String" />
+		<property name="merchantKey" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
