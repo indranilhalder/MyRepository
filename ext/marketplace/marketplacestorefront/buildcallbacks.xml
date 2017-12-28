@@ -335,7 +335,6 @@
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.comparenow.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.contactus.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.dtm.js"/>
-						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.feedback.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.forgottenpassword.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.global.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.helpmeshop.js"/>
