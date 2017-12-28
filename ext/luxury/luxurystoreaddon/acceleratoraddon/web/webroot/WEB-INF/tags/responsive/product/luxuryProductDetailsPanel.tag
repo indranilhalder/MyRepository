@@ -145,7 +145,7 @@ tr.d0 td {
 					</c:choose>
 				</div>
 				 <div class="pdp-video">
-                   <video width="100%" height="100%">
+                   <video width="70%" height="auto" controls>
                       <source src="${videoUrl}" type="video/webm"> 
                       <source src="${videoUrl}" type="video/ogg"> 
                       <source src="${videoUrl}" type="video/mp4">
