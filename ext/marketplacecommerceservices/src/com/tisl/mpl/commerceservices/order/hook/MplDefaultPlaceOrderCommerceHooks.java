@@ -1368,11 +1368,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						 * entryModelList.getSelectedUSSID());
 						 */
 
-						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
-								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(), ussid);
-		//EGV Order change
+						//EGV Order change
 						if (null !=sellerOrderList.getIsEGVCart() && !sellerOrderList.getIsEGVCart().booleanValue())
 						{
+						 final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
+								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(), ussid);
+		
 //final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
 //								entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
 //								sellerOrderList.getCurrency().getIsocode(), ussid);
