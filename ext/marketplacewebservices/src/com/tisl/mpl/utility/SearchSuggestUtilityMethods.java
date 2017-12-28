@@ -666,6 +666,9 @@ public class SearchSuggestUtilityMethods
 		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
 				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 		//ProductData productDataImage = null;
+		double savingsAmt = 0.0;
+		double calculatedPerSavings = 0.0;
+		String floorValue = "";
 
 		for (final ProductData productData : searchPageData.getResults())
 		{
@@ -714,10 +717,12 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setGalleryImagesList(galleryImages);
 				}
-				if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue())
-				{
-					sellingItemDetail.setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue()));
-				}
+				//SDI-3930 Commented as this has to be calculated in case mobile has a special price
+				/*
+				 * if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue()) {
+				 * sellingItemDetail
+				 * .setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue())); }
+				 */
 				if (null != productData.getName())
 				{
 					sellingItemDetail.setProductname(productData.getName());
@@ -825,10 +830,30 @@ public class SearchSuggestUtilityMethods
 				if (specialMobileFlag && null != productData.getMobileprice())
 				{
 					sellingItemDetail.setSellingPrice(productData.getMobileprice());
+					//SDI-3930
+					savingsAmt = productData.getProductMRP().getDoubleValue().doubleValue()
+							- productData.getMobileprice().getDoubleValue().doubleValue();
+					calculatedPerSavings = (savingsAmt / productData.getProductMRP().getDoubleValue().doubleValue()) * 100;
+					floorValue = String.valueOf(Math.floor((calculatedPerSavings * 100.0) / 100.0));
 				}
 				else if (!specialMobileFlag && null != productData.getPrice()) //backward compatible
 				{
 					sellingItemDetail.setSellingPrice(productData.getPrice());
+					//SDI-3930
+					savingsAmt = productData.getProductMRP().getDoubleValue().doubleValue()
+							- productData.getPrice().getDoubleValue().doubleValue();
+					calculatedPerSavings = (savingsAmt / productData.getProductMRP().getDoubleValue().doubleValue()) * 100;
+					floorValue = String.valueOf(Math.floor((calculatedPerSavings * 100.0) / 100.0));
+				}
+
+				//SDI-3930
+				if (StringUtils.isNotEmpty(floorValue) && calculatedPerSavings >= 1.0)
+				{
+					sellingItemDetail.setDiscountPercent(floorValue);
+				}
+				else if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue())
+				{
+					sellingItemDetail.setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue()));
 				}
 
 				//added for jewellery mobile web services:maxSellingPrice & minSellingPrice
