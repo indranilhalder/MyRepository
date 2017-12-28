@@ -114,16 +114,19 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		catch (final EtailBusinessExceptions exception)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(exception, null);
+			LOG.error("Exception Occured=", exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final EtailNonBusinessExceptions exception)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
+			LOG.error("Exception Occured=", exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final Exception exception)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+			LOG.error("Exception Occured=", exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
