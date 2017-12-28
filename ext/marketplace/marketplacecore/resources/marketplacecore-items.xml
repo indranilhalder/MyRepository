@@ -927,6 +927,12 @@
 			<value code="jcb"/>
 			<value code="discover"/>
 		</enumtype>
+		
+		<enumtype code="aplusSite" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="mpl" />
+			<value code="lux" />
+		</enumtype>
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" 
 			dynamic="true"> <description>Component Type For Components</description> 
 			<value code="BannerCarousel" /> <value code="Banners3CarouselType" /> <value 
@@ -11243,6 +11249,13 @@
 								<value>varchar</value>
 							</columntype>
 						</persistence>
+					</attribute>
+					
+					<attribute qualifier="siteToLoad" autocreate="true" type="aplusSite">
+						<description>Site</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
 					</attribute>
 				</attributes>
 			</itemtype>
