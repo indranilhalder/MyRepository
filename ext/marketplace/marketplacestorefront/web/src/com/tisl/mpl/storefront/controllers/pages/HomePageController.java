@@ -386,7 +386,7 @@ public class HomePageController extends AbstractPageController
 	protected ContentPageModel getContentPageForLabelOrId(final String labelOrId) throws CMSItemNotFoundException
 	{
 		final String siteId = getSiteConfigService().getProperty("luxury.site.id");
-		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId) && !userFacade.isAnonymousUser())
 		{
 			final CustomerData currentCustomer = getCustomerFacade().getCurrentCustomer();
 			final String gender = currentCustomer.getGender();
