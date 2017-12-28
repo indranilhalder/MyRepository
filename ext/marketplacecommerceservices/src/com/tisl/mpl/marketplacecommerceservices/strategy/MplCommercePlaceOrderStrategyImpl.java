@@ -196,7 +196,39 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
 
 			//TISPRO-540
-			final boolean isValidOrder = checkOrder(orderModel);
+			 boolean isValidOrder = checkOrder(orderModel);
+			 if(null != cartModel.getIsEGVCart() && cartModel.getIsEGVCart().booleanValue()){
+					isValidOrder=cartModel.getIsEGVCart().booleanValue();
+					orderModel.setIsEGVCart(cartModel.getIsEGVCart());
+					orderModel.setRecipientId(cartModel.getRecipientId());
+					orderModel.setRecipientMessage(cartModel.getRecipientMessage());
+					orderModel.setGiftFromId(cartModel.getGiftFromId());
+					orderModel.setFromFirstName(cartModel.getFromFirstName());
+					orderModel.setFromLastName(cartModel.getFromLastName());
+					orderModel.setFromPhoneNo(cartModel.getFromPhoneNo());
+					if(orderModel.getUser()!=null && CollectionUtils.isNotEmpty(orderModel.getUser().getAddresses())){
+						orderModel.setDeliveryAddress((AddressModel) orderModel.getUser().getAddresses().toArray()[0]);
+					}else{
+						try{
+						AddressModel addressModel=new AddressModel();
+						addressModel.setLine1("1stFloor");
+						addressModel.setLine2("EmpirePlaza2");
+						addressModel.setAddressLine3("LalBahadurShastriMarg");
+						addressModel.setFirstname("Tata");
+						addressModel.setLastname("UnistoreLtd");
+						addressModel.setPhone1("");
+						addressModel.setState("Maharashtra");
+						addressModel.setCity("Mumbai");
+						addressModel.setPostalcode("400083");
+						addressModel.setOwner(orderModel.getUser());
+						getModelService().save(addressModel);
+						orderModel.setDeliveryAddress(addressModel);
+						}catch(Exception excpetion){
+							LOG.error("Error Occure while address create for egv order");
+						}
+					}
+			 }
+					
 
 			if (!isValidOrder)
 			{
