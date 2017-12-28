@@ -3946,7 +3946,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final ObjectMapper mapper = new ObjectMapper();
 			jsonObj.put("subTotalPrice", mapper.writeValueAsString(model.asMap().get("cartTotalMrp")));
 			//CAR-343 Ends
-			jsonObj.put("totalDiscount", model.asMap().get("totalDiscount"));//TPR-7486
+			//jsonObj.put("totalDiscount", model.asMap().get("totalDiscount"));//TPR-7486
+			jsonObj.put("totalDiscount", mapper.writeValueAsString(model.asMap().get("totalDiscount")));//TPR-7486
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");
 		}
