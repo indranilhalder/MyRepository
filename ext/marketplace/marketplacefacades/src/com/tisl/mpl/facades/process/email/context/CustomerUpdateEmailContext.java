@@ -66,7 +66,8 @@ public class CustomerUpdateEmailContext extends AbstractEmailContext<StoreFrontC
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
-
+	public static final String SECURE_RESET_PASSWORD_URL = "secureResetPasswordUrl";
+	private String token;
 
 	private Converter<UserModel, CustomerData> customerConverter;
 	private CustomerData customerData;
@@ -75,6 +76,16 @@ public class CustomerUpdateEmailContext extends AbstractEmailContext<StoreFrontC
 
 	@Autowired
 	private ConfigurationService configurationService;
+
+	public String getToken()
+	{
+		return token;
+	}
+
+	public void setToken(final String token)
+	{
+		this.token = token;
+	}
 
 	@SuppressWarnings("unused")
 	@Override
@@ -92,7 +103,14 @@ public class CustomerUpdateEmailContext extends AbstractEmailContext<StoreFrontC
 			put(DISPLAY_NAME, displayName);
 		}
 		put(EMAIL, storeFrontCustomerProcessModel.getCustomer().getOriginalUid());
+		if (storeFrontCustomerProcessModel instanceof ForgottenPasswordProcessModel)
+		{
+			setToken(((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getToken());
+			final String secureResetPasswordUrl = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel)
+					.getForgetPasswordUrl();
+			put(SECURE_RESET_PASSWORD_URL, secureResetPasswordUrl);
 
+		}
 		if (null != getCustomer(storeFrontCustomerProcessModel))
 		{
 			final List<String> updatedDetailListForVm = new ArrayList<String>();
