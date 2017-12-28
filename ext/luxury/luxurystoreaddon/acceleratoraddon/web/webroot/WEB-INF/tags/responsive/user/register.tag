@@ -59,8 +59,8 @@
 	<p class="h4 text-center">
 		<ycommerce:testId code="luxury_header_Signin_link">
 			 <a class="luxury-login header-login-target-link" href="/luxurylogin/signin" data-target-id="sign-in">
-			 <span><spring:theme code="luxury.header.flyout.signin.member"/></span>
-				<spring:theme code="luxury.header.link.signin" />
+			 <%-- <span><spring:theme code="luxury.header.flyout.signin.member"/></span> --%>
+				<spring:theme code="luxury.header.link.signin.member" />
 			</a>
 		</ycommerce:testId>
 	</p>
