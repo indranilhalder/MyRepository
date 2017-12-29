@@ -695,7 +695,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		//				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode() + "')";
 
 		//SDI-4300
-		final String queryString = "SELECT {a.pk},{b.pk},oh2.p_description FROM {order as a},{orderentry as b},({{select {ohe1:lineid} as p_lineid, max({ohe1:timestamp}) as p_timestamp from {orderhistoryentry as ohe1} group by {lineid}}})  oh1 ,({{select {ohe2:lineid} as p_lineid,{ohe2:timestamp} as p_timestamp,{ohe2:description},{ohe2:order} from  {orderhistoryentry as ohe2}}}) as oh2 WHERE    {a.type} = ?type and  {a.pk} = {b.ORDER} AND {a.VERSIONID} IS NULL and oh1.p_lineid = {b.orderlineid}	and oh1.p_lineid = oh2.p_lineid and oh1.p_timestamp = oh2.p_timestamp AND (  oh1.p_timestamp BETWEEN ?earlierDate and ?presentDate) and  oh2.p_description in ('PAYMENT_SUCCESSFUL','PENDING_SELLER_ASSIGNMENT')";
+		final String queryString = "SELECT {a.pk},{b.pk},oh2.p_description FROM {order as a},{orderentry as b},({{select {ohe1:lineid} as p_lineid, max({ohe1:timestamp}) as p_timestamp from {orderhistoryentry as ohe1} group by {lineid}}})  oh1 ,({{select {ohe2:lineid} as p_lineid,{ohe2:timestamp} as p_timestamp,{ohe2:description},{ohe2:order} from  {orderhistoryentry as ohe2}}}) oh2 WHERE    {a.type} = ?type and  {a.pk} = {b.ORDER} AND {a.VERSIONID} IS NULL and oh1.p_lineid = {b.orderlineid}	and oh1.p_lineid = oh2.p_lineid and oh1.p_timestamp = oh2.p_timestamp AND (  oh1.p_timestamp BETWEEN ?earlierDate and ?presentDate) and  oh2.p_description in ('PAYMENT_SUCCESSFUL','PENDING_SELLER_ASSIGNMENT')";
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("db call fetch  specified details success");
@@ -737,7 +737,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		//				+ " and ({e." + EnumerationValueModel.CODE + "}='" + OrderStatus.PAYMENT_SUCCESSFUL.getCode() + "' OR {e."
 		//				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode() + "')";
 
-		final String queryString = "SELECT {a.pk},{b.pk},oh2.p_description FROM {order as a},{orderentry as b},({{select {ohe1:lineid} as p_lineid, max({ohe1:timestamp}) as p_timestamp from {orderhistoryentry as ohe1} group by {lineid}}})  oh1 ,({{select {ohe2:lineid} as p_lineid,{ohe2:timestamp} as p_timestamp,{ohe2:description},{ohe2:order} from  {orderhistoryentry as ohe2}}}) as oh2 WHERE    {a.type} = ?type and  {a.pk} = {b.ORDER} AND {a.VERSIONID} IS NULL and oh1.p_lineid = {b.orderlineid}	and oh1.p_lineid = oh2.p_lineid and oh1.p_timestamp = oh2.p_timestamp and  oh2.p_description in ('PAYMENT_SUCCESSFUL','PENDING_SELLER_ASSIGNMENT')";
+		final String queryString = "SELECT {a.pk},{b.pk},oh2.p_description FROM {order as a},{orderentry as b},({{select {ohe1:lineid} as p_lineid, max({ohe1:timestamp}) as p_timestamp from {orderhistoryentry as ohe1} group by {lineid}}})  oh1 ,({{select {ohe2:lineid} as p_lineid,{ohe2:timestamp} as p_timestamp,{ohe2:description},{ohe2:order} from  {orderhistoryentry as ohe2}}}) oh2 WHERE    {a.type} = ?type and  {a.pk} = {b.ORDER} AND {a.VERSIONID} IS NULL and oh1.p_lineid = {b.orderlineid}	and oh1.p_lineid = oh2.p_lineid and oh1.p_timestamp = oh2.p_timestamp and  oh2.p_description in ('PAYMENT_SUCCESSFUL','PENDING_SELLER_ASSIGNMENT')";
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("db call fetch details success");

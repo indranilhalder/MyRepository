@@ -1907,10 +1907,10 @@ ACC.singlePageCheckout = {
 	    	      	}*/
         			//If data.validation=="success" set prePaymentValidationDone to true
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
-        			if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
+        			//if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
         				recalculateCart();
         				ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
-        			}
+        			//}
         			
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
