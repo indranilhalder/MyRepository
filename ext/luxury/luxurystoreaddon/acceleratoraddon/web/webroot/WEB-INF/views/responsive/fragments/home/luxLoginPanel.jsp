@@ -28,7 +28,7 @@
 		<div class="form_field_error"></div>
 	</c:if>	
 	<div class="form-input-lists mb-20">
-		<formElement:formInputBox idKey="j_username" labelKey="" path="j_username" inputCSS="text" mandatory="true" placeholder="Enter Your Email Address"/>
+		<formElement:formInputBox idKey="j_username" labelKey="" path="j_username" inputCSS="text" mandatory="true" placeholder="ENTER YOUR EMAIL ADDRESS"/>
 		<formElement:formPasswordBox idKey="j_password" labelKey="" path="j_password" inputCSS="text password form-control" mandatory="true"/>
 		<c:if test="${not empty message}">
 			<span class="errors"><spring:theme code="${message}"/></span>
