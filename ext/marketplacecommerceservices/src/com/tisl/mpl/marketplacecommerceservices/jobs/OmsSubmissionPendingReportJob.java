@@ -339,11 +339,18 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 	{
 
 		String result = value;
-		if (result.contains("\""))
+		if (StringUtils.isNotEmpty(result) && result.contains("\""))
 		{
 			result = result.replace("\"", "\"\"");
 		}
-		result = "\"" + result + "\"";
+		if (StringUtils.isNotEmpty(result))
+		{
+			result = "\"" + result + "\"";
+		}
+		if (StringUtils.isEmpty(result))
+		{
+			result = "";
+		}
 		return result;
 
 	}
