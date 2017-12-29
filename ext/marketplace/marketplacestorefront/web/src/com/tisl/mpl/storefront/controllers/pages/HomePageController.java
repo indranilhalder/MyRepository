@@ -393,10 +393,13 @@ public class HomePageController extends AbstractPageController
 			final String homePagePreference = currentCustomer.getHomePagePreference();
 			final LuxuryHomePagePreferenceModel homePagePreferenceModel = mplCmsFacade.getHomePagePreference(gender,
 					homePagePreference);
-			final String label = homePagePreferenceModel.getPageID();
-			if (label != null)
+			if (null != homePagePreferenceModel)
 			{
-				return super.getContentPageForLabelOrId(label);
+				final String label = homePagePreferenceModel.getPageID();
+				if (label != null)
+				{
+					return super.getContentPageForLabelOrId(label);
+				}
 			}
 		}
 		return super.getContentPageForLabelOrId(labelOrId);

@@ -42,6 +42,8 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 	@SuppressWarnings("unused")
 	private static final String PROCESSED_PREFIX = "PROCESSED_";
 
+	private static final String LUX = "lux";
+
 	@Autowired
 	private ConfigurationService configurationService;
 	@Resource
@@ -64,6 +66,10 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 			{
 				//calling the uploadCSVContent with the input stream and the real file name from Media Model
 				final APlusContentModel aPlusModel = (APlusContentModel) o;
+				final String siteToLoad = aPlusModel.getSiteToLoad().getCode().toString();
+
+				LOG.debug("Site to Load:" + siteToLoad);
+
 				if (!aPlusModel.getCsvFile().getMime().equals("text/csv"))
 				{
 					throw new InterceptorException("Please upload a valid CSV file. MIME type is not text/csv. Current MINE type is "
@@ -74,7 +80,16 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 					throw new InterceptorException("Please upload file");
 				}
 				final InputStream inputStream = mediaService.getStreamFromMedia(aPlusModel.getCsvFile());
-				final String error = this.uploadCSVContent(inputStream, aPlusModel.getCsvFile().getRealFileName());
+
+				String error = null;
+				if (null != siteToLoad && siteToLoad.equals(LUX))
+				{
+					error = this.uploadCSVContent(inputStream, aPlusModel.getCsvFile().getRealFileName(), siteToLoad);
+				}
+				else
+				{
+					error = this.uploadCSVContent(inputStream, aPlusModel.getCsvFile().getRealFileName());
+				}
 				if (StringUtils.isNotEmpty(error))
 				{
 					aPlusModel.setCsvFileError(error);
@@ -91,19 +106,24 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 
 	}
 
+	private String uploadCSVContent(final InputStream inputStream, final String inputFileName)
+	{
+		return uploadCSVContent(inputStream, inputFileName, null);
+	}
+
 	/**
 	 * @Descriptiion: To Process and create Content Data
 	 *
 	 */
-	private String uploadCSVContent(final InputStream inputStream, final String inputFileName)
+	private String uploadCSVContent(final InputStream inputStream, final String inputFileName, final String site)
 	{
 		String error = null;
-		final File rootFolder = new File(configurationService.getConfiguration()
-				.getString("businessConetnt.rootFolderLocation", ""));
-		final File errorFolder = new File(configurationService.getConfiguration().getString("businessConetnt.errorFolderLocation",
-				""));
-		final String fileNamePrefix = configurationService.getConfiguration()
-				.getString("businessConetnt.fileNamePrefix", "content");
+		final File rootFolder = new File(
+				configurationService.getConfiguration().getString("businessConetnt.rootFolderLocation", ""));
+		final File errorFolder = new File(
+				configurationService.getConfiguration().getString("businessConetnt.errorFolderLocation", ""));
+		final String fileNamePrefix = configurationService.getConfiguration().getString("businessConetnt.fileNamePrefix",
+				"content");
 
 		isFolderExist(rootFolder);
 		isFolderExist(errorFolder);
@@ -122,7 +142,15 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 			{
 				flag = true;
 			}
-			error = businessContentImportUtil.processFile(inputStream, output, flag);
+			if (null != site && site.equals(LUX))
+			{
+				error = businessContentImportUtil.processFile(inputStream, output, flag, site);
+			}
+			else
+			{
+				error = businessContentImportUtil.processFile(inputStream, output, flag);
+			}
+
 			inputStream.close();
 			output.close();
 			if (errorFile.exists() && errorFile.length() == 0)

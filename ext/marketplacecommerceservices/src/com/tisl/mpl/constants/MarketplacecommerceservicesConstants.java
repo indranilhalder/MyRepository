@@ -491,6 +491,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String UPDATE = "U".intern();
 
 	public static final String DEFAULT_IMPORT_CATALOG_ID = "mplProductCatalog";
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
 	public static final String DEFAULT_IMPORT_CATALOG_VERSION = "Online";
 	public static final String HMAC_SHA1 = "HmacSHA1";
 	public static final String RAW = "RAW";
@@ -1918,6 +1919,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TPR-978
 	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_ID = "mplContentCatalog";
 	public static final String DEFAULT_IMPORT_CONTENT_CATALOG_VERSION = "Staged";
+
+
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Staged";
 
 	//Added for luxury
 	public static final String CHANNEL_APP = "APP";
