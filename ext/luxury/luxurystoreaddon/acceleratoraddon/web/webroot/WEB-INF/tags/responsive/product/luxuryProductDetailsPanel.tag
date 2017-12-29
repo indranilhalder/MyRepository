@@ -243,9 +243,9 @@ tr.d0 td {
 			<div class="wishAddLogin">
 				<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 			</div>
-			<div class="wishAlreadyAdded">
+			<%-- <div class="wishAlreadyAdded">
 				<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-			</div>
+			</div> --%>
 		</div>
 		<div class="product-detail pdp-right">
 			

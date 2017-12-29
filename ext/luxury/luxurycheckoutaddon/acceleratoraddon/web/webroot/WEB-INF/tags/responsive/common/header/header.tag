@@ -35,9 +35,9 @@
 			<div class="wishAddSucessPlp">
 			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 			</div>
-			<div class="wishAlreadyAddedPlp">
+			<%-- <div class="wishAlreadyAddedPlp">
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-			</div>
+			</div> --%>
 			<!-- Changes for INC144313867 -->
 			<div class="wishRemoveSucessPlp">
 			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
