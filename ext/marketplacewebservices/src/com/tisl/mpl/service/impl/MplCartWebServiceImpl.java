@@ -2401,7 +2401,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
 
 
-					- cartModel.getDeliveryCost().doubleValue());
+					/*- cartModel.getDeliveryCost().doubleValue()*/);
 
 					final PriceData totalPrice = discountUtility.createPrice(cartModel,
 							Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -3189,8 +3189,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
