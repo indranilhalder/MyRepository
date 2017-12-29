@@ -118,7 +118,6 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.util.DiscountUtility;
-import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
@@ -2209,16 +2208,19 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				cartDataDetails.setProducts(gwlpList);
 			}
 			/* Product Details */
-			/*
-			 * if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString())) { final
-			 * PriceData subtotalprice = discountUtility.createPrice(cartModel,
-			 * Double.valueOf(cartModel.getSubtotal().toString())); if (null != subtotalprice && null !=
-			 * subtotalprice.getValue()) {
-			 * cartDataDetails.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2,
-			 * BigDecimal.ROUND_HALF_UP))); } }
-			 */
+
+			if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+			{
+				final PriceData subtotalprice = discountUtility.createPrice(cartModel,
+						Double.valueOf(cartModel.getSubtotal().toString()));
+				if (null != subtotalprice && null != subtotalprice.getValue())
+				{
+					cartDataDetails.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+			}
+
 			//SDI-2801 == Commented the subtotal and discount section and moved it to GenericUtilityMethods class
-			GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDataDetails);
+			//GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDataDetails);
 			if (null != cartModel.getTotalPrice() && StringUtils.isNotEmpty(cartModel.getTotalPrice().toString())
 					&& null != cartModel.getDeliveryCost() && StringUtils.isNotEmpty(cartModel.getDeliveryCost().toString()))
 			{
@@ -2235,12 +2237,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 			}
 
-			/*
-			 * if (null != cartDataOrdered.getTotalDiscounts()) { final PriceData discountPrice =
-			 * cartDataOrdered.getTotalDiscounts(); if (null != discountPrice.getValue()) {
-			 * cartDataDetails.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2,
-			 * BigDecimal.ROUND_HALF_UP))); } }
-			 */
+
+			if (null != cartDataOrdered.getTotalDiscounts())
+			{
+				final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
+				if (null != discountPrice.getValue())
+				{
+					cartDataDetails.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+			}
+
 			/*** Address details ***/
 			if (null != addressListWsDto)
 			{
@@ -2386,15 +2392,20 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cartDataDetails.setProducts(gwlpList);
 				}
 				/* Product Details */
-				/*
-				 * if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString())) {
-				 * final PriceData subtotalprice = discountUtility.createPrice(cartModel,
-				 * Double.valueOf(cartModel.getSubtotal().toString())); if (null != subtotalprice && null !=
-				 * subtotalprice.getValue()) { cartDataDetails
-				 * .setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP))); } }
-				 */
+
+				if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
+				{
+					final PriceData subtotalprice = discountUtility.createPrice(cartModel,
+							Double.valueOf(cartModel.getSubtotal().toString()));
+					if (null != subtotalprice && null != subtotalprice.getValue())
+					{
+						cartDataDetails
+								.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					}
+				}
+
 				//SDI-2801
-				GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDataDetails);
+				//GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDataDetails);
 				if (null != cartModel.getTotalPrice() && StringUtils.isNotEmpty(cartModel.getTotalPrice().toString())
 						&& null != cartModel.getDeliveryCost() && StringUtils.isNotEmpty(cartModel.getDeliveryCost().toString()))
 				{
@@ -2410,11 +2421,17 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						cartDataDetails.setTotalPrice(String.valueOf(totalPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 				}
-				/*
-				 * if (null != cartDataOrdered.getTotalDiscounts()) { final PriceData discountPrice =
-				 * cartDataOrdered.getTotalDiscounts(); if (null != discountPrice.getValue()) { cartDataDetails
-				 * .setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP))); } }
-				 */
+
+				if (null != cartDataOrdered.getTotalDiscounts())
+				{
+					final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
+					if (null != discountPrice.getValue())
+					{
+						cartDataDetails
+								.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					}
+				}
+
 				/*** Address details ***/
 				if (null != addressListWsDto)
 				{
@@ -2653,26 +2670,29 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			if (StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
 			{
-				/*
-				 * final PriceData subtotalprice = discountUtility.createPrice(cartModel,
-				 * Double.valueOf(cartModel.getSubtotal().toString())); if (null != subtotalprice && null !=
-				 * subtotalprice.getValue()) {
-				 * cartDetailsData.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2,
-				 * BigDecimal.ROUND_HALF_UP))); }
-				 */
+
+				final PriceData subtotalprice = discountUtility.createPrice(cartModel,
+						Double.valueOf(cartModel.getSubtotal().toString()));
+				if (null != subtotalprice && null != subtotalprice.getValue())
+				{
+					cartDetailsData.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+
 				//SDI-2801
-				GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDetailsData);
+				//GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDetailsData);
 			}
 			else
 			{
 				cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				cartDetailsData.setError(MarketplacecommerceservicesConstants.NOSUBTOTAL);
 			}
-			/*
-			 * final PriceData discountPrice = cartDataOrdered.getTotalDiscounts(); if (null != discountPrice.getValue()) {
-			 * cartDetailsData.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2,
-			 * BigDecimal.ROUND_HALF_UP))); }
-			 */
+
+			final PriceData discountPrice = cartDataOrdered.getTotalDiscounts();
+			if (null != discountPrice.getValue())
+			{
+				cartDetailsData.setDiscountPrice(String.valueOf(discountPrice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+			}
+
 			//Added for Setting Delivery Charge
 			if (cartModel.getDeliveryCost() != null)
 			{
@@ -2846,25 +2866,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 			if (StringUtils.isNotEmpty(orderModel.getSubtotal().toString()))
 			{
-				/*
-				 * final PriceData subtotalprice = discountUtility.createPrice(orderModel,
-				 * Double.valueOf(orderModel.getSubtotal().toString())); if (null != subtotalprice && null !=
-				 * subtotalprice.getValue()) {
-				 * cartDetailsData.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2,
-				 * BigDecimal.ROUND_HALF_UP))); }
-				 */
+
+				final PriceData subtotalprice = discountUtility.createPrice(orderModel,
+						Double.valueOf(orderModel.getSubtotal().toString()));
+				if (null != subtotalprice && null != subtotalprice.getValue())
+				{
+					cartDetailsData.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+
 				//SDI-2801
-				GenericUtilityMethods.getCartPriceDetailsMobile(orderModel, cartDetailsData);
+				//GenericUtilityMethods.getCartPriceDetailsMobile(orderModel, cartDetailsData);
 			}
 			else
 			{
 				cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				cartDetailsData.setError(MarketplacecommerceservicesConstants.NOSUBTOTAL);
 			}
-			/*
-			 * if (null != orderModel.getTotalDiscounts()) {
-			 * cartDetailsData.setDiscountPrice(String.valueOf(orderModel.getTotalDiscounts().intValue())); }
-			 */
+
+			if (null != orderModel.getTotalDiscounts())
+			{
+				cartDetailsData.setDiscountPrice(String.valueOf(orderModel.getTotalDiscounts().intValue()));
+			}
+
 			//Added for Setting Delivery Charge
 			if (orderModel.getDeliveryCost() != null)
 			{
