@@ -1422,6 +1422,17 @@ public class PaymentServicesController extends BaseController
 				paymentModesData.setPaymentModes(paymentMode);
 				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 			}
+			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+
+			final String juspayMerchantId = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
+			paymentModesData.setMerchantID(juspayMerchantId);
+			paymentModesData.setMerchantKey(juspayMerchantKey);
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{

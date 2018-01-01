@@ -257,7 +257,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -370,7 +370,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -782,9 +782,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			//Line item details loop
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();
-			if (null != mplWebCrmTicketModel.getTransactionId()
-					&& mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
-							MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
+			if (null != mplWebCrmTicketModel.getTransactionId())
 			{
 				ticketLineObj.setLineItemId(mplWebCrmTicketModel.getTransactionId());
 			}
@@ -799,8 +797,12 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				ticketLineObj.setUploadImage(uploadImageList);
 			}
 			ticketlineItemsXMLDataList.add(ticketLineObj);
-			ticket.setLineItemDataList(ticketlineItemsXMLDataList);
 
+			if (mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase(
+					MarketplacecclientservicesConstants.CRM_WEBFORM_TICKET_SUB_ORDER))
+			{
+				ticket.setLineItemDataList(ticketlineItemsXMLDataList);
+			}
 			//call for sending it to PI
 			//ticketCreationCRM(ticket);
 		}

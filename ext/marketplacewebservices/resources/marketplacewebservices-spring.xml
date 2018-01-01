@@ -443,7 +443,7 @@
  
  <bean id="mplOrderSyncUtility"
 			class="com.tisl.mpl.ordersync.impl.OrderSyncUtilityImpl">	
-			<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategy" />
+			<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategyNew" />
 			<property name="modelService" ref="modelService" />
 			<property name="timeService" ref="timeService" />
 			<property name="orderStatusMapping" ref="orderStatusMapping" />
@@ -457,7 +457,7 @@
 			</bean>
 			
 			
-			<alias name="defaultMplConsignmentStatusMappingStrategy" alias="consignmentStatusMappingStrategy" />
+			<alias name="defaultMplConsignmentStatusMappingStrategy" alias="consignmentStatusMappingStrategyNew" />
 	<bean id="defaultMplConsignmentStatusMappingStrategy"
 		class="com.tisl.mpl.integration.oms.mapping.MplConsignmentStatusMappingStrategy">
 		<property name="consignmentStatusMapping" ref="consignmentStatusMapping" />

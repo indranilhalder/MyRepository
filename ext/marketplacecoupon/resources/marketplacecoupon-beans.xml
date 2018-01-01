@@ -30,6 +30,7 @@
     	<property name="totalDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="loadOffer" type="String"/>
     	<property name="mbDiscountAftrCVoucher" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+    	<property name="cartcouponRedeemError" type="String"/>
     </bean>
     
       <bean class="com.tisl.mpl.data.VoucherDisplayData">
