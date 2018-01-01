@@ -18,6 +18,7 @@ import de.hybris.platform.commercefacades.order.impl.DefaultCartFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
@@ -45,6 +46,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -1808,7 +1810,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							}
 							if (null != pinCodeObj.getValidDeliveryModes())
 							{
-								obj.setValidDeliveryModes(pinCodeObj.getValidDeliveryModes());
+								//TISUAT-6157
+								List<DeliveryDetailsData> deliveryModePriorityList = new ArrayList<DeliveryDetailsData>();
+								deliveryModePriorityList = arrangeDeliveryOnPriority(pinCodeObj.getUssid(),
+										pinCodeObj.getValidDeliveryModes());
+								//obj.setValidDeliveryModes(pinCodeObj.getValidDeliveryModes());
+								obj.setValidDeliveryModes(deliveryModePriorityList);
 							}
 							//TISJEW-3517
 							if (isExchangeApplicable)
@@ -1866,6 +1873,53 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		//End of AbstractOrderEntryModel for loop,Product Details
 		return gwlpList;
 
+	}
+
+	/**
+	 * TISUAT-6157
+	 *
+	 * @param ussid
+	 * @param pinCodeReslist
+	 * @return delDataPriorityList
+	 */
+	private List<DeliveryDetailsData> arrangeDeliveryOnPriority(final String ussid, final List<DeliveryDetailsData> pinCodeReslist)
+	{
+		final List<DeliveryDetailsData> delDataPriorityList = new ArrayList<DeliveryDetailsData>();
+		final List<MplZoneDeliveryModeValueModel> deliveryModeList = getMplDeliveryCostService().getDeliveryModesAndCost(
+				MarketplacecommerceservicesConstants.INR, ussid);
+		final List<DeliveryModeModel> delModeList = new ArrayList<DeliveryModeModel>();
+		for (final MplZoneDeliveryModeValueModel delModel : deliveryModeList)
+		{
+			delModeList.add(delModel.getDeliveryMode());
+		}
+		delModeList.sort(Comparator.comparing(DeliveryModeModel::getPriority));
+
+		for (final DeliveryModeModel delivModel : delModeList)
+		{
+			for (final DeliveryDetailsData delData : pinCodeReslist)
+			{
+				if ((MarketplacecommerceservicesConstants.ED.equalsIgnoreCase(delData.getType()))
+						&& (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+				{
+					delDataPriorityList.add(delData);
+					break;
+				}
+				else if ((MarketplacecommerceservicesConstants.HD.equalsIgnoreCase(delData.getType()))
+						&& (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+				{
+					delDataPriorityList.add(delData);
+					break;
+				}
+				else if ((MarketplacecommerceservicesConstants.CnC.equalsIgnoreCase(delData.getType()))
+						&& (MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(delivModel.getCode())))
+				{
+					delDataPriorityList.add(delData);
+					break;
+				}
+			}
+		}
+
+		return delDataPriorityList;
 	}
 
 	/**
