@@ -2457,7 +2457,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								.setSubtotalPrice(String.valueOf(subtotalprice.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 				}
-
+				double actualDelCharge = 0.0;
+				if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+				{
+					for (final AbstractOrderEntryModel cartentry : cartModel.getEntries())
+					{
+						actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+					}
+				}
 				//SDI-2801
 				//GenericUtilityMethods.getCartPriceDetailsMobile(cartModel, cartDataDetails);
 				if (null != cartModel.getTotalPrice() && StringUtils.isNotEmpty(cartModel.getTotalPrice().toString())
@@ -2466,7 +2473,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
 
 
-					/*- cartModel.getDeliveryCost().doubleValue()*/);
+					- cartModel.getDeliveryCost().doubleValue() + actualDelCharge);
 
 					final PriceData totalPrice = discountUtility.createPrice(cartModel,
 							Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
