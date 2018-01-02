@@ -13,7 +13,7 @@ const model = (
       return Object.assign({}, state, {
         modelType: action.modelType,
         visibility: action.visibility,
-        ownProps: action.OwnProps
+        ownProps: action.ownProps
       });
     }
     case modelActions.MOBILE_MODEL_TYPE_HIDE: {
