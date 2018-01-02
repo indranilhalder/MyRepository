@@ -9,14 +9,14 @@ const model = (
   action
 ) => {
   switch (action.type) {
-    case modelActions.MOBILE_MODEL_TYPE_SHOW: {
+    case modelActions.SHOW_MODAL: {
       return Object.assign({}, state, {
         modelType: action.modelType,
         ownProps: action.ownProps,
         showModel: true
       });
     }
-    case modelActions.MOBILE_MODEL_TYPE_HIDE: {
+    case modelActions.HIDE_MODAL: {
       return Object.assign({}, state, {
         modelType: action.modelType,
         ownProps: null,
