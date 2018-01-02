@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
-import "./App.css";
+import styles from "./App.css";
 
 import { Input } from "xelpmoc-core";
 
 class App extends Component {
   render() {
+    console.log(styles);
+
     return (
       <div className="App">
         <header className="App-header">
