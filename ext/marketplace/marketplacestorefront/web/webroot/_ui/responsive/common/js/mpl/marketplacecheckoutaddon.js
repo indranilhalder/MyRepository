@@ -6691,7 +6691,8 @@ function useWalletForPaymentAjax(){
 
 		complete : function(data){
 
-			applyPromotion(null,"none","none");
+			//applyPromotion(null,"none","none");
+			useWalletForPaymentAndPromoAjax();
 		}
 
 	});

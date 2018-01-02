@@ -78213,7 +78213,7 @@ ul.offerui {
     	margin-top: 104px 
     }
 	 .cart.wrapper .right-block.billing.checkout-list-right{
-	 	position: absolute;
+	 	/* position: absolute; */
 	    top: 0;
 	    right: 0;
 	 }
