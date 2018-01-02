@@ -87,6 +87,10 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 				{
 					couponPromo+=entry.getCouponValue();
 				}
+				if(null!=entry.getCartCouponValue())
+				{
+					couponPromo+=entry.getCartCouponValue();
+				}
 			}
 			renderRow(promotion,
 					LabelUtils.getLabel(widget, "promotion", new Object[0]),

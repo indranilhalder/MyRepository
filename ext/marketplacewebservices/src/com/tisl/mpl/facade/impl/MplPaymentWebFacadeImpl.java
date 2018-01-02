@@ -367,6 +367,14 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 						cart.setConvenienceCharges(Double.valueOf(0.0));
 						//getModelService().save(cart);
 					}
+					//Paytm changes for mobile || Start
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.PAYTM);
+						cart.setConvenienceCharges(Double.valueOf(0.0));
+					}
+					//Paytm changes for mobile || End
 					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI))
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.EMI);
@@ -748,7 +756,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -782,6 +790,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			cartModel = findCartValues(cartId);
 			// Validate Cart Model is not null
+			cartService.setSessionCart(cartModel);
 			if (null != cartModel)
 			{
 				cartDetailsData = mplCartWebService.displayOrderSummary(pincode, cartModel, cartDetailsData);

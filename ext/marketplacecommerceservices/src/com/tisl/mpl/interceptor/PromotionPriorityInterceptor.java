@@ -153,6 +153,24 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 
 		final boolean bundlelinknameflag = checkbundlelinknameData(object); //added for TPR-1325 link name character
 
+
+		//TPR-7408 starts here
+		final String costcentreflag = configurationService.getConfiguration().getString("promotion.coupon.costcentre.flag");
+
+
+		if (StringUtils.isNotEmpty(costcentreflag) && StringUtils.equalsIgnoreCase(costcentreflag, "false"))
+		{
+			final boolean checkTotalCostCentrePercentage = checkCostCentreData(object);
+
+			if (!checkTotalCostCentrePercentage)
+			{
+				throw new InterceptorException(Localization.getLocalizedString("promotion.costCentre.attributionPercentage.total"));
+			}
+
+		}
+
+		//TPR-7408 ends here
+
 		if (!errorflag)
 		{
 			//final String errorMsg = Localization.getLocalizedString(MarketplacecommerceservicesConstants.PROMO_ERROR_MESSAGE);
@@ -544,6 +562,45 @@ public class PromotionPriorityInterceptor implements ValidateInterceptor
 			}
 		}
 	}
+
+
+	/* TPR-7408 starts here */
+	/**
+	 * @param object
+	 * @return boolean
+	 */
+	private boolean checkCostCentreData(final Object object)
+	{
+		if (object instanceof AbstractPromotionModel)
+		{
+			//final Integer titleLength = getPromotionTitleLength();
+			final AbstractPromotionModel promo = (AbstractPromotionModel) object;
+
+			final Double promoCostCentreOnePercentageValue = promo.getPromoCostCentreOnePercentage();
+			final Double promoCostCentreTwoPercentageValue = promo.getPromoCostCentreTwoPercentage();
+			final Double promoCostCentreThreePercentageValue = promo.getPromoCostCentreThreePercentage();
+
+			if (promoCostCentreOnePercentageValue == null || promoCostCentreTwoPercentageValue == null
+					|| promoCostCentreThreePercentageValue == null)
+			{
+				return false;
+			}
+			else
+			{
+				final double percentageTotal = promoCostCentreOnePercentageValue.doubleValue()
+						+ promoCostCentreTwoPercentageValue.doubleValue() + promoCostCentreThreePercentageValue.doubleValue();
+				if (percentageTotal != 100.0D)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/* TPR-7408 ends here */
+
+
 
 	/**
 	 * @param object

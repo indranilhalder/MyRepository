@@ -24,6 +24,8 @@
 		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
 		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
 		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
+		<span class="error-message" id="sellerCouponError"><spring:theme code="checkout.multi.coupons.seller"/></span>
+		<span class="error-message" id="orderThresholdError"><spring:theme code="checkout.multi.coupons.orderThreshold"/></span>
 <!-- changes for  [ TPR-4461] TISSTRT-1523-->		
 		<span class="error-message correctMessageCoupon" id="couponPaymentRestrictionMessage"></span>
 <!-- changes for  [ TPR-1075] TISSTRT-1523-->

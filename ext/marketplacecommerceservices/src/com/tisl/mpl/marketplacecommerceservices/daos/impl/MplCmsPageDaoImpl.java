@@ -162,7 +162,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -420,7 +420,6 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		queryString.append(" where ({cm.code} = ?channel or {cp.channel} is null)")
 				.append(" and {cp.catalogVersion}=?catalogVersion")
 				.append(" and {cp.associatedProducts} like '%" + product.getPk().toString() + "%'");
-
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
 		query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);

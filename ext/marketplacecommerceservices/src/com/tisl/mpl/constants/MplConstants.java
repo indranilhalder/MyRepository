@@ -116,4 +116,8 @@ public final class MplConstants
 	//Sonar_fix
 	public static final String COMPONENT_GUID_FOUND = "Found Component>>>>with id :::";
 	public static final String NOT_AVAILABLE = "N/A";
+
+	public static final Integer ORDER_COLUMN_MANUALREF = Integer.valueOf(1);
+	public static final Integer TRANSC_COLUMN_MANUALREF = Integer.valueOf(3);
+	public static final Integer STATUS_COLUMN_MANUALREF = Integer.valueOf(10);
 }

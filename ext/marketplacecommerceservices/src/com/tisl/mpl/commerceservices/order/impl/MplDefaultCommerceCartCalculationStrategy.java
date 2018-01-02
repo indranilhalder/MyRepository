@@ -194,6 +194,16 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			cartEntry.setCartPromoCode("");
 			cartEntry.setIsPercentageDisc(Boolean.FALSE);
 			cartEntry.setTotalProductLevelDisc(Double.valueOf(0.00D));
+
+			//TPR-7408 starts here
+			cartEntry.setPromoProductCostCentreOnePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoProductCostCentreTwoPercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoProductCostCentreThreePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreOnePercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreTwoPercentage(Double.valueOf(0.00D));
+			cartEntry.setPromoCartCostCentreThreePercentage(Double.valueOf(0.00D));
+			//TPR-7408 ends here
+
 			//			cartEntry.setCouponCode("");
 			//			cartEntry.setCouponValue(Double.valueOf(0.00D));
 

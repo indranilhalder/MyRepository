@@ -113,29 +113,28 @@
 			elementtype="SignColItemComponent" autocreate="true" generate="true"
 			type="list" />
 		<!-- Luxury SignatureCollection -->
-
+		
 		<!-- Added for Third Party Wallet -->
 		<collectiontype code="ThrdPrtyAuditEntryCollection"
 			elementtype="ThirdPartyAuditEntry" autocreate="true" generate="true"
 			type="list" />
 		<!-- Added for Third Party Wallet -->
-		<!-- Added in R2.3 START -->
-		<collectiontype elementtype="Address" code="addressList"
+		<!-- Added in R2.3 START  -->
+		 <collectiontype elementtype="Address" code="addressList"
+  			 autocreate="true" generate="true" type="list" />
+  		 <!-- For Return QuickDrop Email Process -->
+   		<collectiontype elementtype="java.lang.String" code="quickDropStores"
+  			 autocreate="true" generate="true" type="list" />
+   
+  		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
+   				autocreate="true" generate="true" type="list" />
+		<!-- Added in R2.3 END  -->
+		<!-- Added for TPR-6286  -->
+		<collectiontype code="AbstractOrderEntryListInvoice" elementtype="AbstractOrderEntry"
 			autocreate="true" generate="true" type="list" />
-		<!-- For Return QuickDrop Email Process -->
-		<collectiontype elementtype="java.lang.String" code="quickDropStores"
+			
+		<collectiontype code="ChildOrderListInvoice" elementtype="Order"
 			autocreate="true" generate="true" type="list" />
-
-		<collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
-			autocreate="true" generate="true" type="list" />
-		<!-- Added in R2.3 END -->
-		<!-- Added for TPR-6286 -->
-		<collectiontype code="AbstractOrderEntryListInvoice"
-			elementtype="AbstractOrderEntry" autocreate="true" generate="true"
-			type="list" />
-
-		<collectiontype code="ChildOrderListInvoice"
-			elementtype="Order" autocreate="true" generate="true" type="list" />
 
 		<collectiontype code="luxuryCategoryCollection"
 			elementtype="Category" autocreate="true" generate="true" type="list" />
@@ -926,6 +925,12 @@
 	    <enumtype code="CreditCardType" autocreate="false" generate="false">
 			<value code="jcb"/>
 			<value code="discover"/>
+		</enumtype>	
+		<!--  added to check refund status h2refund -->
+		<enumtype code="refundFomType" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="Automatic"></value>
+			<value code="Manual"></value>		
 		</enumtype>
 		
 		<enumtype code="aplusSite" autocreate="true" generate="true"
@@ -1394,6 +1399,11 @@
 			</targetElement>
 		</relation>
 		<!-- TPR-6665 : relation betwwen slave urls with solr server config end -->
+		<!-- gigya rating-review response to the user comments using googleplus site for a listing id -->											   
+		<relation code="GigyaResp2GooglePlusSiteUserRelation" autocreate="true" generate="true" localized="false" >
+			<sourceElement qualifier ="gigyaResponseCapture" type="GigyaResponseCapture" cardinality="one"></sourceElement>
+			<targetElement qualifier = "gigyaGooglePlusUserInfo" type="GigyaGooglePlusUserInfo" cardinality="many"></targetElement>
+		</relation>	
 
 	</relations>
 	<itemtypes>
@@ -1429,7 +1439,7 @@
 			
 			
 			
-	<itemtype code="ShopByCategory" autocreate="true"
+		<itemtype code="ShopByCategory" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
 		<attributes>
@@ -1441,11 +1451,12 @@
 						<persistence type='property' />
 				</attribute>
 				<attribute type="java.lang.String" qualifier="title"
-					autocreate="true" generate="true">
-					<description>Title</description>
-					<modifiers read="true" write="true" search="true"
-						optional="false" />
-					<persistence type='property' />
+						autocreate="true" generate="true">
+						<description>Title</description>																																			  
+						<modifiers read="true" write="true" search="true"
+							optional="false" />												  					
+						<persistence type='property' />						   
+						   
 				</attribute>
 				<attribute type="java.lang.String" qualifier="shopNowName"
 						   autocreate="true" generate="true">
@@ -1461,9 +1472,8 @@
 							   optional="true" />
 					<persistence type='property' />
 				</attribute>
-			</attributes>
+		</attributes>
 		</itemtype>
-
 
 		<!-- <itemtype code="ImageShowCaseComponent" autocreate="true" generate="true" 
 			extends="SimpleCMSComponent" jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent"> 
@@ -3280,6 +3290,13 @@
 							optional="true" removable="false" initial="true" private="false"
 							partof="false" />
 					</attribute>
+					<attribute qualifier="status" autocreate="true"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="true" initial="true" private="false"
+							partof="false" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- New table for PR-4 :: START-->
@@ -3526,7 +3543,14 @@
 							unique="false" optional="false" removable="false" initial="true"
 							private="false" partof="false" />
 					</attribute>
-
+					<!-- TPR-7486 -->
+ 				   <attribute qualifier="cardBinNumber" autocreate="true"
+ 					type="java.lang.String">
+ 					   <persistence type="property" />
+ 					    <modifiers read="true" write="true" search="true"
+						unique="false" optional="false" removable="false" initial="true"
+							private="false" partof="false" />
+				   </attribute>
 					<attribute qualifier="billingAddress" autocreate="true"
 						type="Address">
 						<persistence type="property" />
@@ -5917,6 +5941,21 @@
 
 			</itemtype>
 
+			<!-- Added for 5989 :: START -->
+			<itemtype code="WebFormTicketProcess" extends="BusinessProcess"
+				autocreate="true" generate="true" jaloclass="de.hybris.platform.webform.jalo.WebFormTicketProcess">
+				<description>Represents process that is used for sending the web form ticket to PI</description>
+				<attributes>
+					<attribute qualifier="MplWebCrmTicket" type="MplWebCrmTicket">
+						<description>Web form ticket details</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<!-- Added for 5989 :: END -->
+
+
 			<itemtype code="OrderRefundProcess" extends="OrderProcess"
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.OrderRefundProcess">
@@ -5967,7 +6006,38 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<!-- SDI-2788 -->
+			<itemtype code="InitiateRefundProcess" extends="OrderProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.InitiateRefundProcess">
+				<description>Represents process that is used to initiate Refund</description>
+				<attributes>
+					<attribute qualifier="refundTransactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction ID to be refunded</description>
+					</attribute>
+				</attributes>
+			</itemtype>
 
+	<!--SDI 3591  -->
+			
+			<itemtype code="CODReturnOMSSyncProcess" extends="OrderProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.CODReturnOMSSyncProcess">
+				<description>Represents process that is used to initiate OMS call for COD Return Orders from FICO</description>
+				<attributes>
+					<attribute qualifier="transactionStatus" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction status to pass to OMS</description>
+					</attribute>
+					<attribute qualifier="transactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction Id to pass to OMS</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 		</typegroup>
 		<!-- Blacklist Model -->
 		<typegroup name="Marketplace">
@@ -6160,6 +6230,86 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					
+					<!-- TPR-7408 starts here -->
+					
+					<attribute qualifier="promoProductCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoProductCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoProductCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+										
+					<!-- TPR-7408 ends here -->
+					
+					
 					<attribute qualifier="totalProductLevelDisc" autocreate="true"
 						type="java.lang.Double">
 						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
@@ -6182,6 +6332,14 @@
 						<description>NET AMOUNT(tax inclusive) after all disc. in Rs.</description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="chargeback" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>CHARGEBACK AMOUNT(tax inclusive) after all disc. in Rs.</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="isBOGOapplied" autocreate="true"
@@ -6207,8 +6365,8 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-					<!-- Addded to store HD Delivery Charges START -->
-
+					<!-- Addded to store HD Delivery Charges START --> 
+					
 					<attribute qualifier="hdDeliveryCharge" autocreate="true"
 						type="java.lang.Double">
 						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
@@ -6217,8 +6375,8 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-
-					<!-- Addded to store HD Delivery Charges END -->
+					
+					<!-- Addded to store HD Delivery Charges END --> 
 					<attribute qualifier="imeiDetail" autocreate="true" type="ImeiDetail">
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" />
@@ -6235,7 +6393,7 @@
 							optional="true" />
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 					</attribute>
-
+					
 					<attribute autocreate="true" qualifier="refundedEdChargeAmt"
 						type="java.lang.Double">
 						<persistence type="property" qualifier="refundedEdChargeAmt">
@@ -6343,13 +6501,18 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-
+					
 				</attributes>
 				<indexes>
 					<index name="IDX_ENTRY_FETCH">
 						<key attribute="entryNumber" />
 						<key attribute="order" />
 					</index>
+					<!-- TPR-4512 Start -->
+					<index name="IDX_ORDERLINE_ID">
+						<key attribute="orderLineId" />
+					</index>
+					<!-- TPR-4512 End -->
 				</indexes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
@@ -6438,7 +6601,11 @@
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
-
+					<!-- Adding attribute to identify store for OIS orders -->
+ 					<attribute qualifier="storeId" type="java.lang.String">
+ 						<modifiers optional="true" read="true" write="true" />
+ 						<persistence type="property" />
+ 					</attribute>
 					<attribute qualifier="deliveryAddresses" type="addressList">
 						<modifiers optional="true" />
 						<persistence type="property" />
@@ -7990,6 +8157,32 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Added for TPR-5954 || Start -->
+					<attribute qualifier="subReason" type="java.lang.String">
+						<description>Sub reason value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="subReasonCode" type="java.lang.String">
+						<description>Sub reason code</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnRemarks" type="java.lang.String">
+						<description>remarks for return</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="imgUrl" type="java.lang.String">
+						<description>url of the uploaded image</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(2000)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- Added for TPR-5954 || End -->
 				</attributes>
 			</itemtype>
 			<itemtype code="RefundEntry" autocreate="false" generate="true">
@@ -8138,6 +8331,17 @@
 								<value>VARCHAR2(20)</value>
 							</columntype>
 						</persistence>
+					</attribute>
+					<!-- changes for jewellery Cs-Cockpit end -->
+					<!--  added to check refund status h2refund -->
+					<attribute qualifier="refundDetails" type="refundFomType">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property'>
+							<columntype database='oracle'>
+								<value>VARCHAR2(40)</value>
+							</columntype>
+						</persistence>					
 					</attribute>
 					<!-- changes for jewellery Cs-Cockpit end -->
 				</attributes>
@@ -10153,7 +10357,21 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
-
+					<attribute qualifier="cartCouponCode" autocreate="true"
+						type="java.lang.String">
+						<description>Cart Coupon Code</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cartCouponValue" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description> Cart Coupon Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -10950,7 +11168,6 @@
 			</itemtype>
 		</typegroup>
 
-
 		<typegroup name="BulkReturnProcessForOrder">
 			<itemtype code="BulkReturnProcess" extends="GenericItem"
 				autocreate="true" generate="true"
@@ -11105,8 +11322,10 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
-			</itemtype>
-			<!-- Bulk Cancellation Upload -->
+			</itemtype>	  
+		
+		
+					<!-- Bulk Cancellation Upload -->
 			<itemtype code="BulkCancellation" generate="true" extends="GenericItem"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.BulkCancellation">
 				<deployment table="mplBulkCancelUpload" typecode="14599" />
@@ -11212,9 +11431,55 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-
+				
 		<!--  Return Window Changes Ends -->
+		<!-- Size Guide Upload Changes Starts -->
+		<typegroup name="SizeGuideUploadGroup">
+			<itemtype code="SizeGuideUpload" generate="true" extends="GenericItem"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.SizeGuideUpload">
+				<deployment table="mplSizeGuideUpload" typecode="14601" />
+				<attributes>
+				
+					<attribute qualifier="identifiers" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" optional="false" unique="true"/>
+						<description>Identifier</description>
+						<persistence type="property" />
+					</attribute>
+						
+					<attribute qualifier="csvFile" type="Media" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file</description>
+						<persistence type="property" />
+					</attribute>
 
+					<attribute qualifier="status" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Status</description>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Size Guide Changes ends -->
 		<!-- A+ Content TPR-978 -->
 		<typegroup name="APlusContentGroup">
 			<itemtype code="APlusContent" generate="true" extends="GenericItem"
@@ -13393,7 +13658,53 @@
 			</itemtype>
 		</typegroup>
 		<!-- END TPR-5733 -->
-
+		<typegroup name="SellerMonograming">
+			<itemtype code="MplSellerMonograming" autocreate="true" generate="true">
+				<deployment table="MplSellerMonograming" typecode="25678" />
+				<attributes>
+					<attribute autocreate="true" qualifier="productCode" type="java.lang.String"
+						generate="true">
+					 
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" search="true"/>
+					</attribute>
+					<attribute autocreate="true" qualifier="sellerId"
+						type="java.lang.String" generate="true">
+					 
+					 
+						<persistence type="property" />
+						<modifiers unique="true" optional="true" search="true"/>
+					</attribute>
+					<attribute qualifier="message" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="IDX_SELLER_MSG">
+						<key attribute="productCode" />
+						<key attribute="sellerId" />
+					</index>
+					</indexes>
+			</itemtype>
+		</typegroup>
 		<!-- TPR-6665 : sysnonums update to slave servers start -->
 		<typegroup name="MPL_Slave_URL">
 			<itemtype code="SolrEndpointSlaveUrl" autocreate="true"
@@ -13415,10 +13726,10 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-
-		<!-- TPR-6665 : sysnonums update to slave servers end -->
 		
-	<!-- start:PR-9: Solr relevance score -->	
+		<!-- TPR-6665 : sysnonums update to slave servers end-->
+
+<!-- start:PR-9: Solr relevance score -->	
    <typegroup name="Solr_relevancescore">
      <itemtype code="Product" autocreate="false" generate="true" jaloclass="de.hybris.platform.jalo.product.Product">
                 <attributes>
@@ -13433,5 +13744,394 @@
             </itemtype>
             </typegroup>
       <!-- end:PR-9: Solr relevance score -->
-	</itemtypes>
+
+
+	<!-- Car-Changes-Start-CAR-331 -->
+	<typegroup name="Mpl_Restriction">
+		<itemtype code="DateRestriction" extends="Restriction"
+			jaloclass="de.hybris.platform.voucher.jalo.DateRestriction"
+			autocreate="false" generate="false">
+			<indexes>
+				<index name="P_IDX_RESTRICTIONS">
+					<key attribute="itemtype" />
+					<key attribute="ENDDATE" />
+					<key attribute="STARTDATE" />
+
+				</index>
+			</indexes>
+
+		</itemtype>
+	</typegroup>
+	<!-- Car-Changes-End-CAR-331 -->	
+	
+	<!-- TPR-5954 || Category specific return reason ||Start -->
+    <typegroup name="ReturnCat">
+	<itemtype code="ReturnReasonCatChild" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.ReturnReasonCatChild">
+			<deployment table="MplRetReasonCat" typecode="25126" />
+			<attributes>
+				<attribute qualifier="reasonCodes" type="java.lang.String">
+					<description>This is the reason codes</description>
+					<modifiers optional="false" unique="true" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="reasonDesc" type="java.lang.String">
+					<description>The reason descriptions</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="parentRelation" type="java.lang.String">
+					<description>The parent child relation</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
+	 <typegroup name="ReturnCat">
+	<itemtype code="ReturnReasonCatMaster" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.ReturnReasonCatMaster">
+			<deployment table="MplRetReasonCatMap" typecode="25127" />
+			<attributes>
+				<attribute qualifier="prodCat" type="java.lang.String">
+					<description>product category</description>
+					<modifiers optional="false" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="reasonCode" type="java.lang.String">
+					<description>The reason descriptions</description>
+					<modifiers optional="true" unique="true" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
+	<!-- TPR-5954 || Category specific return reason ||End -->
+
+		<!-- TPR-6665 : sysnonums update to slave servers end -->
+		<!-- TPR- 5989 : Web Form to create a Ticket from commerce -->
+		<typegroup name="MPL_WEB_CRM_TICKET">
+		<itemtype code="MplWebCrm" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.MplWebCrm">
+				<description>Takes Business Configured CRM mapping</description>
+				<deployment table="MplWebCrm" typecode="11890" />
+				<attributes>
+					<attribute qualifier="serialNum" type="java.lang.String">
+						<modifiers optional="false" unique="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="nodeText" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="nodeCrmCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="nodeType" type="java.lang.String">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="nodeParent" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="ticketType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="ticketAnswer" type="java.lang.String">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(4000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Ticket Answer</description>					
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="createTicketAllowed" type="boolean">
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="nodeDisplayAllowed" type="boolean">
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.MplWebCrmTicket">
+				<description>Stores Customer Ticket for sending to CRM</description>
+				<deployment table="MplWebCrmTicket" typecode="11898" />
+				<attributes>
+					<attribute qualifier="commerceTicketId" type="java.lang.String">
+						<modifiers optional="false" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="ticketType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="ticketSubType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="orderCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="subOrderCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="transactionId" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="L0code" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="L1code" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="L2code" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="L3code" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="L4code" type="java.lang.String">
+					    <persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="comment" type="java.lang.String">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(1100)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Comments</description>					
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="crmTicketRef" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="customerId" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="customerName" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="customerEmail" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="customerMobile" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="status" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="attachments" type="java.lang.String">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(4000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>File Paths for attachments</description>					
+						<modifiers optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+	
+	<!-- SDI-2813 || OMS Order Sync ||Start -->
+     <typegroup name="OrderSyncLog_Intelligence">
+	<itemtype code="OrderSyncLog" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.OrderSyncLog">
+			<deployment table="MplOrderSyncLog" typecode="25128" />
+			<attributes>
+				<attribute qualifier="transactionId" type="java.lang.String">
+					<description>This is the reason codes</description>
+					<modifiers optional="false" unique="true" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="ErrorLog" type="java.lang.String">
+					<description>The reason descriptions</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+				<attribute qualifier="orderStatus" type="java.lang.String">
+					<description>The parent child relation</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="StatusUpdateXML" type="java.lang.String">
+							  
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
+			
+		<!-- gigya data pulling -->
+	<typegroup name="Gigya_Data_Pulling">
+		<itemtype code="GigyaResponseCapture" autocreate="true" generate="true">
+			<deployment table="GigyaResponseCapture" typecode="25300" />
+			<attributes>
+				<attribute autocreate="true" qualifier="listingId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute qualifier="reviewSummaryResponse" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+				<attribute qualifier="reviewDetailResponse" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+	<!-- table to store info for user commented from google plus site for a listing id-->
+		<itemtype code="GigyaGooglePlusUserInfo" autocreate="true" generate="true">
+			<deployment table="GigyaGooglePlusUserInfo" typecode="25390" />
+			<attributes>
+				<attribute autocreate="true" qualifier="uid" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="googleEmailId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>		
+  </itemtypes>
+
 </items>

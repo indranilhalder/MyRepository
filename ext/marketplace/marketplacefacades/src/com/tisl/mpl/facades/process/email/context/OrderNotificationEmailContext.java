@@ -187,9 +187,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
 		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
-
+		
+		//SDI-2038
 		final String trackOrderUrl = getConfigurationService().getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + orderCode;
+				.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + "/" + orderCode;
 		/* Added in R2.3 for shortUrl START */
 		//final String shortUrl = shortUrlService.genearateShortURL(orderCode);
 		//final String shortUrl = orderProcessModel.getOrderTrackUrl();

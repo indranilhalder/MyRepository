@@ -1075,6 +1075,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (orderModel != null)
 			{
 				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+
+				//Paytm Change..
+				String paytmTransactionId = null;
+				if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions())
+						&& null != orderModel.getPaymentTransactions().get(0)
+						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions().get(0).getEntries())
+						&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
+				{
+					paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
+				}
+
+				model.addAttribute("paytmTransactionId", paytmTransactionId);
+
 				final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 				final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
 				final List<OrderEntryData> orderList = orderDetail.getEntries();
@@ -1885,6 +1899,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		boolean isFineJew = false;
 		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
+		String L2Cat = null;
+
 		try
 		{
 			//OrderEntryData subOrderEntry = new OrderEntryData();
@@ -1953,6 +1969,34 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 					}
 
+					//TPR-5954 || Category specific return reason || Start
+					Collection<CategoryModel> superCategories = productModel.getSupercategories();
+
+					outer: for (final CategoryModel category : superCategories)
+					{
+						if (category.getCode().startsWith("MPH"))
+						{
+							superCategories = category.getSupercategories();
+							for (final CategoryModel category1 : superCategories)
+							{
+								if (category1.getCode().startsWith("MPH"))
+								{
+									superCategories = category1.getSupercategories();
+									for (final CategoryModel category2 : superCategories)
+									{
+										if (category2.getCode().startsWith("MPH"))
+										{
+											L2Cat = category2.getCode();
+											break outer;
+										}
+									}
+								}
+							}
+
+						}
+					}
+					//TPR-5954 || Category specific return reason || End
+
 					//TPR-4134 starts
 					if (StringUtils.isNotEmpty(revSealSellerList))
 					{
@@ -2014,7 +2058,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			}
 			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
-			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+
+
+			//TPR-5954
+			List<ReturnReasonData> reasonDataList = getMplOrderFacade().getCatSpecificRetReason(L2Cat);
+
+			if (null == reasonDataList || reasonDataList.isEmpty())
+			{
+
+				reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+			}
+
+
+
+			//final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			if (!isFineJew)
 			{
 				for (final Iterator<ReturnReasonData> iterator = reasonDataList.iterator(); iterator.hasNext();)
@@ -2135,7 +2192,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						scheduleDatesEmpty = true;
 					}
 				}
-
+				model.addAttribute("disableRsp", Boolean.FALSE);
 				model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
 				model.addAttribute(ModelAttributetConstants.RETURN_DATES, returnableDates);
 				model.addAttribute(ModelAttributetConstants.RETURN_SCHEDULE_INFO, scheduleDatesEmpty);

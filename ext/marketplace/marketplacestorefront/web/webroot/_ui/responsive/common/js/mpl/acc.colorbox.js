@@ -4,7 +4,8 @@ ACC.colorbox = {
 		opacity:0.7,
 		width:"auto",
 		transition:"none",
-		close:'',
+		close: "",
+        overlayClose: true,
 		title:'<div class="headline"><span class="headline-text">{title}</span></div>',
 		onComplete: function() {
 			errorColorBox();
@@ -31,6 +32,9 @@ ACC.colorbox = {
 	close: function(){
 		$.colorbox.close();
 		$.colorbox.remove();
+		$('#cboxClose').click(); // Then this will close the box, $.colorbox.close() still doesn't work
+		$.colorbox.init(); // Re-init, otherwise colorbox stops working
+		
 	}
 };
 function errorColorBox() {

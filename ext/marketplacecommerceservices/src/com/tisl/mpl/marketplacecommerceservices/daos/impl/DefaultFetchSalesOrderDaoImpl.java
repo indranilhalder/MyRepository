@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -370,7 +372,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -550,8 +552,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
 			/*
 			 * } else
-			 * 
-			 * 
+			 *
+			 *
 			 * {
 			 */
 			for (final List<Object> obj : result.getResult())
@@ -671,5 +673,78 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		return orderlist;
 	}
 
+	/*
+	 * TPR-7415 (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOmsSubmissionPendingOrderList(java.util.Date,
+	 * java.util.Date)
+	 */
+	@Override
+	public List<OrderModel> getOmsSubmissionPendingOrderList(final Date startTime, final Date endTime)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch  specified details");
+		}
+		final String queryString = //
+		SELECT_CLASS
+				+ OrderModel.PK
+				+ "} "//
+				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} ,{" + EnumerationValueModel._TYPECODE + " as e} where {p."
+				+ OrderModel.STATUS + "}={e." + EnumerationValueModel.PK + "}" + " and {p." + OrderModel.CREATIONTIME
+				+ "} BETWEEN ?earlierDate and ?presentDate and " + "{p." + OrderModel.TYPE + "} = ?type" + " and ({e."
+				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PAYMENT_SUCCESSFUL.getCode() + "' OR {e."
+				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode() + "')";
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch  specified details success");
+			LOG.debug(EARLIER_DATE.intern() + startTime);
+			LOG.debug(PRESENT_DATE.intern() + endTime);
+		}
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(EARLIER_DATE.intern(), startTime);
+		query.addQueryParameter(PRESENT_DATE.intern(), endTime);
+		query.addQueryParameter(TYPE, SUB);
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("********** specified data query" + query);
+		}
+		return flexibleSearchService.<OrderModel> search(query).getResult();
+	}
+
+
+	/*
+	 * TPR-7415 (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getOmsSubmissionPendingOrderList()
+	 */
+	@Override
+	public List<OrderModel> getOmsSubmissionPendingOrderList()
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch details");
+		}
+		final String queryString = //
+		SELECT_CLASS
+				+ OrderModel.PK
+				+ "} "//
+				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} ,{" + EnumerationValueModel._TYPECODE + " as e} where {p."
+				+ OrderModel.STATUS + "}={e." + EnumerationValueModel.PK + "} and " + "{p." + OrderModel.TYPE + "} = ?type"
+				+ " and ({e." + EnumerationValueModel.CODE + "}='" + OrderStatus.PAYMENT_SUCCESSFUL.getCode() + "' OR {e."
+				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode() + "')";
+
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch details success");
+		}
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(TYPE, SUB);
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("********** fetch order details query " + query);
+		}
+		return flexibleSearchService.<OrderModel> search(query).getResult();
+	}
 
 }

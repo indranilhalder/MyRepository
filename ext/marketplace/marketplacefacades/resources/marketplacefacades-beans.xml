@@ -1275,10 +1275,99 @@
 	</bean>
 	
 	<bean class="de.hybris.platform.solrfacetsearch.config.ClusterConfig">
-		
 		<property name="endpointSlaveURLs" type="java.util.List&lt;com.tisl.mpl.facades.search.data.EndpointSlaveURL>"></property>
-		
+	</bean>	
+	<!-- TPR-6665: Update synonyms in solr slave  end -->
+	
+	<!-- MSD -->
+	<bean class="com.tisl.mpl.facades.data.MSDRequestdata">
+		<property name="api_key" type="String"></property>
+		<property name="widget_list" type="String"></property>
+		<property name="product_id" type="String"></property>
+		<property name="details" type="String"></property>
+		<property name="num_results" type="String"></property>
+		<property name="mad_uuid" type="String"></property>
 	</bean>
 	
 	<!-- TPR-6665: Update synonyms in solr slave  end -->
+	<bean class="com.tisl.mpl.facades.data.MSDResponsedata">
+		<property name="Msddata" type="java.util.List&lt;com.tisl.mpl.facades.data.MSDResponsedataList>"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.MSDResponsedataList">
+	<property name="title" type="String"></property>
+		<property name="price" type="Double"></property>
+		<property name="image_link" type="String"></property>
+		<property name="parent_id" type="String"></property>
+		<property name="link" type="String"></property>
+		<property name="product_id" type="String"></property>
+	</bean>
+	
+	<!-- TPR-5989: Web Form -->
+	<bean class="com.tisl.mpl.facades.cms.data.WebForm">
+		<property name="nodes" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.NodeFormData>" />
+		<property name="name" type="String" />
+		<property name="emailId" type="String" />
+		<property name="mobile" type="String" />
+		<property name="orderLineDatas" type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderEntryData>" />
+		<property name="totalOrderLines" type="String" />
+		
+	</bean>
+	<bean class="com.tisl.mpl.facades.cms.data.NodeFormData">
+		<property name="nodeCode" type="String" />
+		<property name="nodeDesc" type="String" />
+		<property name="nodeType" type="String" />
+		<property name="createTicketAllowed" type="Boolean" />
+		<property name="nodeDisplayAllowed" type="Boolean" />
+		<property name="ticketAnswer" type="String" />
+		<property name="ticketType" type="String" />
+		<property name="parentNode" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.WebFormData">
+		<property name="commerceTicketId" type="String" />
+		<property name="ticketType" type="String" />
+		<property name="ticketSubType" type="String" />
+		<property name="orderCode" type="String" />
+		<property name="subOrderCode" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="L0code" type="String" />
+		<property name="L1code" type="String" />
+		<property name="L2code" type="String" />
+		<property name="L3code" type="String" />
+		<property name="L4code" type="String" />
+		<property name="comment" type="String" />
+		<property name="crmTicketRef" type="String" />
+		<property name="customerId" type="String" />
+		<property name="customerName" type="String" />
+		<property name="customerEmail" type="String" />
+		<property name="customerMobile" type="String" />
+		<property name="status" type="String" />
+		<property name="attachments" type="String" />
+	</bean>
+	<!-- Added for TPR-5989 -->
+	<bean class="com.tis.mpl.facade.data.TicketStatusUpdate">
+		<property name="ecommRequestId" type="String" />
+		<property name="crmTicketID" type="String" />
+		<property name="status" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.WebFormOrder">
+		<property name="orderLineDatas" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.WebFormOrderLine>" />
+		<property name="status" type="String" />
+		<property name="totalOrderLines" type="String" />
+		<property name="pageSize" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.WebFormOrderLine">
+		<property name="orderCode" type="String" />
+		<property name="subOrderCode" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="prodImageURL" type="String" />
+		<property name="orderDate" type="String" />
+		<property name="prodTitle" type="String" />
+		<property name="prodTotalPrice" type="String" />
+		<property name="customerOrderStatus" type="String" />
+	</bean>
+	
 </beans>

@@ -21,6 +21,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String EXTENSIONNAME = "marketplacecoupon";
 
 	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
+	public static final String ALLOFFERVOUCHERQUERY = "select {v.pk} from {MplCartOfferVoucher as v JOIN daterestriction as dr ON {v.pk}={dr.voucher} } where {dr.startdate} <= sysdate and sysdate<= {dr.enddate}";
+	public static final String ALLOFFERVOUCHERQUERYTOTAL = "select {v.pk},{od.total} from {MplCartOfferVoucher as v JOIN daterestriction as dr ON {v.pk}={dr.voucher} JOIN orderrestriction as od ON {v.pk}={od.voucher} } where {dr.startdate} <= sysdate and sysdate<= {dr.enddate}";
 	public static final String COUPONCODE = "couponCode".intern();
 	public static final String COUPONVALUE = "couponValue".intern();
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
@@ -61,6 +63,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String USERINVALID = "User_Invalid".intern();
 	public static final String FREEBIE = "Freebie".intern();
 	public static final String RELEASEISSUE = "Release Issue".intern();
+	public static final String SELLERVIOLATION = "sellerViolated".intern();
+	public static final String ORDERVIOLATION = "orderViolated".intern();
 	//TPR-1075
 	public static final String FIRSTPURUSERINVALID = "First_Purchase_User_Invalid".intern();
 	//Coupon Exception Message
@@ -95,6 +99,10 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String CHANNELINVALID_WEB = "Channel_Not_Applicable_Web".intern();
 	public static final String CHANNELINVALID_MOBILE = "Channel_Not_Applicable_Mobile".intern();
 	public static final String CHANNELINVALID_CALLCENTRE = "Channel_Not_Applicable_CallCentre".intern();
+
+	public static final String CARTCOUPONREDEEM = "/usevoucher";
+	public static final String CARTCOUPONRELEASE = "/releasevoucher";
+	public static final String SELLER_RESTRICTION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart";
 
 	private MarketplacecouponConstants()
 	{

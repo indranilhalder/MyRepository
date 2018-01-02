@@ -104,7 +104,7 @@ public class CustomProductBOGOFPromotionTest extends MplServicelayerTest
 				.search("SELECT {PK} FROM {AbstractPromotion} WHERE {code}='BOGOFPromotion'").getResult().get(0);
 		junit.framework.Assert.assertNotNull(promotion);
 
-		System.out.println("Promotion Code" + promotion.getCode());
+		//	System.out.println("Promotion Code" + promotion.getCode());
 		promotion.setEnabled(Boolean.TRUE);
 		modelService.save(promotion);
 	}
@@ -236,7 +236,7 @@ public class CustomProductBOGOFPromotionTest extends MplServicelayerTest
 				.search("SELECT {PK} FROM {AbstractPromotion} WHERE {code}='BOGOFPromotion'").getResult().get(0);
 		junit.framework.Assert.assertNotNull(promotion);
 
-		System.out.println("Promotion Code" + promotion.getCode());
+		//	System.out.println("Promotion Code" + promotion.getCode());
 		promotion.setEnabled(Boolean.FALSE);
 		modelService.save(promotion);
 	}

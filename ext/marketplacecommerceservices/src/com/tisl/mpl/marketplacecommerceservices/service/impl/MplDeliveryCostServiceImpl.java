@@ -35,6 +35,15 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 		return getMplDeliveryCostDao().getDeliveryCost(deliveryCode, currencyIsoCode, sellerArticleSKU);
 	}
 
+	@Override
+	public MplZoneDeliveryModeValueModel getDeliveryCost(final String deliveryCode, final String currencyIsoCode,
+			final String sellerArticleSKU, final String fulfillmentType)
+	{
+		ServicesUtil.validateParameterNotNull(deliveryCode, "deliveryCode cannot be null");
+		ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
+		return getMplDeliveryCostDao().getDeliveryCost(deliveryCode, currencyIsoCode, sellerArticleSKU, fulfillmentType);
+	}
+
 
 
 	/**

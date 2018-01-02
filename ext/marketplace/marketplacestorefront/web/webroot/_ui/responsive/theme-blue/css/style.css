@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+﻿/* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -41517,7 +41517,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError, .nbAjaxError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError,#sellerCouponError,#orderThresholdError, #invalidChannelError, .nbAjaxError {
 	display: none;
 }
 
@@ -65278,6 +65278,7 @@ li#savedCardDebit + li, li#savedCard + li {
     position: relative;
     width: 216px;
 }
+/*
 .cart.wrapper.checkout-payment .blocks .error-message.card_cvvErrorSavedCard_popup{
 	width: 206px;
     height: 43px;
@@ -65354,6 +65355,7 @@ li#savedCardDebit + li:hover > .card_cvvErrorSavedCard_popup , li#savedCard + li
 li#savedCardDebit + li:hover > .card_nochooseErrorSavedCard_popup , li#savedCard + li:hover > .card_nochooseErrorSavedCard_popup {
     opacity:1;
 }
+*/
 li#savedCardDebit , li#savedCard{
 	margin: 0;
 }
@@ -73238,7 +73240,7 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
     width: 100%;
     margin: 0px auto;
     padding: 15px;
-    font-size: 14px;
+    font-size: 12px;
     min-height: 45px;
     height: auto !important;
 }
@@ -73252,8 +73254,11 @@ span#juspayErrorMsg{
 }
 @media(max-width: 767px){
 	#juspayconnErrorDiv{
-    top: 70px !important;
-}
+		/* start change of TISUAT-6086 */
+	    /* top: 70px !important; */
+	    top: 10px !important;
+	    /* end change of TISUAT-6086 */
+	}
 }
 /*TPR-4461 end*/
 
@@ -75749,7 +75754,7 @@ body.page-returnSubmit .account .wrapper{
   		line-height: 1.5;
   		letter-spacing: 0.6px;
   		padding-right: 22px;
-  		background: url('../images/plp-select-arrow.png') no-repeat 97% 13px #fff;
+  		/* background: url('../images/plp-select-arrow.png') no-repeat 97% 13px #fff; */ 
   		background-size: 10px;
  	}
  	span.price-breakup{
@@ -76948,14 +76953,15 @@ body .account .right-account form label.invite-text-lbl{
 /* TISSPTEN-120 start */
 
 @media (max-width: 768px){
-	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
     margin-left: -3px;
     margin-top: 0px;
 }
 .page-returnSubmit .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
     margin: 10px auto 15px auto ! important;
 }
-.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor {
+.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor,
+.selectReturnMethod.self.col-md-12.col-sm-12.greyColor {
     float: left;
     margin-bottom: 25px;
 }
@@ -76965,10 +76971,105 @@ body .account .right-account form label.invite-text-lbl{
 .thirdTataCliq .col-md-9.scheduledPickup + .col-md-9.selfCourier b {
     display: inline-block;
 }
-
 }
 
 /* TISSPTEN-120 END */
+/*homefurinshing-overview-tab start*/
+.product-info>div.tabs-block.HomeFurnishing{
+	width: 100%;
+    margin: 0 !important;
+    padding: 70px 30px 30px 30px;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview{
+	display: inline-block;
+	width: 49%;
+	vertical-align: top;
+	margin-bottom: 10px;
+	float: left;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: rgba(0, 0, 0, 0.6);
+  	margin-bottom: 8px;
+  	list-style: square;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li.homefurnishing-overview-title{
+	list-style: none;
+	color: #000;
+	text-transform: uppercase;
+	margin-bottom: 16px;
+	margin-left: -15px;
+	
+}
+.product-info>div.tabs-block.HomeFurnishing .nav-wrapper .nav.pdp.productNav li{
+	padding-bottom: 8px;
+}
+/*homefurinshing-overview-tab end*/
+/*home furnishing pdp monogramming start*/
+.sellerMonogramming{
+	font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.6px;
+  margin-top: 12px;
+}
+.product-info .size span+a.buying-guide:after{
+	display: none;
+}
+.product-info .size span+a {
+    color: #a5173c;
+}
+/*home furnishing pdp monogramming end*/
+@media(max-width: 767px){
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview{
+		list-style-type: disc;
+    	margin-left: 16px;
+    	margin-bottom: 48px;
+	}
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-title{
+		list-style: none;
+    	color: #000;
+    	text-transform: uppercase;
+    	margin-bottom: 16px;
+	}
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-desc{
+		font-size: 12px;
+    	line-height: 1.33;
+    	letter-spacing: 0.6px;
+    	color: rgba(0, 0, 0, 0.6);
+   	 	margin-bottom: 8px;
+    	list-style: square;
+    	margin-left: 15px;
+	}
+	.product-info>div.tabs-block.HomeFurnishing{
+    	float: none;
+    	display: block;
+    	clear: both;
+    	padding: 30px 0 0;
+}
+}
+@media(max-width: 380px){
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-desc{
+		letter-spacing: normal;
+	}
+}
+
+
+/* TPR-6740:changes for STW widget in Home Furnishing */
+#stw_widget_hf .carousel-component .gotopdp{
+	width: 225px;
+    height: 36px;
+    background-color: #ffffff;
+    border: solid 1px #444444;
+}
+#stw_widget_hf .carousel-component .gotopdp a{
+	font-size: 12px;
+    line-height: 3;
+    letter-spacing: 0.6px;
+    text-align: center;
+    color: #000000;
+}
 
 /*TPR-6399 start*/
 #login-modal .content{
@@ -77220,11 +77321,26 @@ body .account .right-account form label.invite-text-lbl{
     white-space: normal;
 }
 /*TPR-6654 end*/
+
 /* TISPRDT-2410 start */
 #singlePageAddressPopup .product-block.addresses.new-form .half .dupDisplay label{
 	    margin-bottom: 5px;
 	    }
 /* TISPRDT-2410 end */
+/* Quantity dropdown in homefurnishing start */ nmk
+.pdp select#quantity_dropdown{
+	margin-left: 24px;
+	}
+.pdp .product-detail.HomeFurnishing select#variant_dropdown{
+	padding-right: 20px;
+	}
+/* Quantity dropdown in homefurnishing end */
+
+
+/* HOME-208 Start */
+/* #quantity_dropdown{
+	   float: right;
+} */
 
 /* TPR-6947 start */
 body.template-pages-my-account-returnSuccess .mainContent-wrapper .container .body-Content .account .page-header span a{
@@ -77419,7 +77535,8 @@ background: url(../images/search_image.png) no-repeat;}
 
 	.showcase-section a.btn-red, .showcase-section a.trending-button, #showcaseMobile a.button.trending-button, #showcaseMobile a.button.maroon {
 		height: 25px !important; min-height: 25px !important; padding: 5% 0px !important; margin-left: 0 !important;
-		line-height: unset !important; width: auto !important; font-size: 10px !important; position: static !important; max-width: 100px;}
+		line-height: unset !important; width: auto !important; font-size: 10px !impo
+		HOME-239rtant; position: static !important; max-width: 100px;}
 	.showcase-section .showcase-section-right {padding: 0;}
 	.showcase-section .showcase-section-left {padding: 0;}
 	.showcase-section .desc-section h1 {font-size: 14px !important; padding-top: 0 !important; text-align: left !important;}
@@ -77487,4 +77604,826 @@ background: url(../images/search_image.png) no-repeat;}
 .page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
     z-index: 2;
 }
+
 /* SDI-1393 End */
+
+/*paytm integration start*/
+label[for='priority_paytm'] img{
+	height: 70px;
+    margin-top: -29px;
+    margin-left: 10px;
+}
+/*paytm integration end*/
+
+/* Pagination link */
+.bottom-pagination.pagination-search{
+	display: inline-block;
+    position: relative;
+    float: right;
+    width: 80.16%;
+    padding: 0 0 0 20px;
+    text-align: center;
+}
+li.pageNoLi {
+    display: inline-block;
+}
+a.pageNo {
+    display: inline-block;
+    padding: 7px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+}
+.prev-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    color:#a9133d;
+}
+.pagination-block{
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+}
+.next-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+    color:#a9133d;
+}
+a.pageNo.active{
+    display: inline-block;
+    background: #a9133d;
+    padding: 12px 25px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 9px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    color: #fff;
+}
+.next-page span,
+.next-block a span
+{
+	color:#a9133d;
+	/* font-weight: bold; */
+}
+.prev-page{
+	color:#a9133d;
+	/* font-weight: bold; */
+}
+.total-pagecount{
+	position: absolute;
+    left: 2%;
+    top: 27px;
+    float: left;
+    top: 7px;
+    font-size: 14px
+}
+@media (max-width: 767px){
+.bottom-pagination.pagination-search{
+    width: 100%;
+    padding: 0;
+}
+.total-pagecount{
+	top: 8px;
+    margin-right: 8%;
+}
+.pagination li {
+    font-size: 12px;
+}
+.total-pagecount{
+	font-size: 12px
+}
+.bottom-pagination.pagination-search>span {
+    display: inline-block;
+    margin-right: 10%;
+}
+}
+/* Pagination link */
+
+/* TISPRNXIII-14 start */
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
+    text-align: left ! important;
+}
+/* TISPRNXIII-14 end */
+
+/*Paytm changes*/
+@media (max-width: 768px){
+
+label[for='priority_paytm'] img {
+    margin-left: 30px;
+}
+}
+
+/* TISPRNXIII-34 start */
+@media (max-width: 768px){				
+button#saveBlockData {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+}
+/* TISPRNXIII-34 end */ 
+/* TISPRNXIII-38 */
+@media (max-width: 720px)
+{
+.removeModalAfterLoad .changeAdddd {
+    height: auto ! important;
+}
+}
+/* TISPRNXIII-38 */
+/* TPR-7078 */
+.listing.wrapper .bottom-pagination.pagination-search .pagination li.active a {
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    background: #a9133d;
+    color: white;
+    border-radius: 50%;
+    width: 29px;
+    height: 29px;
+    text-align: center;
+}
+.listing.wrapper .bottom-pagination.pagination-search .pagination li a{
+    display: inline-block;
+    width: 29px;
+    height: 29px;
+    text-align: center
+} 
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.last {
+    display: none;
+}
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.first {
+    display: none;
+}
+.bottom-pagination.pagination-search .pagination li.prev.disabled a, .pagination li.next.disabled a {
+    cursor: not-allowed;
+}
+
+/* TPR-5954 */
+.upload-image-title {
+    cursor: pointer;
+	margin: 10px 18px;
+	color: #a9143c;
+}
+#upload-photo {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+.add-comment-title{
+	color: #a9143c;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnSubReason{
+    width: 47%;
+}
+
+/* SDI-1393 End */
+
+/* start CAR-327 */
+.pdp-offer-title.pdp-title{
+	cursor: pointer;
+}
+#termsAndConditionsheading{
+	font-size: 12px;
+    font-weight: bold;
+}
+#termsAndConditions{
+	font-size: 12px;
+}
+/* end CAR-327 */
+
+.error_msg_backfrom_payment{
+    line-height: normal;
+    letter-spacing: .6px;
+    color: red;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+/* start change for TISUAT-6116 */
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
+	top: 1px !important;
+}
+/* end change for TISUAT-6116 */
+
+/* SDI-1393 End */
+
+.homefurnishing-overview:nth-child(2) {
+    float: right ! important;
+}
+.homefurnishing-overview:nth-child(3) {
+    float: right ! important;
+}
+.homefurnishing-overview:nth-child(4) {
+    clear:both;
+}
+@media (max-width: 767px){
+.homefurnishing-overview:nth-child(2) {
+    float: left ! important;
+}
+.homefurnishing-overview:nth-child(3) {
+    float: left ! important;
+}
+}
+
+/* HOME-210 End */
+/* TPR-6740 start */
+#stw_widget_hf .product-tile {
+    margin-bottom: 15px;
+}
+.gotopdp {
+    position: absolute;
+    bottom: 0;
+}
+/* TPR-6740 end */
+/* HOME-227 start */
+.home-pdp-size + span + .buying-guide.home-buying-guide,
+.home-pdp-size + .buying-guide.home-buying-guide{
+	border-left: 2px solid #9b9b9b;
+    padding-left: 10px !important;
+    margin-left: 10px !important;
+    float:left;
+}
+.buying-guide.home-buying-guide{
+    float:left;
+}
+.home-pdp-size{
+	float:left;
+}
+.home-pdp-size{
+	border: 0px solid transparent ! important;
+	padding: 0 !important;
+    margin: 0 0 10px 0 !important;
+}
+.home-pdp-quantity{
+	border: 0px solid transparent ! important;
+    position: relative;		
+	/* left: 49%; */
+}
+.home-pdp-quantity:nth-child(2)
+{
+	position: relative;
+    left: 14%;
+}
+.home-pdp-quantity:nth-child(1){
+	position: relative;
+	margin-bottom: 35px ! important;
+	left:0%;
+}
+.buying-guide.home-buying-guide + br + #quantity_dropdown{
+	margin-left: 40%;
+}
+#quantity_dropdown{
+	margin-left: 0%;
+}
+/* .home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown {
+    width: 38%;
+} */
+.home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown + #quantity_dropdown {
+    margin-left: 4%;
+}
+select#quantity_dropdown:nth-child(5) {
+    margin-left: 3%;
+}
+span.home-pdp-quantity:nth-last-child(4) {
+   left: 14%;;
+}
+span.home-pdp-quantity:nth-last-child(3) {
+   left: 35%;;
+}
+.buying-guide.home-buying-guide{
+	margin-right: 0 !important;
+    padding-right: 0 !important;
+}
+.buying-guide.home-buying-guide:nth-child(2){
+	margin-right: 16px !important;
+}
+select#quantity_dropdown {
+     position: absolute;
+     top: 24px;
+     left: 0;
+ }
+ #variant_dropdown {
+    width: 38%;
+}
+p.sizetext.size {
+    border: 0px solid !important;
+    height: auto ! important;
+    margin-bottom: 0px !important; 
+}
+.sizetext .home-pdp-quantity:nth-child(2) {
+    left: 46%;
+}
+.sizetext span.home-pdp-quantity:nth-last-child(2) {
+    left: 10%;
+}
+#quickViewVariant select#variant_dropdown {
+    width: 100%;
+}
+.sizetext select#quantity_dropdown {
+    top: 27px;
+}
+/* HOME-227 End */
+/* HOME-239 start */
+@media (max-width: 767px){
+.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
+    clear: both;
+}
+}
+.quickview .product-detail .sizetext a.size-guide:after {
+    background: #a8103d none repeat scroll 0 0;
+    border-radius: 10px;
+    color: #fff;
+    content: "?";
+    display: inline-block;
+    font-size: 10px;
+    font-weight: normal;
+    height: 15px;
+    line-height: 15px;
+    position: absolute;
+   	right: -22px;
+    text-align: center;
+    top: 2px;
+    width: 15px;
+}
+.sizetext a.size-guide {
+    position: relative;
+}
+
+/* HOME-239 End */
+
+
+/* TPR-7417 changes */
+
+.tnc-subtitle{
+overflow-y: scroll;
+height: 200px;
+			}
+.Emi-subTitle ul{
+	text-align: left;
+    list-style-type: disc;
+    font-weight: normal;
+    padding-left: 10px;
+    padding-top: 10px;
+    width: 95%;
+    margin: auto;
+}
+.product-detail .Emi p.active.emi-tnc,
+.product-detail .Emi p.emi-tnc{
+	position: absolute;
+    top: -38px;
+    left: 131px;
+    webkit-box-shadow: 0 -1px 3px rgba(138,134,138,1);
+    -moz-box-shadow: 0 -1px 3px rgba(138,134,138,1);
+   	box-shadow: 0 -1px 3px rgba(138,134,138,1);
+}
+.product-detail .Emi .modal-content p:before {
+    width: 94px;
+    background: #fff;
+    z-index: 0;
+    bottom: -5px;
+}
+.product-detail .Emi {
+    margin: -9px 0 0 !important;
+}
+a.tab-emi{
+	width: 50%;
+    position: absolute;
+   	top:0;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #fff;
+    color: #92002e;
+    letter-spacing: 1px;
+}
+.showEmi.tab-emi{
+	left:0;
+	 margin-right: -3px;
+}
+.emi-tnc.tab-emi{
+	right:0;
+}
+a.tab-emi.active{
+    background-color: #b2b2b2;
+    color: #fff;
+}
+.product-detail .Emi p+.modal-content {
+    padding-top: 32px;
+}
+.product-detail .Emi .modal-content .Close {
+    top: 32px;
+}
+/* TPR-7417 changes End */
+/* HOME-239 End */
+/* TISPRNXIII-53 start */
+@media (max-width: 767px){
+.col-md-9.selfCourier {
+    clear: both;
+}
+.selectReturnMethod.scheduled.col-md-12.col-sm-12.greyColor {
+    float: left;
+} 
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3{
+	padding: 0px ! important;
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 {
+    width: 23.666667%;
+    padding: 0px ! important;
+}
+.col-md-9.quickDrop {
+    clear: both;
+}
+}
+/* TISPRNXIII-53 end */
+.cart.wrapper .right-block.billing .block.bottom.order-details>ul li.item .product {
+    width: 68% ! important;
+    float: right;
+}
+/* TISPRNXIII-74 Start */
+.selectRadio.col-md-2.col-sm-2.col-xs-2 {
+    clear: both;
+}
+/* TISPRNXIII-74 End */
+/* TPR 7486 START*/
+.offerui li {
+	display: inline;
+	float: left;
+	width: 268px;
+	height: 104px;
+	border: solid 1px #dddddd;
+	margin: 6px 19px 6px 0px;
+	padding: 7px;
+	position: relative;
+	text-align: left;
+}
+.offer_des {
+	display: block;
+	margin: 4px 0px 0px 24px;
+	font-size: 13px;
+	color: #787878;
+}
+
+.max-min-value .offer_des {
+	font-size: 11px;
+	color: #787878;
+	margin-bottom: 4px
+}
+.max-min-value {
+	position: absolute;
+	bottom: -10px;
+}
+.offer_heading {
+	font-size: 16px;
+	color: #252525;
+	display: block;
+	margin-bottom: 4px;
+}
+.offer_heading_sub {
+	color: #6e6e6e;
+	margin-bottom: 17px;
+	display: block;
+}
+.offer_title {
+	color: #252525;
+	display: inline-block;
+	vertical-align: middle;
+}
+.viewmoreoffer {
+    width: auto;
+    height: 34px;
+    background-color: #666666;
+    padding: 6px;
+    font-weight: normal;
+    text-transform: capitalize;
+    cursor: pointer;
+}
+.viewmoreoffer span {
+	font-size: 13px;
+    text-align: left;
+    color: #ffffff;
+    display: inline-block;
+}
+ul.offerui {
+	display: inline-block;
+	clear: both;
+	height: auto;
+	background: #fff;s
+}
+.offer_container {
+	position: relative;
+	width: 67%;
+	margin-bottom: 50px;
+}
+.offerui li:last-child {
+    margin-right: 0;
+}
+.offer_title, .offer_heading_sub {
+	font-size: 14px;
+}
+.cart.wrapper.checkout-payment .left-block.choose-payment{
+	border: 1px solid #dddddd;
+}
+.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv
+	{
+	border: 1px solid transparent !important;
+}
+#continue_payment_after_validate:hover {
+	background: #a5173c ! important;
+}
+#paymenttermsoffersPopup .offer_des {
+	 margin: 4px 0px;
+}
+#paymentoffersPopup .content.offer-content{
+    text-align: left;
+	overflow-y: auto;
+    width: 733px !important;
+    padding: 31px 0px 75px 55px !important 
+}
+#paymenttermsoffersPopup .content.offer-content {
+    padding: 0px 47px 75px 44px !important;
+    overflow-y: auto;
+    width: 733px !important;
+    text-align: left;
+}
+/* #paymenttermsoffersPopup.content.offer-content {
+    padding: 12px 15px !important;
+} */
+/* .tnc-heading{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.14;
+    letter-spacing: 0.7px;
+    text-align: left;
+    color: #252525;
+    margin-bottom: 23px;
+ } */
+#paymentoffersPopup .offer_heading,
+#paymenttermsoffersPopup .offer_heading{
+    text-align: left;
+    margin-bottom: 36px;
+}
+#paymentoffersPopup .offerui li,
+#paymenttermsoffersPopup .offerui li {
+    margin: 6px 70px 6px 0px;
+    width: 260px;
+ }
+ #paymentoffersPopup .content.offer-content>.close:before,
+ #paymenttermsoffersPopup .content.offer-content>.close:before {
+    top: 13px;
+}
+.tnc-link{
+	font-size: 14px;
+    text-align: left;
+    color: #4a90e2;
+    text-decoration: underline;
+    margin-left: 11px;
+}
+.tnc-link-mob{
+	float:right;
+}
+@media screen and (max-width: 900px) and (min-width: 520px) {
+	.offerui li{
+		width:220px;
+	}
+}
+@media screen and (max-width: 1024px) {
+	.offerui li{
+		width:206px;
+	}
+}
+@media screen and (min-width: 769px) {
+	#paymenttermsoffersPopup .content.offer-content {
+    	overflow-y: auto;
+    	height: 697px;
+    	margin-top: 104px 
+    }
+	 .cart.wrapper .right-block.billing.checkout-list-right{
+	 	position: absolute;
+	    top: 0;
+	    right: 0;
+	 }
+	 .viewmoreoffer {
+	    position: absolute;
+	    right: 0px;
+	    bottom: -37px;
+	 }
+ }
+ @media screen and (max-width: 767px) {
+ 	#paymenttermsoffersPopup .offertermsui li {
+    	margin-bottom: 20px;
+	}
+	 #paymenttermsoffersPopup .offer_heading {
+   	 margin-left: 0px !important;
+	}
+	 #paymentoffersPopup .content.offer-content{
+		overflow-y: auto;
+	}
+ 	ul.offerui{
+ 		width:100%;
+ 	}
+ 	#paymentoffersPopup .content.offer-content,
+ 	#paymenttermsoffersPopup  .content.offer-contents{
+	    max-width: 68% !important;
+	    padding: 20px 0px ! important;
+	}
+	#paymentoffersPopup .offerui li,
+	#paymenttermsoffersPopup .offerui li {
+    	padding-left: 22px;
+    	width: 100%;
+	}
+	#paymentoffersPopup .offer_heading,
+	#paymenttermsoffersPopup .offer_heading{
+    	margin-left: 21px;
+	    line-height: 1.14;
+	    letter-spacing: 0.7px;
+	    text-align: left;
+	    color: #252525;
+	    font-size: 14px;
+	}
+	 .offerui li{
+	    width: 100%;
+	    border-width: 0px 0px 1px 0px;
+	    padding-left: 15px;
+	 }
+	 .offer_container{
+	 	width:100%;
+	 	background: #fff;
+	 }
+	 .viewmoreoffer {
+	  margin: auto;
+	  background-color: transparent;
+	 }
+	 .viewmoreoffer span {
+	    font-size: 12px;
+	    color: #a5173c;
+	    font-weight: bold;
+    }
+    .offer_heading_sub {
+	    margin-bottom: 0px;
+	    padding-bottom: 17px;
+    }
+    .offer-heading {
+    	background: #eee;
+	}
+	.offer_heading_sub {
+	    font-size: 12px;
+	    text-align: left;
+	    color: #888888;
+	}
+	.offer_heading {
+	    font-size: 12px;
+	    font-weight: 500;
+	    line-height: 1.33;
+	    letter-spacing: 0.6px;
+	    text-align: left;
+	    color: #444444;
+ 	}
+ }
+#paymenttermsoffersPopup #accordion-tnc .offer_title:after {
+    content: "+";
+    position: absolute;
+    right: 17px;
+    top: 9px;
+    font-size: 30px;
+    line-height: 18px;
+    color:#979797;
+    border: none;
+}
+#paymenttermsoffersPopup #accordion-tnc .offer_title.active:after {
+    content: "-";
+    font-size: 50px;
+}
+ #accordion-tnc > li {
+	display: block;
+    border-bottom: solid 1px #979797;
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: 15px;
+}
+#paymenttermsoffersPopup .offertermsui .offer_title:after{
+	 border-bottom: solid 1px #979797;
+    position: relative;
+    padding-bottom: 16px;
+    margin-bottom: 15px;
+}
+#accordion-tnc > li > span {
+	display: block;	
+}
+#accordion-tnc > li > div {
+	display: none;
+}
+button#continue_payment_after_validate {
+    width: 216px ! important;
+    margin: 30px ! important;
+}
+.offer label.numbers {
+    cursor: pointer;
+}
+/* TPR 7486 END */
+/* TISHS-105 start */
+.offer_des li {
+    list-style-type: disc !important;
+    line-height: 1.8;
+}
+#paymentoffersPopup .offer_title,
+.offerui .offer_title{
+    width: 97%;
+   /*  word-break: break-all; */
+    display: inline-block;
+    padding-left: 25px;
+    vertical-align: sub;
+    white-space: pre-wrap;
+    position: relative;
+    top: -16px;
+}
+#paymentoffersPopup span.offer_des,
+.offerui .offer_des {
+    position: relative;
+    top: -14px;
+    /* word-break: break-all; */
+}
+/* #paymentoffersPopup .max-min-value {
+    position: absolute;
+    bottom: -10px;
+} */
+/* TISHS-105 end */
+/* TISHS-96 start */
+.consent-disclaimer{
+	font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: 0.2px;
+    text-align: left;
+    color: #a2a2a2;
+    letter-spacing: 0.1px;
+    text-transform: initial;
+    height: 32px;
+    margin-top: 10px;
+    font-weight: normal;
+}
+/* TISHS-96 end */
+/* TISHS-115 start */
+.headingSec p.summryQuery {
+    padding-left: 71px !important;
+}
+/* TISHS-115 end */
+/* TISHS-166 start  */
+.custmCareHelp .issueQuryPopUp p{
+	 /* word-break: break-all; */
+}
+/* TISHS-166 End  */
+/* TISPRDT-7991 */
+span#offer_section_responsive_error_msg {
+    margin-left: 19px;
+}
+/* TISPRDT-7991 */
+
+/* TISPRDT-8004 */
+
+@media screen and (max-width: 767px) {
+	textarea#comments,
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnSubReason,
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason
+ {
+   	 width: 80%;
+	}
+}
+/* TISPRDT-8004 */
+/* TISPRDT-7983 */
+.tnc-fixed-header{
+	width: 48%;
+    display: inline-block;
+    background: #fff;
+    position: fixed;
+    z-index: 1;
+    padding-top: 31px;
+    padding-left: 31px;
+}
+#paymenttermsoffersPopup ul.offertermsui {
+    margin-top: 86px;
+    padding-left: 32px;
+}
+@media screen and (max-width: 767px) {
+	.tnc-fixed-header{
+		width: 81%;
+	    padding-top: 8px;
+	}
+	.tnc-fixed-header button.close {
+		top: 8px !important;
+	}
+}
+/* TISPRDT-7983 */

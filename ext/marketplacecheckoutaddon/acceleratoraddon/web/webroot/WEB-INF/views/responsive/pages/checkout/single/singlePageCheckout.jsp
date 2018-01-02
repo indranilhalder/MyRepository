@@ -114,7 +114,8 @@ body.page-multiStepCheckoutSummaryPage #up{
 				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetailsMobile.jsp"%>
 		</div>
 	</div>
-	<div  class="checkout_mobile_section" id="makePaymentMobile">
+	<div class="offer_section_responsive" style="display:none"></div> <!-- TPR-7486 -->
+	<div class="checkout_mobile_section" id="makePaymentMobile">
 	<div class="checkout-mobile-heading">Payment</div>
 	<div class="change-cancel-wrapper">
 		<!-- <p class="change-mobile">Change</p>

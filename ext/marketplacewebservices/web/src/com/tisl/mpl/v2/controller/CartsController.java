@@ -159,6 +159,7 @@ import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.voucher.data.VoucherDataList;
+import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
@@ -354,8 +355,8 @@ public class CartsController extends BaseCommerceController
 			return cmd1;
 		}
 		final CartModificationData cmd = new CartModificationData();
-		cmd.setDeliveryModeChanged(Boolean.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged())
-				|| Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
+		cmd.setDeliveryModeChanged(Boolean
+				.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged()) || Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
 		cmd.setEntry(cmd2.getEntry());
 		cmd.setQuantity(cmd2.getQuantity());
 		cmd.setQuantityAdded(cmd1.getQuantityAdded() + cmd2.getQuantityAdded());
@@ -407,8 +408,9 @@ public class CartsController extends BaseCommerceController
 		final OrderEntryData entryToBeModified = getCartEntry(currentCart, currentEntry.getProduct().getCode(), newPickupStore);
 		if (entryToBeModified != null && !entryToBeModified.equals(currentEntry))
 		{
-			throw new CartEntryException("Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
-					+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
+			throw new CartEntryException(
+					"Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
+							+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
 					CartEntryException.AMBIGIOUS_ENTRY, entryToBeModified.getEntryNumber().toString());
 		}
 	}
@@ -692,7 +694,8 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/entries", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderEntryListWsDTO getCartEntries(@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public OrderEntryListWsDTO getCartEntries(
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1489,8 +1492,8 @@ public class CartsController extends BaseCommerceController
 	{ TRUSTED_CLIENT })
 	@RequestMapping(value = "/{cartId}/promotions/{promotionId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void removePromotion(@PathVariable final String promotionId) throws CommercePromotionRestrictionException,
-			NoCheckoutCartException
+	public void removePromotion(@PathVariable final String promotionId)
+			throws CommercePromotionRestrictionException, NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1532,8 +1535,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId) throws NoCheckoutCartException,
-			VoucherOperationException
+	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId)
+			throws NoCheckoutCartException, VoucherOperationException
 	{
 		super.applyVoucherForCartInternal(voucherId);
 	}
@@ -1548,8 +1551,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers/{voucherId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void releaseVoucherFromCart(@PathVariable final String voucherId) throws NoCheckoutCartException,
-			VoucherOperationException
+	public void releaseVoucherFromCart(@PathVariable final String voucherId)
+			throws NoCheckoutCartException, VoucherOperationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2233,9 +2236,9 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					cartDataDetails.setError(MarketplacecommerceservicesConstants.FIELD_QUANTITY
-							+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-							+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
+					cartDataDetails.setError(
+							MarketplacecommerceservicesConstants.FIELD_QUANTITY + MarketplacecommerceservicesConstants.SINGLE_SPACE
+									+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					return cartDataDetails;
 				}
 
@@ -2977,8 +2980,8 @@ public class CartsController extends BaseCommerceController
 			{
 				if (null != element && null != element.getValue() && null != element.getKey())
 				{
-					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(),
-							element.getKey(), cart);
+					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(), element.getKey(),
+							cart);
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 
 					LOG.debug("CartsController : selectDeliveryMode  : Step 1 finalDeliveryCost after Delivery Mode Set "
@@ -3079,8 +3082,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
 			}
 
-			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
-					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
+			pinCodeResponse = mplCartWebService
+					.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3486,6 +3489,111 @@ public class CartsController extends BaseCommerceController
 	}
 
 	/**
+	 * TPR - 7486
+	 *
+	 * @description apply the Cart Coupon at payment page and get discount
+	 * @param cartId
+	 * @param couponCode
+	 * @return ApplyCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value =
+	{ "/applyCartCoupons", "/{cartId}/applyCartCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ApplyCartCouponsDTO applyCartCoupons(@RequestParam final String couponCode,
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
+	{
+		ApplyCartCouponsDTO applycouponDto = new ApplyCartCouponsDTO();
+		CartModel cartModel = null;
+		OrderModel orderModel = null;
+		try
+		{
+			final StringBuilder logBuilder = new StringBuilder();
+			LOG.debug(logBuilder.append("Step 1:::The cart coupon code entered by the customer is :::").append(couponCode));
+
+			//Fetching orderModel based on guid TPR-629
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+			//Redeem coupon for cartModel
+			if (orderModel == null)
+			{
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartGuid);
+				if (cartModel == null)
+				{
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+				}
+				else
+				{
+					cartModel.setChannel(SalesApplication.MOBILE);
+					getModelService().save(cartModel);
+					applycouponDto = mplCouponWebFacade.applyCartVoucher(couponCode, cartModel, null, paymentMode);
+					applycouponDto
+							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
+									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
+				}
+			}
+			else
+			{
+				applycouponDto = mplCouponWebFacade.applyCartVoucher(couponCode, null, orderModel, paymentMode);
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(orderModel));
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			applycouponDto.setCouponMessage("Sorry! The Offer cannot be used for this purchase.");
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			applycouponDto.setCouponMessage("Sorry! The Offer cannot be used for this purchase.");
+
+		}
+		return applycouponDto;
+	}
+
+
+
+
+
+	/**
 	 * @description release the Coupon for the particular user
 	 * @param cartId
 	 * @param couponCode
@@ -3545,6 +3653,101 @@ public class CartsController extends BaseCommerceController
 			else
 			{
 				releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, null, orderModel, paymentMode);
+				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorCode())
+			{
+				releaseCouponDto.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode())
+			{
+				releaseCouponDto.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return releaseCouponDto;
+	}
+
+	/**
+	 * @description release the Coupon for the particular user
+	 * @param cartId
+	 * @param couponCode
+	 * @return ReleaseCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloPriceFactoryException
+	 * @throws CalculationException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value =
+	{ "/releaseCartCoupons", "/{cartId}/releaseCartCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReleaseCouponsDTO releaseCartCoupons(@RequestParam final String couponCode,
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, CalculationException
+	{
+		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
+		CartModel cartModel = null;
+		OrderModel orderModel = null;
+		try
+		{
+
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+			}
+			//Release coupon for cartModel
+			if (null == orderModel)
+			{
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartGuid);
+				if (cartModel == null)
+				{
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+				}
+				else
+				{
+					cartModel.setChannel(SalesApplication.MOBILE);
+					getModelService().save(cartModel);
+					releaseCouponDto = mplCouponWebFacade.releaseCartVoucher(couponCode, cartModel, null, paymentMode);
+					releaseCouponDto
+							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
+									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+			}
+			else
+			{
+				releaseCouponDto = mplCouponWebFacade.releaseCartVoucher(couponCode, null, orderModel, paymentMode);
 				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
@@ -3918,10 +4121,9 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != orderEntryModel.getGiveAway() && !orderEntryModel.getGiveAway().booleanValue())
 			{
-				if (null != orderEntryModel.getMplDeliveryMode()
-						&& null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
-						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode()
-								.getDeliveryMode().getCode())))
+				if (null != orderEntryModel.getMplDeliveryMode() && null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
+						&& MarketplacecommerceservicesConstants.CLICK_COLLECT
+								.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode())))
 				{
 					++cncDelModeCount;
 				}
@@ -3981,8 +4183,8 @@ public class CartsController extends BaseCommerceController
 			cartModel = mplPaymentWebFacade.findCartValues(cartId);
 			final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
-			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
-					deliverySlotsRequestData, cartModel);
+			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
+					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData, cartModel);
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{

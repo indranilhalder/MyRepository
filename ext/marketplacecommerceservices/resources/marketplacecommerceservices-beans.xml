@@ -217,6 +217,7 @@
 		<property name="type" type="String"/>
 		<property name="customerData" type="de.hybris.platform.commercefacades.user.data.CustomerData"/>
 		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="cartCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<!-- TPR-774 -->
 		<property name="subTotalDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="discountDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
@@ -300,11 +301,18 @@
 		<property name="returnPickupDate" type="String"/>
 		<property name="timeSlotFrom" type="String"/>
 		<property name="timeSlotTo" type="String"/>
+		<!-- Added for TPR-5954 -->
+		<property name="comments" type="String"/>
 	</bean>
+	
+	
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
 		<property name="lineItemId" type="String"/>
 		<property name="returnReasonCode" type="String"/>
+		<!-- Added for TPR-5954 -->
+		<property name="subReasonCode" type="String"/>
+		<property name="imageUrl" type="java.util.List&lt;com.tisl.mpl.data.ImageUrl>"/>
 		<property name="cancelReasonCode" type="String"/>
 		<!-- R2.3 Start   -->
 		<property name="returnPickupDate" type="String"/>
@@ -313,6 +321,10 @@
 		<!-- R2.3 END -->
 		<!-- TPR-4134 -->
 		<property name="reverseSealLostflag" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.ImageUrl">
+		<property name="imagePath" type="String"/>
 	</bean>
 	
 	<!-- Return Item AddressInfo Data -->
@@ -506,7 +518,10 @@
 		<property name="returnCancelFlag" type="String"/>
 		<property name="requestID" type="String"/>
 		<property name="reasonCode" type="String"/>
-		<property name="returnCancelRemarks" type="String"/>
+		<!-- 3 below Added for TPR-5954 -->
+		<property name="subReasonCode" type="String"/>
+		<property name="comments" type="String"/>
+		<property name="imageUrl" type="String"/>
 		<!-- Added For Return RTS -->
 		<property name="interfaceType" type="String"/>
 		<property name="refundMode" type="String"/>
@@ -825,6 +840,10 @@
 		<property name="selfCourierDocumentLink" type="String"/>
 		<!-- TPR-4134 -->
 		<property name="reverseSealLostflag" type="String"/>
+		<!-- Added for TPR-5954 -->
+		<property name="subReasonCode" type="String"/>
+		<property name="comments" type="String"/>
+		<property name="imageUrl" type="String"/>
 	</bean>
 	<!-- TPR-1083 Exchange Start -->
 	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
@@ -907,4 +926,5 @@
     	<property name="Order" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.OrderListWsDTO>"/>
     </bean>
     <!-- TPR-5667 : Samsung order response | end -->
+   
 </beans>

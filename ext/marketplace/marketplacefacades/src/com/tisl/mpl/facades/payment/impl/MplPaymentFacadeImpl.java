@@ -92,6 +92,7 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
+
 /**
  * @author TCS
  *
@@ -1080,26 +1081,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
 											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
 									&& null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null == binModel && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -1255,26 +1259,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									&& (StringUtils.equalsIgnoreCase("DEBIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
 											"DC", binModel.getCardType())))
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
 									&& null == savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null == binModel && null == savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -1481,7 +1488,54 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	//			return null;
 	//		}
 	//	}
+	/**
+	 * This method handles netbanking request and response
+	 *
+	 * @param juspayOrderId
+	 * @param paymentMethodType
+	 * @param paymentMethod
+	 * @param redirectAfterPayment
+	 * @param format
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	@Override
+	public String getPaytmOrderStatus(final String juspayOrderId, final String paymentMethodType, final String paymentMethod,
+			final String redirectAfterPayment, final String format) throws EtailNonBusinessExceptions, AdapterException
+	{
+		LOG.debug("Starting executing getPaytmOrderStatus....");
+		final PaymentService juspayService = new PaymentService();
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				.withMerchantId(
+						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
+		//creating OrderStatusRequest
+		final NetbankingRequest paytmRequest = new NetbankingRequest();
+		paytmRequest.setOrderId(juspayOrderId);
+		paytmRequest.setMerchantId(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MARCHANTID));
+		paytmRequest.setPaymentMethodType(paymentMethodType);
+		paytmRequest.setPaymentMethod(paymentMethod);
+		paytmRequest.setRedirectAfterPayment(redirectAfterPayment);
+		paytmRequest.setFormat(format);
+		//creating OrderStatusResponse
+		try
+		{
+			final String paytmResponse = juspayService.getNetbankingResponse(paytmRequest);
+			LOG.debug("Paytm response " + paytmResponse);
+			LOG.debug("Finished executing getPaytmOrderStatus....");
+			return paytmResponse;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Failed to save order status in payment transaction with error: " + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 
 	/**
@@ -1603,26 +1657,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
 											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
 									&& null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null == binModel && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -1662,11 +1719,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1717,9 +1774,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -1910,8 +1967,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 										binModel.getCardType())) && null != savedCard.getBillingAddress())
 						{
 
-							final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+							SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 							savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							savedCardData = null;
 						}
 						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 								&& null != binModel
@@ -1919,22 +1977,25 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 										binModel.getCardType()) || StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.DC,
 										binModel.getCardType())))
 						{
-							final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+							SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 							savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							savedCardData = null;
 						}
 						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
 								&& StringUtils.isEmpty(binModel.getCardType()))
 						{
 							if (null != savedCard.getBillingAddress()) //Credit Card
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 								savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 							else
 							//Debit Card
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 								savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null == binModel)
@@ -1947,8 +2008,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 							else
 							//Debit Card
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 								savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -2993,7 +3055,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		return sb.toString();
 	}
 
+	//TPR-7486
+	@Override
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer)
+	{
+		return getBinService().fetchBankFromCustomerSavedCard(cardRefNum, Customer);
+	}
 
+	//TPR-7486
+	@Override
+	public String fetchBanknameFromBin(final String cardBinNo)
+	{
+		return getBinService().fetchBanknameFromBin(cardBinNo);
+	}
 
 	//TPR-4461 BANK RESTRICTION CHECK STARTS HERE
 	/**

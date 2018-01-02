@@ -2315,7 +2315,7 @@ function createJuspayOrderForSavedCard() {
             sameAsShipping: sameAsShipping,
             guid: guid
         },
-        type: "GET",
+        type: "POST",
         cache: !1,
         async: !1,
         success: function(response) {
@@ -2384,7 +2384,7 @@ function createJuspayOrderForSavedDebitCard() {
             sameAsShipping: sameAsShipping,
             guid: guid
         },
-        type: "GET",
+        type: "POST",
         cache: !1,
         async: !1,
         success: function(response) {
@@ -2455,7 +2455,7 @@ function createJuspayOrderForNewCard(isDebit) {
             sameAsShipping: sameAsShipping,
             guid: guid
         },
-        type: "GET",
+        type: "POST",
         cache: !1,
         async: !1,
         success: function(response) {
@@ -2541,7 +2541,7 @@ function createJuspayOrderForNewCardEmi() {
             sameAsShipping: sameAsShipping,
             guid: guid
         },
-        type: "GET",
+        type: "POST",
         cache: !1,
         async: !1,
         success: function(response) {
@@ -3439,7 +3439,7 @@ function submitNBForm() {
                 cardSaved: !1,
                 guid: guid
             },
-            type: "GET",
+            type: "POST",
             cache: !1,
             success: function(response) {
                 if ("redirect" == response) $(location).attr("href", ACC.config.encodedContextPath + "/cart"); else if ("redirect_to_payment" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid); else if ("redirect_with_details" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid); else if ("redirect_with_coupon" == response) document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 

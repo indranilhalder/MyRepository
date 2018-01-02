@@ -12,16 +12,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 
 
 /**
@@ -33,18 +28,6 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	private MplProductService mplProductService;
 
-
-	@Autowired
-	@Qualifier("pincodeService")
-	private PincodeService pincodeService;
-
-	@Autowired
-	@Qualifier("mplConfigFacade")
-	private MplConfigFacade mplConfigFacade;
-
-	@Autowired
-	@Qualifier("mplPincodeDistanceService")
-	private MplPincodeDistanceService mplPincodeDistanceService;
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplProductFacadeImpl.class);
@@ -121,5 +104,18 @@ public class MplProductFacadeImpl implements MplProductFacade
 		sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
 	}
 
+	@Override
+	public String getSizeForSTWProduct(final String productCode)
+	{
+		return mplProductService.getSizeForSTWProduct(productCode);
+
+	}
+
+	@Override
+	public List<String> getVariantsForSTWProducts(final String productCode)
+	{
+		return mplProductService.getVariantsForSTWProducts(productCode);
+
+	}
 
 }

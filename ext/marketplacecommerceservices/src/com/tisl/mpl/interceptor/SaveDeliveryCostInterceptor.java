@@ -41,7 +41,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.servicelayer.interceptor.ValidateInterceptor#onValidate(java.lang.Object,
 	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
 	 */
@@ -101,8 +101,8 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 						final Double totalcartLevelDisc = oModel.getCartLevelDisc();
 
 
-						deliveryOffChrg += (currentDelCharge.doubleValue() - prevDelCharge.doubleValue()) < 0
-								? (-1) * (currentDelCharge.doubleValue() - prevDelCharge.doubleValue())
+						deliveryOffChrg += (currentDelCharge.doubleValue() - prevDelCharge.doubleValue()) < 0 ? (-1)
+								* (currentDelCharge.doubleValue() - prevDelCharge.doubleValue())
 								: (currentDelCharge.doubleValue() - prevDelCharge.doubleValue());
 
 						couponDiscount += (null == couponValue ? 0.0d : couponValue.doubleValue());
@@ -184,8 +184,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 				final AbstractPromotionModel promotion = oModel.getPromotion();
 				if ((oModel.getCertainty().floatValue() == 1.0F && null != promotion)
 						&& (promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| promotion instanceof BuyAGetPromotionOnShippingChargesModel
-								|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel))
+								|| promotion instanceof BuyAGetPromotionOnShippingChargesModel || promotion instanceof BuyAandBGetPromotionOnShippingChargesModel))
 				{
 					flag = true;
 					break;

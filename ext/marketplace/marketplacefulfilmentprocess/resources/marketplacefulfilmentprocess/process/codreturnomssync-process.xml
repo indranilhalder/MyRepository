@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- //SDI-3591 -->
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="cODReturnOMSSyncAction" name="codreturnomssync-process" processClass="com.tisl.mpl.core.model.CODReturnOMSSyncProcessModel">
+
+	<action id="cODReturnOMSSyncAction" bean="cODReturnOMSSyncAction">
+		<transition name="NOK" to="failed"/>
+		<transition name="OK" to="success"/>
+	</action>
+
+
+	<end id="error" state="ERROR">All went wrong.</end>
+	<end id="failed" state="FAILED">Order not synced at OMS.</end>
+	<end id="success" state="SUCCEEDED">Order synced at OMS.</end>
+</process>

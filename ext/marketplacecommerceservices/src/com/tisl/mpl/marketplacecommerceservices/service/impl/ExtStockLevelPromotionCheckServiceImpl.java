@@ -190,4 +190,16 @@ public class ExtStockLevelPromotionCheckServiceImpl implements ExtStockLevelProm
 	{
 		return stockPromoCheckDao.getTotalOfferOrderCount(promoCode, orginalUid);
 	}
+
+	/**
+	 * TISHS-143 Get Total Buy A Above Promo Offer for Customer
+	 *
+	 * @param promoCode
+	 * @param orginalUid
+	 */
+	@Override
+	public int getTotalOfferOrderCount(final String promoCode, final String orginalUid, final String guid)
+	{
+		return stockPromoCheckDao.getTotalOfferOrderCount(promoCode, orginalUid, guid);
+	}
 }

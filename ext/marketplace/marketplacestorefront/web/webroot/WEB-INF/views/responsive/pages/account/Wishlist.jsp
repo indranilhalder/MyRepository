@@ -239,6 +239,9 @@
 								<c:set value="${product.ussID}" var="entry_ussid" />
 								<c:url value="${product.url}" var="productUrl" />
 								
+									<c:set var="isVolume" value="false"/>
+									<c:set var="isWeight" value="false"/>
+								
 								<li>
 									<div class="product-info">
                                           
@@ -307,10 +310,58 @@
 											<ul>
 												<!-- APPAREL SIZE COMPONENT -->
 												<c:choose>
-												<c:when test="${not empty wpproduct.wishlistProductSize}">
-												<li class="size"><spring:theme code="wishlist.size" />&nbsp
-												${fn:escapeXml(wpproduct.wishlistProductSize)}</li>
+												
+												<c:when test="${not empty product.rootCategory && product.rootCategory=='HomeFurnishing' && not empty product.size}">
+												
+												
+												<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.weight')" var="weightVariant"/>
+												<c:set var = "categoryListArray" value = "${fn:split(weightVariant, ',')}" />
+																			
+											         <c:forEach items="${product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="weightVariantArray">
+																	<c:if test="${categories.code eq weightVariantArray}">
+																						<c:set var="isWeight" value="true"/>
+																	</c:if> 
+															</c:forEach>				
+													</c:forEach> 
+																			
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.volume')" var="volumeVariant"/>
+													<c:set var = "categoryListArray" value = "${fn:split(volumeVariant, ',')}" />
+																			
+															<c:forEach items="${product.categories}" var="categories">
+																	<c:forEach items = "${categoryListArray}" var="volumeVariantArray">
+																			<c:if test="${categories.code eq volumeVariantArray}">
+																				<c:set var="isVolume" value="true"/>
+																			</c:if> 
+																    </c:forEach>				
+															</c:forEach>
+												
+												<c:choose>
+												<c:when test="${true eq isWeight}">
+												<li class="size"><spring:theme code="product.variant.weight" />&nbsp;${fn:escapeXml(product.size)}</li>
 												</c:when>
+												<c:when test="${true eq isVolume}">
+												<li class="size"><spring:theme code="product.variant.volume" />&nbsp;${fn:escapeXml(product.size)}</li>
+												</c:when>
+												<c:otherwise>
+												<c:if test="${!fn:containsIgnoreCase(product.size, 'No Size')}">
+												<li class="size"><spring:theme code="wishlist.size" />&nbsp;${fn:escapeXml(product.size)}</li>
+												</c:if>
+												</c:otherwise>
+												</c:choose>
+												
+												
+												</c:when>
+												<c:otherwise>
+												<c:choose>
+												<c:when test="${not empty wpproduct.wishlistProductSize && !fn:containsIgnoreCase(wpproduct.wishlistProductSize, 'No Size')}">
+												<li class="size"><spring:theme code="wishlist.size" />&nbsp;
+												${fn:escapeXml(wpproduct.wishlistProductSize)}
+												</li>
+												</c:when>
+												</c:choose>
+												</c:otherwise>
+												
 												</c:choose>
 												
 												<li class="size"><spring:theme code="wishlist.qty" /><spring:theme code="wishlist.qty.value" /></li>
@@ -440,6 +491,14 @@
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal" data-id="${lengthSize}"
 															data-target="#redirectsToPDP">
+																<spring:theme code="basket.add.to.basket" />
+															</button>
+														</span>
+														</c:if>
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'HomeFurnishing')}">
+														<span>
+															<button id="addToCartButtonwl" type="${buttonType}"
+																class="blue button js-add-to-cart_wl">
 																<spring:theme code="basket.add.to.basket" />
 															</button>
 														</span>

@@ -18,6 +18,8 @@ import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.promotions.jalo.AbstractPromotion;
+import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.util.Pair;
 import de.hybris.platform.util.DiscountValue;
 
@@ -49,12 +51,14 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 	@Override
 	public boolean apply(final SessionContext ctx)
 	{
-		final AbstractOrder order = getPromotionResult(ctx).getOrder(ctx);
+		final PromotionResult result = getPromotionResult(ctx);
+		final AbstractOrder order = result.getOrder(ctx);
 		boolean isFreebiePromo = false;
 
 		//****New Code Added for TISPRO-670*******
-		if (null != getPromotionResult(ctx) && null != getPromotionResult(ctx).getPromotion()
-				&& getPromotionResult(ctx).getPromotion() instanceof BuyABFreePrecentageDiscount)
+
+		final AbstractPromotion promotion = result.getPromotion();
+		if (null != promotion && promotion instanceof BuyABFreePrecentageDiscount)
 		{
 			isFreebiePromo = true;
 			if (log.isDebugEnabled())
@@ -95,7 +99,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			final DiscountValue discountValue = findOrderEntryDiscountValue(ctx, orderEntry, getGuid(ctx));
 			if (discountValue != null)
 			{
-				needsCalc = calculateApportionedDiscount(orderEntry, ctx, isFreebiePromo, orderEntryAdjustment);
+				needsCalc = calculateApportionedDiscount(orderEntry, ctx, isFreebiePromo, orderEntryAdjustment, promotion);
 			}
 
 			//needsCalc = true;
@@ -267,6 +271,7 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 	}
 
 	/**
+	 * @param promotion
 	 * @Description : This is for apportioning calculation
 	 * @param : ctx
 	 * @param : orderEntry
@@ -274,12 +279,21 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 	 * @return : orderEntryAdjustment
 	 */
 	private boolean calculateApportionedDiscount(final AbstractOrderEntry orderEntry, final SessionContext ctx,
-			final boolean isFreebiePromo, final double orderEntryAdjustment)
+			final boolean isFreebiePromo, final double orderEntryAdjustment, final AbstractPromotion promotion)
 	{
 		boolean needsCalc = false;
 		double percentageDiscount = 0.00D;
 		//Map<String, Integer> qualifyingCountMap = null;
 		String productPromoCode = null;
+
+		//TPR-7408 starts here
+		Double promoCostCentreOnePercentage = null;
+		Double promoCostCentreTwoPercentage = null;
+		Double promoCostCentreThreePercentage = null;
+		//TPR-7408 ends here
+
+
+
 		Map<String, List<String>> productAssociatedItemsMap = null;
 		boolean isPercentageDisc = false;
 
@@ -295,6 +309,42 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 					.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
 			isPercentageDisc = ctx.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC) != null ? ((Boolean) ctx
 					.getAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC)).booleanValue() : false;
+
+			//TPR-7408 starts here
+			//			promoCostCentreOnePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) : null;
+			//
+			//			promoCostCentreTwoPercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) : null;
+			//
+			//			promoCostCentreThreePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) : null;
+
+			try
+			{
+				promoCostCentreOnePercentage = (Double) promotion.getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTREONE);
+				promoCostCentreTwoPercentage = (Double) promotion.getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETWO);
+
+				promoCostCentreThreePercentage = (Double) promotion.getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+
+			}
+			catch (final JaloInvalidParameterException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (final JaloSecurityException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			//TPR-7408 ends here
+
+
 		}
 
 		//String validProductUSSID = null;
@@ -346,6 +396,27 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 			//****New Code Added for TISPRO-670 ends*******
 
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
+
+			//TPR-7408 starts here
+			if (null != promoCostCentreOnePercentage)
+			{
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
+						promoCostCentreOnePercentage);
+			}
+
+			if (null != promoCostCentreTwoPercentage)
+			{
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
+						promoCostCentreTwoPercentage);
+			}
+
+			if (null != promoCostCentreThreePercentage)
+			{
+				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
+						promoCostCentreThreePercentage);
+			}
+			//TPR-7408 ends here
+
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
 			orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC,
 					Double.valueOf(amtTobeDeductedAtlineItemLevel));

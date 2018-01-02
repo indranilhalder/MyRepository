@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -13,14 +16,18 @@ import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldVal
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.standardizationfactory.StandardizationService;
 
@@ -45,7 +52,7 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -69,12 +76,44 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 			String size = pcmColorModel.getSize();
 			String kidswearSize = "";
 
+			final List<String> weightCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
+					.getString("mpl.homefurnishing.category.weight", "").split(","));
+			final List<String> volumeCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
+					.getString("mpl.homefurnishing.category.volume", "").split(","));
+
 			/**
 			 * This logic used to fix issue: TISREL-654 ('Size' facet shouldn't get displayed in the PLP of Belts category)
 			 */
 			if ("Accessories".equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
 			{
 				return Collections.emptyList();
+			}
+
+
+			if (MarketplaceCoreConstants.HOME_FURNISHING.equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
+			{
+				if (size.equalsIgnoreCase(MarketplaceCoreConstants.NOSIZE) && StringUtils.isNotEmpty(size))
+				{
+					return Collections.emptyList();
+				}
+				final Collection<CategoryModel> superCategories = pcmColorModel.getSupercategories();
+				if (CollectionUtils.isNotEmpty(superCategories) && CollectionUtils.isNotEmpty(weightCategoryList)
+						&& CollectionUtils.isNotEmpty(volumeCategoryList))
+				{
+					for (final CategoryModel primaryCategory : superCategories)
+					{
+						if (primaryCategory != null && StringUtils.isNotEmpty(primaryCategory.getCode()))
+						{
+							if (weightCategoryList.contains(primaryCategory.getCode())
+									|| volumeCategoryList.contains(primaryCategory.getCode()))
+							{
+								return Collections.emptyList();
+							}
+
+						}
+					}
+				}
+
 			}
 			//For TPR:4847: size facet clubbing
 			if ("Kidswear".equalsIgnoreCase(pcmColorModel.getProductCategoryTypeL2()))
@@ -143,5 +182,11 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 	public void setFieldNameProvider(final FieldNameProvider fieldNameProvider)
 	{
 		this.fieldNameProvider = fieldNameProvider;
+	}
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
+				ConfigurationService.class);
 	}
 }

@@ -91,6 +91,13 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
    <!-- PR-9,Added for relevancescore -->
     <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_relevancescore-spring.xml" />
+		
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_shippingprice-spring.xml" />
+	
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_jewelleryshippingprice-spring.xml" />
+	
 
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"
@@ -159,7 +166,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
-
 
 	<bean id="mplSellerValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplSellerValueProvider"
@@ -596,15 +602,15 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 
 
-	<bean id="sendNotificationEventListener"
-		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener"
+	<!-- <bean id="sendNotificationEventListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
 
-	<!--R2.3 Secondary Status Listener -->
+	R2.3 Secondary Status Listener
 	<bean id="sendNotificationSecondaryStatusListener"
 		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusListener"
 		parent="abstractSiteEventListener">
@@ -612,7 +618,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
-
+ -->
 
 
 	<bean id="sendOrderToCRMEventListner"
@@ -1570,6 +1576,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- Job to Process a Payment Pending Order -->
 	<bean id="mplProcessOrderJob" class="com.tisl.mpl.core.payment.cronjob.MplProcessOrderJob"
 		autowire="byName" />
+		
+		
+	<bean id="refundClearPerformableJob" class="com.tisl.mpl.core.payment.cronjob.RefundClearPerformableJob"
+		autowire="byName">
+	</bean>
 
 
 	<alias name="defaultSolrAutoSuggestService" alias="solrAutoSuggestService" />
@@ -2049,5 +2060,22 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
 	</bean>
 	<!-- TPR-6665: solr server : synonyms injection end -->
+	
+	<!-- SDI-2924 -->
+	<bean id="forwardPaymentCleanUpJob" class="com.tisl.mpl.core.payment.cronjob.ForwardPaymentCleanUpJob"
+		autowire="byName">
+	</bean>
 
+<!-- TISPRDT-7513 Start -->
+<bean id="mplWeightFacetValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplWeightFacetValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+	<bean id="mplVolumeFacetValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplVolumeFacetValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+<!-- TISPRDT-7513 End -->
 </beans>
