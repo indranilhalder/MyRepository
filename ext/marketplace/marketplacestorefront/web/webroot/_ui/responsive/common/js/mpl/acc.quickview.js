@@ -1129,9 +1129,14 @@ function openPopForBankEMI_quick() {
 				event_type : 'emi_more_information'
 			});
 			//TPR-6029-EMI link click#43--start
-			   if(typeof(_satellite) != "undefined"){
+			   /*if(typeof(_satellite) != "undefined"){
 			    	_satellite.track('cpj_qw_emi');
-				}
+				}*/
+			   setTimeout(function() {
+				   if(typeof(_satellite) != "undefined"){
+				    	_satellite.track('cpj_qw_emi');
+					}
+				}, 1500);
 			//TPR-6029-EMI link click#43--end
 		},
 		error : function(xhr, status, error) {

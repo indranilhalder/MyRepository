@@ -89,7 +89,10 @@
                                                 tealiumCompare=comparableProductCode;
                                                 //TPR-6290
                                                 if(typeof _satellite !="undefined"){
-    	                       						_satellite.track('product_comparison');
+    	                       						/*_satellite.track('product_comparison');*/
+    	                       						setTimeout(function() {
+    	                       							_satellite.track('product_comparison');
+    	                       						}, 1500);
     	                       					}
                                                 dtmAddToCompare(v.productCode,v.categoryType);
                                             });
@@ -361,8 +364,11 @@
 			}
 			//TPR-6290
 			if (typeof _satellite != "undefined") {
-				 _satellite.track('compare_now');
-			    }	
+				/* _satellite.track('compare_now');*/
+				setTimeout(function() {
+					_satellite.track('compare_now');
+				}, 1500);
+			}	
 			dtmAddToComparedList(tealiumCompare);
 			window.location.href = ACC.config.encodedContextPath + "/compare"
 		})

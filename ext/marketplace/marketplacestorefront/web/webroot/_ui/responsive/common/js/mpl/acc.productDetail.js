@@ -3536,9 +3536,14 @@ function getProductContents() {
 					"a_plus_product_id":productId
 				});
 				//TPR-6029 | dtm for A+ products
-				if (typeof(_satellite) != "undefined") {
+			/*	if (typeof(_satellite) != "undefined") {
 					_satellite.track('cpj_pdp_a_plus');
-			    }
+			    }*/
+				setTimeout(function() {
+					if (typeof(_satellite) != "undefined") {
+						_satellite.track('cpj_pdp_a_plus');
+				    }
+				}, 1500);
 			}
 				 
 		},

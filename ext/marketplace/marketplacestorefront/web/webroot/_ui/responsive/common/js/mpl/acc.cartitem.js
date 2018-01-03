@@ -48,7 +48,10 @@ ACC.cartitem = {
 				        }
 			    }
 			  if(typeof(_satellite) !="undefined"){
-			      _satellite.track('cpj_cart_removal');
+				  /*  _satellite.track('cpj_cart_removal');*/
+				  setTimeout(function() {
+					  _satellite.track('cpj_cart_removal');
+				  }, 1500);
 			  }
 					// for MSD	
 					var x = $(this).closest("li.item").prev();
