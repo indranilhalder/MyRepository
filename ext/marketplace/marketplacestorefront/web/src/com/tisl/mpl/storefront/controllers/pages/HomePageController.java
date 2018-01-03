@@ -73,6 +73,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.lux.model.LuxuryHomePagePreferenceModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
@@ -101,6 +102,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.security.cookie.EnhancedCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -167,6 +169,12 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
+
+	@Autowired
+	private CommonUtils commonUtils;
+
+	@Resource(name = "luxuryCookieGenerator")
+	private EnhancedCookieGenerator luxuryCookieGenerator;
 
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
@@ -354,10 +362,21 @@ public class HomePageController extends AbstractPageController
 			//GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.INFO_MESSAGES_HOLDER, "account.confirmation.signout.title");
 			return REDIRECT_PREFIX + ROOT;
 		}
+		String label = null;
+		if (commonUtils.isLuxurySite() && userFacade.isAnonymousUser())
+		{
 
-		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
-		updatePageTitle(model, getContentPageForLabelOrId(null));
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, luxuryCookieGenerator.getCookieName());
+			if (cookie != null)
+			{
+				label = cookie.getValue();
+			}
+
+
+		}
+		storeCmsPageInModel(model, getContentPageForLabelOrId(label));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(label));
+		updatePageTitle(model, getContentPageForLabelOrId(label));
 
 		//UF-287
 		final JSONObject singleBanner = getHomePageBanners("Online", "yes");
