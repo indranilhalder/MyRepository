@@ -8,3 +8,8 @@ test:
   override:
     - yarn  lint
     - yarn  test 
+deployment:
+  staging:
+    branch: master
+    commands:
+      - yarn deploy    
