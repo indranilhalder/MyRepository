@@ -13,10 +13,20 @@
 <h3 class="company author">
           </h3>
 <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
+	
+	
 	<p class="old" id="mrpPriceId" style="display:none">
+	<p class="old" style="float: left;text-decoration: none ! important;">MRP :
+	</p>
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+		
+	<p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
+	</p>
 	</p>
 	<p class="sale" id="mopPriceId" style="display:none">
+	<p class="old" style="float: left;text-decoration: none ! important;">Price :
+	</p>
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="sale" id="spPriceId" style="display:none">
@@ -120,3 +130,8 @@
 			</c:choose> 
 			</ul>
 </c:if> --%>
+<style>
+#mopPriceId + p.old + p {
+    display: none;
+}
+</style>
