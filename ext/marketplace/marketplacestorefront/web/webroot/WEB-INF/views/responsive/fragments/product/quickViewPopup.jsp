@@ -1160,3 +1160,8 @@ $(window).resize(function(){
 
 /*add to wishlist st*/
 </script>
+<style>
+#mopPriceId + p.old + p {
+    display: none;
+}
+</style>
