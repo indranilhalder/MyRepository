@@ -3,12 +3,12 @@ machine:
   version: stable
 dependencies:
   override:
-    - yarn install --dev
+    - yarn install
 test:
   override:
     - yarn  lint
     - yarn  test
-    
+
 
 
 
