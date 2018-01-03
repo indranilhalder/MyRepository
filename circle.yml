@@ -1,7 +1,6 @@
 machine:
   node:
   version: stable
-
 dependencies:
   override:
     - yarn install --dev
@@ -9,7 +8,7 @@ test:
   override:
     - yarn  lint
     - yarn  test
-    
+
 
 
      
