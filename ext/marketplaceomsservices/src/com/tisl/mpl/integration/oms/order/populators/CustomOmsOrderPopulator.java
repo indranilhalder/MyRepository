@@ -1,6 +1,5 @@
 package com.tisl.mpl.integration.oms.order.populators;
 
-import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
 import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -28,14 +27,12 @@ import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.site.BaseSiteService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.hybris.oms.domain.address.Address;
@@ -51,9 +48,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 {
 
 	private static final Logger LOG = Logger.getLogger(CustomOmsOrderPopulator.class);
-
-	@Autowired
-	private BaseSiteService baseSiteService;
 
 	private Converter<OrderEntryModel, OrderLine> orderLineConverter;
 	private Converter<PaymentInfoModel, PaymentInfo> paymentInfoConverter;
@@ -72,17 +66,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 	public void populate(final OrderModel source, final Order target) throws ConversionException
 	{
 
-		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
-		final String site = currentBaseSite.getUid();
-
-		if (MarketplaceomsservicesConstants.LuxuryPrefix.equals(site))
-		{
-			if (LOG.isInfoEnabled())
-			{
-				LOG.info("Flag is: " + site);
-			}
-			target.setStoreIndicator(site);
-		}
 		final UserModel user = source.getUser();
 		final List<OrderLine> ondemandOrderEntrys = new ArrayList<OrderLine>();
 		target.setEmailid(((CustomerModel) user).getOriginalUid());
@@ -120,8 +103,8 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			LOG.info("CustomOmsOrderPopulator Channel name is null for order " + source.getCode());
 		}
 
-		target.setOrderType(
-				MplCodeMasterUtility.getglobalCode(MarketplaceomsservicesConstants.ORDER_TYPE_NEW_CONSTANTS.toUpperCase()));
+		target.setOrderType(MplCodeMasterUtility.getglobalCode(MarketplaceomsservicesConstants.ORDER_TYPE_NEW_CONSTANTS
+				.toUpperCase()));
 		target.setOrderId(source.getCode());
 		/*
 		 * target.setOrderType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(MarketplaceomsservicesConstants.
@@ -400,11 +383,9 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 				if (((ThirdPartyWalletInfoModel) paymentInfoModel).getProviderName().equalsIgnoreCase("PAYTM"))
 				{
 					return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_PAYTM);
-				}
-				else
-				{
+				}else{
 					return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_MRUPEE);
-					//changes for paytm integration--End
+				//changes for paytm integration--End
 				}
 			}
 

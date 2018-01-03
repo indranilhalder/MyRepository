@@ -58,7 +58,6 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	//added for TPR-1348
 	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
 
-	public static final String LuxuryPrefix = "lux";
 
 	private MarketplaceomsservicesConstants()
 	{
