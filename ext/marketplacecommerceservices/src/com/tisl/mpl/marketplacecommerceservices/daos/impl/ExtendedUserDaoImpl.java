@@ -46,7 +46,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @extaccelerator.core.user.dao.ExtendedUserDao#findUserByUIDandSiteID(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -61,7 +61,14 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 		}
 		else
 		{
-			parameters.put(CustomerModel.ORIGINALUID, uid);
+			if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
+			{
+				parameters.put(CustomerModel.MOBILENUMBER, uid);
+			}
+			else if (uid.contains("@"))
+			{
+				parameters.put(CustomerModel.ORIGINALUID, uid);
+			}
 
 		}
 
@@ -133,7 +140,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @extaccelerator.core.user.dao.ExtendedUserDao#findAllUsers()
 	 */
 	@Override
@@ -145,7 +152,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see core.user.dao.ExtendedUserDao#findNewAndModifiedUsersByDateRange(java.util.Date, java.util.Date)
 	 */
 	@Override
