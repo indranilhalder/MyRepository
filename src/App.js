@@ -1,24 +1,30 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
-import styles from "./App.css";
-import { Input } from "xelpmoc-core";
+import { Button } from "xelpmoc-core";
 import ModalPortal from "./components/ModalPortal";
 import ModalContainer from "./containers/ModalContainer";
+import { default as AppStyles } from "./App.css";
 class App extends Component {
   render() {
-    console.log(styles);
-    const modal = true ? (
+    let className = AppStyles.base;
+    if (this.props.modalStatus) {
+      className = AppStyles.blur;
+    }
+    console.log(className);
+    console.log(this.props);
+    const modal = this.props.modalStatus ? (
       <ModalPortal>
         <ModalContainer />
       </ModalPortal>
     ) : null;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <Input />
+      <div className={className}>
+        <Button
+          label="Show Modal"
+          width={100}
+          onClick={() => {
+            this.props.showModal();
+          }}
+        />
         {modal}
       </div>
     );

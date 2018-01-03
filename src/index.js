@@ -4,7 +4,8 @@ import modals from "./reducers/modals.reducer.js";
 import { Provider } from "react-redux";
 import { createStore, combineReducers } from "redux";
 import "./index.css";
-import App from "./App";
+import AppContainer from "./containers/AppContainer";
+
 import registerServiceWorker from "./registerServiceWorker";
 
 const rootReducer = combineReducers({
@@ -14,7 +15,7 @@ let store = createStore(rootReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <AppContainer />
   </Provider>,
   document.getElementById("root")
 );

@@ -1,5 +1,6 @@
 import React from "react";
 import ModalPanel from "./ModalPanel";
+import RestorePassword from "./Login/RestorePassword";
 import "./css/ModalRoot.css";
 export default class ModalRoot extends React.Component {
   handleClose() {
@@ -7,24 +8,7 @@ export default class ModalRoot extends React.Component {
       this.props.hideModal();
     }
   }
-  onSaveVideo(video) {
-    if (this.props.onSaveVideo) {
-      this.props.onSaveVideo(video);
-    }
-    this.props.hideModal();
-  }
-  onSaveQuestion(jobApplication) {
-    if (this.props.updateJobApplication) {
-      this.props.updateJobApplication(jobApplication);
-    }
-    this.props.hideModal();
-  }
-  updateJobApplication(jobApplication) {
-    if (this.props.updateJobApplication) {
-      this.props.updateJobApplication(jobApplication);
-    }
-    this.props.hideModal();
-  }
+
   updateJob(job) {
     if (this.props.updateJob) {
       this.props.updateJob(job);
@@ -35,19 +19,17 @@ export default class ModalRoot extends React.Component {
     // const questionsAnswerVideo = (
     //   <QuestionAnswerVideo {...this.props.ownProps} />
     // );
-    // const MODAL_COMPONENTS = {
+    const MODAL_COMPONENTS = {
+      RECOVER_PASSWORD: RestorePassword
+    };
 
-    //   QUESTION_ANSWER_VIDEO_MODAL: questionsAnswerVideo
-    // };
+    const SelectedModal = MODAL_COMPONENTS["RECOVER_PASSWORD"];
 
-    //const SelectedModal = MODAL_COMPONENTS[this.props.modalType];
-    const SelectedModal = <div>Noob sibot wins</div>;
     return (
       <ModalPanel>
-        <div>
-          <div className="ModalRoot-closeButton" />
-          {SelectedModal}
-        </div>
+        <React.Fragment>
+          <RestorePassword />
+        </React.Fragment>
       </ModalPanel>
     );
   }
