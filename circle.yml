@@ -7,5 +7,4 @@ dependencies:
 test:
   override:
     - yarn  lint
-    - yarn  test
-    
+    - yarn  test 
