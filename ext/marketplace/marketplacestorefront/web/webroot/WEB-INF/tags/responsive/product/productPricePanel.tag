@@ -130,3 +130,8 @@
 			</c:choose> 
 			</ul>
 </c:if> --%>
+<style>
+#mopPriceId + p.old + p {
+    display: none;
+}
+</style>
