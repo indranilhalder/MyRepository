@@ -27,7 +27,6 @@
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
     "object-assign": "4.1.1",
-    "pm2": "^2.9.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
@@ -65,7 +64,8 @@
     "eslint-plugin-react": "^7.5.1",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
-    "prettier": "^1.9.2"
+    "prettier": "^1.9.2",
+    "pm2": "^2.9.1"
   },
   "jest": {
     "collectCoverageFrom": [
