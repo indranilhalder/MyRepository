@@ -435,13 +435,9 @@ ul.tabs{
 						}
 					}
 					ul {
-						border-top: 1px solid $white;
+						
 						> li {
-							position: relative;
-                            border-top: 1px solid #ececec;
-							& + li {
-								border-top: 1px solid #ececec;
-							}                            
+							position: relative;                                                  
                            
 							> a {
 								padding: 12px 30px;
