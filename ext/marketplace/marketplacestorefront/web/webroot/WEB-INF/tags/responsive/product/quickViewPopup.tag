@@ -574,23 +574,24 @@ display:none;
     </c:choose> --%>
     
     <!-- <input type="hidden" id="productPrice" name="productPrice" /> -->
-   <p class="old" id="quickMrpPriceId" style="display:none">
-   <p class="old" style="float: left;text-decoration: none ! important;">MRP :
+   <div class="pdp-price-text" id="quickMrpPriceIdDiv" style="display:none">MRP :
+   <p class="old" id="quickMrpPriceId">
 	</p>
-  
+  <p class="old" style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
 	</p>
-	<p class="sale" id="quickMopPriceId" style="display:none">
-	<p class="old" style="float: left;text-decoration: none ! important;">Price :
+	</div>
+	<div class="pdp-price-text" id="quickMopPriceIdDiv" style="display:none">Price :
+	<p class="sale"  id="quickMopPriceId">
 	</p>
-	</p>
+	</div>
+	<div class="pdp-price-text" id="quickSpPriceIdDiv"  style="display:none">Price :
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
 	  <span></span>
 	</p>
-     <p class="old" style="text-decoration: none ! important;">
-		(Inclusive of all taxes)
-	</p>
+	</div>
     
     <%--for price breakup(TPR-3752) --%>
 
