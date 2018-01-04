@@ -11,9 +11,7 @@ beforeEach(() => {
   };
 
   dummyUser = {
-    _id: "1",
-    userId: "1",
-    emailId: "test@gmail.com",
+    userName: "test@gmail.com",
     password: "123456"
   };
 });
