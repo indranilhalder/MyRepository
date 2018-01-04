@@ -588,7 +588,7 @@ display:none;
 	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
 	  <span></span>
 	</p>
-     <p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
+     <p class="old" style="text-decoration: none ! important;">
 		(Inclusive of all taxes)
 	</p>
     
