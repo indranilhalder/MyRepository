@@ -52,7 +52,7 @@
     "test": "node scripts/test.js --env=jsdom",
     "deploy": "pm2 deploy ecosystem.config.js production",
     "precommit": "lint-staged",
-    "lint": "eslint ‘src/**/*.js’"
+    "lint": "eslint 'src/**/*.js'"
   },
   "lint-staged": {
     "*.js": ["eslint", "prettier --parser flow --write", "git add"]
