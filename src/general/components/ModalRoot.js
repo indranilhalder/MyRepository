@@ -28,7 +28,7 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
   render() {
-    console.log(this.props);
+    console.log(this.props.modalStatus);
     // const questionsAnswerVideo = (
     //   <QuestionAnswerVideo {...this.props.ownProps} />
     // );

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "xelpmoc-core";
-import ModalPortal from "./general/components/ModalPortal";
+
 import ModalContainer from "./general/containers/ModalContainer";
 import { default as AppStyles } from "./App.css";
 class App extends Component {
@@ -11,11 +11,7 @@ class App extends Component {
     }
     console.log(className);
     console.log(this.props);
-    // const modal = this.props.modalStatus ? (
-    //   <ModalPortal>
-    //     <ModalContainer />
-    //   </ModalPortal>
-    // ) : null;
+
     return (
       <div className={className}>
         <Button
@@ -25,6 +21,7 @@ class App extends Component {
             this.props.showModal();
           }}
         />
+
         <ModalContainer />
       </div>
     );
