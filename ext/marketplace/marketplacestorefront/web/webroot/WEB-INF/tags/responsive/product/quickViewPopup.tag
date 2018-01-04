@@ -577,9 +577,7 @@ display:none;
    <p class="old" id="quickMrpPriceId" style="display:none">
    <p class="old" style="float: left;text-decoration: none ! important;">MRP :
 	</p>
-   <p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
-		(Inclusive of all taxes)
-	</p>
+  
 	</p>
 	<p class="sale" id="quickMopPriceId" style="display:none">
 	<p class="old" style="float: left;text-decoration: none ! important;">Price :
@@ -590,7 +588,9 @@ display:none;
 	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
 	  <span></span>
 	</p>
-    
+     <p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
+	</p>
     
     <%--for price breakup(TPR-3752) --%>
 
