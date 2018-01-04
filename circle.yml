@@ -3,7 +3,7 @@ machine:
     version: 8.2.0
 dependencies:
   pre:
-    - yarn install eslint
+    - yarn add eslint
     - node --version
     - npm --version
   override:
