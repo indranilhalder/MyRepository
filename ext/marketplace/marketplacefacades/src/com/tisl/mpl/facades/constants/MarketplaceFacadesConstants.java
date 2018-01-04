@@ -168,6 +168,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String FORWARD_SLASHES = "//";
 	//Adding code for Luxury Facades
 	public static final String LuxuryPrefix = "lux";
+	public static final String MplPrefix = "mpl";
 	public static final String PRODUCT_TYPE = "FineJewellery";
 	public static final String SESSION_SERVICE = "sessionService";
 
