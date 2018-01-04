@@ -7,10 +7,9 @@ import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.voucher.model.CouponUserRestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
@@ -18,9 +17,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -28,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.PromotionPriceUpdaterService;
 import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -37,13 +34,16 @@ import com.tisl.mpl.util.ExceptionUtil;
  * @author TCS
  *
  */
-public class VoucherUserRestrictionUpdaterJob
+public class VoucherUserRestrictionUpdaterJob extends AbstractJobPerformable<CronJobModel>
 {
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(PromotionPriceUpdaterJob.class.getName());
 	@Autowired
 	private PromotionPriceUpdaterService promotionPriceUpdaterService;
+
+	@Autowired
+	private MplVoucherService mplVoucherService;
 
 	@Autowired
 	private ModelService modelService;
@@ -60,6 +60,7 @@ public class VoucherUserRestrictionUpdaterJob
 	 * @param modelService
 	 *           the modelService to set
 	 */
+	@Override
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
@@ -67,27 +68,6 @@ public class VoucherUserRestrictionUpdaterJob
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-
-	//TPR-7408 starts here
-	@Autowired
-	private ConfigurationService configurationService;
-
-	/**
-	 * @return the configurationService
-	 */
-	public ConfigurationService getConfigurationService()
-	{
-		return configurationService;
-	}
-
-	/**
-	 * @param configurationService
-	 *           the configurationService to set
-	 */
-	public void setConfigurationService(final ConfigurationService configurationService)
-	{
-		this.configurationService = configurationService;
-	}
 
 	/**
 	 * @return the flexibleSearchService
@@ -98,6 +78,7 @@ public class VoucherUserRestrictionUpdaterJob
 	}
 
 
+	@Override
 	public PerformResult perform(final CronJobModel cronJob)
 	{
 		try
@@ -110,71 +91,31 @@ public class VoucherUserRestrictionUpdaterJob
 
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{
-				//LOG.debug("CRON LAST START DATE" + configModel.getMplConfigDate());
-				List<UserRestrictionModel> userRestriction = new ArrayList<UserRestrictionModel>();
-				final String queryString = configurationService.getConfiguration().getString("voucher.couponUserRestriction.query");
-				LOG.debug("The queryString is " + queryString);
-				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-				query.addQueryParameter("earlierDate", configModel.getMplConfigDate());
-				LOG.debug("QUERY>>>>>>" + query);
-				userRestriction = getFlexibleSearchService().<UserRestrictionModel> search(query).getResult();
-				LOG.debug(userRestriction);
-				//final List<PrincipalModel> restrCustomerList = new ArrayList<PrincipalModel>();
-				//final List<VoucherModel> voucherList = new ArrayList<VoucherModel>();
-				final SortedMap<VoucherModel, List<PrincipalModel>> voucherUserMap = new TreeMap<VoucherModel, List<PrincipalModel>>();
+				final List<UserRestrictionModel> userRestriction = mplVoucherService.fetchUserRestrictionDetails(configModel
+						.getMplConfigDate());
+
+				final List<CouponUserRestrictionModel> couponUserRestlist = new ArrayList<CouponUserRestrictionModel>();
 				for (final UserRestrictionModel restrictedUser : userRestriction)
 				{
-					voucherUserMap.put(restrictedUser.getVoucher(), new ArrayList<PrincipalModel>(restrictedUser.getUsers()));
+					final VoucherModel voucher = restrictedUser.getVoucher();
+					final List<CouponUserRestrictionModel> couponUserRestrs = mplVoucherService.fetchExistingVoucherData(voucher);
 
-					//restrCustomerList.addAll(restrictedUser.getUsers());
-					//voucherList.add(restrictedUser.getVoucher());
-					//					for (final PrincipalModel user : restrictedUser.getUsers())
-					//					{
-					//						restrCustomerList.add(user);
-					//
-					//					}
-				}
-
-				//final String queryString = configurationService.getConfiguration().getString("voucher.couponUserRestriction.query");
-				final String queryStr = "SELECT {pk} FROM {CouponUserRestriction} where {vouchers} in ?voucherList";
-				LOG.debug("The queryStr is " + queryStr);
-				final FlexibleSearchQuery userRestrQuery = new FlexibleSearchQuery(queryStr);
-				query.addQueryParameter("voucherList", voucherUserMap.keySet());
-				//LOG.debug("QUERY>>>>>>" + query);
-				final List<CouponUserRestrictionModel> couponUserRestrs = getFlexibleSearchService()
-						.<CouponUserRestrictionModel> search(userRestrQuery).getResult();
-				if (CollectionUtils.isNotEmpty(couponUserRestrs))
-				{
-					getModelService().removeAll(couponUserRestrs);
-				}
-
-
-				for (final Map.Entry<VoucherModel, List<PrincipalModel>> pair : voucherUserMap.entrySet())
-				{
-					pair.getKey();
-					pair.getValue();
-				}
-
-
-				final CouponUserRestrictionModel userRestr = getModelService().create(CouponUserRestrictionModel.class);
-				userRestr.setVouchers(voucherUserMap.keySet());
-
-				for (final List<PrincipalModel> userList : voucherUserMap.values())
-				{
-					for (final PrincipalModel user : userList)
+					if (CollectionUtils.isNotEmpty(couponUserRestrs))
 					{
-						userRestr.setClosedUsers(user);
+						getModelService().removeAll(couponUserRestrs);
+					}
+
+					for (final PrincipalModel user : restrictedUser.getUsers())
+					{
+						final CouponUserRestrictionModel userRestr = getModelService().create(CouponUserRestrictionModel.class);
+						userRestr.setVoucher(voucher);
+						userRestr.setClosedUser(user);
+						userRestr.setPositive(restrictedUser.getPositive());
+						couponUserRestlist.add(userRestr);
 					}
 				}
-
-
-
-
-
-
-
-
-
+				getModelService().saveAll(couponUserRestlist);
+				getModelService().removeAll(couponUserRestlist);
 			}
 			else
 			{
@@ -206,10 +147,5 @@ public class VoucherUserRestrictionUpdaterJob
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 
-		finally
-		{
-			//promotionPriceUpdaterService.purgeRedundantData();
-		}
-		//ASFSAD
 	}
 }

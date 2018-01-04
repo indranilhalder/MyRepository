@@ -67,30 +67,7 @@
 		</enumtype>
 		<!-- TPR-7448 Ends here -->
     </enumtypes>
-    
-    
-    <!-- CAR-330 starts here -->
-    <!--  COUPON USER RESTRICTION RELATION STARTS-->
-    <relations>  	
-         <relation code="CouponUserRestrRelation"
-			autocreate="true"
-			generate="true"
-			localized="false">
-			<deployment table="CouponUserRestrRelation" typecode="16004"/>
-			<sourceElement qualifier="vouchers" type="Voucher" cardinality="many">
-				<description>Voucher</description>
-				<modifiers read="true" write="true" search="true" optional="true"/>
-			</sourceElement>
-
-			<targetElement qualifier="restrictedUsers" type="CouponUserRestriction" cardinality="many">
-				<description>Users present in User restriction cloned</description>
-				<modifiers read="true" write="true" search="true" optional="true"/>
-			</targetElement>			
-		</relation>
-   </relations>
-   <!-- COUPON USER RESTRICTION RELATION ENDS -->
-   <!-- CAR-330 ends here -->
-    
+            
 
 	<itemtypes>
 
@@ -624,11 +601,16 @@
 			<deployment table="CouponUserRestriction" typecode="16005"/>
 			
 			<attributes>
-				<attribute qualifier="closedUsers" type="Principal">
+				<attribute qualifier="closedUser" type="Principal">
 					<description>Users present in User restriction cloned</description>
 					<persistence type="property"/>
-					<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
+					<modifiers read="true" write="true" search="false" optional="false"/>
 				</attribute>
+				<attribute qualifier="voucher" type="Voucher">
+				<description>Voucher</description>
+				<persistence type="property"/>
+				<modifiers read="true" write="true" search="true" optional="true"/>
+			    </attribute>
 				<attribute qualifier="positive" type="java.lang.Boolean">
 					<defaultvalue>Boolean.TRUE</defaultvalue>
 					<description>
@@ -637,17 +619,7 @@
 					</description>
 					<persistence type="property"/>
 					<modifiers search="false" optional="false"/>
-				</attribute>
-				<attribute qualifier="violationMessage" type="localized:java.lang.String">
-					<description>
-						the message to return if the restriction is violated (not fulfilled).
-					</description>
-					<modifiers search="false"/>
-					<persistence type="property"/>
-					<custom-properties>
-						<property name="hmcIndexField"><value>"thefield"</value></property>
-					</custom-properties>
-				</attribute>
+				</attribute>				
 			</attributes>
 		</itemtype>		
 		<!-- COUPON USER RESTRICTION ENDS --> 

@@ -100,34 +100,30 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final StringBuilder groupBiulder = new StringBuilder(200);
 
 			final Set<PrincipalGroupModel> groups = customer.getGroups();
+			final Map queryParams = new HashMap();
+			int count = 1;
 			for (final PrincipalGroupModel principal : groups)
 			{
-				groupBiulder.append(" OR {ur.users} like ('%").append(principal.getPk().getLongValue()).append("%') ");
+				groupBiulder.append(" OR {ur.closedUser} = ?").append("customerGroupPk_").append(count);
+				queryParams.put("customerGroupPk_" + count, principal.getPk().toString());
+				count++;
 			}
 
-			final Map queryParams = new HashMap();
-			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
+			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer.getPk().toString());
+			//queryParams.put("customerPkInvalidation", customer.getPk().toString());
+			queryParams.put("isIncluded", "1");
 
 			queryBiulder
 					.append(
-							"select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.users} like ('%")
-					//for checking current user and user group
-					//.append(" AND ( {ur.users} like ('%")
-					.append(customer.getPk().getLongValue())
-					.append("%')")
+							"select {v.pk} from {Promotionvoucher as v JOIN CouponUserRestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.closedUser} = ?")
+					.append(MarketplacecouponConstants.CUSTOMERPK)
 					.append(groupBiulder.toString())
-					//check voucher invalidation table
 					.append(
-							" )AND {v.redemptionQuantityLimitPerUser} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} AND {vin.user}='")
-					//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} ")
-					//.append(" AND  {vin.user}='")
-					.append(customer.getPk().getLongValue())
+							" )AND {ur.positive} = ?isIncluded AND {v.redemptionQuantityLimitPerUser} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} AND {vin.user}=?")
+					.append(MarketplacecouponConstants.CUSTOMERPK)
 					.append(
-							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} DESC");
-			//.append(" }})")
-			//.append(" AND {v.redemptionQuantityLimit} >")
-			//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})")
-			//.append(" ORDER BY {dr.startdate} ASC");
+							"  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} DESC");
+
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
 			LOG.debug("queryString: " + CLOSED_VOUCHER);
