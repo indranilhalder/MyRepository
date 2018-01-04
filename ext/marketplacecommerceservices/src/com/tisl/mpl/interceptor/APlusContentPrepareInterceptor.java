@@ -84,10 +84,12 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 				String error = null;
 				if (null != siteToLoad && siteToLoad.equals(LUX))
 				{
+					LOG.debug("inside Lux Condition: Selected Site is ==" + siteToLoad);
 					error = this.uploadCSVContent(inputStream, aPlusModel.getCsvFile().getRealFileName(), siteToLoad);
 				}
 				else
 				{
+					LOG.debug("Selected Site is ==" + siteToLoad);
 					error = this.uploadCSVContent(inputStream, aPlusModel.getCsvFile().getRealFileName());
 				}
 				if (StringUtils.isNotEmpty(error))
@@ -144,10 +146,12 @@ public class APlusContentPrepareInterceptor implements PrepareInterceptor
 			}
 			if (null != site && site.equals(LUX))
 			{
+				LOG.debug("inside lux - Selected Site is ==" + site);
 				error = businessContentImportUtil.processFile(inputStream, output, flag, site);
 			}
 			else
 			{
+				LOG.debug("Selected Site is ==" + site);
 				error = businessContentImportUtil.processFile(inputStream, output, flag);
 			}
 

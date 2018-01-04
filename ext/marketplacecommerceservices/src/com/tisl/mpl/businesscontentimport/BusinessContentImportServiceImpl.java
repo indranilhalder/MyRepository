@@ -171,6 +171,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		//Sonar-fix
 		//sbError = new StringBuilder();
 
+		LOG.debug("Selected Site is ==" + site);
+
 		while (reader.readNextLine())
 		{
 			lineNo++;
@@ -219,10 +221,12 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 					{
 						if (null != site && site.equals(LUX))
 						{
+							LOG.debug("LUX : Selected Site is ==" + site);
 							processData(line, writer, contentMap, site);
 						}
 						else
 						{
+							LOG.debug(" Selected Site is ==" + site);
 							processData(line, writer, contentMap);
 						}
 
@@ -340,6 +344,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 			final String site)
 	{
 		LOG.debug("Processing Content Data");
+		LOG.debug("hh: Selected Site is ==" + site);
 		try
 		{
 			//Check If Already Present
@@ -358,6 +363,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 				ContentPageModel cmodel = null;
 				if (null != site && site.equals(LUX))
 				{
+					LOG.debug("LUX : Selected Site is ==" + site);
 					cmodel = (ContentPageModel) getCmsPageService().getPageForIdandCatalogVersion(uid, getLuxCatalogVersion());
 				}
 				else
