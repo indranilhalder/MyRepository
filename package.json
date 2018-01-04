@@ -50,7 +50,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "deploy": "pm2 deploy ecosystem.config.js production",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "lint": "eslint 'src/**/*.js'"
   },
   "lint-staged": {
     "*.js": [
