@@ -575,8 +575,15 @@ display:none;
     
     <!-- <input type="hidden" id="productPrice" name="productPrice" /> -->
    <p class="old" id="quickMrpPriceId" style="display:none">
+   <p class="old" style="float: left;text-decoration: none ! important;">MRP :
+	</p>
+   <p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
+	</p>
 	</p>
 	<p class="sale" id="quickMopPriceId" style="display:none">
+	<p class="old" style="float: left;text-decoration: none ! important;">Price :
+	</p>
 	</p>
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
@@ -1153,3 +1160,8 @@ $(window).resize(function(){
 
 /*add to wishlist st*/
 </script>
+<style>
+#quickMopPriceId + p.old + p {
+    display: none;
+}
+</style>
