@@ -115,7 +115,6 @@ public class VoucherUserRestrictionUpdaterJob extends AbstractJobPerformable<Cro
 					}
 				}
 				getModelService().saveAll(couponUserRestlist);
-				getModelService().refresh(couponUserRestlist);
 			}
 			else
 			{
