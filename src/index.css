@@ -4,18 +4,18 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: regular;
 }
 
 @font-face {
   font-family: regular;
-  src: url(/components/fonts/Rubik-Light.ttf);
+  src: url(/general/components/fonts/Rubik-Light.ttf);
 }
 @font-face {
   font-family: semibold;
-  src: url(/components/fonts/Rubik-Medium.ttf);
+  src: url(/general/components/fonts/Rubik-Medium.ttf);
 }
 @font-face {
   font-family: bolder;
-  src: url(/components/fonts/Rubik-Regular.ttf);
+  src: url(/general/components/fonts/Rubik-Regular.ttf);
 }

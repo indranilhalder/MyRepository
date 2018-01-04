@@ -1,6 +1,6 @@
 import React from "react";
 // import "./css/ModalPanel.css";
-import { default as ModalStyles } from "./css/ModalPanel.css";
+import { default as ModalStyles } from "./ModalPanel.css";
 export default class ModalPanel extends React.Component {
   render() {
     console.log(ModalStyles);

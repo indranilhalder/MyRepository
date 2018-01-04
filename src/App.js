@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "xelpmoc-core";
-import ModalPortal from "./components/ModalPortal";
-import ModalContainer from "./containers/ModalContainer";
+import ModalPortal from "./general/components/ModalPortal";
+import ModalContainer from "./general/containers/ModalContainer";
 import { default as AppStyles } from "./App.css";
 class App extends Component {
   render() {

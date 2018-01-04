@@ -1,4 +1,4 @@
-import * as modalActions from "../actions/modal.actions.js";
+import * as modalActions from "./modal.actions.js";
 
 const modals = (
   state = {

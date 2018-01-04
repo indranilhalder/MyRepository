@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import modals from "./reducers/modals.reducer.js";
+import modals from "./general/modal.reducers.js";
 import { Provider } from "react-redux";
 import { createStore, combineReducers } from "redux";
 import "./index.css";
-import AppContainer from "./containers/AppContainer";
+import AppContainer from "./general/containers/AppContainer";
 
 import registerServiceWorker from "./registerServiceWorker";
 

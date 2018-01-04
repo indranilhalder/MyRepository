@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import ModalRoot from "../components/ModalRoot.js";
-import * as modalActions from "../actions/modal.actions.js";
+import * as modalActions from "../modal.actions.js";
 
 const mapStateToProps = (state, ownProps) => {
   return {

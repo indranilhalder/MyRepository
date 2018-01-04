@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
-import { showModal } from "../actions/modal.actions.js";
-import App from "../App.js";
+import { showModal } from "../modal.actions.js";
+import App from "../../App.js";
 
 const mapDispatchToProps = dispatch => {
   return {

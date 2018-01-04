@@ -1,7 +1,7 @@
 import React from "react";
 import ModalPanel from "./ModalPanel";
-import RestorePassword from "./Login/RestorePassword";
-import "./css/ModalRoot.css";
+import RestorePassword from "../../auth/components/RestorePassword";
+import "./ModalRoot.css";
 export default class ModalRoot extends React.Component {
   handleClose() {
     if (this.props.hideModal) {

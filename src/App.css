@@ -7,7 +7,7 @@
   .blur {
     composes: base;
     -webkit-filter: blur(10px);
-    filter: url("./components/img/blur.svg#");
+    filter: url("./general/components/img/blur.svg#");
     filter: blur(10px);
     pointer-events: none;
     transition: 200ms;
