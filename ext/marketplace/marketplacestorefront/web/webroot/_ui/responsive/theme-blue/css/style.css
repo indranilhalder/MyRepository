@@ -78427,3 +78427,10 @@ span#offer_section_responsive_error_msg {
 	}
 }
 /* TISPRDT-7983 */
+
+.pdp-price-text{
+	color: #999;
+    font-size: 14px;
+    padding-right: 10px;
+    text-decoration: none;
+}

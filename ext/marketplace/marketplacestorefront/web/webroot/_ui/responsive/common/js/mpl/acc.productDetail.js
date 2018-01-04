@@ -1978,6 +1978,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//TPR-275 starts
 	if (mrp.value == "") {			
 		 $("#mrpPriceId").hide();
+		 $("#mrpPriceIdDiv").hide();
 		 $("#savingsOnProductId").hide();
 		 $('#addToCartButton-wrong').attr("disable",true);
 		 $('#addToCartButton-wrong').show();
@@ -1993,15 +1994,21 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
+				$("#mrpPriceIdDiv").show();
 				$("#spPriceId").show();
+				$("#spPriceIdDiv").show();
 				$("#mopPriceId").hide();//UF-60
+				$("#mopPriceIdDiv").hide();//UF-60
 				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			} else {
 
 				$('#mrpPriceId').css('text-decoration', 'line-through');
 				$("#mrpPriceId").show();
+				$("#mrpPriceIdDiv").show();
 				$("#spPriceId").show();
+				$("#spPriceIdDiv").show();
 				$("#mopPriceId").hide();//UF-60
+				$("#mopPriceIdDiv").hide();
 				$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
 			}
 
@@ -2009,17 +2016,30 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 			var freebiePriceThresVal = $("#freebiePriceThreshId").val();		
 			if (null!=mop && mop.value != 0 && mop.value > freebiePriceThresVal) {
 				if (mop.value == mrp.value) {
+//					$("#mrpPriceId").removeClass("old").addClass("sale");
+//					$("#mrpPriceId").show();
+//					$('#mrpPriceId').css('text-decoration', '');//UF-60
+//					$("#mopPriceId").hide();//UF-60
+//					$("#spPriceId").hide();//UF-60
+					
 					$("#mrpPriceId").removeClass("old").addClass("sale");
 					$("#mrpPriceId").show();
+					$("#mrpPriceIdDiv").show();
 					$('#mrpPriceId').css('text-decoration', '');//UF-60
-					$("#mopPriceId").hide();//UF-60
-					$("#spPriceId").hide();//UF-60
+					$("#mopPriceId").hide();
+					$("#mopPriceIdDiv").hide();
+					$("#spPriceId").hide();
+					$("#spPriceIdDiv").hide();
 				} else {
 					$('#mrpPriceId').css('text-decoration', 'line-through');
 					$("#mrpPriceId").show();
+					$("#mrpPriceIdDiv").show();
 					$("#mopPriceId").show();
+					$("#mopPriceIdDiv").show();
 					$("#spPriceId").hide();//UF-60
+					$("#spPriceIdDiv").hide();
 					$("#mrpPriceId").removeClass("sale").addClass("old");//UF-60
+
 				}
 			} else if(mop.value != 0 && mop.value <= freebiePriceThresVal){
 				 $(".size").hide(); 	
@@ -2035,13 +2055,13 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $("#pin").attr("disabled",true);
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
-				 $("#mopPriceId").hide();
-				 $("#mrpPriceId").hide();
+				 $("#mopPriceIdDiv").hide();
+				 $("#mrpPriceIdDiv").hide();
 				 $("#savingsOnProductId").hide();
 				 $(".delivery-block").hide();
 				 $(".seller").hide();
 				 $(".star-review").hide();
-				 $("#spPriceId").hide();//UF-60
+				 $("#spPriceIdDiv").hide();//UF-60
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
 				 var prodCode=$("#productCodePost").val();
@@ -2063,6 +2083,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 
 			}else{
 				$("#mrpPriceId").show();
+				$("#mrpPriceIdDiv").show();
 			 }
 		}
 	}

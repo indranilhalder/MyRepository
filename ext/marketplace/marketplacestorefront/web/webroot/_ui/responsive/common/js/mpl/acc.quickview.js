@@ -554,12 +554,16 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 			$('#quickMrpPriceId').css('text-decoration', 'line-through');
 			$("#quickMrpPriceId").show();
+			$("#quickMrpPriceIdDiv").show();
 			$("#quickSpPriceId").show();
+			$("#quickSpPriceIdDiv").show();
 		} else {
 
 			$('#quickMrpPriceId').css('text-decoration', 'line-through');
 			$("#quickMrpPriceId").show();
+			$("#quickMrpPriceIdDiv").show();
 			$("#quickSpPriceId").show();
+			$("#quickSpPriceIdDiv").show();
 		}
 		
 		if(spPrice.value > emiCuttOffAmount)
@@ -574,10 +578,13 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 			if (mop.value == mrp.value) {
 				$("#quickMrpPriceId").removeClass("old").addClass("sale");
 				$("#quickMrpPriceId").show();
+				$("#quickMrpPriceIdDiv").show();
 			} else {
 				$('#quickMrpPriceId').css('text-decoration', 'line-through');
 				$("#quickMrpPriceId").show();
+				$("#quickMrpPriceIdDiv").show();
 				$("#quickMopPriceId").show();
+				$("#quickMopPriceIdDiv").show();
 			}
 			
 			if(mop.value > emiCuttOffAmount)
@@ -588,6 +595,7 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 			
 		} else {
 			$("#quickMrpPriceId").show();
+			$("#quickMrpPriceIdDiv").show();
 			if(mrp.value > emiCuttOffAmount)
 			{
 			$("#emiStickerId").show();
@@ -597,8 +605,10 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 	}
 	if (mrp.value == "") {
 		$("#quickMrpPriceId").hide();
+		$("#quickMrpPriceIdDiv").hide();
 	} else {
 		$("#quickMrpPriceId").show();
+		$("#quickMrpPriceIdDiv").show();
 	}
 }
 
