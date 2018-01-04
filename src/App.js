@@ -9,25 +9,13 @@ class App extends Component {
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
-    console.log(className);
-    console.log(this.props);
+
     const modal = this.props.modalStatus ? (
       <ModalPortal>
         <ModalContainer />
       </ModalPortal>
     ) : null;
-    return (
-      <div className={className}>
-        <Button
-          label="Show Modal"
-          width={100}
-          onClick={() => {
-            this.props.showModal();
-          }}
-        />
-        {modal}
-      </div>
-    );
+    return <div className={className}>{modal}</div>;
   }
 }
 
