@@ -46,10 +46,10 @@
  	<!-- For TPR-4358 End -->
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
-	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
-		  <span></span>
-	</p>
 	</div>
+	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
+		 <span></span>
+	</p>
 	<%--for price breakup(TPR-3752) --%>
 
 	  <c:if test="${product.rootCategory=='FineJewellery' }">	

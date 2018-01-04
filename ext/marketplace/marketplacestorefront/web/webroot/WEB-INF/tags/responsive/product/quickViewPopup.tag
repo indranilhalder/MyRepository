@@ -588,10 +588,10 @@ display:none;
 	<div class="pdp-price-text" id="quickSpPriceIdDiv"  style="display:none">Price :
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
+	</div>
 	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
 	  <span></span>
 	</p>
-	</div>
     
     <%--for price breakup(TPR-3752) --%>
 

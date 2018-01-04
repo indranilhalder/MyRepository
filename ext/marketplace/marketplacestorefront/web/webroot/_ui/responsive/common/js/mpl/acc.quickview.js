@@ -556,14 +556,14 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 			$("#quickMrpPriceId").show();
 			$("#quickMrpPriceIdDiv").show();
 			$("#quickSpPriceId").show();
-			$("#quickSpPriceIdDiv").show();
+			$("#quickSpPriceIdDiv").css('display', 'inline-block');
 		} else {
 
 			$('#quickMrpPriceId').css('text-decoration', 'line-through');
 			$("#quickMrpPriceId").show();
 			$("#quickMrpPriceIdDiv").show();
 			$("#quickSpPriceId").show();
-			$("#quickSpPriceIdDiv").show();
+			$("#quickSpPriceIdDiv").css('display', 'inline-block');
 		}
 		
 		if(spPrice.value > emiCuttOffAmount)
@@ -584,7 +584,7 @@ function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 				$("#quickMrpPriceId").show();
 				$("#quickMrpPriceIdDiv").show();
 				$("#quickMopPriceId").show();
-				$("#quickMopPriceIdDiv").show();
+				$("#quickMopPriceIdDiv").css('display', 'inline-block');
 			}
 			
 			if(mop.value > emiCuttOffAmount)
