@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
-import "./ModalRoot.css";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
