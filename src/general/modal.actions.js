@@ -1,18 +1,17 @@
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
-
-// Actions for Creating User
-export function showModal(modelType, ownProps) {
+export const RESTORE_PASSWORD = "RestorePassword";
+export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,
-    modelType,
+    modalType: type,
     ownProps
   };
 }
 
-export function hideModal(modelType) {
+export function hideModal() {
   return {
     type: HIDE_MODAL,
-    modelType
+    modalType: null
   };
 }

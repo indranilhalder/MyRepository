@@ -2,15 +2,25 @@ import React from "react";
 
 import { Button } from "xelpmoc-core";
 import MediaQuery from "react-responsive";
+import PropTypes from "prop-types";
 export default class LogInButton extends React.Component {
+  onClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  };
   render() {
     return (
-      <div className="App">
+      <div>
         <MediaQuery query="(min-device-width: 1024px)">
           <Button
             label={"Sign in"}
             width={150}
+            height={40}
+            borderRadius={20}
             backgroundColor={"#FF1744"}
+            onClick={this.onClick}
+            loading={this.props.loading}
             textStyle={{ color: "#FFF", fontSize: 14 }}
           />
         </MediaQuery>
@@ -19,6 +29,10 @@ export default class LogInButton extends React.Component {
             backgroundColor={"#FF1744"}
             label={"Login"}
             width={100}
+            height={40}
+            borderRadius={20}
+            onClick={this.onClick}
+            loading={this.props.loading}
             textStyle={{ color: "#FFF", fontSize: 14 }}
           />
         </MediaQuery>
@@ -26,3 +40,8 @@ export default class LogInButton extends React.Component {
     );
   }
 }
+
+LogInButton.propTypes = {
+  onClick: PropTypes.func,
+  loading: PropTypes.bool
+};
