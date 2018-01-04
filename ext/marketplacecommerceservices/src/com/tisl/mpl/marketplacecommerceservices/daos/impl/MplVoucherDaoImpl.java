@@ -359,7 +359,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchUserRestrictionDetails(java.util.Date)
 	 */
 	@Override
@@ -376,7 +376,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchExistingVoucherData(de.hybris.platform.voucher
 	 * .model.VoucherModel)
@@ -385,7 +385,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher)
 	{
 		List<CouponUserRestrictionModel> couponUserRestrs = new ArrayList<CouponUserRestrictionModel>();
-		final String queryStr = "SELECT {pk} FROM {CouponUserRestriction} where {vouchers} = ?voucher";
+		final String queryStr = "SELECT {pk} FROM {CouponUserRestriction} where {voucher} = ?voucher";
 		LOG.debug("The queryStr is " + queryStr);
 		final FlexibleSearchQuery userRestrQuery = new FlexibleSearchQuery(queryStr);
 		userRestrQuery.addQueryParameter("voucher", voucher);
