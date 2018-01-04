@@ -40,6 +40,7 @@ export default class LogInButton extends React.Component {
     );
   }
 }
+
 LogInButton.propTypes = {
   onClick: PropTypes.func,
   loading: PropTypes.bool
