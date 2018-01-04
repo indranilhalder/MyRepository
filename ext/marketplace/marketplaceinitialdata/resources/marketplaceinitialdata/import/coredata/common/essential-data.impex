@@ -254,14 +254,14 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 ;campaignPromoDataCronJob;campaignPromoDataJob;false;en
 ;mplBankCSVPrepareCronJob;mplBankCSVPrepareJob;false;en
 ;refundClearPerformableCronJob;refundClearPerformableJob;false;en
-
 #New Job To Process Order from Payment Pending to Payment Successful
 ;mplProcessOrderCronJob;mplProcessOrderJob;false;en
-
 #New Job To Process mRupee Order from Payment Successful to Order Refund
 ;mplmRupeeCronJob;mplThirdPartyWalletCronJob;false;en
-
 ;promotionPriceUpdaterCronJob;promotionPriceUpdaterJob;false;en
+#CAR-330
+;voucherUserRestrictionUpdaterCronJob;VoucherUserRestrictionUpdaterJob;false;en
+
 
 INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
 								;DelistingHelperJob;delistingJob;en;seller;csv;
@@ -277,6 +277,13 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 #; promotionPriceUpdaterCronJob; 0 0/5 * 1/1 * ? *
 ; mplmRupeeCronJob; 0 0/10 * 1/1 * ? *
 ; refundClearPerformableCronJob; 0 0/15 * 1/1 * ? *
+#CAR-330
+;voucherUserRestrictionUpdaterCronJob; 0 0/5 * 1/1 * ? *
+
+
+#For CAR-330 VoucherUserRestrictionUpdaterCronJob
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate
+;voucherUserRestrictionUpdaterCronJob
 
 
 # Validation constraints - Customer
