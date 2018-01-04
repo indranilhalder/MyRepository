@@ -55,11 +55,7 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint",
-      "prettier --parser flow --write",
-      "git add"
-    ]
+    "*.js": ["eslint", "prettier --parser flow --write", "git add"]
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
@@ -68,15 +64,12 @@
     "eslint-config-recommended": "^2.0.0",
     "eslint-plugin-react": "^7.5.1",
     "husky": "^0.14.3",
-    "jest-enzyme": "^4.0.2",
     "lint-staged": "^6.0.0",
     "pm2": "^2.9.1",
     "prettier": "^1.9.2"
   },
   "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
-    ],
+    "collectCoverageFrom": ["src/**/*.{js,jsx,mjs}"],
     "setupFiles": [
       "<rootDir>/config/polyfills.js",
       "<rootDir>/src/setupTests.js"
@@ -90,11 +83,10 @@
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)":
+        "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
-    ],
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
@@ -109,9 +101,7 @@
     ]
   },
   "babel": {
-    "presets": [
-      "react-app"
-    ]
+    "presets": ["react-app"]
   },
   "eslintConfig": {
     "extends": "react-app"
