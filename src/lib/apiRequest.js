@@ -6,7 +6,7 @@ export async function post(url, payload) {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
-      Authorization: localStorage.getItem("authorizationKey")
+      access_token: localStorage.getItem("authorizationKey")
     }
   });
 }
@@ -14,7 +14,7 @@ export async function post(url, payload) {
 export async function get(url) {
   return await fetch(`${API_URL_ROOT}/${url}`, {
     headers: {
-      Authorization: localStorage.getItem("authorizationKey")
+      access_token: localStorage.getItem("authorizationKey")
     }
   });
 }
@@ -24,7 +24,7 @@ export async function patch(url, payload) {
     method: "PATCH",
     body: JSON.stringify(payload),
     headers: {
-      Authorization: localStorage.getItem("authorizationKey")
+      access_token: localStorage.getItem("authorizationKey")
     }
   });
 }
@@ -34,7 +34,7 @@ export async function put(url, payload) {
     method: "PUT",
     body: JSON.stringify(payload),
     headers: {
-      Authorization: localStorage.getItem("authorizationKey")
+      access_token: localStorage.getItem("authorizationKey")
     }
   });
 }

@@ -38,7 +38,6 @@ const user = (
     case userActions.SIGN_UP_USER_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        user: action.user,
         loading: false
       });
     case userActions.SIGN_UP_USER_FAILURE:

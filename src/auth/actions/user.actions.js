@@ -47,6 +47,7 @@ export function loginUser(userLoginDetails) {
         throw new Error(`[${resultJson.status}] ${resultJson.message}`);
       }
       localStorage.setItem("authorizationKey", resultJson.access_token);
+      // TODO: dispatch a modal here
       dispatch(loginUserSuccess(resultJson));
     } catch (e) {
       dispatch(loginUserFailure(e.message));
@@ -59,11 +60,10 @@ export function signUpUserRequest() {
     status: REQUESTING
   };
 }
-export function signUpUserSuccess(user) {
+export function signUpUserSuccess() {
   return {
     type: SIGN_UP_USER_SUCCESS,
-    status: SUCCESS,
-    user
+    status: SUCCESS
   };
 }
 
@@ -84,7 +84,8 @@ export function signUpUser(userObj) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`[${resultJson.status}] ${resultJson.message}`);
       }
-      dispatch(signUpUserSuccess(resultJson));
+      // TODO: dispatch a modal here
+      dispatch(signUpUserSuccess());
     } catch (e) {
       dispatch(signUpUserFailure(e.message));
     }
@@ -121,6 +122,7 @@ export function otpVerification(userDetails) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`[${resultJson.status}] ${resultJson.message}`);
       }
+      // TODO: dispatch a modal here
       dispatch(otpVerificationSuccess(resultJson));
     } catch (e) {
       dispatch(otpVerificationFailure(e.message));
