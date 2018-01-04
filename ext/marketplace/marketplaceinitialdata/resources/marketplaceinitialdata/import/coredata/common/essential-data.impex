@@ -260,7 +260,7 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 ;mplmRupeeCronJob;mplThirdPartyWalletCronJob;false;en
 ;promotionPriceUpdaterCronJob;promotionPriceUpdaterJob;false;en
 #CAR-330
-;voucherUserRestrictionUpdaterCronJob;VoucherUserRestrictionUpdaterJob;false;en
+;voucherUserRestrictionUpdaterCronJob;voucherUserRestrictionUpdaterJob;false;en
 
 
 INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
