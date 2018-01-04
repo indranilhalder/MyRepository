@@ -28,29 +28,15 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
   render() {
-    console.log(this.props.modalStatus);
-    // const questionsAnswerVideo = (
-    //   <QuestionAnswerVideo {...this.props.ownProps} />
-    // );
     const MODAL_COMPONENTS = {
-      RECOVER_PASSWORD: RestorePassword
+      RestorePassword: <RestorePassword />
     };
 
-    const SelectedModal = this.props.modalStatus ? (
-      <ModalPanel>
-        <React.Fragment>
-          <RestorePassword />
-        </React.Fragment>
-      </ModalPanel>
+    let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
+    const Modal = this.props.modalStatus ? (
+      <ModalPanel>{SelectedModal}</ModalPanel>
     ) : null;
 
-    // return (
-    //   <ModalPanel>
-    //     <React.Fragment>
-    //       <RestorePassword />
-    //     </React.Fragment>
-    //   </ModalPanel>
-    // );
-    return ReactDOM.createPortal(SelectedModal, this.el);
+    return ReactDOM.createPortal(Modal, this.el);
   }
 }
