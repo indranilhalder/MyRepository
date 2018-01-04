@@ -1,4 +1,4 @@
-import * as modelActions from "../actions/model.action";
+import * as modelActions from "./model.action.js";
 
 const model = (
   state = {
