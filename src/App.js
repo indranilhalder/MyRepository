@@ -1,20 +1,29 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
-import styles from "./App.css";
+import { Button } from "xelpmoc-core";
+import ModalContainer from "./general/containers/ModalContainer";
 
-import { Input } from "xelpmoc-core";
-
+import { RESTORE_PASSWORD } from "./general/modal.actions.js";
+import { default as AppStyles } from "./App.css";
 class App extends Component {
   render() {
-    console.log(styles);
+    let className = AppStyles.base;
+    if (this.props.modalStatus) {
+      className = AppStyles.blur;
+    }
 
     return (
-      <div className="App">
+      <div className={className}>
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Tata</h1>
         </header>
-        <Input />
+        <Button
+          label="Show Modal"
+          width={100}
+          onClick={() => {
+            this.props.showModal(RESTORE_PASSWORD);
+          }}
+        />
+        <ModalContainer />
       </div>
     );
   }
