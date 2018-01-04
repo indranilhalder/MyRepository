@@ -1,0 +1,15 @@
+machine:
+  node:
+  version: stable
+dependencies:
+  override:
+    - yarn install
+test:
+  override:
+    - yarn  lint
+    - yarn  test 
+deployment:
+  staging:
+    branch: master
+    commands:
+      - yarn deploy    
