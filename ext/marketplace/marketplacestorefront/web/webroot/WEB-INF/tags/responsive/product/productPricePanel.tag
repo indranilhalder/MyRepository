@@ -16,14 +16,14 @@
 	
 	
 	<p class="old" id="mrpPriceId" style="display:none">
-	<p class="old" style="float: left;text-decoration: none ! important;">MRP :
+	<p class="old" style="float: left !important;display: inline-block;text-decoration: none ! important;">MRP :
 	</p>
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 		
 	
 	</p>
 	<p class="sale" id="mopPriceId" style="display:none">
-	<p class="old" style="float: left;text-decoration: none ! important;">Price :
+	<p class="old" style="float: left !important;display: inline-block;text-decoration: none ! important;">Price :
 	</p>
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	
