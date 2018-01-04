@@ -20,14 +20,14 @@
 	</p>
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 		
-	<p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
-		(Inclusive of all taxes)
-	</p>
+	
 	</p>
 	<p class="sale" id="mopPriceId" style="display:none">
 	<p class="old" style="float: left;text-decoration: none ! important;">Price :
 	</p>
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	
+	
 	</p>
 	<p class="sale" id="spPriceId" style="display:none">
 		<!-- For TPR-4358 Start -->
@@ -47,6 +47,9 @@
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
 		  <span></span>
+	</p>
+	<p class="old" id="mrpPriceId" style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
 	</p>
 	<%--for price breakup(TPR-3752) --%>
 
@@ -131,7 +134,7 @@
 			</ul>
 </c:if> --%>
 <style>
-#mopPriceId + p.old + p {
+#mopPriceId + p.old + p{
     display: none;
 }
 </style>
