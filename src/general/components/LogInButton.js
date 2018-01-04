@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Button } from "xelpmoc-core";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
@@ -44,4 +43,8 @@ export default class LogInButton extends React.Component {
 LogInButton.propTypes = {
   onClick: PropTypes.func,
   loading: PropTypes.bool
+};
+
+LogInButton.defaultProps = {
+  loading: false
 };
