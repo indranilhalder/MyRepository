@@ -37,10 +37,10 @@
 <p class="mb-20">OR</p>
 <form:form method="POST" commandName="extRegisterForm" action="${action}">
 	<div class="form-input-lists mb-20">
-		<formElement:formInputBox idKey="register.profilefirstName" labelKey="" path="firstName" mandatory="true" placeholder="First Name"/>			
-		<formElement:formInputBox idKey="register.profilelastName" labelKey="" path="lastName" mandatory="true" placeholder="Last Name"/>			
-		<formElement:formInputBox idKey="register.mobileNumber" labelKey="" path="mobileNumber" mandatory="true" placeholder="Mobile Number"/>	
-		<formElement:formInputBox idKey="register.email" labelKey="" path="email" mandatory="true" placeholder="Email Address"/>	
+		<formElement:formInputBox idKey="register.profilefirstName" labelKey="" path="firstName" mandatory="true" placeholder="FIRST NAME"/>			
+		<formElement:formInputBox idKey="register.profilelastName" labelKey="" path="lastName" mandatory="true" placeholder="LAST NAME"/>			
+		<formElement:formInputBox idKey="register.mobileNumber" labelKey="" path="mobileNumber" mandatory="true" placeholder="MOBILE NUMBER"/>	
+		<formElement:formInputBox idKey="register.email" labelKey="" path="email" mandatory="true" placeholder="EMAIL ADDRESS"/>	
 		<formElement:formPasswordBox idKey="register.password" labelKey="" path="pwd" inputCSS="password-strength form-control" mandatory="true"/>	
 		<formElement:formConfirmPasswordBox idKey="register.checkpassword" labelKey="" path="checkPwd" inputCSS="form-control" mandatory="true"/>
 	</div>
@@ -59,8 +59,8 @@
 	<p class="h4 text-center">
 		<ycommerce:testId code="luxury_header_Signin_link">
 			 <a class="luxury-login header-login-target-link" href="/luxurylogin/signin" data-target-id="sign-in">
-			 <span><spring:theme code="luxury.header.flyout.signin.member"/></span>
-				<spring:theme code="luxury.header.link.signin" />
+			 <%-- <span><spring:theme code="luxury.header.flyout.signin.member"/></span> --%>
+				<spring:theme code="luxury.header.link.signin.member" />
 			</a>
 		</ycommerce:testId>
 	</p>

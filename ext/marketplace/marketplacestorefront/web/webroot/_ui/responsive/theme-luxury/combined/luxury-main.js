@@ -1091,17 +1091,6 @@ function getRating(key, productCode, category) {
         $("#ratingDiv .gig-rating-readReviewsLink").text(data.streamInfo.ratingCount + " REVIEWS")), 
         $("#customer").text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     });
-    var ratingsParams = {
-        categoryID: category,
-        streamID: productCode,
-        containerID: "ratingDiv",
-        linkedCommentsUI: "commentsDiv",
-        showCommentButton: "true",
-        onAddReviewClicked: function(response) {
-            CheckUserLogedIn();
-        }
-    };
-    gigya.comments.showRatingUI(ratingsParams);
 }
 
 function CheckUserLogedIn() {
