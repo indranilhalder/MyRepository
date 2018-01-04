@@ -1,5 +1,5 @@
 machine:
-  nodejs:
+  node:
   version: 8.0.0
 dependencies:
   pre:
