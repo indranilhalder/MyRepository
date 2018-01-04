@@ -3,7 +3,6 @@ machine:
     version: 8.2.0
 dependencies:
   pre:
-    - npm install -g npm
     - node --version
     - npm --version
   override:
