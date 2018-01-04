@@ -1,12 +1,14 @@
 machine:
   node:
-  version: stable
+    version: 8.2.0
 dependencies:
+  pre:
+    - node --version
+    - npm --version
   override:
     - yarn install
 test:
   override:
-    - yarn  lint
     - yarn  test 
 deployment:
   staging:
