@@ -21,7 +21,7 @@ class SignUp extends Component {
           <Input placeholder={"Email or phone number"} />
           <PasswordInput placeholder={"Password"} />
         </div>
-        <div className={styles.buttonLogin}>
+        <div className={styles.buttonSignup}>
           <div className={styles.buttonHolder}>
             <MediaQuery query="(min-device-width: 1024px)">
               <Button
