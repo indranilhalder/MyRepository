@@ -47,20 +47,24 @@ class SignUp extends Component {
     return (
       <div>
         <div>
-          <Input
-            value={this.props.value ? this.props.value : this.state.value}
-            placeholder={"Name"}
-            onChange={event => this.onChangeName(event)}
-          />
-          <Input
-            placeholder={"Email or phone number"}
-            value={
-              this.props.emailValue
-                ? this.props.emailValue
-                : this.state.emailValue
-            }
-            onChange={event => this.onChangeEmail(event)}
-          />
+          <div className={styles.input}>
+            <Input
+              value={this.props.value ? this.props.value : this.state.value}
+              placeholder={"Name"}
+              onChange={event => this.onChangeName(event)}
+            />
+          </div>
+          <div className={styles.input}>
+            <Input
+              placeholder={"Email or phone number"}
+              value={
+                this.props.emailValue
+                  ? this.props.emailValue
+                  : this.state.emailValue
+              }
+              onChange={event => this.onChangeEmail(event)}
+            />
+          </div>
           <PasswordInput
             placeholder={"Password"}
             password={
