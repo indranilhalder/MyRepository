@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import styles from "./Password.css";
 import show_password from "../../general/components/img/show_pwd.svg";
 import hide_password from "../../general/components/img/hide_pwd.svg";
-import { Input, CircleButton } from "xelpmoc-core";
+import Input from "../../general/components/Input";
+import { CircleButton } from "xelpmoc-core";
 
 class Password extends React.Component {
   constructor(props) {
@@ -12,17 +13,13 @@ class Password extends React.Component {
       isPasswordVisible: this.props.passwordVisible,
       password: "",
       disabled: this.props.disabled,
-      focused: false
+      focused: false,
+      type: this.props.type,
+      img: show_password
     };
     this.styles = this.props.styles ? this.props.styles : styles;
   }
 
-  handleChange(event) {
-    if (this.props.onChange) {
-      this.props.onChange(event.target.value);
-    }
-    this.setState({ value: event.target.value });
-  }
   handleFocus(event) {
     if (this.props.onFocus) {
       this.props.onFocus(event);
@@ -36,6 +33,22 @@ class Password extends React.Component {
     this.setState({ focused: false });
   }
 
+  onPress() {
+    if (!this.state.isPasswordVisible) {
+      this.setState({
+        type: "text",
+        isPasswordVisible: true,
+        img: hide_password
+      });
+    } else {
+      this.setState({
+        type: "password",
+        isPasswordVisible: false,
+        img: show_password
+      });
+    }
+  }
+
   render() {
     var { rightChild, placeholder, ...other } = this.props;
     let className = this.styles.input;
@@ -45,45 +58,26 @@ class Password extends React.Component {
     if (this.state.disabled) {
       className = this.styles.disabled;
     }
+
     return (
       <div className={styles.container}>
         <div>
-          {this.state.isPasswordVisible ? (
-            <Input
-              type={"text"}
-              placeholder={"Email or phone number"}
-              value={this.state.password}
-              placeholder={placeholder}
-            />
-          ) : (
-            <Input
-              type={"password"}
-              placeholder={"Email or phone number"}
-              styles={styles}
-              value={this.state.password}
-              placeholder={placeholder}
-            />
-          )}
-          <div
-            className={styles.button}
-            onClick={() =>
-              this.setState({
-                isPasswordVisible: !this.state.isPasswordVisible
-              })
+          <Input
+            type={this.state.type}
+            placeholder={"Password"}
+            value={this.state.password}
+            placeholder={placeholder}
+            onFocus={event => this.handleFocus(event)}
+            onBlur={event => this.handleBlur(event)}
+            rightChild={
+              <div className={styles.button} onClick={() => this.onPress()}>
+                <CircleButton
+                  color={"transparent"}
+                  icon={<img src={this.state.img} width="20" height="20" />}
+                />
+              </div>
             }
-          >
-            {this.state.isPasswordVisible ? (
-              <CircleButton
-                color={"transparent"}
-                icon={<img src={hide_password} width="20" height="20" />}
-              />
-            ) : (
-              <CircleButton
-                color={"transparent"}
-                icon={<img src={show_password} width="20" height="20" />}
-              />
-            )}{" "}
-          </div>
+          />
         </div>
       </div>
     );
@@ -96,13 +90,14 @@ Password.propTypes = {
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
   maxLength: PropTypes.number,
-  value: PropTypes.string,
-  passwordVisible: PropTypes.bool
+  passwordVisible: PropTypes.bool,
+  type: PropTypes.string
 };
 
 Password.defaultProps = {
   disabled: false,
-  passwordVisible: false
+  passwordVisible: false,
+  type: "Password"
 };
 
 export default Password;
