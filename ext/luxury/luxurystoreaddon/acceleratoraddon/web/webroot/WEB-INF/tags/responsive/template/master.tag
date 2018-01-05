@@ -73,6 +73,8 @@
 	
 	<%-- Additional meta tags --%>
 	<htmlmeta:meta items="${metatags}"/>
+	<meta name="keywords" content="${metaKeywords}">
+ 	<meta name="description" content="${metaDescription}">
 	
 	<!-- Tag for Google Webmaster Tool Verification -->
 	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
@@ -145,7 +147,7 @@
 	
 	<!-- Markup for Google+ -->	
 	<!-- Code Added For INC_11638 - Start -->
-	 <meta itemprop="name" content="${metaTitle}">
+	 <meta itemprop="name" content="${metaPageTitle}">
 	<!-- Code Added For INC_11638 - End -->	
 	<meta itemprop="description" content="${metaDescription}">
 	<%-- <meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}"> --%>
@@ -169,7 +171,7 @@
 	<%-- twitter-card added for INC_10384 --%>
 	<!-- Code Added For INC_11638 - Start -->
 	<meta name="twitter:card" content="summary_large_image">	
-	<meta name="twitter:title" content="${metaTitle}">
+	<meta name="twitter:title" content="${metaPageTitle}">
 	<!-- Code Added For INC_11638 - End -->		
 	<meta name="twitter:site" content="${twitterHandle}">	
 	<meta name="twitter:description" content="${metaDescription}">
@@ -190,7 +192,7 @@
 	
 	<!-- FB Open Graph data -->	
 	<!-- Code Added For INC_11638 - Start -->
-	<meta property="og:title" content="${metaTitle}" />
+	<meta property="og:title" content="${metaPageTitle}" />
 	<!-- Code Added For INC_11638 - End -->
 	<meta property="og:url" content="${canonical}" />
 	
