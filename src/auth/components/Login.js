@@ -1,21 +1,22 @@
 import React, { Component } from "react";
-import { Input, Button } from "xelpmoc-core";
+import { Button } from "xelpmoc-core";
 import MediaQuery from "react-responsive";
+import Input from "../../general/components/Input";
+import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
-import Password from "./Password";
+import LoginButton from "./LogInButton";
 
 class Login extends Component {
   render() {
     return (
-      <div className={styles.container}>
-        <div className={styles.subContainer}>
-          <Input placeholder={"Email or phone number"} styles={styles} />
-          <Password placeholder={"Password"} />
+      <div>
+        <div>
+          <Input placeholder={"Email or phone number"} />
+          <PasswordInput placeholder={"Password"} />
 
           <div className={styles.forgotButton}>
             <MediaQuery query="(min-device-width: 1024px)">
               <Button
-                className={styles.forgotText}
                 backgroundColor={"transparent"}
                 label={"FORGOT PASSWORD?"}
                 textStyle={{
@@ -28,7 +29,6 @@ class Login extends Component {
 
             <MediaQuery query="(max-device-width:1023px)">
               <Button
-                className={styles.forgotText}
                 backgroundColor={"transparent"}
                 label={"FORGOT PASSWORD?"}
                 textStyle={{
@@ -41,23 +41,7 @@ class Login extends Component {
           </div>
         </div>
         <div className={styles.buttonContainer}>
-          <MediaQuery query="(min-device-width: 1024px)">
-            <Button
-              label={"Sign In"}
-              backgroundColor={"#FF1744"}
-              width={100}
-              borderRadius={20}
-            />
-          </MediaQuery>
-
-          <MediaQuery query="(max-device-width:1023px)">
-            <Button
-              label={"Login"}
-              backgroundColor={"#FF1744"}
-              width={100}
-              borderRadius={20}
-            />
-          </MediaQuery>
+          <LoginButton />
         </div>
       </div>
     );
