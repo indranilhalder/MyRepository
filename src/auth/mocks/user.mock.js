@@ -19,3 +19,9 @@ export const userDetails = {
     mobileNumber: "7503721061"
   }
 };
+
+export const userDetailsFailure = {
+  status: "FAILURE",
+  errorCode: "B00001",
+  message: "Failed"
+};

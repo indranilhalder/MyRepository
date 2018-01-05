@@ -10,7 +10,6 @@ let userMock,
   apiMock,
   initialState,
   mockStore,
-  putMock,
   postMock,
   middlewares;
 
@@ -29,6 +28,7 @@ describe("User Actions", () => {
     };
   });
 
+  //Login Test Case
   it("LOG_IN", () => {
     postMock = jest.fn();
     const loginResponse = userMock;
@@ -59,7 +59,7 @@ describe("User Actions", () => {
 
     return store.dispatch(userActions.loginUser(inputDetails)).then(() => {
       expect(localStorage.getItem("authorizationKey")).toEqual(
-        "d2470a48-e71e-41b7-b6b2-a083af3d8c08"
+        user.userDetails.access_token
       );
       expect(store.getActions()).toEqual(expectedActions);
       expect(postMock.mock.calls.length).toBe(1);
@@ -67,6 +67,47 @@ describe("User Actions", () => {
     });
   });
 
+  it("LOG_IN_FAILURE", () => {
+    postMock = jest.fn();
+    const loginResponse = user.userDetailsFailure;
+
+    const result = {
+      status: ERROR,
+      json: () => loginResponse
+    };
+
+    postMock.mockReturnValueOnce(result);
+
+    apiMock = {
+      post: postMock
+    };
+
+    middlewares = [
+      thunk.withExtraArgument({
+        api: apiMock
+      })
+    ];
+    mockStore = configureMockStore(middlewares);
+    const store = mockStore(initialState);
+    // console.log(loginError.toString());
+    const expectedActions = [
+      { type: userActions.LOGIN_USER_REQUEST, status: REQUESTING },
+      {
+        type: userActions.LOGIN_USER_FAILURE,
+        status: ERROR,
+        error: user.userDetailsFailure.message
+      }
+    ];
+
+    return store.dispatch(userActions.loginUser(inputDetails)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(postMock.mock.calls.length).toBe(1);
+      expect(postMock.mock.calls[0][0]).toBe(userActions.LOGIN);
+      // expect(postMock.mock.calls[0][1]).toBe(userMock);
+    });
+  });
+
+  //Sign Up Test Case
   it("SIGN_UP", () => {
     postMock = jest.fn();
     const signUpResponse = "";
@@ -100,7 +141,7 @@ describe("User Actions", () => {
 
     return store.dispatch(userActions.signUpUser(inputDetails)).then(() => {
       expect(localStorage.getItem("authorizationKey")).toEqual(
-        "d2470a48-e71e-41b7-b6b2-a083af3d8c08"
+        user.userDetails.access_token
       );
       expect(store.getActions()).toEqual(expectedActions);
       expect(postMock.mock.calls.length).toBe(1);
@@ -109,6 +150,47 @@ describe("User Actions", () => {
   });
 });
 
+it("SIGN_UP_FAILURE", () => {
+  postMock = jest.fn();
+  const signUpResponse = user.userDetailsFailure;
+
+  const result = {
+    status: ERROR,
+    json: () => signUpResponse
+  };
+
+  postMock.mockReturnValueOnce(result);
+
+  apiMock = {
+    post: postMock
+  };
+
+  middlewares = [
+    thunk.withExtraArgument({
+      api: apiMock
+    })
+  ];
+  mockStore = configureMockStore(middlewares);
+  const store = mockStore(initialState);
+  // console.log(loginError.toString());
+  const expectedActions = [
+    { type: userActions.SIGN_UP_USER_REQUEST, status: REQUESTING },
+    {
+      type: userActions.SIGN_UP_USER_FAILURE,
+      status: ERROR,
+      error: user.userDetailsFailure.message
+    }
+  ];
+
+  return store.dispatch(userActions.signUpUser(inputDetails)).then(() => {
+    expect(store.getActions()).toEqual(expectedActions);
+    expect(postMock.mock.calls.length).toBe(1);
+    expect(postMock.mock.calls[0][0]).toBe(userActions.SIGN_UP);
+    // expect(postMock.mock.calls[0][1]).toBe(userMock);
+  });
+});
+
+//Otp Verification Test Case
 it("OTP_VERIFICATION", () => {
   postMock = jest.fn();
   const otpResponse = userMock;
@@ -143,10 +225,50 @@ it("OTP_VERIFICATION", () => {
 
   return store.dispatch(userActions.otpVerification(inputDetails)).then(() => {
     expect(localStorage.getItem("authorizationKey")).toEqual(
-      "d2470a48-e71e-41b7-b6b2-a083af3d8c08"
+      user.userDetails.access_token
     );
     expect(store.getActions()).toEqual(expectedActions);
     expect(postMock.mock.calls.length).toBe(1);
     expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION);
+  });
+});
+
+it("OTP_VERIFICATION_FAILURE", () => {
+  postMock = jest.fn();
+  const otpVerificationResponse = user.userDetailsFailure;
+
+  const result = {
+    status: ERROR,
+    json: () => otpVerificationResponse
+  };
+
+  postMock.mockReturnValueOnce(result);
+
+  apiMock = {
+    post: postMock
+  };
+
+  middlewares = [
+    thunk.withExtraArgument({
+      api: apiMock
+    })
+  ];
+  mockStore = configureMockStore(middlewares);
+  const store = mockStore(initialState);
+  // console.log(loginError.toString());
+  const expectedActions = [
+    { type: userActions.OTP_VERIFICATION_REQUEST, status: REQUESTING },
+    {
+      type: userActions.OTP_VERIFICATION_FAILURE,
+      status: ERROR,
+      error: user.userDetailsFailure.message
+    }
+  ];
+
+  return store.dispatch(userActions.otpVerification(inputDetails)).then(() => {
+    expect(store.getActions()).toEqual(expectedActions);
+    expect(postMock.mock.calls.length).toBe(1);
+    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION);
+    // expect(postMock.mock.calls[0][1]).toBe(userMock);
   });
 });

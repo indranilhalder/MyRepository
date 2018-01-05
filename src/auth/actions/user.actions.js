@@ -44,7 +44,7 @@ export function loginUser(userLoginDetails) {
       const result = await api.post(LOGIN, userLoginDetails);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
-        throw new Error(`[${resultJson.status}] ${resultJson.message}`);
+        throw new Error(`${resultJson.message}`);
       }
       localStorage.setItem("authorizationKey", resultJson.access_token);
       // TODO: dispatch a modal here
@@ -82,7 +82,7 @@ export function signUpUser(userObj) {
       const result = await api.post(SIGN_UP, userObj);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
-        throw new Error(`[${resultJson.status}] ${resultJson.message}`);
+        throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
       dispatch(signUpUserSuccess());
@@ -120,7 +120,7 @@ export function otpVerification(userDetails) {
       const result = await api.post(OTP_VERIFICATION, userDetails);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
-        throw new Error(`[${resultJson.status}] ${resultJson.message}`);
+        throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
       dispatch(otpVerificationSuccess(resultJson));
