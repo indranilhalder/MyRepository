@@ -10,7 +10,6 @@ import LoginButton from "./LogInButton";
 class Login extends Component {
   constructor(props) {
     super(props);
-    console.log(styles);
     this.state = {
       emailValue: props.emailValue ? props.emailValue : "",
       passwordValue: props.passwordValue ? props.passwordValue : ""
@@ -58,6 +57,7 @@ class Login extends Component {
               onChange={val => this.onChangeEmail(val)}
             />
           </div>
+
           <PasswordInput
             placeholder={"Password"}
             password={
