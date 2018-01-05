@@ -11,7 +11,7 @@ let userMock,
   initialState,
   mockStore,
   postMock,
-  middlewares;
+  middleWares;
 
 describe("User Actions", () => {
   beforeEach(() => {
@@ -44,12 +44,12 @@ describe("User Actions", () => {
       post: postMock
     };
 
-    middlewares = [
+    middleWares = [
       thunk.withExtraArgument({
         api: apiMock
       })
     ];
-    mockStore = configureMockStore(middlewares);
+    mockStore = configureMockStore(middleWares);
     const store = mockStore(initialState);
 
     const expectedActions = [
@@ -82,12 +82,12 @@ describe("User Actions", () => {
       post: postMock
     };
 
-    middlewares = [
+    middleWares = [
       thunk.withExtraArgument({
         api: apiMock
       })
     ];
-    mockStore = configureMockStore(middlewares);
+    mockStore = configureMockStore(middleWares);
     const store = mockStore(initialState);
     // console.log(loginError.toString());
     const expectedActions = [
@@ -123,12 +123,12 @@ describe("User Actions", () => {
       post: postMock
     };
 
-    middlewares = [
+    middleWares = [
       thunk.withExtraArgument({
         api: apiMock
       })
     ];
-    mockStore = configureMockStore(middlewares);
+    mockStore = configureMockStore(middleWares);
     const store = mockStore(initialState);
 
     const expectedActions = [
@@ -165,12 +165,12 @@ it("SIGN_UP_FAILURE", () => {
     post: postMock
   };
 
-  middlewares = [
+  middleWares = [
     thunk.withExtraArgument({
       api: apiMock
     })
   ];
-  mockStore = configureMockStore(middlewares);
+  mockStore = configureMockStore(middleWares);
   const store = mockStore(initialState);
   // console.log(loginError.toString());
   const expectedActions = [
@@ -206,12 +206,12 @@ it("OTP_VERIFICATION", () => {
     post: postMock
   };
 
-  middlewares = [
+  middleWares = [
     thunk.withExtraArgument({
       api: apiMock
     })
   ];
-  mockStore = configureMockStore(middlewares);
+  mockStore = configureMockStore(middleWares);
   const store = mockStore(initialState);
 
   const expectedActions = [
@@ -248,12 +248,12 @@ it("OTP_VERIFICATION_FAILURE", () => {
     post: postMock
   };
 
-  middlewares = [
+  middleWares = [
     thunk.withExtraArgument({
       api: apiMock
     })
   ];
-  mockStore = configureMockStore(middlewares);
+  mockStore = configureMockStore(middleWares);
   const store = mockStore(initialState);
   // console.log(loginError.toString());
   const expectedActions = [
