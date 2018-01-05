@@ -10,9 +10,9 @@ export const OTP_VERIFICATION_REQUEST = "OTP_VERIFICATION_REQUEST";
 export const OTP_VERIFICATION_SUCCESS = "OTP_VERIFICATION_SUCCESS";
 export const OTP_VERIFICATION_FAILURE = "OTP_VERIFICATION_FAILURE";
 
-const LOGIN = "login";
-const SIGN_UP = "onregistration";
-const OTP_VERIFICATION = "otpverification";
+export const LOGIN = "login";
+export const SIGN_UP = "onregistration";
+export const OTP_VERIFICATION = "otpverification";
 
 export function loginUserRequest() {
   return {
