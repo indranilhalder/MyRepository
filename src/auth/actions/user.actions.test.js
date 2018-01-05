@@ -89,7 +89,6 @@ describe("User Actions", () => {
     ];
     mockStore = configureMockStore(middleWares);
     const store = mockStore(initialState);
-    // console.log(loginError.toString());
     const expectedActions = [
       { type: userActions.LOGIN_USER_REQUEST, status: REQUESTING },
       {
@@ -172,7 +171,7 @@ it("SIGN_UP_FAILURE", () => {
   ];
   mockStore = configureMockStore(middleWares);
   const store = mockStore(initialState);
-  // console.log(loginError.toString());
+
   const expectedActions = [
     { type: userActions.SIGN_UP_USER_REQUEST, status: REQUESTING },
     {
@@ -255,7 +254,6 @@ it("OTP_VERIFICATION_FAILURE", () => {
   ];
   mockStore = configureMockStore(middleWares);
   const store = mockStore(initialState);
-  // console.log(loginError.toString());
   const expectedActions = [
     { type: userActions.OTP_VERIFICATION_REQUEST, status: REQUESTING },
     {
