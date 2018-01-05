@@ -76,6 +76,6 @@ public class MplBoostSearchQueryPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE
 		{
 			return;
 		}
-		orderFields.add(0, new OrderField("score", false));
+		//orderFields.add(0, new OrderField("score", false));
 	}
 }
