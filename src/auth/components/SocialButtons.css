@@ -1,0 +1,43 @@
+@media screen and (min-width: 1024px) {
+  .base {
+    text-align: center;
+  }
+  .holder {
+    display: inline-block;
+  }
+
+  .centerHolder {
+    composes: holder;
+    margin: 0px 30px 0px 30px;
+  }
+
+  .textHolder {
+    text-align: center;
+  }
+  .title {
+    color: "#212121";
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .base {
+    text-align: center;
+  }
+  .holder {
+    display: inline-block;
+  }
+
+  .centerHolder {
+    composes: holder;
+    margin: 0px 15px 0px 15px;
+  }
+
+  .textHolder {
+    text-align: center;
+  }
+  .title {
+    color: white;
+    font-size: 16px;
+  }
+}

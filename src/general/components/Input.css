@@ -1,0 +1,40 @@
+.container {
+  width: 100%;
+  height: auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .base {
+    border: 2px;
+    border-color: #d3d3d3;
+    border-style: solid;
+    display: flex;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-right: 25px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .base {
+    border-bottom: 1px;
+    border-bottom-color: #d3d3d3;
+    border-bottom-style: solid;
+    display: flex;
+    margin-top: 20px;
+    padding-bottom: 5px;
+    padding-right: 25px;
+  }
+}
+.focused {
+  composes: base;
+  border-bottom-color: #d3d3d3;
+  border-bottom-style: solid;
+}
+.disabled {
+  composes: base;
+  opacity: 0.5;
+  pointer-events: none;
+  border-bottom-color: #d3d3d3;
+  border-bottom-style: solid;
+}
