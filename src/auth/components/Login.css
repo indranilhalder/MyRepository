@@ -1,0 +1,25 @@
+.buttonLogin {
+  text-align: center;
+  width: 100%;
+  float: left;
+  margin-top: 10px;
+}
+.buttonHolder {
+  display: inline-block;
+}
+.forgotButton {
+  width: 100%;
+  float: left;
+}
+
+@media screen and (min-width: 1024px) {
+  .forgotButton {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .forgotButtonPosition {
+    float: right;
+  }
+}
