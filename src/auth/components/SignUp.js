@@ -22,25 +22,25 @@ class SignUp extends Component {
     }
   };
 
-  onChangeName(event) {
+  onChangeName(val) {
     if (this.props.onChangeName) {
-      this.props.onChangeName(event.target.value);
+      this.props.onChangeName(val);
     }
-    this.setState({ nameValue: event });
+    this.setState({ nameValue: val });
   }
 
-  onChangeEmail(event) {
+  onChangeEmail(val) {
     if (this.props.onChangeEmail) {
-      this.props.onChangeEmail(event.target.value);
+      this.props.onChangeEmail(val);
     }
-    this.setState({ emailValue: event });
+    this.setState({ emailValue: val });
   }
 
-  onChangePassword(event) {
+  onChangePassword(val) {
     if (this.props.onChangePassword) {
-      this.props.onChangePassword(event.target.value);
+      this.props.onChangePassword(val);
     }
-    this.setState({ passwordValue: event });
+    this.setState({ passwordValue: val });
   }
 
   render() {
@@ -51,7 +51,7 @@ class SignUp extends Component {
             <Input
               value={this.props.value ? this.props.value : this.state.value}
               placeholder={"Name"}
-              onChange={event => this.onChangeName(event)}
+              onChange={val => this.onChangeName(val)}
             />
           </div>
           <div className={styles.input}>
@@ -62,7 +62,7 @@ class SignUp extends Component {
                   ? this.props.emailValue
                   : this.state.emailValue
               }
-              onChange={event => this.onChangeEmail(event)}
+              onChange={val => this.onChangeEmail(val)}
             />
           </div>
           <PasswordInput
@@ -72,7 +72,7 @@ class SignUp extends Component {
                 ? this.props.passwordValue
                 : this.state.passwordValue
             }
-            onChange={event => this.onChangePassword(event)}
+            onChange={val => this.onChangePassword(val)}
           />
         </div>
         <div className={styles.buttonSignup}>
