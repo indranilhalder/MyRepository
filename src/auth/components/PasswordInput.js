@@ -10,7 +10,6 @@ class PasswordInput extends React.Component {
     super(props);
     this.state = {
       isPasswordVisible: this.props.passwordVisible,
-      password: "",
       type: this.props.type,
       img: show_password
     };
@@ -38,8 +37,7 @@ class PasswordInput extends React.Component {
       <Input
         {...this.props}
         type={this.state.type}
-        placeholder={"Password"}
-        value={this.state.password}
+        value={this.props.password}
         rightChild={
           <CircleButton
             size={20}
@@ -55,12 +53,14 @@ class PasswordInput extends React.Component {
 
 PasswordInput.propTypes = {
   passwordVisible: PropTypes.bool,
-  type: PropTypes.string
+  type: PropTypes.string,
+  password: PropTypes.string
 };
 
 PasswordInput.defaultProps = {
   passwordVisible: false,
-  type: "Password"
+  type: "Password",
+  password: ""
 };
 
 export default PasswordInput;
