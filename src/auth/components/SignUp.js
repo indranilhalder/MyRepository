@@ -7,19 +7,69 @@ import PasswordInput from "./PasswordInput";
 import styles from "./SignUp.css";
 
 class SignUp extends Component {
-  onClick = () => {
-    if (this.props.onClick) {
-      this.props.onClick();
+  constructor(props) {
+    super(props);
+    console.log(styles);
+    this.state = {
+      nameValue: props.nameValue ? props.nameValue : "",
+      emailValue: props.emailValue ? props.emailValue : "",
+      passwordValue: props.passwordValue ? props.passwordValue : ""
+    };
+  }
+  onSubmit = () => {
+    if (this.props.onSubmit) {
+      this.props.onSubmit();
     }
   };
+
+  onChangeName(event) {
+    if (this.props.onChangeName) {
+      this.props.onChangeName(event.target.value);
+    }
+    this.setState({ nameValue: event });
+  }
+
+  onChangeEmail(event) {
+    if (this.props.onChangeEmail) {
+      this.props.onChangeEmail(event.target.value);
+    }
+    this.setState({ emailValue: event });
+  }
+
+  onChangePassword(event) {
+    if (this.props.onChangePassword) {
+      this.props.onChangePassword(event.target.value);
+    }
+    this.setState({ passwordValue: event });
+  }
 
   render() {
     return (
       <div>
         <div>
-          <Input placeholder={"Name"} />
-          <Input placeholder={"Email or phone number"} />
-          <PasswordInput placeholder={"Password"} />
+          <Input
+            value={this.props.value ? this.props.value : this.state.value}
+            placeholder={"Name"}
+            onChange={event => this.onChangeName(event)}
+          />
+          <Input
+            placeholder={"Email or phone number"}
+            value={
+              this.props.emailValue
+                ? this.props.emailValue
+                : this.state.emailValue
+            }
+            onChange={event => this.onChangeEmail(event)}
+          />
+          <PasswordInput
+            placeholder={"Password"}
+            password={
+              this.props.passwordValue
+                ? this.props.passwordValue
+                : this.state.passwordValue
+            }
+            onChange={event => this.onChangePassword(event)}
+          />
         </div>
         <div className={styles.buttonSignup}>
           <div className={styles.buttonHolder}>
@@ -31,7 +81,7 @@ class SignUp extends Component {
                 borderColor={"#000000"}
                 borderRadius={20}
                 backgroundColor={"#ffffff"}
-                onClick={this.onClick}
+                onClick={this.onSubmit}
                 loading={this.props.loading}
                 textStyle={{
                   color: "#000000",
@@ -47,7 +97,7 @@ class SignUp extends Component {
                 width={150}
                 height={40}
                 borderRadius={20}
-                onClick={this.onClick}
+                onClick={this.onSubmit}
                 loading={this.props.loading}
                 textStyle={{
                   color: "#FFFFFF",
@@ -64,7 +114,13 @@ class SignUp extends Component {
 }
 
 SignUp.propTypes = {
-  onClick: PropTypes.func,
+  onSubmit: PropTypes.func,
+  onChangeName: PropTypes.func,
+  onChangeEmail: PropTypes.func,
+  onChangePassword: PropTypes.func,
+  nameValue: PropTypes.string,
+  emailValue: PropTypes.string,
+  passwordValue: PropTypes.string,
   loading: PropTypes.bool
 };
 
