@@ -3,11 +3,11 @@ import React, { Component } from "react";
 import styles from "./SocialButtons.css";
 import MediaQuery from "react-responsive";
 import { CircleButton, Icon } from "xelpmoc-core";
-import facebookImage from "../../general/components/img/facebook.svg";
-import twitter from "../../general/components/img/twitter";
-import googlePlus from "../../general/components/img/googlePlus.svg";
+import facebookImage from "./img/facebook.svg";
+import twitter from "./img/twitter.svg";
+import googlePlus from "./img/googlePlus.svg";
 import PropTypes from "prop-types";
-class SocialButtons extends Component {
+export default class SocialButtons extends Component {
   facebookLogin = () => {
     if (this.props.facebookLogin) {
       this.props.facebookLogin();
@@ -100,7 +100,6 @@ class SocialButtons extends Component {
   }
 }
 
-export default SocialButtons;
 SocialButtons.propTypes = {
   titleText: PropTypes.string,
   facebookLogin: PropTypes.func,
