@@ -9,7 +9,6 @@ import styles from "./SignUp.css";
 class SignUp extends Component {
   constructor(props) {
     super(props);
-    console.log(styles);
     this.state = {
       nameValue: props.nameValue ? props.nameValue : "",
       emailValue: props.emailValue ? props.emailValue : "",
