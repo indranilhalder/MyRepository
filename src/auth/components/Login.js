@@ -8,6 +8,14 @@ import styles from "./Login.css";
 import LoginButton from "./LogInButton";
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    console.log(styles);
+    this.state = {
+      emailValue: props.emailValue ? props.emailValue : "",
+      passwordValue: props.passwordValue ? props.passwordValue : ""
+    };
+  }
   onButtonPress = () => {
     if (this.props.onButtonPress) {
       this.props.onButtonPress();
@@ -20,12 +28,45 @@ class Login extends Component {
     }
   }
 
+  onChangeEmail(val) {
+    if (this.props.onChangeEmail) {
+      this.props.onChangeEmail(val);
+    }
+    this.setState({ emailValue: val });
+  }
+
+  onChangePassword(val) {
+    if (this.props.onChangePassword) {
+      this.props.onChangePassword(val);
+    }
+
+    this.setState({ passwordValue: val });
+  }
+
   render() {
     return (
       <div>
         <div>
-          <Input placeholder={"Email or phone number"} />
-          <PasswordInput placeholder={"Password"} />
+          <div className={styles.input}>
+            <Input
+              placeholder={"Email or phone number"}
+              emailValue={
+                this.props.emailValue
+                  ? this.props.emailValue
+                  : this.state.emailValue
+              }
+              onChange={val => this.onChangeEmail(val)}
+            />
+          </div>
+          <PasswordInput
+            placeholder={"Password"}
+            password={
+              this.props.passwordValue
+                ? this.props.passwordValue
+                : this.state.passwordValue
+            }
+            onChange={val => this.onChangePassword(val)}
+          />
 
           <div className={styles.forgotButton}>
             <MediaQuery query="(min-device-width: 1024px)">
@@ -75,6 +116,10 @@ class Login extends Component {
 Login.propTypes = {
   onButtonPress: PropTypes.func,
   onForgotPassword: PropTypes.func,
+  onChangeEmail: PropTypes.func,
+  onChangePassword: PropTypes.func,
+  emailValue: PropTypes.string,
+  passwordValue: PropTypes.string,
   loading: PropTypes.bool
 };
 
