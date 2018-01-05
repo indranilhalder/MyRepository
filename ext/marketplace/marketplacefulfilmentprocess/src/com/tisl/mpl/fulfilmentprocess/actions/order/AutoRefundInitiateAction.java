@@ -27,7 +27,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+import com.tisl.mpl.core.enums.RefundFomType;
 import com.tisl.mpl.core.model.InitiateRefundProcessModel;
+
 import com.tisl.mpl.marketplacecommerceservices.service.MplNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 
@@ -125,6 +128,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 													final ConsignmentModel consignment = orderEntry.getConsignmentEntries().iterator().next()
 															.getConsignment();
 													consignment.setStatus(ConsignmentStatus.REFUND_INITIATED);
+													//h2refund Added to know the refund type
+													consignment.setRefundDetails(RefundFomType.AUTOMATIC);
 													modelService.save(consignment);
 													final OrderHistoryEntryModel historyEntry = modelService
 															.create(OrderHistoryEntryModel.class);

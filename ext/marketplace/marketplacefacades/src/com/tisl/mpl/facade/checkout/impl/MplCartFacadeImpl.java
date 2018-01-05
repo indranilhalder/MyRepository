@@ -111,6 +111,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
@@ -173,6 +174,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private MplDelistingService mplDelistingService;
+
+	@Autowired
+	private MplVoucherService mplVoucherService;
 
 	//sonar fix
 	/*
@@ -279,7 +283,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public CartData getSessionCartWithEntryOrderingMobile(final CartModel cart, final boolean recentlyAddedFirst,
+	public CartData getSessionCartWithEntryOrderingMobile(CartModel cart, final boolean recentlyAddedFirst,
 			final boolean isrecalculate, final boolean resetReqd) throws EtailNonBusinessExceptions
 	{
 		final Map<String, String> orderEntryToUssidMap = new HashMap<String, String>();
@@ -299,6 +303,19 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				if (isrecalculate)
 				{
 					commerceCartService.recalculateCart(cart);
+
+					if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+					{
+						cart = (CartModel) mplVoucherService.modifyDiscountValues(cart);
+						final Double totalPrice = mplVoucherService.setTotalPrice(cart);
+						if (null != totalPrice && totalPrice.doubleValue() > 0)
+						{
+							cart.setTotalPrice(totalPrice);
+							getModelService().save(cart);
+							getModelService().refresh(cart);
+						}
+
+					}
 				}
 
 				totalMrpCal(cart);
@@ -845,7 +862,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		double subtotal = 0.0;
 		double totalPrice = 0.0;
 		Double discountValue = Double.valueOf(0.0);
-		final boolean cartSaveRequired = false; //TISPT 80
+		double delCharge = 0.0;
+		double sdCharge = 0.0;
+		//	final boolean cartSaveRequired = false; //TISPT 80
 		if (cartModel != null)
 		{
 			final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
@@ -861,30 +880,52 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				//					entry.setCurrDelCharge(Double.valueOf(0));
 				//				}
 				//getModelService().save(entry); //TISPT 80
+				delCharge += entry.getCurrDelCharge().doubleValue();
+				sdCharge += entry.getScheduledDeliveryCharge().doubleValue();
 			}
-			if (cartSaveRequired)
-			{
-				getModelService().saveAll(entries);
-			}
+			//			if (cartSaveRequired)
+			//			{
+			//				getModelService().saveAll(entries);
+			//			}
 
 			//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
 
 			final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
+			//	discountValue = cartModel.getTotalDiscounts();// TSHIP SHIPPING CHARGE
 
-
-			////TISST-13010
+			//TISST-13010
 			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{
 				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 			}
 
-			totalPrice = subtotal - discountValue.doubleValue();
+			totalPrice = subtotal + delCharge + sdCharge - discountValue.doubleValue();
 
+			cartModel.setDeliveryCost(Double.valueOf(delCharge));
 			cartModel.setSubtotal(Double.valueOf(subtotal));
 			cartModel.setTotalPrice(Double.valueOf(totalPrice));
 			cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
-			getModelService().save(cartModel);
+			getModelService().saveAll(cartModel);
 		}
+	}
+
+	@Override
+	public double getReviewOrderDelCost(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		double totalDelPrice = 0.0;
+		if (cartModel != null)
+		{
+			double delCharge = 0.0;
+			double sdCharge = 0.0;
+			final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				delCharge += entry.getCurrDelCharge().doubleValue();
+				sdCharge += entry.getScheduledDeliveryCharge().doubleValue();
+			}
+			totalDelPrice = delCharge + sdCharge;
+		}
+		return totalDelPrice;
 	}
 
 
@@ -2002,7 +2043,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				modelService.saveAll(entryList);
 			}
-
 			//TISPT-104
 			//call recalculate on cart, only if there's a change in deliverymode.
 			//			if (hasDeliveryMode)
@@ -3757,7 +3797,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 			{
 				if (null != entry.getFulfillmentType()
-						&& entry.getFulfillmentType().equalsIgnoreCase(MarketplaceFacadesConstants.SSHIPCODE))
+				/* && entry.getFulfillmentType().equalsIgnoreCase(MarketplaceFacadesConstants.SSHIPCODE) */)
 				{
 					if (null != entry.getCurrDelCharge() && entry.getCurrDelCharge().doubleValue() > 0.0)
 					{
@@ -4531,7 +4571,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#populatePriceDisclaimerCart(de.hybris.platform.core.model.order.CartModel
 	 * )
@@ -4541,5 +4581,24 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		// YTODO Auto-generated method stub
 		return mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
+	}
+
+
+	/**
+	 * @return the mplVoucherService
+	 */
+	public MplVoucherService getMplVoucherService()
+	{
+		return mplVoucherService;
+	}
+
+
+	/**
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
+	 */
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
+	{
+		this.mplVoucherService = mplVoucherService;
 	}
 }

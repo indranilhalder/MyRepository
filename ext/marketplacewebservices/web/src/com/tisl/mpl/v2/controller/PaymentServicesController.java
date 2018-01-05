@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.MplPromoPriceWsDTO;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -62,6 +63,7 @@ import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.DiscountUtility;
@@ -114,6 +116,9 @@ public class PaymentServicesController extends BaseController
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
+
+	@Resource(name = "mplCouponFacade")
+	private MplCouponFacade mplCouponFacade;
 
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
@@ -324,6 +329,7 @@ public class PaymentServicesController extends BaseController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				cartService.setSessionCart(cart);
 				//TISPT-29
 				if (null != cart)
 				{
@@ -683,59 +689,126 @@ public class PaymentServicesController extends BaseController
 						if (CollectionUtils.isNotEmpty(voucherList))
 						{
 							VoucherModel appliedVoucher = null;
+							//TPR-7486
+							boolean mplCartVoucher = false;
+							final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
-							final DiscountModel discount = voucherList.get(0);
-
-							if (discount instanceof PromotionVoucherModel)
+							//final DiscountModel discount = voucherList.get(0);
+							for (final DiscountModel discount : voucherList)
 							{
-								final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-								appliedVoucher = promotionVoucherModel;
 
-								final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-								for (final RestrictionModel restriction : restrictions)
+								if (discount instanceof PromotionVoucherModel)
 								{
-									if (restriction instanceof PaymentModeRestrictionModel)
+									//final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+									//appliedVoucher = promotionVoucherModel;
+									//TPR-7486
+									if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
 									{
-										boolean willApply = false;
-
-
-										final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
-
-
-										final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-												.getPaymentTypeData(); //Voucher Payment mode
-
-
-										if (CollectionUtils.isNotEmpty(paymentTypeList))
-										{
-											if (StringUtils.isNotEmpty(paymentModeCard))
-											{
-												for (final PaymentTypeModel paymentType : paymentTypeList)
-												{
-													if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
-													{
-														willApply = true;
-													}
-													break;
-												}
-											}
-											else
-											{
-												willApply = true;
-											}
-										}
-
-										//if (willApply == false)
-										if (!willApply)//SonarFix
-										{
-											updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
-											failFlag = true;
-											failErrorCode = MarketplacecommerceservicesConstants.B9078;
-										}
+										final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+										appliedVoucher = promotionVoucherModel;
+										mplCartVoucher = false;
+									}
+									else
+									{
+										final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+										appliedVoucher = promotionVoucherModel;
+										mplCartVoucher = true;
 									}
 
+									final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+									for (final RestrictionModel restriction : restrictions)
+									{
+										if (restriction instanceof PaymentModeRestrictionModel)
+										{
+											boolean willApply = false;
+
+
+											final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
+
+
+											final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+													.getPaymentTypeData(); //Voucher Payment mode
+
+
+											if (CollectionUtils.isNotEmpty(paymentTypeList))
+											{
+												if (StringUtils.isNotEmpty(paymentModeCard))
+												{
+													for (final PaymentTypeModel paymentType : paymentTypeList)
+													{
+														if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+														{
+															willApply = true;
+															break;
+														}
+
+													}
+												}
+
+											}
+											if (mplCartVoucher)
+											{ //MplCartOfferVoucherModel
+												voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+											}
+											else
+											{ //PromotionVoucherModel
+												voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+											}
+
+											//if (willApply == false)
+											/*
+											 * if (!willApply)//SonarFix {
+											 * updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants
+											 * .COUPONFAILUREMESSAGE); failFlag = true; failErrorCode =
+											 * MarketplacecommerceservicesConstants.B9078; }
+											 */
+										}
+
+									}
 								}
 							}
+							//ERROR MESSAGE FOR COUPON AND VOUCHER
+							boolean checkcartVoucher1 = true;
+							boolean checkPromovoucher2 = true;
+							for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+							{
+
+								if (voucherentry.getKey().equals("mplcartvoucher"))
+								{
+									if (!voucherentry.getValue().booleanValue())
+									{
+										checkcartVoucher1 = false;
+									}
+								}
+								if (voucherentry.getKey().equals("promovoucher"))
+								{
+									if (!voucherentry.getValue().booleanValue())
+									{
+										checkPromovoucher2 = false;
+									}
+								}
+							}
+							if (!checkcartVoucher1 && !checkPromovoucher2)
+							{ //both coupon and voucher
+								updateTransactionDtls
+										.setErrorMessage(MarketplacecommerceservicesConstants.CARTANDCOUPONBOTHFAILUREMESSAGE);
+								failFlag = true;
+								failErrorCode = MarketplacecommerceservicesConstants.B9078;
+							}
+							else if (!checkcartVoucher1)
+							{ // only voucher
+								updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.CARTCOUPONFAILUREMESSAGE);
+								failFlag = true;
+								failErrorCode = MarketplacecommerceservicesConstants.B9078;
+							}
+							else if (!checkPromovoucher2)
+							{ //only coupon
+							  //return "coupon";
+								updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
+								failFlag = true;
+								failErrorCode = MarketplacecommerceservicesConstants.B9078;
+							}
+							//ERROR MESSAGE FOR COUPON AND VOUCHER
 						}
 
 						//TPR-4461 COUPON FOR COD END WHEN ORDER MODEL IS NULL ENDS HERE
@@ -747,8 +820,7 @@ public class PaymentServicesController extends BaseController
 						final Double cartValue = cart.getSubtotal();
 						final Double totalCODCharge = cart.getConvenienceCharges();
 
-						//saving COD Payment related info
-						getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
+
 
 						//Mandatory checks agains cart
 						if (!getMplPaymentFacade().checkCart(cart))
@@ -794,6 +866,8 @@ public class PaymentServicesController extends BaseController
 						}
 						else
 						{
+							//saving COD Payment related info
+							getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge, cart);
 							//CAR-110
 							//orderData = mplCheckoutFacade.placeOrderByCartId(cartGuid);
 							orderCode = mplCheckoutFacade.placeOrderMobile(cart);
@@ -843,59 +917,122 @@ public class PaymentServicesController extends BaseController
 					if (CollectionUtils.isNotEmpty(voucherList))
 					{
 						VoucherModel appliedVoucher = null;
+						//TPR-7486
+						boolean mplCartVoucher = false;
+						final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
-						final DiscountModel discount = voucherList.get(0);
-
-						if (discount instanceof PromotionVoucherModel)
+						//final DiscountModel discount = voucherList.get(0);
+						for (final DiscountModel discount : voucherList)
 						{
-							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
 
-							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-							for (final RestrictionModel restriction : restrictions)
+
+							if (discount instanceof PromotionVoucherModel)
 							{
-								if (restriction instanceof PaymentModeRestrictionModel)
+								//final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+								//appliedVoucher = promotionVoucherModel;
+								//TPR-7486
+								if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
 								{
-									boolean willApply = false;
-
-
-									final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
-
-
-									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-											.getPaymentTypeData(); //Voucher Payment mode
-
-
-									if (CollectionUtils.isNotEmpty(paymentTypeList))
-									{
-										if (StringUtils.isNotEmpty(paymentModeCard))
-										{
-											for (final PaymentTypeModel paymentType : paymentTypeList)
-											{
-												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
-												{
-													willApply = true;
-												}
-												break;
-											}
-										}
-										else
-										{
-											willApply = true;
-										}
-									}
-
-									//if (willApply == false)//SonarFix
-									if (!willApply)
-									{
-										updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
-										failFlag = true;
-										failErrorCode = MarketplacecommerceservicesConstants.B9078;
-									}
+									final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+									appliedVoucher = promotionVoucherModel;
+									mplCartVoucher = false;
+								}
+								else
+								{
+									final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+									appliedVoucher = promotionVoucherModel;
+									mplCartVoucher = true;
 								}
 
+								final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+								for (final RestrictionModel restriction : restrictions)
+								{
+									if (restriction instanceof PaymentModeRestrictionModel)
+									{
+										boolean willApply = false;
+
+
+										final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
+
+
+										final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+												.getPaymentTypeData(); //Voucher Payment mode
+
+
+										if (CollectionUtils.isNotEmpty(paymentTypeList))
+										{
+											if (StringUtils.isNotEmpty(paymentModeCard))
+											{
+												for (final PaymentTypeModel paymentType : paymentTypeList)
+												{
+													if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+													{
+														willApply = true;
+														break;
+													}
+
+												}
+											}
+
+										}
+
+										if (mplCartVoucher)
+										{ //MplCartOfferVoucherModel
+											voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+										}
+										else
+										{ //PromotionVoucherModel
+											voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+										}
+
+										//if (willApply == false)//SonarFix
+
+									}
+
+								}
 							}
 						}
+						//ERROR MESSAGE FOR COUPON AND VOUCHER
+						boolean checkcartVoucher1 = true;
+						boolean checkPromovoucher2 = true;
+						for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+						{
+
+							if (voucherentry.getKey().equals("mplcartvoucher"))
+							{
+								if (!voucherentry.getValue().booleanValue())
+								{
+									checkcartVoucher1 = false;
+								}
+							}
+							if (voucherentry.getKey().equals("promovoucher"))
+							{
+								if (!voucherentry.getValue().booleanValue())
+								{
+									checkPromovoucher2 = false;
+								}
+							}
+						}
+						if (!checkcartVoucher1 && !checkPromovoucher2)
+						{ //both coupon and voucher
+							updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.CARTANDCOUPONBOTHFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+						}
+						else if (!checkcartVoucher1)
+						{ // only voucher
+							updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.CARTCOUPONFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+						}
+						else if (!checkPromovoucher2)
+						{ //only coupon
+						  //return "coupon";
+							updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+						}
+						//ERROR MESSAGE FOR COUPON AND VOUCHER
 					}
 
 					//INC144315486
@@ -903,8 +1040,7 @@ public class PaymentServicesController extends BaseController
 					final Double orderValue = orderModel.getSubtotal();
 					final Double totalCODCharge = orderModel.getConvenienceCharges();
 
-					//saving COD Payment related info
-					getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+
 
 					//Mandatory checks agains order
 					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
@@ -938,6 +1074,8 @@ public class PaymentServicesController extends BaseController
 						}
 						else
 						{
+							//saving COD Payment related info
+							getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
 							// OrderIssues:-  multiple Payment Response from juspay restriction
 							//adding Payment id to model
 							if (mplPaymentWebFacade.updateOrder(orderModel))
@@ -1266,6 +1404,7 @@ public class PaymentServicesController extends BaseController
 							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
+					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 				}
 				else
 				{
@@ -1281,7 +1420,19 @@ public class PaymentServicesController extends BaseController
 						MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
+				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 			}
+			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+
+			final String juspayMerchantId = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
+			paymentModesData.setMerchantID(juspayMerchantId);
+			paymentModesData.setMerchantKey(juspayMerchantKey);
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{

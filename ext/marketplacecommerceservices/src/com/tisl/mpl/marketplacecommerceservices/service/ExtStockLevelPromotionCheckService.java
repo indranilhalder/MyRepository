@@ -62,6 +62,16 @@ public interface ExtStockLevelPromotionCheckService
 	 */
 	public int getTotalOfferOrderCount(String promoCode, String orginalUid);
 
+	/**
+	 * TISHS-143
+	 * 
+	 * @param promoCode
+	 * @param orginalUid
+	 * @param guid
+	 * @return int
+	 */
+	public int getTotalOfferOrderCount(String promoCode, String orginalUid, String guid);
+
 
 
 

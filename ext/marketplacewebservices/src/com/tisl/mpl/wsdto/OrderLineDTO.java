@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "OrderLine")
 @XmlType(propOrder =
 { "orderId", "transactionId", "interfaceType", "reasonCode", "refundMode", "returnStoreId", "storeCreditNo", "isReturnEligible",
-		"isReturnInitiated" })
+		"isReturnInitiated", "subReasonCode", "comments" })
 public class OrderLineDTO
 {
 	private String orderId;
@@ -27,6 +27,45 @@ public class OrderLineDTO
 	private String storeCreditNo;
 	private String isReturnEligible;
 	private String isReturnInitiated;
+	private String subReasonCode;
+	private String comments;
+
+
+	/**
+	 * @return the subReasonCode
+	 */
+	@XmlElement(name = "SubReturnReason")
+	public String getSubReasonCode()
+	{
+		return subReasonCode;
+	}
+
+	/**
+	 * @param subReasonCode
+	 *           the subReasonCode to set
+	 */
+	public void setSubReasonCode(final String subReasonCode)
+	{
+		this.subReasonCode = subReasonCode;
+	}
+
+	/**
+	 * @return the comments
+	 */
+	@XmlElement(name = "Comments")
+	public String getComments()
+	{
+		return comments;
+	}
+
+	/**
+	 * @param comments
+	 *           the comments to set
+	 */
+	public void setComments(final String comments)
+	{
+		this.comments = comments;
+	}
 
 	/**
 	 * @return the orderId

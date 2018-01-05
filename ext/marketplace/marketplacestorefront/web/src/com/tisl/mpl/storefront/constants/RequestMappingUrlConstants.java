@@ -187,4 +187,8 @@ public final class RequestMappingUrlConstants
 	public static final String FILE_DOWNLOAD_PATH = "return.filedownload.path";
 	public static final String RETURN_FILE_NAME = "return.filedownload.filename";
 
+
+	//TPR-5954
+	public static final String IMG_UPLOAD_PATH = "img.fileupload.path";
+
 }

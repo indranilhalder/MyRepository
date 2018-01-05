@@ -7,8 +7,10 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +38,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#getAllUSSIDforSeller(java.lang.String)
 	 */
 	@Override
@@ -45,9 +47,9 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		try
 		{
 			final String queryString = //
-					SELECT + SellerInformationModel.PK + "} " //
-							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-							+ "WHERE " + C + SellerInformationModel.SELLERID + "}=?sellerId";
+			SELECT + SellerInformationModel.PK + "} " //
+					+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+					+ "WHERE " + C + SellerInformationModel.SELLERID + "}=?sellerId";
 
 			LOG.info(QUERY + queryString);
 
@@ -70,7 +72,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#delistSeller(java.util.List, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -83,7 +85,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#delistUSSID(java.util.List, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -96,7 +98,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#getModelforUSSID(java.lang.String)
 	 */
 	@Override
@@ -105,9 +107,9 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		try
 		{
 			final String queryString = //
-					SELECT + SellerInformationModel.PK + "} " //
-							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-							+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid";
+			SELECT + SellerInformationModel.PK + "} " //
+					+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+					+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid";
 			//As Sellerarticlesku is same as USSID
 			LOG.info(QUERY + queryString);
 
@@ -130,7 +132,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * TISEE-5143
 	 */
 	@Override
@@ -140,10 +142,12 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		{
 
 			final String queryString = //
-					SELECT + SellerInformationModel.PK + "} " //
-							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-							+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid" + " AND {c:"
-							+ SellerInformationModel.CATALOGVERSION + "}=?catalogVersion";
+			SELECT + SellerInformationModel.PK
+					+ "} " //
+					+ "FROM {" + SellerInformationModel._TYPECODE
+					+ " AS c} "//
+					+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid" + " AND {c:"
+					+ SellerInformationModel.CATALOGVERSION + "}=?catalogVersion";
 			//As Sellerarticlesku is same as USSID
 			LOG.info(QUERY + queryString);
 
@@ -167,7 +171,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao#FindUnprocessedRecord()
 	 */
 	@Override
@@ -180,8 +184,8 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 			//					+ "FROM {" + MarketplaceDelistModel._TYPECODE + " AS c} "//
 			//					+ "WHERE " + "{c:" + MarketplaceDelistModel.ISPROCESSED + "}='0'";
 			final StringBuilder stbQuery = new StringBuilder(50);
-			stbQuery.append(SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE + " AS c} WHERE "
-					+ C + MarketplaceDelistModel.ISPROCESSED + "}='0'");
+			stbQuery.append(SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE
+					+ " AS c} WHERE " + C + MarketplaceDelistModel.ISPROCESSED + "}='0'");
 
 			LOG.info(QUERY + stbQuery);
 
@@ -200,6 +204,93 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 	}
 
+	//SDI-2814 --- De-listing and Re-listing through xml from PI Start
+	@Override
+	public List<MarketplaceDelistModel> fetchDelistDetails(final List<String> ussid)
+	{
+		try
+		{
+			String sellerV = "";
+			for (final String s : ussid)
+			{
+				sellerV = sellerV + "'" + s + "'" + ",";
+			}
+			final String sellerVarb = sellerV.substring(0, sellerV.length() - 1);
 
+			final String queryString = SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE
+					+ " AS c} WHERE {c." + MarketplaceDelistModel.DELISTUSSID + "} in (" + sellerVarb + ")";
+
+			LOG.debug(QUERY + queryString);
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			final List<MarketplaceDelistModel> resultList = flexibleSearchService.<MarketplaceDelistModel> search(query).getResult();
+			if (CollectionUtils.isNotEmpty(resultList))
+			{
+				return resultList;
+			}
+			return null;
+		}
+
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
+
+	@Override
+	public List<MarketplaceDelistModel> fetchDataForUssid(final String sellerVarb)
+	{
+		final String priceQueryString = "select {c.pk} from {MarketplaceDelist as c} where {c.delistUssid} in (" + sellerVarb + ")";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
+
+		return flexibleSearchService.<MarketplaceDelistModel> search(query).getResult();
+	}
+
+	@Override
+	public List<SellerInformationModel> getSellerModel(final List<String> ussid, final CatalogVersionModel catalogVersion,
+			final List<String> NoSellerUssid)
+	{
+		final List<String> sellerSKU = new ArrayList();
+		String sellerV = "";
+		for (final String s : ussid)
+		{
+			sellerV = sellerV + "'" + s + "'" + ",";
+		}
+		final String sellerVarb = sellerV.substring(0, sellerV.length() - 1);
+
+		final String priceQueryString = "select {c.pk} from {SellerInformation as c} where {c.sellerArticleSKU} in (" + sellerVarb
+				+ ") and {c.catalogVersion}=?catalogVersion";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
+		query.addQueryParameter("catalogVersion", catalogVersion);
+
+
+		final List<SellerInformationModel> sellerL = flexibleSearchService.<SellerInformationModel> search(query).getResult();
+		if (CollectionUtils.isNotEmpty(sellerL))
+		{
+			if (sellerL.size() == ussid.size())
+			{
+				return sellerL;
+			}
+			else
+			{
+				for (final SellerInformationModel seller : sellerL)
+				{
+					sellerSKU.add(seller.getSellerArticleSKU());
+				}
+				for (final String sku : ussid)
+				{
+					if (!sellerSKU.contains(sku))
+					{
+						NoSellerUssid.add(sku);
+					}
+				}
+				return sellerL;
+			}
+		}
+		return null;
+
+	}
+	//SDI-2814 --- De-listing and Re-listing through xml from PI END
 
 }

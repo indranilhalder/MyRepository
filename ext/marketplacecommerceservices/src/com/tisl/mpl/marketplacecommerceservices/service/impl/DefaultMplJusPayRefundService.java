@@ -147,10 +147,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				}
 				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
 				{
-					if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
-							.equals(paymentTransactionEntry.getType()))
-							&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
-									.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
+					if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType())
+							|| PaymentTransactionType.AUTHORIZATION.equals(paymentTransactionEntry.getType()))
+							&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+									|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
 					{
 						auditid = paymentTransactionEntry.getRequestToken();
 						break;
@@ -175,10 +175,11 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				//Changed to pick up base url from local properties
 				final PaymentService paymentService = new PaymentService();
 
-				paymentService.setBaseUrl(configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-				paymentService.withKey(
-						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				paymentService.setBaseUrl(
+						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+				paymentService
+						.withKey(configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 						.withMerchantId(
 								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -216,7 +217,11 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				LOG.debug("Refund status for unique ID genrated :" + uniqueRequestId);
 				RefundResponse refundResponse = null;
 				LOG.debug("before calling refund service *******************************");
-				refundResponse = paymentService.refund(refundRequest);
+				//refundResponse = paymentService.refund(refundRequest);
+				if (refundRequest.getAmount().doubleValue() > 0)
+				{
+					refundResponse = paymentService.refund(refundRequest);
+				}
 				LOG.debug("after calling refund service *******************************");
 
 				//TISBOX-1779
@@ -345,10 +350,11 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				final PaymentService paymentService = new PaymentService();
 
-				paymentService.setBaseUrl(configurationService.getConfiguration().getString(
-						MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-				paymentService.withKey(
-						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				paymentService.setBaseUrl(
+						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+				paymentService
+						.withKey(configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 						.withMerchantId(
 								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -567,7 +573,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			{
 				if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
 						|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
-						&& validPaymentType.contains(paymentTransactionEntry.getType()))
+								&& validPaymentType.contains(paymentTransactionEntry.getType()))
 				{
 					return paymentTransactionEntry.getPaymentMode();
 				}
@@ -635,7 +641,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 
 	@Override
-	public boolean attachPaymentTransactionModel(final OrderModel orderModel, final PaymentTransactionModel paymentTransactionModel)
+	public boolean attachPaymentTransactionModel(final OrderModel orderModel,
+			final PaymentTransactionModel paymentTransactionModel)
 	{
 		if (orderModel != null)
 		{
@@ -714,10 +721,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (paymentTransactionModel != null)
 			{
-				refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode() != null ? paymentTransactionModel.getCode()
-						: StringUtils.EMPTY);
-				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus() != null ? paymentTransactionModel.getStatus()
-						: StringUtils.EMPTY);
+				refundInfo.setRefundedBankTrxID(
+						paymentTransactionModel.getCode() != null ? paymentTransactionModel.getCode() : StringUtils.EMPTY);
+				refundInfo.setRefundedBankTrxStatus(
+						paymentTransactionModel.getStatus() != null ? paymentTransactionModel.getStatus() : StringUtils.EMPTY);
 				refundInfo.setRefundedAmt(amount.floatValue());
 			}
 			else
@@ -800,8 +807,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		statusCode = globalCode != null ? globalCode.getGlobalCode() : statusCode;
 		//}
 
-		final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(new ArrayList<RefundInfo>(),
-				referenceNumber, orderEntry.getTransactionID(), statusCode, null);
+		final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(new ArrayList<RefundInfo>(), referenceNumber,
+				orderEntry.getTransactionID(), statusCode, null);
 
 		if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
 		{
@@ -839,8 +846,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 					for (final PaymentTransactionEntryModel transactionEntry : transaction.getEntries())
 					{
 						if (MarketplacecommerceservicesConstants.SUCCESS.equalsIgnoreCase(transactionEntry.getTransactionStatus())
-								&& (PaymentTransactionType.CANCEL.equals(transactionEntry.getType()) || PaymentTransactionType.RETURN
-										.equals(transactionEntry.getType())))
+								&& (PaymentTransactionType.CANCEL.equals(transactionEntry.getType())
+										|| PaymentTransactionType.RETURN.equals(transactionEntry.getType())))
 						{
 							cancelTanactionsEntry.add(transactionEntry);
 						}
@@ -867,8 +874,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		final double amountRemaining = Double.parseDouble(df.format(totalAmountPaied - alreadyRefundDone));
 		final double adjustableAmount = Math.abs(amountRemaining - refundAmount);
 		LOG.info("adjustableAmount :  : validateRefundAmount ():" + adjustableAmount);
-		final double threshold = Double.parseDouble(configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.REFUNDTHRESHOLD).trim());
+		final double threshold = Double.parseDouble(
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.REFUNDTHRESHOLD).trim());
 		LOG.info("threshold :  : validateRefundAmount ():" + threshold);
 
 		if (amountRemaining < refundAmount && threshold > adjustableAmount)
@@ -922,8 +929,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 START
-				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
-						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null
+						? orderEntry.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 END
 
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + currDelCharges.doubleValue()
@@ -949,8 +956,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED, null);
 
 				// Making RTM entry to be picked up by webhook job
-				final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
-						RefundTransactionMappingModel.class);
+				final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+						.create(RefundTransactionMappingModel.class);
 				refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
 				refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 				refundTransactionMappingModel.setCreationtime(new Date());
@@ -960,8 +967,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			}
 		}
 
-		final PaymentTransactionModel paymentTransactionModel = createPaymentTransactionModel(orderRequestRecord
-				.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
+		final PaymentTransactionModel paymentTransactionModel = createPaymentTransactionModel(
+				orderRequestRecord.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
 				orderRequestRecord.getRefundableAmount(), paymentTransactionType, "An Exception Occured.", uniqueRequestId);
 		attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(), paymentTransactionModel);
 
@@ -1010,8 +1017,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
-				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
-						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null
+						? orderEntry.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
@@ -1036,8 +1043,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			}
 		}
 
-		final PaymentTransactionModel paymentTransactionModel = createPaymentTransactionModel(orderRequestRecord
-				.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
+		final PaymentTransactionModel paymentTransactionModel = createPaymentTransactionModel(
+				orderRequestRecord.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
 				orderRequestRecord.getRefundableAmount(), paymentTransactionType, "NO Response FROM PG", uniqueRequestId);
 		attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(), paymentTransactionModel);
 	}

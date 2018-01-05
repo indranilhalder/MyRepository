@@ -16,5 +16,8 @@ public interface MplDeliveryCostDao
 {
 	MplZoneDeliveryModeValueModel getDeliveryCost(String deliveryCode, String currencyIsoCode, String sellerArticleSku);
 
+	MplZoneDeliveryModeValueModel getDeliveryCost(String deliveryCode, String currencyIsoCode, String sellerArticleSku,
+			String fulfillmentType);
+
 	List<MplZoneDeliveryModeValueModel> getDeliveryModesAndCost(final String currencyIsoCode, String sellerArticleSku);
 }

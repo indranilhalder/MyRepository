@@ -38,7 +38,9 @@ public class CartMatchingFilter extends AbstractUrlMatchingFilter
 	private static final String GETTOPTWOWISHLIST = "getTopTwoWishlistForUser";
 	private static final String SOFTCARTRESERVATIONFORPAYMENT = "softReservationForPayment";
 	private static final String APPLYCOUPON = "applyCoupons";
+	private static final String APPLYCARTCOUPON = "applyCartCoupons";
 	private static final String RELEASECOUPON = "releaseCoupons";
+	private static final String RELEASECARTCOUPON = "releaseCartCoupons";
 	private static final String ORDER_SUMMARY = "displayOrderSummary";
 	private static final String RESEND_OTP_COD = "resendOtpforcod";
 	@Autowired
@@ -59,6 +61,7 @@ public class CartMatchingFilter extends AbstractUrlMatchingFilter
 		if (matchesUrl(request, regexp) && null != getValue(request, regexp)
 				&& !request.getRequestURI().contains(GETTOPTWOWISHLIST)
 				&& !request.getRequestURI().contains(SOFTCARTRESERVATIONFORPAYMENT) && !request.getRequestURI().contains(APPLYCOUPON)
+				&& !request.getRequestURI().contains(RELEASECARTCOUPON) && !request.getRequestURI().contains(APPLYCARTCOUPON)
 				&& !request.getRequestURI().contains(RELEASECOUPON) && !request.getRequestURI().contains(ORDER_SUMMARY)
 				&& !request.getRequestURI().contains(RESEND_OTP_COD))
 		{

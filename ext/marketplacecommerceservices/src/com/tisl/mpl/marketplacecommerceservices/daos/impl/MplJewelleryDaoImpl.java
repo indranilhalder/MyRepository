@@ -38,7 +38,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getJewelleryUssid(java.lang.String)
 	 */
 	@Override
@@ -71,7 +71,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getJewelleryInfoByUssid(java.lang.String)
 	 */
 	@Override
@@ -103,7 +103,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getWeightVarientUssid(java.lang.String)
 	 */
 	@Override
@@ -178,7 +178,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getPanCardStatus(java.lang.String)
 	 */
 	//CKD:TPR-3809
@@ -187,12 +187,14 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 	{
 		List<PancardInformationModel> panCardInfo = null;
 		String status = null;
-		final String query = "select {pan.pk} from {PancardInformation as pan} where {pan.transactionid}=" + orderLineId;
+		final String query = "select {pan.pk} from {PancardInformation as pan} where {pan.transactionid}=?orderLineId";
 
 		try
 		{
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
+			fQuery.addQueryParameter("orderLineId", orderLineId);
 			//	panCardInfo = flexibleSearchService.<PancardInformationModel> search(query.toString()).getResult();//SONAR FIX JEWELLERY
-			panCardInfo = flexibleSearchService.<PancardInformationModel> search(query).getResult();
+			panCardInfo = flexibleSearchService.<PancardInformationModel> search(fQuery).getResult();
 			if (CollectionUtils.isNotEmpty(panCardInfo))
 			{
 				status = panCardInfo.get(0).getStatus();
@@ -220,7 +222,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getSellerMsgForRetRefTab(java.lang.String)
 	 */
 	@Override
@@ -255,7 +257,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getSealInfo(java.lang.String)
 	 */
 	@Override
@@ -289,7 +291,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getAllWeightVariantByPussid(java.lang.String)
 	 */
 	@Override

@@ -89,9 +89,9 @@
 	            </value>
 	        </property>
 	        <property name="impexRow">
-	            <value>;{2};{+1};{+0};home-delivery
-	            		;{3};{+1};{+0};express-delivery
-	            		;{4};{+1};{+0};click-and-collect
+	            <value>;{3};{+1};{+0};home-delivery
+	            		;{4};{+1};{+0};express-delivery
+	            		;{5};{+1};{+0};click-and-collect
 	            		</value>
 	        </property>
         </bean>

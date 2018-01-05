@@ -50,6 +50,7 @@ import de.hybris.platform.commercewebservicescommons.dto.user.CountryListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.TitleListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.UserSignUpWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
+import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
@@ -73,6 +74,7 @@ import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.util.localization.Localization;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -82,11 +84,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -116,19 +123,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -143,6 +154,7 @@ import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
@@ -172,14 +184,18 @@ import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.wsdto.AboutUsResultWsData;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.BannerWsDTO;
+import com.tisl.mpl.wsdto.CRMWsData;
+import com.tisl.mpl.wsdto.CRMWsDataParent;
 import com.tisl.mpl.wsdto.CategoryBrandDTO;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.CorporateAddressWsDTO;
+import com.tisl.mpl.wsdto.FileUploadResponseData;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
+import com.tisl.mpl.wsdto.OfferListWsData;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
@@ -214,6 +230,11 @@ public class MiscsController extends BaseController
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
 	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
+	private static final String FAILURE = "Failure";
+	public static final String RETURN_TYPE_COD = "01";
+	private static final String SUCCESS = "Success";
+
+
 
 
 	@Resource(name = "brandFacade")
@@ -228,29 +249,13 @@ public class MiscsController extends BaseController
 	private HttpRequestCustomerUpdatePopulator httpRequestCustomerUpdatePopulator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
-	/*
-	 * @Resource private ModelService modelService;
-	 *
-	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 *
-	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *
-	 * @Autowired private WishlistFacade wishlistFacade;
-	 *
-	 * @Autowired private MplSellerMasterService mplSellerInformationService;
-	 */
+
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private MplCustomerProfileService mplCustomerProfileService;
-	/*
-	 * @Autowired private Wishlist2Service wishlistService;
-	 */
 	@Resource(name = "passwordStrengthValidator")
 	private Validator passwordStrengthValidator;
-	/*
-	 * @Autowired private MplCartFacade mplCartFacade;
-	 */
 	@Autowired
 	private ExtendedUserService extUserService;
 	@Autowired
@@ -261,11 +266,7 @@ public class MiscsController extends BaseController
 	private HomescreenService homescreenservice;
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
-	/*
-	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 *
-	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
-	 */
+
 	@Autowired
 	private MplRestrictionServiceImpl restrictionserviceimpl;
 	@Autowired
@@ -323,11 +324,9 @@ public class MiscsController extends BaseController
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	@Autowired
 	private SessionService sessionService;
-
 	//TPR-4512
 	@Resource(name = "mplOrderFacade")
 	private MplOrderFacade mplOrderFacade;
-
 	@Autowired
 	private ConfigurationService configurationService;
 	//Newly added for TPR-1345:One touch CRM
@@ -337,23 +336,16 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
-
-
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
 
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 
-
-
-	/*
-	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
-	 */
-	/*
-	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
-	 */
+	@Autowired
+	private MplWebFormFacade mplWebFormFacade;
 	private static final Logger LOG = Logger.getLogger(MiscsController.class);
-	public static final String RETURN_TYPE_COD = "01";
-	private static final String SUCCESS = "Success";
+
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -1572,6 +1564,132 @@ public class MiscsController extends BaseController
 		return aboutUsBannerData;
 	}
 
+
+	/**
+	 * Display OFFERS IN PAYMENT PAGE
+	 *
+	 * @param fields
+	 * @return aboutUsBannerData
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/paymentSpecificOffers", method = RequestMethod.GET)
+	@ResponseBody
+	public OfferListWsData getPaymentSpecificOffers(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			throws CMSItemNotFoundException
+	{
+		OfferListWsData offersData = new OfferListWsData();
+		try
+		{
+			offersData = mplCouponFacade.getAllOffersForMobile();
+			if (offersData != null)
+			{
+				offersData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			offersData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			offersData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return offersData;
+	}
+
+	/**
+	 * Display OFFERS TERMS AND CONDITIONS IN PAYMENT PAGE
+	 *
+	 * @param fields
+	 * @return aboutUsBannerData
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/paymentSpecificOffersTermsAndCondition", method = RequestMethod.GET)
+	@ResponseBody
+	public OfferListWsData getPaymentSpecificOffersTermsAndCondition(
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws CMSItemNotFoundException
+	{
+		OfferListWsData offersData = new OfferListWsData();
+		try
+		{
+			offersData = mplCouponFacade.getAllOffersTermsAndConditionForMobile();
+			if (offersData != null)
+			{
+				offersData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			offersData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			offersData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return offersData;
+	}
+
+
 	/**
 	 * Display Hel and Services Page
 	 *
@@ -2019,6 +2137,9 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public Object oneTouchCancelReturn(final InputStream crmRequestXML)
 	{
+
+
+
 		LOG.info("==========Inside oneTouchCancelReturn controller==========");
 		//instances & variables
 		OneTouchCancelReturnDTO output = null;
@@ -2038,7 +2159,9 @@ public class MiscsController extends BaseController
 		String delayValue = "0";
 		long delay = 0;
 		List<AbstractOrderEntryModel> orderEntriesModel = null;
-
+		Map<String, String> dataMap = null;//Added for TPR-5954
+		StringBuilder imgUrl = null;//Added for TPR-5954
+		final String subQuery = null;//Added for TPR-5954
 		try
 		{
 			//Converting XML to JAVA Object
@@ -2076,6 +2199,18 @@ public class MiscsController extends BaseController
 					}
 					try
 					{
+						//TPR-5954 || Start
+						dataMap = new HashMap<String, String>();
+						dataMap.put("comments", oneTouchCrmObj.getComments());
+						dataMap.put("subreasoncode", oneTouchCrmObj.getSubReturnReasonCode());
+						imgUrl = new StringBuilder();
+						/*
+						 * if (null != oneTouchCrmObj.getUploadImage()) { for (final String up :
+						 * oneTouchCrmObj.getUploadImage()) { imgUrl.append(up); imgUrl.append(","); } subQuery =
+						 * imgUrl.substring(0, imgUrl.length() - 1); dataMap.put("imgurl", subQuery);
+						 * imgUrl.setLength(0);//Emptying the image path string }
+						 */
+						//TPR-5954 || End
 						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());//Sub order model
 						final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data
 						orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel, oneTouchCrmObj.getTransactionId());//associated order entries
@@ -2277,7 +2412,7 @@ public class MiscsController extends BaseController
 									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
 											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
 											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
-											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
+											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId(), dataMap);
 									//Return is successfull
 									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 									{
@@ -2412,8 +2547,10 @@ public class MiscsController extends BaseController
 			output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
 			output.setRemarks(MarketplacewebservicesConstants.FORMAT_MISMATCH);
 			outputList.add(output);
+			dataMap = null;
 		}
 		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
+		dataMap = null;
 		return oneTouchReturnDTOList;
 	}
 
@@ -2564,4 +2701,191 @@ public class MiscsController extends BaseController
 	{
 		this.mplOrderFacade = mplOrderFacade;
 	}
+
+	/**
+	 * This method is for web form ticket status update (TPR-5989)
+	 */
+	@RequestMapping(value = "/{baseSiteId}/webformTicketStatus", method = RequestMethod.POST, consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+	@ResponseBody
+	public void webformTicketStatusUpdate(@RequestBody final TicketStatusUpdate ticketStatusUpdate)
+			throws EtailNonBusinessExceptions
+	{
+		try
+		{
+			mplWebFormFacade.webFormticketStatusUpdate(ticketStatusUpdate);
+		}
+		catch (final Exception exc)
+		{
+			LOG.error(exc);
+		}
+
+	}
+
+	/**
+	 * @param emailId
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+
+	@RequestMapping(value = "/{baseSiteId}/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CRMWsDataParent getcemwebform() throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	{
+		final CRMWsDataParent crmDto = new CRMWsDataParent();
+		try
+		{
+			final List<CRMWsData> crmdata = mplWebFormFacade.getAllWebCRMTreedata();
+			crmDto.setNodes(crmdata);
+			crmDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				crmDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmDto.setErrorCode(e.getErrorCode());
+			}
+			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				crmDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmDto.setErrorCode(e.getErrorCode());
+			}
+			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return crmDto;
+	}
+
+
+
+
+	@RequestMapping(value = "/{baseSiteId}/crmFileUpload", method = RequestMethod.POST)
+	@ResponseBody
+	public FileUploadResponseData getcrmFileUploadRequest(@RequestParam("uploadFile") final MultipartFile multipartFile)
+			throws WebserviceValidationException
+	{
+		final FileUploadResponseData crmFileUploaddata = new FileUploadResponseData();
+		String finalUrlForDispatchProof = null;
+		try
+		{
+			LOG.debug("***************:" + multipartFile.getOriginalFilename());
+			String fileUploadLocation = null;
+
+			//String finalUrlForDispatchProof = null;
+			//TISRLUAT-50
+			if (null != configurationService)
+			{
+				fileUploadLocation = configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.CRM_FILE_UPLOAD_PATH);
+
+				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
+				{
+					try
+					{
+						final byte barr[] = multipartFile.getBytes();
+						finalUrlForDispatchProof = getPoDUploadPath(fileUploadLocation, multipartFile.getOriginalFilename()); //PRDI-151
+						final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(finalUrlForDispatchProof));
+						bout.write(barr);
+						bout.flush();
+						bout.close();
+						LOG.info("Txn ID: " + " >> Uploaded Proof of dispatch: " + finalUrlForDispatchProof);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Failed to upload PoD. Txnid: " + " -- Path: " + finalUrlForDispatchProof + " -- Exception: " + e);
+					}
+
+					crmFileUploaddata.setFileURL(finalUrlForDispatchProof);
+					crmFileUploaddata.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else
+				{
+					LOG.error("Failed to upload Proof of dispatch. POD File Upload location is not configured: "
+							+ MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				crmFileUploaddata.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmFileUploaddata.setErrorCode(e.getErrorCode());
+			}
+			crmFileUploaddata.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				crmFileUploaddata.setError(e.getMessage());
+			}
+			crmFileUploaddata.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+
+
+
+
+
+		return crmFileUploaddata;
+	}
+
+	/**
+	 * @param fileUploadLocation
+	 * @param originalFilename
+	 * @return
+	 */
+	private String getPoDUploadPath(final String fileUploadLocation, final String originalFilename)
+	{
+		String date = null;
+		Path path = null;
+		final StringBuffer buffer = new StringBuffer();
+		final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+		try
+		{
+			date = sdf.format(new Date());
+			path = Paths.get(fileUploadLocation + File.separator + date);
+			//if directory exists?
+			//"fileUploadLocation", transactionId and fileName cannot be null or blank.
+			if (!Files.exists(path))
+			{
+				try
+				{
+					Files.createDirectories(path);
+				}
+				catch (final IOException e)
+				{
+					//fail to create directory
+					LOG.error("Exception, while creating the Directory: " + path + " -- " + e);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception, While calculating the upload path: " + ex);
+		}
+		return buffer.append(path).append(File.separator).append(originalFilename).toString();
+	}
+
+
 }

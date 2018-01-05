@@ -27,6 +27,7 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
+import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -44,6 +45,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -77,6 +79,11 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 	//Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
+	private static final String DATEFORMAT = "dd/MMM/yyyy hh:mm:ss".intern();
+	private static final String L1 = "l1".intern();
+	private static final String L2 = "l2".intern();
+	private static final String L3 = "l3".intern();
+	private static final String L4 = "l4".intern();
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(OmsSubmissionPendingReportJob.class.getName());
@@ -107,16 +114,19 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		catch (final EtailBusinessExceptions exception)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(exception, null);
+			LOG.error("Exception Occured=", exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final EtailNonBusinessExceptions exception)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
+			LOG.error("Exception Occured=", exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		catch (final Exception exception)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+			LOG.error("Exception Occured=", exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
@@ -143,18 +153,22 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			final Date finalStartDate = cal.getTime();
 			getFetchSalesOrderService().saveCronDetails(finalStartDate, cronJobModel.getCode());
 		}
+		else
+		{
+			LOG.error("Either cronJobModel or cronJobModel.getStartTime() or cronJobModel.getCode() is null");
+		}
 	}
 
 	/**
-	 *
+	 * Populate order data
 	 */
 	private void populateOrderData()
 	{
-		final List<OrderModel> orderModels = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss();
-		if (null != orderModels && !orderModels.isEmpty())
+		final SearchResult<List<Object>> result = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss();
+		if (null != result)
 		{
 			LOG.debug("all orders db fetch successful in populateOrderData");
-			writeItemsToCSV(orderModels);
+			writeItemsToCSV(result);
 		}
 	}
 
@@ -164,13 +178,13 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 	 */
 	private void populateSpecifiedData(final Date mplConfigDate, final Date startTime)
 	{
-		List<OrderModel> orderModels = null;
-		orderModels = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss(mplConfigDate, startTime);
-		if (null != orderModels && !orderModels.isEmpty())
+		SearchResult<List<Object>> result = null;
+		result = getFetchSalesOrderService().fetchSpecifiedDataForPymntScss(mplConfigDate, startTime);
+		if (null != result)
 		{
 			LOG.debug("all orders db fetch successful in populateSpecifiedData");
 			///Convert order data and write into CSV
-			writeItemsToCSV(orderModels);
+			writeItemsToCSV(result);
 		}
 		else
 		{
@@ -178,10 +192,13 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		}
 	}
 
+	/**
+	 * Generate blank csv
+	 */
 	void writeBlankCSV()
 	{
 		FileWriter fileWriter = null;
-		String CSVHeader = "";
+		String CSVHeader = StringUtils.EMPTY;
 		try
 		{
 			final File rootFolder = new File(getOutputFilePath());
@@ -219,14 +236,16 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 
 	/**
 	 * This method takes the list of SalesReportData and set in the CSV file to be generated in a specified location
+	 *
+	 * @param result
 	 */
-	void writeItemsToCSV(final List<OrderModel> orderModels)
+	void writeItemsToCSV(final SearchResult<List<Object>> result)
 	{
 		FileWriter fileWriter = null;
-		String CSVHeader = "";
+		String CSVHeader = StringUtils.EMPTY;
 		try
 		{
-			final SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy hh:mm:ss");
+			final SimpleDateFormat formatter = new SimpleDateFormat(DATEFORMAT);
 
 			final File rootFolder = new File(getOutputFilePath());
 			rootFolder.getParentFile().mkdirs();
@@ -237,51 +256,56 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			//Add a new line separator after the header
 			fileWriter.append(NEW_LINE_SEPARATOR);
 
-
-			for (final OrderModel subOrder : orderModels)
+			for (final List<Object> row : result.getResult())
 			{
-				final OrderModel parentReference = subOrder.getParentReference();
-				if (null != parentReference && null != parentReference.getChildOrders()
-						&& parentReference.getChildOrders().contains(subOrder))//Condition to ignore orphan child
+				if (CollectionUtils.isNotEmpty(row))
 				{
-					for (final AbstractOrderEntryModel subOrderEntry : subOrder.getEntries())
+					final OrderModel subOrder = (OrderModel) row.get(0);
+					final AbstractOrderEntryModel orderEntry = (AbstractOrderEntryModel) row.get(1);
+					final String orderEntryStatus = (String) row.get(2);
+
+
+
+					final AddressModel delAddress = subOrder.getDeliveryAddress();
+					final Map<String, String> map = categoryList(orderEntry);
+					fileWriter.append(csvFormat(formatter.format(subOrder.getCreationtime())));//Order date
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(subOrder.getParentReference().getCode()));//ORN
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(orderEntryStatus));//Order Status
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(subOrder.getCode()));//Seller Order Id
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(orderEntry.getOrderLineId()));//Transaction Id
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(getPaymentMode(subOrder.getPaymentInfo())));//Payment Type
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L1)));//l1
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L2)));//l2
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L3)));//l3
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(map.get(L4)));//l4
+					fileWriter.append(COMMA_DELIMITER);
+					//final String fullName = setFirstAndLastName(subOrder);
+					String fullName = "";
+					if (null != delAddress)
 					{
-						final Map<String, String> map = categoryList(subOrderEntry);
-						fileWriter.append(csvFormat(formatter.format(subOrder.getCreationtime())));//Order date
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrder.getParentReference().getCode()));//ORN
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrder.getStatus().getCode()));//Order Status
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrder.getCode()));//Seller Order Id
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(subOrderEntry.getOrderLineId()));//Transaction Id
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(getPaymentMode(subOrder.getPaymentInfo())));//Payment Type
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get("l1")));//l1
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get("l2")));//l2
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get("l3")));//l3
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(map.get("l4")));//l4
-						fileWriter.append(COMMA_DELIMITER);
-						final String fullName = setFirstAndLastName(subOrder);
-						fileWriter.append(csvFormat(fullName == null ? "" : fullName));//Customer Name
-						fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(csvFormat(((CustomerModel) subOrder.getUser()).getOriginalUid()));//Customer EmailId
-						fileWriter.append(COMMA_DELIMITER);
-						final AddressModel delAddress = subOrder.getDeliveryAddress();
-						if (null != delAddress)
-						{
-							fileWriter
-									.append(csvFormat(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2()));//Phone Number
-						}
-						fileWriter.append(COMMA_DELIMITER);
-						//fileWriter.append(COMMA_DELIMITER);
-						fileWriter.append(NEW_LINE_SEPARATOR);
+						fullName = setFirstAndLastName(delAddress);
 					}
+					fileWriter.append(csvFormat(fullName == null ? "" : fullName));//Customer Name
+					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(csvFormat(((CustomerModel) subOrder.getUser()).getOriginalUid()));//Customer EmailId
+					fileWriter.append(COMMA_DELIMITER);
+					if (null != delAddress)
+					{
+						fileWriter.append(csvFormat(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2()));//Phone Number
+					}
+					fileWriter.append(COMMA_DELIMITER);
+					//fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
 				}
 			}
 		}
@@ -307,15 +331,26 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 
 	}
 
-	private static String csvFormat(final String value)
+	/**
+	 * @param value
+	 * @return String
+	 */
+	private String csvFormat(final String value)
 	{
 
 		String result = value;
-		if (result.contains("\""))
+		if (StringUtils.isNotEmpty(result) && result.contains("\""))
 		{
 			result = result.replace("\"", "\"\"");
 		}
-		result = "\"" + result + "\"";
+		if (StringUtils.isNotEmpty(result))
+		{
+			result = "\"" + result + "\"";
+		}
+		if (StringUtils.isEmpty(result))
+		{
+			result = "";
+		}
 		return result;
 
 	}
@@ -339,6 +374,10 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		return output_file_path.toString();
 	}
 
+	/**
+	 * @param paymentInfoModel
+	 * @return paymentMode
+	 */
 	private String getPaymentMode(final PaymentInfoModel paymentInfoModel)
 	{
 
@@ -406,12 +445,20 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		return "CC";
 	}
 
+	/**
+	 * @param entry
+	 * @return l1 to l4 category
+	 */
 	private Map<String, String> categoryList(final AbstractOrderEntryModel entry)
 	{
 		final Map map = new HashMap<String, String>();
-		if (null != entry && null != entry.getProduct())
+		ProductModel product = null;
+		if (null != entry)
 		{
-			final ProductModel product = entry.getProduct();
+			product = entry.getProduct();
+		}
+		if (null != product)
+		{
 			//List<String> categoryList = new ArrayList<String>();
 			final HashMap<String, String> categoryMap = new HashMap<String, String>();
 			LOG.debug(">>>>>>> before prodcatlist");
@@ -526,21 +573,38 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		return map;
 	}
 
-	private String setFirstAndLastName(final OrderModel source)
+
+	//	@SuppressWarnings("unused")
+	//	private String setFirstAndLastName(final OrderModel source)
+	//	{
+	//		String name = null;
+	//		if (source.getDeliveryAddress() != null)
+	//		{
+	//			final AddressModel deliveryAddressModel = source.getDeliveryAddress();
+	//			//stubbed as there is not there in user or address table
+	//			if (StringUtils.isNotBlank(deliveryAddressModel.getFirstname()))
+	//			{
+	//				name = deliveryAddressModel.getFirstname();
+	//			}
+	//			if (StringUtils.isNotBlank(deliveryAddressModel.getLastname()))
+	//			{
+	//				name = name + " " + deliveryAddressModel.getLastname();
+	//			}
+	//		}
+	//		return name;
+	//	}
+
+	private String setFirstAndLastName(final AddressModel deliveryAddressModel)
 	{
 		String name = null;
-		if (source.getDeliveryAddress() != null)
+		//stubbed as there is not there in user or address table
+		if (null != deliveryAddressModel && StringUtils.isNotBlank(deliveryAddressModel.getFirstname()))
 		{
-			final AddressModel deliveryAddressModel = source.getDeliveryAddress();
-			//stubbed as there is not there in user or address table
-			if (StringUtils.isNotBlank(deliveryAddressModel.getFirstname()))
-			{
-				name = deliveryAddressModel.getFirstname();
-			}
-			if (StringUtils.isNotBlank(deliveryAddressModel.getLastname()))
-			{
-				name = name + " " + deliveryAddressModel.getLastname();
-			}
+			name = deliveryAddressModel.getFirstname();
+		}
+		if (null != deliveryAddressModel && StringUtils.isNotBlank(deliveryAddressModel.getLastname()))
+		{
+			name = name + " " + deliveryAddressModel.getLastname();
 		}
 		return name;
 	}
