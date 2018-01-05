@@ -28,20 +28,24 @@ class Login extends Component {
             </MediaQuery>
 
             <MediaQuery query="(max-device-width:1023px)">
-              <Button
-                backgroundColor={"transparent"}
-                label={"FORGOT PASSWORD?"}
-                textStyle={{
-                  color: "#000",
-                  fontSize: 12,
-                  fontFamily: "regular"
-                }}
-              />
+              <div className={styles.forgotButtonPosition}>
+                <Button
+                  backgroundColor={"transparent"}
+                  label={"FORGOT PASSWORD?"}
+                  textStyle={{
+                    color: "#000",
+                    fontSize: 12,
+                    fontFamily: "regular"
+                  }}
+                />
+              </div>
             </MediaQuery>
           </div>
         </div>
-        <div className={styles.buttonContainer}>
-          <LoginButton />
+        <div className={styles.buttonLogin}>
+          <div className={styles.buttonHolder}>
+            <LoginButton />
+          </div>
         </div>
       </div>
     );
