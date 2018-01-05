@@ -15,11 +15,11 @@ class SignUp extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-  onSubmit = () => {
+  onSubmit(val) {
     if (this.props.onSubmit) {
-      this.props.onSubmit();
+      this.props.onSubmit(val);
     }
-  };
+  }
 
   onChangeName(val) {
     if (this.props.onChangeName) {
@@ -84,7 +84,7 @@ class SignUp extends Component {
                 borderColor={"#000000"}
                 borderRadius={20}
                 backgroundColor={"#ffffff"}
-                onClick={this.onSubmit}
+                onClick={val => this.onSubmit(val)}
                 loading={this.props.loading}
                 textStyle={{
                   color: "#000000",
@@ -100,7 +100,7 @@ class SignUp extends Component {
                 width={150}
                 height={40}
                 borderRadius={20}
-                onClick={this.onSubmit}
+                onClick={val => this.onSubmit(val)}
                 loading={this.props.loading}
                 textStyle={{
                   color: "#FFFFFF",
