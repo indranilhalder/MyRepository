@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Button } from "xelpmoc-core";
-import ModalContainer from "./general/containers/ModalContainer";
-
-import { RESTORE_PASSWORD } from "./general/modal.actions.js";
+//import { Button } from "xelpmoc-core";
+//import ModalContainer from "./general/containers/ModalContainer";
+import Buttons from "./components/SocialButtons";
+//import { RESTORE_PASSWORD } from "./general/modal.actions.js";
 import { default as AppStyles } from "./App.css";
 class App extends Component {
   render() {
@@ -16,14 +16,15 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to Tata</h1>
         </header>
-        <Button
+        <Buttons />
+        {/* <Button
           label="Show Modal"
           width={100}
           onClick={() => {
             this.props.showModal(RESTORE_PASSWORD);
           }}
         />
-        <ModalContainer />
+        <ModalContainer /> */}
       </div>
     );
   }
