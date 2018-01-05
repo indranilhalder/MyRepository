@@ -848,5 +848,57 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		this.configurationService = configurationService;
 	}
 
+	/**
+	 * This method is used to generate otp for customer registration on APP
+	 *
+	 * @param userIdOrEmail
+	 * @param OTPType
+	 * @param mobileNumber
+	 * @return otp
+	 * @throws InvalidKeyException
+	 * @throws NoSuchAlgorithmException
+	 */
+	@Override
+	public String generateOTPForRegister(final String userIdOrEmail, final String OTPType, final String mobileNumber)
+			throws InvalidKeyException, NoSuchAlgorithmException
+	{
+		final byte a[] = new byte[100];
+		final long b = randomLongNumberGenerattion(userIdOrEmail);
+		final String otp = (otpOutput(a, b, 6, false, (int) Math.round(Math.random() * 100)));
+		LOG.info("Mobile Number====" + mobileNumber);
+		OTPModel otpmodel = null;
+		try
+		{
+			otpmodel = getModelservice().create(OTPModel.class);
+			otpmodel.setEmailId(userIdOrEmail);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+
+			throw new EtailBusinessExceptions("UnknownIdentifierException", e);
+		}
+		catch (final ModelSavingException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailBusinessExceptions("ModelSavingException", ex);
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		/* R2.3 END */
+		LOG.info(" OTP======  " + otp);
+		otpmodel.setOTPNumber(otp);
+		otpmodel.setOTPType(OTPType);
+		otpmodel.setMobileNo(mobileNumber);
+		getModelservice().save(otpmodel);
+		return otp;
+	}
 
 }

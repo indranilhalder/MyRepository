@@ -36,6 +36,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.MarketplacePreferenceModel;
+import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -282,7 +283,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
-				final String otp = otpGenericService.generateOTP(mobileNumber, OTPTypeEnum.COD.getCode(), mobileNumber);
+				final String otp = otpGenericService.generateOTPForRegister(mobileNumber, OTPTypeEnum.COD.getCode(), mobileNumber);
 				//sending sms to verify customer registration
 				final String contactNumber = getConfigurationService().getConfiguration().getString(
 						MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
@@ -305,13 +306,13 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				{
 					LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
 				}
-
 				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + mobileNumber);
 			}
 			else
 			{
+				successFlag = false;
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
 			}
 		}
@@ -337,13 +338,9 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 		if (successFlag)
 		{
-			//Set success flag
 			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			if (null != mobileNumber && null != getCustomerId(mobileNumber))
-			{
-				result.setUsername(getCustomerId(mobileNumber));
-				result.setMessage("OTP has been sent on your specified emailId/Phone number");
-			}
+			result.setUsername(mobileNumber);
+			result.setMessage("OTP has been sent on your specified email id/phone number");
 		}
 		return result;
 	}
@@ -945,7 +942,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1046,7 +1043,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1140,6 +1137,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		this.userDetailsService = userDetailsService;
 	}
 
-
+	@Override
+	public boolean validateOtpForRegistration(final String mobileNumber, final String otp)
+	{
+		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(mobileNumber, mobileNumber, otp, OTPTypeEnum.COD,
+				Long.parseLong(getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+		if (null != otpResponse && null != otpResponse.getInvalidErrorMessage()
+				&& otpResponse.getInvalidErrorMessage().equalsIgnoreCase("VALID"))
+		{
+			LOG.debug("Otp response fetched is ::::::::::::" + otpResponse.getInvalidErrorMessage());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 }

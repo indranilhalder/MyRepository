@@ -40,4 +40,6 @@ public interface MplMobileUserService
 	 */
 	public MplRegistrationResultWsDto registerAppUser(String emailIdLwCase, int platformDecider);
 
+	public boolean validateOtpForRegistration(final String mobileNumber, final String otp);
+
 }

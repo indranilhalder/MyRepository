@@ -109,7 +109,7 @@ public interface OTPGenericService
 	 *
 	 */
 	public OTPResponseData validateOTP(String customerPKorEmail, String mobileNo, String enteredOTPNumber, OTPTypeEnum OTPType,
-		long expiryTime);
+			long expiryTime);
 
 	/**
 	 * This method returns the latest OTP against a customer
@@ -144,4 +144,17 @@ public interface OTPGenericService
 	 */
 	OTPResponseData validateLatestOTPWV(String userIdOrEmail, String mobileNo, String enteredOTPNumber, OTPTypeEnum OTPType,
 			long expiryTime);
+
+	/**
+	 * This method is used to generate otp for customer registration on APP
+	 *
+	 * @param userIdOrEmail
+	 * @param OTPType
+	 * @param mobileNumber
+	 * @return otp
+	 * @throws InvalidKeyException
+	 * @throws NoSuchAlgorithmException
+	 */
+	public String generateOTPForRegister(final String userIdOrEmail, final String OTPType, final String mobileNumber)
+			throws InvalidKeyException, NoSuchAlgorithmException;
 }
