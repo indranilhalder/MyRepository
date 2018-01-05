@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Button } from "xelpmoc-core";
 import MediaQuery from "react-responsive";
 import Input from "../../general/components/Input";
@@ -7,6 +8,18 @@ import styles from "./Login.css";
 import LoginButton from "./LogInButton";
 
 class Login extends Component {
+  onButtonPress = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  };
+
+  onForgotPassword() {
+    if (this.props.onForgotPassword) {
+      this.props.onForgotPassword();
+    }
+  }
+
   render() {
     return (
       <div>
@@ -19,6 +32,8 @@ class Login extends Component {
               <Button
                 backgroundColor={"transparent"}
                 label={"FORGOT PASSWORD?"}
+                onClick={() => this.onForgotPassword()}
+                loading={this.props.loading}
                 textStyle={{
                   color: "#d00",
                   fontSize: 12,
@@ -32,6 +47,8 @@ class Login extends Component {
                 <Button
                   backgroundColor={"transparent"}
                   label={"FORGOT PASSWORD?"}
+                  onClick={() => this.onForgotPassword()}
+                  loading={this.props.loading}
                   textStyle={{
                     color: "#000",
                     fontSize: 12,
@@ -44,12 +61,25 @@ class Login extends Component {
         </div>
         <div className={styles.buttonLogin}>
           <div className={styles.buttonHolder}>
-            <LoginButton />
+            <LoginButton
+              onClick={this.onButtonPress}
+              loading={this.props.loading}
+            />
           </div>
         </div>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  onClick: PropTypes.func,
+  onForgotPassword: PropTypes.func,
+  loading: PropTypes.bool
+};
+
+Login.defaultProps = {
+  loading: false
+};
 
 export default Login;
