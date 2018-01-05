@@ -5,6 +5,8 @@ import { mount } from "enzyme";
 test("Button is rendered with window with less than 1024", () => {
   window.innerWidth = 500;
   const LoginButton = mount(<LogInButton />);
+  console.log("LOGIN BUTTON TEST");
+  console.log(LoginButton.text());
   expect(LoginButton.children.length).toEqual(1);
   expect(LoginButton.contains("Login"));
 });

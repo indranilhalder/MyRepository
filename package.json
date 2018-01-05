@@ -44,7 +44,7 @@
     "webpack-dev-server": "2.9.4",
     "webpack-manifest-plugin": "1.3.2",
     "whatwg-fetch": "2.0.3",
-    "xelpmoc-core": "^0.1.1"
+    "xelpmoc-core": "^0.2.1"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -55,7 +55,11 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": ["eslint", "prettier --parser flow --write", "git add"]
+    "*.js": [
+      "eslint",
+      "prettier --parser flow --write",
+      "git add"
+    ]
   },
   "devDependencies": {
     "enzyme": "^3.3.0",
@@ -83,10 +87,11 @@
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)":
-        "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
@@ -101,7 +106,9 @@
     ]
   },
   "babel": {
-    "presets": ["react-app"]
+    "presets": [
+      "react-app"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
