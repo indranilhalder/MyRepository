@@ -10,7 +10,7 @@
 <div class="video-wrapper">
 	<c:set var="urlParts" value="${fn:split(component.videoUrl, '/')}" />
 	<div class="video-container youtube-player" data-id="${urlParts[fn:length(urlParts)-1]}">
-		<%-- <iframe class="iframe-video" src="${component.videoUrl}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+		<iframe class="iframe-video" src="${component.videoUrl}?rel=0&enablejsapi=1" id="player"></iframe>
 	</div>
 	<c:if test="${not empty component.videoDescription}">
 <div class="brand-description">
