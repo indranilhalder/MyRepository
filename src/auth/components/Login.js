@@ -9,8 +9,8 @@ import LoginButton from "./LogInButton";
 
 class Login extends Component {
   onButtonPress = () => {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.onButtonPress) {
+      this.props.onButtonPress();
     }
   };
 
@@ -73,7 +73,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  onClick: PropTypes.func,
+  onButtonPress: PropTypes.func,
   onForgotPassword: PropTypes.func,
   loading: PropTypes.bool
 };
