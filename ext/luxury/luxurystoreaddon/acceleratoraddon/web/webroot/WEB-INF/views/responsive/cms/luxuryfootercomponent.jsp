@@ -50,11 +50,22 @@
 		</div>
 	</div>
 	
-	<div class="container footer-popular-search">
+	<!-- <div class="container footer-popular-search">
 	    <div class="footer-bottom-links">
 		   <h5 class="footer-popular-accordian-title"><span>POPULAR SEARCHES</span><span class="pull-right footer-popular-accordian-right"><span id="footer-popular-accordian-icon" class="glyphicon glyphicon-plus"></span></span></h5>
 	   </div>
-	</div>
+	</div> -->
+	
+	<cms:pageSlot position="SeoFooter" var="feature" element="div"
+				  class="span-24 section5 cms_disp-img_slot pad20">
+		<cms:component component="${feature}" />
+	</cms:pageSlot>
+	
+	<cms:pageSlot position="PopularSearch" var="feature" element="div"
+				  class="span-24 section5 cms_disp-img_slot pad20">
+		<cms:component component="${feature}" />
+	</cms:pageSlot>
+
 	
 	<div class="modal fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
 	<div class="overlay" data-dismiss="modal"></div>

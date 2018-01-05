@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.facades.process.email.context;
 
-import de.hybris.platform.commerceservices.model.process.ForgottenPasswordProcessModel;
+
 import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
@@ -104,14 +104,7 @@ public class CustomerUpdateEmailContext extends AbstractEmailContext<StoreFrontC
 			put(DISPLAY_NAME, displayName);
 		}
 		put(EMAIL, storeFrontCustomerProcessModel.getCustomer().getOriginalUid());
-		if (storeFrontCustomerProcessModel instanceof ForgottenPasswordProcessModel)
-		{
-			setToken(((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getToken());
-			final String secureResetPasswordUrl = ((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel)
-					.getForgetPasswordUrl();
-			put(SECURE_RESET_PASSWORD_URL, secureResetPasswordUrl);
 
-		}
 		if (null != getCustomer(storeFrontCustomerProcessModel))
 		{
 			final List<String> updatedDetailListForVm = new ArrayList<String>();

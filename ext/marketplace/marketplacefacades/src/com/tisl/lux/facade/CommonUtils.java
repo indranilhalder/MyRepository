@@ -10,4 +10,7 @@ package com.tisl.lux.facade;
 public interface CommonUtils
 {
 	boolean isLuxurySite();
+
+	boolean isMplSite();
+
 }
