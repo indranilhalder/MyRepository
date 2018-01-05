@@ -900,6 +900,13 @@
 		<property name="sessionSecret" type="String" />
 		<property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.MplRegistrationResultWsDto">
+		<property name="status" type="String" />
+		<property name="isTemporaryPassword" type="String" />
+		<property name="message" type="String" />
+		<property name="username" type="String" />
+		<property name="errorCode" type="String"></property>
+	</bean>
 	<!-- Registration Mobile web service -->
 
 	<bean class="com.tisl.mpl.wsdto.UpdateCustomerDetailDto" extends="com.tisl.mpl.wsdto.ErrorDTO">

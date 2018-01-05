@@ -324,11 +324,15 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		LOG.info("Mobile Number====" + mobileNumber);
 
 		final OTPModel otpmodel = getModelservice().create(OTPModel.class);
-		/*R2.3 START */
+		/* R2.3 START */
 		try
 		{
 			user = userService.getUserForUID(userIdOrEmail);
-			otpmodel.setCustomerId(user.getPk().toString());
+
+			if (null != user)
+			{
+				otpmodel.setCustomerId(user.getPk().toString());
+			}
 			otpmodel.setEmailId(userIdOrEmail);
 		}
 		catch (final UnknownIdentifierException e)
@@ -358,7 +362,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
 			throw new EtailNonBusinessExceptions(ex);
 		}
-		/*R2.3 END */
+		/* R2.3 END */
 		LOG.info(" OTP======  " + otp);
 		otpmodel.setOTPNumber(otp);
 		otpmodel.setOTPType(OTPType);
@@ -367,106 +371,99 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		return otp;
 	}
 
-		/**
-		 * This method validates OTP
-		 *
-		 * @param userIdOrEmail
-		 * @param enteredOTPNumber
-		 * @param OTPType
-		 * @param expiryTime
-		 * @return boolean
-		 *
-		 */
-		@Override
-		public OTPResponseData validateOTP(final String userIdOrEmail, final String mobileNo, final String enteredOTPNumber,
-				final OTPTypeEnum OTPType, final long expiryTime)
+	/**
+	 * This method validates OTP
+	 *
+	 * @param userIdOrEmail
+	 * @param enteredOTPNumber
+	 * @param OTPType
+	 * @param expiryTime
+	 * @return boolean
+	 *
+	 */
+	@Override
+	public OTPResponseData validateOTP(final String userIdOrEmail, final String mobileNo, final String enteredOTPNumber,
+			final OTPTypeEnum OTPType, final long expiryTime)
+	{
+		List<OTPModel> otplist = null;
+		final OTPResponseData otpResponse = new OTPResponseData();
+
+		try
 		{
-			List<OTPModel> otplist = null;
-			final OTPResponseData otpResponse = new OTPResponseData();
-	
-			try
+			if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
 			{
-				if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
+				final UserModel user = userService.getUserForUID(userIdOrEmail);
+				otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
+
+			}
+			else
+			{
+				otpResponse.setOTPValid(Boolean.TRUE);
+				otpResponse.setInvalidErrorMessage("VALID");
+				return otpResponse;
+			}
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			otplist = otpDao.fetchOTP(userIdOrEmail, mobileNo, OTPType);
+		}
+		catch (final ModelSavingException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailBusinessExceptions("ModelSavingException", ex);
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+
+		//if (otplist.size() > 0)
+		if (CollectionUtils.isNotEmpty(otplist))
+		{
+			final OTPModel latestOTP = otplist.get(0);
+			LOG.debug("OTP" + latestOTP.getOTPNumber());
+
+			Date currentDate = null;
+			if (latestOTP.getOTPNumber().equals(enteredOTPNumber))
+			{
+				try
 				{
-					final UserModel user = userService.getUserForUID(userIdOrEmail);
-					otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
-	
+					currentDate = dateFormat.parse(getCurrentDate());
 				}
-				else
+				catch (final ParseException e)
 				{
-					otpResponse.setOTPValid(Boolean.TRUE);
-					otpResponse.setInvalidErrorMessage("VALID");
+					LOG.debug(e);
+				}
+				final long difference = currentDate.getTime() - latestOTP.getCreationtime().getTime();
+
+				LOG.debug("Time Difference is" + difference);
+				if (difference > expiryTime)
+				{
+					LOG.debug("Otp has expired");
+					otpResponse.setOTPValid(Boolean.FALSE);
+					otpResponse.setInvalidErrorMessage("EXPIRED");
 					return otpResponse;
 				}
-			}
-			catch (final UnknownIdentifierException e)
-			{
-				otplist = otpDao.fetchOTP(userIdOrEmail, mobileNo, OTPType);
-			}
-			catch (final ModelSavingException ex)
-			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-				throw new EtailBusinessExceptions("ModelSavingException", ex);
-			}
-			catch (final IllegalArgumentException ex)
-			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-				throw new EtailNonBusinessExceptions(ex);
-			}
-			catch (final NullPointerException ex)
-			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-				throw new EtailNonBusinessExceptions(ex);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
-				throw new EtailNonBusinessExceptions(ex);
-			}
-	
-			//if (otplist.size() > 0)
-			if (CollectionUtils.isNotEmpty(otplist))
-			{
-				final OTPModel latestOTP = otplist.get(0);
-				LOG.debug("OTP" + latestOTP.getOTPNumber());
-	
-				Date currentDate = null;
-				if (latestOTP.getOTPNumber().equals(enteredOTPNumber))
-				{
-					try
-					{
-						currentDate = dateFormat.parse(getCurrentDate());
-					}
-					catch (final ParseException e)
-					{
-						LOG.debug(e);
-					}
-					final long difference = currentDate.getTime() - latestOTP.getCreationtime().getTime();
-	
-					LOG.debug("Time Difference is" + difference);
-					if (difference > expiryTime)
-					{
-						LOG.debug("Otp has expired");
-						otpResponse.setOTPValid(Boolean.FALSE);
-						otpResponse.setInvalidErrorMessage("EXPIRED");
-						return otpResponse;
-					}
-					else
-					{
-						//TIS-3168
-						LOG.error("Otp validation matched for OTP:::" + enteredOTPNumber);
-						//LOG.debug("Otp matched!!!!");
-						latestOTP.setIsValidated(Boolean.TRUE);
-						getModelservice().save(latestOTP);
-						otpResponse.setOTPValid(Boolean.TRUE);
-						otpResponse.setInvalidErrorMessage("VALID");
-						return otpResponse;
-					}
-				}
 				else
 				{
-					otpResponse.setOTPValid(Boolean.FALSE);
-					otpResponse.setInvalidErrorMessage("INVALID");
+					//TIS-3168
+					LOG.error("Otp validation matched for OTP:::" + enteredOTPNumber);
+					//LOG.debug("Otp matched!!!!");
+					latestOTP.setIsValidated(Boolean.TRUE);
+					getModelservice().save(latestOTP);
+					otpResponse.setOTPValid(Boolean.TRUE);
+					otpResponse.setInvalidErrorMessage("VALID");
 					return otpResponse;
 				}
 			}
@@ -477,6 +474,13 @@ public class OTPGenericServiceImpl implements OTPGenericService
 				return otpResponse;
 			}
 		}
+		else
+		{
+			otpResponse.setOTPValid(Boolean.FALSE);
+			otpResponse.setInvalidErrorMessage("INVALID");
+			return otpResponse;
+		}
+	}
 
 
 	/**

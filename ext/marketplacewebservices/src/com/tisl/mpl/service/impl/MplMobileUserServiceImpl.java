@@ -36,6 +36,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.MarketplacePreferenceModel;
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
@@ -44,10 +45,13 @@ import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPreferenceService;
+import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.service.MplMobileUserService;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.wsdto.FetchCategoryBrandWsDTO;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
 import com.tisl.mpl.wsdto.FetchNewsLetterWsDTO;
+import com.tisl.mpl.wsdto.MplRegistrationResultWsDto;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 
 
@@ -80,6 +84,11 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private MplUserHelper mplUserHelper;
 
 	private UserDetailsService userDetailsService;
+
+	@Resource
+	private OTPGenericService otpGenericService;
+	@Resource
+	private SendSMSFacade sendSMSFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplMobileUserServiceImpl.class);
 
@@ -248,6 +257,92 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			{
 				LOG.debug("************ Fetching customer id mobile web service for **************" + login);
 				result.setCustomerId(getCustomerId(login));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * New API for API project-phase 1 || For registration
+	 */
+	@SuppressWarnings("javadoc")
+	@Override
+	public MplRegistrationResultWsDto registerAppUser(final String mobileNumber, final int platformNumber)
+	{
+		final MplRegistrationResultWsDto result = new MplRegistrationResultWsDto();
+		boolean successFlag = false;
+		try
+		{
+			//result = mplUserHelper.validateRegistrationData(login, null);//to-do validate email & mobile number
+			LOG.debug("************** User details validated mobile web service ************" + mobileNumber);
+			//Set login and password
+			final ExtRegisterData registration = new ExtRegisterData();
+			registration.setLogin(mobileNumber);
+
+			//Register the user, call facade
+			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
+			{
+				final String otp = otpGenericService.generateOTP(mobileNumber, OTPTypeEnum.COD.getCode(), mobileNumber);
+				//sending sms to verify customer registration
+				final String contactNumber = getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
+				try
+				{
+					//TODO mplCustomerName null pointer code fix 16-AUG-15
+
+					sendSMSFacade.sendSms(
+							MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_COD_OTP
+									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, "There")
+									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otp)
+									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
+				}
+				catch (final ModelSavingException e)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
+				}
+				catch (final EtailNonBusinessExceptions e)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
+				}
+
+				//Set success flag
+				successFlag = true;
+				LOG.debug("************** User registered via mobile web service *************" + mobileNumber);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			//Throw exception when the input details are invalid
+			throw businessException;
+		}
+
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9013);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//Catch and throw exception as it is when obtained from commerce
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		if (successFlag)
+		{
+			//Set success flag
+			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			if (null != mobileNumber && null != getCustomerId(mobileNumber))
+			{
+				result.setUsername(getCustomerId(mobileNumber));
+				result.setMessage("OTP has been sent on your specified emailId/Phone number");
 			}
 		}
 		return result;
@@ -850,7 +945,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -951,7 +1046,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override

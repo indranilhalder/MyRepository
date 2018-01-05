@@ -248,6 +248,7 @@ import com.tisl.mpl.wsdto.MplOrderNotificationWsDto;
 import com.tisl.mpl.wsdto.MplOrderTrackingNotificationsListWsDto;
 import com.tisl.mpl.wsdto.MplPreferenceDataForMobile;
 import com.tisl.mpl.wsdto.MplPreferenceListWsDto;
+import com.tisl.mpl.wsdto.MplRegistrationResultWsDto;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
@@ -768,6 +769,82 @@ public class UsersController extends BaseCommerceController
 		//Return result
 		return result;
 	}
+
+	@Secured(
+	{ ROLE_CLIENT, CUSTOMER, TRUSTED_CLIENT })
+	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public MplUserResultWsDto newsocialMediaRegistration(@RequestParam final String emailId,
+			@RequestParam final String socialMedia, @RequestParam(required = true) final String isPwa,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		try
+		{
+			//SDI-639 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			//SDI-639 ends here
+
+			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
+			final String emailIdLwCase = emailId.toLowerCase();
+			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			{
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacewebservicesConstants.FACEBOOK,
+						tataTreatsEnable, platformDecider);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			{
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacecommerceservicesConstants.GOOGLE,
+						tataTreatsEnable, platformDecider);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//Return result
+		return result;
+	}
+
 
 	/**
 	 * Login via social media
@@ -10074,6 +10151,80 @@ public class UsersController extends BaseCommerceController
 		}
 		return orderHistoryListData;
 	}
+
+	@Secured(
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/customerRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public MplRegistrationResultWsDto registerUser(@RequestParam final String loginId,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+
+	{
+		LOG.debug("****************** User Registration mobile web service ***********" + loginId);
+		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
+		GigyaWsDTO gigyaWsDto = new GigyaWsDTO();
+		final boolean isNewusers = true;
+		try
+		{
+			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
+			final String emailIdLwCase = loginId.toLowerCase();
+
+
+			//TPR-6272 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			//TPR-6272 ends here
+			userResult = mobileUserService.registerAppUser(emailIdLwCase, platformDecider);//TPR-6272 Parameter platformNumber added
+			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
+			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
+			//			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
+			//			{
+			//				userResult.setSessionSecret(gigyaWsDto.getSessionSecret());
+			//			}
+			//			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionToken()))
+			//			{
+			//				userResult.setSessionToken(gigyaWsDto.getSessionToken());
+			//			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userResult;
+	}
+
 
 	/**
 	 * @return the mplProductWebService
