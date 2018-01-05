@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Button } from "xelpmoc-core";
 import ModalContainer from "./general/containers/ModalContainer";
-
+import { Route } from "react-router-dom";
 import { RESTORE_PASSWORD } from "./general/modal.actions.js";
 import { default as AppStyles } from "./App.css";
+import MediaQuery from "react-responsive";
+import MobileAuth from "./MobileAuth.js";
 class App extends Component {
   render() {
     let className = AppStyles.base;
@@ -13,18 +15,9 @@ class App extends Component {
 
     return (
       <div className={className}>
-        <header className="App-header">
-          <h1 className="App-title">Welcome to Tata</h1>
-        </header>
-
-        <Button
-          label="Show Modal"
-          width={100}
-          onClick={() => {
-            this.props.showModal(RESTORE_PASSWORD);
-          }}
-        />
-        <ModalContainer />
+        <MediaQuery query="(max-device-width: 1024px)">
+          <Route path="/auth" component={MobileAuth} />
+        </MediaQuery>
       </div>
     );
   }

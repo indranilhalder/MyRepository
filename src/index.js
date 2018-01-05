@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { createStore, combineReducers } from "redux";
 import "./index.css";
 import AppContainer from "./general/containers/AppContainer";
+import { BrowserRouter } from "react-router-dom";
 
 import registerServiceWorker from "./registerServiceWorker";
 
@@ -15,7 +16,9 @@ let store = createStore(rootReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <AppContainer />
+    <BrowserRouter>
+      <AppContainer />
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );
