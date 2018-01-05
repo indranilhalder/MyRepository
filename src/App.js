@@ -16,6 +16,7 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to Tata</h1>
         </header>
+
         <Button
           label="Show Modal"
           width={100}
