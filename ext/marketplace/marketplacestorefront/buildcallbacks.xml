@@ -374,6 +374,7 @@
 						<arg line="--js ${mpstorefront.js.dir}/mpl/tealium.js" />
 						<arg line="--js ${luxstorefront.js.dir}/feedback.js" />
 						<arg line="--js ${luxstorefront.js.dir}/custom-search.js" />
+						<arg line="--js ${luxstorefront.js.dir}/popular-search.js" />
 						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<echo message="Minifying JS for Luxury is completed..." />
