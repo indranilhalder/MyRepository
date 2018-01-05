@@ -1,0 +1,13 @@
+.base {
+  width: 100%;
+  padding: 80px 40px 40px 40px;
+}
+.center {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.logo {
+  display: inline-block;
+}
