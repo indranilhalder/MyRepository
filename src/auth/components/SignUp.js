@@ -15,9 +15,13 @@ class SignUp extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-  onSubmit(val) {
+  onSubmit() {
     if (this.props.onSubmit) {
-      this.props.onSubmit(val);
+      this.props.onSubmit({
+        name: this.state.nameValue,
+        email: this.state.emailValue,
+        password: this.state.passwordValue
+      });
     }
   }
 
