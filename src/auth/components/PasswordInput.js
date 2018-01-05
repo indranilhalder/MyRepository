@@ -5,7 +5,7 @@ import hide_password from "../../general/components/img/hide_pwd.svg";
 import Input from "../../general/components/Input";
 import { CircleButton, Icon } from "xelpmoc-core";
 
-class Password extends React.Component {
+class PasswordInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,14 +53,14 @@ class Password extends React.Component {
   }
 }
 
-Password.propTypes = {
+PasswordInput.propTypes = {
   passwordVisible: PropTypes.bool,
   type: PropTypes.string
 };
 
-Password.defaultProps = {
+PasswordInput.defaultProps = {
   passwordVisible: false,
   type: "Password"
 };
 
-export default Password;
+export default PasswordInput;

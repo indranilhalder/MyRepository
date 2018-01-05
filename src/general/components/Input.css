@@ -38,12 +38,3 @@
   border-bottom-color: #d3d3d3;
   border-bottom-style: solid;
 }
-.button {
-  margin-left: 20;
-  cursor: "pointer";
-  padding: 5;
-  position: absolute; /* to align it to right and positon it over the input */
-  top: 0px;
-  bottom: 10px;
-  right: 5px;
-}
