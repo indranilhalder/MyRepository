@@ -17,21 +17,6 @@ class App extends Component {
           <h1 className="App-title">Welcome to Tata</h1>
         </header>
 
-        <Button
-          label="Restore Password"
-          width={100}
-          onClick={() => {
-            this.props.showModal(RESTORE_PASSWORD);
-          }}
-        />
-
-        <Button
-          label="Show OTP"
-          width={100}
-          onClick={() => {
-            this.props.showModal(OTP_VERIFICATION);
-          }}
-        />
         <ModalContainer />
       </div>
     );
