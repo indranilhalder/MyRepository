@@ -94,6 +94,7 @@ export default class OtpVerification extends React.Component {
                 onChange={val => {
                   this.handleOtpInput(val);
                 }}
+                type="tel"
               />
             </div>
             <div className={ownStyles.buttonHolder}>
