@@ -10,6 +10,12 @@ export default class RestorePassword extends React.Component {
       this.props.handleCancel();
     }
   }
+
+  handleRestoreClick() {
+    if (this.props.handleRestoreClick) {
+      this.props.handleRestoreClick();
+    }
+  }
   render() {
     return (
       <AuthPopUp>
@@ -28,7 +34,7 @@ export default class RestorePassword extends React.Component {
               height={40}
               borderRadius={20}
               backgroundColor={"#FF1744"}
-              onClick={this.onClick}
+              onClick={() => this.handleRestoreClick()}
               loading={this.props.loading}
               textStyle={{ color: "#FFF", fontSize: 14 }}
             />
@@ -54,5 +60,6 @@ export default class RestorePassword extends React.Component {
 }
 
 RestorePassword.propTypes = {
-  handleCancel: PropTypes.func
+  handleCancel: PropTypes.func,
+  handleRestoreClick: PropTypes.func
 };

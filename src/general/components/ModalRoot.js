@@ -24,7 +24,10 @@ export default class ModalRoot extends React.Component {
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
-        <RestorePassword handleCancel={() => this.handleClose()} />
+        <RestorePassword
+          handleCancel={() => this.handleClose()}
+          handleRestoreClick={() => this.handleClose()}
+        />
       ),
       OtpVerification: <OtpVerification closeModal={() => this.handleClose()} />
     };
