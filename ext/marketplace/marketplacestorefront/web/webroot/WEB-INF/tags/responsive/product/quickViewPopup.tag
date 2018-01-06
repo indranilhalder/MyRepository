@@ -574,16 +574,24 @@ display:none;
     </c:choose> --%>
     
     <!-- <input type="hidden" id="productPrice" name="productPrice" /> -->
-   <p class="old" id="quickMrpPriceId" style="display:none">
+   <div class="pdp-price-text" id="quickMrpPriceIdDiv" style="display:none">MRP :
+   <p class="old" id="quickMrpPriceId">
 	</p>
-	<p class="sale" id="quickMopPriceId" style="display:none">
+  <p class="old" style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
 	</p>
+	</div>
+	<div class="pdp-price-text" id="quickMopPriceIdDiv" style="display:none">Price :
+	<p class="sale"  id="quickMopPriceId">
+	</p>
+	</div>
+	<div class="pdp-price-text" id="quickSpPriceIdDiv"  style="display:none">Price :
 	<p class="sale" id="quickSpPriceId" style="display:none">
 	</p>
+	</div>
 	<p class="savings pdp-savings" id="savingsOnProductIdQV" style="display:none">															
 	  <span></span>
 	</p>
-    
     
     <%--for price breakup(TPR-3752) --%>
 
@@ -1153,3 +1161,8 @@ $(window).resize(function(){
 
 /*add to wishlist st*/
 </script>
+<style>
+#quickMopPriceId + p.old + p {
+    display: none;
+}
+</style>

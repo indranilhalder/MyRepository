@@ -13,12 +13,23 @@
 <h3 class="company author">
           </h3>
 <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
-	<p class="old" id="mrpPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	
+	<div id="mrpPriceIdDiv" style="display:none;" class="pdp-price-text">MRP : 
+	<p class="old" id="mrpPriceId">
 	</p>
-	<p class="sale" id="mopPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+		<p class="old"  style="text-decoration: none ! important;">
+		(Inclusive of all taxes)
 	</p>
+	</div>
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+		
+	<div id="mopPriceIdDiv" style="display:none;" class="pdp-price-text">Price : 
+	<p class="sale" id="mopPriceId">
+	</p>
+	</div>
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	
+	<div id="spPriceIdDiv" style="display:none;" class="pdp-price-text">Price : 
 	<p class="sale" id="spPriceId" style="display:none">
 		<!-- For TPR-4358 Start -->
 		<span itemprop="price">${product_list_price}</span>
@@ -35,8 +46,9 @@
  	<!-- For TPR-4358 End -->
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
+	</div>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
-		  <span></span>
+		 <span></span>
 	</p>
 	<%--for price breakup(TPR-3752) --%>
 
@@ -120,3 +132,8 @@
 			</c:choose> 
 			</ul>
 </c:if> --%>
+<style>
+#mopPriceId + p.old + p{
+    display: none;
+}
+</style>

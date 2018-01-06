@@ -15,6 +15,7 @@
       <!-- you should add all required extensions to this list, except platform extensions which are automatically required -->         
       <!-- <requires-extension name="cms"/> -->         
      	<requires-extension name="commerceservices" />
+     	<requires-extension name="commercesearch"/>
 		<requires-extension name="commercefacades" />
 		<requires-extension name="promotions" />
 		<requires-extension name="wishlist" />
