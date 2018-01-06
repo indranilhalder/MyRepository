@@ -5,7 +5,8 @@ const user = (
     user: null,
     status: null,
     error: null,
-    loading: false
+    loading: false,
+    message: null
   },
   action
 ) => {
@@ -64,6 +65,69 @@ const user = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
+        loading: false
+      });
+
+    case userActions.FORGOT_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: true
+      });
+
+    case userActions.FORGOT_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        message: action.message
+      });
+
+    case userActions.FORGOT_PASSWORD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        user: action.user,
+        loading: false
+      });
+
+    case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: true
+      });
+
+    case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        message: action.message
+      });
+
+    case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        user: action.user,
+        loading: false
+      });
+
+    case userActions.RESET_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: true
+      });
+
+    case userActions.RESET_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        message: action.message
+      });
+
+    case userActions.RESET_PASSWORD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        user: action.user,
         loading: false
       });
 
