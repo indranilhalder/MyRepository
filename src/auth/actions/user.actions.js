@@ -1,5 +1,9 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
-
+import {
+  showModal,
+  OTP_VERIFICATION,
+  hideModal
+} from "../../general/modal.actions.js";
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -12,7 +16,7 @@ export const OTP_VERIFICATION_FAILURE = "OTP_VERIFICATION_FAILURE";
 
 export const LOGIN = "login";
 export const SIGN_UP = "onregistration";
-export const OTP_VERIFICATION = "otpverification";
+export const OTP_VERIFICATION_PATH = "otpverification";
 
 export function loginUserRequest() {
   return {
@@ -47,7 +51,7 @@ export function loginUser(userLoginDetails) {
         throw new Error(`${resultJson.message}`);
       }
       localStorage.setItem("authorizationKey", resultJson.access_token);
-      // TODO: dispatch a modal here
+
       dispatch(loginUserSuccess(resultJson));
     } catch (e) {
       dispatch(loginUserFailure(e.message));
@@ -84,7 +88,7 @@ export function signUpUser(userObj) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
+      dispatch(showModal(OTP_VERIFICATION));
       dispatch(signUpUserSuccess());
     } catch (e) {
       dispatch(signUpUserFailure(e.message));
@@ -117,12 +121,12 @@ export function otpVerification(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(otpVerificationRequest());
     try {
-      const result = await api.post(OTP_VERIFICATION, userDetails);
+      const result = await api.post(OTP_VERIFICATION_PATH, userDetails);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
+      dispatch(hideModal());
       dispatch(otpVerificationSuccess(resultJson));
     } catch (e) {
       dispatch(otpVerificationFailure(e.message));

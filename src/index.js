@@ -3,10 +3,11 @@ import ReactDOM from "react-dom";
 import AppContainer from "../src/general/containers/AppContainer";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import * as api from "../src/lib/apiRequest";
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import user from "../src/auth/reducers/user.reducer";
+import * as api from "../src/lib/apiRequest";
 import modal from "../src/general/modal.reducers";
 import registerServiceWorker from "./registerServiceWorker";
 

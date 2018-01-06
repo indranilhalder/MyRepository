@@ -1,6 +1,6 @@
 .base {
   width: 100%;
-  padding: 80px 40px 40px 40px;
+  padding: 9vh 40px 40px 40px;
   min-height: 100vh;
   background: url(./img/background.png)no-repeat;
   background-size: cover;
@@ -17,4 +17,20 @@
 }
 .logo {
   display: inline-block;
+}
+
+.footer {
+  color: white;
+  font-family: regular;
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  margin-top: 8vh;
+}
+
+.socialButtons {
+  display: inline-block;
+  width: 100%;
+  margin-top: 5px;
 }

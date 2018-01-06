@@ -17,7 +17,7 @@ export default class LogInButton extends React.Component {
             width={150}
             height={40}
             borderRadius={20}
-            backgroundColor={"#FF1744"}
+            backgroundColor={"#ff1744"}
             onClick={this.onClick}
             loading={this.props.loading}
             textStyle={{ color: "#FFF", fontSize: 14 }}
@@ -27,9 +27,9 @@ export default class LogInButton extends React.Component {
           <Button
             backgroundColor={"#FF1744"}
             label={"Login"}
-            width={100}
-            height={40}
-            borderRadius={20}
+            width={150}
+            height={45}
+            borderRadius={22.5}
             onClick={this.onClick}
             loading={this.props.loading}
             textStyle={{ color: "#FFF", fontSize: 14 }}
