@@ -65,8 +65,15 @@ public class PaymentService
 
 	private static final Logger LOG = Logger.getLogger(PaymentService.class);
 
-	private int connectionTimeout = 5 * 10000;
-	private int readTimeout = 5 * 1000;
+	//private int connectionTimeout = 5 * 10000;
+	//private int readTimeout = 5 * 1000;
+
+	private int connectionTimeout = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+			"payment.juspay.connectionTimeout", "50000"));
+
+	private int readTimeout = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+			"payment.juspay.readTimeout", "5000"));
+	
 	//private static final Logger log = Logger.getLogger(PaymentService.class);
 	private String baseUrl;
 	private String key;
@@ -252,6 +259,9 @@ public class PaymentService
 		}
 		catch (final Exception e)
 		{
+			LOG.error("Endpoint=>" + endPoint);
+			LOG.error("encodedParams=>" + encodedParams);
+			LOG.error("Error in juspay connection=>", e);
 			throw new AdapterException("Error with connection", e);
 		}
 	}
