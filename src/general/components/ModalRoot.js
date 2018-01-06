@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
+import OtpVerification from "../../auth/components/OtpVerification";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -24,7 +25,8 @@ export default class ModalRoot extends React.Component {
     const MODAL_COMPONENTS = {
       RestorePassword: (
         <RestorePassword handleCancel={() => this.handleClose()} />
-      )
+      ),
+      OtpVerification: <OtpVerification />
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
