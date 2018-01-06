@@ -79,7 +79,7 @@ export default class ButtonType extends React.Component {
     }
   }
   render() {
-    return <div>{this.renderButton()}</div>;
+    return <React.Fragment>{this.renderButton()}</React.Fragment>;
   }
 }
 
