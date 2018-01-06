@@ -12,7 +12,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    modalStatus: state.modals.modalDisplayed
+    modalStatus: state.modal.modalDisplayed
   };
 };
 
