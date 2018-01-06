@@ -34,7 +34,13 @@ export default class ModalRoot extends React.Component {
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     const Modal = this.props.modalStatus ? (
-      <ModalPanel>{SelectedModal}</ModalPanel>
+      <ModalPanel
+        closeModal={() => {
+          this.handleClose();
+        }}
+      >
+        {SelectedModal}
+      </ModalPanel>
     ) : null;
 
     return ReactDOM.createPortal(Modal, this.el);

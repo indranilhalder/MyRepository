@@ -102,8 +102,8 @@ class SignUp extends Component {
                 backgroundColor={"#FF1744"}
                 label={"Sign Up"}
                 width={150}
-                height={40}
-                borderRadius={20}
+                height={45}
+                borderRadius={22.5}
                 onClick={() => this.onSubmit()}
                 loading={this.props.loading}
                 textStyle={{

@@ -68,29 +68,19 @@ export default class SocialButtons extends Component {
             <div className={styles.holder}>
               <CircleButton
                 color={"rgba(0,0,0,0)"}
-                borderColor={"#fff"}
-                size={50}
+                size={45}
                 onClick={this.facebookLogin}
-                icon={<Icon image={facebookImage} size={50} />}
+                icon={<Icon image={facebookImage} size={45} />}
               />
             </div>
-            <div className={styles.centerHolder}>
-              <CircleButton
-                color={"rgba(0,0,0,0)"}
-                borderColor={"#fff"}
-                size={50}
-                onClick={this.twitterLogin}
-                icon={<Icon image={twitter} size={50} />}
-              />
-            </div>
+            <div className={styles.centerHolder} />
 
             <div className={styles.holder}>
               <CircleButton
                 color={"rgba(0,0,0,0)"}
-                borderColor={"#fff"}
-                size={50}
+                size={45}
                 onClick={this.googlePlusLogin}
-                icon={<Icon image={googlePlus} size={50} />}
+                icon={<Icon image={googlePlus} size={45} />}
               />
             </div>
           </div>

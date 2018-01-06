@@ -1,7 +1,8 @@
 import React from "react";
 import AuthPopUp from "./AuthPopUp";
 import PropTypes from "prop-types";
-import { Input, Button } from "xelpmoc-core";
+import { Button } from "xelpmoc-core";
+import Input from "../../general/components/Input";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
 export default class RestorePassword extends React.Component {
@@ -24,7 +25,7 @@ export default class RestorePassword extends React.Component {
           Please enter your Email or phone number to restore the password
         </div>
         <div className={styles.input}>
-          <Input hollow={true} />
+          <Input hollow={true} placeholder="Enter email or password" />
         </div>
         <div className={styles.button}>
           <div className={ownStyles.submit}>

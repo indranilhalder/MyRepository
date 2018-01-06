@@ -33,6 +33,6 @@ body {
     filter: blur(10px);
     pointer-events: none;
     transition: 200ms;
-    overflow: hidden;
+    position: fixed;
   }
 }

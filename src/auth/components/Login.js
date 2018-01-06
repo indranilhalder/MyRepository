@@ -78,7 +78,7 @@ class Login extends Component {
             <MediaQuery query="(min-device-width: 1024px)">
               <Button
                 backgroundColor={"transparent"}
-                label={"FORGOT PASSWORD?"}
+                label={"Forgot Password?"}
                 onClick={() => this.onForgotPassword()}
                 loading={this.props.loading}
                 textStyle={{
@@ -92,8 +92,9 @@ class Login extends Component {
             <MediaQuery query="(max-device-width:1023px)">
               <div className={styles.forgotButtonPosition}>
                 <Button
+                  height={25}
                   backgroundColor={"transparent"}
-                  label={"FORGOT PASSWORD?"}
+                  label={"Forgot Password?"}
                   onClick={() => this.onForgotPassword()}
                   loading={this.props.loading}
                   textStyle={{
