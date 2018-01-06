@@ -11,40 +11,48 @@ export default class ButtonType extends React.Component {
           width={this.props.width}
           height={this.props.height}
           borderRadius={this.props.height / 2}
-          onClick={this.onClick}
+          onClick={this.props.onClick}
           loading={this.props.loading}
-          textStyle={{ color: "#FFF", fontSize: 14, fontFamily: "regular" }}
+          textStyle={{
+            color: "#FFF",
+            fontSize: 14,
+            fontFamily: "Rubik Medium"
+          }}
         />
       );
     } else if (this.props.type === "secondary") {
       return (
         <Button
           backgroundColor={"#ffffff"}
-          borderColor={"#000000"}
+          borderColor={"#181818"}
           label={this.props.label}
           width={this.props.width}
           height={this.props.height}
           borderRadius={this.props.height / 2}
-          onClick={this.onClick}
+          onClick={this.props.onClick}
           loading={this.props.loading}
-          textStyle={{ color: "#000000", fontSize: 14, fontFamily: "regular" }}
+          textStyle={{
+            color: "#181818",
+            fontSize: 14,
+            fontFamily: "Rubik Medium"
+          }}
         />
       );
     } else if (this.props.type === "tertiary") {
       return (
         <Button
           backgroundColor={"transparent"}
-          borderColor={"rgba(0,0,0,0.5)"}
+          borderColor={"#8D8D8D"}
           label={this.props.label}
           width={this.props.width}
           height={this.props.height}
           borderRadius={this.props.height / 2}
-          onClick={this.onClick}
+          onClick={this.props.onClick}
           loading={this.props.loading}
           textStyle={{
-            color: "rgba(0,0,0,0.5)",
+            color: "#8D8D8D",
             fontSize: 14,
-            fontFamily: "regular"
+            fontFamily: "Rubik Medium"
           }}
         />
       );
