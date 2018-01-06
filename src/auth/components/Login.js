@@ -7,6 +7,9 @@ import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
 
+// Forgot password --> shows a modal
+// Don't have an account --> sign up --> a route change.
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -15,9 +18,12 @@ class Login extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-  onButtonPress = () => {
-    if (this.props.onButtonPress) {
-      this.props.onButtonPress();
+  onSubmit = () => {
+    if (this.props.onSubmit) {
+      this.props.onSubmit({
+        email: this.state.emailValue,
+        password: this.state.passwordValue
+      });
     }
   };
 
@@ -102,10 +108,7 @@ class Login extends Component {
         </div>
         <div className={styles.buttonLogin}>
           <div className={styles.buttonHolder}>
-            <LoginButton
-              onClick={this.onButtonPress}
-              loading={this.props.loading}
-            />
+            <LoginButton onClick={this.onSubmit} loading={this.props.loading} />
           </div>
         </div>
       </div>
@@ -114,7 +117,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  onButtonPress: PropTypes.func,
+  onSubmit: PropTypes.func,
   onForgotPassword: PropTypes.func,
   onChangeEmail: PropTypes.func,
   onChangePassword: PropTypes.func,

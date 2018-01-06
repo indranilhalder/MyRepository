@@ -1,6 +1,6 @@
 import * as modalActions from "./modal.actions.js";
 
-const modals = (
+const modal = (
   state = {
     modalDisplayed: false,
     modalType: null
@@ -24,4 +24,4 @@ const modals = (
       return state;
   }
 };
-export default modals;
+export default modal;

@@ -1,6 +1,8 @@
 .base {
   width: 100%;
   padding: 80px 40px 40px 40px;
+  min-height: 100vh;
+  background: #ebeced;
 }
 .center {
   width: 100%;
@@ -15,7 +17,9 @@
 .footer {
   color: white;
   font-family: regular;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
-  margin-top: 20px;
+  display: inline-block;
+  width: 100%;
+  margin-top: 56px;
 }

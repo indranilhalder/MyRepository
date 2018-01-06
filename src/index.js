@@ -10,9 +10,11 @@ import { BrowserRouter } from "react-router-dom";
 import user from "../src/auth/reducers/user.reducer";
 import * as api from "../src/lib/apiRequest";
 import registerServiceWorker from "./registerServiceWorker";
+import modal from "./general/modal.reducers.js";
 
 const rootReducer = combineReducers({
-  user
+  user,
+  modal
 });
 
 let store = createStore(

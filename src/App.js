@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 import { RESTORE_PASSWORD } from "./general/modal.actions.js";
 import { default as AppStyles } from "./App.css";
 import MediaQuery from "react-responsive";
-import MobileAuth from "./MobileAuth.js";
+import Auth from "./auth/components/MobileAuth.js";
 class App extends Component {
   render() {
     let className = AppStyles.base;
@@ -15,9 +15,8 @@ class App extends Component {
 
     return (
       <div className={className}>
-        <MediaQuery query="(max-device-width: 1024px)">
-          <Route path="/auth" component={MobileAuth} />
-        </MediaQuery>
+        <Route path="/" component={Auth} />
+        <ModalContainer />
       </div>
     );
   }

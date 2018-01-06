@@ -4,9 +4,9 @@ import * as modalActions from "../modal.actions.js";
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    modalType: state.modals.modalType,
-    ownProps: state.modals.ownProps,
-    modalStatus: state.modals.modalDisplayed
+    modalType: state.modal.modalType,
+    ownProps: state.modal.ownProps,
+    modalStatus: state.modal.modalDisplayed
   };
 };
 

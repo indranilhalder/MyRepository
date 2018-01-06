@@ -20,15 +20,11 @@ export default class ModalRoot extends React.Component {
     }
   }
 
-  updateJob(job) {
-    if (this.props.updateJob) {
-      this.props.updateJob(job);
-    }
-    this.props.hideModal();
-  }
   render() {
     const MODAL_COMPONENTS = {
-      RestorePassword: <RestorePassword />
+      RestorePassword: (
+        <RestorePassword handleCancel={() => this.handleClose()} />
+      )
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];

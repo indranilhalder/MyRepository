@@ -47,7 +47,7 @@ export function loginUser(userLoginDetails) {
         throw new Error(`${resultJson.message}`);
       }
       localStorage.setItem("authorizationKey", resultJson.access_token);
-      // TODO: dispatch a modal here
+
       dispatch(loginUserSuccess(resultJson));
     } catch (e) {
       dispatch(loginUserFailure(e.message));
