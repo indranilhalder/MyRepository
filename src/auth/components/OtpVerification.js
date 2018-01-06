@@ -8,6 +8,12 @@ import ownStyles from "./OtpVerificationStyles.css";
 import { default as styles } from "./AuthPopUp.css";
 import Input from "../../general/components/Input";
 export default class OtpVerification extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      otp: ""
+    };
+  }
   callVerify = () => {
     if (this.props.callVerify) {
       this.props.callVerify();
@@ -18,11 +24,14 @@ export default class OtpVerification extends React.Component {
       this.props.resendOtp();
     }
   };
-  submit = () => {
+  onSubmitOtp = () => {
     if (this.props.submit) {
-      this.props.submit();
+      this.props.submitOtp(this.state.otp);
     }
   };
+  handleOtpInput(val) {
+    this.setState({ otp: val });
+  }
   render() {
     return (
       <AuthPopUp>
@@ -40,10 +49,9 @@ export default class OtpVerification extends React.Component {
               <Button
                 backgroundColor={"transparent"}
                 height={30}
-                width={"auto"}
-                textStyle={{ color: "#212121", fontSize: "14px" }}
+                textStyle={{ color: "#212121", fontSize: 14 }}
                 label={"Resend OTP"}
-                onClick={this.callVerify}
+                onClick={() => this.callVerify()}
               />
             </div>
 
@@ -60,16 +68,16 @@ export default class OtpVerification extends React.Component {
                 label={"Submit"}
                 textStyle={{
                   color: "#212121",
-                  fontSize: "14px",
+                  fontSize: 14,
                   fontFamily: "bolder"
                 }}
-                onClick={this.submit}
+                onClick={() => this.onSubmitOtp()}
               />
             </div>
           </div>
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1023px)">
-          <div>
+          <React.Fragment>
             <div className={ownStyles.iconHolder}>
               <Icon image={lockIcon} size={30} />
             </div>
@@ -81,32 +89,35 @@ export default class OtpVerification extends React.Component {
               </div>
             </div>
             <div className={ownStyles.input}>
-              <Input placeholder={"Enter 4-digit code"} />
+              <Input
+                placeholder={"Enter 4-digit code"}
+                onChange={val => {
+                  this.handleOtpInput(val);
+                }}
+              />
             </div>
             <div className={ownStyles.buttonHolder}>
               <div className={ownStyles.left}>
                 <Button
                   backgroundColor={"transparent"}
                   height={30}
-                  width={"auto"}
-                  textStyle={{ color: "#fff", fontSize: "14px" }}
+                  textStyle={{ color: "#fff", fontSize: 14 }}
                   label={"Call to verify"}
-                  onClick={this.callVerify}
+                  onClick={() => this.callVerify()}
                 />
               </div>
               <div className={ownStyles.right}>
                 <Button
                   backgroundColor={"transparent"}
                   height={30}
-                  width={"auto"}
-                  textStyle={{ color: "#fff", fontSize: "14px" }}
+                  textStyle={{ color: "#fff", fontSize: 14 }}
                   label={"Resend OTP"}
-                  onClick={this.resendOtp}
+                  onClick={() => this.resendOtp()}
                 />
                 <div className={ownStyles.time}>30 sec</div>
               </div>
             </div>
-          </div>
+          </React.Fragment>
         </MediaQuery>
       </AuthPopUp>
     );
