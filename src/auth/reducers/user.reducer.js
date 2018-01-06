@@ -71,7 +71,6 @@ const user = (
     case userActions.FORGOT_PASSWORD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
         loading: true
       });
 
@@ -85,14 +84,13 @@ const user = (
     case userActions.FORGOT_PASSWORD_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        user: action.user,
-        loading: false
+        loading: false,
+        error: action.error
       });
 
     case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
         loading: true
       });
 
@@ -106,14 +104,13 @@ const user = (
     case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        user: action.user,
-        loading: false
+        loading: false,
+        error: action.error
       });
 
     case userActions.RESET_PASSWORD_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
         loading: true
       });
 
@@ -127,8 +124,8 @@ const user = (
     case userActions.RESET_PASSWORD_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        user: action.user,
-        loading: false
+        loading: false,
+        error: action.error
       });
 
     default:
