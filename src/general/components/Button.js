@@ -56,6 +56,24 @@ export default class ButtonType extends React.Component {
           }}
         />
       );
+    } else if (this.props.type === "hollow") {
+      return (
+        <Button
+          backgroundColor={"transparent"}
+          borderColor={"#FFFFFF"}
+          label={this.props.label}
+          width={this.props.width}
+          height={this.props.height}
+          borderRadius={this.props.height / 2}
+          onClick={this.props.onClick}
+          loading={this.props.loading}
+          textStyle={{
+            color: "#FFFFFF",
+            fontSize: 14,
+            fontFamily: "Rubik Medium"
+          }}
+        />
+      );
     } else {
       return <Button {...this.props} />;
     }
