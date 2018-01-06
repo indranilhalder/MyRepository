@@ -5,7 +5,6 @@ import thunk from "redux-thunk";
 import { Provider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import "./index.css";
-import AppContainer from "./general/containers/AppContainer";
 import { BrowserRouter } from "react-router-dom";
 import user from "../src/auth/reducers/user.reducer";
 import * as api from "../src/lib/apiRequest";

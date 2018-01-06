@@ -88,7 +88,7 @@ class SignUp extends Component {
                 borderColor={"#000000"}
                 borderRadius={20}
                 backgroundColor={"#ffffff"}
-                onClick={val => this.onSubmit(val)}
+                onClick={() => this.onSubmit()}
                 loading={this.props.loading}
                 textStyle={{
                   color: "#000000",
@@ -104,7 +104,7 @@ class SignUp extends Component {
                 width={150}
                 height={40}
                 borderRadius={20}
-                onClick={val => this.onSubmit(val)}
+                onClick={() => this.onSubmit()}
                 loading={this.props.loading}
                 textStyle={{
                   color: "#FFFFFF",

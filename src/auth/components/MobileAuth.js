@@ -1,11 +1,8 @@
 import React from "react";
 import { Route, withRouter, Switch } from "react-router-dom";
 import AuthFrame from "./AuthFrame.js";
-import Login from "./Login.js";
-import SignUp from "./SignUp.js";
 import LoginContainer from "../containers/LoginContainer.js";
-import PropTypes from "prop-types";
-
+import SignUpContainer from "../containers/SignUpContainer.js";
 const LOGIN_PATH = "/login";
 const SIGN_UP_PATH = "/sign_up";
 
@@ -34,7 +31,8 @@ export default class Auth extends React.Component {
         footerText={footerText}
         footerClick={() => this.navigateToSignUp()}
       >
-        <LoginContainer />
+        <Route path="/login" component={LoginContainer} />
+        <Route path="/sign_up" component={SignUpContainer} />
       </AuthFrame>
     );
   }
