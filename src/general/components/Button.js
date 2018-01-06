@@ -16,7 +16,7 @@ export default class ButtonType extends React.Component {
           textStyle={{
             color: "#FFF",
             fontSize: 14,
-            fontFamily: "Rubik Medium"
+            fontFamily: "semiBold"
           }}
         />
       );
@@ -34,7 +34,7 @@ export default class ButtonType extends React.Component {
           textStyle={{
             color: "#181818",
             fontSize: 14,
-            fontFamily: "Rubik Medium"
+            fontFamily: "semiBold"
           }}
         />
       );
@@ -52,7 +52,7 @@ export default class ButtonType extends React.Component {
           textStyle={{
             color: "#8D8D8D",
             fontSize: 14,
-            fontFamily: "Rubik Medium"
+            fontFamily: "semiBold"
           }}
         />
       );
@@ -70,7 +70,7 @@ export default class ButtonType extends React.Component {
           textStyle={{
             color: "#FFFFFF",
             fontSize: 14,
-            fontFamily: "Rubik Medium"
+            fontFamily: "semiBold"
           }}
         />
       );
