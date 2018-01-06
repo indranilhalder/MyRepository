@@ -19,17 +19,24 @@ export default class Auth extends React.Component {
     const pathName = this.props.location.pathname;
     let footerText = "";
     let footerClick;
+    let showSocialButtons;
     if (pathName === LOGIN_PATH || "/") {
       footerText = "Don't have an account? Sign up";
       footerClick = () => this.navigateToSignUp();
+      showSocialButtons = true;
     }
 
     if (pathName === SIGN_UP_PATH) {
       footerText = "Already have an account? Login";
       footerClick = () => this.navigateToLogin();
+      showSocialButtons = false;
     }
     return (
-      <AuthFrame footerText={footerText} footerClick={footerClick}>
+      <AuthFrame
+        showSocialButtons={showSocialButtons}
+        footerText={footerText}
+        footerClick={footerClick}
+      >
         <Switch>
           <Route path="/login" component={LoginContainer} />
           <Route path="/sign_up" component={SignUpContainer} />

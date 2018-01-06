@@ -3,6 +3,7 @@ import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import tataLogo from "./img/tataLogo.png";
 import { default as styles } from "./AuthFrame.css";
+import SocialButtons from "./SocialButtons.js";
 export default class AuthFrame extends React.Component {
   render() {
     return (
@@ -13,6 +14,12 @@ export default class AuthFrame extends React.Component {
           </div>
         </div>
         {this.props.children}
+        {this.props.showSocialButtons && (
+          <div className={styles.socialButtons}>
+            <SocialButtons />
+          </div>
+        )}
+
         {this.props.footerText && (
           <div
             onClick={() => this.props.footerClick()}
@@ -28,5 +35,10 @@ export default class AuthFrame extends React.Component {
 
 AuthFrame.propTypes = {
   footerText: PropTypes.string,
-  footerClick: PropTypes.func
+  footerClick: PropTypes.func,
+  showSocialButtons: PropTypes.bool
+};
+
+AuthFrame.defaultProps = {
+  showSocialButtons: false
 };

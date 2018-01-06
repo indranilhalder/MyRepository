@@ -50,7 +50,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <div>
           <div className={styles.input}>
             <Input
@@ -97,7 +97,7 @@ class Login extends Component {
                   onClick={() => this.onForgotPassword()}
                   loading={this.props.loading}
                   textStyle={{
-                    color: "#000",
+                    color: "#fff",
                     fontSize: 12,
                     fontFamily: "regular"
                   }}
@@ -111,7 +111,7 @@ class Login extends Component {
             <LoginButton onClick={this.onSubmit} loading={this.props.loading} />
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
