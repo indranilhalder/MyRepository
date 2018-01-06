@@ -43,8 +43,8 @@
 							 <li class="header-SignInShare"><%-- <spring:theme
 									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->
 
-						<%--	<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>  --%>
+							<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>  
 							 
 							<%-- <li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li> --%>			<!-- UF-249 -->
@@ -96,8 +96,8 @@
 											<li class="header-SignInShare"><%-- <spring:theme
 									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->
 
-						<%-- <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>  --%>
+						    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
 									
 							<%-- <li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li> --%>		<!-- UF-249 -->

@@ -7463,8 +7463,7 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
-			//disabled the service call to resolve DB issues
-			//couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
 			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
