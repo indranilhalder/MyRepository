@@ -37,7 +37,6 @@
 		<%-- <li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li> --%>
 	</ul>
-	<%--
 	 <ul>
 		<li class="header-coupon">
 			<h2>
@@ -47,7 +46,6 @@
 		<li id="lnCoupons" <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/coupons')}">class="active"</c:if>><a href="<c:url value="/my-account/coupons?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li>
 	</ul> 
-	--%>
 	<ul>
 		<li id="shareHead">
 			<h2>
