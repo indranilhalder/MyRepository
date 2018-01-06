@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { showModal } from "../modal.actions.js";
+import { withRouter } from "react-router-dom";
 import App from "../../App.js";
 
 const mapDispatchToProps = dispatch => {
@@ -16,6 +17,8 @@ const mapStateToProps = state => {
   };
 };
 
-const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);
+const AppContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(App)
+);
 
 export default AppContainer;

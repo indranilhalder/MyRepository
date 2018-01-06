@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { signUpUser, otpVerification } from "../actions/user.actions.js";
+import { signUpUser } from "../actions/user.actions.js";
 import { withRouter } from "react-router-dom";
 import SignUp from "../components/SignUp.js";
 
