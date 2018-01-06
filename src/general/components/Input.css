@@ -25,6 +25,11 @@
     padding-bottom: 5px;
     padding-right: 25px;
   }
+  .hollow {
+    composes: base;
+    color: #fff;
+    border-bottom-color: #fff;
+  }
 }
 .focused {
   composes: base;
