@@ -176,7 +176,6 @@ export function forgotPassword(userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      console.log(resultJson);
       dispatch(forgotPasswordSuccess(resultJson.message));
     } catch (e) {
       dispatch(forgotPasswordFailure(e.message));
@@ -219,7 +218,6 @@ export function forgotPasswordOtpVerification(userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      console.log(resultJson);
       dispatch(forgotPasswordOtpVerificationSuccess(resultJson.message));
     } catch (e) {
       dispatch(forgotPasswordOtpVerificationFailure(e.message));
@@ -258,7 +256,6 @@ export function resetPassword(userDetails) {
       }
       // TODO: dispatch a modal here
       dispatch(resetPasswordSuccess(resultJson.message));
-      console.log(resultJson);
     } catch (e) {
       dispatch(resetPasswordFailure(e.message));
     }
