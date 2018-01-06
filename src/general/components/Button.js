@@ -1,81 +1,70 @@
 import React from "react";
-import { Button } from "xelpmoc-core";
+import { Button as CoreButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
-export default class ButtonType extends React.Component {
+
+export default class Button extends React.Component {
   renderButton() {
-    if (this.props.type === "primary") {
-      return (
-        <Button
-          backgroundColor={"#FF1744"}
-          label={this.props.label}
-          width={this.props.width}
-          height={this.props.height}
-          borderRadius={this.props.height / 2}
-          onClick={this.props.onClick}
-          loading={this.props.loading}
-          textStyle={{
-            color: "#FFF",
-            fontSize: 14,
-            fontFamily: "semiBold"
-          }}
-        />
-      );
-    } else if (this.props.type === "secondary") {
-      return (
-        <Button
-          backgroundColor={"#ffffff"}
-          borderColor={"#181818"}
-          label={this.props.label}
-          width={this.props.width}
-          height={this.props.height}
-          borderRadius={this.props.height / 2}
-          onClick={this.props.onClick}
-          loading={this.props.loading}
-          textStyle={{
-            color: "#181818",
-            fontSize: 14,
-            fontFamily: "semiBold"
-          }}
-        />
-      );
-    } else if (this.props.type === "tertiary") {
-      return (
-        <Button
-          backgroundColor={"transparent"}
-          borderColor={"#8D8D8D"}
-          label={this.props.label}
-          width={this.props.width}
-          height={this.props.height}
-          borderRadius={this.props.height / 2}
-          onClick={this.props.onClick}
-          loading={this.props.loading}
-          textStyle={{
-            color: "#8D8D8D",
-            fontSize: 14,
-            fontFamily: "semiBold"
-          }}
-        />
-      );
-    } else if (this.props.type === "hollow") {
-      return (
-        <Button
-          backgroundColor={"transparent"}
-          borderColor={"#FFFFFF"}
-          label={this.props.label}
-          width={this.props.width}
-          height={this.props.height}
-          borderRadius={this.props.height / 2}
-          onClick={this.props.onClick}
-          loading={this.props.loading}
-          textStyle={{
-            color: "#FFFFFF",
-            fontSize: 14,
-            fontFamily: "semiBold"
-          }}
-        />
-      );
-    } else {
-      return <Button {...this.props} />;
+    var { backgroundColor, borderRadius, textStyle, ...other } = this.props;
+    switch (this.props.type) {
+      case "primary":
+        return (
+          <CoreButton
+            {...other}
+            backgroundColor={"#FF1744"}
+            borderRadius={this.props.height / 2}
+            textStyle={{
+              color: "#FFF",
+              fontSize: 14,
+              fontFamily: "semibold"
+            }}
+          />
+        );
+        break;
+      case "secondary":
+        return (
+          <CoreButton
+            {...other}
+            backgroundColor={"#ffffff"}
+            borderRadius={this.props.height / 2}
+            borderColor={"#181818"}
+            textStyle={{
+              color: "#181818",
+              fontSize: 14,
+              fontFamily: "semibold"
+            }}
+          />
+        );
+        break;
+      case "tertiary":
+        return (
+          <CoreButton
+            {...other}
+            backgroundColor={"transparent"}
+            borderRadius={this.props.height / 2}
+            borderColor={"#8D8D8D"}
+            textStyle={{
+              color: "#8D8D8D",
+              fontSize: 14,
+              fontFamily: "semibold"
+            }}
+          />
+        );
+      case "hollow":
+        return (
+          <CoreButton
+            {...other}
+            backgroundColor={"transparent"}
+            borderRadius={this.props.height / 2}
+            borderColor={"#FFFFFF"}
+            textStyle={{
+              color: "#FFFFFF",
+              fontSize: 14,
+              fontFamily: "semibold"
+            }}
+          />
+        );
+      default:
+        return <CoreButton {...this.props} />;
     }
   }
   render() {
@@ -83,10 +72,10 @@ export default class ButtonType extends React.Component {
   }
 }
 
-ButtonType.propTypes = {
+Button.propTypes = {
   type: PropTypes.oneOf(["primary", "secondary", "tertiary"])
 };
 
-ButtonType.defaultProps = {
+Button.defaultProps = {
   height: 40
 };
