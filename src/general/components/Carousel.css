@@ -1,0 +1,102 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.header {
+  width: 100%;
+  float: left;
+  padding: 0 10px;
+  font-size: 20px;
+  font-family: bolder;
+}
+.nav {
+  float: right;
+}
+.navButton {
+  width: 40px;
+  height: 40px;
+  background: #fff url(./img/arrow.svg)no-repeat;
+  background-position: center;
+  background-size: 20px;
+  border-radius: 0 20px 20px 0;
+  cursor: pointer;
+  float: left;
+}
+.forward {
+  composes: navButton;
+}
+.back {
+  composes: navButton;
+  margin-right: 2px;
+  margin-left: 40px;
+  transform: rotate(-180deg);
+}
+.sliderHolder {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.slider {
+  width: 100%;
+  height: auto;
+  white-space: nowrap;
+  transition: 200ms;
+}
+
+.element {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 10px;
+}
+@media screen and (min-width: 1025px) {
+  .header {
+    display: flex;
+    -webkit-display: flex;
+    align-items: center;
+    -webkit-align-items: center;
+    margin-bottom: 20px;
+  }
+  .nav {
+    display: flex;
+    -webkit-display: flex;
+    align-items: center;
+    -webkit-align-items: center;
+    margin-left: auto;
+  }
+  .button {
+    width: auto;
+    font-size: 14px;
+    font-family: semibold;
+    color: #212121;
+    position: relative;
+    padding-bottom: 15px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .button:after {
+    content: "";
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    background: #212121;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .slider {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: -20px;
+    padding-bottom: 20px;
+  }
+  .header {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  .footer {
+    margin-top: 20px;
+    padding: 0 10px;
+  }
+}
