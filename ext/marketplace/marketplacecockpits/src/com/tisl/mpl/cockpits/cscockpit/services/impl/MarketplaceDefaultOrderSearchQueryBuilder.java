@@ -161,8 +161,11 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 			query2.append("} WHERE {o:originalVersion} IS NULL ");
 
 			if (searchOrderId) {
-				query.append(" AND {o:code} LIKE ?orderId ");
-				query2.append(" AND {o:code} LIKE ?orderId ");
+				//Change for SDI-4814
+				/*query.append(" AND {o:code} LIKE ?orderId ");
+				query2.append(" AND {o:code} LIKE ?orderId ");*/
+				query.append(" AND {o:code}=?orderId ");
+				query2.append(" AND {o:code}=?orderId ");
 			}
 
 			if (searchdeliveryMode) {
@@ -233,8 +236,10 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 					query.toString());
 
 			if (searchOrderId) {
-				searchQuery.addQueryParameter("orderId", "%" + orderId.trim()
-						+ "%");
+				//Change for SDI-4814
+				/*searchQuery.addQueryParameter("orderId", "%" + orderId.trim()
+						+ "%");*/
+				searchQuery.addQueryParameter("orderId", orderId.trim());
 			}
 			if (searchCustomerFirstName) {
 				searchQuery.addQueryParameter("customerFirstName", "%"
