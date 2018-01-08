@@ -255,6 +255,9 @@ public class HomePageController extends AbstractPageController
 	private static final String EXCEPTION_MESSAGE_NEWEXCLUSIVE = "Exception in getNewAndExclusive";
 
 	private static final String userFirstName = "userFirstName";
+	private static final String footerSlotName = "FooterSlot";
+	
+	
 
 	/**
 	 * @description this is called to load home page
@@ -382,6 +385,7 @@ public class HomePageController extends AbstractPageController
 		final JSONObject singleBanner = getHomePageBanners("Online", "yes");
 		model.addAttribute("mobileBanner", singleBanner.get("moblileBanners"));
 		model.addAttribute("desktopBanner", singleBanner.get("desktopBanners"));
+		getFooterContent("FooterSlot", model);
 		//}
 		//		catch (final EtailBusinessExceptions e)
 		//		{
