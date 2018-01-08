@@ -10,7 +10,7 @@
 --%>
 <c:choose>
 	<c:when test="${priceData.value > 0}">
-		<span class="priceFormat">${priceData.formattedValueNoDecimal}</span>
+		<span class="priceFormat">${priceData.formattedValue}</span>
 	</c:when>
 	<c:otherwise>
 		<c:if test="${displayFreeForZero}">
