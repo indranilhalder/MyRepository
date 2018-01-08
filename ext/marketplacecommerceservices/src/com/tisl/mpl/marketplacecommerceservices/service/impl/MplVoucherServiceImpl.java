@@ -2323,7 +2323,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	/*
 	 * TPR-7448 (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#getVoucherDiscountValue(de.hybris.platform.
 	 * core.model.order.AbstractOrderModel, de.hybris.platform.voucher.model.VoucherModel)
@@ -3442,7 +3442,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	/* CAR-330 starts here */
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#fetchUserRestrictionDetails(java.util.Date)
 	 */
@@ -3455,7 +3455,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#fetchExistingVoucherData(de.hybris.platform
 	 * .voucher.model.VoucherModel)
