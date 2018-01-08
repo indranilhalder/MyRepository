@@ -3,11 +3,7 @@ import PropTypes from "prop-types";
 
 export default class Header extends React.Component {
   render() {
-    return (
-      <div>
-        <h3 style={{ ...this.props.textStyle }}> {this.props.text} </h3>
-      </div>
-    );
+    return <h3 style={{ ...this.props.textStyle }}> {this.props.text} </h3>;
   }
 }
 
