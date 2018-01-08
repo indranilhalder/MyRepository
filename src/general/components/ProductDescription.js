@@ -7,8 +7,8 @@ import styles from "./ProductDescription.css";
 
 export default class ProductDescription extends Component {
   handleClick() {
-    if (this.props.onIconPress) {
-      this.props.onIconPress();
+    if (this.props.onDownload) {
+      this.props.onDownload();
     }
   }
   render() {
@@ -16,12 +16,14 @@ export default class ProductDescription extends Component {
       <div className={styles.base}>
         <div className={styles.header}>
           <Header text={this.props.title} />
-          <CircleButton
-            size={20}
-            color={"transparent"}
-            icon={<Icon image={this.props.icon} />}
-            onClick={() => this.handleClick()}
-          />
+          {this.props.onDownload && (
+            <CircleButton
+              size={20}
+              color={"transparent"}
+              icon={<Icon image={this.props.icon} />}
+              onClick={() => this.handleClick()}
+            />
+          )}
         </div>
         <div className={styles.content}>
           <Para text={this.props.description} />
@@ -37,7 +39,7 @@ ProductDescription.propTypes = {
   description: PropTypes.string,
   price: PropTypes.string,
   icon: PropTypes.string,
-  onIconPress: PropTypes.func
+  onDownload: PropTypes.func
 };
 
 ProductDescription.defaultProps = {
