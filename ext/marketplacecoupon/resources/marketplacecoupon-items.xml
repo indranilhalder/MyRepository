@@ -621,6 +621,14 @@
 					<modifiers search="false" optional="false"/>
 				</attribute>				
 			</attributes>
+			<indexes>					
+ 	          <index name="closedUser_IDX" unique="false">
+ 					<key attribute="closedUser" /> 					
+ 	          </index>
+ 	          <index name="positive_IDX" unique="false">
+					<key attribute="positive"/>					
+	          </index>
+           </indexes>
 		</itemtype>		
 		<!-- COUPON USER RESTRICTION ENDS --> 
 		<!-- CAR-330 ends here -->
