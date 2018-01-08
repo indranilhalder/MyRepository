@@ -7460,7 +7460,8 @@ public class UsersController extends BaseCommerceController
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		CommonCouponsDTO couponDto = new CommonCouponsDTO();
-		final String userRestrictionFlag = configurationService.getConfiguration().getString("voucherUserRestrictionFlag");
+		final String userRestrictionFlag = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.ISVOUCHERTOBEDISPLAYED);
 		LOG.debug("The userRestrictionFlag is " + userRestrictionFlag);
 		try
 		{

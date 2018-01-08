@@ -2395,4 +2395,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
+
+	//CAR-330
+	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
 }
