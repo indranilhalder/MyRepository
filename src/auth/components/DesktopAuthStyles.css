@@ -2,11 +2,11 @@
   width: 900px;
   height: 600px;
   position: relative;
+  display: flex;
 }
-.left {
+.leftDesktopHolder {
   background: #fff;
   width: 50%;
-  float: left;
   height: 100%;
 }
 .header {
@@ -18,11 +18,9 @@
   align-items: center;
   justify-content: center;
 }
-.right {
+.rightDesktopHolder {
+  composes: leftDesktopHolder;
   background: #f3f3f3;
-  width: 50%;
-  float: right;
-  height: 100%;
 }
 .socialButtonHolder {
   position: absolute;
