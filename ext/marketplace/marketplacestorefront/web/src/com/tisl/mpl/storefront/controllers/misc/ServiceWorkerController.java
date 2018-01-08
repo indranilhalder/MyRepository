@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.storefront.controllers.misc;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import java.io.IOException;
 
 import javax.annotation.Resource;
@@ -13,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.tisl.mpl.facade.cms.MplCmsFacade;
-
 
 /**
  * @author TCS
@@ -23,6 +23,8 @@ import com.tisl.mpl.facade.cms.MplCmsFacade;
 @Controller
 public class ServiceWorkerController
 {
+	@Resource
+	private ConfigurationService configurationService;
 
 	//@Resource(name = "mplCmsFacade")
 	//private MplCmsFacade mplCmsFacade;
@@ -120,10 +122,15 @@ public class ServiceWorkerController
 		response.getWriter().write(manifest.toString());
 	}
 
-	@RequestMapping(value = "/stats.html", method = RequestMethod.GET)
-	public String adobeStats(final HttpServletRequest request, final HttpServletResponse response) throws IOException
+	@RequestMapping(value = "/iframeUtag.html", method = RequestMethod.GET)
+	public String tealiumHtml(final HttpServletRequest request, final HttpServletResponse response) throws IOException
 	{
 		// code here
-		return "pages/pwamp/stats";
+		final String ampAnalyticsHostTealium = configurationService.getConfiguration().getString("amp.analytics.source.origin",
+				"*.tatacliq.com");
+		response.addHeader("Access-Control-Allow-Origin", ampAnalyticsHostTealium);
+		response.addHeader("AMP-Access-Control-Allow-Source-Origin", ampAnalyticsHostTealium);
+		response.addHeader("Access-Control-Expose-Headers", ampAnalyticsHostTealium);
+		return "pages/pwamp/iframeUtag";
 	}
 }

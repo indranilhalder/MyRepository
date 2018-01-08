@@ -42,6 +42,7 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,6 +52,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -129,9 +131,46 @@ public class HomePagePwAmpController extends AbstractPageController
 	private static final String STRIKE_PRICE = "strikePrice";
 
 	@RequestMapping(method = RequestMethod.GET)
-	String pwampHome(final HttpServletRequest request, final HttpServletResponse response)
+	String pwampHome(final HttpServletRequest request, final HttpServletResponse response, final Model model)
 	{
+		final Cookie[] cookies = request.getCookies();
+
+		if (cookies != null)
+		{
+			for (final Cookie cookie : cookies)
+			{
+				if (cookie.getName().equals("mpl-userType"))
+				{
+					model.addAttribute("user_type", cookie.getValue());
+				}
+				if (cookie.getName().equals("mpl-user"))
+				{
+					model.addAttribute("user_id", cookie.getValue());
+				}
+			}
+			model.addAttribute("sessionId", request.getSession().getId());
+			model.addAttribute("visitorIp", getVisitorIp(request));
+		}
 		return "/pages/pwamp/home";
+	}
+
+	private static String getVisitorIp(final HttpServletRequest request)
+	{
+		final String REMOTE_IP = request.getHeader("REMOTE_ADDR");
+		final String HTTP_FORWARDED_FOR = request.getHeader("HTTP_FORWARDED_FOR");
+
+		if (REMOTE_IP != null && REMOTE_IP.length() != 0 && !"unknown".equalsIgnoreCase(REMOTE_IP))
+		{
+			return REMOTE_IP;
+		}
+		else if (HTTP_FORWARDED_FOR != null && HTTP_FORWARDED_FOR.length() != 0 && !"unknown".equalsIgnoreCase(HTTP_FORWARDED_FOR))
+		{
+			return HTTP_FORWARDED_FOR;
+		}
+		else
+		{
+			return request.getRemoteAddr();
+		}
 	}
 
 
