@@ -1091,17 +1091,6 @@ function getRating(key, productCode, category) {
         $("#ratingDiv .gig-rating-readReviewsLink").text(data.streamInfo.ratingCount + " REVIEWS")), 
         $("#customer").text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     });
-    var ratingsParams = {
-        categoryID: category,
-        streamID: productCode,
-        containerID: "ratingDiv",
-        linkedCommentsUI: "commentsDiv",
-        showCommentButton: "true",
-        onAddReviewClicked: function(response) {
-            CheckUserLogedIn();
-        }
-    };
-    gigya.comments.showRatingUI(ratingsParams);
 }
 
 function CheckUserLogedIn() {
@@ -1422,7 +1411,6 @@ function setDetailsForStock() {
 }
 
 function getProductContents() {
-	console.log("Get Product Contents");
     var requiredUrl = ACC.config.encodedContextPath + "/p-fetchPageContents", dataString = "productCode=" + productCode;
     $.ajax({
         url: requiredUrl,
@@ -1459,24 +1447,9 @@ function getProductContents() {
     });
 }
 
-function lazyLoadProductContents(){
-	if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
-		if(!$('#productContentDivId').attr('loaded')) {
-		    //not in ajax.success due to multiple sroll events
-		    $('#productContentDivId').attr('loaded', true);
-
-		
-		    //ajax goes here
-		    //by theory, this code still may be called several times
-		    if ($('#productContentDivId').children().length == 0) {
-		    	console.log("load the contents");
-		    	getProductContents();
-		    }
-		    else{
-		    	console.log("not loaded");
-		    }
-		}
-	}
+function lazyLoadProductContents() {
+    $(window).scrollTop() + $(window).height() >= $("#productContentDivId").offset().top && ($("#productContentDivId").attr("loaded") || ($("#productContentDivId").attr("loaded", !0), 
+    0 == $("#productContentDivId").children().length && getProductContents()));
 }
 
 function populateFreebieMsg(ussId) {
@@ -17220,6 +17193,23 @@ TATA.CommonFunctions = {
             } ]
         });
     },
+    ProductSlider: function() {
+        $(".product-slider").slick({
+            infinite: !0,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            dots: !1,
+            responsive: [ {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1.5,
+                    slidesToScroll: 1,
+                    arrows: !0,
+                    dots: !1
+                }
+            } ]
+        });
+    },
     Accordion: function() {
         var Acc = $(".accordion").find(".accordion-title");
         $(document).on("click", ".accordion .accordion-title", function() {
@@ -17301,8 +17291,8 @@ TATA.CommonFunctions = {
             type: "GET",
             cache: !1,
             success: function(data) {
-                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus;
-                //TATA.CommonFunctions.setHeader(data);
+                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus, 
+                TATA.CommonFunctions.setHeader(data);
             }
         });
     },
@@ -17523,10 +17513,10 @@ TATA.CommonFunctions = {
     init: function() {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
-        _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
-        _self.ShopByCatagorySlider(), _self.TrendingCatagorySlider(), _self.wishlistInit(), 
-        _self.deleteWishlist(), _self.leftBarAccordian(), _self.deliveryaddressform(), _self.swipeLookBook(), 
-        _self.removeProdouct(), _self.displayRemoveCoupon();
+        _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.ProductSlider(), 
+        _self.Accordion(), _self.ShopByCatagorySlider(), _self.TrendingCatagorySlider(), 
+        _self.wishlistInit(), _self.deleteWishlist(), _self.leftBarAccordian(), _self.deliveryaddressform(), 
+        _self.swipeLookBook(), _self.removeProdouct(), _self.displayRemoveCoupon();
     }
 }, TATA.Pages = {
     PLP: {

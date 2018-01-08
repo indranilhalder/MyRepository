@@ -41,6 +41,9 @@
             }
         }
     }
+    ul.pdpFeatures{
+        display: flex;
+    }
     
     ul.pdpFeatures li {
         display: inline-block;
@@ -55,7 +58,7 @@
     }
     .contVideo li {
         display: inline-block;
-        width: 33%;
+        width: 32%;
         margin-right: 2px;
         cursor: pointer;
         vertical-align: top;
@@ -276,6 +279,7 @@
     }
 }
 @media (max-width: 767px){
+    
     .Manufacturer {
         margin: 35px 15px;
         .Padd {
@@ -295,6 +299,10 @@
         text-align: left;
     }
     .Manufacturer.Temp02{
+        ul.pdpFeatures{
+        display: block;
+        }
+        
         .Padd ul.temp2-fst li:nth-child(2n) .media-content {
             padding-bottom: 2%;
         }
@@ -320,6 +328,9 @@
         .contVideo li {
             width: 100%;
             text-align: center;
+        }
+        .youtube-player iframe{
+            z-index: 1;
         }
     }
     .temp2-center {

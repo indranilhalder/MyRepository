@@ -386,7 +386,31 @@ TATA.CommonFunctions = {
         });
 
     },
+    
+    ProductSlider: function() {
 
+        $('.product-slider').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            dots: false,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1.5,
+                        slidesToScroll: 1,
+                        //centerMode: true,
+                        arrows: true,
+                        dots:false
+                    }
+                }
+            ]
+        });
+
+    },
+    
+ 
     Accordion: function() {
         var Acc = $('.accordion').find('.accordion-title');
 
@@ -935,6 +959,7 @@ TATA.CommonFunctions = {
         _self.MainBanner();
         _self.LookBookSlider();
         _self.BrandSlider();
+        _self.ProductSlider();
         _self.Accordion();
         _self.ShopByCatagorySlider();
         _self.TrendingCatagorySlider();
@@ -945,6 +970,8 @@ TATA.CommonFunctions = {
         _self.swipeLookBook();  
         _self.removeProdouct();
         _self.displayRemoveCoupon();
+        
+       
     }
 
 };
