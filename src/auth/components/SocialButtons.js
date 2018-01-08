@@ -40,7 +40,7 @@ export default class SocialButtons extends Component {
                 icon={<Icon image={facebookImage} size={50} />}
               />
             </div>
-
+            <div className={styles.centerHolder} />
             <div className={styles.holder}>
               <CircleButton
                 color={"rgba(0,0,0,0)"}

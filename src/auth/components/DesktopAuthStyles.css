@@ -5,34 +5,29 @@
 }
 .left {
   background: #fff;
-  width: 450px;
+  width: 50%;
   float: left;
-  height: 600px;
+  height: 100%;
 }
 .header {
   color: #212121;
   font-size: 30;
 }
-.loginHolder {
+.authHolder {
   padding: 80px 80px 0px 80px;
   align-items: center;
-
   justify-content: center;
 }
 .right {
   background: #f3f3f3;
-  width: 450px;
+  width: 50%;
   float: right;
-  height: 600px;
-}
-.signUpHolder {
-  composes: loginHolder;
+  height: 100%;
 }
 .socialButtonHolder {
   position: absolute;
   height: 150px;
   bottom: 50px;
-  width: 600px;
   margin: auto;
   left: 0px;
   right: 0px;
