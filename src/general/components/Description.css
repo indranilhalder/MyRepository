@@ -1,0 +1,11 @@
+.base {
+  width: 100%;
+}
+.header {
+  margin: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.subHeader {
+  margin: 5px;
+}
