@@ -95,25 +95,33 @@ public class VoucherUserRestrictionUpdaterJob extends AbstractJobPerformable<Cro
 						.getMplConfigDate());
 
 				final List<CouponUserRestrictionModel> couponUserRestlist = new ArrayList<CouponUserRestrictionModel>();
-				for (final UserRestrictionModel restrictedUser : userRestriction)
+
+				if (CollectionUtils.isNotEmpty(userRestriction))
 				{
-					final VoucherModel voucher = restrictedUser.getVoucher();
-					final List<CouponUserRestrictionModel> couponUserRestrs = mplVoucherService.fetchExistingVoucherData(voucher);
-
-					if (CollectionUtils.isNotEmpty(couponUserRestrs))
+					for (final UserRestrictionModel restrictedUser : userRestriction)
 					{
-						getModelService().removeAll(couponUserRestrs);
-					}
+						final VoucherModel voucher = restrictedUser.getVoucher();
+						final List<CouponUserRestrictionModel> couponUserRestrs = mplVoucherService.fetchExistingVoucherData(voucher);
 
-					for (final PrincipalModel user : restrictedUser.getUsers())
-					{
-						final CouponUserRestrictionModel userRestr = getModelService().create(CouponUserRestrictionModel.class);
-						userRestr.setVoucher(voucher);
-						userRestr.setClosedUser(user);
-						userRestr.setPositive(restrictedUser.getPositive());
-						couponUserRestlist.add(userRestr);
+						if (CollectionUtils.isNotEmpty(couponUserRestrs))
+						{
+							getModelService().removeAll(couponUserRestrs);
+						}
+
+						if (CollectionUtils.isNotEmpty(restrictedUser.getUsers()))
+						{
+							for (final PrincipalModel user : restrictedUser.getUsers())
+							{
+								final CouponUserRestrictionModel userRestr = getModelService().create(CouponUserRestrictionModel.class);
+								userRestr.setVoucher(voucher);
+								userRestr.setClosedUser(user);
+								userRestr.setPositive(restrictedUser.getPositive());
+								couponUserRestlist.add(userRestr);
+							}
+						}
 					}
 				}
+
 				getModelService().saveAll(couponUserRestlist);
 			}
 			else
