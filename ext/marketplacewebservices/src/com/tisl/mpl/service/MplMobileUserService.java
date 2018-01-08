@@ -42,4 +42,7 @@ public interface MplMobileUserService
 
 	public boolean validateOtpForRegistration(final String mobileNumber, final String otp);
 
+	public MplUserResultWsDto registerNewMplUserWithMobile(final String login, final String password,
+			final boolean tataTreatsEnable, final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+
 }

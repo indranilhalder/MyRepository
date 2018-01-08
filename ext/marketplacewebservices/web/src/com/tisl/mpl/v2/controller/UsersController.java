@@ -269,6 +269,7 @@ import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
 import com.tisl.mpl.wsdto.SubReasonsMap;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
+import com.tisl.mpl.wsdto.UserLoginResultWsDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WalletPaymentWsDTO;
@@ -11149,7 +11150,7 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/registrationOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto registrationOTPVerification(@RequestParam final String username,
+	public UserLoginResultWsDto registrationOTPVerification(@RequestParam final String username,
 			@RequestParam final String password, @RequestParam(required = true) final String otp,
 			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
@@ -11157,6 +11158,8 @@ public class UsersController extends BaseCommerceController
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + username);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
+		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
 		try
 		{
 			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp);
@@ -11174,17 +11177,20 @@ public class UsersController extends BaseCommerceController
 					platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 				}
 				LOG.debug("The platform number is " + platformDecider);
-				userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, true, platformDecider);
-				final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
-				//gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
-				//if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
-				//{
-				//	userResult.setSessionSecret(gigyaWsDto.getSessionSecret());
-				//}
-				//if (StringUtils.isNotEmpty(gigyaWsDto.getSessionToken()))
-				//	{
-				//		userResult.setSessionToken(gigyaWsDto.getSessionToken());
-				//	}
+				userResult = mobileUserService.registerNewMplUserWithMobile(emailIdLwCase, password, true, platformDecider);
+				//final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
+				userLoginResultWsDto.setStatus(userResult.getStatus());
+				userLoginResultWsDto.setCustomerId(userResult.getCustomerId());
+				userLoginResultWsDto.setMessage("OTP verified. Registration Successful");
+				if (emailIdLwCase.contains("@"))
+				{
+					customerInfo.setEmailId(emailIdLwCase);
+				}
+				else
+				{
+					customerInfo.setMobileNumber(emailIdLwCase);
+				}
+				userLoginResultWsDto.setCustomerInfo(customerInfo);
 			}
 
 			else
@@ -11216,6 +11222,94 @@ public class UsersController extends BaseCommerceController
 			{
 				userResult.setErrorCode(e.getErrorCode());
 			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userLoginResultWsDto;
+	}
+
+	/**
+	 * Login user from mobile
+	 *
+	 * @param emailId
+	 * @param password
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{emailId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserLoginResultWsDto customerLogin(@PathVariable final String emailId, @RequestParam final String password)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		final UserLoginResultWsDto userResult = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
+		//		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+		CustomerModel customerModel = null;
+		try
+		{
+			//CAR Project performance issue fixed
+
+
+			//customerModel = mplPaymentWebFacade.getCustomer(emailId);
+
+			LOG.debug("****************** User Login mobile web service ***********" + emailId);
+			//Login user with username and password
+			//	isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
+			result = mobileUserService.loginUser(emailId, password);
+			if (result.getStatus().equalsIgnoreCase("Success"))
+			{
+				customerModel = (CustomerModel) userService.getCurrentUser();
+				if (null != customerModel.getDateOfBirth())
+				{
+					customerInfo.setDateOfBirth(customerModel.getDateOfBirth().toString());
+				}
+				customerInfo.setFirstName(customerModel.getFirstName());
+				customerInfo.setLastName(customerModel.getLastName());
+				if (null != customerModel.getGender())
+				{
+					customerInfo.setGender(customerModel.getGender().toString());
+				}
+				customerInfo.setMobileNumber(customerModel.getMobileNumber());
+				customerInfo.setEmailId(customerModel.getOriginalUid());
+				userResult.setCustomerInfo(customerInfo);
+			}
+			userResult.setStatus(result.getStatus());
+			userResult.setCustomerId(result.getCustomerId());
+			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
+			//Return result
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
 			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return userResult;

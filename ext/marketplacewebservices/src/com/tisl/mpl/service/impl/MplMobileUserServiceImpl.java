@@ -1155,4 +1155,81 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 	}
 
+	/**
+	 * Register new user || Using mobile number
+	 *
+	 * @param login
+	 * @param password
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws DuplicateUidException
+	 */
+	@SuppressWarnings("javadoc")
+	@Override
+	public MplUserResultWsDto registerNewMplUserWithMobile(final String login, final String password,
+			final boolean tataTreatsEnable, final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	{
+		final MplUserResultWsDto result = new MplUserResultWsDto();
+		boolean successFlag = false;
+		try
+		{
+			mplUserHelper.validateRegistrationDataForMobileNumber(login, password);
+			LOG.debug("************** User details validated mobile web service ************" + login);
+			//Set login and password
+			final ExtRegisterData registration = new ExtRegisterData();
+			registration.setLogin(login);
+			registration.setPassword(password);
+			//TPR-1372
+			if (tataTreatsEnable)
+			{
+				registration.setCheckTataRewards(true);
+			}
+			//Register the user, call facade
+			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
+			{
+				registerCustomerFacade.register(registration, platformNumber);
+				//Set success flag
+				successFlag = true;
+				LOG.debug("************** User registered via mobile web service *************" + login);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			throw businessException;
+		}
+		catch (final DuplicateUidException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0001);
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9013);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//Catch and throw exception as it is when obtained from commerce
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		if (successFlag)
+		{
+			//Set success flag
+			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			if (null != login && null != getCustomerId(login))
+			{
+				LOG.debug("************ Fetching customer id mobile web service for **************" + login);
+				result.setCustomerId(getCustomerId(login));
+			}
+		}
+		return result;
+	}
+
 }

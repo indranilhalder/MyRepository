@@ -908,7 +908,16 @@
 		<property name="errorCode" type="String"></property>
 	</bean>
 	<!-- Registration Mobile web service -->
-
+	<!-- NU-30 || Start -->
+	<bean class="com.tisl.mpl.wsdto.UserLoginResultWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="status" type="String" />
+		<property name="message" type="String" />
+		<property name="customerId" type="String" />
+		<property name="isTemporaryPassword" type="String" />
+		<property name="isSocialMedia" type="String" />
+		<property name="customerInfo" type="com.tisl.mpl.wsdto.UpdateCustomerDetailDto"></property>
+	</bean>
+	<!-- NU-30 || End -->
 	<bean class="com.tisl.mpl.wsdto.UpdateCustomerDetailDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="firstName" type="String" />
 		<property name="lastName" type="String" />

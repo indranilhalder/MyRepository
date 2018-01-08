@@ -85,7 +85,7 @@ public class MplUserHelper
 		/*
 		 * TISPRM-11 else if (!validatePasswordPolicy(password)) { throw new
 		 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9010); }
-		 * 
+		 *
 		 * else if (StringUtils.length(password) > MAX_PASSWORD_LENGTH) { throw new
 		 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9009); }
 		 */
@@ -108,10 +108,6 @@ public class MplUserHelper
 	 */
 	public boolean validateEmailAddress(final String email)
 	{
-		if (!email.contains("@"))
-		{
-			return true;//Validate mobile number implementation
-		}
 		final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
@@ -167,5 +163,40 @@ public class MplUserHelper
 		}
 		return false;
 	}
+
+	/**
+	 * Validating registration details from mobile before registration || For registration using mobile no.
+	 *
+	 * @param login
+	 * @param password
+	 * @return MplUserResultWsDto
+	 */
+
+	public boolean validateRegistrationDataForMobileNumber(final String login, final String password)
+			throws EtailBusinessExceptions
+	{
+		boolean validatedResult = true;
+		try
+		{
+			if (!(login.length() == 10 && (login.startsWith("9") || login.startsWith("8") || login.startsWith("7"))))
+			{
+				validatedResult = false;
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			throw businessException;
+		}
+		if ((StringUtils.isEmpty(password) || StringUtils.length(password) < MIN_PASSWORD_LENGTH))
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9008);
+		}
+		else if (checkWhiteSpace(password))
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9014);
+		}
+		return validatedResult;
+	}
+
 
 }
