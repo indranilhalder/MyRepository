@@ -1866,6 +1866,7 @@
 						<button class="button validatepayment" type="button" id="continue_payment_after_validate">
 				         <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			           </button>
+			           <button type="button" class="topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 			             <div class="terms" id="prepaidtermsconditions">
 										<p class="redirect">You will be redirected to secure payment
 											gateway.</p>

@@ -78467,7 +78467,7 @@ span#offer_section_responsive_error_msg {
 	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3, .giftCheckoutInnerCols4 {padding: 4%;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
 	.topPlaceOrderCodBtn {height: 42px !important; font-size: 12px !important}
-	.topPlaceOrderBtn {margin: 12px 0 0 !important}
+	.topPlaceOrderBtn {margin: 12px 0 0 !important;}
 	.emiTopOrderPlaceButton {background-color: #a5173c; font-size: 12px; color: white; height: 40px; line-height: normal; padding: 10px; width: 40%; font-weight: 400;}
 	#netbanking .nbButton .topPlaceOrderBtn {margin-left: 35px !important;}
 	
@@ -78479,6 +78479,7 @@ span#offer_section_responsive_error_msg {
 	
 	@media(min-width: 768px){
 		.cliqCashPlaceOrderBtnMobile {display: none !important;}
+		.topPlaceOrderBtn {width: 216px !important; margin: 30px !important; background-color: #a5173c !important; color: white; font-size: 12px; height: 40px; letter-spacing: 1px; line-height: 40px; padding: 0;}
 	}
 	
 	@media(min-width: 768px){

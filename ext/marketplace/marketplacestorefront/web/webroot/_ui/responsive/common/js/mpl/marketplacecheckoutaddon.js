@@ -6628,7 +6628,7 @@ function useWalletForPaymentAjax(){
 			
 			if(data.disableJsMode){
 				//alert(data.disableJsMode);
-				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").hide();
+				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").hide();
 				//$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 				$(".topPlaceOrderBtn").show();
 				if($(window).width() < 768){
@@ -6640,7 +6640,7 @@ function useWalletForPaymentAjax(){
 				$(".topPlaceOrderBtn").prop('disabled',false);
 
 			}else{
-				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
+				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").show();
 
 				//COD, EMI Place Order Button Fix
 				if($(window).width() < 768){
@@ -6757,7 +6757,7 @@ function useWalletForPaymentAndPromoAjax(){
 
 			if(data.disableJsMode){
 				//alert(data.disableJsMode);
-				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").hide();
+				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").hide();
 				//$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 				$(".topPlaceOrderBtn").show();//
 				if($(window).width() < 768){
@@ -6776,7 +6776,7 @@ function useWalletForPaymentAndPromoAjax(){
 				$('#convChargeFieldId').before(divText);
 
 			}else{
-				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
+				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").show();
 
 				//COD, EMI Place Order Button Fix
 				if($(window).width() < 768){
