@@ -19,7 +19,9 @@ Paragraph.propTypes = {
     color: PropTypes.string,
     fontSize: PropTypes.number,
     fontFamily: PropTypes.string,
-    fontWeight: PropTypes.string
+    fontWeight: PropTypes.string,
+    fontWeight: PropTypes.string,
+    lineHeight: PropTypes.number
   })
 };
 
@@ -29,6 +31,7 @@ Paragraph.defaultProps = {
     margin: 0,
     color: "#212121",
     fontSize: 14,
+    lineHeight: "20px",
     fontFamily: "regular",
     fontWeight: "normal"
   }
