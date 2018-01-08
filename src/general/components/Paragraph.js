@@ -18,7 +18,8 @@ Paragraph.propTypes = {
     margin: PropTypes.number,
     color: PropTypes.string,
     fontSize: PropTypes.number,
-    fontFamily: PropTypes.string
+    fontFamily: PropTypes.string,
+    fontWeight: PropTypes.string
   })
 };
 
@@ -28,6 +29,7 @@ Paragraph.defaultProps = {
     margin: 0,
     color: "#212121",
     fontSize: 14,
-    fontFamily: "regular"
+    fontFamily: "regular",
+    fontWeight: "normal"
   }
 };

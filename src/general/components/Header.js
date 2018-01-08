@@ -18,7 +18,8 @@ Header.propTypes = {
     margin: PropTypes.number,
     color: PropTypes.string,
     fontSize: PropTypes.number,
-    fontFamily: PropTypes.string
+    fontFamily: PropTypes.string,
+    fontWeight: PropTypes.string
   })
 };
 
@@ -28,6 +29,7 @@ Header.defaultProps = {
     margin: 0,
     color: "#212121",
     fontSize: 16,
-    fontFamily: "semibold"
+    fontFamily: "semibold",
+    fontWeight: "normal"
   }
 };
