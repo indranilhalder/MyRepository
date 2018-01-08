@@ -2643,6 +2643,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			oModel.setGlobalDiscountValues(globalDiscountList);
 			getModelService().save(oModel);
+			setCartSubTotal(oModel);
 			getModelService().refresh(oModel);
 
 		}
@@ -3464,5 +3465,34 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		return mplVoucherDao.fetchExistingVoucherData(voucher);
 	}
+
 	/* CAR-330 ends here */
+
+	/**
+	 * The method sets Subtotal
+	 *
+	 * @param oModel
+	 */
+	private void setCartSubTotal(final AbstractOrderModel oModel)
+	{
+		double subtotal = 0.0;
+		if (oModel != null)
+		{
+			final List<AbstractOrderEntryModel> entries = oModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final Long quantity = entry.getQuantity();
+				final Double basePrice = entry.getBasePrice();
+
+				if (quantity != null && basePrice != null)
+				{
+					final double entryTotal = basePrice.doubleValue() * quantity.doubleValue();
+					subtotal += entryTotal;
+				}
+			}
+			oModel.setSubtotal(Double.valueOf(subtotal));
+			modelService.save(oModel);
+		}
+	}
+
 }
