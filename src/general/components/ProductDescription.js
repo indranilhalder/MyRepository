@@ -3,10 +3,9 @@ import { Icon, CircleButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import Header from "./Header";
 import Para from "./Paragraph";
-import styles from "./Description.css";
-import eye from "../../general/components/img/hide_pwd.svg";
+import styles from "./ProductDescription.css";
 
-export default class Description extends Component {
+export default class ProductDescription extends Component {
   handleClick() {
     if (this.props.onIconPress) {
       this.props.onIconPress();
@@ -24,29 +23,26 @@ export default class Description extends Component {
             onClick={() => this.handleClick()}
           />
         </div>
-        <div className={styles.subHeader}>
+        <div className={styles.content}>
           <Para text={this.props.description} />
-          <Para text={this.props.subDescription} />
-          <Para text={this.props.price} />
+          <Para text={`Rs ${this.props.price}`} />
         </div>
       </div>
     );
   }
 }
 
-Description.propTypes = {
+ProductDescription.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  subDescription: PropTypes.string,
-  price: PropTypes.number,
+  price: PropTypes.string,
   icon: PropTypes.string,
   onIconPress: PropTypes.func
 };
 
-Description.defaultProps = {
+ProductDescription.defaultProps = {
   title: "",
-  icon: eye,
+  icon: "",
   description: "",
-  subDescription: "",
-  price: 0
+  price: ""
 };
