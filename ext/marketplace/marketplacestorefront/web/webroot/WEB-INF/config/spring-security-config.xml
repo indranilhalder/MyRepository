@@ -43,7 +43,7 @@
 				authentication-failure-handler-ref="loginCheckoutAuthenticationFailureHandler"
 				authentication-success-handler-ref="loginCheckoutGuidAuthenticationSuccessHandler" />
 
-		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" delete-cookies="JSESSIONID"/><!-- CAR-342 -->
+		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" invalidate-session="true" delete-cookies="JSESSIONID" />
 
 		<security:port-mappings>
 			<security:port-mapping http="#{configurationService.configuration.getProperty('tomcat.http.port')}"
@@ -98,7 +98,7 @@
 				authentication-failure-handler-ref="loginAuthenticationFailureHandler"
 				authentication-success-handler-ref="loginGuidAuthenticationSuccessHandler"  />
 
-		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" delete-cookies="JSESSIONID"/><!-- CAR-342 -->
+		<security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" invalidate-session="true" delete-cookies="JSESSIONID"/>
 
 		<security:port-mappings>
 			<security:port-mapping http="#{configurationService.configuration.getProperty('tomcat.http.port')}"

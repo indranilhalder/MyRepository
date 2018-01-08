@@ -926,5 +926,18 @@
     	<property name="Order" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.OrderListWsDTO>"/>
     </bean>
     <!-- TPR-5667 : Samsung order response | end -->
-   
+    
+    <bean class="com.tisl.mpl.facades.cms.data.AmpServiceWorkerData">
+		<property name="code" type="String"/>
+		<property name="cacheName" type="String"/>
+		<property name="cacheVersion" type="String"/>
+		<property name="filesToCache" type="String"/>
+		<property name="cachingStrategy" type="String"/>
+		<property name="serviceworkerJs" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.AmpMenifestData">
+		<property name="code" type="String"/>
+		<property name="menifestJson" type="String"/>
+	</bean>
 </beans>

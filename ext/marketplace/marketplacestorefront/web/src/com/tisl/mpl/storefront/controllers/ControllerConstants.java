@@ -62,6 +62,8 @@ public interface ControllerConstants
 	 * Class with action name constants
 	 */
 	String LUXURY_STORE_ADDON_PREFIX = "addon:/luxurystoreaddon";
+	String SHOPBYDEPTCOMPONENT = "marketplace.mplcatalog.shopbydept.component.web.id";
+	String B9004 = "B9004";
 
 	interface Actions
 	{

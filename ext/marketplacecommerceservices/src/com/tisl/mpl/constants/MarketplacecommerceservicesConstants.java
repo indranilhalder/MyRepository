@@ -2395,4 +2395,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
+	public static final String AMP_SERVICEWORKER_QUERY = "select pk from {AmpServiceworker}";
+	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 }
