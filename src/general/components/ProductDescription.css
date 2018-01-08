@@ -2,10 +2,29 @@
   width: 100%;
 }
 .header {
-  margin: 5px;
-  display: flex;
-  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 5px;
+}
+.hasDownload {
+  composes: header;
+  padding-right: 30px;
 }
 .content {
-  margin: 5px;
+  width: 100%;
+}
+.button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.priceHolder {
+  display: inline-block;
+}
+.discount {
+  composes: priceHolder;
+  margin-right: 10px;
+}
+.priceCancelled {
+  composes: priceHolder;
+  text-decoration: line-through;
 }
