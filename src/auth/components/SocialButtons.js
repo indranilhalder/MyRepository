@@ -14,11 +14,6 @@ export default class SocialButtons extends Component {
       this.props.facebookLogin();
     }
   };
-  twitterLogin = () => {
-    if (this.props.twitterLogin) {
-      this.props.twitterLogin();
-    }
-  };
   googlePlusLogin = () => {
     if (this.props.googlePlusLogin) {
       this.props.googlePlusLogin();
@@ -41,7 +36,7 @@ export default class SocialButtons extends Component {
                 icon={<Icon image={desktopFacebookImage} size={50} />}
               />
             </div>
-            <div className={styles.seperator} />
+            <div className={styles.separator} />
             <div className={styles.holder}>
               <CircleButton
                 color={"rgba(0,0,0,0)"}
@@ -65,7 +60,7 @@ export default class SocialButtons extends Component {
                 icon={<Icon image={facebookImage} size={45} />}
               />
             </div>
-            <div className={styles.seperator} />
+            <div className={styles.separator} />
 
             <div className={styles.holder}>
               <CircleButton
@@ -85,7 +80,6 @@ export default class SocialButtons extends Component {
 SocialButtons.propTypes = {
   titleText: PropTypes.string,
   facebookLogin: PropTypes.func,
-  twitterLogin: PropTypes.func,
   googlePlusLogin: PropTypes.func
 };
 SocialButtons.defaultProps = {

@@ -6,7 +6,7 @@
     display: inline-block;
   }
 
-  .seperator {
+  .separator {
     composes: holder;
     margin: 0px 20px 0px 20px;
   }
@@ -28,7 +28,7 @@
     display: inline-block;
   }
 
-  .seperator {
+  .separator {
     composes: holder;
     margin: 0px 15px 0px 15px;
   }
