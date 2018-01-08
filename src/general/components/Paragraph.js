@@ -3,11 +3,7 @@ import PropTypes from "prop-types";
 
 export default class Paragraph extends React.Component {
   render() {
-    return (
-      <div>
-        <p style={{ ...this.props.textStyle }}> {this.props.text} </p>
-      </div>
-    );
+    return <p style={{ ...this.props.textStyle }}> {this.props.text} </p>;
   }
 }
 
