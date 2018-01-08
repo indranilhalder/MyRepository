@@ -4,7 +4,7 @@ import styles from "./SocialButtons.css";
 import MediaQuery from "react-responsive";
 import { CircleButton, Icon } from "xelpmoc-core";
 import facebookImage from "./img/facebook.svg";
-import twitter from "./img/twitter.svg";
+
 import googlePlus from "./img/googlePlus.svg";
 import PropTypes from "prop-types";
 export default class SocialButtons extends Component {
@@ -38,15 +38,6 @@ export default class SocialButtons extends Component {
                 size={50}
                 onClick={this.facebookLogin}
                 icon={<Icon image={facebookImage} size={50} />}
-              />
-            </div>
-
-            <div className={styles.centerHolder}>
-              <CircleButton
-                color={"rgba(0,0,0,0)"}
-                size={50}
-                onClick={this.twitterLogin}
-                icon={<Icon image={twitter} size={50} />}
               />
             </div>
 
