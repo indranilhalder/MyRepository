@@ -16,7 +16,6 @@ Paragraph.propTypes = {
     fontSize: PropTypes.number,
     fontFamily: PropTypes.string,
     fontWeight: PropTypes.string,
-    fontWeight: PropTypes.string,
     lineHeight: PropTypes.number
   })
 };
