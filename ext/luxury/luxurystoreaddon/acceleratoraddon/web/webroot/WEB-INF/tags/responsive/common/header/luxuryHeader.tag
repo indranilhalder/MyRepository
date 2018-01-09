@@ -122,7 +122,7 @@
 					</cms:pageSlot></a>
 					</li>
 					</sec:authorize>
-					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
+					<li class="header-bag-link"><a href="/cart" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>
 					</cms:pageSlot></a></li>
 				</ul>
