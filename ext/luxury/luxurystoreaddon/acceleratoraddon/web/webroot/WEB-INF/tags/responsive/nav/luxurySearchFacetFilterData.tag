@@ -23,7 +23,7 @@
 						"<span class="searchString">					
 							<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>
 						</span>
-						in <span class="searchString">${searchCategoryName}</span>""
+						in <span class="searchString">${searchCategoryName}</span>"
 					</c:when>
 					<c:otherwise>
 						<span class="searchString">${searchCategoryName}</span>
