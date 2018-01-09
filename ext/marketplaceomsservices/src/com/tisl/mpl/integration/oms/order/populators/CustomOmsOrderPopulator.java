@@ -1,6 +1,5 @@
 package com.tisl.mpl.integration.oms.order.populators;
 
-import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
 import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -28,14 +27,12 @@ import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.site.BaseSiteService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.hybris.oms.domain.address.Address;
@@ -45,6 +42,8 @@ import com.hybris.oms.domain.order.PaymentInfo;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
@@ -63,9 +62,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 
 	//private MplCodeMasterUtility mplCodeMaterUtility;
 
-	@Autowired
-	private BaseSiteService baseSiteService;
-
 	@SuppressWarnings("static-access")
 	@Override
 	public void populate(final OrderModel source, final Order target) throws ConversionException
@@ -78,14 +74,15 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		target.setMiddleName(((CustomerModel) user).getMiddleName());
 		target.setCartID(source.getGuid());
 
-		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
-		final String site = currentBaseSite.getUid();
-
-		if (MarketplaceomsservicesConstants.LUXURY_PREFIX.equalsIgnoreCase(site))
+		if (source.getStore() != null && StringUtil.isNotEmpty(source.getStore().getUid()))
 		{
-			if (LOG.isInfoEnabled())
+			if (MarketplaceomsservicesConstants.LUXURY_PREFIX.equalsIgnoreCase(source.getStore().getUid()))
 			{
-				target.setStoreIndicator(site);
+				if (LOG.isInfoEnabled())
+				{
+					LOG.info("Luxury Store Indicator");
+				}
+				target.setStoreIndicator(source.getStore().getUid());
 			}
 		}
 
