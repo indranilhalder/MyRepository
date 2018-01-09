@@ -1,20 +1,24 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
-import styles from "./App.css";
+import { Button } from "xelpmoc-core";
+import ModalContainer from "./general/containers/ModalContainer";
+import { Route, Redirect } from "react-router-dom";
 
-import { Input } from "xelpmoc-core";
-
+import { RESTORE_PASSWORD, OTP_VERIFICATION } from "./general/modal.actions.js";
+import { default as AppStyles } from "./App.css";
+import MediaQuery from "react-responsive";
+import Auth from "./auth/components/MobileAuth.js";
 class App extends Component {
   render() {
-    console.log(styles);
+    let className = AppStyles.base;
+    if (this.props.modalStatus) {
+      className = AppStyles.blur;
+    }
 
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React World</h1>
-        </header>
-        <Input />
+      <div className={className}>
+        <Route path="/" component={Auth} />
+
+        <ModalContainer />
       </div>
     );
   }
