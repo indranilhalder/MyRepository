@@ -1,0 +1,81 @@
+@media screen and (min-width: 1024px) {
+  .content {
+    font-size: 14px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .header {
+    font-size: 22px;
+    display: flex;
+    color: #212121;
+    font-family: bold;
+    justify-content: center;
+  }
+  .buttonHolder {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .time {
+    font-size: 12px;
+    font-family: regular;
+    height: 30px;
+    color: #212121;
+    line-height: 30px;
+    float: right;
+  }
+  .left {
+    float: left;
+    display: inline-block;
+  }
+  .span {
+    color: #ff1744;
+    margin-left: 2px;
+  }
+  .submit {
+    width: auto;
+    margin-right: 10px;
+  }
+}
+@media screen and (max-width: 1023px) {
+  .buttonHolder {
+    text-align: center;
+  }
+  .iconHolder {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  .content {
+    font-size: 14px;
+    font-family: regular;
+    margin-top: 10px;
+  }
+  .time {
+    font-size: 12px;
+    font-family: regular;
+    text-align: right;
+    margin-right: 15px;
+  }
+  .left {
+    float: left;
+    display: inline-block;
+  }
+  .right {
+    float: right;
+    display: inline-block;
+  }
+  .input {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .span {
+    text-decoration-line: underline;
+    text-underline-position: under;
+    margin-left: 2px;
+  }
+  .content {
+    color: #fff;
+    line-height: 20px;
+  }
+}
