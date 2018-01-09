@@ -1,8 +1,9 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import {
   showModal,
-  OTP_VERIFICATION,
-  hideModal
+  SIGN_UP_OTP_VERIFICATION,
+  hideModal,
+  FORGOT_PASSWORD_OTP_VERIFICATION
 } from "../../general/modal.actions.js";
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
@@ -29,7 +30,8 @@ export const RESET_PASSWORD_FAILURE = "RESET_PASSWORD_FAILURE";
 export const LOGIN = "login";
 export const SIGN_UP = "onregistration";
 export const FORGOT_PASSWORD = "forgotpassword";
-export const FORGOT_PASSWORD_OTP_VERIFICATION = "forgotpasswordotpverification";
+export const FORGOT_PASSWORD_OTP_VERIFICATION_PATH =
+  "forgotpasswordotpverification";
 export const RESET_PASSWORD = "resetpassword";
 export const OTP_VERIFICATION_PATH = "otpverification";
 
@@ -66,7 +68,6 @@ export function loginUser(userLoginDetails) {
         throw new Error(`${resultJson.message}`);
       }
       localStorage.setItem("authorizationKey", resultJson.access_token);
-
       dispatch(loginUserSuccess(resultJson));
     } catch (e) {
       dispatch(loginUserFailure(e.message));
@@ -103,7 +104,7 @@ export function signUpUser(userObj) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(showModal(OTP_VERIFICATION));
+      dispatch(showModal(SIGN_UP_OTP_VERIFICATION));
       dispatch(signUpUserSuccess());
     } catch (e) {
       dispatch(signUpUserFailure(e.message));
@@ -180,6 +181,7 @@ export function forgotPassword(userDetails) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
+      dispatch(showModal(FORGOT_PASSWORD_OTP_VERIFICATION));
       dispatch(forgotPasswordSuccess(resultJson.message));
     } catch (e) {
       dispatch(forgotPasswordFailure(e.message));
@@ -214,7 +216,7 @@ export function forgotPasswordOtpVerification(userDetails) {
     dispatch(forgotPasswordOtpVerificationRequest());
     try {
       const result = await api.post(
-        FORGOT_PASSWORD_OTP_VERIFICATION,
+        FORGOT_PASSWORD_OTP_VERIFICATION_PATH,
         userDetails
       );
       const resultJson = await result.json();

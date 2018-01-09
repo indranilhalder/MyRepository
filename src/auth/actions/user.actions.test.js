@@ -5,7 +5,7 @@ import thunk from "redux-thunk";
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as user from "../mocks/user.mock";
 import {
-  OTP_VERIFICATION,
+  SIGN_UP_OTP_VERIFICATION,
   SHOW_MODAL,
   HIDE_MODAL
 } from "../../general/modal.actions";
@@ -138,7 +138,7 @@ describe("User Actions", () => {
     const expectedActions = [
       { type: userActions.SIGN_UP_USER_REQUEST, status: REQUESTING },
       {
-        modalType: OTP_VERIFICATION,
+        modalType: SIGN_UP_OTP_VERIFICATION,
         ownProps: undefined,
         type: SHOW_MODAL
       },

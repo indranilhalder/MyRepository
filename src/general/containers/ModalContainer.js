@@ -1,7 +1,12 @@
 import { connect } from "react-redux";
 import ModalRoot from "../components/ModalRoot.js";
 import * as modalActions from "../modal.actions.js";
-
+import {
+  resetPassword,
+  otpVerification,
+  forgotPassword,
+  forgotPasswordOtpVerification
+} from "../../auth/actions/user.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
@@ -17,6 +22,18 @@ const mapDispatchToProps = dispatch => {
     },
     hideModal: () => {
       dispatch(modalActions.hideModal());
+    },
+    otpVerification: userDetails => {
+      dispatch(otpVerification(userDetails));
+    },
+    resetPassword: userDetails => {
+      dispatch(resetPassword(userDetails));
+    },
+    forgotPassword: userDetails => {
+      dispatch(forgotPassword(userDetails));
+    },
+    forgotPasswordOtpVerification: userDetails => {
+      dispatch(forgotPasswordOtpVerification(userDetails));
     }
   };
 };

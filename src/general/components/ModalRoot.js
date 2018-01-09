@@ -21,15 +21,45 @@ export default class ModalRoot extends React.Component {
     }
   }
 
+  submitOtp(userDetails) {
+    this.props.otpVerification(userDetails);
+    this.props.hideModal();
+  }
+
+  resetPassword(userDetails) {
+    this.props.resetPassword(userDetails);
+    this.props.hideModal();
+  }
+
+  handleRestoreClick(userDetails) {
+    this.props.forgotPassword(userDetails);
+    this.props.hideModal();
+  }
+
+  submitOtpForgotPassword(userDetails) {
+    this.props.forgotPasswordOtpVerification(userDetails);
+    this.props.hideModal();
+  }
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
         <RestorePassword
           handleCancel={() => this.handleClose()}
-          handleRestoreClick={() => this.handleClose()}
+          handleRestoreClick={() => this.handleRestoreClick()}
         />
       ),
-      OtpVerification: <OtpVerification closeModal={() => this.handleClose()} />
+      SignUpOtpVerification: (
+        <OtpVerification
+          closeModal={() => this.handleClose()}
+          submitOtp={() => this.submitOtp()}
+        />
+      ),
+      ForgotPasswordOtpVerification: (
+        <OtpVerification
+          closeModal={() => this.handleClose()}
+          submitOtp={() => this.submitOtpForgotPassword()}
+        />
+      )
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];

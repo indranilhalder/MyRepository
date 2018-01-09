@@ -1,7 +1,8 @@
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
 export const RESTORE_PASSWORD = "RestorePassword";
-export const OTP_VERIFICATION = "OtpVerification";
+export const SIGN_UP_OTP_VERIFICATION = "SignUpOtpVerification";
+export const FORGOT_PASSWORD_OTP_VERIFICATION = "ForgotPasswordOtpVerification";
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,
