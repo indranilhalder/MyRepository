@@ -16,6 +16,7 @@ export default class CategoryImage extends React.Component {
     );
   }
 }
+
 CategoryImage.propTypes = {
   source: PropTypes.string,
   text: PropTypes.string
