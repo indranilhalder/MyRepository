@@ -1,0 +1,40 @@
+.base {
+  width: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  padding-bottom: 100%;
+  position: relative;
+}
+.imageHolder {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+.textwrapper {
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (min-width: 1025px) {
+  .text {
+    font-size: 20px;
+    color: whitesmoke;
+    font-weight: bold;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .text {
+    font-size: 14px;
+    color: whitesmoke;
+    font-weight: bold;
+  }
+}
