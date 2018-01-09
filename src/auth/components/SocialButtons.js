@@ -4,18 +4,14 @@ import styles from "./SocialButtons.css";
 import MediaQuery from "react-responsive";
 import { CircleButton, Icon } from "xelpmoc-core";
 import facebookImage from "./img/facebook.svg";
-import twitter from "./img/twitter.svg";
+import desktopFacebookImage from "./img/facebook_desktop.svg";
 import googlePlus from "./img/googlePlus.svg";
+import desktopGooglePlus from "./img/googlePlus_desktop.svg";
 import PropTypes from "prop-types";
 export default class SocialButtons extends Component {
   facebookLogin = () => {
     if (this.props.facebookLogin) {
       this.props.facebookLogin();
-    }
-  };
-  twitterLogin = () => {
-    if (this.props.twitterLogin) {
-      this.props.twitterLogin();
     }
   };
   googlePlusLogin = () => {
@@ -37,25 +33,16 @@ export default class SocialButtons extends Component {
                 color={"rgba(0,0,0,0)"}
                 size={50}
                 onClick={this.facebookLogin}
-                icon={<Icon image={facebookImage} size={50} />}
+                icon={<Icon image={desktopFacebookImage} size={50} />}
               />
             </div>
-
-            <div className={styles.centerHolder}>
-              <CircleButton
-                color={"rgba(0,0,0,0)"}
-                size={50}
-                onClick={this.twitterLogin}
-                icon={<Icon image={twitter} size={50} />}
-              />
-            </div>
-
+            <div className={styles.separator} />
             <div className={styles.holder}>
               <CircleButton
                 color={"rgba(0,0,0,0)"}
                 size={50}
                 onClick={this.googlePlusLogin}
-                icon={<Icon image={googlePlus} size={50} />}
+                icon={<Icon image={desktopGooglePlus} size={50} />}
               />
             </div>
           </div>
@@ -73,7 +60,7 @@ export default class SocialButtons extends Component {
                 icon={<Icon image={facebookImage} size={45} />}
               />
             </div>
-            <div className={styles.centerHolder} />
+            <div className={styles.separator} />
 
             <div className={styles.holder}>
               <CircleButton
@@ -93,7 +80,6 @@ export default class SocialButtons extends Component {
 SocialButtons.propTypes = {
   titleText: PropTypes.string,
   facebookLogin: PropTypes.func,
-  twitterLogin: PropTypes.func,
   googlePlusLogin: PropTypes.func
 };
 SocialButtons.defaultProps = {
