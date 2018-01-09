@@ -70,7 +70,7 @@ $(document).ready(function(){
    </div>
    
    <%-- code changes for carousel start --%>
-   <div class="every-scene">
+   <div class="product-slider">
 		<cms:pageSlot position="Section3A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />
 		</cms:pageSlot>
