@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import MediaQuery from "react-responsive";
 import CoreButton from "./Button";
 import { Icon } from "xelpmoc-core";
@@ -8,6 +7,7 @@ import CircleIconBlack from "./img/circle_plus_black.svg";
 
 export default class FollowButton extends Component {
   render() {
+    const { type, label, icon, ...other } = this.props;
     return (
       <div>
         <MediaQuery query="(min-device-width: 1025px)">
@@ -19,6 +19,7 @@ export default class FollowButton extends Component {
               size: 20,
               offset: 10
             }}
+            {...other}
           />
         </MediaQuery>
         <MediaQuery query="(max-device-width:1024px)">
@@ -30,6 +31,7 @@ export default class FollowButton extends Component {
               size: 20,
               offset: 10
             }}
+            {...other}
           />
         </MediaQuery>
       </div>
