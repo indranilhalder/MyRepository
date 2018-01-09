@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
+import OtpVerification from "../../auth/components/OtpVerification";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -20,20 +21,26 @@ export default class ModalRoot extends React.Component {
     }
   }
 
-  updateJob(job) {
-    if (this.props.updateJob) {
-      this.props.updateJob(job);
-    }
-    this.props.hideModal();
-  }
   render() {
     const MODAL_COMPONENTS = {
-      RestorePassword: <RestorePassword />
+      RestorePassword: (
+        <RestorePassword
+          handleCancel={() => this.handleClose()}
+          handleRestoreClick={() => this.handleClose()}
+        />
+      ),
+      OtpVerification: <OtpVerification closeModal={() => this.handleClose()} />
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
     const Modal = this.props.modalStatus ? (
-      <ModalPanel>{SelectedModal}</ModalPanel>
+      <ModalPanel
+        closeModal={() => {
+          this.handleClose();
+        }}
+      >
+        {SelectedModal}
+      </ModalPanel>
     ) : null;
 
     return ReactDOM.createPortal(Modal, this.el);

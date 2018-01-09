@@ -1,3 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: regular;
+}
+
+@font-face {
+  font-family: regular;
+  src: url(/general/components/fonts/Rubik-Light.ttf);
+}
+@font-face {
+  font-family: semibold;
+  src: url(/general/components/fonts/Rubik-Medium.ttf);
+}
+@font-face {
+  font-family: bolder;
+  src: url(/general/components/fonts/Rubik-Regular.ttf);
+}
+
 .base {
   width: 100%;
   color: #212121;
@@ -11,6 +33,6 @@
     filter: blur(10px);
     pointer-events: none;
     transition: 200ms;
-    overflow: hidden;
+    position: fixed;
   }
 }

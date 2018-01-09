@@ -1,6 +1,6 @@
 .input {
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .buttonLogin {
@@ -8,6 +8,7 @@
   width: 100%;
   float: left;
   margin-top: 10px;
+  margin-bottom: 20px;
 }
 .buttonHolder {
   display: inline-block;
@@ -15,6 +16,7 @@
 .forgotButton {
   width: 100%;
   float: left;
+  margin: 15px 0;
 }
 
 @media screen and (min-width: 1024px) {
@@ -26,5 +28,6 @@
 @media screen and (max-width: 1024px) {
   .forgotButtonPosition {
     float: right;
+    margin-right: -15px;
   }
 }

@@ -1,16 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import SignUpContainer from "../src/auth/containers/SignUpContainer";
+import AppContainer from "../src/general/containers/AppContainer";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import * as api from "../src/lib/apiRequest";
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import user from "../src/auth/reducers/user.reducer";
+import * as api from "../src/lib/apiRequest";
+import modal from "../src/general/modal.reducers";
 import registerServiceWorker from "./registerServiceWorker";
 
 const rootReducer = combineReducers({
-  user
+  user,
+  modal
 });
 
 let store = createStore(
@@ -25,7 +28,7 @@ let store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <SignUpContainer />
+      <AppContainer />
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")

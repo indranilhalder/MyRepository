@@ -2,7 +2,8 @@ module.exports = {
   apps: [
     {
       name: "tata-cliq-frontend",
-      script: "index.js"
+      script: "index.js",
+      watch: true
     }
   ],
   deploy: {
@@ -14,8 +15,7 @@ module.exports = {
       repo: "git@github.com:XelpmocDesignandTechPvtLtd/tata-cliq-frontend.git",
       ssh_options: ["StrictHostKeyChecking=no", "PasswordAuthentication=no"],
       path: "/home/ubuntu/tata-cliq-frontend",
-      "post-deploy":
-        " yarn install && yarn build && sudo pm2 start /home/ubuntu/tata-cliq-frontend/index.js"
+      "post-deploy": "yarn install && yarn run pre-build"
     }
   }
 };

@@ -6,9 +6,9 @@
     display: inline-block;
   }
 
-  .centerHolder {
+  .separator {
     composes: holder;
-    margin: 0px 30px 0px 30px;
+    margin: 0px 20px 0px 20px;
   }
 
   .textHolder {
@@ -28,16 +28,18 @@
     display: inline-block;
   }
 
-  .centerHolder {
+  .separator {
     composes: holder;
     margin: 0px 15px 0px 15px;
   }
 
   .textHolder {
     text-align: center;
+    margin-bottom: 20px;
   }
   .title {
     color: white;
-    font-size: 16px;
+    font-size: 14px;
+    font-family: semibold;
   }
 }
