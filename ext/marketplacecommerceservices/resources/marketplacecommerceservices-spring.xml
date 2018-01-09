@@ -2064,7 +2064,7 @@
                 <property name="excludedCronJobCodes">
                     <set/>
                 </property>
-                <property name="expiryDays" value="${cronjob.dayOld.count}"/>
+                <!-- <property name="expiryDays" value="${cronjob.dayOld.count}"/>  -->
             </bean>
         </property>
     </bean>
