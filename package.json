@@ -53,7 +53,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "lint": "eslint 'src/**/*.js'",
-    "pre-build":"yarn run build  && pm2 startOrRestart ecosystem.config.js",
+    "pre-build":"yarn run build  && sudo pm2 startOrRestart ecosystem.config.js",
     "deploy": "pm2 deploy ecosystem.config.js production --force",
     "precommit": "lint-staged"
   },
