@@ -55,9 +55,9 @@ export default class Button extends React.Component {
             {...other}
             backgroundColor={"transparent"}
             borderRadius={this.props.height / 2}
-            borderColor={"#FFFFFF"}
+            borderColor={this.props.color}
             textStyle={{
-              color: "#FFFFFF",
+              color: this.props.color,
               fontSize: 14,
               fontFamily: "semibold"
             }}
@@ -77,5 +77,6 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  height: 36
+  height: 36,
+  color: "#181818"
 };
