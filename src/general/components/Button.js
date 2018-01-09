@@ -77,5 +77,5 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  height: 40
+  height: 36
 };
