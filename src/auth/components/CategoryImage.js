@@ -3,10 +3,6 @@ import styles from "./CategoryImage.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 export default class CategoryImage extends React.Component {
-  // constructor(props) {
-  //     super(props);
-  //     this.styles = this.props.styles ? this.props.styles : styles;
-  //   }
   render() {
     return (
       <div className={styles.base}>
