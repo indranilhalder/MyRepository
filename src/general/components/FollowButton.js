@@ -12,6 +12,7 @@ export default class FollowButton extends Component {
       <div>
         <MediaQuery query="(min-device-width: 1025px)">
           <CoreButton
+            width={180}
             type={"secondary"}
             label={"Start following"}
             icon={{
@@ -24,6 +25,7 @@ export default class FollowButton extends Component {
         </MediaQuery>
         <MediaQuery query="(max-device-width:1024px)">
           <CoreButton
+            width={180}
             type={"primary"}
             label={"Start following"}
             icon={{
