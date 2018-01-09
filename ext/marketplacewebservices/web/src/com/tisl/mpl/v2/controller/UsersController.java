@@ -162,6 +162,7 @@ import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.ReturnLogisticsResponseDetails;
 import com.tisl.mpl.data.WishlistData;
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -11162,7 +11163,7 @@ public class UsersController extends BaseCommerceController
 		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
 		try
 		{
-			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp);
+			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.REG);
 			if (validOtpFlag)
 			{
 				final String emailIdLwCase = username.toLowerCase();

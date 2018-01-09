@@ -37,12 +37,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ForgetPasswordService;
+import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.MplRegistrationResultWsDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 
 
@@ -62,6 +65,8 @@ public class ForgottenPasswordsController extends BaseController
 	private ForgetPasswordService forgetPasswordService;
 	@Autowired
 	MplUserHelper mplUserHelper;
+	@Resource
+	private MplMobileUserService mobileUserService;
 
 	/**
 	 * Generates a token to restore customer's forgotten password.
@@ -103,7 +108,7 @@ public class ForgottenPasswordsController extends BaseController
 			}
 			else
 			{
-			        final String emailidLwCase = emailid.toLowerCase(); //INC144318796
+				final String emailidLwCase = emailid.toLowerCase(); //INC144318796
 				validateEmail(emailidLwCase);
 				final URL requestUrl = new URL(request.getRequestURL().toString());
 				final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
@@ -172,5 +177,100 @@ public class ForgottenPasswordsController extends BaseController
 			userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 		}
 		return userResultWsDto;
+	}
+
+	@Secured(
+	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	@RequestMapping(value = "/customerForgotPassword", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public MplRegistrationResultWsDto customerForgotPassword(@RequestParam final String username,
+			@RequestParam final int platformNumber, @RequestParam final String isPwa) throws Exception
+	{
+		MplRegistrationResultWsDto resultWsDto = new MplRegistrationResultWsDto();
+		try
+		{
+			resultWsDto = mobileUserService.forgotPasswordOtp(username, platformNumber);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				resultWsDto.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				resultWsDto.setErrorCode(e.getErrorCode());
+			}
+			resultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				resultWsDto.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				resultWsDto.setErrorCode(e.getErrorCode());
+			}
+			resultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return resultWsDto;
+	}
+
+	@Secured(
+	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	@RequestMapping(value = "/forgotPasswordOTPVerification", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public MplRegistrationResultWsDto forgotPasswordOTPVerification(@RequestParam final String username,
+			@RequestParam final int platformNumber, @RequestParam final String otp, @RequestParam final String isPwa)
+			throws Exception
+	{
+		final MplRegistrationResultWsDto resultWsDto = new MplRegistrationResultWsDto();
+		boolean validOtpFlag = false;
+		try
+		{
+			validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.FORGOT_PASSWORD);
+			if (validOtpFlag)
+			{
+				resultWsDto.setMessage("OTP verified. Please reset your password");
+				resultWsDto.setStatus("SUCCESS");
+
+			}
+			else
+			{
+				resultWsDto.setMessage("Incorrect OTP. Please try again");
+				resultWsDto.setStatus("FAILURE");
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				resultWsDto.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				resultWsDto.setErrorCode(e.getErrorCode());
+			}
+			resultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				resultWsDto.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				resultWsDto.setErrorCode(e.getErrorCode());
+			}
+			resultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return resultWsDto;
 	}
 }

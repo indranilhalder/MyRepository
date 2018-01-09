@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.service;
 
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
@@ -38,11 +39,17 @@ public interface MplMobileUserService
 	 * @param platformDecider
 	 * @return
 	 */
+	//NU-30
 	public MplRegistrationResultWsDto registerAppUser(String emailIdLwCase, int platformDecider);
 
-	public boolean validateOtpForRegistration(final String mobileNumber, final String otp);
+	//NU-30
+	public boolean validateOtpForRegistration(final String mobileNumber, final String otp, final OTPTypeEnum enumType);
 
+	//NU-30
 	public MplUserResultWsDto registerNewMplUserWithMobile(final String login, final String password,
 			final boolean tataTreatsEnable, final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+
+	//NU-31
+	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber);
 
 }

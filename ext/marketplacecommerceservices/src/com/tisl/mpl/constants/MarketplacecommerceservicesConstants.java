@@ -829,6 +829,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B0013 = "B0013";
 	public static final String B0014 = "B0014";
 	public static final String B0015 = "B0015";
+	public static final String B0016 = "B0016";
 	//My Account Constants ends
 
 	//Mobile web service error codes starts
@@ -2395,4 +2396,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
+	public static final String TIMEOUT_FOR_OTP = "timeout.for.otp".intern();
 }

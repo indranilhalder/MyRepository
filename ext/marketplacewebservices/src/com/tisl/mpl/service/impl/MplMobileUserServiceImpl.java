@@ -276,27 +276,16 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			//result = mplUserHelper.validateRegistrationData(login, null);//to-do validate email & mobile number
 			LOG.debug("************** User details validated mobile web service ************" + mobileNumber);
-			//Set login and password
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(mobileNumber);
-
-			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
-				final String otp = otpGenericService.generateOTPForRegister(mobileNumber, OTPTypeEnum.COD.getCode(), mobileNumber);
-				//sending sms to verify customer registration
-				final String contactNumber = getConfigurationService().getConfiguration().getString(
-						MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
+				final String otp = otpGenericService.generateOTPForRegister(mobileNumber, OTPTypeEnum.REG.getCode(), mobileNumber);
 				try
 				{
-					//TODO mplCustomerName null pointer code fix 16-AUG-15
-
-					sendSMSFacade.sendSms(
-							MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-							MarketplacecommerceservicesConstants.SMS_MESSAGE_COD_OTP
-									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, "There")
-									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otp)
-									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
+					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
 				}
 				catch (final ModelSavingException e)
 				{
@@ -942,7 +931,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1043,7 +1032,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1138,11 +1127,10 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	}
 
 	@Override
-	public boolean validateOtpForRegistration(final String mobileNumber, final String otp)
+	public boolean validateOtpForRegistration(final String mobileNumber, final String otp, final OTPTypeEnum enumType)
 	{
-		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(mobileNumber, mobileNumber, otp, OTPTypeEnum.COD,
-				Long.parseLong(getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(mobileNumber, mobileNumber, otp, enumType, Long
+				.parseLong(getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
 		if (null != otpResponse && null != otpResponse.getInvalidErrorMessage()
 				&& otpResponse.getInvalidErrorMessage().equalsIgnoreCase("VALID"))
 		{
@@ -1175,20 +1163,16 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			mplUserHelper.validateRegistrationDataForMobileNumber(login, password);
 			LOG.debug("************** User details validated mobile web service ************" + login);
-			//Set login and password
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
 			registration.setPassword(password);
-			//TPR-1372
 			if (tataTreatsEnable)
 			{
 				registration.setCheckTataRewards(true);
 			}
-			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
 				registerCustomerFacade.register(registration, platformNumber);
-				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);
 			}
@@ -1228,6 +1212,75 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				LOG.debug("************ Fetching customer id mobile web service for **************" + login);
 				result.setCustomerId(getCustomerId(login));
 			}
+		}
+		return result;
+	}
+
+	/**
+	 * New API for API project-phase 1 || For registration
+	 */
+	//NU-31
+	@Override
+	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber)
+	{
+		final MplRegistrationResultWsDto result = new MplRegistrationResultWsDto();
+		boolean successFlag = false;
+		try
+		{
+			//result = mplUserHelper.validateRegistrationData(login, null);//to-do validate email & mobile number
+			LOG.debug("************** User details validated mobile web service ************" + mobileNumber);
+			final ExtRegisterData registration = new ExtRegisterData();
+			registration.setLogin(mobileNumber);
+			if (!registerCustomerFacade.checkUniquenessOfEmail(registration))
+			{
+				final String otp = otpGenericService.generateOTPForRegister(mobileNumber, OTPTypeEnum.FORGOT_PASSWORD.getCode(),
+						mobileNumber);
+				try
+				{
+					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
+				}
+				catch (final ModelSavingException e)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
+				}
+				catch (final EtailNonBusinessExceptions e)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
+				}
+				successFlag = true;
+				LOG.debug("************** User registered via mobile web service *************" + mobileNumber);
+			}
+			else
+			{
+				successFlag = false;
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0016);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			throw businessException;
+		}
+
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9013);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		if (successFlag)
+		{
+			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			result.setUsername(mobileNumber);
+			result.setMessage("OTP has been sent on your specified email id/phone number");
 		}
 		return result;
 	}
