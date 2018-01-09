@@ -1,0 +1,52 @@
+@media screen and (max-width: 1024px) {
+  .base {
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  .slider {
+    white-space: nowrap;
+    width: 100%;
+    height: 58.33vw;
+    position: relative;
+  }
+  .forwards {
+    composes: slider;
+    animation: forward 300ms;
+  }
+  .item {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    transform: scale(0.737);
+    transition: 300ms;
+  }
+  .item:nth-child(1) {
+    left: -83%;
+  }
+  .item:nth-child(2) {
+    left: 0;
+    transform: scale(0.86);
+  }
+  .item:nth-child(3) {
+    left: 83%;
+  }
+  @keyframes forward {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX("-83%");
+    }
+  }
+  @keyframes back {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX("83%");
+    }
+  }
+}
