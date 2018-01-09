@@ -40,9 +40,8 @@ class PasswordInput extends React.Component {
         value={this.props.password}
         rightChild={
           <CircleButton
-            size={20}
             color={"transparent"}
-            icon={<Icon image={this.state.img} />}
+            icon={<Icon image={this.state.img} size={20} />}
             onClick={() => this.onPress()}
           />
         }
