@@ -61,10 +61,20 @@
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 	
-	<cms:pageSlot position="PopularSearch" var="feature" element="div"
-				  class="span-24 section5 cms_disp-img_slot pad20">
-		<cms:component component="${feature}" />
-	</cms:pageSlot>
+	<div class="container footer-links-container">
+    <div class="col-sm-12">
+        <h5 class="collapse-title" data-id="collapse-group-1">
+            <span><spring:theme code="popular.search.title"/></span><span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+        </h5>
+    </div>
+	<div id="collapse-group-1">
+		<cms:pageSlot position="PopularSearch" var="feature" element="div"
+					  class="span-24 section5 cms_disp-img_slot pad20">
+			<cms:component component="${feature}" />
+		</cms:pageSlot>
+	</div>
+	</div>
+
 
 	
 	<div class="modal fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
