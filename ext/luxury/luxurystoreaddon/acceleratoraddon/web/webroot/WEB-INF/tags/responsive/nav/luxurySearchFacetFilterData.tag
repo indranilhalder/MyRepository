@@ -6,7 +6,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="breadcrumb" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/nav/breadcrumb"%>
 <div class="container plp-wrapper">
-	<h1 class="categor-name text-center">
+	<h1 class="categor-name text-center fs24">
 		<c:choose>
 			<c:when test="${isCategoryPage && not empty searchPageData.results && searchPageData.pagination.totalNumberOfResults > 0}">
 				${dropDownText} (${searchPageData.pagination.totalNumberOfResults})
