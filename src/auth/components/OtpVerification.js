@@ -25,7 +25,9 @@ export default class OtpVerification extends React.Component {
     }
   };
   onSubmitOtp = () => {
-    this.props.submitOtp(this.state.otp);
+    if (this.props.submitOtp) {
+      this.props.submitOtp(this.state.otp);
+    }
   };
   handleOtpInput(val) {
     this.setState({ otp: val });
