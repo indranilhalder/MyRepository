@@ -5,7 +5,8 @@ const user = (
     user: null,
     status: null,
     error: null,
-    loading: false
+    loading: false,
+    message: null
   },
   action
 ) => {
@@ -65,6 +66,66 @@ const user = (
         status: action.status,
         error: action.error,
         loading: false
+      });
+
+    case userActions.FORGOT_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case userActions.FORGOT_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        message: action.message
+      });
+
+    case userActions.FORGOT_PASSWORD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        error: action.error
+      });
+
+    case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        message: action.message
+      });
+
+    case userActions.FORGOT_PASSWORD_OTP_VERIFICATION_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        error: action.error
+      });
+
+    case userActions.RESET_PASSWORD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case userActions.RESET_PASSWORD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        message: action.message
+      });
+
+    case userActions.RESET_PASSWORD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        error: action.error
       });
 
     default:
