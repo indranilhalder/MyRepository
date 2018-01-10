@@ -3,7 +3,7 @@ import AuthPopUp from "./AuthPopUp";
 import { Icon, Button } from "xelpmoc-core";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
-import lockIcon from "./img/facebook.svg";
+import lockIcon from "./img/otpLock.svg";
 import ownStyles from "./OtpVerificationStyles.css";
 import { default as styles } from "./AuthPopUp.css";
 import Input from "../../general/components/Input";
@@ -25,7 +25,7 @@ export default class OtpVerification extends React.Component {
     }
   };
   onSubmitOtp = () => {
-    if (this.props.submit) {
+    if (this.props.submitOtp) {
       this.props.submitOtp(this.state.otp);
     }
   };
@@ -79,7 +79,7 @@ export default class OtpVerification extends React.Component {
         <MediaQuery query="(max-device-width: 1023px)">
           <React.Fragment>
             <div className={ownStyles.iconHolder}>
-              <Icon image={lockIcon} size={30} />
+              <Icon image={lockIcon} size={50} />
             </div>
             <div>
               <div className={ownStyles.content}>
@@ -132,5 +132,5 @@ OtpVerification.propTypes = {
 };
 
 OtpVerification.defaultProps = {
-  mobileNumber: "9999999999"
+  mobileNumber: ""
 };

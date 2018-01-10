@@ -28,6 +28,7 @@ it("should return initial state", () => {
     user: null,
     status: null,
     error: null,
+    message: null,
     loading: false
   });
 });

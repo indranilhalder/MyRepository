@@ -1,0 +1,14 @@
+.base {
+  width: 100%;
+  padding-bottom: 133%;
+  position: relative;
+}
+.imageHolder {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: hidden;
+  border-radius: 5px;
+}

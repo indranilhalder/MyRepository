@@ -4,6 +4,11 @@ import * as userActions from "./user.actions.js";
 import thunk from "redux-thunk";
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as user from "../mocks/user.mock";
+import {
+  SIGN_UP_OTP_VERIFICATION,
+  SHOW_MODAL,
+  HIDE_MODAL
+} from "../../general/modal.actions";
 import "../mocks/localStorage.mock";
 let userMock,
   inputDetails,
@@ -133,6 +138,11 @@ describe("User Actions", () => {
     const expectedActions = [
       { type: userActions.SIGN_UP_USER_REQUEST, status: REQUESTING },
       {
+        modalType: SIGN_UP_OTP_VERIFICATION,
+        ownProps: undefined,
+        type: SHOW_MODAL
+      },
+      {
         type: userActions.SIGN_UP_USER_SUCCESS,
         status: SUCCESS
       }
@@ -216,6 +226,10 @@ it("OTP_VERIFICATION", () => {
   const expectedActions = [
     { type: userActions.OTP_VERIFICATION_REQUEST, status: REQUESTING },
     {
+      modalType: null,
+      type: HIDE_MODAL
+    },
+    {
       type: userActions.OTP_VERIFICATION_SUCCESS,
       user: userMock,
       status: SUCCESS
@@ -228,7 +242,7 @@ it("OTP_VERIFICATION", () => {
     );
     expect(store.getActions()).toEqual(expectedActions);
     expect(postMock.mock.calls.length).toBe(1);
-    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION);
+    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION_PATH);
   });
 });
 
@@ -256,6 +270,7 @@ it("OTP_VERIFICATION_FAILURE", () => {
   const store = mockStore(initialState);
   const expectedActions = [
     { type: userActions.OTP_VERIFICATION_REQUEST, status: REQUESTING },
+
     {
       type: userActions.OTP_VERIFICATION_FAILURE,
       status: ERROR,
@@ -266,7 +281,7 @@ it("OTP_VERIFICATION_FAILURE", () => {
   return store.dispatch(userActions.otpVerification(inputDetails)).then(() => {
     expect(store.getActions()).toEqual(expectedActions);
     expect(postMock.mock.calls.length).toBe(1);
-    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION);
+    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION_PATH);
     // expect(postMock.mock.calls[0][1]).toBe(userMock);
   });
 });
