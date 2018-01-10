@@ -5,7 +5,7 @@ import { showModal, RESTORE_PASSWORD } from "../../general/modal.actions.js";
 import Login from "../components/Login.js";
 const mapDispatchToProps = dispatch => {
   return {
-    login: userLoginDetails => {
+    onSubmit: userLoginDetails => {
       dispatch(loginUser(userLoginDetails));
     },
     onForgotPassword: () => {

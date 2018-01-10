@@ -5,25 +5,20 @@
 
 @media screen and (min-width: 1024px) {
   .base {
+    height: 40px;
     border: 2px;
     border-color: #d3d3d3;
     border-style: solid;
     display: flex;
-    margin-top: 20px;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    padding-right: 25px;
   }
 }
 @media screen and (max-width: 1024px) {
   .base {
+    height: 40px;
     border-bottom: 1px;
     border-bottom-color: #d3d3d3;
     border-bottom-style: solid;
     display: flex;
-    margin-top: 20px;
-    padding-bottom: 5px;
-    padding-right: 25px;
   }
   .hollow {
     composes: base;
