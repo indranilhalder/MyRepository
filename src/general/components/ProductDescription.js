@@ -47,13 +47,13 @@ export default class ProductDescription extends Component {
 
           {this.props.discountPrice && (
             <div className={styles.discount}>
-              <Para text={`Rs ${this.props.discountPrice}`} />
+              <Para text={`Rs. ${this.props.discountPrice}`} />
             </div>
           )}
 
           {this.props.price && (
             <div className={priceCancel}>
-              <Para text={`Rs ${this.props.price}`} />
+              <Para text={`Rs. ${this.props.price}`} />
             </div>
           )}
         </div>
