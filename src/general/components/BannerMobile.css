@@ -59,20 +59,4 @@
   .item:nth-child(3) {
     left: 83%;
   }
-  /* @keyframes forwardAnim {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX("-83%");
-    }
-  }
-  @keyframes backAnim {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX("83%");
-    }
-  } */
 }
