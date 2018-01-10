@@ -684,3 +684,6 @@ div.wishlist-content .pagination a.active {
 .list .selectedWishlist {
 	color: #a9143c;		/* add for TISCSS-69 */
 }
+#deleteConfirmation .modal-content, #removeProductConfirmation .modal-content {
+    border: 1px solid;
+}

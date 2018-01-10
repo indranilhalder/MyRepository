@@ -13143,3 +13143,9 @@ a.tab-emi.active{
     top: 32px;
 }
 /* TPR-7417 changes End */
+.pdp-price-text{
+	color: #999;
+    font-size: 14px;
+    padding-right: 10px;
+    text-decoration: none;
+}

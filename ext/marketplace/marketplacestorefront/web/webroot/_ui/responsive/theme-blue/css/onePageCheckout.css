@@ -6034,6 +6034,11 @@ ul.offerui {
 button#continue_payment_after_validate {
     width: 216px ! important;
     margin: 30px ! important;
+    background-color: #a5173c;
+    font-weight: normal !important;
+    line-height: 40px !important;
+    font-size: 12px !important;
+    padding: 0;
 }
 .offer label.numbers {
     cursor: pointer;
@@ -6131,3 +6136,9 @@ span#offer_section_responsive_error_msg {
 	}
 }
 /* TISPRDT-7983 */
+@media (min-width: 1125px)
+{
+	.checkout-order-summary .shipping span.shippingSpan {
+		    width: 70%;
+	}
+}
