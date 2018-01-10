@@ -769,7 +769,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		if (commonUtils.isLuxurySite() && categoryCode != null)
 		{
 			final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-			if (null != filterTerms && !filterTerms.isEmpty())
+			if (StringUtils.isNotBlank(searchQueryData.getFreeTextSearch()))
 			{
 				final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
