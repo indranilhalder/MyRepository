@@ -10,33 +10,26 @@ class PasswordInput extends React.Component {
     super(props);
     this.styles = this.props.styles ? this.props.styles : styles;
     this.state = {
-      isPasswordVisible: this.props.passwordVisible,
-      type: this.props.type,
-      scalerClass: this.styles.scaler
+      isPasswordVisible: this.props.passwordVisible
     };
   }
 
   onPress = () => {
-    if (!this.state.isPasswordVisible) {
-      this.setState({
-        type: "text",
-        isPasswordVisible: true,
-        scalerClass: this.styles.scalerHolder
-      });
-    } else {
-      this.setState({
-        type: "password",
-        isPasswordVisible: false,
-        scalerClass: this.styles.scaler
-      });
-    }
+    this.setState({ isPasswordVisible: !this.state.isPasswordVisible });
   };
 
   render() {
+    let scalerClass = this.styles.scaler;
+    let type = this.props.type;
+
+    if (this.state.isPasswordVisible) {
+      scalerClass = this.styles.scalerHolder;
+      type = "text";
+    }
     return (
       <Input
         {...this.props}
-        type={this.state.type}
+        type={type}
         value={this.props.password}
         rightChild={
           <div className={styles.passWordButton}>
@@ -45,7 +38,7 @@ class PasswordInput extends React.Component {
               icon={<Icon image={this.props.img} size={20} />}
               onClick={this.onPress}
             />
-            <div className={this.state.scalerClass} />
+            <div className={scalerClass} />
           </div>
         }
       />
