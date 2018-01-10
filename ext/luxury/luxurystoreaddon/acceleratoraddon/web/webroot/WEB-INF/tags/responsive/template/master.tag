@@ -140,12 +140,12 @@
 	</c:choose> --%>
 	
 	
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.luxury.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="favHost"/>
 	<!-- Changes for TISPT-113 -->
 	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/> --%>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.luxury.media.url')" var="seoMediaURL"/>
 	
 	<!-- Markup for Google+ -->	
 	<!-- Code Added For INC_11638 - Start -->
