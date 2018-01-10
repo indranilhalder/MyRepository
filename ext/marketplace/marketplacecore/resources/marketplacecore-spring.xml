@@ -1971,10 +1971,20 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- TPR-1285 Dynamic Sitemap Stop -->
 
 	<!-- for promotion price row updater job -->
-	<bean id="promotionPriceUpdaterJob"
+	<bean id="promotionPriceUpdaterJob" 
 		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
 		autowire="byName">
 	</bean>
+	
+	
+	<!-- CAR-330 starts here -->
+	<!-- for entering replica data in CouponUserRestriction table for MyAccount Page -->
+	<bean id="voucherUserRestrictionUpdaterJob" parent="abstractJobPerformable"
+		class="com.tisl.mpl.core.promotion.job.VoucherUserRestrictionUpdaterJob"
+		autowire="byName">
+	</bean>
+	<!-- CAR-330 ends here -->
+	
 
 	<!-- mrupee changes -->
 	<bean id="mplThirdPartyWalletCronJob" parent="abstractJobPerformable"
