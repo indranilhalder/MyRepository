@@ -17409,7 +17409,7 @@ TATA.CommonFunctions = {
             });
         },
         init: function() {
-            this.MobileMenu(), this.HeaderMinicart(); //this.Headermegamenutab();
+            this.MobileMenu(), this.HeaderMinicart(); this.Headermegamenutab();
         }
     },
     Footer: function() {

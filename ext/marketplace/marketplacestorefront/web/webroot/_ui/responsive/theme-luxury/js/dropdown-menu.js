@@ -19,7 +19,7 @@ $(document).ready(function() {
             //show first sub menu tab
             $('.tabs > .tab-link:first-child').addClass('current');
             $('#main-nav > .mega-menu:first-child').addClass('current');
-            $('#main-nav > .mega-menu:first-child > li > a').fadeIn(600);
+            //$('#main-nav > .mega-menu:first-child > li > a').fadeIn(600);
         });
 
 
@@ -35,7 +35,7 @@ $(document).ready(function() {
             $(this).find('.sub-menu .sub-menu-inner').fadeIn(600);
         });
         
-        $(".mega-menu.tab-content").mouseout(function() {
+        $("ul.tabs li,.mega-menu.tab-content").mouseout(function() {
         	$('.tabs > .tab-link:first-child').addClass('current');
         	$('#main-nav > .mega-menu:first-child').addClass('current');
         	$('#main-nav > .mega-menu:first-child > li > a').fadeIn(600);

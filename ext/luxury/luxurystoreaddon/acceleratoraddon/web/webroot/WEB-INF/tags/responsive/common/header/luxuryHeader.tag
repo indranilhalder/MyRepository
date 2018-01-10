@@ -177,7 +177,7 @@
 						<a href="#" class="account-userTitle account-userTitle-custom"></a>
 						<ycommerce:testId code="header_LoggedUser">
 							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-							<span>Your Other usful links</span></div>
+							<span>Your Other useful links</span></div>
 						</ycommerce:testId>
 						
 						</li>
