@@ -82,8 +82,8 @@ class Login extends Component {
                 onClick={() => this.onForgotPassword()}
                 loading={this.props.loading}
                 textStyle={{
-                  color: "#d00",
-                  fontSize: 12,
+                  color: "#FF1744",
+                  fontSize: 14,
                   fontFamily: "regular"
                 }}
               />
@@ -98,8 +98,8 @@ class Login extends Component {
                   onClick={() => this.onForgotPassword()}
                   loading={this.props.loading}
                   textStyle={{
-                    color: "#fff",
-                    fontSize: 12,
+                    color: "#fffff",
+                    fontSize: 14,
                     fontFamily: "regular"
                   }}
                 />
