@@ -50,12 +50,15 @@ export default class BannerMobile extends React.Component {
       this.setState({ direction: "" });
     });
   };
-  animationEnd() {
-    if (this.state.direction === "forward") {
-      this.swapForward();
-    }
-    if (this.state.direction === "back") {
-      this.swapBack();
+  animationEnd(evt) {
+    evt.stopPropagation();
+    if (evt.target.classList.contains(styles.slider)) {
+      if (this.state.direction === "forward") {
+        this.swapForward();
+      }
+      if (this.state.direction === "back") {
+        this.swapBack();
+      }
     }
   }
 
@@ -84,8 +87,8 @@ export default class BannerMobile extends React.Component {
         <div
           className={sliderClass}
           style={{ transform: transformStyle }}
-          onTransitionEnd={() => {
-            this.animationEnd();
+          onTransitionEnd={evt => {
+            this.animationEnd(evt);
           }}
         >
           {this.state.items.map((child, i) => {
