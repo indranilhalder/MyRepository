@@ -1319,3 +1319,12 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     min-width: 200px;
     color: #fff;
 }
+@media (max-width: 767px)
+{
+.sign-in.tab-view .tabs>li {
+    padding: 0 12px ! important;
+}
+}
+.forgot-password-container .actions a{
+	border: 0 !important;
+}
