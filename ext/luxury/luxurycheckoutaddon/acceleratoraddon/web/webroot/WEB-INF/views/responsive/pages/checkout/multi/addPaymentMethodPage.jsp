@@ -16,6 +16,7 @@
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<input type="hidden"  id ="tealiumOrderFlag" value ="${cartToOrderConvert}"  />
 <cart:tealiumCartParameters/>
 				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
 					<button class="close juspayCloseButton" type="button">&times;</button>

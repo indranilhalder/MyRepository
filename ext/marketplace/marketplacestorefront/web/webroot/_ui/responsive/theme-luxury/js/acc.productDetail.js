@@ -1372,7 +1372,8 @@ $(function() {
 																	pdp_pin_delivery : deliverModeTealium.join("_")
 																});
 															/*TPR-642 & 640 ends*/
-
+																 dtmLuxPdpPincode("success",productCode,pin);
+																 console.log("call for dtmLuxPdpPincode:acc.productDetails");
 														} else {
 															//$("#home").hide();
 															//$("#homeli").hide();
@@ -1411,6 +1412,8 @@ $(function() {
 																pdp_pin_delivery : 'error'
 															});
 														/*TPR-642 & 640 ends*/
+															dtmLuxPdpPincode("failure",productCode,pin);
+															console.log("call for dtmLuxPdpPincode:failure:acc.productDetails");
 														}
 													}
 												}
@@ -3030,8 +3033,9 @@ function loadDefaultWishListName_SizeGuide() {
 			e.preventDefault();
 			
 			/*TPR-694*/
-			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
-			
+			utag.link({ "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
+			dtmLuxOfferClick();
+			console.log("call for dtmLuxOfferClick:acc.productDetails");
 			/*TPR-694 ends */
 			//offerPopup($("#promotionDetailsId").html());
 		});
@@ -4172,6 +4176,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		//TPR-429
 		complete: function() {
 			differentiateSeller();
+			differentiateLuxSellerDtm()
+			console.log("call for differentiateLuxSellerDtm:acc.productDetails");
 		}
 		
 	});

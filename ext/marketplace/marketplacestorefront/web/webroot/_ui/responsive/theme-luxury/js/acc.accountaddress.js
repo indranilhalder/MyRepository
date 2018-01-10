@@ -248,6 +248,8 @@ function editAddress(addressId) {
     		
     		var nowValue = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").val();
     		var reasonCode=Rejectionselectedvalue;
+    		var dtmPrdtCat=$("#dtmPrdtCat").val();
+    		var dtmPrdtCode=$("#dtmPrdtCode").val();
     		//TPR-4752 | for order cancellation reason
     		var reasonCancel = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
     	//	console.log("Reasone code : "+Rejectionselectedvalue);
@@ -298,6 +300,7 @@ function editAddress(addressId) {
    			 					   'cancel_order_reason' : reasonCancel
    			 				   });
    			 				}
+         					dtmOrderCancelSuccess(dtmPrdtCode,dtmPrdtCat,reasonCancel);
         				}
         				else{
         					$(".cancellation-request-block #resultTitle").text("Failure!");
@@ -308,6 +311,7 @@ function editAddress(addressId) {
         					if(typeof utag !="undefined"){
         					   utag.link({error_type : 'cancel_confirmation_error'});
         					}
+        					dtmErrorTracking("Order cannot be cancelled","errorname");
         				}
         				
         				//$("#cancelOrder"+orderCode).modal('hide');
@@ -324,6 +328,7 @@ function editAddress(addressId) {
         				if(typeof utag !="undefined"){
         				   utag.link({error_type : 'cancel_confirmation_error'});
         				}
+        				dtmErrorTracking("Order cannot be cancelled","errorname");
         				$("body .spinner,body #no-click").remove();
         			}
         		});

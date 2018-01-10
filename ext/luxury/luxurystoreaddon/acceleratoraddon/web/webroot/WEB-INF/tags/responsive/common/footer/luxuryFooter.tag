@@ -91,19 +91,25 @@
 							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
 						}); */
 			          	//TPR-667 END
-						return true;
-					}
-					
-					else if(data == "mailFormatError"){
-						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
-						return false;
-					}
-				},
-				error : function(data) {
-					alert("Oops something went wrong!!!");
-				}
-			});
+			           
+	                         if (typeof _satellite != "undefined") {
+									_satellite.track('news_letter_sign_up');
+								  }
+								return true;
+							}
+
+							else if (data == "mailFormatError") {
+								$("#error_message").css({
+									"display" : "block"
+								});
+								document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
+								return false;
+							}
+						},
+						error : function(data) {
+							alert("Oops something went wrong!!!");
+						}
+					});
 		}
 	}
 </script>

@@ -77,7 +77,8 @@
 	<!-- Tag for Google Webmaster Tool Verification -->
 	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
 	 <meta name="google-site-verification" content="BinPUCzYwsMCqMgbZ7Dxaik-cMOJPhoXkn4x7sJiM8c" />
-	
+	<!-- injecting adobe staging js on head tag -->
+	<script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-9d27bc3356d4973d37a14f45dd3a41618b35a35astaging.js"></script>
 	
 	<c:set var="host" value="${header.host}"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('update_Email_url')" var="emailURL"/>
@@ -366,7 +367,8 @@
 	
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-
+<!-- injecting satellite obj  for DTM -->	
+<script type="text/javascript">_satellite.pageBottom();</script>
 	
 </body>
 
