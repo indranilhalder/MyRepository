@@ -1,36 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import show_password from "../../general/components/img/show_pwd.svg";
-import hide_password from "../../general/components/img/hide_pwd.svg";
 import Input from "../../general/components/Input";
 import { CircleButton, Icon } from "xelpmoc-core";
+import styles from "./PasswordInput.css";
 
 class PasswordInput extends React.Component {
   constructor(props) {
     super(props);
+    this.styles = this.props.styles ? this.props.styles : styles;
     this.state = {
       isPasswordVisible: this.props.passwordVisible,
       type: this.props.type,
-      img: show_password
+      scalerClass: this.styles.scaler
     };
-    this.styles = this.props.styles;
   }
 
-  onPress() {
+  onPress = () => {
     if (!this.state.isPasswordVisible) {
       this.setState({
         type: "text",
         isPasswordVisible: true,
-        img: hide_password
+        scalerClass: this.styles.scalerHolder
       });
     } else {
       this.setState({
         type: "password",
         isPasswordVisible: false,
-        img: show_password
+        scalerClass: this.styles.scaler
       });
     }
-  }
+  };
 
   render() {
     return (
@@ -39,11 +39,14 @@ class PasswordInput extends React.Component {
         type={this.state.type}
         value={this.props.password}
         rightChild={
-          <CircleButton
-            color={"transparent"}
-            icon={<Icon image={this.state.img} size={20} />}
-            onClick={() => this.onPress()}
-          />
+          <div className={styles.passWordButton}>
+            <CircleButton
+              color={"transparent"}
+              icon={<Icon image={this.props.img} size={20} />}
+              onClick={this.onPress}
+            />
+            <div className={this.state.scalerClass} />
+          </div>
         }
       />
     );
@@ -53,13 +56,15 @@ class PasswordInput extends React.Component {
 PasswordInput.propTypes = {
   passwordVisible: PropTypes.bool,
   type: PropTypes.string,
-  password: PropTypes.string
+  password: PropTypes.string,
+  img: PropTypes.string
 };
 
 PasswordInput.defaultProps = {
   passwordVisible: false,
   type: "Password",
-  password: ""
+  password: "",
+  img: show_password
 };
 
 export default PasswordInput;
