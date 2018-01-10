@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./Banner.css";
-export default class Banner extends React.Component {
+import styles from "./BannerMobile.css";
+export default class BannerMobile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,39 +12,68 @@ export default class Banner extends React.Component {
     };
   }
   swipeStart(evt) {
+    evt.stopPropagation();
     this.setState({ touchStart: evt.touches[0].clientX });
   }
   swipeMove(evt) {
+    evt.stopPropagation();
     this.setState({ touchEnd: evt.touches[0].clientX });
   }
   swipeEnd() {
     if (this.state.touchStart < this.state.touchEnd) {
-      console.log("forward");
       this.slideForward();
     } else {
       this.slideBack();
     }
   }
   slideForward = () => {
-    const items = [];
-    items.push(this.state.items[2]);
-    items.push(this.state.items[0]);
-    items.push(this.state.items[1]);
-    this.setState({ items, direction: "forward" });
+    this.setState({ direction: "forward" });
   };
   slideBack = () => {
+    this.setState({ direction: "back" });
+  };
+  swapForward = () => {
+    const items = [];
+    items.push(this.state.items[2]);
+    items.push(this.state.items[0]);
+    items.push(this.state.items[1]);
+    this.setState({ items }, () => {
+      this.setState({ direction: "" });
+    });
+  };
+  swapBack = () => {
     const items = [];
     items.push(this.state.items[1]);
     items.push(this.state.items[2]);
     items.push(this.state.items[0]);
-    this.setState({ items, direction: "back" });
+    this.setState({ items }, () => {
+      this.setState({ direction: "" });
+    });
   };
   animationEnd() {
-    this.setState({ direction: "" });
+    if (this.state.direction === "forward") {
+      this.swapForward();
+    }
+    if (this.state.direction === "back") {
+      this.swapBack();
+    }
   }
 
   render() {
-    console.log(this.state);
+    let transformStyle = "";
+    let sliderClass = styles.slider;
+    if (this.state.direction === "") {
+      transformStyle = "";
+      sliderClass = styles.slider;
+    }
+    if (this.state.direction === "forward") {
+      transformStyle = `translateX(${83}%)`;
+      sliderClass = styles.forward;
+    }
+    if (this.state.direction === "back") {
+      sliderClass = styles.back;
+      transformStyle = `translateX(${-83}%)`;
+    }
     return (
       <div
         className={styles.base}
@@ -53,8 +82,9 @@ export default class Banner extends React.Component {
         onTouchEnd={evt => this.swipeEnd(evt)}
       >
         <div
-          className={styles.slider}
-          onAnimationEnd={() => {
+          className={sliderClass}
+          style={{ transform: transformStyle }}
+          onTransitionEnd={() => {
             this.animationEnd();
           }}
         >
