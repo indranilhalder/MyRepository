@@ -769,11 +769,14 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		if (commonUtils.isLuxurySite() && categoryCode != null)
 		{
 			final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-			solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
-			solrSearchQueryTermData.setValue(categoryCode);
-			filterTerms.add(solrSearchQueryTermData);
-			searchQueryData.setFilterTerms(filterTerms);
+			if (null != filterTerms && !filterTerms.isEmpty())
+			{
+				final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
+				solrSearchQueryTermData.setValue(categoryCode);
+				filterTerms.add(solrSearchQueryTermData);
+				searchQueryData.setFilterTerms(filterTerms);
+			}
 			searchQueryData.setCategoryCode(categoryCode);
 		}
 		//INC144317341 ends
