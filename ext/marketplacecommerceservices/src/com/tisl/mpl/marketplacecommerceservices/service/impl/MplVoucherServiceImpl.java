@@ -33,13 +33,16 @@ import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.jalo.util.VoucherEntry;
 import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
+import de.hybris.platform.voucher.model.CouponUserRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
+import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -105,7 +108,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
-
 
 	private final static String CODE00 = "00".intern();
 	private final static String CODE01 = "01".intern();
@@ -2321,7 +2323,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	/*
 	 * TPR-7448 (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#getVoucherDiscountValue(de.hybris.platform.
 	 * core.model.order.AbstractOrderModel, de.hybris.platform.voucher.model.VoucherModel)
@@ -2641,6 +2643,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			oModel.setGlobalDiscountValues(globalDiscountList);
 			getModelService().save(oModel);
+			setCartSubTotal(oModel);
 			getModelService().refresh(oModel);
 
 		}
@@ -3434,6 +3437,62 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 
 		return subtotal;
+	}
+
+	/* CAR-330 starts here */
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#fetchUserRestrictionDetails(java.util.Date)
+	 */
+	@Override
+	public List<UserRestrictionModel> fetchUserRestrictionDetails(final Date mplConfigDate)
+	{
+		return mplVoucherDao.fetchUserRestrictionDetails(mplConfigDate);
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#fetchExistingVoucherData(de.hybris.platform
+	 * .voucher.model.VoucherModel)
+	 */
+	@Override
+	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher)
+	{
+		return mplVoucherDao.fetchExistingVoucherData(voucher);
+	}
+
+	/* CAR-330 ends here */
+
+	/**
+	 * The method sets Subtotal
+	 *
+	 * @param oModel
+	 */
+	private void setCartSubTotal(final AbstractOrderModel oModel)
+	{
+		double subtotal = 0.0;
+		if (oModel != null)
+		{
+			final List<AbstractOrderEntryModel> entries = oModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final Long quantity = entry.getQuantity();
+				final Double basePrice = entry.getBasePrice();
+
+				if (quantity != null && basePrice != null)
+				{
+					final double entryTotal = basePrice.doubleValue() * quantity.doubleValue();
+					subtotal += entryTotal;
+				}
+			}
+			oModel.setSubtotal(Double.valueOf(subtotal));
+			modelService.save(oModel);
+		}
 	}
 
 }

@@ -37,8 +37,10 @@
 		<%-- <li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li> --%>
 	</ul>
-	<%--
-	 <ul>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('myAcc.voucher.display.flag')" var="isVoucherToBeDisplayed"/>
+
+    <c:if test="${isVoucherToBeDisplayed eq true }">
+	   <ul>
 		<li class="header-coupon">
 			<h2>
 				<spring:theme code="header.flyout.credits" />
@@ -46,8 +48,8 @@
 		</li>
 		<li id="lnCoupons" <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/coupons')}">class="active"</c:if>><a href="<c:url value="/my-account/coupons?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li>
-	</ul> 
-	--%>
+	  </ul> 
+	</c:if>
 	<ul>
 		<li id="shareHead">
 			<h2>
