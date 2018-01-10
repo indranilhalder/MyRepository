@@ -20,10 +20,17 @@
     border-bottom-style: solid;
     display: flex;
   }
+  .base input {
+    font-size: 14px;
+  }
   .hollow {
     composes: base;
     color: #fff;
     border-bottom-color: #fff;
+  }
+  .hollow input::placeholder {
+    color: #fff;
+    opacity: 0.5;
   }
 }
 .focused {
