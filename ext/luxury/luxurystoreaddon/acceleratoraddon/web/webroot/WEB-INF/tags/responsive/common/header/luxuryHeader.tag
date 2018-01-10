@@ -78,7 +78,7 @@
 							<li class="tab-link" data-tab="${component.uid}">
 							<c:choose>
 								<c:when test="${not empty component.navigationNode.links}">
-									${component.navigationNode.links[0].linkName}
+									<cms:component component="${component.navigationNode.links[0]}" evaluateRestriction="true"/>
 								</c:when>
 								<c:otherwise>
 									${component.navigationNode.title}
