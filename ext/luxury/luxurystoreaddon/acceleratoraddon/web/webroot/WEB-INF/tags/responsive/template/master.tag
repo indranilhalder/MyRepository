@@ -73,7 +73,7 @@
 	
 	
 	<%-- Additional meta tags --%>
-	<htmlmeta:meta items="${metatags}"/>
+	<%-- <htmlmeta:meta items="${metatags}"/> --%>
 	
 	<meta name="keywords" content="${keywords}">
   	<meta name="description" content="${description}">
