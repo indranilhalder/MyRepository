@@ -251,7 +251,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	/**
 	 * TPR-1283 CHANGES
-	 * 
+	 *
 	 * @param categoryCode
 	 * @param searchQuery
 	 * @param page
@@ -438,11 +438,23 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					/* TPR-1283 CHANGES --Starts */
 					//Added for heading change of the PLP of brand facet
-					String supercatcode = categoryCode;
-					if (!commonUtils.isLuxurySite())
+					String supercatcode = null;
+					if (commonUtils.isLuxurySite())
+					{
+						if (categoryCode.length() > 4)
+						{
+							supercatcode = categoryCode.substring(0, 5);
+						}
+						else
+						{
+							supercatcode = categoryCode;
+						}
+					}
+					else
 					{
 						supercatcode = categoryCode.substring(0, 5);
 					}
+
 					if (categoryCode != supercatcode)
 					{
 						final String header = brandName + " " + cateName;
@@ -486,7 +498,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	/**
 	 * INC144317957 CHANGES
-	 * 
+	 *
 	 * @param categoryCode
 	 * @param searchQuery
 	 * @param page
@@ -1790,7 +1802,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 *              in @RequestMapping
 	 * @param categoryCode
 	 * @param searchQuery
-	 * 
+	 *
 	 * @param showMode
 	 * @param sortCode
 	 * @return SearchResultsData<ProductData>
@@ -1866,7 +1878,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	}
 
 	/**
-	 * 
+	 *
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -1892,7 +1904,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	/**
-	 * 
+	 *
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -2167,7 +2179,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	/**
 	 * check if the request contains paging information
-	 * 
+	 *
 	 * @param request
 	 * @return pagination
 	 */
