@@ -335,6 +335,7 @@
 		<property name="friendsInviteMessageText" type="String" />
 		<property name="wishlistNames" type="java.util.List&lt;java.lang.String>" />
 		<property name="category" type="java.util.Map&lt;String,String>" />
+		<property name="message" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ValidateOtpWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">

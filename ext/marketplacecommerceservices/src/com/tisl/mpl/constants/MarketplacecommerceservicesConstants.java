@@ -830,6 +830,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B0014 = "B0014";
 	public static final String B0015 = "B0015";
 	public static final String B0016 = "B0016";
+	public static final String B0017 = "B0017";
 	//My Account Constants ends
 
 	//Mobile web service error codes starts
