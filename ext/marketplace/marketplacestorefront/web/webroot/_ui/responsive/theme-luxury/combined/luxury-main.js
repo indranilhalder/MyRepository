@@ -17379,7 +17379,8 @@ TATA.CommonFunctions = {
                 }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
                 $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");*/
             })), $("#hamburger-menu").on("click", function() {
-                $("body").addClass("menu-open"), $(".header-left .tab-link").first().addClass("current"), 
+            	var curr_menu = sessionStorage.getItem('active-menu');
+                $("body").addClass("menu-open"); if(!curr_menu){$(".header-left .tab-link").first().addClass("current");} 
                 $(".main-nav .tab-content").first().addClass("current");
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");

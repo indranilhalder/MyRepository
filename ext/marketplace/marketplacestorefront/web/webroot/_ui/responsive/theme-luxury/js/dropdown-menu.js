@@ -103,6 +103,7 @@ $(document).ready(function() {
     }
     
     function executeForMobile(){
+    	$('ul.tabs li > a').attr('href','#');
     	$('.tabs .tab-link a').click(function(e) {
     	    e.preventDefault();
     	    $(this).parent().siblings().removeClass('current');

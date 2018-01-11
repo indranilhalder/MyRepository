@@ -8,12 +8,13 @@
 
 
 <c:set var = "sessionid" value = "true" scope="page"/>
-
+<c:set var = "compId" value ="${components[0].uid}"/>
 
 <c:forEach items="${components}" var="component">
 	<c:if test="${component.navigationNode.visible}">
+	
 	<c:if test="${pageScope.sessionid}"> 
-	<ul  class="mega-menu  tab-content current" id="${component.uid}">
+	<ul  class="mega-menu  tab-content current" id="${compId}">
 	</c:if>
 	<c:if test="${!pageScope.sessionid}"> 
 		<ul  class="mega-menu  tab-content" id="${component.uid}">
@@ -24,7 +25,3 @@
 	</c:if>
 	<c:set var = "sessionid" value = "false" scope="page"/>
 </c:forEach>
-
-
-
-
