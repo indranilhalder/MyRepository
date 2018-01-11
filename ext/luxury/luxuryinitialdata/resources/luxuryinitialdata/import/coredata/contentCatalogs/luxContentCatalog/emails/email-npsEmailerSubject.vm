@@ -1,1 +1,1 @@
-Delivery confirmation and Feedback of your Order Number ${ctx.transactionId}
+Delivery confirmation and Feedback of your Transaction Reference ID ${ctx.transactionId}
