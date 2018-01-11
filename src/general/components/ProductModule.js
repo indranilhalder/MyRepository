@@ -21,12 +21,13 @@ export default class ProductModule extends React.Component {
         <div className={styles.imageHolder} onClick={this.onClick}>
           <ProductImage image={this.props.productImage} />
         </div>
-        <div className={styles.content} />
-        <ProductDescription
-          {...this.props}
-          icon={downloadIcon}
-          onDownload={this.onDownload}
-        />
+        <div className={styles.content}>
+          <ProductDescription
+            {...this.props}
+            icon={downloadIcon}
+            onDownload={this.onDownload}
+          />
+        </div>
       </div>
     );
   }
