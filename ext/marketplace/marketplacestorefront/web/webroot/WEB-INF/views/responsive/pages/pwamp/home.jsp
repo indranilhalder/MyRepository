@@ -152,43 +152,35 @@
 			Department<i class="fa fa-angle-right"></i>
 		</h4>
 		<amp-accordion class="sidebar-menu l2-accordian">
+		<c:forEach items="${component.components}" var="component" varStatus="i">	
 		<section>
 			<h4 class="l2-options">
-				Women<i class="fa fa-angle-right"></i>
+				<a href="${component.link.url}">${component.navigationNode.title}</a><i class="fa fa-angle-right"></i>
 			</h4>
 			<amp-accordion class="sidebar-menu l3-accordian">
+			<c:if test="${not empty component.navigationNode.children}">
 			<section>
+			<c:forEach items="${component.navigationNode.children}" var="child1">
+				<c:forEach items="${child1.children}" var="child">
+					<c:if test="${child.visible}">
 				<h4 class="l3-options">
-					Ethnic wear<i class="fa fa-angle-right"></i>
+					<a href="${child.links[0].url}">${child.title}</a>
+					<i class="fa fa-angle-right"></i>
 				</h4>
+				
 				<ul>
-					<li><a href="#">Kurtis And Kurtas</a></li>
-					<li><a href="#">Suit Sets</a></li>
-					<li><a href="#">Fusion Wear</a></li>
+				<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
+					<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+				</c:forEach>
 				</ul>
+				</c:if>
+				</c:forEach>
+			</c:forEach>
 			</section>
-			<section>
-				<h4 class="l3-options">
-					Inner & Nightwear<i class="fa fa-angle-right"></i>
-				</h4>
-				<ul>
-					<li><a href="#">Bras</a></li>
-					<li><a href="#">Panties</a></li>
-					<li><a href="#">Lingerie Sets</a></li>
-				</ul>
-			</section>
-			<section>
-				<h4 class="l3-options">
-					Western Wear<i class="fa fa-angle-right"></i>
-				</h4>
-				<ul>
-					<li><a href="#">Tops & Tees</a></li>
-					<li><a href="#">Dresses</a></li>
-					<li><a href="#">Shirts</a></li>
-				</ul>
-			</section>
+			</c:if>
 			</amp-accordion>
 		</section>
+		</c:forEach>
 		</amp-accordion>
 	</section>
 	<section>

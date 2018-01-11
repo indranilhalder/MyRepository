@@ -5,7 +5,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarComponentModel;
-import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
@@ -58,6 +57,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
@@ -80,7 +80,6 @@ import com.tisl.mpl.storefront.web.data.MplAutocompleteResultData;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.DepartmentHierarchyData;
-import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.DepartmentSubHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData;
 
@@ -91,7 +90,7 @@ import com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData;
  */
 @Controller
 @RequestMapping(value = "/pwamp")
-public class HomePagePwAmpController extends AbstractPageController
+public class HomePagePwAmpController extends HomePageController
 {
 
 	private static final String VERSION = "version";
@@ -131,7 +130,8 @@ public class HomePagePwAmpController extends AbstractPageController
 	private static final String STRIKE_PRICE = "strikePrice";
 
 	@RequestMapping(method = RequestMethod.GET)
-	String pwampHome(final HttpServletRequest request, final HttpServletResponse response, final Model model)
+	String pwampHome(final HttpServletRequest request, final HttpServletResponse response, final Model model,
+			final RedirectAttributes redirectModel)
 	{
 		final Cookie[] cookies = request.getCookies();
 
@@ -150,6 +150,14 @@ public class HomePagePwAmpController extends AbstractPageController
 			}
 			model.addAttribute("sessionId", request.getSession().getId());
 			model.addAttribute("visitorIp", getVisitorIp(request));
+		}
+		try
+		{
+			this.home(false, model, redirectModel, request);
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error("HomePagePwAmpController :: pwampHome" + e.getMessage());
 		}
 		return "/pages/pwamp/home";
 	}
@@ -179,6 +187,7 @@ public class HomePagePwAmpController extends AbstractPageController
 	 * @param version
 	 * @return JSONObject
 	 */
+	@Override
 	@SuppressWarnings("boxing")
 	@ResponseBody
 	@RequestMapping(value = "/getHomePageBanners", method = RequestMethod.GET)
@@ -310,6 +319,7 @@ public class HomePagePwAmpController extends AbstractPageController
 		return ampObj;
 	}
 
+	@Override
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLove", method = RequestMethod.GET)
 	public JSONObject getBrandsYouLove(@RequestParam(VERSION) final String version)
@@ -371,6 +381,7 @@ public class HomePagePwAmpController extends AbstractPageController
 
 	}
 
+	@Override
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
 	public JSONObject getBestPicks(@RequestParam(VERSION) final String version)
@@ -406,6 +417,7 @@ public class HomePagePwAmpController extends AbstractPageController
 		return ampObj;
 	}
 
+	@Override
 	@ResponseBody
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
 	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version)
@@ -440,6 +452,7 @@ public class HomePagePwAmpController extends AbstractPageController
 	}
 
 	/* Home Page StayQued */
+	@Override
 	@SuppressWarnings("boxing")
 	@ResponseBody
 	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
@@ -483,6 +496,7 @@ public class HomePagePwAmpController extends AbstractPageController
 
 	}
 
+	@Override
 	@ResponseBody
 	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
 	public JSONObject getNewAndExclusive(@RequestParam(VERSION) final String version)
@@ -649,6 +663,7 @@ public class HomePagePwAmpController extends AbstractPageController
 
 	}
 
+	@Override
 	@ResponseBody
 	@RequestMapping(value = "/getCollectionShowcase", method = RequestMethod.GET)
 	public JSONObject getCollectionShowcase(@RequestParam(VERSION) final String version)
