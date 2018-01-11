@@ -27,20 +27,26 @@ export default class Follow extends Component {
   }
 
   render() {
+    let text = this.props.text;
+    let width = this.props.width;
     if (this.state.isFollow) {
       this.onFollowClick();
+      text = "Following";
+      width = 100;
     } else {
       this.onUnFollowClick();
+      text = "Follow";
+      width = 80;
     }
 
     return (
       <CoreButton
-        width={80}
+        width={width}
         height={36}
         backgroundColor={"transparent"}
         borderRadius={100}
         borderColor={"#FFFFFF"}
-        label={"Follow"}
+        label={text}
         textStyle={{
           color: "#FFFFFF",
           fontSize: 14,
@@ -59,5 +65,7 @@ Follow.PropTypes = {
 };
 
 Follow.defaultProps = {
-  follow: false
+  follow: false,
+  text: "Follow",
+  width: 80
 };
