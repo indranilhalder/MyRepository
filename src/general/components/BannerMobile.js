@@ -4,12 +4,21 @@ export default class BannerMobile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: this.props.children
+      visibleItems: this.props.children
         ? React.Children.map(this.props.children, (child, i) => {
-            return child;
+            if (i < 3) {
+              return child;
+            }
           })
-        : null
+        : null,
+      numberOfItems: React.Children.count(this.props.children),
+      position: 2
     };
+    this.items = this.props.children
+      ? React.Children.map(this.props.children, (child, i) => {
+          return child;
+        })
+      : null;
   }
   swipeStart(evt) {
     evt.stopPropagation();
@@ -33,21 +42,40 @@ export default class BannerMobile extends React.Component {
     this.setState({ direction: "back" });
   };
   swapForward = () => {
-    const items = [];
-    items.push(this.state.items[2]);
-    items.push(this.state.items[0]);
-    items.push(this.state.items[1]);
-    this.setState({ items }, () => {
-      this.setState({ direction: "" });
+    const visibleItems = [];
+
+    const position = (this.state.position - 1) % this.state.numberOfItems;
+    let normalPosition = position;
+    if (normalPosition < 0) {
+      normalPosition = this.state.numberOfItems + normalPosition;
+    }
+    this.setState({ position: normalPosition }, () => {
+      visibleItems.push(this.state.visibleItems[2]);
+      visibleItems.push(this.state.visibleItems[0]);
+      visibleItems.push(this.items[this.state.position]);
+      this.setState({ visibleItems }, () => {
+        this.setState({ direction: "" });
+      });
+      console.log(this.state.position);
     });
   };
+
   swapBack = () => {
-    const items = [];
-    items.push(this.state.items[1]);
-    items.push(this.state.items[2]);
-    items.push(this.state.items[0]);
-    this.setState({ items }, () => {
-      this.setState({ direction: "" });
+    const visibleItems = [];
+    const position = (this.state.position + 1) % this.state.numberOfItems;
+    this.setState({ position }, () => {
+      visibleItems.push(this.state.visibleItems[1]);
+      visibleItems.push(this.state.visibleItems[2]);
+      // if (this.items[this.state.position] && this.state.position > 2) {
+      //   visibleItems.push(this.items[this.state.position]);
+      // } else {
+      //   visibleItems.push(this.state.visibleItems[0]);
+      // }
+      visibleItems.push(this.items[this.state.position]);
+      this.setState({ visibleItems }, () => {
+        this.setState({ direction: "" });
+      });
+      console.log(this.state.position);
     });
   };
   animationEnd(evt) {
@@ -91,7 +119,7 @@ export default class BannerMobile extends React.Component {
             this.animationEnd(evt);
           }}
         >
-          {this.state.items.map((child, i) => {
+          {this.state.visibleItems.map((child, i) => {
             return (
               <div className={styles.item} key={i}>
                 {child}
