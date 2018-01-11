@@ -3641,5 +3641,9 @@
 		<property name="status" type="String" />		
 	</bean>
 		
-	
+	<bean class="com.tisl.mpl.wsdto.ComponentRequestDTO">
+		<property name="widgetPlatform" type="String" />
+		<property name="mbox" type="String" />
+		<property name="mboxParameters" type="String" />				
+	</bean>
 </beans>
