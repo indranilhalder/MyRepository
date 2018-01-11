@@ -5,6 +5,10 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.CartModel;
@@ -12,6 +16,8 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -26,6 +32,7 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,17 +68,24 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.CliqCashWsDto;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 
 
 /**
@@ -132,6 +147,22 @@ public class PaymentServicesController extends BaseController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
+	
+	@Autowired 
+	private MplWalletFacade mplWalletFacade;
+
+	@Resource(name = "mplDefaultPriceDataFactory")
+	private DefaultPriceDataFactory PriceDataFactory;
+	
+	@Autowired
+	private MplEGVCartService mplEGVCartService;
+	
+	@Autowired
+	private NotificationFacade notificationFacade;
+	
+
+	
+	
 
 	/**
 	 * @return the voucherService
@@ -359,6 +390,24 @@ public class PaymentServicesController extends BaseController
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
 						}
+						
+						if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+						{
+							
+							if (null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D )
+							{
+								promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
+								promoPriceData.setCliqCashApplied(true);
+							}
+						}
+						else if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
+						{
+							promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+							promoPriceData.setCliqCashApplied(true);
+						}else {
+							promoPriceData.setPaybleAmount(cart.getTotalPrice());
+							promoPriceData.setCliqCashApplied(false);
+						}
 					}
 					else
 					{
@@ -409,6 +458,24 @@ public class PaymentServicesController extends BaseController
 				else
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
+				}
+				
+				if (null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+				{
+					
+					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D )
+					{
+						promoPriceData.setPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue()));
+						promoPriceData.setCliqCashApplied(true);
+					}
+				}
+				else if (null != orderModel.getSplitModeInfo() &&  orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
+				{
+					promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+					promoPriceData.setCliqCashApplied(true);
+				}else {
+					promoPriceData.setPaybleAmount(orderModel.getTotalPrice());
+					promoPriceData.setCliqCashApplied(false);
 				}
 			}
 
@@ -1222,9 +1289,43 @@ public class PaymentServicesController extends BaseController
 			LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
 					userId, juspayOrderID));
 		}
-		OrderModel orderToBeUpdated = null;
+		OrderModel orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 		String statusResponse = "";
 		boolean alreadyProcessed = false;
+		
+//		// Buying Of EGV Changes Start 
+//		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
+		if (orderToBeUpdated != null && null != orderToBeUpdated.getIsEGVCart() && orderToBeUpdated.getIsEGVCart().booleanValue())
+		{
+			OrderData orderData = null;
+
+			try
+			{
+				orderData = getEGVOrderStatus(cartGuid);
+				if(null != orderData) {
+					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+					updateTransactionDetail.setOrderId(orderData.getCode());
+				}else {
+					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+				}
+				return updateTransactionDetail;
+			}
+			catch (InvalidCartException e)
+			{
+				LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+				updateTransactionDetail.setError(e.getMessage());
+			}
+			catch (CalculationException e)
+			{
+				LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+			}
+			return updateTransactionDetail;
+		}
+		
+	 // Buying Of EGV Changes End 
+		
 		try
 		{
 			//final String orderGuid = decryptKey(guid);
@@ -1263,6 +1364,22 @@ public class PaymentServicesController extends BaseController
 							if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(statusResponse))
 							{
 								//return placeOrder(model, redirectAttributes);
+								
+							// Paying The remaining amount through Wallet 
+								try {
+									LOG.debug(" Paying Amount From QC ");
+									if(null != orderToBeUpdated.getSplitModeInfo() && 
+											orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT) ){
+									double amountDeducted = payAmountThroughWallet(orderToBeUpdated);
+									if( amountDeducted>0.0D) {
+									  updateTransactionDetail.setCliqCashAmountDeducted(Double.valueOf(amountDeducted));
+										updateTransactionDetail.setCliqCashApplied(true);
+									}
+									}
+								}catch (Exception e) {
+									LOG.error("Exception occurred whil paying from QC"+e.getMessage());
+								}
+								
 								if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
 								{
 									updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
@@ -1370,6 +1487,141 @@ public class PaymentServicesController extends BaseController
 	}
 
 
+	
+	
+	public double payAmountThroughWallet(OrderModel order)
+	{
+   
+		LOG.info("paying amount from EGV Wallet");
+		double amountDeducted = 0.0D;
+		//final OrderData orderData;
+		//final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
+		QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+		try
+		{
+			final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			
+			final double WalletAmt = order.getPayableWalletAmount().doubleValue();
+			final double totalAmt = order.getTotalPrice().doubleValue();
+			final double juspayAmount = totalAmt - WalletAmt;
+			amountDeducted = WalletAmt;
+
+			qcResponse = mplPaymentFacade.createQCOrderRequest(order.getGuid(), order,
+					currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
+					qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE, WalletAmt, juspayAmount);
+			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+			{
+				order.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+				modelService.save(order);
+			}
+
+			else if (null == qcResponse || null == qcResponse.getResponseCode())
+			{
+
+				order.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+				modelService.save(order);
+			}
+
+		}
+		catch (final Exception ex)
+		{
+
+			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
+			{
+				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+				modelService.save(order);
+			}
+		}
+		return amountDeducted;
+	}
+	// Buying Of EGV  Changes START 
+	private OrderData getEGVOrderStatus(final String guid)
+			throws InvalidCartException, CalculationException
+	{
+		 OrderData orderData = new OrderData();
+		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+		String orderStatusResponse = null;
+		orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
+		//Redirection when transaction is successful i.e. CHARGED
+		if (null != orderStatusResponse)
+		{
+			if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+			{
+				orderData= updateOrder(orderToBeUpdated);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9322);
+			}
+		}
+		else
+		{
+			return updateOrder(orderToBeUpdated);
+		}
+		return orderData;
+	}
+	
+	
+	
+	/**
+	 * This method updates already created order as per new Payment Soln - Order before Payment TPR-629
+	 *
+	 * @param orderToBeUpdated
+	 * @return String
+	 * @throws InvalidCartException
+	 * @throws CalculationException
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	private OrderData updateOrder(final OrderModel orderToBeUpdated)
+			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
+	{
+		LOG.debug("========================Inside Update Order============================");
+		 OrderData orderData=null;
+		try
+		{
+			if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
+			{
+				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
+				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
+
+				//order confirmation email and sms
+				notificationFacade.sendOrderConfirmationNotification(orderToBeUpdated);
+
+				 orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+
+			}
+			else if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
+			{
+				 orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+			}
+			else if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+			}
+			else
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return orderData;
+	}
+
+
+	// Buying Of EGV  Changes END 
+	
 	/**
 	 * @desc This method fetches delete the saved cards --TPR-629
 	 *
@@ -1384,6 +1636,7 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		CartModel cart = null;
 		OrderModel orderModel = null;
+		boolean isEgvOrder = false;
 		//CAR-111
 		//final CartData cartData = null;
 		//OrderData orderData = null;
@@ -1396,8 +1649,9 @@ public class PaymentServicesController extends BaseController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if (cart != null)
-				{
+				if(null !=cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()) {
+					isEgvOrder = true;
+				}
 					//CAR-111
 					//cartData = getMplExtendedCartConverter().convert(cart);
 					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
@@ -1405,14 +1659,17 @@ public class PaymentServicesController extends BaseController
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
 					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
+					paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					cart.setPayableWalletAmount(Double.valueOf(0.0D));
+					modelService.save(cart);
+					modelService.refresh(cart);
 			}
 			else
 			{
+					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()) {
+						isEgvOrder = true;
+					}
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
@@ -1421,18 +1678,116 @@ public class PaymentServicesController extends BaseController
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
+                                paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+					modelService.save(orderModel);
+					modelService.refresh(orderModel);
 			}
-			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
-					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+			/* Added for cliq Cash Functionality start */
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+			try
+			{
+				LOG.debug("Getting saved Card Details");
+				final MplSavedCardDTO savedCards = new MplSavedCardDTO();
 
-			final String juspayMerchantId = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
-			paymentModesData.setMerchantID(juspayMerchantId);
-			paymentModesData.setMerchantKey(juspayMerchantKey);
+				Map<Date, SavedCardData> savedCardsMap = new TreeMap<Date, SavedCardData>();
+				Map<Date, SavedCardData> savedDebitCards = new TreeMap<Date, SavedCardData>();
+				savedCardsMap = getMplPaymentFacade().listStoredCreditCards(customer);
+				LOG.debug("savedCardsMap " + savedCardsMap);
+				savedDebitCards = getMplPaymentFacade().listStoredDebitCards(customer);
+				// Add everything in savedCardsMap from savedDebitCards
+				savedCardsMap.putAll(savedDebitCards);
+				//Adding details into DTO
+				savedCards.setSavedCardDetailsMap(savedCardsMap);
+
+				paymentModesData.setSavedCardResponse(savedCards);
+				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			catch (Exception e)
+			{
+				LOG.error("Exception occurred while getting the saved credit card details " + e.getMessage());
+			}
+         
+			if(!isEgvOrder) {
+				boolean EnabledSplitPaymentModeForMobile = false;
+				if(null != configurationService.getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.ENABLED_SPILT_PAYMENT_FORMOBILE)) {
+					final String splitModeEnabledStringValue = configurationService.getConfiguration()
+							.getString(MarketplacecommerceservicesConstants.ENABLED_SPILT_PAYMENT_FORMOBILE).trim();
+					if(null != splitModeEnabledStringValue){
+						EnabledSplitPaymentModeForMobile =Boolean.valueOf(splitModeEnabledStringValue).booleanValue();
+					}
+				}
+				
+				if(EnabledSplitPaymentModeForMobile){
+					
+					LOG.debug("Split Payment Mode Enabled For Mobile");
+					try
+					{
+						LOG.debug("Getting saved Clish Cash Details");
+						CliqCashWsDto cliqCash = new CliqCashWsDto();
+						TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
+						if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
+								&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
+						{
+
+							CustomerWalletDetailResponse responce = mplWalletFacade
+									.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
+							if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())
+							{
+
+								if (null != responce.getApiWebProperties() && null != responce.getApiWebProperties().getDateAtClient())
+								{
+									cliqCash.setBalanceClearedAsOf(responce.getApiWebProperties().getDateAtClient());
+								}
+
+								final BigDecimal walletAmount = new BigDecimal(responce.getWallet().getBalance().doubleValue());
+								final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
+										MarketplacecommerceservicesConstants.INR);
+
+								if (null != priceData)
+								{
+									totalCliqCashBalanceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+									totalCliqCashBalanceWsDto.setDoubleValue(priceData.getDoubleValue());
+									totalCliqCashBalanceWsDto.setFormattedValue(priceData.getFormattedValue());
+									totalCliqCashBalanceWsDto.setPriceType(priceData.getPriceType());
+									totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+									totalCliqCashBalanceWsDto.setValue(priceData.getValue());
+									paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+								}
+								cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
+								paymentModesData.setCliqCash(cliqCash);
+							}
+						}else {
+							final BigDecimal walletAmount = new BigDecimal(0.0D);
+							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
+									MarketplacecommerceservicesConstants.INR);
+
+							if (null != priceData)
+							{
+								totalCliqCashBalanceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+								totalCliqCashBalanceWsDto.setDoubleValue(priceData.getDoubleValue());
+								totalCliqCashBalanceWsDto.setFormattedValue(priceData.getFormattedValue());
+								totalCliqCashBalanceWsDto.setPriceType(priceData.getPriceType());
+								totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+								totalCliqCashBalanceWsDto.setValue(priceData.getValue());
+								paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							}
+							cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
+							paymentModesData.setCliqCash(cliqCash);
+						}
+					}
+					catch (Exception e)
+					{
+						LOG.debug("Exception occurred while getting customer QC wallet Amount" + e.getMessage());
+					}
+				}else {
+					LOG.debug("Split Payment Mode Not Enabled For Mobile");
+				}
+				
+			}
+			/* Added for cliq Cash Functionality end */
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
