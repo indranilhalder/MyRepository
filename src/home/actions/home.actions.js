@@ -32,11 +32,14 @@ export function homeFeedFailure(error) {
 }
 
 export function homeFeed() {
+  console.log("HOME FEED");
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
       const result = await api.get(HOME_FEED_PATH);
       const resultJson = await result.json();
+      console.log("RESULTS JSOn");
+      console.log(resultJson);
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }

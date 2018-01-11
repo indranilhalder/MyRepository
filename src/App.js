@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import { Button } from "xelpmoc-core";
 import ModalContainer from "./general/containers/ModalContainer";
-import { Route, Redirect } from "react-router-dom";
-
-import { RESTORE_PASSWORD, OTP_VERIFICATION } from "./general/modal.actions.js";
+import { Route, Switch } from "react-router-dom";
 import { default as AppStyles } from "./App.css";
-import MediaQuery from "react-responsive";
 import Auth from "./auth/components/MobileAuth.js";
+import HomeContainer from "./home/containers/HomeContainer.js";
 class App extends Component {
   render() {
     let className = AppStyles.base;
@@ -16,8 +13,10 @@ class App extends Component {
 
     return (
       <div className={className}>
-        <Route path="/" component={Auth} />
-
+        <Switch>
+          <Route path="/home" component={HomeContainer} />
+          <Route path="/" component={Auth} />
+        </Switch>
         <ModalContainer />
       </div>
     );

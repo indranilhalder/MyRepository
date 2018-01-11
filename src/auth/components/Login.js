@@ -20,6 +20,7 @@ class Login extends Component {
   }
   onSubmit = () => {
     if (this.props.onSubmit) {
+      this.props.homeFeed();
       this.props.onSubmit({
         email: this.state.emailValue,
         password: this.state.passwordValue
