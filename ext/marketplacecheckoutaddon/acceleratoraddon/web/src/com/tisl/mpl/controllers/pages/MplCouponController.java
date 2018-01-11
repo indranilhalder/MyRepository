@@ -370,20 +370,22 @@ public class MplCouponController
 	private VoucherDiscountData reapplyCartCoupon(final VoucherDiscountData data, final String cartCouponCode,
 			final CartModel cartModel)
 	{
-		final VoucherDiscountData dataPojo = data;
+		VoucherDiscountData dataPojo = data;
 		try
 		{
 			final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, cartModel, null);
 			final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(null, cartModel, applyStatus, true,
 					cartCouponCode);
 
-			data.setTotalDiscount(newData.getTotalDiscount());
-			data.setTotalPrice(newData.getTotalPrice());
+			dataPojo.setTotalDiscount(newData.getTotalDiscount());
+			dataPojo.setTotalPrice(newData.getTotalPrice());
 
 		}
 		catch (final VoucherOperationException e)
 		{
 			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+			dataPojo = setDiscountDataForException(dataPojo, cartModel);
+			dataPojo.setCartcouponRedeemError("ERROR");
 		}
 		catch (final Exception e)
 		{
@@ -404,20 +406,22 @@ public class MplCouponController
 	private VoucherDiscountData reapplyCartCoupon(final VoucherDiscountData data, final String cartCouponCode,
 			final OrderModel oModel)
 	{
-		final VoucherDiscountData dataPojo = data;
+		VoucherDiscountData dataPojo = data;
 		try
 		{
 			final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, null, oModel);
 			final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(oModel, null, applyStatus, true,
 					cartCouponCode);
 
-			data.setTotalDiscount(newData.getTotalDiscount());
-			data.setTotalPrice(newData.getTotalPrice());
+			dataPojo.setTotalDiscount(newData.getTotalDiscount());
+			dataPojo.setTotalPrice(newData.getTotalPrice());
 
 		}
 		catch (final VoucherOperationException e)
 		{
 			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+			dataPojo = setDiscountDataForException(dataPojo, oModel);
+			dataPojo.setCartcouponRedeemError("ERROR");
 		}
 		catch (final Exception e)
 		{
@@ -957,6 +961,43 @@ public class MplCouponController
 
 		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(abstractOrderModel, abstractOrderModel.getTotalPriceWithConv()));
 		errorData.setCouponRedeemed(false);
+
+		return errorData;
+	}
+
+
+	/**
+	 * Returns Discount Value
+	 *
+	 * @param data
+	 * @param abstractOrderModel
+	 * @return errorData
+	 */
+	private VoucherDiscountData setDiscountDataForException(final VoucherDiscountData data,
+			final AbstractOrderModel abstractOrderModel)
+	{
+		final VoucherDiscountData errorData = data;
+		double totalDiscount = 0.0;
+
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<>(abstractOrderModel.getEntries());
+		if (CollectionUtils.isNotEmpty(entryList))
+		{
+			for (final AbstractOrderEntryModel oModel : entryList)
+			{
+				final Double mrp = oModel.getMrp();
+				final Double entryPrice = (null == oModel.getTotalPrice() ? Double.valueOf(0) : oModel.getTotalPrice());
+				final int quantity = oModel.getQuantity().intValue();
+
+				final Double cartDiscount = (null == oModel.getCartLevelDisc() ? Double.valueOf(0) : oModel.getCartLevelDisc());
+
+
+				final double value = (mrp.doubleValue() * quantity) - entryPrice.doubleValue();
+
+				totalDiscount += value + cartDiscount.doubleValue();
+			}
+		}
+
+		errorData.setTotalDiscount(getMplCheckoutFacade().createPrice(abstractOrderModel, Double.valueOf(totalDiscount)));
 
 		return errorData;
 	}

@@ -127,4 +127,11 @@ public interface BuyBoxService
 	 * @return String
 	 */
 	public String getSellerMonogrammingMsg(String productCode, String sellerId);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	//SDI-4195
+	List<BuyBoxModel> getBuyboxStockForSearch(String productCode) throws EtailNonBusinessExceptions;
 }

@@ -1907,10 +1907,10 @@ ACC.singlePageCheckout = {
 	    	      	}*/
         			//If data.validation=="success" set prePaymentValidationDone to true
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
-        			if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
+        			//if(ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled == false) {	
         				recalculateCart();
         				ACC.singlePageCheckout.mobileValidationSteps.isApplypromoCalled=true;
-        			}
+        			//}
         			
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
@@ -3624,9 +3624,12 @@ ACC.singlePageCheckout = {
 	showAllOffers:function(){
 		//$(".offer_container_poppup").show();
 		ACC.singlePageCheckout.paymentOffersPopup($(".offer_container_poppup").html());
-		$(".offer_container_poppup").remove();
+		//$(".offer_container_poppup").remove();
 	},	
-	paymentOffersPopup:function(data){		
+	paymentOffersPopup:function(data){
+		if($("#paymentoffersPopup").length) {
+		         $("#paymentoffersPopup").remove();
+	          }
      	   $("body").append('<div class="modal fade" id="paymentoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 
 		   $("#paymentoffersPopup").modal('show');	 

@@ -108,6 +108,8 @@ public interface MplCustomAddressFacade
 	 */
 	Double populateDeliveryMethodData(String deliveryCode, String sellerArticleSKU, CartModel cartModel);
 
+	Double populateDeliveryMethodDataMobile(String deliveryCode, String sellerArticleSKU, CartModel cartModel);
+
 	/**
 	 * It is responsible for fetching Cart Data
 	 *

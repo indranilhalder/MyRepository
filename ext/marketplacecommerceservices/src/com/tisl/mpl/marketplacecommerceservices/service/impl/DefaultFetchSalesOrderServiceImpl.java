@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.util.Date;
 import java.util.List;
@@ -180,24 +181,24 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService#fetchSpecifiedDataForPymntScss(java.util
 	 * .Date, java.util.Date)
 	 */
 	@Override
-	public List<OrderModel> fetchSpecifiedDataForPymntScss(final Date mplConfigDate, final Date startTime)
+	public SearchResult<List<Object>> fetchSpecifiedDataForPymntScss(final Date mplConfigDate, final Date startTime)
 	{
 		return fetchSalesOrderDao.getOmsSubmissionPendingOrderList(mplConfigDate, startTime);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService#fetchSpecifiedDataForPymntScss()
 	 */
 	@Override
-	public List<OrderModel> fetchSpecifiedDataForPymntScss()
+	public SearchResult<List<Object>> fetchSpecifiedDataForPymntScss()
 	{
 		return fetchSalesOrderDao.getOmsSubmissionPendingOrderList();
 	}

@@ -359,8 +359,8 @@ public class CartsController extends BaseCommerceController
 			return cmd1;
 		}
 		final CartModificationData cmd = new CartModificationData();
-		cmd.setDeliveryModeChanged(Boolean
-				.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged()) || Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
+		cmd.setDeliveryModeChanged(Boolean.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged())
+				|| Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
 		cmd.setEntry(cmd2.getEntry());
 		cmd.setQuantity(cmd2.getQuantity());
 		cmd.setQuantityAdded(cmd1.getQuantityAdded() + cmd2.getQuantityAdded());
@@ -412,9 +412,8 @@ public class CartsController extends BaseCommerceController
 		final OrderEntryData entryToBeModified = getCartEntry(currentCart, currentEntry.getProduct().getCode(), newPickupStore);
 		if (entryToBeModified != null && !entryToBeModified.equals(currentEntry))
 		{
-			throw new CartEntryException(
-					"Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
-							+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
+			throw new CartEntryException("Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
+					+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
 					CartEntryException.AMBIGIOUS_ENTRY, entryToBeModified.getEntryNumber().toString());
 		}
 	}
@@ -704,8 +703,7 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/entries", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderEntryListWsDTO getCartEntries(
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public OrderEntryListWsDTO getCartEntries(@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1502,8 +1500,8 @@ public class CartsController extends BaseCommerceController
 	{ TRUSTED_CLIENT })
 	@RequestMapping(value = "/{cartId}/promotions/{promotionId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void removePromotion(@PathVariable final String promotionId)
-			throws CommercePromotionRestrictionException, NoCheckoutCartException
+	public void removePromotion(@PathVariable final String promotionId) throws CommercePromotionRestrictionException,
+			NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1545,8 +1543,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId)
-			throws NoCheckoutCartException, VoucherOperationException
+	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId) throws NoCheckoutCartException,
+			VoucherOperationException
 	{
 		super.applyVoucherForCartInternal(voucherId);
 	}
@@ -1561,8 +1559,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers/{voucherId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void releaseVoucherFromCart(@PathVariable final String voucherId)
-			throws NoCheckoutCartException, VoucherOperationException
+	public void releaseVoucherFromCart(@PathVariable final String voucherId) throws NoCheckoutCartException,
+			VoucherOperationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2246,9 +2244,9 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					cartDataDetails.setError(
-							MarketplacecommerceservicesConstants.FIELD_QUANTITY + MarketplacecommerceservicesConstants.SINGLE_SPACE
-									+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
+					cartDataDetails.setError(MarketplacecommerceservicesConstants.FIELD_QUANTITY
+							+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+							+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					return cartDataDetails;
 				}
 
@@ -2749,7 +2747,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2990,8 +2988,8 @@ public class CartsController extends BaseCommerceController
 			{
 				if (null != element && null != element.getValue() && null != element.getKey())
 				{
-					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(), element.getKey(),
-							cart);
+					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodDataMobile(element.getValue(),
+							element.getKey(), cart);
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 
 					LOG.debug("CartsController : selectDeliveryMode  : Step 1 finalDeliveryCost after Delivery Mode Set "
@@ -3092,8 +3090,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
 			}
 
-			pinCodeResponse = mplCartWebService
-					.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
+					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -4349,9 +4347,10 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != orderEntryModel.getGiveAway() && !orderEntryModel.getGiveAway().booleanValue())
 			{
-				if (null != orderEntryModel.getMplDeliveryMode() && null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
-						&& MarketplacecommerceservicesConstants.CLICK_COLLECT
-								.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode())))
+				if (null != orderEntryModel.getMplDeliveryMode()
+						&& null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
+						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode()
+								.getDeliveryMode().getCode())))
 				{
 					++cncDelModeCount;
 				}
@@ -4411,8 +4410,8 @@ public class CartsController extends BaseCommerceController
 			cartModel = mplPaymentWebFacade.findCartValues(cartId);
 			final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
-			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
-					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData, cartModel);
+			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
+					deliverySlotsRequestData, cartModel);
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{

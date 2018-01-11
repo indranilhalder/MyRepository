@@ -28,8 +28,7 @@ import com.tisl.mpl.core.model.OrderUpdateProcessModel;
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
-import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener;
-import com.tisl.mpl.marketplaceomsservices.event.SendNotificationSecondaryStatusEvent;
+
 
 
 /**

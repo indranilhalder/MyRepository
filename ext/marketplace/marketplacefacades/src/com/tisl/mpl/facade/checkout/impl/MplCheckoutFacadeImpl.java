@@ -27,9 +27,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
-import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -46,8 +44,6 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.voucher.VoucherModelService;
-import de.hybris.platform.voucher.jalo.PromotionVoucher;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -1448,25 +1444,25 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Override
 	public boolean isCouponValid(final AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
-		boolean result = false;
+		//		boolean result = false;
+		//
+		//		final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts();
+		//		if (CollectionUtils.isNotEmpty(voucherList))
+		//		{
+		//			final PromotionVoucherModel voucher = (PromotionVoucherModel) voucherList.get(0);//Only one coupon would be applied in one order
+		//			if (getVoucherModelService().isApplicable(voucher, abstractOrderModel)
+		//					&& ((PromotionVoucher) getModelService().getSource(voucher)).isReservable(voucher.getVoucherCode(),
+		//							(User) getModelService().getSource(abstractOrderModel.getUser())))
+		//			{
+		//				result = true;
+		//			}
+		//		}
+		//		else
+		//		{
+		//			result = true;
+		//		}
 
-		final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts();
-		if (CollectionUtils.isNotEmpty(voucherList))
-		{
-			final PromotionVoucherModel voucher = (PromotionVoucherModel) voucherList.get(0);//Only one coupon would be applied in one order
-			if (getVoucherModelService().isApplicable(voucher, abstractOrderModel)
-					&& ((PromotionVoucher) getModelService().getSource(voucher)).isReservable(voucher.getVoucherCode(),
-							(User) getModelService().getSource(abstractOrderModel.getUser())))
-			{
-				result = true;
-			}
-		}
-		else
-		{
-			result = true;
-		}
-
-		return result;
+		return true;
 	}
 
 

@@ -2350,6 +2350,15 @@
 					</attribute>
 
 				</attributes>
+				<!-- Index Addition 08/01/2017 Start -->
+				<indexes>
+					<index name="IDX_PRICEROWS_SITE" unique="true">
+						<key attribute="sellerArticleSKU" />
+						<key attribute="siteId" />
+						<key attribute="itemtype" />
+					</index>
+				</indexes>
+					<!-- Index Addition 08/01/2017 End -->
 			</itemtype>
 			<!-- Channel Specific Promotion Start New table -->
 			<itemtype code="PromotionalPriceRow" extends="GenericItem"
@@ -3903,6 +3912,13 @@
 					</attribute>
 
 				</attributes>
+				<!-- Index Addition 08/01/2017 Start -->
+				<indexes>
+					<index name="IDX_ADR_CELL" unique="true">
+						<key attribute="cellphone" />
+					</index>
+				</indexes>
+					<!-- Index Addition 08/01/2017 End -->
 			</itemtype>
 
 			<itemtype code="Employee" jaloclass="de.hybris.platform.jalo.user.Employee"
