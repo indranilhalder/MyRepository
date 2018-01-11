@@ -46,7 +46,6 @@ const home = (
       homeFeedData = _.cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].data = action.data;
       homeFeedData[action.positionInFeed].loading = false;
-      console.log(homeFeedData);
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData

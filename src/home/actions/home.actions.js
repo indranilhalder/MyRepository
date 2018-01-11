@@ -41,10 +41,6 @@ export function homeFeed() {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(homeFeedSuccess(resultJson));
-      let promiseForComponentData = _.each(resultJson, (component, index) => {
-        dispatch(getComponentData(index, component.fetchURL));
-      });
-      await Promise.all(promiseForComponentData);
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }
