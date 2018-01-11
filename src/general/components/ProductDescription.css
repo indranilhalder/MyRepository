@@ -33,3 +33,7 @@
   composes: priceHolder;
   text-decoration: line-through;
 }
+.priceCancelledWhite {
+  composes: priceCancelled;
+  color: #fff;
+}
