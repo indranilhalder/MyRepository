@@ -8,9 +8,12 @@
 .hasDownload {
   composes: header;
   padding-right: 30px;
+  position: relative;
 }
 .content {
   width: 100%;
+  margin-top: 15px;
+  color: #212121;
 }
 .button {
   position: absolute;
@@ -19,6 +22,8 @@
 }
 .priceHolder {
   display: inline-block;
+  color: #212121;
+  margin-top: 15px;
 }
 .discount {
   composes: priceHolder;
@@ -27,4 +32,8 @@
 .priceCancelled {
   composes: priceHolder;
   text-decoration: line-through;
+}
+.priceCancelledWhite {
+  composes: priceCancelled;
+  color: #fff;
 }
