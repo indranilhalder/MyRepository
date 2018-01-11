@@ -19,6 +19,7 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
@@ -1551,6 +1552,16 @@ public class GenericUtilityMethods
 			Collections.reverse(sellerIdList);
 			sellerIds = StringUtils.join(sellerIdList, '_');
 		}
+
+		if (orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel)
+		{
+			final QCWalletPaymentInfoModel modelQC = (QCWalletPaymentInfoModel) orderModel.getPaymentInfo();
+			if (null != modelQC.getType() && modelQC.getType().equalsIgnoreCase("Cliq Cash"))
+			{
+				model.addAttribute("qc_paymentMode", modelQC.getType());
+			}
+		}
+
 		if (orderData.getMplPaymentInfo() != null)
 		{
 			String paymentType = "";
