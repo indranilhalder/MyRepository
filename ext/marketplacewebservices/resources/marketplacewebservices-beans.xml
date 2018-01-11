@@ -3577,4 +3577,69 @@
 		<property name="subReturnReason" type="java.lang.String" />
 	</bean>
 	<!-- Added for TPR-5954 || End -->
+
+<!--  Added for NU-35 -->
+
+	<bean class="com.tisl.mpl.wsdto.OffersDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="webURL" type="String" />
+		<property name="appURL" type="String" />
+		<property name="imageURL" type="String" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.productsDTO">
+		<property name="title" type="String"/>
+		<property name="mrpPrice" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.PriceData>"/>
+		<property name="discountedPrice" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.PriceData>"/>
+		<property name="webURL" type="String" />
+		<property name="appURL" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="prdId" type="String" />
+		</bean>
+	<bean class="com.tisl.mpl.wsdto.ThemeOffersDTO">
+		<property name="offers" type="java.util.List&lt;com.tisl.mpl.wsdto.OffersDTO>" />
+		<property name="products" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />		
+	</bean>	
+		<bean class="com.tisl.mpl.wsdto.HomePageBannersDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />		
+	</bean>	
+	
+	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="videoURL" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />		
+	</bean>	
+	
+	
+	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCaraouselDTO">
+		<property name="brandLogo" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />		
+	</bean>
+		
+	
 </beans>
