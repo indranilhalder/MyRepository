@@ -1,0 +1,11 @@
+.base {
+  width: 100%;
+}
+.imageHolder {
+  width: 100%;
+  height: auto;
+}
+
+.content {
+  margin-top: 20px;
+}
