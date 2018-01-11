@@ -18,9 +18,9 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      let data = _.cloneDeep(action.data);
-      let homeFeedData = _.map(data, subData => {
-        return _.extend({}, subData, { loading: false, data: {} });
+      let homeFeedClonedData = _.cloneDeep(action.data);
+      let homeFeedData = _.map(homeFeedClonedData, subData => {
+        return _.extend({}, subData, { loading: false, data: {}, status: "" });
       });
       return Object.assign({}, state, {
         status: action.status,
@@ -35,45 +35,36 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_REQUEST:
-      data = _.cloneDeep(state.homeFeed);
-      _.each(data, (value, index) => {
-        if (index === action.positionInFeed) {
-          value.loading = true;
-        }
-      });
-
+      homeFeedData = _.cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].loading = true;
       return Object.assign({}, state, {
         status: action.status,
-        homeFeed: data
+        homeFeed: homeFeedData
       });
 
     case homeActions.COMPONENT_DATA_SUCCESS:
-      data = _.cloneDeep(state.homeFeed);
-      _.each(data, (value, index) => {
-        if (index === action.positionInFeed) {
-          value.data = action.data;
-          value.loading = false;
-        }
-      });
+      homeFeedData = _.cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].data = action.data;
+      homeFeedData[action.positionInFeed].loading = false;
+      console.log(homeFeedData);
       return Object.assign({}, state, {
         status: action.status,
-        homeFeed: data
+        homeFeed: homeFeedData
       });
 
     case homeActions.COMPONENT_DATA_FAILURE:
-      data = _.cloneDeep(state.homeFeed);
-      _.each(data, (value, index) => {
-        if (index === action.positionInFeed) {
-          value.loading = false;
-        }
-      });
+      homeFeedData = _.cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].loading = false;
+      homeFeedData[action.positionInFeed].status = action.error;
 
       return Object.assign({}, state, {
         status: action.status,
-        homeFeed: data
+        homeFeed: homeFeedData
       });
 
     default:
       return state;
   }
 };
+
+export default home;
