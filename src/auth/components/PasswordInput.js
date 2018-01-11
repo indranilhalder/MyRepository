@@ -8,7 +8,6 @@ import styles from "./PasswordInput.css";
 class PasswordInput extends React.Component {
   constructor(props) {
     super(props);
-    this.styles = this.props.styles ? this.props.styles : styles;
     this.state = {
       isPasswordVisible: this.props.passwordVisible
     };
@@ -19,11 +18,11 @@ class PasswordInput extends React.Component {
   };
 
   render() {
-    let scalerClass = this.styles.scaler;
+    let scalerClass = styles.scaler;
     let type = this.props.type;
 
     if (this.state.isPasswordVisible) {
-      scalerClass = this.styles.scalerHolder;
+      scalerClass = styles.scalerHolder;
       type = "text";
     }
     return (
