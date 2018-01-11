@@ -83,8 +83,9 @@
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js/minified" name="mpstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/combined" name="lxstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js" name="mpstorefront.js.dir" />
-	<property location="**.js" name="alljs.file.expression" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/js" name="luxstorefront.js.dir" />
+	<property location="**.js" name="alljs.file.expression" />
+	
 	<!-- Start properties for min-css for mpl -->
 
 	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui/yuicompressor.jar" name="yui.compresser.jar" />
@@ -322,7 +323,7 @@
 						<arg line="--js !${mpstorefront.js.dir}/mpl/**feedback.js"/>
 						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.productDetail.js"/>
 						<arg line="--js !${mpstorefront.js.dir}/mpl/**marketplacecheckoutaddon.js"/>
-						<arg line="--js ${luxstorefront.js.dir}/acc.LuxDtm.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**acc.LuxDtm.js" />
 						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">

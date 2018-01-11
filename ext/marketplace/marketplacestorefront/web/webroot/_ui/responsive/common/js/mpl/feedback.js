@@ -3906,11 +3906,11 @@ $(window).on("scroll",function(){
 });
 /*end change of INC144319119*/
 
-$(".accordin").smk_Accordion({
+/*$(".accordin").smk_Accordion({
     closeAble: true,
     closeOther: false,
     slideSpeed: 750,
-});
+});*/
 /*$(".accordin").on("click", function(){
 	$(this).parent().find(".accordin.FineJewellery .item div.title").slideToggle();
 	$(this).parent().toggleClass("accordion-open");

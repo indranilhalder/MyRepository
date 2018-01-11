@@ -1201,6 +1201,7 @@ $(function() {
 													
 												});
 											/*TPR-642 & 640 ends*/
+												dtmLuxPdpPincode("failure",productCode,pin);
 												return false;
 											}
 											// check if oms service is down
@@ -1238,6 +1239,7 @@ $(function() {
 													pdp_pin_delivery : 'error'
 												});
 											/*TPR-642 & 640 ends*/
+												dtmLuxPdpPincode("failure",productCode,pin);
 												return false;
 											} else {
 												

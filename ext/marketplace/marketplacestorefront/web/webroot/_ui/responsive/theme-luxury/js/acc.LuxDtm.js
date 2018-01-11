@@ -1,9 +1,8 @@
 var digitalData;
-	
+var isImageHoverTriggered = false;		// flag to identify mouse hover action	
 $(document).ready(function(){
 	console.log("lux dtm call");
 	_satellite.pageBottom();
-	alert("hello");
 	var pageType= $('#pageType').val();
 	var tealiumOrderFlag = $('#tealiumOrderFlag').val();
 	var subdomain = window.location.href.split("/")[2].split(".")[0];
@@ -203,8 +202,7 @@ $(document).ready(function(){
 				}  
 
 				//TPR-6333 | Track Geo-location of users
-				if(pincode != ''){
-				console.log("pdp:geolocation:");
+				if($('#pin').val() != 'undefined' && $('#pin').val() != '' ){
 					digitalData.geolocation = {
 							pin : {
 								code : pincode
@@ -470,7 +468,25 @@ $(document).ready(function(){
 				
 				if(tealiumOrderFlag !='undefined' && tealiumOrderFlag == 'true'){
 			    	dtmErrorTracking("Order not placed: Unsuccesful error","errorName");
-			    }			
+			    }	
+				
+			/*	//product size
+			  $(document).on('click',".variant-select > li", function(){
+					   alert("here size on load");
+					var product_size = $(this).find('a').html();
+					alert(product_size);
+					if(typeof digitalData.cpj.product != "undefined"){
+						digitalData.cpj.product.size = product_size;
+					}
+					else{
+						digitalData.cpj.product = {
+							size : product_size
+						}
+				    }
+					if(typeof _satellite !="undefined"){
+						   _satellite.track('cpj_pdp_product_size');
+						}
+				   });*/
 });
 
 
@@ -941,9 +957,6 @@ $(document).on('click','.col-sm-4 .col-md-4 .col-lg-4 .app-info .get-in-touch .s
 /*On Size selection | PDP #29  | tpr- 6301*/ 
 	   $(document).on('click',".variant-select > li", function(){
 		var product_size = $(this).find('a').html();
-		if(typeof _satellite !="undefined"){
-		   _satellite.track('cpj_pdp_product_size');
-		}
 		if(typeof digitalData.cpj.product != "undefined"){
 			digitalData.cpj.product.size = product_size;
 		}
@@ -952,23 +965,26 @@ $(document).on('click','.col-sm-4 .col-md-4 .col-lg-4 .app-info .get-in-touch .s
 				size : product_size
 			}
 	    }
+		if(typeof _satellite !="undefined"){
+			   _satellite.track('cpj_pdp_product_size');
+			}
 	   });
 
 // For product colour #30 |TPR-6302
 $(document).on('click',".color-swatch > li", function(){
-	var product_color = $(this).find('a').attr('title').toLowerCase();
-	//alert(product_color);
-/*	if(typeof(_satellite)!="undefined" &&  pageType == "product"){
-	    _satellite.track('cpj_pdp_product_color');
-	}
+	var product_color = $(this).find('img').attr('title').toLowerCase();
+
 	if(typeof digitalData.cpj.product != "undefined"){
 		digitalData.cpj.product.color = product_color;
 	}
 	else{
 		digitalData.cpj.product = {
-			color : product_color
+				color : product_color
 		}
-	}*/
+	}
+	if(typeof(_satellite)!="undefined" &&  pageType == "product"){
+		_satellite.track('cpj_pdp_product_color');
+	}
 })
 //image click
 $(document).on("click",".product-image-container >.clearfix > .pdp-img-nav ",function(){
@@ -977,6 +993,21 @@ $(document).on("click",".product-image-container >.clearfix > .pdp-img-nav ",fun
 	}
 })
 
+//image hover
+
+$(document).on("mouseover",".zoomContainer",function(e) {
+		if($('#pageType').val() != "/compare"){
+			if($('#pageType').val() == "product"
+				|| $('#pageType').val() == "/sellersdetailpage"){
+				if(!isImageHoverTriggered){
+					if(typeof _satellite != "undefined"){
+						_satellite.track('cpj_pdp_image_hover');
+						isImageHoverTriggered = true;
+					}
+				}
+			}
+		}
+	});	  
 $(document).on('click','.pincode-button',function(){
 	if(typeof(_satellite)!="undefined"){
 		_satellite.track('cpj_checkout_add_address');
@@ -1027,9 +1058,6 @@ $(document).on('click','.product-item',function(){
 //video track
 $(document).on('click','.play',function(){
 	//var video =$(this).parent().find('a').attr('data-video-url');
-	if(typeof(_satellite)!="undefined"){
-		_satellite.track('product_video');
-	}
 	var productCode = $("input[name=productCodeMSD]").val();
 	var productCategory = $('#product_category').val().trim().toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g, "_").replace(/['"]/g, "");
 	var product_video = productCode+"_video";
@@ -1050,6 +1078,10 @@ $(document).on('click','.play',function(){
 				digitalData.product.video = {
 					name :  product_video
 		     	}
+			}
+			
+			if(typeof(_satellite)!="undefined"){
+				_satellite.track('product_video');
 			}
 })
 
