@@ -34,10 +34,13 @@ public class HomePageAppController
 			@RequestParam final String lng, @RequestParam final String pincode, @RequestParam final String channel,
 			@RequestParam final String isPwa, @RequestBody final ComponentRequestDTO componentRequestDTO)
 	{
-		final ThemeOffersDTO themeOffersDTO = null;
+		final ThemeOffersDTO themeOffersDTO = new ThemeOffersDTO();
 		try
 		{
 			//
+			themeOffersDTO.setError("error");
+			themeOffersDTO.setErrorCode("6002");
+			themeOffersDTO.setErrorMessage("status message");
 			System.out.println("Theme offers dto" + componentRequestDTO);
 		}
 		catch (final EtailNonBusinessExceptions e)
