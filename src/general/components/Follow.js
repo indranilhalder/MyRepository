@@ -3,13 +3,6 @@ import PropTypes from "prop-types";
 import CoreButton from "./Button";
 
 export default class Follow extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isFollow: this.props.follow
-    };
-  }
-
   onFollowClick() {
     if (this.props.onFollowClick) {
       this.props.onFollowClick();
@@ -23,18 +16,20 @@ export default class Follow extends Component {
   }
 
   handleClick() {
-    this.setState({ isFollow: !this.state.isFollow });
+    if (this.props.follow) {
+      this.onFollowClick();
+    } else {
+      this.onUnFollowClick();
+    }
   }
 
   render() {
     let text = this.props.text;
     let width = this.props.width;
-    if (this.state.isFollow) {
-      this.onFollowClick();
+    if (this.props.follow) {
       text = "Following";
       width = 100;
     } else {
-      this.onUnFollowClick();
       text = "Follow";
       width = 80;
     }
