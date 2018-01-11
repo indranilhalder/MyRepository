@@ -32,11 +32,11 @@
     height: 100px;
   }
   .title {
-    font-size: 55px;
-    line-height: 65px;
+    font-size: 50px;
+    line-height: normal;
     margin-top: 20px;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
   }
   .button {
     margin-top: 30px;
@@ -58,9 +58,9 @@
   }
   .title {
     font-size: 30px;
-    line-height: 35px;
+    line-height: normal;
     margin-top: 15px;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
   }
 }
