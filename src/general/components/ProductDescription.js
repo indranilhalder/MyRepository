@@ -19,10 +19,12 @@ export default class ProductDescription extends Component {
       headerClass = styles.hasDownload;
     }
 
-    if (this.props.discountPrice && this.props.isWhite) {
-      priceCancel = styles.priceCancelledWhite;
-    } else {
-      priceCancel = styles.priceCancelled;
+    if (this.props.discountPrice) {
+      if (this.props.isWhite) {
+        priceCancel = styles.priceCancelledWhite;
+      } else {
+        priceCancel = styles.priceCancelled;
+      }
     }
 
     return (
