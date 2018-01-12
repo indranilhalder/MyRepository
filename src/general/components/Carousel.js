@@ -47,39 +47,41 @@ export default class Carousel extends React.Component {
 
     return (
       <div className={styles.base} styles={{ color: this.props.color }}>
-        <div className={headerClass}>
-          {this.props.header}
-          <MediaQuery query="(min-device-width: 1025px)">
-            <div className={styles.nav}>
-              {this.props.seeAll && (
-                <div
-                  className={buttonClass}
-                  onClick={() => {
-                    this.props.seeAll();
-                  }}
-                >
-                  {this.props.buttonText}
-                </div>
-              )}
-              {childrenCount > visibleChildren && (
-                <React.Fragment>
+        {this.props.header && (
+          <div className={headerClass}>
+            {this.props.header}
+            <MediaQuery query="(min-device-width: 1025px)">
+              <div className={styles.nav}>
+                {this.props.seeAll && (
                   <div
-                    className={styles.back}
+                    className={buttonClass}
                     onClick={() => {
-                      this.slideBack();
+                      this.props.seeAll();
                     }}
-                  />
-                  <div
-                    className={styles.forward}
-                    onClick={() => {
-                      this.slideForward();
-                    }}
-                  />
-                </React.Fragment>
-              )}
-            </div>
-          </MediaQuery>
-        </div>
+                  >
+                    {this.props.buttonText}
+                  </div>
+                )}
+                {childrenCount > visibleChildren && (
+                  <React.Fragment>
+                    <div
+                      className={styles.back}
+                      onClick={() => {
+                        this.slideBack();
+                      }}
+                    />
+                    <div
+                      className={styles.forward}
+                      onClick={() => {
+                        this.slideForward();
+                      }}
+                    />
+                  </React.Fragment>
+                )}
+              </div>
+            </MediaQuery>
+          </div>
+        )}
         <div className={styles.sliderHolder}>
           <div className={styles.slider} style={style}>
             {this.props.children &&

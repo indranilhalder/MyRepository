@@ -4,8 +4,12 @@ import PropTypes from "prop-types";
 import styles from "./ProductImageHeader.css";
 export default class ProductImageHeader extends React.Component {
   render() {
+    let className = styles.base;
+    if (this.props.description) {
+      className = styles.hasDescription;
+    }
     return (
-      <div className={styles.base}>
+      <div className={className}>
         <div className={styles.content}>
           <Image image={this.props.image} />
           {this.props.logo && (
