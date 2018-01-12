@@ -2,6 +2,7 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
+import Logo from "../../general/components/Logo";
 export default class AutomatedBrandProductCarousel extends React.Component {
   handleClick() {
     if (this.props.seeAll) {
@@ -15,6 +16,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
           <ProductImageHeader
             image={this.props.bannerImage}
             description={this.props.bannerDescription}
+            logo={<Logo image={this.props.bannerLogo} />}
           />
         }
         backgroundColor="#e4e4e4"

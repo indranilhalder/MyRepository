@@ -58,8 +58,9 @@
   margin: auto;
 }
 .logo {
-  width: 140px;
-  height: auto;
+  width: auto;
+  max-width: 100%;
+  height: 30px;
   position: absolute;
   left: 15px;
   top: 15px;
