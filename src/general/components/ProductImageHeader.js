@@ -1,5 +1,6 @@
 import React from "react";
 import { Image } from "xelpmoc-core";
+import PropTypes from "prop-types";
 import styles from "./ProductImageHeader.css";
 export default class ProductImageHeader extends React.Component {
   render() {
@@ -24,3 +25,11 @@ export default class ProductImageHeader extends React.Component {
     );
   }
 }
+
+ProductImageHeader.propTypes = {
+  name: PropTypes.string,
+  label: PropTypes.string,
+  description: PropTypes.string,
+  image: PropTypes.string,
+  logo: PropTypes.element
+};
