@@ -4,12 +4,15 @@ import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FeedComponent.css";
 
-export default class FeedSection extends React.Component {
+export default class FeedComponent extends React.Component {
   render() {
     return (
       <div
         className={styles.base}
-        style={{ backgroundColor: this.props.backgroundColor }}
+        style={{
+          backgroundColor: this.props.backgroundColor,
+          backgroundImage: `url(${this.props.backgroundImage})`
+        }}
       >
         {this.props.banner && (
           <div className={styles.banner}>{this.props.banner}</div>
@@ -40,7 +43,7 @@ export default class FeedSection extends React.Component {
     );
   }
 }
-FeedSection.propTypes = {
+FeedComponent.propTypes = {
   backgroundColor: PropTypes.string,
   banner: PropTypes.element,
   data: PropTypes.arrayOf(
