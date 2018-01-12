@@ -3246,6 +3246,7 @@ ACC.singlePageCheckout = {
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
+				$("input:radio[name=debitCards]").prop("checked",false);	//add for SDI-4094
 				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection(paymentMode);
 				savedCreditCardRadioChange(radioId);
 			}
@@ -3258,6 +3259,7 @@ ACC.singlePageCheckout = {
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
+				$("input:radio[name=creditCards]").prop("checked",false);	//add for SDI-4094
 				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection(paymentMode);
 				savedDebitCardRadioChange(radioId);
 			}
