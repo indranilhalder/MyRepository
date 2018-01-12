@@ -1467,7 +1467,8 @@ ACC.singlePageCheckout = {
         	if($("#reviewOrder #totPriceWithoutRupeeSymbol").text()!="")
         	{
         		var countItemsText=ACC.singlePageCheckout.countItemsForReviewOrder;
-        		$("#selectedReviewOrderHighlight").html(countItemsText+" Item(s), "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
+        		//$("#selectedReviewOrderHighlight").html(countItemsText+" Item(s), "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());	//commented for SDI-2493
+        		$("#selectedReviewOrderHighlight").html(countItemsText+" Item(s), "+$(".cart-total-block .totals li#total span.amt").text());	//add for SDI-2493
         	}
         	//added for tealium
   		  $("#checkoutPageName").val("Review Order");
