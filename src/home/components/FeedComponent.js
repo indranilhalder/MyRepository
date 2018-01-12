@@ -2,7 +2,7 @@ import React from "react";
 import Carousel from "../../general/components/Carousel";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
-import styles from "./FeedSection.css";
+import styles from "./FeedComponent.css";
 
 export default class FeedSection extends React.Component {
   render() {
@@ -31,6 +31,7 @@ export default class FeedSection extends React.Component {
                   title={datum.title}
                   price={datum.price}
                   discountPrice={datum.discountPrice}
+                  description={datum.description}
                 />
               );
             })}
@@ -42,6 +43,15 @@ export default class FeedSection extends React.Component {
 FeedSection.propTypes = {
   backgroundColor: PropTypes.string,
   banner: PropTypes.element,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      productImage: PropTypes.string,
+      title: PropTypes.string,
+      price: PropTypes.number,
+      discountPrice: PropTypes.number,
+      description: PropTypes.string
+    })
+  ),
   carouselOptions: PropTypes.shape({
     elementWidthDesktop: PropTypes.number,
     elementWidthMobile: PropTypes.number,
