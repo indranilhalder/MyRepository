@@ -223,7 +223,7 @@ tr.d0 td {
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
 				</c:when>
 					<c:otherwise>
-				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><a href="/c/${product.brand.brandCode}"><span itemprop="name">${product.brand.brandname}</span></a></h3>
 					</c:otherwise>
 				</c:choose>
 				<!-- CKD:TPR-250-End-->
