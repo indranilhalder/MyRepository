@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
@@ -27,6 +30,8 @@ import com.tisl.mpl.wsdto.ThemeOffersDTO;
 @RequestMapping(value = "/{baseSiteId}/cms/{userId}/page", headers = "Accept=application/xml,application/json")
 public class HomePageAppController
 {
+	@Resource(name = "homePageAppFacade")
+	private HomePageAppFacade homePageAppFacade;
 
 	@RequestMapping(value = "/themeOffer", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
@@ -38,6 +43,7 @@ public class HomePageAppController
 		try
 		{
 			//
+			homePageAppFacade.getAdobeTargetDataOfferWidget(componentRequestDTO);
 			themeOffersDTO.setError("error");
 			themeOffersDTO.setErrorCode("6002");
 			themeOffersDTO.setErrorMessage("status message");
@@ -71,5 +77,22 @@ public class HomePageAppController
 		}
 		return themeOffersDTO;
 
+	}
+
+	/**
+	 * @return the homePageAppFacade
+	 */
+	public HomePageAppFacade getHomePageAppFacade()
+	{
+		return homePageAppFacade;
+	}
+
+	/**
+	 * @param homePageAppFacade
+	 *           the homePageAppFacade to set
+	 */
+	public void setHomePageAppFacade(final HomePageAppFacade homePageAppFacade)
+	{
+		this.homePageAppFacade = homePageAppFacade;
 	}
 }

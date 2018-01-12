@@ -190,7 +190,21 @@
 		<bean id="mplSendOrderFromCommerceToSamsung" class="com.tisl.mpl.service.impl.MplSendOrderFromCommerceToSamsungImpl" />
 		
 		<!-- Added for TPR-5989 -->
-		<bean id="clientIntegration" class="com.tisl.mpl.service.ClientIntegrationImpl" /> 
-		
+		<bean id="clientIntegration" class="com.tisl.mpl.service.ClientIntegrationImpl" />
+		 
+		<bean id="homePageAppService" class="com.tisl.mpl.service.impl.HomePageAppServiceImpl">
+		<property name="use"
+			value="#{configurationService.configuration.getProperty('homePageApp.use')}" />
+		<property name="domain"
+			value="#{configurationService.configuration.getProperty('homePageApp.domain')}" />
+			<property name="method"
+			value="#{configurationService.configuration.getProperty('homePageApp.method')}" />
+		<property name="proxyPort"
+			value="#{configurationService.configuration.getProperty('homePageApp.proxy.port')}" />
+		<property name="proxyEnabled"
+			value="#{configurationService.configuration.getProperty('homePageApp.proxy.enabled')}" />
+		<property name="proxyAddress"
+			value="#{configurationService.configuration.getProperty('homePageApp.proxy.address')}" />
+	</bean>
 </beans>
 
