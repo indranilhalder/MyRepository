@@ -3,7 +3,7 @@ import ProductImage from "./ProductImage";
 import ProductDescription from "./ProductDescription";
 import styles from "./ProductModule.css";
 import downloadIcon from "./img/download.svg";
-
+import downloadIconWhite from "./img/downloadWhite.svg";
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {
@@ -16,6 +16,10 @@ export default class ProductModule extends React.Component {
     }
   };
   render() {
+    let downloadImage = downloadIcon;
+    if (this.props.isWhite) {
+      downloadImage = downloadIconWhite;
+    }
     return (
       <div className={styles.base}>
         <div className={styles.imageHolder} onClick={this.onClick}>
@@ -24,7 +28,7 @@ export default class ProductModule extends React.Component {
         <div className={styles.content}>
           <ProductDescription
             {...this.props}
-            icon={downloadIcon}
+            icon={downloadImage}
             onDownload={this.onDownload}
           />
         </div>
