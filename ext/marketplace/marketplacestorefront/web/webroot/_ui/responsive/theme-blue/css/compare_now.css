@@ -62,7 +62,7 @@
 /* start CMR-45 */
 @media (max-width: 650px) {
 	.page-header h2 {
-		font-size: 24px;
+		font-size: 24px !important; 	/* changes for TISCSS-113 */
 	}
 	.comparison-table.stats, .comparison-table.stats thead, .comparison-table.stats tbody, .comparison-table.stats tr {
 		display: block;
