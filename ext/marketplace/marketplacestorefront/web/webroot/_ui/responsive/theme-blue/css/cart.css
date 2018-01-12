@@ -2954,7 +2954,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul>li:first-child div.pr
 body.page-cartPage .cart.wrapper .product-block li.item>ul>li {
 	float: none !important;
 	width: 100%;
-    text-align: center;
+    /* text-align: center; */	/* commented for TISCSS-140 */
 }
 
 body.page-cartPage .cart.wrapper .product-block li.item ul .item-edit-details
