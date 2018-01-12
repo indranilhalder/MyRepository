@@ -6,7 +6,7 @@ export default class ProductImageHeader extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.content}>
-          <Image img={this.props.image} color="tranparent" />
+          <Image image={this.props.image} />
           {this.props.logo && (
             <div className={styles.logo}>{this.props.logo}</div>
           )}
