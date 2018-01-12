@@ -1,0 +1,15 @@
+.base {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  overflow: hidden;
+}
+.image {
+  height: 100%;
+  width: auto;
+  opacity: 0;
+}
+.imageLoaded {
+  composes: image;
+  opacity: 1;
+}
