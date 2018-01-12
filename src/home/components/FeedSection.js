@@ -1,6 +1,7 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
 import ProductModule from "../../general/components/ProductModule";
+import PropTypes from "prop-types";
 import styles from "./FeedSection.css";
 
 export default class FeedSection extends React.Component {
@@ -8,7 +9,7 @@ export default class FeedSection extends React.Component {
     return (
       <div
         className={styles.base}
-        style={{ background: this.props.background }}
+        style={{ backgroundColor: this.props.backgroundColor }}
       >
         {this.props.banner && (
           <div className={styles.banner}>{this.props.banner}</div>
@@ -38,3 +39,15 @@ export default class FeedSection extends React.Component {
     );
   }
 }
+FeedSection.propTypes = {
+  backgroundColor: PropTypes.string,
+  banner: PropTypes.element,
+  carouselOptions: PropTypes.shape({
+    elementWidthDesktop: PropTypes.number,
+    elementWidthMobile: PropTypes.number,
+    buttonText: PropTypes.string,
+    header: PropTypes.string,
+    isWhite: PropTypes.bool,
+    seeAll: PropTypes.func
+  })
+};
