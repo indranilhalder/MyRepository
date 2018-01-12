@@ -2397,4 +2397,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String AMP_SERVICEWORKER_QUERY = "select pk from {AmpServiceworker}";
 	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
+	//CAR-330
+	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
 }
