@@ -1,6 +1,7 @@
 import React from "react";
 import ProductImage from "./ProductImage";
 import ProductDescription from "./ProductDescription";
+import PropTypes from "prop-types";
 import styles from "./ProductModule.css";
 import downloadIcon from "./img/download.svg";
 import downloadIconWhite from "./img/downloadWhite.svg";
@@ -36,3 +37,9 @@ export default class ProductModule extends React.Component {
     );
   }
 }
+ProductModule.propTypes = {
+  productImage: PropTypes.string,
+  onClick: PropTypes.func,
+  onDowload: PropTypes.func,
+  isWhite: PropTypes.bool
+};
