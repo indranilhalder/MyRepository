@@ -14,9 +14,12 @@ import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.model.CouponUserRestrictionModel;
+import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.util.Date;
 import java.util.List;
 
 import com.tisl.mpl.core.model.JuspayCardStatusModel;
@@ -268,4 +271,15 @@ public interface MplVoucherService
 	 */
 	public Tuple3<?, ?, ?> checkCardPerOfferValidationMobile(AbstractOrderModel abstractOrderModel, String token,
 			String cardSaved, String cardRefNo, final String cardFingerPrint, final String channel) throws Exception;
+
+
+	/* CAR-330 starts here */
+
+	public List<UserRestrictionModel> fetchUserRestrictionDetails(final Date mplConfigDate);
+
+	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher);
+
+	/* CAR-330 ends here */
+
+
 }

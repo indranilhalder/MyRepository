@@ -67,6 +67,7 @@
 		</enumtype>
 		<!-- TPR-7448 Ends here -->
     </enumtypes>
+            
 
 	<itemtypes>
 
@@ -591,5 +592,45 @@
 		</itemtype>
 		<!-- TPR-7448 Ends here -->
 		
+		<!-- CAR-330 starts here -->
+		<!--  COUPON USER RESTRICTION STARTS-->	<!-- extends="Restriction" -->	
+		<itemtype code="CouponUserRestriction" 			
+			jaloclass="de.hybris.platform.voucher.jalo.CouponUserRestriction"
+			autocreate="true"
+			generate="true">
+			<deployment table="CouponUserRestriction" typecode="16005"/>
+			
+			<attributes>
+				<attribute qualifier="closedUser" type="Principal">
+					<description>Users present in User restriction cloned</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="false" optional="false"/>
+				</attribute>
+				<attribute qualifier="voucher" type="Voucher">
+				<description>Voucher</description>
+				<persistence type="property"/>
+				<modifiers read="true" write="true" search="true" optional="true"/>
+			    </attribute>
+				<attribute qualifier="positive" type="java.lang.Boolean">
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<description>
+						Specifies if this restriction is a positive (true) or negative 
+						(false) one.
+					</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="false"/>
+				</attribute>				
+			</attributes>
+			<indexes>					
+ 	          <index name="closedUser_IDX" unique="false">
+ 					<key attribute="closedUser" /> 					
+ 	          </index>
+ 	          <index name="positive_IDX" unique="false">
+					<key attribute="positive"/>					
+	          </index>
+           </indexes>
+		</itemtype>		
+		<!-- COUPON USER RESTRICTION ENDS --> 
+		<!-- CAR-330 ends here -->
 	</itemtypes>
 </items>
