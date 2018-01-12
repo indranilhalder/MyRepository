@@ -352,27 +352,6 @@
 		</amp-iframe>
 	</ul> -->
 	
-	<div class="amp-tealium">
-		<c:set var="site_region" value="en"/>
-		<c:set var="user_type" value="${user_type}"/>
-		<c:set var="user_login_type" value="${userLoginType}"/>
-		<c:set var="user_id" value="${user_id}"/>
-		<c:set var="page_type" value="home"/>
-		<c:set var="page_name" value="homepage"/>
-		<c:set var="product_category" value="null"/>
-		<c:set var="page_subcategory_name" value="null"/>
-		<c:set var="page_subcategory_name_L3" value="null"/>
-		<c:set var="session_id" value="${sessionId}"/>
-		<c:set var="visitor_ip" value="${visitorIp}"/>
-		<c:set var="site_currency" value="INR"/>
-		<c:set var="site_section" value="home"/>
-		<c:set var="IA_company" value="${pageContext.request.serverName}"/>
-		
-		<amp-iframe height="1" width="1"
-		 src="${base}/iframeUtag.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}" 
-		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
-	</div>
-	
 	<!-- Top Deals -->
 	<div id="topDealsComp">
 		<div class="topDealsTopSection">
@@ -572,6 +551,28 @@
 		</div>
 		{{/subComponents}} </amp-carousel> </template> </amp-list>
 	</div>
+	
+	<div class="amp-tealium" style="position:absolute;top:75%;">
+		<c:set var="site_region" value="en"/>
+		<c:set var="user_type" value="${user_type}"/>
+		<c:set var="user_login_type" value="${userLoginType}"/>
+		<c:set var="user_id" value="${user_id}"/>
+		<c:set var="page_type" value="home"/>
+		<c:set var="page_name" value="homepage"/>
+		<c:set var="product_category" value="null"/>
+		<c:set var="page_subcategory_name" value="null"/>
+		<c:set var="page_subcategory_name_L3" value="null"/>
+		<c:set var="session_id" value="${sessionId}"/>
+		<c:set var="visitor_ip" value="${visitorIp}"/>
+		<c:set var="site_currency" value="INR"/>
+		<c:set var="site_section" value="home"/>
+		<c:set var="IA_company" value="${pageContext.request.serverName}"/>
+		
+		<amp-iframe height="1" width="1"
+		 src="${base}/iframeUtag.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}" 
+		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
+	</div>
+	
 	<footer:ampfooter />
 	
 </body>

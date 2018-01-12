@@ -121,7 +121,7 @@ public class HomePagePwAmpController extends HomePageController
 	private static final String DISP_PRICE = "dispPrice";
 	private static final String STRIKE_PRICE = "strikePrice";
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	String pwampHome(final HttpServletRequest request, final HttpServletResponse response, final Model model,
 			final RedirectAttributes redirectModel)
 	{
