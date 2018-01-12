@@ -34,5 +34,6 @@ export default class AutomatedBrandProductCarousel extends React.Component {
 AutomatedBrandProductCarousel.propTypes = {
   bannerImage: PropTypes.string,
   bannerLogo: PropTypes.string,
-  bannerDescription: PropTypes.string
+  bannerDescription: PropTypes.string,
+  seeAll: PropTypes.func
 };
