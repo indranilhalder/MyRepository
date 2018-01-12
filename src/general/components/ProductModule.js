@@ -40,6 +40,6 @@ export default class ProductModule extends React.Component {
 ProductModule.propTypes = {
   productImage: PropTypes.string,
   onClick: PropTypes.func,
-  onDowload: PropTypes.func,
+  onDownload: PropTypes.func,
   isWhite: PropTypes.bool
 };
