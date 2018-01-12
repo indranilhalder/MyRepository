@@ -4,6 +4,10 @@
   padding-bottom: 56.25%;
   position: relative;
 }
+.hasDescription {
+  composes: base;
+  margin-bottom: 40px;
+}
 .content {
   width: 100%;
   height: 100%;

@@ -82,9 +82,7 @@
     composes: button;
     color: #fff;
   }
-  .buttonWhite:after {
-    background: #fff;
-  }
+
   .button:after {
     content: "";
     width: 100%;
@@ -93,6 +91,15 @@
     bottom: 0;
     height: 1px;
     background: #212121;
+  }
+  .buttonWhite:after {
+    content: "";
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    background: #fff;
   }
 }
 @media screen and (max-width: 1024px) {
