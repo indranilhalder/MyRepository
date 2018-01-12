@@ -35,6 +35,8 @@ export default class FeedComponent extends React.Component {
                   price={datum.price}
                   discountPrice={datum.discountPrice}
                   description={datum.description}
+                  onDownload={datum.onDownload}
+                  onClick={datum.onClick}
                 />
               );
             })}
@@ -52,7 +54,9 @@ FeedComponent.propTypes = {
       title: PropTypes.string,
       price: PropTypes.number,
       discountPrice: PropTypes.number,
-      description: PropTypes.string
+      description: PropTypes.string,
+      onDownload: PropTypes.func,
+      onClick: PropTypes.func
     })
   ),
   carouselOptions: PropTypes.shape({
