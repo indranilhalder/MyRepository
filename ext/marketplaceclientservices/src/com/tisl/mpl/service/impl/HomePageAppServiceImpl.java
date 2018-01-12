@@ -5,15 +5,12 @@ package com.tisl.mpl.service.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
-
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import java.net.URL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tisl.mpl.service.HomePageAppService;
@@ -55,40 +52,47 @@ public class HomePageAppServiceImpl implements HomePageAppService
 		try
 		{
 			// YTODO Auto-generated method stub
-			final String url = getDomain();
+			final String homepageurl = getDomain();
 			BufferedReader br = null;
+			OutputStream os = null;
+			HttpURLConnection urlConnection = null;
 
-			//final HttpURLConnection urlConnection = null;
 			//setProxy();
-			//final URL url = new URL(stwUrl);
-			//urlConnection = (HttpURLConnection) url.openConnection(proxy);
-			/*
-			 * urlConnection = (HttpURLConnection) url.openConnection(); urlConnection.setConnectTimeout(15000);//15 secs
-			 * urlConnection.setRequestMethod("POST"); urlConnection.setRequestProperty("Content-length", "0");
-			 * urlConnection.setRequestProperty("charset", "utf-8"); urlConnection.setRequestProperty("Content-Type",
-			 * "application/x-www-form-urlencoded"); urlConnection.setUseCaches(false); urlConnection.connect(); final int
-			 * responseCode = urlConnection.getResponseCode();
-			 */
-			final CloseableHttpClient client = HttpClients.createDefault();
-			final HttpPost httpPost = new HttpPost(url);
-			httpPost.setHeader("Accept", "application/json");
-			httpPost.setHeader("Content-type", "application/json");
-			httpPost.setHeader("Content-length", "0");
-			httpPost.setHeader("charset", "utf-8");
+
 			final ObjectMapper mapper = new ObjectMapper();
 			final String jsonInString = mapper.writeValueAsString(ComponentRequestDTO);
-			final StringEntity entity = new StringEntity(jsonInString);
-			httpPost.setEntity(entity);
-			final CloseableHttpResponse response = client.execute(httpPost);
 
-			System.out.println("Response from Target" + response.getEntity().getContent().toString());
-			final int responsecode = response.getStatusLine().getStatusCode();
-			switch (responsecode)
+			final URL url = new URL(homepageurl);
+			//urlConnection = (HttpURLConnection) url.openConnection(proxy);
+			urlConnection = (HttpURLConnection) url.openConnection();
+
+			//urlConnection.setConnectTimeout(15000);//15 secs
+			urlConnection.setRequestMethod("POST");
+			urlConnection.setRequestProperty("charset", "utf-8");
+			urlConnection.setRequestProperty("Content-type", "application/json");
+			urlConnection.setRequestProperty("Accept", "application/json");
+			urlConnection.setRequestProperty("Content-Language", "en-US");
+			urlConnection.setRequestProperty("Content-Length", Integer.toString(jsonInString.getBytes().length));
+			urlConnection.setUseCaches(false);
+			urlConnection.setDoInput(true);
+			urlConnection.setDoOutput(true);
+
+			System.out.println("\n Going to call Adobe target for the purgeUrlHTTPConnection.getOutputStream() .......");
+			os = urlConnection.getOutputStream();
+			os.write(jsonInString.getBytes());
+			os.flush();
+			os.close();
+
+
+			//Get InputStream to read response.
+
+			final int responseCode = urlConnection.getResponseCode();
+
+			switch (responseCode)
 			{
 				case 200:
 				case 201:
-					//final BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-					br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+					br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 					final StringBuilder sb = new StringBuilder();
 					String readLine;
 					while ((readLine = br.readLine()) != null)
@@ -97,8 +101,23 @@ public class HomePageAppServiceImpl implements HomePageAppService
 					}
 					br.close();
 					return sb.toString();
-				default://Sonar Fix
+				default:
 			}
+			/*
+			 * final CloseableHttpClient client = HttpClients.createDefault(); final HttpPost httpPost = new HttpPost(url);
+			 * httpPost.setHeader("Accept", "application/json"); httpPost.setHeader("Content-type", "application/json");
+			 * //httpPost.setHeader("Content-length", "0"); httpPost.setHeader("charset", "utf-8"); final ObjectMapper
+			 * mapper = new ObjectMapper(); final String jsonInString = mapper.writeValueAsString(ComponentRequestDTO);
+			 * final StringEntity entity = new StringEntity(jsonInString); httpPost.setEntity(entity); final
+			 * CloseableHttpResponse response = client.execute(httpPost);
+			 *
+			 * System.out.println("Response from Target" + response.getEntity().getContent().toString()); final int
+			 * responsecode = response.getStatusLine().getStatusCode(); switch (responsecode) { case 200: case 201: //final
+			 * BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream())); br = new
+			 * BufferedReader(new InputStreamReader(response.getEntity().getContent())); final StringBuilder sb = new
+			 * StringBuilder(); String readLine; while ((readLine = br.readLine()) != null) { sb.append(readLine +
+			 * NEW_LINE); } br.close(); return sb.toString(); default://Sonar Fix }
+			 */
 		}
 		catch (final Exception e)
 		{
