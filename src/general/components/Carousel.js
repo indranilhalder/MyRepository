@@ -47,9 +47,9 @@ export default class Carousel extends React.Component {
 
     return (
       <div className={styles.base} styles={{ color: this.props.color }}>
-        <div className={headerClass}>
-          {this.props.header}
-          <MediaQuery query="(min-device-width: 1025px)">
+        <MediaQuery query="(min-device-width: 1025px)">
+          <div className={headerClass}>
+            {this.props.header}
             <div className={styles.nav}>
               {this.props.seeAll && (
                 <div
@@ -78,8 +78,14 @@ export default class Carousel extends React.Component {
                 </React.Fragment>
               )}
             </div>
-          </MediaQuery>
-        </div>
+          </div>
+        </MediaQuery>
+        <MediaQuery query="(max-device-width: 1024px)">
+          {this.props.header && (
+            <div className={headerClass}>{this.props.header}</div>
+          )}
+        </MediaQuery>
+
         <div className={styles.sliderHolder}>
           <div className={styles.slider} style={style}>
             {this.props.children &&
