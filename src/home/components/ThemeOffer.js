@@ -27,16 +27,5 @@ export default class ThemeOffer extends React.Component {
 }
 ThemeOffer.propTypes = {
   header: PropTypes.string,
-  seeAll: PropTypes.func,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      productImage: PropTypes.string,
-      title: PropTypes.string,
-      price: PropTypes.number,
-      discountPrice: PropTypes.number,
-      description: PropTypes.string,
-      onDownload: PropTypes.func,
-      onClick: PropTypes.func
-    })
-  )
+  seeAll: PropTypes.func
 };
