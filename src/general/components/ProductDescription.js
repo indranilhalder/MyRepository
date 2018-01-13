@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Icon, CircleButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import Header from "./Header";
-import Para from "./Paragraph";
 import styles from "./ProductDescription.css";
 
 export default class ProductDescription extends Component {
@@ -14,26 +12,25 @@ export default class ProductDescription extends Component {
 
   render() {
     let headerClass = styles.header;
-    let priceCancel = styles.priceHolder;
+    let priceClass = styles.priceHolder;
+    let headerText = styles.headerText;
+    let contentClass = styles.content;
     if (this.props.onDownload) {
       headerClass = styles.hasDownload;
     }
 
     if (this.props.discountPrice) {
-      if (this.props.isWhite) {
-        priceCancel = styles.priceCancelledWhite;
-      } else {
-        priceCancel = styles.priceCancelled;
-      }
+      priceClass = styles.priceCancelled;
+    }
+    if (this.props.isWhite) {
+      headerText = styles.headerWhite;
+      contentClass = styles.contentWhite;
     }
 
     return (
       <div className={styles.base}>
         <div className={headerClass}>
-          <Header
-            textStyle={{ color: this.props.textColor }}
-            text={this.props.title}
-          />
+          <div className={headerText}>{this.props.title}</div>
           {this.props.onDownload && (
             <div className={styles.button}>
               <CircleButton
@@ -45,30 +42,17 @@ export default class ProductDescription extends Component {
             </div>
           )}
         </div>
-        <div className={styles.content}>
-          {this.props.description && (
-            <Para
-              textStyle={{ color: this.props.textColor }}
-              text={this.props.description}
-            />
-          )}
+        <div className={contentClass}>
+          {this.props.description && <div>{this.props.description}</div>}
 
           {this.props.discountPrice && (
             <div className={styles.discount}>
-              <Para
-                textStyle={{ color: this.props.textColor }}
-                text={`Rs. ${this.props.discountPrice}`}
-              />
+              {`Rs. ${this.props.discountPrice}`}
             </div>
           )}
 
           {this.props.price && (
-            <div className={priceCancel}>
-              <Para
-                textStyle={{ color: this.props.textColor }}
-                text={`Rs. ${this.props.price}`}
-              />
-            </div>
+            <div className={priceClass}>{`Rs. ${this.props.price}`}</div>
           )}
         </div>
       </div>
@@ -83,8 +67,7 @@ ProductDescription.propTypes = {
   discountPrice: PropTypes.number,
   icon: PropTypes.string,
   onDownload: PropTypes.func,
-  textColor: PropTypes.string,
-  isWhite: PropTypes.string
+  isWhite: PropTypes.bool
 };
 
 ProductDescription.defaultProps = {

@@ -36,16 +36,24 @@ export default class Carousel extends React.Component {
     const style = {
       transform: transform
     };
+    let headerClass = styles.header;
+    let buttonClass = styles.button;
+    let buttonColor = "#212121";
+    if (this.props.isWhite) {
+      headerClass = styles.headerWhite;
+      buttonClass = styles.buttonWhite;
+      buttonColor = "#fff";
+    }
 
     return (
-      <div className={styles.base}>
-        <div className={styles.header}>
-          {this.props.header}
-          <MediaQuery query="(min-device-width: 1025px)">
+      <div className={styles.base} styles={{ color: this.props.color }}>
+        <MediaQuery query="(min-device-width: 1025px)">
+          <div className={headerClass}>
+            {this.props.header}
             <div className={styles.nav}>
               {this.props.seeAll && (
                 <div
-                  className={styles.button}
+                  className={buttonClass}
                   onClick={() => {
                     this.props.seeAll();
                   }}
@@ -70,8 +78,14 @@ export default class Carousel extends React.Component {
                 </React.Fragment>
               )}
             </div>
-          </MediaQuery>
-        </div>
+          </div>
+        </MediaQuery>
+        <MediaQuery query="(max-device-width: 1024px)">
+          {this.props.header && (
+            <div className={headerClass}>{this.props.header}</div>
+          )}
+        </MediaQuery>
+
         <div className={styles.sliderHolder}>
           <div className={styles.slider} style={style}>
             {this.props.children &&
@@ -104,7 +118,8 @@ export default class Carousel extends React.Component {
             <div className={styles.footer}>
               <Button
                 label={this.props.buttonText}
-                type="secondary"
+                type="hollow"
+                color={buttonColor}
                 width={120}
                 onClick={() => {
                   this.props.seeAll();
@@ -123,11 +138,13 @@ Carousel.propTypes = {
   elementWidthMobile: PropTypes.number,
   buttonText: PropTypes.string,
   header: PropTypes.string,
+  isWhite: PropTypes.bool,
   seeAll: PropTypes.func
 };
 
 Carousel.defaultProps = {
   elementWidthDesktop: 25,
   elementWidthMobile: 45,
-  buttonText: "Shop all"
+  buttonText: "Shop all",
+  color: "#181818"
 };

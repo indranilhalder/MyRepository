@@ -26,9 +26,9 @@ export default class Button extends React.Component {
             {...other}
             backgroundColor={"#ffffff"}
             borderRadius={this.props.height / 2}
-            borderColor={"#181818"}
+            borderColor={"#212121"}
             textStyle={{
-              color: "#181818",
+              color: "#212121",
               fontSize: 14,
               fontFamily: "semibold"
             }}
@@ -73,10 +73,10 @@ export default class Button extends React.Component {
 }
 
 Button.propTypes = {
-  type: PropTypes.oneOf(["primary", "secondary", "tertiary"])
+  type: PropTypes.oneOf(["primary", "secondary", "tertiary", "hollow"])
 };
 
 Button.defaultProps = {
   height: 36,
-  color: "#181818"
+  color: "#212121"
 };
