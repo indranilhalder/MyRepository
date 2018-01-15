@@ -2398,4 +2398,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
 }
