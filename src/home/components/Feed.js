@@ -38,7 +38,7 @@ class Feed extends Component {
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
-        <MDSpinner name="ball-beat" />
+        <MDSpinner />
       </div>
     );
   }
