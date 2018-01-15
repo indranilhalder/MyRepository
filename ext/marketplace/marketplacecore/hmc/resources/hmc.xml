@@ -22,6 +22,8 @@
 		<group name="user" expand="false" description="group.user.description">
 			<typeref type="OTP" description="typeref.otp.description" />
 			<typeref type="Blacklist" description="typeref.blacklist.description" />
+			<typeref type="HomePageTypes" description="group.homepagetypes.description" />
+			<typeref type="LuxuryHomePagePreference" description="group.homepagepreferences.description" />
 		</group>
 		<group name="catalog" mode="append" description="group.catalog.description">
 			<typeref type="MplShopByLook" description="group.MplShopByLook.description" />
@@ -78,6 +80,67 @@
 						<attribute name="enumCode" />
 						<attribute name="globalCode" />
 						<attribute name="description" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+
+		</organizer>
+	</type>
+		<!-- Configuration for HomePageTypes -->
+	<type name="LuxuryHomePagePreference" mode="append">
+		<organizer>
+			
+			<search mode="replace" autoperform="true">
+				<condition attribute="customerGender" operator="contains"/>
+				<condition attribute="homePageType" operator="contains"/>
+				<condition attribute="pageID" operator="contains"/>
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="customerGender" width="100"/>
+						<attribute name="homePageType" width="200"/>
+						<attribute name="pageID" width="200"/>
+					</itemlayout>
+				</listview>
+			</result>
+			<editor>
+				<tab name="tab.common" position="0" mode="replace">
+					<section name="properties" mode="replace">
+						<listlayout>
+							<attribute name="customerGender" width="100"/>
+							<attribute name="homePageType" width="200"/>
+							<attribute name="pageID" width="200"/>
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+
+		</organizer>
+	</type>
+		<!-- Configuration for HomePageTypes -->
+	<type name="HomePageTypes" mode="append">
+		<organizer>
+			
+			<search mode="replace" autoperform="true">
+				<condition attribute="code" operator="contains"/>
+				<condition attribute="discription" operator="contains"/>
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="code" width="100"/>
+						<attribute name="discription" width="200"/>
+					</itemlayout>
+				</listview>
+			</result>
+			<editor>
+				<tab name="tab.common" position="0" mode="replace">
+					<section name="properties" mode="replace">
+						<listlayout>
+							<attribute name="code" width="100"/>
+							<attribute name="discription" width="200"/>
 						</listlayout>
 					</section>
 				</tab>
