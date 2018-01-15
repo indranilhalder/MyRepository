@@ -1940,6 +1940,7 @@ body.page-checkout-login header, body.page-multiStepCheckoutSummaryPage header {
     color: #666;
     padding-top: 5px;
     padding-left: 0;
+    letter-spacing: normal;	/* add for TISCSS-99 */
 }
 .address-list .default input[type="radio"]+label:before {
     margin-right: 12px;
