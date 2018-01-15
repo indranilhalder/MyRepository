@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { getComponentData } from "../actions/home.actions";
 import { withRouter } from "react-router-dom";
-import FeedComponent from "../components/FeedComponent";
+import Widget from "../components/Widget";
 const mapDispatchToProps = dispatch => {
   return {
     getComponentData: (fetchUrl, positionInFeed) => {
@@ -19,8 +19,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const FeedComponentContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FeedComponent)
+const WidgetContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Widget)
 );
 
-export default FeedComponentContainer;
+export default WidgetContainer;

@@ -52,8 +52,8 @@ FeedComponent.propTypes = {
     PropTypes.shape({
       productImage: PropTypes.string,
       title: PropTypes.string,
-      price: PropTypes.number,
-      discountPrice: PropTypes.number,
+      price: PropTypes.string,
+      discountPrice: PropTypes.string,
       description: PropTypes.string,
       onDownload: PropTypes.func,
       onClick: PropTypes.func

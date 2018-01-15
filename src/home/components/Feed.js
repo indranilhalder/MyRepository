@@ -1,20 +1,28 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import FeedComponentContainer from "../containers/FeedComponentContainer";
+import WidgetContainer from "../containers/WidgetContainer";
+import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
+import BannerProductCarousel from "./BannerProductCarousel.js";
+import RecommendationWidget from "./RecommendationWidget.js";
+import ThemeOffer from "./ThemeOffer.js";
+
 const typeComponentMapping = {
-  themeOffers: props => <div {...props}> HELLO WORLD</div>
+  themeOffers: props => <ThemeOffer {...props} />,
+  productRecommendationWidget: props => <RecommendationWidget {...props} />,
+  bannerProductCarousel: props => <BannerProductCarousel {...props} />
+  // automatedBrandProductCarousel: props => (
+  //   <AutomatedBrandProductCarousel {...props} />
+  // )
 };
-// Forgot password --> shows a modal
-// Don't have an account --> sign up --> a route change.
 
 class Feed extends Component {
   renderFeedComponent(feedDatum, i) {
     return (
       typeComponentMapping[feedDatum.type] && (
-        <FeedComponentContainer positionInFeed={i}>
+        <WidgetContainer positionInFeed={i} key={i}>
           {typeComponentMapping[feedDatum.type] &&
             typeComponentMapping[feedDatum.type]}
-        </FeedComponentContainer>
+        </WidgetContainer>
       )
     );
   }
@@ -23,7 +31,6 @@ class Feed extends Component {
     this.props.homeFeed();
   }
   render() {
-    console.log("FEED");
     return (
       <div>
         {this.props.homeFeedData.map((feedDatum, i) => {
