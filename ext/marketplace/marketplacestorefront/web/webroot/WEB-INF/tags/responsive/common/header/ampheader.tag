@@ -579,6 +579,28 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
   display: none;
 }
 
+.display-visible {
+  display: block;
+}
+
+.pincode-check {
+  position: absolute; z-index: 2147483648; top: 200px; right: 30px; left: 30px; background: white;
+}
+
+.pincode-check > section {padding: 0 10px 10px;}
+
+.pincode-check h3 {text-align: center;}
+
+.pincode-check h3 span {float: right; font-size: 28px; margin-top: -10px}
+
+.pincode_text {border: 1px solid #dfd1d5; line-height: 1; padding: 0; height: 40px; outline: 0; padding-left: 10px; cursor: text; text-overflow: ellipsis;}
+
+.pincode_submit {border: none; font-size: 12px; background: #a9143c; color: #fff; float: right; line-height: 0; padding: 0 15px; height: 39px;}
+
+.background-layer {position: absolute; height: 100%; width: 100%; background: rgba(0,0,0,0.65); z-index: 2000; top: 0;}
+
+.sidebar-zindex {z-index: 1000;}
+
 .search-submit {
   margin: 10px 0;
   padding: .5em 1em;
@@ -1026,6 +1048,7 @@ amp-selector [option][selected] {
   color: white;
   background: #444;
   border-radius: 4px;
+  margin-right: 5px;
   padding: 6px;
   width: 16px;
   text-align: center;

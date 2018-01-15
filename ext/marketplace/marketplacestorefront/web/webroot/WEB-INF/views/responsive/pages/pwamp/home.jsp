@@ -145,7 +145,7 @@
 		</p>
 	</header>
 
-	<amp-sidebar id="sidebar" layout="nodisplay" side="left">
+	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" layout="nodisplay" side="left">
 	<amp-accordion class="sidebar-menu l1-accordian">
 	<section>
 		<h4 class="l1-options">
@@ -161,20 +161,29 @@
 			</h4>
 			<amp-accordion class="sidebar-menu l3-accordian">
 			<c:if test="${not empty component.navigationNode.children}">
-			<c:forEach items="${component.navigationNode.children}" var="child1">
 			
+			<c:forEach items="${component.navigationNode.children}" var="child1">
+				<%-- ${child1.children[2].title} --%>
 				<c:forEach items="${child1.children}" var="child">
 					<c:if test="${child.visible}">
+					
+					<%-- <c:forEach items="${child.children}" var="subchild">
+						${subchild.linkName}
+					</c:forEach> --%>
 					<section>
 						<h4 class="l3-options">
 							<%-- <a href="${child.links[0].url}"> --%>
 							${child.title}
+							<%-- ${child.children[0].linkName} --%>
 							<!-- </a> -->
 							<i class="fa fa-angle-right"></i>
 						</h4>
 						<ul>
-						<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
-							<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+						<%-- <li>${child.links[0].linkName}</li> --%>
+						<c:forEach items="${child.links}" var="childlink" varStatus="i">
+							<c:if test="${not i.first}">
+								<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+							</c:if>
 						</c:forEach>
 						</ul>
 					</section>
@@ -323,10 +332,29 @@
 	<p class="sidebar-divider-item">
 		<a href="${request.contextPath}/apps"><i class="fa fa-mobile-phone"></i>Download App</a>
 	</p>
-	<p class="sidebar-divider-item">
-		<a href="#">Enter Your Pincode</a>
-	</p>
+	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
 	</amp-sidebar>
+
+	<section class="pincode-check hidden" [class]="pinCodeVisible ? 'pincode-check display-visible' : 'pincode-check hidden'">
+    <section>
+      <!--<form method="GET" action-xhr="/homePincode" target="_top">
+        <input class="pincode_text" id="home_pincode" name="pin" placeholder="Pincode" maxlength="6" />
+        <input type="submit" value="SUBMIT" class="pincode_submit">
+      </form> -->
+      <h3>Enter Pincode <span role="popup-close" tabindex="2" on="tap:AMP.setState({pinCodeVisible: false})">&times;</span></h3>
+      <input class="pincode_text" id="home_pincode" on="input-debounced:AMP.setState({homePincode: event.value})" placeholder="Pincode" maxlength="6" />
+      <button class="pincode_submit" on="tap:AMP.setState({submitPincode: true, pinCodeVisible: false})">Submit</button>
+    </section>
+    <amp-list src="/homePincode="
+      [src]="submitPincode ? '/homePincode='+homePincode : ''"
+      height="10" layout="fixed-height">
+
+    </amp-list>
+  </section>
+  <section class="background-layer hidden" tabindex="0" role="popup-close"
+    [class]="pinCodeVisible ? 'background-layer display-visible' : 'background-layer hidden'"
+      on="tap:AMP.setState({pinCodeVisible: false})">
+  </section>
 
 	<div class="sliders main-content">
 		<amp-list src="/pwamp/getHomePageBanners?version=Online" height="370"
