@@ -1185,15 +1185,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1599,7 +1599,7 @@ public class ProductDetailsHelper
 	}
 
 	/*
-	 *
+	 * 
 	 * Added For Home Furnishing
 	 */
 	public Map<String, List<String>> displayConfigurableAttributeForHF(final ProductData productData)
@@ -1705,17 +1705,19 @@ public class ProductDetailsHelper
 										if (setInfoFlag && !featureData.getName().equalsIgnoreCase(MarketplaceFacadesConstants.SET)
 												&& !isetInfoComputed)
 										{
-
-											productFeatureDataList.addAll(Arrays.asList(groupSetInfoHF(
-													configurableAttributData,
-													configurationService
-															.getConfiguration()
-															.getInteger(
-																	MarketplaceFacadesConstants.CONFIGURABLE_ATTRIBUTE
-																			+ MarketplaceFacadesConstants.HOME_FURNISHING
-																			+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI + "."
-																			+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI_SPACE,
-																	new Integer(10)).intValue()).split(MarketplaceFacadesConstants.PIPE_REGEX)));
+											//SONR Fix Avoid instantiating Integer objects. Call Integer.valueOf() instead.
+											productFeatureDataList.addAll(Arrays
+													.asList(groupSetInfoHF(
+															configurableAttributData,
+															configurationService
+																	.getConfiguration()
+																	.getInteger(
+																			MarketplaceFacadesConstants.CONFIGURABLE_ATTRIBUTE
+																					+ MarketplaceFacadesConstants.HOME_FURNISHING
+																					+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI + "."
+																					+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI_SPACE,
+																			Integer.valueOf(10)).intValue()).split(
+															MarketplaceFacadesConstants.PIPE_REGEX)));
 											isetInfoComputed = true;
 
 										}
@@ -1935,7 +1937,6 @@ public class ProductDetailsHelper
 
 		return groupedString.toString().substring(0, groupedString.toString().lastIndexOf('|') - 1);
 	}
-
 
 	/**
 	 * @param mapConfigurableAttributes
