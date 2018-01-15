@@ -6,7 +6,7 @@ import BannerProductCarousel from "./BannerProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
 import styles from "./Feed.css";
-import { PulseLoader } from "react-spinners";
+import MDSpinner from "react-md-spinner";
 
 const typeComponentMapping = {
   themeOffers: props => <ThemeOffer {...props} />,
@@ -38,7 +38,7 @@ class Feed extends Component {
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
-        <PulseLoader loading={this.props.loading} />
+        <MDSpinner name="ball-beat" />
       </div>
     );
   }
