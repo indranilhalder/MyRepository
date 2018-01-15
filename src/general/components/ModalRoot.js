@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
+import Portal from "preact-portal";
+
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -74,6 +76,6 @@ export default class ModalRoot extends React.Component {
       </ModalPanel>
     ) : null;
 
-    return ReactDOM.createPortal(Modal, this.el);
+    return <Portal into={this.el}>{Modal}</Portal>;
   }
 }

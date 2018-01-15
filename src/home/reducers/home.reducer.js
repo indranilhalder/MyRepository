@@ -1,5 +1,7 @@
 import * as homeActions from "../actions/home.actions";
-import _ from "lodash";
+import extend from "lodash/extend";
+import cloneDeep from "lodash/cloneDeep";
+import map from "lodash/map";
 
 const home = (
   state = {
@@ -18,9 +20,9 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      let homeFeedClonedData = _.cloneDeep(action.data);
-      let homeFeedData = _.map(homeFeedClonedData, subData => {
-        return _.extend({}, subData, { loading: false, data: {}, status: "" });
+      let homeFeedClonedData = cloneDeep(action.data);
+      let homeFeedData = map(homeFeedClonedData, subData => {
+        return extend({}, subData, { loading: false, data: {}, status: "" });
       });
       return Object.assign({}, state, {
         status: action.status,
@@ -35,7 +37,7 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_REQUEST:
-      homeFeedData = _.cloneDeep(state.homeFeed);
+      homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].loading = true;
       return Object.assign({}, state, {
         status: action.status,
@@ -43,7 +45,7 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_SUCCESS:
-      homeFeedData = _.cloneDeep(state.homeFeed);
+      homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].data = action.data;
       homeFeedData[action.positionInFeed].loading = false;
       return Object.assign({}, state, {
@@ -52,7 +54,7 @@ const home = (
       });
 
     case homeActions.COMPONENT_DATA_FAILURE:
-      homeFeedData = _.cloneDeep(state.homeFeed);
+      homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].loading = false;
       homeFeedData[action.positionInFeed].status = action.error;
 
