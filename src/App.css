@@ -7,19 +7,6 @@ body {
   font-family: regular;
 }
 
-@font-face {
-  font-family: regular;
-  src: url(/general/components/fonts/Rubik-Light.ttf);
-}
-@font-face {
-  font-family: semibold;
-  src: url(/general/components/fonts/Rubik-Medium.ttf);
-}
-@font-face {
-  font-family: bolder;
-  src: url(/general/components/fonts/Rubik-Regular.ttf);
-}
-
 .base {
   width: 100%;
   color: #212121;

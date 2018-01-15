@@ -1,5 +1,4 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
-import _ from "lodash";
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
