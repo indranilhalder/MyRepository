@@ -1083,7 +1083,7 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
 }
 .confirmation .right-block .block .totals li.shippingthanks span:first-child {
     display: inline-block;
-    width: 89%;	/* TISCSS-57 */
+    width: 80%;	/* TISCSS-57 & TISCSS-98 */
 }
 /* start for TISCSS-57 */
 .confirmation .right-block .block .totals li.shippingthanks>span.amt {
