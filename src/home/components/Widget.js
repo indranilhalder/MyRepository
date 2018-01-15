@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { PulseLoader } from "react-spinners";
-import styles from "./Widget.css";
 
 export default class Widget extends React.Component {
   componentDidMount() {

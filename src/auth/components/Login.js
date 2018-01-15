@@ -51,8 +51,6 @@ class Login extends Component {
   }
 
   render() {
-    console.log("IN LOGIN COMPONENT");
-    console.log(this.props);
     return (
       <React.Fragment>
         <div>
