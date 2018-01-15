@@ -1650,3 +1650,12 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 	}
 }
 /* TISPRNXIII-38 */
+.confirmation .product-block li.item>ul>li:first-child div.product .product-name {
+    font-weight: 600 ! important;
+}
+@media (max-width: 767px){
+	.track-order-modal .content {
+	    width: calc(100% - 24px) ! important;
+	    height: calc(100% - 104px) ! important;
+	}
+}	
