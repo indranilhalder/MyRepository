@@ -287,7 +287,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 
 		if (promoCurrent instanceof BuyAPercentageDiscountModel)
 		{
-			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
+			final StringBuilder queryString = new StringBuilder(5000);
+			queryString.append("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
 			queryString.append(" {{ SELECT {p." + BuyAPercentageDiscountModel.PK + "} AS pk, {p."
 					+ BuyAPercentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyAPercentageDiscountModel._TYPECODE + " AS p ");
 			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
@@ -547,8 +548,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		final List<CategoryModel> categoryList = mplPromotionHelper.getAllCategories(categories);
 		final Map params = new HashMap();
 		params.put("categories", categoryList);
-
-		final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
+		final StringBuilder queryString = new StringBuilder(5000);
+		queryString.append("SELECT DISTINCT pprom.pk FROM (");
 		queryString.append(" {{ SELECT {c2p.target} as pk " + MarketplacecommerceservicesConstants.QUERYFROM);
 		queryString.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
 		queryString.append(" WHERE {c2p.source} IN (?categories)");
@@ -614,10 +615,9 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		//Get valid promotional seller list for product
 		final Map params = new HashMap();
 		params.put("product", product.getPk());
-
-		final StringBuilder queryString = new StringBuilder("SELECT {" + SellerInformationModel.PK + "} FROM {"
-				+ SellerInformationModel._TYPECODE + " AS sellerInfo} " + " WHERE {sellerInfo."
-				+ SellerInformationModel.PRODUCTSOURCE + "} = ?product ");
+		final StringBuilder queryString = new StringBuilder(5000);
+		queryString.append("SELECT {" + SellerInformationModel.PK + "} FROM {" + SellerInformationModel._TYPECODE
+				+ " AS sellerInfo} " + " WHERE {sellerInfo." + SellerInformationModel.PRODUCTSOURCE + "} = ?product ");
 
 		if (CollectionUtils.isNotEmpty(promoSellersList))
 		{
@@ -645,8 +645,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		//		final StringBuilder queryString = new StringBuilder("SELECT {c2p.source} as pk " + MarketplacecommerceservicesConstants.QUERYFROM);
 		//		queryString.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
 		//		queryString.append(" WHERE {c2p.target} =?product)");
-
-		final StringBuilder queryString = new StringBuilder("SELECT {cat2prod:source} as pk  ");
+		final StringBuilder queryString = new StringBuilder(5000);
+		queryString.append("SELECT {cat2prod:source} as pk  ");
 		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM).append(
 				GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
 		queryString.append(" AS cat2prod JOIN ").append(CategoryModel._TYPECODE)
