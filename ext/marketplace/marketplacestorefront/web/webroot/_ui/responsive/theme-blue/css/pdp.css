@@ -7698,15 +7698,7 @@ body.no-scroll {
 .Manufacturer.Temp01 img,.Manufacturer.Temp02 img,.Manufacturer.Temp03 img,.Manufacturer.Temp04 img,.Manufacturer.Temp07 img,.Manufacturer.temp-five img,.Manufacturer.temp-six img{
 	max-width:100%;
 }
-.Manufacturer h3 {
-    font-size: 24px;
-    font-weight: bold;
-    padding-bottom: 10px;
-    margin: 0 0 17px;
-    position: relative;
-    display: inline-block;
-}
-.Manufacturer h3:after {
+#productContentDivId .Manufacturer h3:after {	/* add id in hierarchy for TISCSS-104 */
     content: '';
     position: absolute;
     left: 0;
@@ -7749,10 +7741,10 @@ body.no-scroll {
     padding: 5.8% 2.2% 0 7%;
 }
 .Manufacturer h3{
-	font-size: 24px;
+	font-size: 24px !important;		/* add important for TISCSS-104 */
     font-weight: bold;
     padding-bottom: 10px;
-    margin: 0 0 17px;
+    margin: 0 0 17px !important;	/* add important for TISCSS-104 */
     position: relative;
     display: inline-block;
 }
