@@ -1,6 +1,7 @@
 import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
+import { transformData } from "./utils.js";
 
 export default class RecommendationWidget extends React.Component {
   handleClick() {
@@ -9,21 +10,28 @@ export default class RecommendationWidget extends React.Component {
     }
   }
   render() {
+    let feedComponentData = this.props.feedComponentData;
+    let carouselData;
+    if (feedComponentData.data instanceof Array) {
+      carouselData = feedComponentData.data.map(transformData);
+    }
+
     return (
       <FeedComponent
         backgroundColor="#e4e4e4"
         carouselOptions={{
-          header: "Recommended for you",
-          buttonText: "See All",
+          header: this.props.feedComponentData.title,
+          buttonText: this.props.feedComponentData.btnText,
           seeAll: () => {
             this.handleClick();
           }
         }}
-        {...this.props}
+        data={carouselData}
       />
     );
   }
 }
 RecommendationWidget.propTypes = {
-  seeAll: PropTypes.func
+  seeAll: PropTypes.func,
+  feedComponentData: PropTypes.object
 };

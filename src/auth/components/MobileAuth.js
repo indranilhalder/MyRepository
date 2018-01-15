@@ -40,7 +40,7 @@ export default class Auth extends React.Component {
         <Switch>
           <Route path="/login" component={LoginContainer} />
           <Route path="/sign_up" component={SignUpContainer} />
-          <Route path="*" component={LoginContainer} />
+          {/* <Route path="*" component={LoginContainer} /> */}
         </Switch>
       </AuthFrame>
     );

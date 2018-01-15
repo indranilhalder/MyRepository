@@ -43,7 +43,9 @@ export default class ProductDescription extends Component {
           )}
         </div>
         <div className={contentClass}>
-          {this.props.description && <div>{this.props.description}</div>}
+          {this.props.description && (
+            <div className={styles.description}>{this.props.description}</div>
+          )}
 
           {this.props.discountPrice && (
             <div className={styles.discount}>
@@ -63,8 +65,8 @@ export default class ProductDescription extends Component {
 ProductDescription.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  price: PropTypes.number,
-  discountPrice: PropTypes.number,
+  price: PropTypes.string,
+  discountPrice: PropTypes.string,
   icon: PropTypes.string,
   onDownload: PropTypes.func,
   isWhite: PropTypes.bool
@@ -74,7 +76,7 @@ ProductDescription.defaultProps = {
   title: "",
   icon: "",
   description: "",
-  price: 0,
+  price: "",
   isWhite: false,
   textColor: "#212121"
 };

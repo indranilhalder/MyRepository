@@ -3,6 +3,7 @@ import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
 import Logo from "../../general/components/Logo";
+import { transformData } from "./utils.js";
 export default class AutomatedBrandProductCarousel extends React.Component {
   handleClick() {
     if (this.props.seeAll) {
@@ -10,13 +11,19 @@ export default class AutomatedBrandProductCarousel extends React.Component {
     }
   }
   render() {
+    const componentData = this.props.feedComponentData.data;
+    let carouselData;
+    if (componentData.items instanceof Array) {
+      carouselData = componentData.items.map(transformData);
+    }
+
     return (
       <FeedComponent
         banner={
           <ProductImageHeader
-            image={this.props.bannerImage}
-            description={this.props.bannerDescription}
-            logo={<Logo image={this.props.bannerLogo} />}
+            image={componentData.imageUrl}
+            description={componentData.description}
+            logo={<Logo image={componentData.brandLogo} />}
           />
         }
         backgroundColor="#e4e4e4"
@@ -26,7 +33,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
             this.handleClick();
           }
         }}
-        {...this.props}
+        data={carouselData}
       />
     );
   }

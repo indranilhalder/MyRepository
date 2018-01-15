@@ -24,6 +24,7 @@ export default class ModalRoot extends React.Component {
   submitOtp(userDetails) {
     this.props.otpVerification(userDetails);
     this.props.hideModal();
+    this.props.history.push("/home");
   }
 
   resetPassword(userDetails) {

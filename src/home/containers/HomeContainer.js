@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { homeFeed } from "../actions/home.actions";
-import Home from "../../auth/components/Login";
+import Feed from "../components/Feed";
 import { withRouter } from "react-router-dom";
 const mapDispatchToProps = dispatch => {
   return {
@@ -12,12 +12,13 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    data: state.home.data
+    homeFeedData: state.home.homeFeed,
+    loading: state.home.loading
   };
 };
 
 const HomeContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Home)
+  connect(mapStateToProps, mapDispatchToProps)(Feed)
 );
 
 export default HomeContainer;

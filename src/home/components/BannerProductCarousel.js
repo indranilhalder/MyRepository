@@ -2,6 +2,7 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
+import { transformData } from "./utils.js";
 export default class BannerProductCarousal extends React.Component {
   handleClick() {
     if (this.props.seeAll) {
@@ -9,13 +10,18 @@ export default class BannerProductCarousal extends React.Component {
     }
   }
   render() {
+    const feedComponentData = this.props.feedComponentData.data;
+    let data = [];
+    if (feedComponentData.items) {
+      data = feedComponentData.items.map(transformData);
+    }
     return (
       <FeedComponent
         banner={
           <ProductImageHeader
-            image={this.props.bannerImage}
-            name={this.props.bannerHeading}
-            label={this.props.bannerDescription}
+            image={feedComponentData.imageURL}
+            name={feedComponentData.title}
+            label={feedComponentData.description}
           />
         }
         backgroundColor="#e4e4e4"
@@ -25,7 +31,7 @@ export default class BannerProductCarousal extends React.Component {
             this.handleClick();
           }
         }}
-        {...this.props}
+        data={data}
       />
     );
   }
