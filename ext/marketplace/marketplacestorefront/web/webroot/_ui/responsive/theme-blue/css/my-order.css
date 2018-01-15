@@ -1436,10 +1436,6 @@ body .account .right-account .order-history .product-block li.item .cancellation
 	body .right-account .order-history .cancellation-request-block .return-form .return-container .questions label {
     	font-size: 14px !important;
 	}
-	body .right-account .order-history .cancellation-request-block .return-form .buttons {
-    text-align: center;
-    padding: 0 35px 20px;
-	}
 	body .right-account .order-history .cancellation-request-block .return-form .return-container .questions {
 	    width: 100%;
 	}
@@ -1453,6 +1449,11 @@ body .account .right-account .order-history .product-block li.item .cancellation
  		text-align: center;
      	padding: 0 35px 20px;
  	}
+ 	/* start add for TISCSS-102 */
+ 	body .right-account .order-history .cancellation-request-block.success .return-form .buttons {
+ 		padding-top: 30px;
+ 	}
+ 	/* end add for TISCSS-102 */
  	body .right-account .order-history .cancellation-request-block .return-form .buttons button {
  		width: 100%;
  	}
