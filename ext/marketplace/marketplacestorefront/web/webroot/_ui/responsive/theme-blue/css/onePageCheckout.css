@@ -46,7 +46,10 @@
 	padding: 38px 28px 28px;
 	background:#f8f8f8;
 }
-
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
+    padding: 0;
+    font-size: 14px;
+}
 .cart.wrapper.checkout-payment .right-block.billing .block.summary-info  ul.totals li#total{
 	border-top:1px solid #ddd;
 	border-bottom:none;
@@ -1442,11 +1445,6 @@ a.cvvHelp#cvvHelp + div.popover{
     font-size: 12px !important;
     z-index: 99;
 }
-.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
-    font-size: 14px;
-    padding-top: 17.5px;
-    padding-bottom: 5px;
-}
 }
 div.radio.creditDebitLabelRadio{
 	display: none;
@@ -1942,6 +1940,7 @@ body.page-checkout-login header, body.page-multiStepCheckoutSummaryPage header {
     color: #666;
     padding-top: 5px;
     padding-left: 0;
+    letter-spacing: normal;	/* add for TISCSS-99 */
 }
 .address-list .default input[type="radio"]+label:before {
     margin-right: 12px;
@@ -5677,10 +5676,7 @@ transform-origin:0 0;
 #paymentFormButton.pay.cont-del #submitPaymentFormCODButton {
     display: block !important;
 }
-.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
-    padding: 0;
-    font-size: 14px;
-}
+
 .retail-bag {
 	padding-bottom: 5px;	/* add for TISCSS-63 */
 }

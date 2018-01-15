@@ -4574,9 +4574,7 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 		{
 		padding-top: 10px;
 	}
-	.MyBag-top-section {
-		margin: 0 0 20px 0;
-	}
+	
 	body.page-cartPage .cart.wrapper .product-block {
 		margin-top: 20px;
 	}
@@ -5808,3 +5806,6 @@ li.item>ul li:last-child {
     font-weight: normal;
 } */
 /* end comment for TISCSS-77 */
+.MyBag-top-section {
+		margin: 0 0 20px 0;
+	}

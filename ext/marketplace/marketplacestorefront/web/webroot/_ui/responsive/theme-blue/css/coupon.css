@@ -239,3 +239,9 @@ body .account .right-account::after {
     display: table;
 }
 }
+/* TISCSS-106 */
+.comparison-table.active .short-info {
+    padding: 10px 0;
+    margin-top: 0;
+}
+/* TISCSS-106 */
