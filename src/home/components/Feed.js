@@ -9,10 +9,10 @@ import ThemeOffer from "./ThemeOffer.js";
 const typeComponentMapping = {
   themeOffers: props => <ThemeOffer {...props} />,
   productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  bannerProductCarousel: props => <BannerProductCarousel {...props} />
-  // automatedBrandProductCarousel: props => (
-  //   <AutomatedBrandProductCarousel {...props} />
-  // )
+  bannerProductCarousel: props => <BannerProductCarousel {...props} />,
+  automatedBrandProductCarousel: props => (
+    <AutomatedBrandProductCarousel {...props} />
+  )
 };
 
 class Feed extends Component {
