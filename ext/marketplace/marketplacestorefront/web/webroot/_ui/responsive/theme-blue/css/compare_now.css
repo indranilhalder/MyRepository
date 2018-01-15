@@ -103,3 +103,6 @@
 	}
 }
 /* end change of TISCSS-68 */
+.comparison-table:first-child {
+    margin-top: 30px;
+}
