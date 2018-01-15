@@ -3,12 +3,14 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
 import java.util.List;
@@ -19,8 +21,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.FPCRefundMethod;
+import com.tisl.mpl.core.enums.FPCRefundStatus;
+import com.tisl.mpl.core.enums.FPCRefundType;
+import com.tisl.mpl.core.model.FPCRefundEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.juspay.PaymentService;
+import com.tisl.mpl.juspay.Refund;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.ForwardPaymentCleanUpDao;
@@ -45,13 +52,37 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	@Autowired
 	MplJusPayRefundService mplJusPayRefundService;
 
+	@Autowired
+	ModelService modelService;
+
 	private final static Logger LOG = Logger.getLogger(ForwardPaymentCleanUpServiceImpl.class.getName());
 
 	@Override
-	public List<OrderModel> fetchSpecificOrders(final Date startTime, final Date endTime)
+	public List<OrderModel> fetchOrdersWithMultiplePayments(final Date startTime, final Date endTime)
 	{
-		return forwardPaymentCleanUpDao.fetchSpecificOrders(startTime, endTime);
+		return forwardPaymentCleanUpDao.fetchOrdersWithMultiplePayments(startTime, endTime);
 	}
+
+	@Override
+	public List<OrderModel> fetchPaymentFailedOrders(final Date startTime, final Date endTime)
+	{
+		return forwardPaymentCleanUpDao.fetchPaymentFailedOrders(startTime, endTime);
+	}
+
+
+	@Override
+	public List<MplPaymentAuditModel> fetchAuditsWithoutOrder(final Date startTime, final Date endTime)
+	{
+		return forwardPaymentCleanUpDao.fetchAuditsWithoutOrder(startTime, endTime);
+	}
+
+
+	@Override
+	public List<FPCRefundEntryModel> fetchSpecificRefundEntries(final String expiredFlag)
+	{
+		return forwardPaymentCleanUpDao.fetchSpecificRefundEntries(expiredFlag);
+	}
+
 
 	@Override
 	public MplConfigurationModel fetchConfigDetails(final String code)
@@ -60,118 +91,77 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	}
 
 	@Override
-	public void cleanUpMultiplePayments(final OrderModel orderModel)
+	public void createRefundEntryForMultiplePayments(final OrderModel orderModel)
 	{
-		try
+		if (!checkCOD(orderModel))
 		{
-			if (!checkCOD(orderModel))
+			final List<MplPaymentAuditModel> paymentAuditList = forwardPaymentCleanUpDao.fetchAuditsForGUID(orderModel.getGuid());
+
+			if (paymentAuditList.size() > 1)
 			{
-				final List<MplPaymentAuditModel> paymentAuditList = forwardPaymentCleanUpDao.fetchAuditsForGUID(orderModel.getGuid());
+				LOG.debug("Found multiple audits for order: " + orderModel.getCode());
+				final List<PaymentTransactionModel> paymentTransactionList = orderModel.getPaymentTransactions();
 
-				if (paymentAuditList.size() > 1)
+				String firstAuditId = null;
+				for (final PaymentTransactionModel paymentTransaction : paymentTransactionList)
 				{
-					LOG.debug("Found multiple audits for order: " + orderModel.getCode());
-					final List<PaymentTransactionModel> paymentTransactionList = orderModel.getPaymentTransactions();
-
-					String firstAuditId = null;
-					for (final PaymentTransactionModel paymentTransaction : paymentTransactionList)
-					{
-						if (null != firstAuditId)
-						{
-							break;
-						}
-						for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
-						{
-							if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
-									.equals(paymentTransactionEntry.getType()))
-									&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
-											.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
-							{
-								firstAuditId = paymentTransactionEntry.getRequestToken();
-								break;
-							}
-						}
-					}
 					if (null != firstAuditId)
 					{
-						LOG.debug("Valid audit ID for the order: " + firstAuditId);
-						LOG.debug("Requsting JuspayOrderStatus for the valid audit id: " + firstAuditId);
-
-						final GetOrderStatusResponse orderStatusResponse = getOrderStatusFromJuspay(firstAuditId);
-
-						if (null != orderStatusResponse && null != orderStatusResponse.getStatus())
+						break;
+					}
+					for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+					{
+						if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
+								.equals(paymentTransactionEntry.getType()))
+								&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
+										.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
 						{
-							LOG.debug("Status for the valid audit id " + firstAuditId + " : " + orderStatusResponse.getStatus());
-
-							if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED)
-									&& CollectionUtils.isEmpty(orderStatusResponse.getRefunds()))
-							{
-								for (final MplPaymentAuditModel paymentAudit : paymentAuditList)
-								{
-									try
-									{
-										if (!StringUtils.equalsIgnoreCase(paymentAudit.getAuditId(), firstAuditId))
-										{
-											LOG.debug("Requsting JuspayOrderStatus for audit id: " + paymentAudit.getAuditId());
-
-											final GetOrderStatusResponse dupOrderStatusResponse = getOrderStatusFromJuspay(paymentAudit
-													.getAuditId());
-											if (null != dupOrderStatusResponse && null != dupOrderStatusResponse.getStatus())
-											{
-												if (dupOrderStatusResponse.getStatus().equalsIgnoreCase(
-														MarketplacecommerceservicesConstants.CHARGED)
-														&& CollectionUtils.isEmpty(dupOrderStatusResponse.getRefunds()))
-												{
-													LOG.debug("Initiating refund for Audit ID " + paymentAudit.getAuditId());
-
-													initiateOrderRefund(dupOrderStatusResponse, paymentAudit);
-
-													LOG.debug("Refund initiated successfully for Audit ID " + paymentAudit.getAuditId());
-												}
-												else
-												{
-													LOG.debug("Audit ID " + paymentAudit.getAuditId() + " is not CHARGED or already refunded");
-												}
-											}
-											else
-											{
-												LOG.error("Failed to retrieve status from Juspay for audit id: " + paymentAudit.getAuditId());
-											}
-										}
-									}
-									catch (final Exception e)
-									{
-										LOG.error("Error while processing audit id: " + paymentAudit.getAuditId() + " Order ID: "
-												+ orderModel.getCode());
-										LOG.error(e.getMessage(), e);
-									}
-								}
-							}
-							else
-							{
-								LOG.debug("Valid Audit ID " + firstAuditId
-										+ " is not CHARGED or already refunded. Aborting auto-refund for the order :"
-										+ orderModel.getCode());
-							}
-						}
-						else
-						{
-							LOG.error("Failed to retrieve status for the valid audit id from Juspay");
+							firstAuditId = paymentTransactionEntry.getRequestToken();
+							break;
 						}
 					}
-					else
+				}
+				if (null != firstAuditId)
+				{
+					LOG.debug("Valid audit ID for the order: " + firstAuditId);
+
+					for (final MplPaymentAuditModel paymentAudit : paymentAuditList)
 					{
-						LOG.debug("No valid audit id found for the order: " + orderModel.getCode());
+						try
+						{
+							if (!StringUtils.equalsIgnoreCase(paymentAudit.getAuditId(), firstAuditId))
+							{
+								if (!refundEntryExists(paymentAudit.getAuditId()))
+								{
+									final FPCRefundEntryModel refundEntry = modelService.create(FPCRefundEntryModel.class);
+									refundEntry.setAuditId(paymentAudit.getAuditId());
+									refundEntry.setAudit(paymentAudit);
+									refundEntry.setCartGUID(paymentAudit.getCartGUID());
+									refundEntry.setOrder(orderModel);
+									refundEntry.setParentAuditId(firstAuditId);
+									refundEntry.setRefundStatus(FPCRefundStatus.CREATED);
+									refundEntry.setRefundType(FPCRefundType.DUPLICATE_PAYMENT);
+									refundEntry.setIsExpired(Boolean.FALSE);
+									modelService.save(refundEntry);
+									LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+								}
+							}
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
+							LOG.error(e.getMessage(), e);
+						}
 					}
 				}
 			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Error while processing the cleanup for the order: " + orderModel.getCode());
-			LOG.error(e.getMessage(), e);
+			else
+			{
+				LOG.debug("No valid audit id found for the order: " + orderModel.getCode());
+			}
 		}
 	}
+
 
 	private boolean checkCOD(final OrderModel orderModel)
 	{
@@ -182,6 +172,234 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 			isCOD = true;
 		}
 		return isCOD;
+	}
+
+	@Override
+	public void createRefundEntryForFailedOrders(final OrderModel orderModel)
+	{
+		if (!checkCOD(orderModel))
+		{
+			final OrderStatus orderStatus = orderModel.getStatus();
+			final List<MplPaymentAuditModel> auditList = forwardPaymentCleanUpDao.fetchAuditsForGUID(orderModel.getGuid());
+			if (CollectionUtils.isNotEmpty(auditList))
+			{
+				for (final MplPaymentAuditModel paymentAudit : auditList)
+				{
+					try
+					{
+						if (null != orderStatus)
+						{
+							if (orderStatus.equals(OrderStatus.PAYMENT_TIMEOUT))
+							{
+								if (!refundEntryExists(paymentAudit.getAuditId()))
+								{
+									final FPCRefundEntryModel refundEntry = modelService.create(FPCRefundEntryModel.class);
+									refundEntry.setAuditId(paymentAudit.getAuditId());
+									refundEntry.setAudit(paymentAudit);
+									refundEntry.setCartGUID(paymentAudit.getCartGUID());
+									refundEntry.setOrder(orderModel);
+									refundEntry.setRefundStatus(FPCRefundStatus.CREATED);
+									refundEntry.setRefundType(FPCRefundType.PAYMENT_TIMEOUT);
+									refundEntry.setIsExpired(Boolean.FALSE);
+									modelService.save(refundEntry);
+									LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+								}
+								else
+								{
+									LOG.error("Refund entry already exists for audit :" + paymentAudit.getAuditId());
+								}
+							}
+							else if (orderStatus.equals(OrderStatus.PAYMENT_FAILED))
+							{
+								if (!refundEntryExists(paymentAudit.getAuditId()))
+								{
+									final FPCRefundEntryModel refundEntry = modelService.create(FPCRefundEntryModel.class);
+									refundEntry.setAuditId(paymentAudit.getAuditId());
+									refundEntry.setAudit(paymentAudit);
+									refundEntry.setCartGUID(paymentAudit.getCartGUID());
+									refundEntry.setOrder(orderModel);
+									refundEntry.setRefundStatus(FPCRefundStatus.CREATED);
+									refundEntry.setRefundType(FPCRefundType.PAYMENT_FAILED);
+									refundEntry.setIsExpired(Boolean.FALSE);
+									modelService.save(refundEntry);
+									LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+								}
+								else
+								{
+									LOG.error("Refund entry already exists for audit :" + paymentAudit.getAuditId());
+								}
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
+						LOG.error(e.getMessage(), e);
+
+
+					}
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public void createRefundEntryForAuditsWithoutOrder(final MplPaymentAuditModel auditModel)
+	{
+		try
+		{
+			if (!refundEntryExists(auditModel.getAuditId()))
+			{
+				final FPCRefundEntryModel refundEntry = modelService.create(FPCRefundEntryModel.class);
+				refundEntry.setAuditId(auditModel.getAuditId());
+				refundEntry.setAudit(auditModel);
+				refundEntry.setCartGUID(auditModel.getCartGUID());
+				refundEntry.setRefundStatus(FPCRefundStatus.CREATED);
+				refundEntry.setRefundType(FPCRefundType.ORDER_NOT_GENERATED);
+				refundEntry.setIsExpired(Boolean.FALSE);
+				modelService.save(refundEntry);
+				LOG.debug("RefundEntry created for the audit :" + auditModel.getAuditId());
+			}
+			else
+			{
+				LOG.error("Refund entry already exists for audit :" + auditModel.getAuditId());
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while creating refund entry for audit: " + auditModel.getAuditId());
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void processRefund(final FPCRefundEntryModel refundEntry)
+	{
+		final FPCRefundType refundType = refundEntry.getRefundType();
+		if (refundEntry.getRefundStatus().equals(FPCRefundStatus.CREATED))
+		{
+			refundEntry.setRefundStatus(FPCRefundStatus.PENDING);
+		}
+		try
+		{
+			if (null != refundType)
+			{
+				if (refundType.equals(FPCRefundType.PAYMENT_FAILED) || refundType.equals(FPCRefundType.PAYMENT_TIMEOUT)
+						|| refundType.equals(FPCRefundType.ORDER_NOT_GENERATED))
+				{
+					final GetOrderStatusResponse orderStatusResponse = getOrderStatusFromJuspay(refundEntry.getAuditId());
+					if (null != orderStatusResponse)
+					{
+						if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							final String refundResponseStatus = checkRefundStatus(orderStatusResponse);
+							if (null == refundResponseStatus)
+							{
+								if (refundType.equals(FPCRefundType.ORDER_NOT_GENERATED))
+								{
+									initiateOrderRefundAudit(orderStatusResponse, refundEntry.getAudit());
+								}
+								else
+								{
+									initiateOrderRefund(orderStatusResponse, refundEntry.getAudit());
+								}
+								refundEntry.setRefundStatus(FPCRefundStatus.REFUND_INITIATED);
+							}
+							else if (refundResponseStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+							{
+								refundEntry.setRefundStatus(FPCRefundStatus.REFUND_SUCCESSFUL);
+								final String refundMethod = checkRefundMethod(orderStatusResponse);
+								if (refundMethod.equals(MarketplacecommerceservicesConstants.AUTOMATIC))
+								{
+									refundEntry.setRefundMethod(FPCRefundMethod.AUTOMATIC);
+								}
+								else if (refundMethod.equals(MarketplacecommerceservicesConstants.MANUAL))
+								{
+									refundEntry.setRefundMethod(FPCRefundMethod.MANUAL);
+								}
+								expireRefundEntry(refundEntry);
+							}
+							else if (refundResponseStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+							{
+								refundEntry.setRefundStatus(FPCRefundStatus.REFUND_IN_PROGRESS);
+							}
+						}
+						else
+						{
+							refundEntry.setRefundStatus(FPCRefundStatus.NOT_APPLICABLE);
+							expireRefundEntry(refundEntry);
+						}
+					}
+				}
+				else if (refundType.equals(FPCRefundType.DUPLICATE_PAYMENT))
+				{
+					if (null != refundEntry.getParentAuditId())
+					{
+						final GetOrderStatusResponse parentOrderStatusResponse = getOrderStatusFromJuspay(refundEntry
+								.getParentAuditId());
+						if (parentOrderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							final String parentRefundStatus = checkRefundStatus(parentOrderStatusResponse);
+							if (null == parentRefundStatus)
+							{
+								final GetOrderStatusResponse orderStatusResponse = getOrderStatusFromJuspay(refundEntry.getAuditId());
+								if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+								{
+									final String refundResponseStatus = checkRefundStatus(orderStatusResponse);
+									if (null == refundResponseStatus)
+									{
+										initiateOrderRefund(orderStatusResponse, refundEntry.getAudit());
+										refundEntry.setRefundStatus(FPCRefundStatus.REFUND_INITIATED);
+									}
+									else if (refundResponseStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+									{
+										refundEntry.setRefundStatus(FPCRefundStatus.REFUND_SUCCESSFUL);
+										final String refundMethod = checkRefundMethod(orderStatusResponse);
+										if (refundMethod.equals(MarketplacecommerceservicesConstants.AUTOMATIC))
+										{
+											refundEntry.setRefundMethod(FPCRefundMethod.AUTOMATIC);
+										}
+										else if (refundMethod.equals(MarketplacecommerceservicesConstants.MANUAL))
+										{
+											refundEntry.setRefundMethod(FPCRefundMethod.MANUAL);
+										}
+										expireRefundEntry(refundEntry);
+									}
+									else if (refundResponseStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+									{
+										refundEntry.setRefundStatus(FPCRefundStatus.REFUND_IN_PROGRESS);
+
+									}
+								}
+								else
+								{
+									refundEntry.setRefundStatus(FPCRefundStatus.NOT_APPLICABLE);
+									expireRefundEntry(refundEntry);
+								}
+							}
+						}
+						else
+						{
+							refundEntry.setRefundStatus(FPCRefundStatus.NOT_APPLICABLE);
+							expireRefundEntry(refundEntry);
+							LOG.error("Parent audit id not charged : " + refundEntry.getParentAuditId());
+						}
+					}
+				}
+			}
+			else
+			{
+				expireRefundEntry(refundEntry);
+			}
+			modelService.save(refundEntry);
+		}
+		catch (final Exception e)
+		{
+			modelService.save(refundEntry);
+			LOG.error("Error while processing refund for audit: " + refundEntry.getAuditId());
+			LOG.error(e.getMessage(), e);
+		}
 	}
 
 	private GetOrderStatusResponse getOrderStatusFromJuspay(final String orderId)
@@ -238,4 +456,107 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 		}
 	}
 
+	private void initiateOrderRefundAudit(final GetOrderStatusResponse orderStatusResponse, final MplPaymentAuditModel paymentAudit)
+	{
+		try
+		{
+			if (null != orderStatusResponse.getPaymentMethodType()
+					&& orderStatusResponse.getPaymentMethodType().equalsIgnoreCase(
+							MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+			{
+				mplJusPayRefundService.doRefundAudit(paymentAudit.getAuditId(), orderStatusResponse.getPaymentMethodType());
+			}
+			else if (StringUtils.isNotEmpty(orderStatusResponse.getBankEmi())
+					&& StringUtils.isNotEmpty(orderStatusResponse.getBankTenure()))
+			{
+				mplJusPayRefundService.doRefundAudit(paymentAudit.getAuditId(), MarketplacecommerceservicesConstants.EMI);
+			}
+			else
+			{
+				mplJusPayRefundService.doRefundAudit(paymentAudit.getAuditId(), orderStatusResponse.getCardResponse().getCardType());
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	private boolean refundEntryExists(final String auditId)
+	{
+		final FPCRefundEntryModel refundEntry = forwardPaymentCleanUpDao.fetchRefundEntryForAuditId(auditId);
+		if (null != refundEntry)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	private String checkRefundStatus(final GetOrderStatusResponse orderStatusResponse)
+	{
+		boolean isPending = false;
+		boolean isSuccess = false;
+		if (null != orderStatusResponse && CollectionUtils.isNotEmpty(orderStatusResponse.getRefunds()))
+		{
+			final List<Refund> refundResponseList = orderStatusResponse.getRefunds();
+			for (final Refund refundResponse : refundResponseList)
+			{
+				if (null != refundResponse.getStatus()
+						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					isSuccess = true;
+					break;
+				}
+				else if (null != refundResponse.getStatus()
+						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+				{
+					isPending = true;
+				}
+			}
+		}
+		if (isSuccess)
+		{
+			return MarketplacecommerceservicesConstants.SUCCESS;
+		}
+		else if (isPending)
+		{
+			return MarketplacecommerceservicesConstants.PENDING;
+		}
+		return null;
+	}
+
+	private String checkRefundMethod(final GetOrderStatusResponse orderStatusResponse)
+	{
+
+		if (null != orderStatusResponse && CollectionUtils.isNotEmpty(orderStatusResponse.getRefunds()))
+		{
+			final List<Refund> refundResponseList = orderStatusResponse.getRefunds();
+			for (final Refund refundResponse : refundResponseList)
+			{
+				if (null != refundResponse.getStatus()
+						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					if (StringUtils.isNotEmpty(refundResponse.getUniqueRequestId()))
+					{
+						return MarketplacecommerceservicesConstants.AUTOMATIC;
+					}
+					else
+					{
+						return MarketplacecommerceservicesConstants.MANUAL;
+					}
+				}
+			}
+		}
+		return MarketplacecommerceservicesConstants.MANUAL;
+	}
+
+	@Override
+	public void expireRefundEntry(final FPCRefundEntryModel refundEntry)
+	{
+		refundEntry.setIsExpired(Boolean.TRUE);
+		modelService.save(refundEntry);
+	}
 }
