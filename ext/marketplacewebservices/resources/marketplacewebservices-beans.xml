@@ -3589,10 +3589,10 @@
 	</bean>
 	
 	
-	<bean class="com.tisl.mpl.wsdto.productsDTO">
+	<bean class="com.tisl.mpl.wsdto.HomeProductsDTO">
 		<property name="title" type="String"/>
-		<property name="mrpPrice" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.PriceData>"/>
-		<property name="discountedPrice" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.PriceData>"/>
+		<property name="mrpPrice" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="discountedPrice" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="webURL" type="String" />
 		<property name="appURL" type="String" />
 		<property name="imageURL" type="String" />
@@ -3600,7 +3600,7 @@
 		</bean>
 	<bean class="com.tisl.mpl.wsdto.ThemeOffersDTO">
 		<property name="offers" type="java.util.List&lt;com.tisl.mpl.wsdto.OffersDTO>" />
-		<property name="products" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="products" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
 		<property name="errorMessage" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
@@ -3614,14 +3614,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.ThemeOffersJSONDTO">
 		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.OffersDTO>" />
-		<property name="itemIds" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />			
+		<property name="itemIds" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />			
 	</bean>	
 	
 		<bean class="com.tisl.mpl.wsdto.HomePageBannersDTO">
 		<property name="title" type="String" />
 		<property name="description" type="String" />
 		<property name="imageURL" type="String" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
 		<property name="errorMessage" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
@@ -3633,7 +3633,7 @@
 		<property name="description" type="String" />
 		<property name="imageURL" type="String" />
 		<property name="videoURL" type="String" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
 		<property name="errorMessage" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
@@ -3645,7 +3645,7 @@
 		<property name="brandLogo" type="String" />
 		<property name="description" type="String" />
 		<property name="imageURL" type="String" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.productsDTO>" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
 		<property name="errorMessage" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
