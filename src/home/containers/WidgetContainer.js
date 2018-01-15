@@ -15,7 +15,8 @@ const mapStateToProps = (state, ownProps) => {
   const feedComponentData = state.home.homeFeed[ownProps.positionInFeed];
   return {
     feedComponentData: feedComponentData,
-    positionInFeed
+    positionInFeed,
+    loading: feedComponentData.loading
   };
 };
 

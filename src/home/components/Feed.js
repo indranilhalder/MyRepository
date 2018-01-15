@@ -5,6 +5,8 @@ import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
+import styles from "./Feed.css";
+import { PulseLoader } from "react-spinners";
 
 const typeComponentMapping = {
   themeOffers: props => <ThemeOffer {...props} />,
@@ -27,17 +29,28 @@ class Feed extends Component {
     );
   }
 
+  renderFeedComponents() {
+    return this.props.homeFeedData.map((feedDatum, i) => {
+      return this.renderFeedComponent(feedDatum, i);
+    });
+  }
+
+  renderLoader() {
+    return (
+      <div className={styles.loadingIndicator}>
+        <PulseLoader loading={this.props.loading} />
+      </div>
+    );
+  }
+
   componentWillMount() {
     this.props.homeFeed();
   }
   render() {
-    return (
-      <div>
-        {this.props.homeFeedData.map((feedDatum, i) => {
-          return this.renderFeedComponent(feedDatum, i);
-        })}
-      </div>
-    );
+    if (this.props.loading) {
+      return this.renderLoader();
+    }
+    return <div>{this.renderFeedComponents()}</div>;
   }
 }
 

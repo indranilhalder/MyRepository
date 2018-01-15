@@ -12,6 +12,8 @@
   font-family: semibold;
   font-size: 16px;
   color: #212121;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .headerWhite {
   composes: headerText;
@@ -21,6 +23,11 @@
 .hasDownload {
   composes: header;
   padding-right: 30px;
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .content {
   width: 100%;

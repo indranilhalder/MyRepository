@@ -12,7 +12,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    homeFeedData: state.home.homeFeed
+    homeFeedData: state.home.homeFeed,
+    loading: state.home.loading
   };
 };
 
