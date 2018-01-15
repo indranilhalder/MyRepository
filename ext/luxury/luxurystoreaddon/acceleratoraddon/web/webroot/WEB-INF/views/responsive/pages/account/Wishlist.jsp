@@ -153,10 +153,10 @@
 				<c:if test="${not empty allWishLists}">
 				<div class="top">
 					<div id="wishlistDetailItemNo">
-						<h2>${particularWishlistName}</h2>
+						<%--<h2>${particularWishlistName}</h2>
 						<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
 										</p>
-						<%-- <c:if test="${fn:length(WishlistProductDataList)>1}">
+						 <c:if test="${fn:length(WishlistProductDataList)>1}">
 									<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
 										</p>
 								</c:if>

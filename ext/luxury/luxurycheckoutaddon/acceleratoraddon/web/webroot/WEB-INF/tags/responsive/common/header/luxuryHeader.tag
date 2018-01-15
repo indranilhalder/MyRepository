@@ -45,9 +45,9 @@
 	<div class="wishAddSucessPlp">
 		<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 	</div>
-		<div class="wishAlreadyAddedPlp">
+		<%-- <div class="wishAlreadyAddedPlp">
 	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-		</div>
+		</div> --%>
 	<!-- Changes for INC144313867 -->
 	<div class="wishRemoveSucessPlp">
 	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
@@ -79,7 +79,7 @@
 							</sec:authorize>							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 							<li class="mob-login">
-								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign in or Sign up</a>
+								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign In</a>
  						
 							</li>
 						</sec:authorize>

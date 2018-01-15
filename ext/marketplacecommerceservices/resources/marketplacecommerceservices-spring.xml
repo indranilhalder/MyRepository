@@ -67,6 +67,10 @@
 	<bean id="mplMediService"
 		class="com.tils.mpl.media.impl.MplMediaServiceImpl">
 	</bean>
+	
+	<bean id="mplboostSearchQueryPopulator" class="com.tisl.mpl.solr.search.MplBoostSearchQueryPopulator"
+    parent="boostSearchQueryPopulator" />
+    
 <!-- Optimization Fix PDP End -->
 	<!-- PDP RestrictedPincode end -->
 	<!-- The hybris platform provides one single Spring application context 
@@ -120,7 +124,7 @@
 				<ref bean="commerceSearchTextPopulator" />
 				<ref bean="commerceSearchFiltersPopulator" />
 				<ref bean="mplSearchSolrQueryTypeFacetsPopulator"/>
-                                <ref bean="boostSearchQueryPopulator"/>
+                                <ref bean="mplboostSearchQueryPopulator"/>
                                 <ref bean="conditionalSortFilteringIndexedTypePopulator" />
                                 <ref bean="facetReconfigurationPopulator"/>
 

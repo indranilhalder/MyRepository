@@ -400,7 +400,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 			}
 			//PR-23 start
-			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			if (searchPageData.getPagination().getTotalNumberOfResults() == 0 && !commonUtils.isLuxurySite())
 			{
 				if (StringUtils.isNotEmpty(searchPageData.getFreeTextSearch()))
 				{

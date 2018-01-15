@@ -45,9 +45,9 @@
 	<div class="wishAddSucessPlp">
 		<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 	</div>
-		<div class="wishAlreadyAddedPlp">
+		<%-- <div class="wishAlreadyAddedPlp">
 	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-		</div>
+		</div> --%>
 	<!-- Changes for INC144313867 -->
 	<div class="wishRemoveSucessPlp">
 	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
@@ -122,7 +122,7 @@
 					</cms:pageSlot></a>
 					</li>
 					</sec:authorize>
-					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
+					<li class="header-bag-link"><a href="/cart" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>
 					</cms:pageSlot></a></li>
 				</ul>
@@ -177,7 +177,7 @@
 						<a href="#" class="account-userTitle account-userTitle-custom"></a>
 						<ycommerce:testId code="header_LoggedUser">
 							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-							<span>Your Other usful links</span></div>
+							<span>Your Other useful links</span></div>
 						</ycommerce:testId>
 						
 						</li>
@@ -195,7 +195,7 @@
 							</sec:authorize>							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 							<li class="mob-login">
-								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign in or Sign up</a>
+								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign In</a>
  						
 							</li>
 						</sec:authorize>
@@ -231,6 +231,7 @@
 	<div class="modal fade text-center signin-box" id="mypopUpModal" >
 		 <div class="modal-dialog">
 			<div class="modal-content">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 				<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
 					<div class="header-account-inner clearfix" id="login-container">
 						<div class="header-account-section header-forget-pass"></div>

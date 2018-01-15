@@ -958,7 +958,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
     $("#savingsOnProductId").html(""), void 0 === savingsOnProduct && (null != mrp && null != spPrice ? (savingPriceCal = mrp.doubleValue - spPrice.doubleValue, 
     savingPriceCalPer = savingPriceCal / mrp.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100)) : null != mrp && null != mop && (savingPriceCal = mrp.doubleValue - mop.doubleValue, 
     savingPriceCalPer = savingPriceCal / mrp.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100))), 
-    null != mrp && $("#mrpPriceId").append(mrp.formattedValueNoDecimal), null != mop && $("#mopPriceId").append(mop.formattedValueNoDecimal), 
+    null != mrp && $("#mrpPriceId").append(mrp.formattedValueNoDecimal), null != mop && $("#mopPriceId").html('<span>Price:</span><span>'+mop.formattedValueNoDecimal+'</span>'), 
     null != spPrice && $("#spPriceId").append(spPrice.formattedValueNoDecimal), null != savingsOnProduct && $("#savingsOnProductId").append("(-" + savingsOnProduct + " %)"), 
     null != savingsOnProduct && 0 != savingsOnProduct && $("#savingsOnProductId").show(), 
     "" == mrp.value) $("#mrpPriceId").hide(), $("#savingsOnProductId").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
@@ -967,7 +967,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
     $("#spPriceId").show(), $("#mopPriceId").hide(), $("#mrpPriceId").removeClass("sale").addClass("old"); else {
         var freebiePriceThresVal = $("#freebiePriceThreshId").val();
         if (null != mop && 0 != mop.value && mop.value > freebiePriceThresVal) mop.value == mrp.value ? ($("#mrpPriceId").removeClass("old").addClass("sale"), 
-        $("#mrpPriceId").show(), $("#mrpPriceId").css("text-decoration", ""), $("#mopPriceId").hide(), 
+        $("#mrpPriceId").show(), $("#mrpPriceId").css("text-decoration", ""),$(".price-feature").addClass("nonsale"), $("#mopPriceId").hide(),
         $("#spPriceId").hide()) : ($("#mrpPriceId").css("text-decoration", "line-through"), 
         $("#mrpPriceId").show(), $("#mopPriceId").show(), $("#spPriceId").hide(), $("#mrpPriceId").removeClass("sale").addClass("old")); else if (0 != mop.value && mop.value <= freebiePriceThresVal) {
             $(".size").hide(), $(".color-swatch").hide(), $(".reviews").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
@@ -980,7 +980,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
             populateFreebieMsg(prodCode));
             $.isEmptyObject(freebieproductMsg) ? $("#freebieProductMsgId").show() : ($("#freebieProductMsgId").html(freebieMsg), 
             $("#freebieProductMsgId").show());
-        } else $("#mrpPriceId").show();
+        }else{$(".price-feature").addClass("nonsale"); $("#mrpPriceId").show();}
     }
     void 0 != spPrice || null != spPrice ? ($("#prodPrice").val(spPrice.value), $("#price-for-mad").val(spPrice.value)) : void 0 != mop || null != mop ? ($("#prodPrice").val(mop.value), 
     $("#price-for-mad").val(mop.value)) : ($("#prodPrice").val(mrp.value), $("#price-for-mad").val(mrp.value)), 
@@ -17380,21 +17380,24 @@ TATA.CommonFunctions = {
     Header: {
         MobileMenu: function() {
             $(window).width() < 768 && ($(".mega-menu li span").each(function() {
-                $(this).prev().css("pointer-events", "none");
-            }), $(".mega-menu > li ").on("click", function() {
-                $(".mega-menu li span").each(function() {
+                //$(this).prev().css("pointer-events", "none");
+            }), 
+            $(".mega-menu > li ").on("click", function() {
+                /*$(".mega-menu li span").each(function() {
                     $(this).prev().css("pointer-events", "none");
                 }), $(".mega-menu > li ").each(function() {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(this).addClass("parent"), $(".sub-menu-toggle", this).first().addClass("active").next(".sub-menu").addClass("active"), 
-                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");
-            }), $(document).on("click", ".open-inner-menu li", function() {
-                $(".open-inner-menu li").each(function() {
+                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");*/
+            }), 
+            $(document).on("click", ".open-inner-menu li", function() {
+               /* $(".open-inner-menu li").each(function() {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
-                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");
+                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");*/
             })), $("#hamburger-menu").on("click", function() {
-                $("body").addClass("menu-open"), $(".header-left .tab-link").first().addClass("current"), 
+            	var curr_menu = sessionStorage.getItem('active-menu');
+                $("body").addClass("menu-open"); if(!curr_menu){$(".header-left .tab-link").first().addClass("current");} 
                 $(".main-nav .tab-content").first().addClass("current");
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
@@ -17424,7 +17427,7 @@ TATA.CommonFunctions = {
             });
         },
         init: function() {
-            this.MobileMenu(), this.HeaderMinicart(), this.Headermegamenutab();
+            this.MobileMenu(), this.HeaderMinicart(); this.Headermegamenutab();
         }
     },
     Footer: function() {

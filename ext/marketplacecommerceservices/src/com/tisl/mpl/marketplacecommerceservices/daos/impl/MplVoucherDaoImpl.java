@@ -10,9 +10,13 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+import de.hybris.platform.voucher.model.CouponUserRestrictionModel;
+import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -119,12 +123,12 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * TPR-7448 This method returns Invalidation model for maxAvailCount
 	 *
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
 	public List<VoucherCardPerOfferInvalidationModel> findCardPerOfferInvalidation(final String guid, final VoucherModel voucher,
-			final String cardReferenceNo)
+			final String cardFingerprint)
 	{
 		try
 		{
@@ -132,7 +136,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			LOG.debug("Invalidation query is " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
-			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
@@ -155,12 +159,12 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * TPR-7448 This method returns Invalidation model for maxAountPerMonth
 	 *
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(final String guid, final VoucherModel voucher,
-			final String cardReferenceNo)
+			final String cardFingerprint)
 	{
 		try
 		{
@@ -168,7 +172,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			LOG.debug("Invalidation query is " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
-			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
@@ -191,12 +195,12 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * TPR-7448 This method returns Invalidation model for maxAountPerDay
 	 *
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPDay(final String guid, final VoucherModel voucher,
-			final String cardReferenceNo)
+			final String cardFingerprint)
 	{
 		try
 		{
@@ -204,7 +208,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			LOG.debug("Invalidation query is " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
-			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
@@ -227,12 +231,12 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * TPR-7448 This method returns Invalidation model for maxAountPerWeek
 	 *
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPWeek(final String guid, final VoucherModel voucher,
-			final String cardReferenceNo)
+			final String cardFingerprint)
 	{
 		try
 		{
@@ -240,7 +244,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			LOG.debug("Invalidation query is " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
-			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
@@ -263,12 +267,12 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	 * TPR-7448 This method returns Invalidation model for maxAountPerYear
 	 *
 	 * @param voucher
-	 * @param cardReferenceNo
+	 * @param cardFingerprint
 	 * @return VoucherInvalidationModel
 	 */
 	@Override
 	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPYear(final String guid, final VoucherModel voucher,
-			final String cardReferenceNo)
+			final String cardFingerprint)
 	{
 		try
 		{
@@ -276,7 +280,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 			LOG.debug("Invalidation query is " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
-			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDREFERENCENO, cardReferenceNo);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.GUID, guid);
 
 			return getFlexibleSearchService().<VoucherCardPerOfferInvalidationModel> search(query).getResult();
@@ -351,6 +355,44 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 
 
+	/* CAR-330 starts here */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchUserRestrictionDetails(java.util.Date)
+	 */
+	@Override
+	public List<UserRestrictionModel> fetchUserRestrictionDetails(final Date mplConfigDate)
+	{
+		List<UserRestrictionModel> userRestriction = new ArrayList<UserRestrictionModel>();
+		final String queryString = "select {pk} from {UserRestriction AS pr} WHERE {pr.modifiedtime} >= ?earlierDate";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("earlierDate", mplConfigDate);
+		LOG.debug("The queryString is " + queryString);
+		userRestriction = getFlexibleSearchService().<UserRestrictionModel> search(query).getResult();
+		return userRestriction;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchExistingVoucherData(de.hybris.platform.voucher
+	 * .model.VoucherModel)
+	 */
+	@Override
+	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher)
+	{
+		List<CouponUserRestrictionModel> couponUserRestrs = new ArrayList<CouponUserRestrictionModel>();
+		final String queryStr = "SELECT {pk} FROM {CouponUserRestriction} where {voucher} = ?voucher";
+		LOG.debug("The queryStr is " + queryStr);
+		final FlexibleSearchQuery userRestrQuery = new FlexibleSearchQuery(queryStr);
+		userRestrQuery.addQueryParameter("voucher", voucher);
+		couponUserRestrs = getFlexibleSearchService().<CouponUserRestrictionModel> search(userRestrQuery).getResult();
+		return couponUserRestrs;
+	}
+
+	/* CAR-330 ends here */
 
 }

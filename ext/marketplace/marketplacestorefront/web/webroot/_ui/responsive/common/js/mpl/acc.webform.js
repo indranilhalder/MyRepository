@@ -540,8 +540,8 @@ ACC.WebForm = {
 						$.each(data.nodes, function(index, data) {
 
 							htmlOption += "<option value='" + data.nodeCode
-									+ "' " + " nodeText='" + data.nodeDesc
-									+ "' " + " nodeDisplayAllowed='"
+									+ "' " + " nodeText=\"" + data.nodeDesc
+									+ "\" " + " nodeDisplayAllowed='"
 									+ data.nodeDisplayAllowed + "' "
 									+ " createTicketAllowed='"
 									+ data.createTicketAllowed + "' ";

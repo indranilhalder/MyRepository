@@ -728,6 +728,9 @@
 		<property name="code" type="String" />
 		<property name="desc" type="String" />
 		<property name="deliveryCost" type="String" />
+		<!-- SDI-4197-->
+		<property name="priority" type="int" />
+		<!-- SDI-4197-->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.WebSerResponseWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="code" type="String" />
@@ -1206,6 +1209,8 @@
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
 		<property name="paymentOffers" type="com.tisl.mpl.wsdto.OfferListWsData" />
+		<property name="merchantID" type="String" />
+		<property name="merchantKey" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
