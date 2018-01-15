@@ -1056,5 +1056,126 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		final String uniqueRequestId = MarketplacecommerceservicesConstants.EMPTYSTRING + random.nextInt(1000000000);
 		return uniqueRequestId;
 	}
+	
+	//SDI-4494
+	@Override
+	public void doRefundAudit(String orderId, String paymentType)
+	{
+		try
+		{
+			LOG.debug("Inside doRefund====Fetching Audit================");
+			final MplPaymentAuditModel mplPaymentAuditModel = juspayWebHookDao.fetchAuditData(orderId);
+
+			if (null != mplPaymentAuditModel && StringUtils.isNotEmpty(mplPaymentAuditModel.getAuditId()))
+			{
+
+				MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
+				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
+				mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_INITIATED);
+
+				final PaymentService paymentService = new PaymentService();
+
+				paymentService.setBaseUrl(
+						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+				paymentService
+						.withKey(configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+						.withMerchantId(
+								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+
+				final RefundRequest refundRequest = new RefundRequest();
+				refundRequest.setOrderId(mplPaymentAuditModel.getAuditId());
+				final Random random = new Random(9999);
+				final String uniqueId = mplPaymentAuditModel.getAuditId() + "-" + random.nextInt();
+				refundRequest.setUniqueRequestId(uniqueId);
+				if (null != mplPaymentAuditModel.getPaymentAmount())
+				{
+					refundRequest.setAmount(mplPaymentAuditModel.getPaymentAmount());
+				}
+				else
+				{
+					refundRequest.setAmount(Double.valueOf(0.0));
+					LOG.debug("doRefund for Webhook======Payment Amount is null for UniqueRequestId" + uniqueId + "for Audit id-"
+							+ mplPaymentAuditModel.getAuditId());
+				}
+
+				mplPaymentAuditEntryModel.setRefundReqId(uniqueId);
+				modelService.save(mplPaymentAuditEntryModel);
+				final List<MplPaymentAuditEntryModel> auditEnteries = new ArrayList<MplPaymentAuditEntryModel>(
+						mplPaymentAuditModel.getAuditEntries());
+				auditEnteries.add(mplPaymentAuditEntryModel);
+				mplPaymentAuditModel.setAuditEntries(auditEnteries);
+				modelService.save(mplPaymentAuditModel);
+
+				LOG.debug("Refund status for unique ID genrated :" + uniqueId);
+				RefundResponse refundResponse = null;
+				LOG.debug("before calling refund service *******************************");
+				refundResponse = paymentService.refund(refundRequest);
+				LOG.debug("after calling refund service *******************************");
+
+				mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
+				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
+				mplPaymentAuditEntryModel.setResponseDate(new Date());
+
+				if (refundResponse != null && CollectionUtils.isNotEmpty(refundResponse.getRefunds()))
+				{
+					for (final Refund refund : refundResponse.getRefunds())
+					{
+						if (refund.getUniqueRequestId().equalsIgnoreCase(uniqueId))
+						{
+							LOG.debug("Refund status for ID:" + refund.getUniqueRequestId() + " is :" + refund.getStatus());
+
+							switch (refund.getStatus().toUpperCase())
+							{
+								case MarketplacecommerceservicesConstants.SUCCESS_VAL:
+									LOG.debug("Inside SUCCESS case for refund================");
+
+									mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_SUCCESSFUL);
+
+									//setting Payment transaction against auditentry in case where we dont have the order
+
+									//setting the unique request id of the refund request sent to Juspay in Audit entry
+									mplPaymentAuditEntryModel.setRefundReqId(refund.getUniqueRequestId());
+
+									break;
+
+								case MarketplacecommerceservicesConstants.PENDING_VAL:
+									LOG.debug("Inside PENDING case for refund================");
+
+
+									mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_INITIATED);
+
+
+									//setting the unique request id of the refund request sent to Juspay in Audit entry
+									mplPaymentAuditEntryModel.setRefundReqId(refund.getUniqueRequestId());
+
+									break;
+
+								default:
+									LOG.debug("Inside UNSUCCESSFUL case for refund================");
+									mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
+							}
+						}
+					}
+				}
+
+				modelService.save(mplPaymentAuditEntryModel);
+				//auditEnteries = new ArrayList<MplPaymentAuditEntryModel>(mplPaymentAuditModel.getAuditEntries());
+				auditEnteries.add(mplPaymentAuditEntryModel);
+				mplPaymentAuditModel.setAuditEntries(auditEnteries);
+				modelService.save(mplPaymentAuditModel);
+			}
+		}
+		catch (final ModelSavingException exception)
+		{
+			LOG.error(exception.getMessage(), exception);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+		
+	}
 
 }
+

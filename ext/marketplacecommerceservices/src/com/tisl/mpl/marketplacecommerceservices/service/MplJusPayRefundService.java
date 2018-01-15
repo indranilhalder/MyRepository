@@ -39,6 +39,13 @@ public interface MplJusPayRefundService
 	 * @throws Exception
 	 */
 	void doRefund(final String orderId, final String paymentType);
+	
+	/**
+	 *
+	 * @param orderId
+	 * @throws Exception
+	 */
+	void doRefundAudit(final String orderId, final String paymentType);
 
 	/**
 	 *
