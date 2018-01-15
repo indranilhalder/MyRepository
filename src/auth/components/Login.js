@@ -21,6 +21,7 @@ class Login extends Component {
   onSubmit = () => {
     if (this.props.onSubmit) {
       this.props.homeFeed();
+      this.props.history.push("/home");
       this.props.onSubmit({
         email: this.state.emailValue,
         password: this.state.passwordValue
@@ -50,6 +51,8 @@ class Login extends Component {
   }
 
   render() {
+    console.log("IN LOGIN COMPONENT");
+    console.log(this.props);
     return (
       <React.Fragment>
         <div>
