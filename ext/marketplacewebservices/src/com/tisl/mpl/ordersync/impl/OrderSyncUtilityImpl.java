@@ -362,7 +362,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			callTrace.append("updateOrCreateConsignment:->");
 			final ShipmentDTO shipment = sellerOrder.getOrderLine().getShipment();
 			final DeliveryDTO delivery = shipment.getDelivery();
-			ConsignmentModel consignmentFinal = null;
+
 
 			if (shipment != null && shipment.getOlqsStatus() != null && delivery.getDeliveryMode() != null)
 			{
@@ -387,13 +387,13 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 					{
 
-						consignmentFinal = createNewConsignment(shipment, childOrder);
+						createNewConsignment(shipment, childOrder);
 
 
 					}
-					else if (updateConsignment(shipment, existingConsignmentModel, childOrder))
+					else
 					{
-						consignmentFinal = existingConsignmentModel;
+						updateConsignment(shipment, existingConsignmentModel, childOrder);
 					}
 				}
 			}
@@ -764,7 +764,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			try
 			{
 				LOG.info("CustomOmsShipmentSyncAdapte:::InScan::::" + shipment.getInScan());
-				if (shipment.getInScan() != null && Boolean.valueOf(shipment.getInScan()).booleanValue())
+				if (shipment.getInScan() != null && Boolean.parseBoolean(shipment.getInScan()))
 				{
 					if (consignmentModel.getIsInscan() == null)
 					{
@@ -1058,7 +1058,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					shipment, consignmentModel, orderModel, newStatus, eventService, configurationService);
 			if (null != shipment && null != shipment.getIsEDtoHD())
 			{
-				if (Boolean.valueOf(shipment.getIsEDtoHD()).booleanValue()
+				if (Boolean.parseBoolean(shipment.getIsEDtoHD())
 						&& (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 						&& (consignmentModel.getIsEDtoHDCheck() == null || consignmentModel.getIsEDtoHDCheck() == Boolean.FALSE))
 				{
@@ -1126,8 +1126,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			if (null != shipment && null != shipment.getSdb())
 			{
 
-				if (Boolean.valueOf(shipment.getSdb()).booleanValue()
-						&& (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+				if (Boolean.parseBoolean(shipment.getSdb()) && (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 						&& (consignmentModel.getSdbCheck() == null || consignmentModel.getSdbCheck() == Boolean.FALSE))
 				{
 
@@ -1198,8 +1197,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			if (null != shipment && null != shipment.getSsb())
 			{
 
-				if (Boolean.valueOf(shipment.getSsb()).booleanValue()
-						&& (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+				if (Boolean.parseBoolean(shipment.getSsb()) && (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 						&& (consignmentModel.getSsbCheck() == null || consignmentModel.getSsbCheck() == Boolean.FALSE))
 				{
 					if (newStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))

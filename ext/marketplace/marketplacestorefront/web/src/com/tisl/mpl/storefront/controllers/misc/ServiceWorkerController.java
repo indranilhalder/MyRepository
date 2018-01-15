@@ -150,7 +150,7 @@ public class ServiceWorkerController
 		response.getWriter().write(menifestJson);
 	}
 
-	@RequestMapping(value = "/iframeUtag.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/iframeUtag_homepage.html", method = RequestMethod.GET)
 	public String tealiumHtml(final HttpServletRequest request, final HttpServletResponse response) throws IOException
 	{
 		// code here
