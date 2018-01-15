@@ -13,4 +13,6 @@ import com.tisl.mpl.wsdto.ComponentRequestDTO;
 public interface HomePageAppService
 {
 	public String getAdobeTargetDataOfferWidget(ComponentRequestDTO ComponentRequestDTO);
+
+
 }

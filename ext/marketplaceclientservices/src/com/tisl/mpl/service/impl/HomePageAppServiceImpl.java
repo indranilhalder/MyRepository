@@ -228,4 +228,6 @@ public class HomePageAppServiceImpl implements HomePageAppService
 		this.proxyAddress = proxyAddress;
 	}
 
+
+
 }
