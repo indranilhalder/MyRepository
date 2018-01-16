@@ -7234,7 +7234,10 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 	transition: all 0.3s;
 }
 .product-info .color-swatch li.active{
-	outline: 1px solid #a9143c;			/* TISSQAUAT-3434 */
+	border-color: #a9143c ! important;			/* TISSQAUAT-3434 */
+}
+.product-info .size span+a {
+    color: #a5173c ! important;
 }
 #allVariantOutOfStock {
 	color: #FE2E2E;
