@@ -1672,7 +1672,7 @@ public class GenericUtilityMethods
 		double cartTotalNetSelPrice = 0.0D;
 		//double couponDiscount = 0.0D;
 		double cartEntryNetSellPrice = 0.0D;
-		final DecimalFormat df = new DecimalFormat("#.##");
+//		final DecimalFormat df = new DecimalFormat("#.##");
 		double totalDeliveryCharge = 0;
 		Long cartEntryMrp = Long.valueOf(0);
 		double cartDiscount = 0.0D;
