@@ -306,6 +306,9 @@ public class ProductPageController extends MidPageController
 
 	private static final String MPH = "MPH".intern();
 
+	private static final String ERROR = "Error>>";
+	private static final String SEPERATOR_X = " X ";
+
 	//TPR-6405
 	private static final String SAMSUNG = "Samsung";
 	@SuppressWarnings("unused")
@@ -682,7 +685,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + ERROR + exception);
 		}
 
 
@@ -707,7 +710,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + ERROR + exception);
 		}
 	}
 
@@ -741,7 +744,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + "Error>>"
+			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + ERROR
 					+ exception);
 		}
 
@@ -2768,7 +2771,7 @@ public class ProductPageController extends MidPageController
 							{
 								if (islengthAvailable && iswidthAvailable && isheightAvailable)
 								{
-									prodDimensionValue = length + " X " + width + " X " + height;
+									prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -2776,7 +2779,7 @@ public class ProductPageController extends MidPageController
 								}
 								else if (islengthAvailable && iswidthAvailable)
 								{
-									prodDimensionValue = length + " X " + width;
+									prodDimensionValue = length + SEPERATOR_X + width;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -2814,7 +2817,7 @@ public class ProductPageController extends MidPageController
 								{
 									if (islengthAvailable && iswidthAvailable && isheightAvailable)
 									{
-										prodDimensionValue = length + " X " + width + " X " + height;
+										prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 												+ prodDimensionValue);
@@ -2822,7 +2825,7 @@ public class ProductPageController extends MidPageController
 									}
 									else if (islengthAvailable && iswidthAvailable)
 									{
-										prodDimensionValue = length + " X " + width;
+										prodDimensionValue = length + SEPERATOR_X + width;
 										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 												+ prodDimensionValue);
@@ -5246,7 +5249,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error during populating MSD >> for Home Furnishing >>" + "Error>>" + e);
+			LOG.error("Error during populating MSD >> for Home Furnishing >>" + ERROR + e);
 		}
 		return MSDJObject;
 	}
