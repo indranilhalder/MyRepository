@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default class Paragraph extends React.Component {
   render() {
-    return <p style={{ ...this.props.textStyle }}> {this.props.text} </p>;
+    return <div style={{ ...this.props.textStyle }}> {this.props.text} </div>;
   }
 }
 
@@ -16,7 +16,7 @@ Paragraph.propTypes = {
     fontSize: PropTypes.number,
     fontFamily: PropTypes.string,
     fontWeight: PropTypes.string,
-    lineHeight: PropTypes.number
+    lineHeight: PropTypes.string
   })
 };
 

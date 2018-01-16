@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import ModalRoot from "../components/ModalRoot.js";
+import { withRouter } from "react-router-dom";
 import * as modalActions from "../modal.actions.js";
 import {
   resetPassword,
@@ -37,6 +38,8 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-const ModalContainer = connect(mapStateToProps, mapDispatchToProps)(ModalRoot);
+const ModalContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ModalRoot)
+);
 
 export default ModalContainer;

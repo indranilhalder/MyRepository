@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import { Icon, CircleButton } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import Header from "./Header";
-import Para from "./Paragraph";
 import styles from "./ProductDescription.css";
 
 export default class ProductDescription extends Component {
-  constructor(props) {
-    super(props);
-    this.styles = this.props.styles ? this.props.styles : styles;
-  }
   handleClick() {
     if (this.props.onDownload) {
       this.props.onDownload();
@@ -17,20 +11,26 @@ export default class ProductDescription extends Component {
   }
 
   render() {
-    let headerClass = this.styles.header;
-    let priceCancel = this.styles.priceHolder;
+    let headerClass = styles.header;
+    let priceClass = styles.priceHolder;
+    let headerText = styles.headerText;
+    let contentClass = styles.content;
     if (this.props.onDownload) {
-      headerClass = this.styles.hasDownload;
+      headerClass = styles.hasDownload;
     }
 
     if (this.props.discountPrice) {
-      priceCancel = this.styles.priceCancelled;
+      priceClass = styles.priceCancelled;
+    }
+    if (this.props.isWhite) {
+      headerText = styles.headerWhite;
+      contentClass = styles.contentWhite;
     }
 
     return (
       <div className={styles.base}>
         <div className={headerClass}>
-          <Header text={this.props.title} />
+          <div className={headerText}>{this.props.title}</div>
           {this.props.onDownload && (
             <div className={styles.button}>
               <CircleButton
@@ -42,19 +42,19 @@ export default class ProductDescription extends Component {
             </div>
           )}
         </div>
-        <div className={styles.content}>
-          {this.props.description && <Para text={this.props.description} />}
+        <div className={contentClass}>
+          {this.props.description && (
+            <div className={styles.description}>{this.props.description}</div>
+          )}
 
           {this.props.discountPrice && (
             <div className={styles.discount}>
-              <Para text={`Rs. ${this.props.discountPrice}`} />
+              {`Rs. ${this.props.discountPrice}`}
             </div>
           )}
 
           {this.props.price && (
-            <div className={priceCancel}>
-              <Para text={`Rs. ${this.props.price}`} />
-            </div>
+            <div className={priceClass}>{`Rs. ${this.props.price}`}</div>
           )}
         </div>
       </div>
@@ -65,15 +65,18 @@ export default class ProductDescription extends Component {
 ProductDescription.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  price: PropTypes.number,
-  discountPrice: PropTypes.number,
+  price: PropTypes.string,
+  discountPrice: PropTypes.string,
   icon: PropTypes.string,
-  onDownload: PropTypes.func
+  onDownload: PropTypes.func,
+  isWhite: PropTypes.bool
 };
 
 ProductDescription.defaultProps = {
   title: "",
   icon: "",
   description: "",
-  price: 0
+  price: "",
+  isWhite: false,
+  textColor: "#212121"
 };

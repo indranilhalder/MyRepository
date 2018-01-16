@@ -1,0 +1,9 @@
+.base {
+  width: 100%;
+  padding: 30px 0;
+  background-size: contain;
+}
+.banner {
+  width: 100%;
+  padding-bottom: 30px;
+}

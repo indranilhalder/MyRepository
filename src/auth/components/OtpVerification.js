@@ -83,8 +83,7 @@ export default class OtpVerification extends React.Component {
             </div>
             <div>
               <div className={ownStyles.content}>
-                Waiting to automatically detect an SMS sent to{" "}
-                {this.props.mobileNumber}.
+                Please enter the OTP sent to {this.props.mobileNumber}.
                 <span className={ownStyles.span}>Wrong number?</span>
               </div>
             </div>
@@ -114,6 +113,13 @@ export default class OtpVerification extends React.Component {
                   textStyle={{ color: "#fff", fontSize: 14 }}
                   label={"Resend OTP"}
                   onClick={() => this.resendOtp()}
+                />
+                <Button
+                  backgroundColor={"transparent"}
+                  height={30}
+                  label={"Submit"}
+                  textStyle={{ color: "#fff", fontSize: 14 }}
+                  onClick={() => this.onSubmitOtp()}
                 />
                 <div className={ownStyles.time}>30 sec</div>
               </div>

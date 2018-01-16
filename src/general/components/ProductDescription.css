@@ -1,19 +1,44 @@
 .base {
   width: 100%;
+  height: auto;
 }
 .header {
   width: 100%;
   margin-bottom: 5px;
+  position: relative;
 }
+.headerText {
+  width: 100%;
+  font-family: semibold;
+  font-size: 16px;
+  color: #212121;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.headerWhite {
+  composes: headerText;
+  color: #fff;
+}
+
 .hasDownload {
   composes: header;
   padding-right: 30px;
-  position: relative;
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .content {
   width: 100%;
-  margin-top: 15px;
   color: #212121;
+  font-size: 14px;
+  line-height: 20px;
+  font-family: regular;
+}
+.contentWhite {
+  composes: content;
+  color: #fff;
 }
 .button {
   position: absolute;
@@ -22,8 +47,6 @@
 }
 .priceHolder {
   display: inline-block;
-  color: #212121;
-  margin-top: 15px;
 }
 .discount {
   composes: priceHolder;
