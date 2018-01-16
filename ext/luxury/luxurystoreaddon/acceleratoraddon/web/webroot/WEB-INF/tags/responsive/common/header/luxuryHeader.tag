@@ -78,7 +78,7 @@
 							<li class="tab-link" data-tab="${component.uid}">
 							<c:choose>
 								<c:when test="${not empty component.navigationNode.links}">
-									${component.navigationNode.links[0].linkName}
+									<cms:component component="${component.navigationNode.links[0]}" evaluateRestriction="true"/>
 								</c:when>
 								<c:otherwise>
 									${component.navigationNode.title}
@@ -122,7 +122,7 @@
 					</cms:pageSlot></a>
 					</li>
 					</sec:authorize>
-					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
+					<li class="header-bag-link"><a href="/cart" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>
 					</cms:pageSlot></a></li>
 				</ul>
@@ -177,7 +177,7 @@
 						<a href="#" class="account-userTitle account-userTitle-custom"></a>
 						<ycommerce:testId code="header_LoggedUser">
 							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-							<span>Your Other usful links</span></div>
+							<span>Your Other useful links</span></div>
 						</ycommerce:testId>
 						
 						</li>
@@ -195,7 +195,7 @@
 							</sec:authorize>							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 							<li class="mob-login">
-								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign in or Sign up</a>
+								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign In</a>
  						
 							</li>
 						</sec:authorize>

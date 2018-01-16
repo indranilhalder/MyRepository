@@ -17363,21 +17363,24 @@ TATA.CommonFunctions = {
     Header: {
         MobileMenu: function() {
             $(window).width() < 768 && ($(".mega-menu li span").each(function() {
-                $(this).prev().css("pointer-events", "none");
-            }), $(".mega-menu > li ").on("click", function() {
-                $(".mega-menu li span").each(function() {
+                //$(this).prev().css("pointer-events", "none");
+            }), 
+            $(".mega-menu > li ").on("click", function() {
+                /*$(".mega-menu li span").each(function() {
                     $(this).prev().css("pointer-events", "none");
                 }), $(".mega-menu > li ").each(function() {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(this).addClass("parent"), $(".sub-menu-toggle", this).first().addClass("active").next(".sub-menu").addClass("active"), 
-                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");
-            }), $(document).on("click", ".open-inner-menu li", function() {
-                $(".open-inner-menu li").each(function() {
+                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");*/
+            }), 
+            $(document).on("click", ".open-inner-menu li", function() {
+               /* $(".open-inner-menu li").each(function() {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
-                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");
+                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");*/
             })), $("#hamburger-menu").on("click", function() {
-                $("body").addClass("menu-open"), $(".header-left .tab-link").first().addClass("current"), 
+            	var curr_menu = sessionStorage.getItem('active-menu');
+                $("body").addClass("menu-open"); if(!curr_menu){$(".header-left .tab-link").first().addClass("current");} 
                 $(".main-nav .tab-content").first().addClass("current");
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
@@ -17407,7 +17410,7 @@ TATA.CommonFunctions = {
             });
         },
         init: function() {
-            this.MobileMenu(), this.HeaderMinicart(), this.Headermegamenutab();
+            this.MobileMenu(), this.HeaderMinicart(); this.Headermegamenutab();
         }
     },
     Footer: function() {

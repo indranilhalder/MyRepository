@@ -7460,11 +7460,17 @@ public class UsersController extends BaseCommerceController
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		CommonCouponsDTO couponDto = new CommonCouponsDTO();
+		final String userRestrictionFlag = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.ISVOUCHERTOBEDISPLAYED);
+		LOG.debug("The userRestrictionFlag is " + userRestrictionFlag);
 		try
 		{
 			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
-			//disabled the service call to resolve DB issues
-			//couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			//CAR-330
+			if (StringUtils.isNotEmpty(userRestrictionFlag) && StringUtils.equalsIgnoreCase(userRestrictionFlag, "true"))
+			{
+				couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			}
 			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 		}
 		catch (final EtailNonBusinessExceptions e)

@@ -144,3 +144,14 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
  ;lux_Promotion_Creation_Mail_Body;"Promotion Creation Mail Body";$emailResource/email-PromotinCreationMailBody.vm
  ;lux_Promotion_Creation_Mail_Subject;"Event Based Coupon Mail Subject";$emailResource/email-PromotinCreationMailSubject.vm
+
+ 
+###Nps Email 
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;lux_Email_Nps_Emailer_Body;"Nps Email Body";$emailResource/email-npsEmailerBody.vm
+;lux_Email_Nps_Emailer_Subject;"Nps Email Subject";$emailResource/email-npsEmailerSubject.vm
+
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;NpsEmail;"customercare@tatacliq.com";"TataCLiQ Care"

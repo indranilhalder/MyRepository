@@ -367,7 +367,7 @@ var productCodeSG = '${product.code}';
 						 </c:when>
 						 <c:when test="${product.rootCategory=='Accessories'}">
 						 		<c:forEach items="${sizeguideData}" var="sizeGuide" >
-							    <li class="item footwear">
+							    <li style="padding-right:230px;">
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 									<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 									<ul>
