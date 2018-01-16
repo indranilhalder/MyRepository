@@ -52,6 +52,23 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(UpdatePromotionalPriceDaoImpl.class.getName());
 
+	private static final String SELECT = " {{ SELECT {p.";
+	private static final String AS_PK = "} AS pk, {p.";
+	private static final String AS_P = " AS p ";
+	private static final String AS_FROM = "} AS prio FROM {";
+	private static final String JOIN = " JOIN ";
+	private static final String WHERE = " WHERE {p.";
+	private static final String PRIORITY = "} >= ?promoCurrPriority ";
+	private static final String AND_P = " AND {p.";
+	private static final String IS_NULL = "} is NULL ";
+	private static final String TRUE = "} = ?true ";
+	private static final String QUALIFYING_COUNT = "} = ?qualifyingCount ";
+	private static final String SYSDATE = "} <= ?sysdate ";
+	private static final String AND_SYSDATE = " AND ?sysdate <= {p.";
+	private static final String CLOSING_BRACES = "} }}";
+	private static final String QUERY = "QUERY>>>>>>";
+	private static final String PRODUCT = "product";
+
 	/**
 	 * Fetch Price Row Details for Product(Staged + Online) Defect : Modified for TISPRD-938
 	 *
@@ -289,36 +306,36 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		{
 			final StringBuilder queryString = new StringBuilder(5000);
 			queryString.append("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
-			queryString.append(" {{ SELECT {p." + BuyAPercentageDiscountModel.PK + "} AS pk, {p."
-					+ BuyAPercentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyAPercentageDiscountModel._TYPECODE + " AS p ");
-			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
+			queryString.append(SELECT + BuyAPercentageDiscountModel.PK + AS_PK + BuyAPercentageDiscountModel.PRIORITY + AS_FROM
+					+ BuyAPercentageDiscountModel._TYPECODE + AS_P);
+			queryString.append(JOIN + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyAPercentageDiscountModel.PK + "}");
 			queryString.append(" AND {p2p.source} = ?product }");
-			//queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+			//queryString.append(WHERE + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 			//			queryString.append(" AND {p2p.source} IN (?product) ");
-			queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
-			queryString.append(" AND {p." + BuyAPercentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
-			queryString.append(" AND {p." + BuyAPercentageDiscountModel.ENABLED + "} = ?true ");
-			queryString.append(" AND {p." + BuyAPercentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
-			queryString.append(" AND {p." + BuyAPercentageDiscountModel.STARTDATE + "} <= ?sysdate ");
-			queryString.append(" AND ?sysdate <= {p." + BuyAPercentageDiscountModel.ENDDATE + "} }}");
+			queryString.append(WHERE + BuyAPercentageDiscountModel.PRIORITY + PRIORITY);
+			queryString.append(AND_P + BuyAPercentageDiscountModel.IMMUTABLEKEY + IS_NULL);
+			queryString.append(AND_P + BuyAPercentageDiscountModel.ENABLED + TRUE);
+			queryString.append(AND_P + BuyAPercentageDiscountModel.QUANTITY + QUALIFYING_COUNT);//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
+			queryString.append(AND_P + BuyAPercentageDiscountModel.STARTDATE + SYSDATE);
+			queryString.append(AND_SYSDATE + BuyAPercentageDiscountModel.ENDDATE + CLOSING_BRACES);
 
 			if (CollectionUtils.isNotEmpty(categories))
 			{
 				queryString.append(MarketplacecommerceservicesConstants.QUERYUNION);
-				queryString.append(" {{ SELECT {p." + BuyAPercentageDiscountModel.PK + "} AS pk, {p."
-						+ BuyAPercentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyAPercentageDiscountModel._TYPECODE + " AS p ");
-				queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
+				queryString.append(SELECT + BuyAPercentageDiscountModel.PK + AS_PK + BuyAPercentageDiscountModel.PRIORITY + AS_FROM
+						+ BuyAPercentageDiscountModel._TYPECODE + AS_P);
+				queryString.append(JOIN + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
 				queryString.append(" ON {p." + BuyAPercentageDiscountModel.PK + "} = {c2p.target} ");
 				queryString.append(" AND {c2p.source} IN (?categories) }");
-				//queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+				//queryString.append(WHERE + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 				//				queryString.append(" AND {c2p.source} IN (?categories) ");
-				queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
-				queryString.append(" AND {p." + BuyAPercentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
-				queryString.append(" AND {p." + BuyAPercentageDiscountModel.ENABLED + "} = ?true ");
-				queryString.append(" AND {p." + BuyAPercentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
-				queryString.append(" AND {p." + BuyAPercentageDiscountModel.STARTDATE + "} <= ?sysdate ");
-				queryString.append(" AND ?sysdate <= {p." + BuyAPercentageDiscountModel.ENDDATE + "} }}");
+				queryString.append(WHERE + BuyAPercentageDiscountModel.PRIORITY + PRIORITY);
+				queryString.append(AND_P + BuyAPercentageDiscountModel.IMMUTABLEKEY + IS_NULL);
+				queryString.append(AND_P + BuyAPercentageDiscountModel.ENABLED + TRUE);
+				queryString.append(AND_P + BuyAPercentageDiscountModel.QUANTITY + QUALIFYING_COUNT);//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
+				queryString.append(AND_P + BuyAPercentageDiscountModel.STARTDATE + SYSDATE);
+				queryString.append(AND_SYSDATE + BuyAPercentageDiscountModel.ENDDATE + CLOSING_BRACES);
 
 				params.put("categories", categories);
 			}
@@ -331,8 +348,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 				queryString.append(" ) pprom ORDER BY pprom.prio DESC");
 			}
 
-			LOG.debug("QUERY>>>>>>" + queryString);
-			params.put("product", product);
+			LOG.debug(QUERY + queryString);
+			params.put(PRODUCT, product);
 			//query.addQueryParameter("categories", categories);
 			//query.addQueryParameter("promotionGroup", "mplPromoGrp");
 			params.put("promoCurrPriority", promoCurrent.getPriority());
@@ -344,7 +361,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			query.addQueryParameters(params);
 			query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
 
-			LOG.debug("QUERY>>>>>>" + queryString);
+			LOG.debug(QUERY + queryString);
 
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
 			for (final List<Object> row : result.getResult())
@@ -355,39 +372,38 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		}
 		else if (promoCurrent instanceof BuyABFreePrecentageDiscountModel)
 		{
-			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
-			queryString.append(" {{ SELECT {p." + BuyABFreePrecentageDiscountModel.PK + "} AS pk, {p."
-					+ BuyABFreePrecentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyABFreePrecentageDiscountModel._TYPECODE
-					+ " AS p ");
-			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
+			final StringBuilder queryString = new StringBuilder(5000);
+			queryString.append("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
+			queryString.append(SELECT + BuyABFreePrecentageDiscountModel.PK + AS_PK + BuyABFreePrecentageDiscountModel.PRIORITY
+					+ AS_FROM + BuyABFreePrecentageDiscountModel._TYPECODE + AS_P);
+			queryString.append(JOIN + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyABFreePrecentageDiscountModel.PK + "}");
 			queryString.append(" AND {p2p.source} = ?product }");
-			//queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+			//queryString.append(WHERE + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 			//			queryString.append(" AND {p2p.source} IN (?product) ");
-			queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
-			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
-			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.ENABLED + "} = ?true ");
-			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
-			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.STARTDATE + "} <= ?sysdate ");
-			queryString.append(" AND ?sysdate <= {p." + BuyABFreePrecentageDiscountModel.ENDDATE + "} }}");
+			queryString.append(WHERE + BuyABFreePrecentageDiscountModel.PRIORITY + PRIORITY);
+			queryString.append(AND_P + BuyABFreePrecentageDiscountModel.IMMUTABLEKEY + IS_NULL);
+			queryString.append(AND_P + BuyABFreePrecentageDiscountModel.ENABLED + TRUE);
+			queryString.append(AND_P + BuyABFreePrecentageDiscountModel.QUANTITY + QUALIFYING_COUNT);//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
+			queryString.append(AND_P + BuyABFreePrecentageDiscountModel.STARTDATE + SYSDATE);
+			queryString.append(AND_SYSDATE + BuyABFreePrecentageDiscountModel.ENDDATE + CLOSING_BRACES);
 
 			if (CollectionUtils.isNotEmpty(categories))
 			{
 				queryString.append(MarketplacecommerceservicesConstants.QUERYUNION);
-				queryString.append(" {{ SELECT {p." + BuyABFreePrecentageDiscountModel.PK + "} AS pk, {p."
-						+ BuyABFreePrecentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyABFreePrecentageDiscountModel._TYPECODE
-						+ " AS p ");
-				queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
+				queryString.append(SELECT + BuyABFreePrecentageDiscountModel.PK + AS_PK + BuyABFreePrecentageDiscountModel.PRIORITY
+						+ AS_FROM + BuyABFreePrecentageDiscountModel._TYPECODE + AS_P);
+				queryString.append(JOIN + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
 				queryString.append(" ON {p." + BuyABFreePrecentageDiscountModel.PK + "} = {c2p.target} ");
 				queryString.append(" AND {c2p.source} IN (?categories) }");
-				//queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+				//queryString.append(WHERE + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 				//queryString.append(" WHERE {c2p.source} IN (?categories) ");
-				queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
-				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
-				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.ENABLED + "} = ?true ");
-				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
-				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.STARTDATE + "} <= ?sysdate ");
-				queryString.append(" AND ?sysdate <= {p." + BuyABFreePrecentageDiscountModel.ENDDATE + "} }}");
+				queryString.append(WHERE + BuyABFreePrecentageDiscountModel.PRIORITY + PRIORITY);
+				queryString.append(AND_P + BuyABFreePrecentageDiscountModel.IMMUTABLEKEY + IS_NULL);
+				queryString.append(AND_P + BuyABFreePrecentageDiscountModel.ENABLED + TRUE);
+				queryString.append(AND_P + BuyABFreePrecentageDiscountModel.QUANTITY + QUALIFYING_COUNT);//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
+				queryString.append(AND_P + BuyABFreePrecentageDiscountModel.STARTDATE + SYSDATE);
+				queryString.append(AND_SYSDATE + BuyABFreePrecentageDiscountModel.ENDDATE + CLOSING_BRACES);
 
 				params.put("categories", categories);
 			}
@@ -401,8 +417,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 				queryString.append(" ) pprom ORDER BY pprom.prio DESC");
 			}
 
-			LOG.debug("QUERY>>>>>>" + queryString);
-			params.put("product", product);
+			LOG.debug(QUERY + queryString);
+			params.put(PRODUCT, product);
 			//params.putquery.addQueryParameter("categories", categories);
 			//query.addQueryParameter("promotionGroup", "mplPromoGrp");
 			params.put("promoCurrPriority", promoCurrent.getPriority());
@@ -414,7 +430,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			query.addQueryParameters(params);
 			query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
 
-			LOG.debug("QUERY>>>>>>" + queryString);
+			LOG.debug(QUERY + queryString);
 
 			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
 			for (final List<Object> row : result.getResult())
@@ -600,7 +616,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			queryString.append(" ) pprom");
 		}
 
-		LOG.debug("QUERY>>>>>>" + queryString);
+		LOG.debug(QUERY + queryString);
 
 		final List<ProductModel> productValidList = flexibleSearchService.<ProductModel> search(queryString.toString(), params)
 				.getResult();
@@ -614,7 +630,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	{
 		//Get valid promotional seller list for product
 		final Map params = new HashMap();
-		params.put("product", product.getPk());
+		params.put(PRODUCT, product.getPk());
 		final StringBuilder queryString = new StringBuilder(5000);
 		queryString.append("SELECT {" + SellerInformationModel.PK + "} FROM {" + SellerInformationModel._TYPECODE
 				+ " AS sellerInfo} " + " WHERE {sellerInfo." + SellerInformationModel.PRODUCTSOURCE + "} = ?product ");
@@ -630,7 +646,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			params.put("promotionRejectedSeller", promoRejectSellerList);
 		}
 
-		LOG.debug("QUERY>>>>>>" + queryString);
+		LOG.debug(QUERY + queryString);
 		final List<SellerInformationModel> productValidSellerList = flexibleSearchService.<SellerInformationModel> search(
 				queryString.toString(), params).getResult();
 		return productValidSellerList;
@@ -640,7 +656,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	public CategoryModel getBrandForProduct(final ProductModel product)
 	{
 		final Map params = new HashMap();
-		params.put("product", product);
+		params.put(PRODUCT, product);
 
 		//		final StringBuilder queryString = new StringBuilder("SELECT {c2p.source} as pk " + MarketplacecommerceservicesConstants.QUERYFROM);
 		//		queryString.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
@@ -654,7 +670,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		queryString.append("WHERE {cat2prod:target} =?product AND {category.code} like '%")
 				.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' ");
 
-		LOG.debug("QUERY>>>>>>" + queryString);
+		LOG.debug(QUERY + queryString);
 
 		final List<CategoryModel> productValidList = flexibleSearchService.<CategoryModel> search(queryString.toString(), params)
 				.getResult();

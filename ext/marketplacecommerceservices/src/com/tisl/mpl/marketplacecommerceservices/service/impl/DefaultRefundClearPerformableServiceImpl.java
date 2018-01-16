@@ -77,7 +77,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	final Double refundStartTime = new Double(120);
 
 
-	private static final String REFUND = "REFUND_SUCCESSFUL";
+	//	private static final String REFUND = "REFUND_SUCCESSFUL";
 	private static final String SUCCESS = "SUCCESS";
 
 

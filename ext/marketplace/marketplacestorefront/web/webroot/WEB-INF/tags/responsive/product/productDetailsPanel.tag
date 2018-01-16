@@ -185,18 +185,18 @@ tr.d0 td {
 			<!-- end change for INC144314454 -->
 		</div>
 		
-		<div class="wishAddSucess">
+		<div class="wishAddSucess" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishRemoveSucess">
+		<div class="wishRemoveSucess" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishAddLogin">
+		<div class="wishAddLogin" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>
-		<div class="wishAlreadyAdded">
+		<div class="wishAlreadyAdded" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 

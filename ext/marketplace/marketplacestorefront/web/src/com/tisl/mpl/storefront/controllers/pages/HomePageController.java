@@ -15,7 +15,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
-import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -94,7 +93,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
-import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.cms.data.FooterLinkData;
@@ -177,13 +175,13 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
-
-	//TPR-6740
-	@Resource(name = "mplProductFacade")
-	private MplProductFacade mplProductFacade;
-
-	@Resource(name = "uiExperienceService")
-	private UiExperienceService uiExperienceService;
+	//SONR FIX
+	//	//TPR-6740
+	//	@Resource(name = "mplProductFacade")
+	//	private MplProductFacade mplProductFacade;
+	//
+	//	@Resource(name = "uiExperienceService")
+	//	private UiExperienceService uiExperienceService;
 
 	@Resource(name = "ampDeviceDetectionFacade")
 	private DeviceDetectionFacade ampDeviceDetectionFacade;
@@ -256,9 +254,10 @@ public class HomePageController extends AbstractPageController
 	private static final String EXCEPTION_MESSAGE_NEWEXCLUSIVE = "Exception in getNewAndExclusive";
 
 	private static final String userFirstName = "userFirstName";
-	private static final String footerSlotName = "FooterSlot";
-	
-	
+
+	//	private static final String footerSlotName = "FooterSlot";
+
+
 
 	/**
 	 * @description this is called to load home page

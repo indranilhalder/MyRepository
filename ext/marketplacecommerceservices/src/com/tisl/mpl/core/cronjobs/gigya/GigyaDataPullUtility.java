@@ -5,7 +5,7 @@ package com.tisl.mpl.core.cronjobs.gigya;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.site.BaseSiteService;
+
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -40,7 +40,7 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 {
 	private final static Logger LOG = Logger.getLogger(GigyaDataPullUtility.class.getName());
 	private static final String RATING_PROXY_ENABLED = "proxy.enabled".intern();
-	private static final String RATING_SECRETKEY = "gigya.secretkey".intern();
+	//private static final String RATING_SECRETKEY = "gigya.secretkey".intern();
 	private static final String RATING_APIKEY = "gigya.apikey".intern();
 	private static final String REVIEWS_RATING_EXCEPTION = "Gigya 'rating and review count' error";
 	private static final String CATEGORY_ID = "categoryId".intern();
@@ -59,8 +59,8 @@ public class GigyaDataPullUtility extends StdSerializer<Object>
 
 	@Autowired
 	private ConfigurationService configService;
-	@Autowired
-	private BaseSiteService baseSiteService;
+//	@Autowired
+//	private BaseSiteService baseSiteService;
 	@Resource(name = "modelService")
 	private ModelService modelService;
 

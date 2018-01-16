@@ -52,13 +52,14 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 
 	private static final String SELLER = "seller";
 	private static final String BRAND = "brand";
+	private static final String C = "/c-";
 
 	//private static final String MICROSITE = "microsite";
 
 	/*
 	 * This method initially gets Shop by brand component for the component id and then fetches the corresponding fields
 	 * Sets latest modified time for mobile caching
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomBrandService#getShopByBrand()
 	 */
 	@Override
@@ -156,7 +157,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							}
 							//							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
 
-							final String subBrandUrl = "/Categories/" + oModel.getName() + "/c-" + oModel.getCode();
+							final String subBrandUrl = "/Categories/" + oModel.getName() + C + oModel.getCode();
 							if (StringUtils.isNotEmpty(subBrandUrl))
 							{
 
@@ -295,7 +296,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							}
 							//							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
 
-							final String subBrandUrl = "/Categories/" + oModel.getName() + "/c-" + oModel.getCode();
+							final String subBrandUrl = "/Categories/" + oModel.getName() + C + oModel.getCode();
 							if (StringUtils.isNotEmpty(subBrandUrl))
 							{
 
@@ -373,7 +374,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							subbranddata.setSub_brand_code(subBrandCode);
 						}
 					}
-					else if (subrand.getSubBrandUrl().contains("/c/") || subrand.getSubBrandUrl().contains("/c-"))
+					else if (subrand.getSubBrandUrl().contains("/c/") || subrand.getSubBrandUrl().contains(C))
 					{
 						subbranddata.setSub_brand_type(BRAND);
 						subbranddata.setSub_brand_url(subrand.getSubBrandUrl().substring(3));
@@ -383,7 +384,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						{
 							subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('/') + 1);
 						}
-						else if (subrand.getSubBrandUrl().contains("/c-"))
+						else if (subrand.getSubBrandUrl().contains(C))
 						{
 							subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('-') + 1);
 						}
