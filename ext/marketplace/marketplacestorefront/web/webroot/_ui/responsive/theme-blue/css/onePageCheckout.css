@@ -439,9 +439,6 @@ margin: 0;
 	width: -webkit-calc(100% - 32px);
 	font-size: 14px;
 }
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block li.item{
-	padding:0;
-}
 .cart.wrapper.checkout-payment .blocks h3,
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .new-card h2 {
     font-size: 14px;
@@ -983,6 +980,11 @@ div#savedEMICard .credit-card-group .right-align-form {
     letter-spacing: 0.6px;
         margin: 0 0 0 34px;
 }
+/* start add for TISCSS-146 */
+.cart.wrapper.checkout-payment .blocks .card-sec p {
+	padding-left: 18px;
+}
+/* end add for TISCSS-146 */
 .cart.wrapper.checkout-payment .card-sec .card-num .card_image {
     float: left;
     margin-bottom: 0px;
@@ -1554,7 +1556,7 @@ body.page-multiStepCheckoutSummaryPage #flip-tabs, body.page-checkout-login head
     display: none;
 }
 body.page-multiStepCheckoutSummaryPage .mainContent-wrapper {
-    background: #eee;
+    /* background: #eee; */		/* commented for TISCSS-146 */
 }
 .mainContent-wrapper {
     position: relative;
@@ -4617,9 +4619,6 @@ div.radio.creditDebitLabelRadio {
     width: 55%;
     margin-bottom: 0px;
 }
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block li.item .cvv {
-    position: relative;
-}
 #billingAddress, label[for="save-card-dc"] {
     margin-top: 7px;
 }
@@ -5212,9 +5211,6 @@ div#savedCreditCard, div#savedDebitCard, div#savedEMICard {
 .bank-select #bankNameForEMI {
     max-width: 100%;
 }
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block li.item {
-    padding: 0;
-}
 .cart.wrapper .right-block.billing.checkout-list-right {
     padding: 0 12px !important;
     margin: 0 0 70px;
@@ -5263,6 +5259,14 @@ div#savedCreditCard, div#savedDebitCard, div#savedEMICard {
 .address-list .address .name {
     padding-bottom: 0;
 }
+/* start add for TISCSS-146 */
+.cart.wrapper .payments.tab-view .product-block li.item#savedCardDebit, .cart.wrapper .payments.tab-view .product-block li.item#savedCard {
+	border-bottom: 1px solid #e4e4e4;
+}
+.cart.wrapper.checkout-payment .blocks .new-card {
+	padding: 14px 0 0 0;
+}
+/* end add for TISCSS-146 */
 }
 @media (max-width: 980px) and (min-width: 768px){
 body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {

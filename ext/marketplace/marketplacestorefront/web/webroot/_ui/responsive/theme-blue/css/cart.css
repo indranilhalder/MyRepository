@@ -1050,7 +1050,11 @@
 	{
 	float: right;
 }
-
+/* start add for TISCSS-146 */
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv {
+	float: none;
+}
+/* end add for TISCSS-146 */
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv label,
 	.confirmation .left-block .payments.tab-view .tabs .product-block li.item .cvv label
 	{
