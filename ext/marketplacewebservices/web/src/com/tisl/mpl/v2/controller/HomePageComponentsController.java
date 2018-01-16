@@ -20,8 +20,11 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
+import com.tisl.mpl.wsdto.BannersCarouselDTO;
+import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
-import com.tisl.mpl.wsdto.ThemeOffersRequestDTO;
+import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
 
 
 /**
@@ -40,7 +43,7 @@ public class HomePageComponentsController
 	@ResponseBody
 	public ThemeOffersDTO getThemeOffersComponent(@RequestParam final String mcvid, @RequestParam final String lat,
 			@RequestParam final String lng, @RequestParam final String pincode, @RequestParam final String channel,
-			@RequestParam final String isPwa, @RequestBody final ThemeOffersRequestDTO themeOffersRequestDTO)
+			@RequestParam final String isPwa, @RequestBody final HomepageComponentRequestDTO themeOffersRequestDTO)
 	{
 
 		ThemeOffersDTO themeOffersDTO = new ThemeOffersDTO();
@@ -90,4 +93,64 @@ public class HomePageComponentsController
 		}
 		return themeOffersDTO;
 	}
+
+	//bannercomponent
+	@RequestMapping(value = "/bannerProductCarouselComponent", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public BannersCarouselDTO getbannerProductCarouselComponent(@RequestParam final String mcvid, @RequestParam final String lat,
+			@RequestParam final String lng, @RequestParam final String pincode, @RequestParam final String channel,
+			@RequestParam final String isPwa, @RequestBody final HomepageComponentRequestDTO bannerCarouselRequestDTO)
+	{
+
+		BannersCarouselDTO bannerProductCarouselDTO = new BannersCarouselDTO();
+
+		final String bannerProductcarouselJsonString = bannerCarouselRequestDTO.getContent();
+		bannerProductCarouselDTO = homePageAppFacade.getBannerProductCarouselDTO(bannerCarouselRequestDTO,
+				bannerProductcarouselJsonString);
+		System.out.println("Theme offers dto" + bannerProductCarouselDTO);
+
+		return bannerProductCarouselDTO;
+	}
+
+
+	//videoProductCarousel
+	@RequestMapping(value = "/videoProductCarouselComponent", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public VideoProductCaraouselDTO getvideoProductCarouselComponent(@RequestParam final String mcvid,
+			@RequestParam final String lat, @RequestParam final String lng, @RequestParam final String pincode,
+			@RequestParam final String channel, @RequestParam final String isPwa,
+			@RequestBody final HomepageComponentRequestDTO videoProductCaraouselRequestDTO)
+	{
+
+		VideoProductCaraouselDTO videoProductCaraouselDTO = new VideoProductCaraouselDTO();
+
+		final String videoProductcarouselJsonString = videoProductCaraouselRequestDTO.getContent();
+		videoProductCaraouselDTO = homePageAppFacade.getVideoProductCarouselDTO(videoProductCaraouselRequestDTO,
+				videoProductcarouselJsonString);
+		System.out.println("Theme offers dto" + videoProductCaraouselDTO);
+
+		return videoProductCaraouselDTO;
+	}
+
+
+	//automatedBrandproductCarousel
+
+	@RequestMapping(value = "/automatedBrandCarouselComponent", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselComponent(@RequestParam final String mcvid,
+			@RequestParam final String lat, @RequestParam final String lng, @RequestParam final String pincode,
+			@RequestParam final String channel, @RequestParam final String isPwa,
+			@RequestBody final HomepageComponentRequestDTO automatedBrandRequestDTO)
+	{
+
+		AutomatedBrandProductCarouselDTO automatedBrandCaraouselDTO = new AutomatedBrandProductCarouselDTO();
+
+		final String automatedBrandCaraouselJsonString = automatedBrandRequestDTO.getContent();
+		automatedBrandCaraouselDTO = homePageAppFacade.getautomatedBrandCarouselDTO(automatedBrandRequestDTO,
+				automatedBrandCaraouselJsonString);
+		System.out.println("Theme offers dto" + automatedBrandCaraouselDTO);
+
+		return automatedBrandCaraouselDTO;
+	}
+
 }
