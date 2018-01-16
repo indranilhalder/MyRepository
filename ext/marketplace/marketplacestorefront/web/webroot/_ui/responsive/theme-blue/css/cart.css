@@ -5817,5 +5817,5 @@ li.item>ul li:last-child {
 } */
 /* end comment for TISCSS-77 */
 .MyBag-top-section {
-		margin: 0 0 20px 0;
+		margin: 0 0 20px 0 ! important;
 	}
