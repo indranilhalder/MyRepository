@@ -26,11 +26,15 @@ import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.service.HomePageAppService;
+import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
+import com.tisl.mpl.wsdto.BannersCarouselDTO;
 import com.tisl.mpl.wsdto.ComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomeProductsDTO;
+import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
 import com.tisl.mpl.wsdto.ThemeOffersJSONDTO;
 import com.tisl.mpl.wsdto.ThemeOffersRequestDTO;
+import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
 
 
 /**
@@ -85,7 +89,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getAdobeTargetData()
 	 */
 	@Override
@@ -98,7 +102,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.homeapi.HomePageAppFacade#getThemeOffersComponentDTO(com.tisl.mpl.wsdto.ThemeOffersRequestDTO,
 	 * com.tisl.mpl.wsdto.ThemeOffersJSONDTO)
@@ -200,5 +204,47 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 		}
 		return finalProductsDTO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getBannerProductCarouselDTO(com.tisl.mpl.facade.homeapi.
+	 * HomepageComponentRequestDTO, java.lang.String)
+	 */
+	@Override
+	public BannersCarouselDTO getBannerProductCarouselDTO(final HomepageComponentRequestDTO bannerCarouselRequestDTO,
+			final String bannerProductcarouselJsonString)
+	{
+		// YTODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getVideoProductCarouselDTO(com.tisl.mpl.facade.homeapi.
+	 * HomepageComponentRequestDTO, java.lang.String)
+	 */
+	@Override
+	public VideoProductCaraouselDTO getVideoProductCarouselDTO(final HomepageComponentRequestDTO videoProductCaraouselRequestDTO,
+			final String videoProductcarouselJsonString)
+	{
+		// YTODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getautomatedBrandCarouselDTO(com.tisl.mpl.facade.homeapi.
+	 * HomepageComponentRequestDTO, java.lang.String)
+	 */
+	@Override
+	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselDTO(
+			final HomepageComponentRequestDTO automatedBrandRequestDTO, final String automatedBrandCaraouselJsonString)
+	{
+		// YTODO Auto-generated method stub
+		return null;
 	}
 }

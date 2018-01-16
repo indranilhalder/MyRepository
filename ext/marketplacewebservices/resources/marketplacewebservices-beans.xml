@@ -3627,13 +3627,7 @@
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
 	</bean>	
-	
-	<bean class="com.tisl.mpl.wsdto.BannerCarouselRequestDTO">	
-		<property name="thirdPartyId" type="String" />
-		<property name="edgeHost" type="String" />
-		<property name="content" type="String" />	
-	</bean>	
-	
+
 	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselDTO">
 		<property name="title" type="String" />
 		<property name="description" type="String" />
@@ -3646,14 +3640,6 @@
 		<property name="status" type="String" />		
 	</bean>	
 	
-	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselRequestDTO">	
-		<property name="thirdPartyId" type="String" />
-		<property name="edgeHost" type="String" />
-		<property name="content" type="String" />	
-	</bean>	
-	
-	
-	
 	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO">
 		<property name="brandLogo" type="String" />
 		<property name="description" type="String" />
@@ -3663,12 +3649,6 @@
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
-	</bean>
-	
-	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductRequestDTO">	
-		<property name="thirdPartyId" type="String" />
-		<property name="edgeHost" type="String" />
-		<property name="content" type="String" />	
 	</bean>
 		
 	<bean class="com.tisl.mpl.wsdto.ComponentRequestDTO">

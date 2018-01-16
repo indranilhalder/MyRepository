@@ -8,7 +8,6 @@ import com.tisl.mpl.wsdto.BannersCarouselDTO;
 import com.tisl.mpl.wsdto.ComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
-import com.tisl.mpl.wsdto.ThemeOffersRequestDTO;
 import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
 
 
@@ -20,7 +19,8 @@ public interface HomePageAppFacade
 {
 	public void getAdobeTargetDataOfferWidget(ComponentRequestDTO componentRequestDTO);
 
-	public ThemeOffersDTO getThemeOffersComponentDTO(ThemeOffersRequestDTO themeOffersRequestDTO, String themeOffersJSONString);
+	public ThemeOffersDTO getThemeOffersComponentDTO(HomepageComponentRequestDTO themeOffersRequestDTO,
+			String themeOffersJSONString);
 
 	/**
 	 * @param bannerCarouselRequestDTO
