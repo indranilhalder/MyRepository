@@ -5119,7 +5119,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery {
     margin: 0 8px 18px 8px;
 }
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.remove-entry-button:after {
-    right: -28px;
+    right: -18px;	/* modified for TICSCC-181 */
 }
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo {
     padding: 12px 0 12px 8px;
