@@ -72,9 +72,9 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 	private ModelService modelService;
 
-	final Double refundClearTATFinal = new Double(10);
+	final static Double refundClearTATFinal = new Double(10);
 
-	final Double refundStartTime = new Double(120);
+	final static Double refundStartTime = new Double(120);
 
 
 	//	private static final String REFUND = "REFUND_SUCCESSFUL";
@@ -268,7 +268,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 					checkJuspayFlag = true;
 				}
 
-				if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("SUCCESS")
+				if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase(SUCCESS)
 						&& refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
 				{
 					//update order status only
@@ -495,23 +495,23 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			}
 
 
-			if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS") && cancelledForRisk)
+			if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS) && cancelledForRisk)
 			{
 				updateOrderStatusCancelledForRisk(order);
 			}
 			else if (refundReason.equalsIgnoreCase(JuspayRefundType.CANCELLED.toString())
-					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 			{
 				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
 				updateOrderStatusCancelled(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
 			else if (refundReason.equalsIgnoreCase(JuspayRefundType.RETURN.toString())
-					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 			{
 				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
 				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 			}
-			else if (!StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+			else if (!StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 			{
 				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.REFUND_IN_PROGRESS);
 				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
@@ -662,7 +662,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 					juspayOrderStatusRequestIdList.add(juspayRefundResponseModel.getUniqueRequestId());
 
 					if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
-							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("SUCCESS"))
+							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase(SUCCESS))
 					{
 						//update order status only
 						final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(juspayRefundResponseModel
