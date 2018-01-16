@@ -9999,7 +9999,7 @@ public class UsersController extends BaseCommerceController
 		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
 
-		final int orderCount = 0;
+//		final int orderCount = 0;
 		final int start = 0, end = 0;
 		OrderData orderDetails = null;
 		try
