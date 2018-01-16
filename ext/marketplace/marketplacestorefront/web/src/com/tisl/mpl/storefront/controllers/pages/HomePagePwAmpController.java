@@ -96,8 +96,6 @@ public class HomePagePwAmpController extends HomePageController
 	private static final String COMPONENT_UID_PATH_VARIABLE_PATTERN = "{componentUid:.*}";
 	private static final String DROPDOWN_BRAND = "MBH";
 	private static final String DROPDOWN_CATEGORY = "MSH";
-	private static final String URL = "url";
-	private static final String ITEMS = "items";
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService cmsPageService;
@@ -226,13 +224,15 @@ public class HomePagePwAmpController extends HomePageController
 									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
-										moblileBanners.put(URL, bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("href", bannerComponent.getUrlLink());
+										moblileBanners.put("pk", bannerComponent.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
 									{
 										final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
-										desktopBanners.put(URL, bannerComponent.getBannerImage().getUrl());
+										desktopBanners.put("url", bannerComponent.getBannerImage().getUrl());
 										desktopBannersSet.add(desktopBanners);
 									}
 								}
@@ -246,13 +246,15 @@ public class HomePagePwAmpController extends HomePageController
 									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
-										moblileBanners.put(URL, bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("href", bannerComponent.getUrlLink());
+										moblileBanners.put("pk", bannerComponent.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
 									{
 										final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
-										desktopBanners.put(URL, bannerComponent.getBannerImage().getUrl());
+										desktopBanners.put("url", bannerComponent.getBannerImage().getUrl());
 										desktopBannersSet.add(desktopBanners);
 									}
 								}
@@ -264,13 +266,15 @@ public class HomePagePwAmpController extends HomePageController
 									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
-										moblileBanners.put(URL, banner.getMedia().getUrl());
+										moblileBanners.put("url", banner.getMedia().getUrl());
+										moblileBanners.put("href", banner.getUrlLink());
+										moblileBanners.put("pk", banner.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
 									{
 										final LinkedHashMap<String, String> desktopBanners = new LinkedHashMap<String, String>();
-										desktopBanners.put(URL, banner.getMedia().getUrl());
+										desktopBanners.put("url", banner.getMedia().getUrl());
 										desktopBannersSet.add(desktopBanners);
 									}
 								}
@@ -309,7 +313,7 @@ public class HomePagePwAmpController extends HomePageController
 					MarketplacecommerceservicesConstants.E0000));
 		}
 		ampArray.add(homePageBannerJson);
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 	}
 
@@ -370,7 +374,7 @@ public class HomePagePwAmpController extends HomePageController
 					MarketplacecommerceservicesConstants.E0000));
 		}
 		ampArray.add(brandsYouLoveJson);
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 
 	}
@@ -407,7 +411,7 @@ public class HomePagePwAmpController extends HomePageController
 					MarketplacecommerceservicesConstants.E0000));
 		}
 		ampArray.add(getBestPicksJson);
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 	}
 
@@ -441,7 +445,7 @@ public class HomePagePwAmpController extends HomePageController
 					MarketplacecommerceservicesConstants.E0000));
 		}
 		ampArray.add(getProductsYouCareJson);
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 	}
 
@@ -485,7 +489,7 @@ public class HomePagePwAmpController extends HomePageController
 		final int range = rand.nextInt(3) + 1;
 		final JSONArray items = (JSONArray) getStayQuedHomepageJson.get("allBannerJsonObject");
 		ampArray.add(items.get(range - 1));
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 
 	}
@@ -652,7 +656,7 @@ public class HomePagePwAmpController extends HomePageController
 			LOG.error(EXCEPTION_MESSAGE_NEWEXCLUSIVE, e);
 		}
 		ampArray.add(newAndExclusiveJson);
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 
 	}
@@ -714,7 +718,7 @@ public class HomePagePwAmpController extends HomePageController
 					MarketplacecommerceservicesConstants.E0000));
 		}
 		ampArray.add(collectionShowcase);
-		ampObj.put(ITEMS, ampArray);
+		ampObj.put("items", ampArray);
 		return ampObj;
 
 	}

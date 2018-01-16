@@ -222,7 +222,6 @@ header{
 
 .header-icon-2{
 	right:0px;
-	top:0px;
 }
 
 .header-logo{
@@ -389,7 +388,6 @@ padding-top:0px;
 
 .header-icon-3{
 	right:60px;
-	top:0px;
 }
 
 .header-search-section {
@@ -550,7 +548,7 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 }
 
 /*Autocomplete*/
-.suggest {width: 31%; margin-left: 152px; position: absolute; top: 48px;}
+.suggest {width: 31%; margin-left: 152px; position: absolute; top: 48px;z-index: 1;}
 
 .suggest amp-selector {margin: 0; padding: 0; text-align: left;}
 .suggest amp-list {background-color: #fff;}

@@ -5,8 +5,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true" enabled="true">
 <!doctype html>
 <html amp>
 <header:ampheader />
@@ -23,14 +21,12 @@
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'>
 			<i class="fa fa-navicon"></i>
 		</button>
-		<!-- <a href="index.php" class="header-logo"><img src="./images/logo.png" /></a> -->
-
 		<section class="col-xs-12 header-search-section">
 			<section class="header-search-left">
 				<section class="logo-container header-search-left-child">
-					<amp-img class="logo-image" width="50" height="30"
+					<a href="/"><amp-img class="logo-image" width="50" height="30"
 						layout="flex-item"
-						src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
+						src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img></a>
 				</section>
 			</section>
 			<section class="header-search-center desktop-item"
@@ -77,8 +73,8 @@
               autosuggest-list.show"
 					[value]="term || ''" value="" required autocomplete="off" />
 				<button class="header-search-btn">
-					<i class="fa fa-search"></i>
-				</button>
+		          <a href="/search/?searchCategory=all&text=" [href]="'/search/?searchCategory=all&text='+term"><i class="fa fa-search"></i></a>
+		        </button>
 				<div class="suggest">
 					<div class="autosuggest-container hidden"
 						[class]="(showDropdown && term) ?
@@ -363,7 +359,7 @@
 			layout="responsive" type="slides" controls autoplay loop delay="3000">
 		{{#moblileBanners}}
 		<div>
-			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
+			<a href="{{href}}?icid={{pk}}"><amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img></a>
 		</div>
 		{{/moblileBanners}} </amp-carousel> </template> </amp-list>
 	</div>
@@ -381,17 +377,19 @@
 	</ul> -->
 	
 	<!-- Top Deals -->
+	<amp-list src="/pwamp/getBestPicks?version=Online" height="360" layout="fixed-height"> 
+	<template type="amp-mustache">
 	<div id="topDealsComp">
 		<div class="topDealsTopSection">
 			<h2 class="homeViewHeading">
-				Top Deals <small class="homeViewAllBtn"><a href="#">View
-						All</a></small>
+				{{title}} <small class="homeViewAllBtn">
+				<a href="{{buttonLink}}">{{buttonText}}</a></small>
 			</h2>
 		</div>
 		<div>
 			<div id="topDealsCompCarousel">
-				<amp-list src="/pwamp/getBestPicks?version=Online" height="360"
-					layout="fixed-height"> <template type="amp-mustache">
+				
+				
 				<amp-carousel height="360" layout="fixed-height" type="carousel">
 				{{#subItems}}
 				<div class="topDealsItem">
@@ -400,16 +398,21 @@
 								layout="fill" src="{{imageUrl}}" alt="Brand Image"></amp-img></a>
 					</div>
 				</div>
-				{{/subItems}} </amp-carousel> </template> </amp-list>
+				{{/subItems}} 
+				</amp-carousel> 
+				
+				
 			</div>
 		</div>
-		<div class="brandStudioBottom">
+<!-- 		<div class="brandStudioBottom">
 			<amp-list src="/json/bestpicks.json" height="40"
 				layout="fixed-height"> <template type="amp-mustache">
 			<a href="{{buttonLink}}"><button class="brandStudioViewAllBtn">{{buttonText}}</button></a>
 			</template> </amp-list>
-		</div>
+		</div> -->
 	</div>
+	</template> 
+	</amp-list>
 
 	<!-- Brands You Love -->
 	<div id="brandsYouLoveMobileComp" class="">
@@ -445,30 +448,29 @@
 	</div>
 
 	<!-- What To Buy Now -->
+	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="400" layout="fixed-height"> 
+	<template type="amp-mustache"> 
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
-			<h2 class="homeViewHeading">What To Buy Now</h2>
+			<h2 class="homeViewHeading">{{title}}</h2>
 		</div>
 		<div>
 			<div id="whatToBuyCompCarousel">
-
-				<amp-list src="/pwamp/getProductsYouCare?version=Online"
-					height="400" layout="fixed-height"> <template
-					type="amp-mustache"> <amp-carousel height="400"
-					layout="fixed-height" type="carousel">
+				<amp-carousel height="400" layout="fixed-height" type="carousel">
 				{{#categories}}
 				<div class="whatToBuyItem">
 					<div class="whatToBuyItemImg">
 						<a href="{{imageURL}}"><amp-img class="responsive-img"
-								layout="fill" src="{{mediaURL}}" alt="Brand Image"></amp-img></a>
+								layout="fill" src="{{mediaURL}}" alt="{{imageName}}"></amp-img></a>
 					</div>
 				</div>
-				{{/categories}} </amp-carousel> </template> </amp-list>
-
+				{{/categories}} 
+				</amp-carousel> 
 			</div>
 		</div>
 	</div>
-
+	</template> 
+	</amp-list>
 	<br />
 
 	<div class="compContainer">
@@ -503,22 +505,23 @@
 			</template> 
 			</amp-list>
 		</div>
-
+		
+		<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="280" layout="fixed-height"> 
+		<template type="amp-mustache">
 		<!-- New In -->
 		<div id="newInComp">
 			<div class="newInTopSection">
 				<h2 class="homeViewHeading">
-					New In <small class="homeViewAllBtn"><a href="#">View
+					{{title}} <small class="homeViewAllBtn"><a href="/search/viewOnlineProducts">View
 							All</a></small>
 				</h2>
 			</div>
 			<div>
 				<div id="newInCompCarousel">
-					<amp-list src="/pwamp/getNewAndExclusive?version=Online"
-						height="280" layout="fixed-height"> <template
-						type="amp-mustache"> <amp-carousel height="280"
+					 
+						<amp-carousel height="280"
 						layout="fixed-height" type="carousel">
-					{{#newAndExclusiveProducts}} <a href="{{productUrl}}"><div
+						{{#newAndExclusiveProducts}} <a href="{{productUrl}}"><div
 							class="newInItem">
 							<div class="newInItemImg">
 								<amp-img width="120" height="180" layout="responsive"
@@ -532,13 +535,15 @@
 								</p>
 								{{/productPrice}}
 							</div>
-						</div></a> {{/newAndExclusiveProducts}} </amp-carousel> </template> </amp-list>
+						</div></a> {{/newAndExclusiveProducts}} </amp-carousel> 
 				</div>
 			</div>
 			<div class="brandStudioBottom">
 				<button class="brandStudioViewAllBtn">View All</button>
 			</div>
 		</div>
+		</template> 
+	</amp-list>
 	</div>
 
 
@@ -548,10 +553,11 @@
 			<h2 class="homeViewHeading">Inspire Me</h2>
 		</div>
 		<amp-list src="/pwamp/getCollectionShowcase?version=Online"
-			height="240" layout="fixed-height"> <template
-			type="amp-mustache"> <amp-carousel height="240"
-			layout="fixed-height" type="slides" controls autoplay loop
-			delay="8000"> {{#subComponents}}
+			height="240" layout="fixed-height"> 
+			<template
+			type="amp-mustache"> 
+			<amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
+			{{#subComponents}}
 		<div class="inspireMeCenter">
 			<div class="stayTwo">
 				<div>
@@ -577,7 +583,10 @@
 				</div>
 			</div>
 		</div>
-		{{/subComponents}} </amp-carousel> </template> </amp-list>
+		{{/subComponents}} 
+		</amp-carousel> 
+		</template> 
+		</amp-list>
 	</div>
 	
 	<div class="amp-tealium" style="position:absolute;top:75%;">
@@ -614,4 +623,3 @@
 	
 </body>
 </html>
-</compress:html>
