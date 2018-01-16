@@ -73,8 +73,8 @@
               autosuggest-list.show"
 					[value]="term || ''" value="" required autocomplete="off" />
 				<button class="header-search-btn">
-					<i class="fa fa-search"></i>
-				</button>
+		          <a href="/search/?searchCategory=all&text=" [href]="'/search/?searchCategory=all&text='+term"><i class="fa fa-search"></i></a>
+		        </button>
 				<div class="suggest">
 					<div class="autosuggest-container hidden"
 						[class]="(showDropdown && term) ?
