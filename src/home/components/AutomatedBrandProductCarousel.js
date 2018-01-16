@@ -13,6 +13,8 @@ export default class AutomatedBrandProductCarousel extends React.Component {
   render() {
     const componentData = this.props.feedComponentData.data;
     let carouselData;
+    console.log("COMPONENT DATA");
+    console.log(componentData);
     if (componentData.items instanceof Array) {
       carouselData = componentData.items.map(transformData);
     }
@@ -21,7 +23,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
       <FeedComponent
         banner={
           <ProductImageHeader
-            image={componentData.imageUrl}
+            image={componentData.imageURL}
             description={componentData.description}
             logo={<Logo image={componentData.brandLogo} />}
           />
