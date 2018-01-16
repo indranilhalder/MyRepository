@@ -12,7 +12,8 @@ export default class BannerMobile extends React.Component {
           })
         : null,
       numberOfItems: React.Children.count(this.props.children),
-      position: 2
+      position: 2,
+      absolutePosition: 2
     };
     this.items = this.props.children
       ? React.Children.map(this.props.children, (child, i) => {
@@ -39,17 +40,27 @@ export default class BannerMobile extends React.Component {
     this.setState({ direction: "forward" });
   };
   slideBack = () => {
+    const visibleItems = [];
+    visibleItems.push(this.items[this.state.position + 1]);
+    visibleItems.push(this.state.visibleItems[1]);
+    visibleItems.push(this.items[2]);
+    console.log(visibleItems);
+    this.setState({ visibleItems });
     this.setState({ direction: "back" });
   };
   swapForward = () => {
     const visibleItems = [];
 
-    const position = (this.state.position - 1) % this.state.numberOfItems;
+    let position = (this.state.absolutePosition - 1) % this.state.numberOfItems;
+    if (position <= 0) {
+      position = this.state.numberOfItems + position;
+    }
     let normalPosition = position;
+    let absolutePosition = this.state.absolutePosition - 1;
     if (normalPosition < 0) {
       normalPosition = this.state.numberOfItems + normalPosition;
     }
-    this.setState({ position: normalPosition }, () => {
+    this.setState({ position: normalPosition, absolutePosition }, () => {
       visibleItems.push(this.state.visibleItems[2]);
       visibleItems.push(this.state.visibleItems[0]);
       visibleItems.push(this.items[this.state.position]);
@@ -62,8 +73,10 @@ export default class BannerMobile extends React.Component {
 
   swapBack = () => {
     const visibleItems = [];
-    const position = (this.state.position + 1) % this.state.numberOfItems;
-    this.setState({ position }, () => {
+    const position =
+      (this.state.absolutePosition + 1) % this.state.numberOfItems;
+    let absolutePosition = this.state.absolutePosition + 1;
+    this.setState({ position, absolutePosition }, () => {
       visibleItems.push(this.state.visibleItems[1]);
       visibleItems.push(this.state.visibleItems[2]);
       // if (this.items[this.state.position] && this.state.position > 2) {
