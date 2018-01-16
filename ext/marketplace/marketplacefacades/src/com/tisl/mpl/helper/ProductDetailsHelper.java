@@ -102,6 +102,7 @@ public class ProductDetailsHelper
 	private static final String N = "N";
 	public static final String EMPTY = "";
 	private final static String COMMACONSTANT = ",";
+	private static final String SEPERATOR_X = " X ";
 	/**
 	 *
 	 */
@@ -1185,15 +1186,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1599,7 +1600,7 @@ public class ProductDetailsHelper
 	}
 
 	/*
-	 * 
+	 *
 	 * Added For Home Furnishing
 	 */
 	public Map<String, List<String>> displayConfigurableAttributeForHF(final ProductData productData)
@@ -1812,7 +1813,7 @@ public class ProductDetailsHelper
 						{
 							if (islengthAvailable && iswidthAvailable && isheightAvailable)
 							{
-								prodDimensionValue = length + " X " + width + " X " + height;
+								prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 										+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 										+ prodDimensionValue);
@@ -1820,7 +1821,7 @@ public class ProductDetailsHelper
 							}
 							else if (islengthAvailable && iswidthAvailable)
 							{
-								prodDimensionValue = length + " X " + width;
+								prodDimensionValue = length + SEPERATOR_X + width;
 								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 										+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 										+ prodDimensionValue);
@@ -1858,7 +1859,7 @@ public class ProductDetailsHelper
 							{
 								if (islengthAvailable && iswidthAvailable && isheightAvailable)
 								{
-									prodDimensionValue = length + " X " + width + " X " + height;
+									prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -1866,7 +1867,7 @@ public class ProductDetailsHelper
 								}
 								else if (islengthAvailable && iswidthAvailable)
 								{
-									prodDimensionValue = length + " X " + width;
+									prodDimensionValue = length + SEPERATOR_X + width;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
