@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import tataLogo from "./img/tataLogo.png";
+import tataLogo from "./img/tata_Logo.svg";
 import { default as styles } from "./AuthFrame.css";
 import SocialButtons from "./SocialButtons.js";
 export default class AuthFrame extends React.Component {
