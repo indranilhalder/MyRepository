@@ -9327,12 +9327,13 @@ public class UsersController extends BaseCommerceController
 	{
 		final String returnCancelFlag = "R";
 		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
-		final ReturnReasonDetails returnReasonData = null;
-		final ReturnReasonDTO reasonDto = new ReturnReasonDTO();
-		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		//SONR Unused Variable 
+		//		final ReturnReasonDetails returnReasonData = null;
+		//		final ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		//		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
 		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
 				"finejewellery.reverseseal.sellername");
-		boolean isFineJew = false;
+		//	boolean isFineJew = false;
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
@@ -9450,7 +9451,7 @@ public class UsersController extends BaseCommerceController
 						//break;
 						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 						{
-							isFineJew = true;
+							//isFineJew = true;
 
 							if (showRevSeal)
 							{
