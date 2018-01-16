@@ -3627,6 +3627,12 @@
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
 	</bean>	
+	<bean class="com.tisl.mpl.wsdto.BannersCarouselJSONDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
+		</bean>
 
 	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselDTO">
 		<property name="title" type="String" />
@@ -3640,6 +3646,14 @@
 		<property name="status" type="String" />		
 	</bean>	
 	
+	<bean class="com.tisl.mpl.wsdto.VideoProductJSONDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="videoURL" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />		
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO">
 		<property name="brandLogo" type="String" />
 		<property name="description" type="String" />
@@ -3650,6 +3664,12 @@
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCarouselJSONDTO">
+		<property name="brandLogo" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
+		</bean>
 		
 	<bean class="com.tisl.mpl.wsdto.ComponentRequestDTO">
 		<property name="widgetPlatform" type="String" />
