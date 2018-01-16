@@ -5,7 +5,7 @@ package com.tisl.mpl.core.cronjobs.gigya;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.site.BaseSiteService;
+
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
