@@ -413,9 +413,9 @@
 		<amp-carousel class="slider" width="400" height="400"
 			layout="responsive" type="slides" controls autoplay loop delay="3000">
 		{{#moblileBanners}}
-		<div>
-			<a href="{{href}}?icid={{pk}}"><amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img></a>
-		</div>
+		<a href="{{href}}?icid={{pk}}"><div>
+			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
+		</div></a>
 		{{/moblileBanners}} </amp-carousel> </template> </amp-list>
 	</div>
 
@@ -607,10 +607,8 @@
 		<div class="inspireMeMobileTopSection">
 			<h2 class="homeViewHeading">Inspire Me</h2>
 		</div>
-		<amp-list src="/pwamp/getCollectionShowcase?version=Online"
-			height="240" layout="fixed-height"> 
-			<template
-			type="amp-mustache"> 
+		<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="240" layout="fixed-height"> 
+		<template type="amp-mustache"> 
 			<amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
 			{{#subComponents}}
 		<div class="inspireMeCenter">
