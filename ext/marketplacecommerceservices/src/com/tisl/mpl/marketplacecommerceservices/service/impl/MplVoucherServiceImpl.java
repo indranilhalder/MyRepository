@@ -21,7 +21,6 @@ import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
@@ -47,7 +46,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -68,9 +66,6 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
-import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
@@ -243,59 +238,48 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	}
 
-
+	//SONR  Unused Method
 	/**
 	 * Provide the Modified Delivery Cost for Shipping Promotions
 	 *
 	 * @param entries
 	 * @return deliveryCost
 	 */
-	private double getModifiedDeliveryCost(final List<AbstractOrderEntryModel> entries)
-	{
-		double deliveryCost = 0.0D;
-		if (CollectionUtils.isNotEmpty(entries))
-		{
-			for (final AbstractOrderEntryModel entry : entries)
-			{
-				if (null != entry && !entry.getGiveAway().booleanValue() && null != entry.getCurrDelCharge()
-						&& entry.getCurrDelCharge().doubleValue() > 0)
-				{
-					deliveryCost += entry.getCurrDelCharge().doubleValue();
-				}
-			}
-		}
-		return deliveryCost;
-	}
+	//	private double getModifiedDeliveryCost(final List<AbstractOrderEntryModel> entries)
+	//	{
+	//		double deliveryCost = 0.0D;
+	//		if (CollectionUtils.isNotEmpty(entries))
+	//		{
+	//			for (final AbstractOrderEntryModel entry : entries)
+	//			{
+	//				if (null != entry && !entry.getGiveAway().booleanValue() && null != entry.getCurrDelCharge()
+	//						&& entry.getCurrDelCharge().doubleValue() > 0)
+	//				{
+	//					deliveryCost += entry.getCurrDelCharge().doubleValue();
+	//				}
+	//			}
+	//		}
+	//		return deliveryCost;
+	//	}
 
 
 
-
+	//SONR Unused Method
 	/**
 	 * Validate Cart for Shipping Promotion
 	 *
 	 * @param allPromotionResults
 	 * @return flag
 	 */
-	private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults)
-	{
-		boolean flag = false;
-		if (CollectionUtils.isNotEmpty(allPromotionResults))
-		{
-			final List<PromotionResultModel> promotionList = new ArrayList<PromotionResultModel>(allPromotionResults);
-			for (final PromotionResultModel oModel : promotionList)
-			{
-				if (oModel.getCertainty().floatValue() == 1.0F
-						&& null != oModel.getPromotion()
-						&& (oModel.getPromotion() instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
-				{
-					flag = true;
-					break;
-				}
-			}
-		}
-		return flag;
-	}
+	/*
+	 * private boolean validateForShippingPromo(final Set<PromotionResultModel> allPromotionResults) { boolean flag =
+	 * false; if (CollectionUtils.isNotEmpty(allPromotionResults)) { final List<PromotionResultModel> promotionList = new
+	 * ArrayList<PromotionResultModel>(allPromotionResults); for (final PromotionResultModel oModel : promotionList) { if
+	 * (oModel.getCertainty().floatValue() == 1.0F && null != oModel.getPromotion() && (oModel.getPromotion() instanceof
+	 * BuyAboveXGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof
+	 * BuyAGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof
+	 * BuyAandBGetPromotionOnShippingChargesModel)) { flag = true; break; } } } return flag; }
+	 */
 
 
 
@@ -2126,11 +2110,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						//Save card ref no in db
 						saveCardFingerPrintNoInDb(addCardResponse, abstractOrderModel, channel);
 					}
-					if (Boolean.FALSE.booleanValue() && priceDiff.doubleValue() > 0.0)//Disabling this code for H2_SPRINT2 as price update will not go in sprint 2
-					{
-						//Updating model with new discount price
-						//updateVoucherPriceAbstractOrderModel(abstractOrderModel, promotionVoucherModel, priceDiff);//Commenting for now will go in H2_SPRINT3
-					}
+					//										if (Boolean.FALSE.booleanValue() && priceDiff.doubleValue() > 0.0)//Disabling this code for H2_SPRINT2 as price update will not go in sprint 2
+					//										{
+					//											//Updating model with new discount price
+					//											//updateVoucherPriceAbstractOrderModel(abstractOrderModel, promotionVoucherModel, priceDiff);//Commenting for now will go in H2_SPRINT3
+					//										}
 				}
 			}
 		}
@@ -2323,7 +2307,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	/*
 	 * TPR-7448 (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#getVoucherDiscountValue(de.hybris.platform.
 	 * core.model.order.AbstractOrderModel, de.hybris.platform.voucher.model.VoucherModel)
@@ -3442,7 +3426,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	/* CAR-330 starts here */
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#fetchUserRestrictionDetails(java.util.Date)
 	 */
@@ -3455,7 +3439,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService#fetchExistingVoucherData(de.hybris.platform
 	 * .voucher.model.VoucherModel)
