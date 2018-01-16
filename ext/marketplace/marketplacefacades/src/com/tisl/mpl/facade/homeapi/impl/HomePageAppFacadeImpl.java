@@ -3,8 +3,12 @@
  */
 package com.tisl.mpl.facade.homeapi.impl;
 
+import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,7 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.service.HomePageAppService;
 import com.tisl.mpl.wsdto.ComponentRequestDTO;
@@ -40,6 +45,9 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 	private HomePageAppService homePageAppService;
 
 	private BuyBoxService buyBoxService;
+
+	@Resource(name = "commonI18NService")
+	private CommonI18NService commonI18NService;
 
 	/**
 	 * @return the buyBoxService
@@ -153,6 +161,10 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		HomeProductsDTO productdto = null;
 		final List<String> listingIds = (List<String>) CollectionUtils.collect(productsdto, new BeanToPropertyValueTransformer(
 				"prdId"));
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplaceFacadesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
+		final String currencyIso = currency.getIsocode();
+		final DecimalFormat df = new DecimalFormat("#.00");
 		for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 		{
 			final String buyBoxListingIdLwrCase = buyBoxModel.getProduct().toLowerCase();
@@ -168,27 +180,22 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 					}
 				});
 
-				if (buyBoxModel.getAvailable().intValue() > 0)
-				{
-					finalProductsDTO.add(productdto);
-				}
-				else
-				{
-					continue;
-				}
-
 				if (buyBoxModel.getSpecialPrice() != null && Double.compare(buyBoxModel.getSpecialPrice().doubleValue(), 0.0) > 0)
 				{
 					productdto.getDiscountedPrice().setDoubleValue(buyBoxModel.getSpecialPrice());
-					productdto.getDiscountedPrice().setFormattedValue(buyBoxModel.getSpecialPrice().toString());
+					productdto.getDiscountedPrice().setFormattedValue(df.format(buyBoxModel.getSpecialPrice()));
+					productdto.getDiscountedPrice().setCurrencyIso(currencyIso);
+					productdto.getDiscountedPrice().setCurrencySymbol(currencySymbol);
 				}
 				if (buyBoxModel.getMrp() != null && Double.compare(buyBoxModel.getMrp().doubleValue(), 0.0) > 0)
 				{
 					productdto.getMrpPrice().setDoubleValue(buyBoxModel.getMrp());
-					productdto.getMrpPrice().setFormattedValue(buyBoxModel.getMrp().toString());
+					productdto.getMrpPrice().setFormattedValue(df.format(buyBoxModel.getMrp()));
+					productdto.getDiscountedPrice().setCurrencyIso(currencyIso);
+					productdto.getDiscountedPrice().setCurrencySymbol(currencySymbol);
 				}
 
-
+				finalProductsDTO.add(productdto);
 			}
 
 		}

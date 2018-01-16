@@ -1369,5 +1369,8 @@
 		<property name="prodTotalPrice" type="String" />
 		<property name="customerOrderStatus" type="String" />
 	</bean>
+	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
+		<property name="currencySymbol" type="String" />				
+	</bean>
 	
 </beans>

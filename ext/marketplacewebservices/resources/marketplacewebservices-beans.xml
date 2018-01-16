@@ -3606,7 +3606,7 @@
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
 	</bean>	
-	<bean class="com.tisl.mpl.wsdto.ThemeOffersRequestDTO">	
+	<bean class="com.tisl.mpl.wsdto.HomepageComponentRequestDTO">	
 		<property name="thirdPartyId" type="String" />
 		<property name="edgeHost" type="String" />
 		<property name="content" type="String" />	
@@ -3657,4 +3657,6 @@
 		<property name="mbox" type="String" />
 		<property name="mboxParameters" type="String" />				
 	</bean>
+	
+	
 </beans>
