@@ -14,7 +14,6 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.result.PromotionOrderResults;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -39,16 +38,16 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 	@Autowired
 	private ModelService modelService;
 
-	//CAR-324
-	@Autowired
-	private ConfigurationService configurationService;
+	//CAR-324 SONR Fix unused variable
+	//	@Autowired
+	//	private ConfigurationService configurationService;
 
 	@Override
 	public PromotionOrderResults updatePromotions(final Collection<PromotionGroupModel> promotionGroups,
 			final AbstractOrderModel order)
 	{
-		final PromotionOrderResults result = getPromotionsManager()
-				.updatePromotions(getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
+		final PromotionOrderResults result = getPromotionsManager().updatePromotions(
+				getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
 
 		refreshOrder(order);
 		//CAR-324
@@ -178,26 +177,20 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 
 		return isOrderAndEntryPromotionList;
 	}
-
+	//SONR FIX Unused Methods
 	//CAR-324
-	private void refreshOrderNew(final AbstractOrderModel order, final PromotionOrderResults result)
-	{
-		final List<String> isOrdAndEntryLevelPromotionList = isOrderAndEntryLevelPromotion(result);
-		List toRefresh = new ArrayList();
-
-		if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(1)))
-		{
-			toRefresh.add(order);
-			refreshModifiedModelsAfter(toRefresh);
-		}
-
-		if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(0)))
-		{
-			toRefresh = new ArrayList(order.getEntries());
-			refreshModifiedModelsAfter(toRefresh);
-		}
-
-		setCartSubTotal(order);
-	}
+	/*
+	 * private void refreshOrderNew(final AbstractOrderModel order, final PromotionOrderResults result) { final
+	 * List<String> isOrdAndEntryLevelPromotionList = isOrderAndEntryLevelPromotion(result); List toRefresh = new
+	 * ArrayList();
+	 * 
+	 * if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(1))) { toRefresh.add(order);
+	 * refreshModifiedModelsAfter(toRefresh); }
+	 * 
+	 * if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(0))) { toRefresh = new ArrayList(order.getEntries());
+	 * refreshModifiedModelsAfter(toRefresh); }
+	 * 
+	 * setCartSubTotal(order); }
+	 */
 
 }
