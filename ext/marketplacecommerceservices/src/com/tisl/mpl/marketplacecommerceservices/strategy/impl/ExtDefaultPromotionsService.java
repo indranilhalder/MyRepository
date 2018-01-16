@@ -6,18 +6,12 @@ package com.tisl.mpl.marketplacecommerceservices.strategy.impl;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.promotions.impl.DefaultPromotionsService;
-import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.promotions.model.OrderPromotionModel;
-import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
-import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.result.PromotionOrderResults;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -123,73 +117,73 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 	}
 
 	//CAR-324
-	private List<String> isOrderAndEntryLevelPromotion(final PromotionOrderResults result)
-	{
-		PromotionResultModel promotionResModel = null;
-		AbstractPromotionModel abstPromotionModel = null;
-		List<PromotionResult> promotionResultList = null;
-		final List<String> isOrderAndEntryPromotionList = new ArrayList<String>(Arrays.asList("N", "N"));
-
-		try
-		{
-			if (result != null && result.getAllResults() != null)
-			{
-				promotionResultList = result.getAllResults();
-				if (promotionResultList != null)
-				{
-					for (final PromotionResult promotionResult : promotionResultList)
-					{
-						promotionResModel = getModelService().get(promotionResult);
-						if (promotionResModel != null && null != promotionResModel.getCertainty()
-								&& (promotionResModel.getCertainty().floatValue() == 1F))
-						{
-							abstPromotionModel = promotionResModel.getPromotion();
-
-							if (abstPromotionModel != null)
-							{
-								if (abstPromotionModel instanceof ProductPromotionModel)
-								{
-									isOrderAndEntryPromotionList.add(0, "Y");
-								}
-								else if (abstPromotionModel instanceof OrderPromotionModel)
-								{
-									isOrderAndEntryPromotionList.add(1, "Y");
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					LOG.error("promotionResultList is null");
-				}
-			}
-			else
-			{
-				LOG.error("result is null or result.getAllResults() is null");
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-			//e.printStackTrace();
-		}
-
-		return isOrderAndEntryPromotionList;
-	}
+	//	private List<String> isOrderAndEntryLevelPromotion(final PromotionOrderResults result)
+	//	{
+	//		PromotionResultModel promotionResModel = null;
+	//		AbstractPromotionModel abstPromotionModel = null;
+	//		List<PromotionResult> promotionResultList = null;
+	//		final List<String> isOrderAndEntryPromotionList = new ArrayList<String>(Arrays.asList("N", "N"));
+	//
+	//		try
+	//		{
+	//			if (result != null && result.getAllResults() != null)
+	//			{
+	//				promotionResultList = result.getAllResults();
+	//				if (promotionResultList != null)
+	//				{
+	//					for (final PromotionResult promotionResult : promotionResultList)
+	//					{
+	//						promotionResModel = getModelService().get(promotionResult);
+	//						if (promotionResModel != null && null != promotionResModel.getCertainty()
+	//								&& (promotionResModel.getCertainty().floatValue() == 1F))
+	//						{
+	//							abstPromotionModel = promotionResModel.getPromotion();
+	//
+	//							if (abstPromotionModel != null)
+	//							{
+	//								if (abstPromotionModel instanceof ProductPromotionModel)
+	//								{
+	//									isOrderAndEntryPromotionList.add(0, "Y");
+	//								}
+	//								else if (abstPromotionModel instanceof OrderPromotionModel)
+	//								{
+	//									isOrderAndEntryPromotionList.add(1, "Y");
+	//								}
+	//							}
+	//						}
+	//					}
+	//				}
+	//				else
+	//				{
+	//					LOG.error("promotionResultList is null");
+	//				}
+	//			}
+	//			else
+	//			{
+	//				LOG.error("result is null or result.getAllResults() is null");
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e);
+	//			//e.printStackTrace();
+	//		}
+	//
+	//		return isOrderAndEntryPromotionList;
+	//	}
 	//SONR FIX Unused Methods
 	//CAR-324
 	/*
 	 * private void refreshOrderNew(final AbstractOrderModel order, final PromotionOrderResults result) { final
 	 * List<String> isOrdAndEntryLevelPromotionList = isOrderAndEntryLevelPromotion(result); List toRefresh = new
 	 * ArrayList();
-	 * 
+	 *
 	 * if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(1))) { toRefresh.add(order);
 	 * refreshModifiedModelsAfter(toRefresh); }
-	 * 
+	 *
 	 * if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(0))) { toRefresh = new ArrayList(order.getEntries());
 	 * refreshModifiedModelsAfter(toRefresh); }
-	 * 
+	 *
 	 * setCartSubTotal(order); }
 	 */
 
