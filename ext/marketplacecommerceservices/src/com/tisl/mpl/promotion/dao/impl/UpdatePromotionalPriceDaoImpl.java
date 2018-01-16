@@ -355,7 +355,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		}
 		else if (promoCurrent instanceof BuyABFreePrecentageDiscountModel)
 		{
-			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
+			final StringBuilder queryString = new StringBuilder(5000);
+			queryString.append("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
 			queryString.append(" {{ SELECT {p." + BuyABFreePrecentageDiscountModel.PK + "} AS pk, {p."
 					+ BuyABFreePrecentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyABFreePrecentageDiscountModel._TYPECODE
 					+ " AS p ");
