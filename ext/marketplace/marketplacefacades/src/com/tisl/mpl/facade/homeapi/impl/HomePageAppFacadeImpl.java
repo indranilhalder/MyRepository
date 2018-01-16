@@ -33,7 +33,6 @@ import com.tisl.mpl.wsdto.HomeProductsDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
 import com.tisl.mpl.wsdto.ThemeOffersJSONDTO;
-import com.tisl.mpl.wsdto.ThemeOffersRequestDTO;
 import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
 
 
@@ -89,7 +88,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getAdobeTargetData()
 	 */
 	@Override
@@ -102,13 +101,13 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.homeapi.HomePageAppFacade#getThemeOffersComponentDTO(com.tisl.mpl.wsdto.ThemeOffersRequestDTO,
 	 * com.tisl.mpl.wsdto.ThemeOffersJSONDTO)
 	 */
 	@Override
-	public ThemeOffersDTO getThemeOffersComponentDTO(final ThemeOffersRequestDTO themeOffersRequestDTO,
+	public ThemeOffersDTO getThemeOffersComponentDTO(final HomepageComponentRequestDTO themeOffersRequestDTO,
 			final String themeOffersJSONString)
 	{
 		final ObjectMapper mapper = new ObjectMapper();
@@ -208,7 +207,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getBannerProductCarouselDTO(com.tisl.mpl.facade.homeapi.
 	 * HomepageComponentRequestDTO, java.lang.String)
 	 */
@@ -222,7 +221,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getVideoProductCarouselDTO(com.tisl.mpl.facade.homeapi.
 	 * HomepageComponentRequestDTO, java.lang.String)
 	 */
@@ -236,7 +235,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getautomatedBrandCarouselDTO(com.tisl.mpl.facade.homeapi.
 	 * HomepageComponentRequestDTO, java.lang.String)
 	 */
