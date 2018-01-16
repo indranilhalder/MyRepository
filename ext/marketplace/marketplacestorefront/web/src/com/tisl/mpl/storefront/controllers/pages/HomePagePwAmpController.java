@@ -225,6 +225,8 @@ public class HomePagePwAmpController extends HomePageController
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("href", bannerComponent.getUrlLink());
+										moblileBanners.put("pk", bannerComponent.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
@@ -245,6 +247,8 @@ public class HomePagePwAmpController extends HomePageController
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put("url", bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("href", bannerComponent.getUrlLink());
+										moblileBanners.put("pk", bannerComponent.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
@@ -263,6 +267,8 @@ public class HomePagePwAmpController extends HomePageController
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put("url", banner.getMedia().getUrl());
+										moblileBanners.put("href", banner.getUrlLink());
+										moblileBanners.put("pk", banner.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
