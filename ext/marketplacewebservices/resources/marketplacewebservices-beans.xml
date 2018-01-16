@@ -3606,7 +3606,7 @@
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
 	</bean>	
-	<bean class="com.tisl.mpl.wsdto.ThemeOffersRequestDTO">	
+	<bean class="com.tisl.mpl.wsdto.HomepageComponentRequestDTO">	
 		<property name="thirdPartyId" type="String" />
 		<property name="edgeHost" type="String" />
 		<property name="content" type="String" />	
@@ -3617,7 +3617,7 @@
 		<property name="itemIds" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />			
 	</bean>	
 	
-		<bean class="com.tisl.mpl.wsdto.HomePageBannersDTO">
+		<bean class="com.tisl.mpl.wsdto.BannersCarouselDTO">
 		<property name="title" type="String" />
 		<property name="description" type="String" />
 		<property name="imageURL" type="String" />
@@ -3626,6 +3626,12 @@
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
+	</bean>	
+	
+	<bean class="com.tisl.mpl.wsdto.BannerCarouselRequestDTO">	
+		<property name="thirdPartyId" type="String" />
+		<property name="edgeHost" type="String" />
+		<property name="content" type="String" />	
 	</bean>	
 	
 	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselDTO">
@@ -3640,8 +3646,15 @@
 		<property name="status" type="String" />		
 	</bean>	
 	
+	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselRequestDTO">	
+		<property name="thirdPartyId" type="String" />
+		<property name="edgeHost" type="String" />
+		<property name="content" type="String" />	
+	</bean>	
 	
-	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCaraouselDTO">
+	
+	
+	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO">
 		<property name="brandLogo" type="String" />
 		<property name="description" type="String" />
 		<property name="imageURL" type="String" />
@@ -3650,6 +3663,12 @@
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
 		<property name="status" type="String" />		
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductRequestDTO">	
+		<property name="thirdPartyId" type="String" />
+		<property name="edgeHost" type="String" />
+		<property name="content" type="String" />	
 	</bean>
 		
 	<bean class="com.tisl.mpl.wsdto.ComponentRequestDTO">
