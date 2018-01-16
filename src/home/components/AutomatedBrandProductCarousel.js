@@ -21,7 +21,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
       <FeedComponent
         banner={
           <ProductImageHeader
-            image={componentData.imageUrl}
+            image={componentData.imageURL}
             description={componentData.description}
             logo={<Logo image={componentData.brandLogo} />}
           />
