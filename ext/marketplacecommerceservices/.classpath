@@ -21,5 +21,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/virtualjdbc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/acceleratorcms"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceWalletServices"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commercesearch"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>
