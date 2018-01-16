@@ -52,22 +52,22 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(UpdatePromotionalPriceDaoImpl.class.getName());
 
-	private static String SELECT = " {{ SELECT {p.";
-	private static String AS_PK = "} AS pk, {p.";
-	private static String AS_P = " AS p ";
-	private static String AS_FROM = "} AS prio FROM {";
-	private static String JOIN = " JOIN ";
-	private static String WHERE = " WHERE {p.";
-	private static String PRIORITY = "} >= ?promoCurrPriority ";
-	private static String AND_P = " AND {p.";
-	private static String IS_NULL = "} is NULL ";
-	private static String TRUE = "} = ?true ";
-	private static String QUALIFYING_COUNT = "} = ?qualifyingCount ";
-	private static String SYSDATE = "} <= ?sysdate ";
-	private static String AND_SYSDATE = " AND ?sysdate <= {p.";
-	private static String CLOSING_BRACES = "} }}";
-	private static String QUERY = "QUERY>>>>>>";
-	private static String PRODUCT = "product";
+	private static final String SELECT = " {{ SELECT {p.";
+	private static final String AS_PK = "} AS pk, {p.";
+	private static final String AS_P = " AS p ";
+	private static final String AS_FROM = "} AS prio FROM {";
+	private static final String JOIN = " JOIN ";
+	private static final String WHERE = " WHERE {p.";
+	private static final String PRIORITY = "} >= ?promoCurrPriority ";
+	private static final String AND_P = " AND {p.";
+	private static final String IS_NULL = "} is NULL ";
+	private static final String TRUE = "} = ?true ";
+	private static final String QUALIFYING_COUNT = "} = ?qualifyingCount ";
+	private static final String SYSDATE = "} <= ?sysdate ";
+	private static final String AND_SYSDATE = " AND ?sysdate <= {p.";
+	private static final String CLOSING_BRACES = "} }}";
+	private static final String QUERY = "QUERY>>>>>>";
+	private static final String PRODUCT = "product";
 
 	/**
 	 * Fetch Price Row Details for Product(Staged + Online) Defect : Modified for TISPRD-938
