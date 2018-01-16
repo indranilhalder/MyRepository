@@ -5,6 +5,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!doctype html>
 <html amp>
 <header:ampheader />
@@ -316,6 +318,59 @@
 		</c:forEach> </amp-accordion>
 	</section>
 	</amp-accordion>
+	
+	<c:if test="${empty hideHeaderLinks}">
+			<c:if test="${uiExperienceOverride}">
+				<li class="backToMobileLink"><c:url
+						value="/_s/ui-experience?level=" var="backToMobileStoreUrl" /> <a
+					href="${backToMobileStoreUrl}"> <spring:theme
+							code="text.backToMobileStore" />
+				</a></li>
+			</c:if>
+
+			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+				<%-- <c:set var="maxNumberChars" value="25" />
+				<c:if test="${fn:length(user.firstName) gt maxNumberChars}">
+					<c:set target="${user}" property="firstName"
+						value="${fn:substring(user.firstName, 0, maxNumberChars)}..." />
+				</c:if> --%>
+
+				<li class="logged_in dropdown ajaxloginhi" >
+				<span class="material-icons"></span>
+				<ycommerce:testId code="header_LoggedUser">
+					<c:set var="userName" value="${user.firstName}"/>
+							<a href="<c:url value="/my-account"/>"
+								class="headeruserdetails account-userTitle account-userTitle-custom"><spring:theme
+									code="header.hi.blank" arguments="${userName}" htmlEscape="true" />!</a>
+						<%-- </c:if> --%>
+						<span id="mobile-menu-toggle"></span>
+					</ycommerce:testId>
+						<ul class="dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout" role="menu">
+						</ul>
+				</li>
+			</sec:authorize>
+
+			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+				<div class="content">
+				<div class="right">
+					<ul>
+						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi">
+						<span class="material-icons"></span>
+						<ycommerce:testId
+						code="header_Login_link">
+						<a id="socialLogin" class="headeruserdetails" href="<c:url value="/login"/>" role="button"
+							aria-expanded="false"><%-- <spring:theme
+								code="header.link.flylogin" /> --%></a>
+						<span id="mobile-menu-toggle"></span>	<!-- add for PRDI-409 & PRDI-438 -->
+					</ycommerce:testId>
+
+							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">
+							</ul>
+						</li>
+					</ul>
+				</div></div>
+			</sec:authorize>
+		</c:if>
 	<p class="sidebar-divider-item">
 		<a href="/login"><i class="fa fa-user"></i>Sign In/Sign Up</a>
 	</p>

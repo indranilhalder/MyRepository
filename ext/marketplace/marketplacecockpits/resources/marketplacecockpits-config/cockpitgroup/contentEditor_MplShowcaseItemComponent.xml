@@ -26,11 +26,19 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>
+					<td><cockpit code="property" value="MplShowcaseItemComponent.text_mobile"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
 					<td><cockpit code="property" value="MplShowcaseItemComponent.bannerImage"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>
 					<td><cockpit code="property" value="MplShowcaseItemComponent.bannerText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplShowcaseItemComponent.bannerTextMobile"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>

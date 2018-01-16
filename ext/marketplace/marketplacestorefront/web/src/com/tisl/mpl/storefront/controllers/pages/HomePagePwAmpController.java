@@ -227,6 +227,8 @@ public class HomePagePwAmpController extends HomePageController
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put(URL, bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("href", bannerComponent.getUrlLink());
+										moblileBanners.put("pk", bannerComponent.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
@@ -247,6 +249,8 @@ public class HomePagePwAmpController extends HomePageController
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put(URL, bannerComponent.getBannerImage().getUrl());
+										moblileBanners.put("href", bannerComponent.getUrlLink());
+										moblileBanners.put("pk", bannerComponent.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
@@ -265,6 +269,8 @@ public class HomePagePwAmpController extends HomePageController
 									{
 										final LinkedHashMap<String, String> moblileBanners = new LinkedHashMap<String, String>();
 										moblileBanners.put(URL, banner.getMedia().getUrl());
+										moblileBanners.put("href", banner.getUrlLink());
+										moblileBanners.put("pk", banner.getPk().getLongValueAsString());
 										mobileBannersSet.add(moblileBanners);
 									}
 									else
@@ -777,14 +783,17 @@ public class HomePagePwAmpController extends HomePageController
 						{
 							if (StringUtils.isNotEmpty(showcaseItem.getText()))
 							{
-								showCaseItemJson.put("text", showcaseItem.getText());
+								//showCaseItemJson.put("text", showcaseItem.getText());
+								showCaseItemJson.put("text", showcaseItem.getText_mobile());
+
 							}
 						}
 						if (null != showcaseItem.getBannerText())
 						{
 							if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
 							{
-								showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+								//showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+								showCaseItemJson.put("bannerText", showcaseItem.getBannerTextMobile());
 							}
 						}
 						if (null != showcaseItem.getBannerUrl() && StringUtils.isNotEmpty(showcaseItem.getBannerUrl()))
@@ -795,11 +804,13 @@ public class HomePagePwAmpController extends HomePageController
 					else
 					{
 						String headerText = EMPTY_STRING;
-						if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
+						if (StringUtils.isNotEmpty(showcaseItem.getHeaderTextMobile()))
 						{
-							headerText = showcaseItem.getHeaderText();
+							headerText = showcaseItem.getHeaderTextMobile();
 						}
+						//showCaseItemJson.put("headerText", headerText);
 						showCaseItemJson.put("headerText", headerText);
+
 						//UF-420 starts
 						try
 						{
@@ -965,14 +976,14 @@ public class HomePagePwAmpController extends HomePageController
 					}
 					showCaseItemJson.put("secondProductPrice", price);
 				}
-				if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
+				if (StringUtils.isNotEmpty(showcaseItem.getBannerTextMobile()))
 				{
-					showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+					showCaseItemJson.put("bannerText", showcaseItem.getBannerTextMobile());
 				}
 			}
-			if (StringUtils.isNotEmpty(showcaseItem.getText()))
+			if (StringUtils.isNotEmpty(showcaseItem.getText_mobile()))
 			{
-				showCaseItemJson.put("text", showcaseItem.getText());
+				showCaseItemJson.put("text", showcaseItem.getText_mobile());
 			}
 
 			if (null != showcaseItem.getBannerImage() && StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
