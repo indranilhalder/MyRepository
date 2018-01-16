@@ -953,7 +953,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		{
 			for (final StoreLocationResponseData storeLocationResponseData : response)
 			{
-				final String ussId = storeLocationResponseData.getUssId();
+//				final String ussId = storeLocationResponseData.getUssId();
 				//SONR FIX
 				//final String pincodeSellerId = ussId.substring(0, 6);
 				//get stores from commerce
@@ -1042,7 +1042,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			for (final StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
 			{
 
-				final String ussId = storeLocationRequestData.getUssId();
+//				final String ussId = storeLocationRequestData.getUssId();
 //SONR FIX
 				//				final String pincodeSellerId = ussId.substring(0, 6);
 				if (null != storeLocationRequestData.getStoreId())
