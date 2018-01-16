@@ -13,34 +13,34 @@
   }
   .forward {
     composes: slider;
-    transition: 300ms;
+    transition: transform 300ms;
   }
   .back {
     composes: slider;
-    transition: 300ms;
+    transition: transform 300ms;
   }
   .forward .item:nth-child(3) {
     left: -166% !important;
   }
   .forward .item:nth-child(1) {
     transform: scale(0.86) !important;
-    transition: 300ms;
+    transition: transform 300ms;
   }
   .back .item:nth-child(1) {
     left: 166% !important;
   }
   .back .item:nth-child(3) {
     transform: scale(0.86) !important;
-    transition: 300ms;
+    transition: transform 300ms;
   }
   .forward .item:nth-child(2),
   .back .item:nth-child(2) {
-    transition: 300ms;
+    transition: transform 300ms;
     transform: scale(0.737) !important;
   }
   .transition {
     composes: slider;
-    transition: 300ms;
+    transition: transform 300ms;
   }
   .item {
     width: 100%;

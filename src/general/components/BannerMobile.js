@@ -41,10 +41,25 @@ export default class BannerMobile extends React.Component {
   };
   slideBack = () => {
     const visibleItems = [];
-    visibleItems.push(this.items[this.state.position + 1]);
-    visibleItems.push(this.state.visibleItems[1]);
-    visibleItems.push(this.items[2]);
-    console.log(visibleItems);
+    visibleItems.push(
+      this.items[(this.state.position + 1) % this.state.numberOfItems]
+    );
+    visibleItems.push(
+      this.items[
+        this.state.position > 0
+          ? this.state.position - 1
+          : this.state.numberOfItems - 1
+      ]
+    );
+    visibleItems.push(this.items[this.state.position]);
+
+    console.log((this.state.position + 1) % this.state.numberOfItems);
+    console.log(
+      this.state.position > 0
+        ? this.state.position - 1
+        : this.state.numberOfItems - 1
+    );
+    console.log(this.state.position);
     this.setState({ visibleItems });
     this.setState({ direction: "back" });
   };
@@ -79,16 +94,11 @@ export default class BannerMobile extends React.Component {
     this.setState({ position, absolutePosition }, () => {
       visibleItems.push(this.state.visibleItems[1]);
       visibleItems.push(this.state.visibleItems[2]);
-      // if (this.items[this.state.position] && this.state.position > 2) {
-      //   visibleItems.push(this.items[this.state.position]);
-      // } else {
-      //   visibleItems.push(this.state.visibleItems[0]);
-      // }
       visibleItems.push(this.items[this.state.position]);
       this.setState({ visibleItems }, () => {
         this.setState({ direction: "" });
       });
-      console.log(this.state.position);
+      // console.log(this.state.position);
     });
   };
   animationEnd(evt) {
@@ -98,7 +108,9 @@ export default class BannerMobile extends React.Component {
         this.swapForward();
       }
       if (this.state.direction === "back") {
+        // setTimeout(() => {
         this.swapBack();
+        // }, 1000);
       }
     }
   }
