@@ -1,6 +1,6 @@
 export function transformData(datum) {
   return {
-    productImage: datum.imageURL,
+    image: datum.imageURL,
     title: datum.title,
     description: datum.title,
     price: datum.mrpPrice && datum.mrpPrice.formattedValue,
