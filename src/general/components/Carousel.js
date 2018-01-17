@@ -45,7 +45,7 @@ export default class Carousel extends React.Component {
       buttonClass = styles.buttonWhite;
       buttonColor = "#fff";
     }
-    if (this.props.seeAll && !this.props.hasFooter) {
+    if (this.props.seeAll && !this.props.withFooter) {
       buttonSpace = 110;
     }
 
