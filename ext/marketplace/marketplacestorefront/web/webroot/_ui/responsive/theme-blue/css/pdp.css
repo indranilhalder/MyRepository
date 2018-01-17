@@ -13144,3 +13144,7 @@ a.tab-emi.active{
     padding-right: 10px;
     text-decoration: none;
 }
+.Manufacturer.Temp03 h3 {
+    font-size: 20px;
+    margin-bottom: 0;
+}
