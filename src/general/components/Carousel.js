@@ -39,17 +39,26 @@ export default class Carousel extends React.Component {
     let headerClass = styles.header;
     let buttonClass = styles.button;
     let buttonColor = "#212121";
+    let buttonSpace = 10;
     if (this.props.isWhite) {
       headerClass = styles.headerWhite;
       buttonClass = styles.buttonWhite;
       buttonColor = "#fff";
+    }
+    if (this.props.seeAll && !this.props.hasFooter) {
+      buttonSpace = 110;
     }
 
     return (
       <div className={styles.base} styles={{ color: this.props.color }}>
         <MediaQuery query="(min-device-width: 1025px)">
           <div className={headerClass}>
-            {this.props.header}
+            <div>
+              <div>{this.props.header}</div>
+              {this.props.subheader && (
+                <div className={styles.subheader}>{this.props.subheader}</div>
+              )}
+            </div>
             <div className={styles.nav}>
               {this.props.seeAll && (
                 <div
@@ -82,7 +91,26 @@ export default class Carousel extends React.Component {
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
           {this.props.header && (
-            <div className={headerClass}>{this.props.header}</div>
+            <div className={headerClass} style={{ paddingRight: buttonSpace }}>
+              <div>{this.props.header}</div>
+              {this.props.subheader && (
+                <div className={styles.subheader}>{this.props.subheader}</div>
+              )}
+              {this.props.seeAll &&
+                !this.props.withFooter && (
+                  <div className={styles.mobileButton}>
+                    <Button
+                      label={this.props.buttonText}
+                      type="hollow"
+                      color={buttonColor}
+                      width={100}
+                      onClick={() => {
+                        this.props.seeAll();
+                      }}
+                    />
+                  </div>
+                )}
+            </div>
           )}
         </MediaQuery>
 
@@ -114,19 +142,20 @@ export default class Carousel extends React.Component {
           </div>
         </div>
         <MediaQuery query="(max-device-width: 1024px)">
-          {this.props.seeAll && (
-            <div className={styles.footer}>
-              <Button
-                label={this.props.buttonText}
-                type="hollow"
-                color={buttonColor}
-                width={120}
-                onClick={() => {
-                  this.props.seeAll();
-                }}
-              />
-            </div>
-          )}
+          {this.props.seeAll &&
+            this.props.withFooter && (
+              <div className={styles.footer}>
+                <Button
+                  label={this.props.buttonText}
+                  type="hollow"
+                  color={buttonColor}
+                  width={120}
+                  onClick={() => {
+                    this.props.seeAll();
+                  }}
+                />
+              </div>
+            )}
         </MediaQuery>
       </div>
     );
@@ -139,12 +168,14 @@ Carousel.propTypes = {
   buttonText: PropTypes.string,
   header: PropTypes.string,
   isWhite: PropTypes.bool,
-  seeAll: PropTypes.func
+  seeAll: PropTypes.func,
+  withFooter: PropTypes.bool
 };
 
 Carousel.defaultProps = {
   elementWidthDesktop: 25,
   elementWidthMobile: 45,
   buttonText: "Shop all",
-  color: "#181818"
+  color: "#181818",
+  withFooter: true
 };

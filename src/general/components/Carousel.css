@@ -6,9 +6,16 @@
   width: 100%;
   float: left;
   padding: 0 10px;
+  color: #212121;
+  font-family: semibold;
+  position: relative;
+}
+.subheader {
+  width: 100%;
+  float: left;
   font-size: 20px;
   color: #212121;
-  font-family: bolder;
+  font-family: regular;
 }
 .headerWhite {
   composes: header;
@@ -60,6 +67,7 @@
     align-items: center;
     -webkit-align-items: center;
     margin-bottom: 20px;
+    font-size: 30px;
   }
   .nav {
     display: flex;
@@ -112,9 +120,19 @@
   }
   .header {
     margin-bottom: 20px;
+    font-size: 20px;
+  }
+  .subheader {
+    font-size: 14px;
   }
   .footer {
     margin-top: 20px;
     padding: 0 10px;
+  }
+  .mobileButton {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100px;
   }
 }
