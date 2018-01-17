@@ -29,7 +29,8 @@
 }
 .content {
   width: 100%;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  white-space: normal;
 }
 .header {
   width: 100%;
