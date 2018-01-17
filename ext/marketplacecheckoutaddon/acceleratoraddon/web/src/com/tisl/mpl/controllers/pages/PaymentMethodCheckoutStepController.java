@@ -4550,7 +4550,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
 			final String guid, final String paymentinfo, @RequestParam(required = false) final String token,
-			@RequestParam(required = false) final String cardRefNo, @RequestParam(required = false) final String cardToken,
+			@RequestParam(required = false) final String cardFingerPrint,
 			final Model model,final boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
@@ -5246,7 +5246,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB,0.0d);
 						mplVoucherService.updateCardPerOfferVoucherEntry(orderModel);//TPR-7448
 					}
 				}

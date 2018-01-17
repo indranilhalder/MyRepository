@@ -6808,7 +6808,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo,
 			@RequestParam(required = false) final String cardFingerPrint) throws EtailNonBusinessExceptions
 	{
-		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
+		 OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
 		String failErrorCode = "";
 		boolean failFlag = false;

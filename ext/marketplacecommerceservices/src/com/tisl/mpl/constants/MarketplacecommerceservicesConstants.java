@@ -2431,4 +2431,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
 }
