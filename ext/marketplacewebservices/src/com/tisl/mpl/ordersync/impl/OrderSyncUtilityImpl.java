@@ -902,13 +902,29 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				target.setLastname(names[1]);
 			}
 		}
-
-		final CountryModel countryModel = getCountryModel(source.getCountryIso3166Alpha2Code());
-		target.setCountry(countryModel);
-
-		final RegionModel regionModel = getRegionModel(countryModel, source.getCountrySubentity());
-		target.setRegion(regionModel);
-
+		
+		CountryModel countryModel = null;
+		try
+		{
+			countryModel = getCountryModel(source.getCountryIso3166Alpha2Code());
+			target.setCountry(countryModel);
+		}
+		catch (final Exception e)
+		{
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
+		}
+		
+		try
+		{
+			final RegionModel regionModel = getRegionModel(countryModel, source.getCountrySubentity());
+			target.setRegion(regionModel);
+		}
+		catch (final Exception e)
+		{
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
+		}
 
 	}
 

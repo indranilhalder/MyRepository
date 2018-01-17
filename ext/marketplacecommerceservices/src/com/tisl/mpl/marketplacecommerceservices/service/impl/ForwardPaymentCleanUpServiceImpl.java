@@ -432,6 +432,11 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 									expireRefundEntry(refundEntry);
 								}
 							}
+							else
+							{
+								refundEntry.setRefundStatus(FPCRefundStatus.NOT_APPLICABLE);
+								expireRefundEntry(refundEntry);
+							}
 						}
 						else
 						{
