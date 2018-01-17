@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.priceTask;
+package com.tisl.mpl.pricetask;
 
 import de.hybris.platform.impex.jalo.ImpExException;
 import de.hybris.platform.impex.jalo.imp.MultiThreadedImpExImportReader;
