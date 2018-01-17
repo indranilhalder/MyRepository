@@ -12,8 +12,7 @@
   font-family: semibold;
   font-size: 16px;
   color: #212121;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space:normal;
 }
 .headerWhite {
   composes: headerText;
@@ -26,8 +25,7 @@
 }
 
 .description {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space:normal;
 }
 .content {
   width: 100%;
