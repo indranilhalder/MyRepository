@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facade.homeapi.impl;
 
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
@@ -20,8 +21,11 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
@@ -111,9 +115,10 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 	 */
 	@Override
 	public ThemeOffersDTO getThemeOffersComponentDTO(final HomepageComponentRequestDTO themeOffersRequestDTO,
-			final String themeOffersJSONString)
+			final String themeOffersJSONString) throws EtailNonBusinessExceptions
 	{
 		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
 		final ThemeOffersDTO finalThemeOffersDTO = new ThemeOffersDTO();
 		ThemeOffersJSONDTO themeOffersJSONDTO = null;
@@ -122,6 +127,9 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 			final List<String> productCodes = new ArrayList<String>();
 			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
 			themeOffersJSONDTO = mapper.readValue(themeOffersJSONString, ThemeOffersJSONDTO.class);
+			//			final JsonFactory factory = mapper.getFactory();
+			//			final JsonParser parser = factory.createParser(themeOffersJSONString);
+			//			final JsonNode actualObj = mapper.readTree(parser);
 			final List<HomeProductsDTO> productsdto = themeOffersJSONDTO.getItemIds();
 			for (final HomeProductsDTO productdto : productsdto)
 			{
@@ -143,11 +151,12 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 			}
 			finalThemeOffersDTO.setOffers(themeOffersJSONDTO.getItems());
-			finalThemeOffersDTO.setProducts(finalProductsDTO);
+			finalThemeOffersDTO.setItems(finalProductsDTO);
 		}
 		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
 			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 
 		return finalThemeOffersDTO;
@@ -163,10 +172,11 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 	 */
 	@Override
 	public BannersCarouselDTO getBannerProductCarouselDTO(final HomepageComponentRequestDTO bannerCarouselRequestDTO,
-			final String bannerProductcarouselJsonString)
+			final String bannerProductcarouselJsonString) throws EtailNonBusinessExceptions
 	{
 		// YTODO Auto-generated method stub
 		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
 		final BannersCarouselDTO finalBannersCarouselDTO = new BannersCarouselDTO();
 		BannersCarouselJSONDTO bannersCarouselJSONDTO = null;
@@ -204,6 +214,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
 			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 
 		return finalBannersCarouselDTO;
@@ -217,10 +228,11 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 	 */
 	@Override
 	public VideoProductCaraouselDTO getVideoProductCarouselDTO(final HomepageComponentRequestDTO videoProductCaraouselRequestDTO,
-			final String videoProductcarouselJsonString)
+			final String videoProductcarouselJsonString) throws EtailNonBusinessExceptions
 	{
 		// YTODO Auto-generated method stub
 		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
 		final VideoProductCaraouselDTO finalVideoProductCaraouselDTO = new VideoProductCaraouselDTO();
 		VideoProductJSONDTO videoProductJSONDTO = null;
@@ -259,6 +271,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
 			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 
 		return finalVideoProductCaraouselDTO;
@@ -273,9 +286,11 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 	@Override
 	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselDTO(
 			final HomepageComponentRequestDTO automatedBrandRequestDTO, final String automatedBrandCaraouselJsonString)
+			throws EtailNonBusinessExceptions
 	{
 		// YTODO Auto-generated method stub
 		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
 		final AutomatedBrandProductCarouselDTO finalAutomatedBrandProductCarouselDTO = new AutomatedBrandProductCarouselDTO();
 		AutomatedBrandProductCarouselJSONDTO automatedBrandProductCarouselJSONDTO = null;
@@ -314,6 +329,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
 			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 
 		return finalAutomatedBrandProductCarouselDTO;
@@ -336,11 +352,12 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		final CurrencyModel currency = commonI18NService.getCurrency(MarketplaceFacadesConstants.INR);
 		final String currencySymbol = currency.getSymbol();
 		final String currencyIso = currency.getIsocode();
-		final DecimalFormat df = new DecimalFormat("#.00");
+		final DecimalFormat df = new DecimalFormat("###,###.##");
 		for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 		{
-			final String buyBoxListingIdLwrCase = buyBoxModel.getProduct().toLowerCase();
-			if (listingIds.contains(buyBoxListingIdLwrCase))
+			//final String buyBoxListingIdLwrCase = buyBoxModel.getProduct().toLowerCase();
+			final String buyBoxListingId = buyBoxModel.getProduct();
+			if (listingIds.contains(buyBoxListingId))
 			{
 				productdto = (HomeProductsDTO) CollectionUtils.find(productsdto, new Predicate()
 				{
@@ -348,23 +365,29 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 					public boolean evaluate(final Object obj)
 					{
 						final HomeProductsDTO finder = (HomeProductsDTO) obj;
-						return finder.getPrdId().equals(buyBoxListingIdLwrCase);
+						return finder.getPrdId().equals(buyBoxListingId);
 					}
 				});
 
-				if (buyBoxModel.getSpecialPrice() != null && Double.compare(buyBoxModel.getSpecialPrice().doubleValue(), 0.0) > 0)
+				if (buyBoxModel.getSpecialPrice() != null && Double.compare(buyBoxModel.getSpecialPrice().doubleValue(), 0.0) >= 0)
 				{
-					productdto.getDiscountedPrice().setDoubleValue(buyBoxModel.getSpecialPrice());
-					productdto.getDiscountedPrice().setFormattedValue(df.format(buyBoxModel.getSpecialPrice()));
-					productdto.getDiscountedPrice().setCurrencyIso(currencyIso);
-					productdto.getDiscountedPrice().setCurrencySymbol(currencySymbol);
+					final PriceData discountedPrice = new PriceData();
+					discountedPrice.setDoubleValue(buyBoxModel.getSpecialPrice());
+					discountedPrice.setFormattedValue(df.format(buyBoxModel.getSpecialPrice()));
+					discountedPrice.setCurrencyIso(currencyIso);
+					discountedPrice.setCurrencySymbol(currencySymbol);
+
+					productdto.setDiscountedPrice(discountedPrice);
 				}
 				if (buyBoxModel.getMrp() != null && Double.compare(buyBoxModel.getMrp().doubleValue(), 0.0) > 0)
 				{
-					productdto.getMrpPrice().setDoubleValue(buyBoxModel.getMrp());
-					productdto.getMrpPrice().setFormattedValue(df.format(buyBoxModel.getMrp()));
-					productdto.getDiscountedPrice().setCurrencyIso(currencyIso);
-					productdto.getDiscountedPrice().setCurrencySymbol(currencySymbol);
+					final PriceData mrpPrice = new PriceData();
+					mrpPrice.setDoubleValue(buyBoxModel.getMrp());
+					mrpPrice.setFormattedValue(df.format(buyBoxModel.getMrp()));
+					mrpPrice.setCurrencyIso(currencyIso);
+					mrpPrice.setCurrencySymbol(currencySymbol);
+
+					productdto.setMrpPrice(mrpPrice);
 				}
 
 				finalProductsDTO.add(productdto);

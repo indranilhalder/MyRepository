@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -61,19 +60,6 @@ public class HomePageComponentsController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			if (null != e.getErrorMessage())
-			{
-				themeOffersDTO.setError(e.getErrorMessage());
-			}
-			if (null != e.getErrorCode())
-			{
-				themeOffersDTO.setErrorCode(e.getErrorCode());
-			}
-			themeOffersDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
 				themeOffersDTO.setError(e.getErrorMessage());
