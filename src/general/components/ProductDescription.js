@@ -19,7 +19,10 @@ export default class ProductDescription extends Component {
       headerClass = styles.hasDownload;
     }
 
-    if (this.props.discountPrice) {
+    if (
+      this.props.discountPrice &&
+      this.props.price !== this.props.discountPrice
+    ) {
       priceClass = styles.priceCancelled;
     }
     if (this.props.isWhite) {
@@ -47,11 +50,12 @@ export default class ProductDescription extends Component {
             <div className={styles.description}>{this.props.description}</div>
           )}
 
-          {this.props.discountPrice && (
-            <div className={styles.discount}>
-              {`Rs. ${this.props.discountPrice}`}
-            </div>
-          )}
+          {this.props.discountPrice &&
+            this.props.discountPrice !== this.props.price && (
+              <div className={styles.discount}>
+                {`Rs. ${this.props.discountPrice}`}
+              </div>
+            )}
 
           {this.props.price && (
             <div className={priceClass}>{`Rs. ${this.props.price}`}</div>
