@@ -19,32 +19,25 @@ public interface HomePageAppFacade
 {
 	public void getAdobeTargetDataOfferWidget(ComponentRequestDTO componentRequestDTO);
 
-	public ThemeOffersDTO getThemeOffersComponentDTO(HomepageComponentRequestDTO themeOffersRequestDTO,
-			String themeOffersJSONString);
+	public ThemeOffersDTO getThemeOffersComponentDTO(HomepageComponentRequestDTO themeOffersRequestDTO);
 
 	/**
 	 * @param bannerCarouselRequestDTO
-	 * @param bannerProductcarouselJsonString
 	 * @return
 	 */
-	public BannersCarouselDTO getBannerProductCarouselDTO(HomepageComponentRequestDTO bannerCarouselRequestDTO,
-			String bannerProductcarouselJsonString);
+	public BannersCarouselDTO getBannerProductCarouselDTO(HomepageComponentRequestDTO bannerCarouselRequestDTO);
 
 	/**
 	 * @param videoProductCaraouselRequestDTO
-	 * @param videoProductcarouselJsonString
 	 * @return
 	 */
-	public VideoProductCaraouselDTO getVideoProductCarouselDTO(HomepageComponentRequestDTO videoProductCaraouselRequestDTO,
-			String videoProductcarouselJsonString);
+	public VideoProductCaraouselDTO getVideoProductCarouselDTO(HomepageComponentRequestDTO videoProductCaraouselRequestDTO);
 
 	/**
 	 * @param automatedBrandRequestDTO
-	 * @param automatedBrandCaraouselJsonString
 	 * @return
 	 */
-	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselDTO(HomepageComponentRequestDTO automatedBrandRequestDTO,
-			String automatedBrandCaraouselJsonString);
+	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselDTO(HomepageComponentRequestDTO automatedBrandRequestDTO);
 
 
 }

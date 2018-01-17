@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -47,18 +47,15 @@ public class HomePageComponentsController
 
 		ThemeOffersDTO themeOffersDTO = new ThemeOffersDTO();
 
-		final String themeOfferJsonString = themeOffersRequestDTO.getContent();
 		try
 		{
-			themeOffersDTO = homePageAppFacade.getThemeOffersComponentDTO(themeOffersRequestDTO, themeOfferJsonString);
+			themeOffersDTO = homePageAppFacade.getThemeOffersComponentDTO(themeOffersRequestDTO);
 			//here we have to decide whether we are going to use  datamapper  or not
-			//		themeOffersDTO.setError("error");
-			//		themeOffersDTO.setErrorCode("6002");
-			//		themeOffersDTO.setErrorMessage("status message");
-			//		System.out.println("Theme offers dto" + themeOffersDTO);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("Error in home page components controller");
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
@@ -68,14 +65,15 @@ public class HomePageComponentsController
 			{
 				themeOffersDTO.setErrorCode(e.getErrorCode());
 			}
-			themeOffersDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			themeOffersDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
 		catch (final Exception e)
 		{
+			LOG.error("Error in home page components controller");
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			themeOffersDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
-			themeOffersDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
-			themeOffersDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			themeOffersDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
+			themeOffersDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
+			themeOffersDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
 		return themeOffersDTO;
 	}
@@ -90,9 +88,7 @@ public class HomePageComponentsController
 
 		BannersCarouselDTO bannerProductCarouselDTO = new BannersCarouselDTO();
 
-		final String bannerProductcarouselJsonString = bannerCarouselRequestDTO.getContent();
-		bannerProductCarouselDTO = homePageAppFacade.getBannerProductCarouselDTO(bannerCarouselRequestDTO,
-				bannerProductcarouselJsonString);
+		bannerProductCarouselDTO = homePageAppFacade.getBannerProductCarouselDTO(bannerCarouselRequestDTO);
 		System.out.println("Theme offers dto" + bannerProductCarouselDTO);
 
 		return bannerProductCarouselDTO;
@@ -110,9 +106,7 @@ public class HomePageComponentsController
 
 		VideoProductCaraouselDTO videoProductCaraouselDTO = new VideoProductCaraouselDTO();
 
-		final String videoProductcarouselJsonString = videoProductCaraouselRequestDTO.getContent();
-		videoProductCaraouselDTO = homePageAppFacade.getVideoProductCarouselDTO(videoProductCaraouselRequestDTO,
-				videoProductcarouselJsonString);
+		videoProductCaraouselDTO = homePageAppFacade.getVideoProductCarouselDTO(videoProductCaraouselRequestDTO);
 		System.out.println("Theme offers dto" + videoProductCaraouselDTO);
 
 		return videoProductCaraouselDTO;
@@ -131,9 +125,7 @@ public class HomePageComponentsController
 
 		AutomatedBrandProductCarouselDTO automatedBrandCaraouselDTO = new AutomatedBrandProductCarouselDTO();
 
-		final String automatedBrandCaraouselJsonString = automatedBrandRequestDTO.getContent();
-		automatedBrandCaraouselDTO = homePageAppFacade.getautomatedBrandCarouselDTO(automatedBrandRequestDTO,
-				automatedBrandCaraouselJsonString);
+		automatedBrandCaraouselDTO = homePageAppFacade.getautomatedBrandCarouselDTO(automatedBrandRequestDTO);
 		System.out.println("Theme offers dto" + automatedBrandCaraouselDTO);
 
 		return automatedBrandCaraouselDTO;
