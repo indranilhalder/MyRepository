@@ -22,7 +22,28 @@
       <section class="footer-main-content">
         <section class="footer-child-last mobile-item">
             <p>#NEWSLETTER</p>
-            <p><input class="footer-last-input" placeholder="Your Email Id" /><button class="footer-last-btn">SUBSCRIBE</button></p>
+            <form method="get"
+            	action="https://www.tatacliq.com/newsLetterSubscriptionEmail"
+			  	action-xhr="https://www.tatacliq.com/newsLetterSubscriptionEmail"
+			  target="_top">
+            <div><input class="footer-last-input" placeholder="Your Email Id" name="email" />
+            <input class="footer-last-btn" type="submit" value="SUBSCRIBE" /></div>
+            <div submit-success>
+			    <template type="amp-mustache">
+			      Thanks for signing up. We'll keep you updated with our newsletters.
+			    </template>
+			  </div>
+            </form>
+            
+            <!-- <p><input class="footer-last-input" placeholder="Your Email Id" on="input-debounced:AMP.setState({subscribeEmail: event.value, subscribeNewsletter: 'no-subscribe'})" />
+            <button class="footer-last-btn" on="tap:AMP.setState({subscribeNewsletter: 'subscribe'})">SUBSCRIBE</button></p>
+            <amp-list src="https://www.tatacliq.com/newsLetterSubscriptionEmail?email="
+		      [src]="subscribeNewsletter == 'subscribe' ? 'https://www.tatacliq.com/newsLetterSubscriptionEmail?email='+subscribeEmail : 'https://www.tatacliq.com/newsLetterSubscriptionEmail?email='" height="20" layout="fixed-height">
+				<template type="amp-mustache">
+					<span>{{response == 'success' ? 'Thanks for signing up. We will keep you updated with our newsletters.' : 'None'}}</span>
+				</template>
+		    </amp-list> -->
+		    
             <p>THE SOCIAL NETWORK</p>
             <p>
               <a href="https://plus.google.com/107413929814020009505"><i class="fa fa-google-plus"></i></a>
