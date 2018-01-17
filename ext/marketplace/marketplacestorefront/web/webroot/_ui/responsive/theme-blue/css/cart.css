@@ -5819,3 +5819,6 @@ li.item>ul li:last-child {
 .MyBag-top-section {
 		margin: 0 0 20px 0 ! important;
 	}
+.cart.wrapper .product-block li.item ul .item-edit-details li .popover.bottom {
+    z-index: 11;
+}	
