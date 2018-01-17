@@ -11431,10 +11431,15 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "{emailId}/loginSocialUser", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto socialLogin(@PathVariable final String emailId, @RequestParam final String socialMedia ,@RequestParam(required = true) final boolean isPwa, )
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public UserLoginResultWsDto socialLogin(@PathVariable final String emailId, @RequestParam final String socialMedia,
+			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
+		final UserLoginResultWsDto userResult = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
+		//		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+		CustomerModel customerModel = null;
 		try
 		{
 			LOG.debug("****************** Social Media User Login mobile web service ***********" + emailId);
@@ -11453,34 +11458,57 @@ public class UsersController extends BaseCommerceController
 			{
 				result = mobileUserService.loginSocialUser(emailId, socialMedia);
 			}
+			if (result.getStatus().equalsIgnoreCase("Success"))
+			{
+				customerModel = (CustomerModel) userService.getCurrentUser();
+				if (null != customerModel.getDateOfBirth())
+				{
+					customerInfo.setDateOfBirth(customerModel.getDateOfBirth().toString());
+				}
+				customerInfo.setFirstName(customerModel.getFirstName());
+				customerInfo.setLastName(customerModel.getLastName());
+				if (null != customerModel.getGender())
+				{
+					customerInfo.setGender(customerModel.getGender().toString());
+				}
+				if (null != customerModel.getMobileNumber())
+				{
+					customerInfo.setMobileNumber(customerModel.getMobileNumber());
+				}
+				customerInfo.setEmailId(customerModel.getOriginalUid());
+				userResult.setCustomerInfo(customerInfo);
+			}
+			userResult.setStatus(result.getStatus());
+			userResult.setCustomerId(result.getCustomerId());
+			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
-				result.setError(e.getErrorMessage());
+				userResult.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				result.setErrorCode(e.getErrorCode());
+				userResult.setErrorCode(e.getErrorCode());
 			}
-			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
-				result.setError(e.getErrorMessage());
+				userResult.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				result.setErrorCode(e.getErrorCode());
+				userResult.setErrorCode(e.getErrorCode());
 			}
-			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		//Return result
-		return result;
+		return userResult;
 	}
 }
