@@ -599,6 +599,8 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 
 .sidebar-zindex {z-index: 1000;}
 
+.close-menubar {left: 288px; position: fixed; top: 0; padding: 0px 10px; z-index: 2147483647; font-size: 34px; background-color: #fff; border: 1px solid #ccc;}
+
 .search-submit {
   margin: 10px 0;
   padding: .5em 1em;
@@ -802,9 +804,9 @@ p {margin: 0;}
 #stayQuedComp, #inspireMeMobileComp {display: block; padding: 10px 20px 10px 0; width: 45%; float: left;}
 .stayQuedCenter {background-color: #f2f2f2; padding: 0 0 0 10px;}
 
-.stayQuedBottom {display: block; text-align: center; padding: 10px;}
+.stayQuedBottom {display: block; padding: 10px; padding-left: 0;}
 .stayQuedBottom a {display: -webkit-inline-box;}
-.stayQuedViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white; cursor: pointer;}
+.stayQuedViewAllBtn {background-color: #444; padding: 10px 30px; border: none; color: white; cursor: pointer;}
 
 @media(max-width: 480px) {
 	#stayQuedComp, #inspireMeMobileComp {background-color: #f2f2f2; padding: 5px 0px 15px; width: 100%;}
