@@ -307,51 +307,47 @@
 			</c:if>
 
 			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-				<%-- <c:set var="maxNumberChars" value="25" />
-				<c:if test="${fn:length(user.firstName) gt maxNumberChars}">
-					<c:set target="${user}" property="firstName"
-						value="${fn:substring(user.firstName, 0, maxNumberChars)}..." />
-				</c:if> --%>
-
-				<li class="logged_in dropdown ajaxloginhi" >
-				<span class="material-icons"></span>
-				<ycommerce:testId code="header_LoggedUser">
-					<c:set var="userName" value="${user.firstName}"/>
-							<a href="<c:url value="/my-account"/>"
-								class="headeruserdetails account-userTitle account-userTitle-custom"><spring:theme
-									code="header.hi.blank" arguments="${userName}" htmlEscape="true" />!</a>
-						<%-- </c:if> --%>
-						<span id="mobile-menu-toggle"></span>
-					</ycommerce:testId>
-						<ul class="dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout" role="menu">
-						</ul>
-				</li>
+				<p class="sidebar-divider-item">
+					<c:set var="userName" value="${fname}"/>
+					<a href="<c:url value="/my-account"/>" class="fa fa-user"><spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
+				</p>
+				<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
+	        				<ul>
+	        				<li class="header-myAccount"></li>
+							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+										code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
+							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
+										code="header.flyout.Personal" /></a></li>
+							<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
+										code="header.flyout.orders" /></a></li>
+							<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
+										code="header.flyout.cards" /></a></li>
+							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
+										code="header.flyout.address" /></a></li>
+                       <c:if test="${isVoucherToBeDisplayed eq true }">
+						    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
+						</c:if>
+							<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
+										code="header.flyout.invite" /></a></li>
+										
+							<li><ycommerce:testId code="header_signOut">
+									<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
+											code="header.link.logout" />
+									</a></u>
+								</ycommerce:testId>
+							</li>
+							</ul>
+					</c:if>
 			</sec:authorize>
 
 			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-				<div class="content">
-				<div class="right">
-					<ul>
-						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi">
-						<span class="material-icons"></span>
-						<ycommerce:testId
-						code="header_Login_link">
-						<a id="socialLogin" class="headeruserdetails" href="<c:url value="/login"/>" role="button"
-							aria-expanded="false"><%-- <spring:theme
-								code="header.link.flylogin" /> --%></a>
-						<span id="mobile-menu-toggle"></span>	<!-- add for PRDI-409 & PRDI-438 -->
-					</ycommerce:testId>
-
-							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">
-							</ul>
-						</li>
-					</ul>
-				</div></div>
+					<p class="sidebar-divider-item">
+					<a href="<c:url value="/login"/>"><i class="fa fa-user"></i>Sign In/Sign Up</a>
+					</p>
 			</sec:authorize>
 		</c:if>
-	<p class="sidebar-divider-item">
-		<a href="/login"><i class="fa fa-user"></i>Sign In/Sign Up</a>
-	</p>
+	
 	<p class="sidebar-divider-item">
 		<a href="/my-account/wishList"><i class="fa fa-heart"></i>My Wishlists</a>
 	</p>
@@ -602,8 +598,6 @@
 				<div>
 					<p class="h2 stayQuedHeading">{{headerText}}</p>
 					<p>{{text}}</p>
-					<p>These accessories simply add just the right amount of style
-						to any outfit.</p>
 					<div class="stayQuedBottom">
 						<a href="{{details.bannerUrl}}"><button
 								class="stayQuedViewAllBtn">Read The Story</button></a>
