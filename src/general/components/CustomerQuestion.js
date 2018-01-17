@@ -2,6 +2,11 @@ import React from "react";
 import ProductImage from "./ProductImage";
 import styles from "./CustomerQuestion.css";
 export default class CustomerQuestion extends React.Component {
+  handleClick(val) {
+    if (this.props.selectItem) {
+      this.props.selectItem(val);
+    }
+  }
   render() {
     let checkClass = styles.check;
     if (this.props.selected) {
@@ -9,7 +14,12 @@ export default class CustomerQuestion extends React.Component {
     }
     return (
       <div className={styles.base}>
-        <div className={styles.image}>
+        <div
+          className={styles.image}
+          onClick={val => {
+            this.handleClick(val);
+          }}
+        >
           <ProductImage image={this.props.image} />
           <div className={checkClass} />
         </div>
