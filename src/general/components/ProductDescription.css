@@ -46,6 +46,7 @@
 }
 .priceHolder {
   display: inline-block;
+  line-height: 24px;
 }
 .discount {
   composes: priceHolder;
