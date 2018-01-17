@@ -7,6 +7,7 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -108,28 +109,30 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			for (final ConsignmentModel consignment : consignmentModelList)
 			{
 				final OrderModel order = (OrderModel) consignment.getOrder();
-				Map<String, RefundTransactionMappingModel> refundTransactionMap = new HashMap<String, RefundTransactionMappingModel>();
-				AbstractOrderEntryModel orderEntry = null;
-				if (consignment.getStatus().equals(ConsignmentStatus.REFUND_IN_PROGRESS)
-						|| consignment.getStatus().equals(ConsignmentStatus.REFUND_INITIATED))
+				if (null != order && !checkCOD(order))
 				{
-
-					final Set consignmentEntries = consignment.getConsignmentEntries();
-					for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
+					Map<String, RefundTransactionMappingModel> refundTransactionMap = new HashMap<String, RefundTransactionMappingModel>();
+					AbstractOrderEntryModel orderEntry = null;
+					if (consignment.getStatus().equals(ConsignmentStatus.REFUND_IN_PROGRESS)
+							|| consignment.getStatus().equals(ConsignmentStatus.REFUND_INITIATED))
 					{
-						final ConsignmentEntryModel consignmentEntry = (ConsignmentEntryModel) iteratorC.next();
-						orderEntry = consignmentEntry.getOrderEntry();
-						if (null != orderEntry)
+
+						final Set consignmentEntries = consignment.getConsignmentEntries();
+						for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
 						{
-							break;
+							final ConsignmentEntryModel consignmentEntry = (ConsignmentEntryModel) iteratorC.next();
+							orderEntry = consignmentEntry.getOrderEntry();
+							if (null != orderEntry)
+							{
+								break;
+							}
 						}
+
 					}
-
+					refundTransactionMap = refundClearPerformableDao.fetchRefundTransactionMapping(orderEntry);
+					LOG.error("Going to process the Order NO:" + order.getCode());
+					checkWebhookEntryForRefund(order, refundTransactionMap, consignment, orderEntry);
 				}
-				refundTransactionMap = refundClearPerformableDao.fetchRefundTransactionMapping(orderEntry);
-				LOG.error("Going to process the Order NO:" + order.getCode());
-				checkWebhookEntryForRefund(order, refundTransactionMap, consignment, orderEntry);
-
 			}
 		}
 
@@ -194,6 +197,13 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			{
 				updateStatusOnly(refund, order, consignment, refundTransactionMap);
 			}
+			else if (refundStatus.equals(MarketplacecommerceservicesConstants.PENDING))
+			{
+				if (!consignment.getStatus().equals(ConsignmentStatus.REFUND_IN_PROGRESS))
+				{
+					updateStatus(ConsignmentStatus.REFUND_IN_PROGRESS, consignment, order);
+				}
+			}
 		}
 	}
 
@@ -206,7 +216,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		refundTransactionModel = refundTransactionMap.get(refund.getUniqueRequestId());
 		if (null != refundTransactionModel)
 		{
-
 			LOG.error("Updating status for Order:" + order.getCode());
 			PaymentTransactionType paymentTransactionType = null;
 			boolean riskFlag = false;
@@ -235,14 +244,14 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				final List<OrderHistoryEntryModel> orderHistoryEntryList = order.getHistoryEntries();
 				for (final OrderHistoryEntryModel ohe : orderHistoryEntryList)
 				{
-					if (ohe.getLineId().equals(consignment.getCode()) && ohe.getDescription().contains("CANCEL"))
+					if (ohe.getLineId().equals(consignment.getCode()) && ohe.getDescription().equals("CANCELLATION_INITIATED"))
 					{
 						paymentTransactionType = PaymentTransactionType.CANCEL;
 						updateStatus(ConsignmentStatus.ORDER_CANCELLED, consignment, order);
 						break;
 
 					}
-					else if (ohe.getLineId().equals(consignment.getCode()) && ohe.getDescription().contains("RETURN"))
+					else if (ohe.getLineId().equals(consignment.getCode()) && ohe.getDescription().equals("RETURN_INITIATED"))
 					{
 						paymentTransactionType = PaymentTransactionType.RETURN;
 						updateStatus(ConsignmentStatus.ORDER_CANCELLED, consignment, order);
@@ -357,7 +366,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				}
 				catch (final Exception e)
 				{
-					updateStatus(ConsignmentStatus.REFUND_IN_PROGRESS, consignment, order);
 					LOG.error("Refund failed" + e);
 				}
 
@@ -367,7 +375,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				}
 				else
 				{
-					updateStatus(ConsignmentStatus.REFUND_IN_PROGRESS, consignment, order);
 					LOG.error("Refund failed");
 				}
 
@@ -408,13 +415,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 					updateStatus(ConsignmentStatus.RETURN_COMPLETED, consignment, order);
 					updateOrderStatusReturn(rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 				}
-				else if (!StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
-				{
-					updateStatus(ConsignmentStatus.REFUND_IN_PROGRESS, consignment, order);
-					updateOrderStatusReturn(rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
-				}
 			}
-
 		}
 		catch (final Exception e)
 		{
@@ -628,6 +629,17 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		refundTransactionMappingModel.setRefundType(refundType);
 		refundTransactionMappingModel.setRefundAmount(refundAmount);
 		getModelService().save(refundTransactionMappingModel);
+	}
+
+	private boolean checkCOD(final OrderModel orderModel)
+	{
+		boolean isCOD = false;
+
+		if (null != orderModel.getPaymentInfo() && orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+		{
+			isCOD = true;
+		}
+		return isCOD;
 	}
 
 }

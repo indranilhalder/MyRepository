@@ -23,6 +23,8 @@ public interface ForwardPaymentCleanUpService
 
 	List<OrderModel> fetchPaymentFailedOrders(final Date startTime, final Date endTime);
 
+	List<OrderModel> fetchRmsFailedOrders(final Date startTime, final Date endTime);
+
 	List<MplPaymentAuditModel> fetchAuditsWithoutOrder(final Date startTime, final Date endTime);
 
 	List<FPCRefundEntryModel> fetchSpecificRefundEntries(String expiredFlag);
@@ -32,6 +34,8 @@ public interface ForwardPaymentCleanUpService
 	void createRefundEntryForMultiplePayments(final OrderModel orderModel);
 
 	void createRefundEntryForFailedOrders(final OrderModel orderModel);
+
+	void createRefundEntryForRmsFailedOrders(final OrderModel orderModel);
 
 	void createRefundEntryForAuditsWithoutOrder(final MplPaymentAuditModel auditModel);
 

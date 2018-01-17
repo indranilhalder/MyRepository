@@ -132,6 +132,27 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 				}
 			}
 		}
+		final Calendar rmsStartTime = Calendar.getInstance();
+		rmsStartTime.setTime(startTime);
+		final int rmsTAT = configurationService.getConfiguration().getInt(MarketplacecommerceservicesConstants.FPC_RMS_TAT, 360);
+		rmsStartTime.add(Calendar.MINUTE, -rmsTAT);
+		final List<OrderModel> rmsFailedOrderList = forwardPaymentCleanUpService.fetchRmsFailedOrders(rmsStartTime.getTime(),
+				endTime);
+		if (CollectionUtils.isNotEmpty(rmsFailedOrderList))
+		{
+			for (final OrderModel orderModel : rmsFailedOrderList)
+			{
+				try
+				{
+					forwardPaymentCleanUpService.createRefundEntryForRmsFailedOrders(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing refund for order: " + orderModel.getCode());
+					LOG.error(e.getMessage(), e);
+				}
+			}
+		}
 		final List<MplPaymentAuditModel> auditList = forwardPaymentCleanUpService.fetchAuditsWithoutOrder(startTime, endTime);
 		if (CollectionUtils.isNotEmpty(auditList))
 		{
@@ -157,10 +178,10 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 		final Boolean tatEnabled = configurationService.getConfiguration().getBoolean(
 				MarketplacecommerceservicesConstants.FPC_TAT_ENABLED, Boolean.TRUE);
 		final int tatDuration = configurationService.getConfiguration().getInt(
-				MarketplacecommerceservicesConstants.FPC_TAT_DURATION, 1);
+				MarketplacecommerceservicesConstants.FPC_TAT_DURATION, 0);
 		final Calendar expireTime = Calendar.getInstance();
 		expireTime.setTime(startTime);
-		expireTime.add(Calendar.DATE, (0 - tatDuration));
+		expireTime.add(Calendar.MINUTE, (0 - tatDuration));
 		final List<FPCRefundEntryModel> refundList = forwardPaymentCleanUpService
 				.fetchSpecificRefundEntries(MarketplacecommerceservicesConstants.ZERO);
 		for (final FPCRefundEntryModel refundEntry : refundList)

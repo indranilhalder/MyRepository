@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
@@ -24,8 +25,10 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.FPCRefundMethod;
 import com.tisl.mpl.core.enums.FPCRefundStatus;
 import com.tisl.mpl.core.enums.FPCRefundType;
+import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.FPCRefundEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.Refund;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
@@ -34,6 +37,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.ForwardPaymentCleanUpDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ForwardPaymentCleanUpService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.model.MplConfigurationModel;
+import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 /**
@@ -53,6 +57,9 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	MplJusPayRefundService mplJusPayRefundService;
 
 	@Autowired
+	OrderStatusSpecifier orderStatusSpecifier;
+
+	@Autowired
 	ModelService modelService;
 
 	private final static Logger LOG = Logger.getLogger(ForwardPaymentCleanUpServiceImpl.class.getName());
@@ -69,6 +76,11 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 		return forwardPaymentCleanUpDao.fetchPaymentFailedOrders(startTime, endTime);
 	}
 
+	@Override
+	public List<OrderModel> fetchRmsFailedOrders(final Date startTime, final Date endTime)
+	{
+		return forwardPaymentCleanUpDao.fetchRmsFailedOrders(startTime, endTime);
+	}
 
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditsWithoutOrder(final Date startTime, final Date endTime)
@@ -235,13 +247,55 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 					{
 						LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
 						LOG.error(e.getMessage(), e);
-
-
 					}
 				}
 			}
 		}
 
+	}
+
+	@Override
+	public void createRefundEntryForRmsFailedOrders(final OrderModel orderModel)
+	{
+		if (!checkCOD(orderModel))
+		{
+			final OrderStatus orderStatus = orderModel.getStatus();
+			final List<MplPaymentAuditModel> auditList = forwardPaymentCleanUpDao.fetchAuditsForGUID(orderModel.getGuid());
+			if (CollectionUtils.isNotEmpty(auditList))
+			{
+				for (final MplPaymentAuditModel paymentAudit : auditList)
+				{
+					try
+					{
+						if (null != orderStatus && orderStatus.equals(OrderStatus.RMS_VERIFICATION_FAILED))
+						{
+							if (!refundEntryExists(paymentAudit.getAuditId()))
+							{
+								final FPCRefundEntryModel refundEntry = modelService.create(FPCRefundEntryModel.class);
+								refundEntry.setAuditId(paymentAudit.getAuditId());
+								refundEntry.setAudit(paymentAudit);
+								refundEntry.setCartGUID(paymentAudit.getCartGUID());
+								refundEntry.setOrder(orderModel);
+								refundEntry.setRefundStatus(FPCRefundStatus.CREATED);
+								refundEntry.setRefundType(FPCRefundType.RMS_VERIFICATION_FAILED);
+								refundEntry.setIsExpired(Boolean.FALSE);
+								modelService.save(refundEntry);
+								LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+							}
+							else
+							{
+								LOG.error("Refund entry already exists for audit :" + paymentAudit.getAuditId());
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
+						LOG.error(e.getMessage(), e);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -384,6 +438,54 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 							refundEntry.setRefundStatus(FPCRefundStatus.NOT_APPLICABLE);
 							expireRefundEntry(refundEntry);
 							LOG.error("Parent audit id not charged : " + refundEntry.getParentAuditId());
+						}
+					}
+				}
+				else if (refundType.equals(FPCRefundType.RMS_VERIFICATION_FAILED))
+				{
+					final GetOrderStatusResponse orderStatusResponse = getOrderStatusFromJuspay(refundEntry.getAuditId());
+					if (null != orderStatusResponse)
+					{
+						if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
+						{
+							final String refundResponseStatus = checkRefundStatus(orderStatusResponse);
+							if (null == refundResponseStatus)
+							{
+								final OrderModel order = refundEntry.getOrder();
+								if (null != order)
+								{
+									callRMSVerficationFailed(refundEntry.getOrder());
+									refundEntry.setRefundStatus(FPCRefundStatus.REFUND_INITIATED);
+								}
+							}
+							else if (refundResponseStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+							{
+								final OrderModel order = refundEntry.getOrder();
+								if (null != order)
+								{
+									orderStatusSpecifier.setOrderStatus(order, OrderStatus.ORDER_CANCELLED);
+								}
+								refundEntry.setRefundStatus(FPCRefundStatus.REFUND_SUCCESSFUL);
+								final String refundMethod = checkRefundMethod(orderStatusResponse);
+								if (refundMethod.equals(MarketplacecommerceservicesConstants.AUTOMATIC))
+								{
+									refundEntry.setRefundMethod(FPCRefundMethod.AUTOMATIC);
+								}
+								else if (refundMethod.equals(MarketplacecommerceservicesConstants.MANUAL))
+								{
+									refundEntry.setRefundMethod(FPCRefundMethod.MANUAL);
+								}
+								expireRefundEntry(refundEntry);
+							}
+							else if (refundResponseStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
+							{
+								refundEntry.setRefundStatus(FPCRefundStatus.REFUND_IN_PROGRESS);
+							}
+						}
+						else
+						{
+							refundEntry.setRefundStatus(FPCRefundStatus.NOT_APPLICABLE);
+							expireRefundEntry(refundEntry);
 						}
 					}
 				}
@@ -559,4 +661,97 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 		refundEntry.setIsExpired(Boolean.TRUE);
 		modelService.save(refundEntry);
 	}
+
+	private void callRMSVerficationFailed(final OrderModel orderModel)
+	{
+
+		String defaultPinCode = "".intern();
+		if (null != orderModel.getDeliveryAddress() && StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPostalcode()))
+		{
+			defaultPinCode = orderModel.getDeliveryAddress().getPostalcode();
+		}
+		else
+		{
+			defaultPinCode = MarketplacecommerceservicesConstants.PINCODE;
+		}
+		if (StringUtils.isNotEmpty(defaultPinCode))
+		{
+			final PaymentTransactionModel paymentTransactionModel = initiateRefundRms(orderModel);
+
+			if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
+			{
+				final String status = paymentTransactionModel.getStatus();
+				if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
+				}
+			}
+
+
+		}
+
+	}
+
+	private PaymentTransactionModel initiateRefundRms(final OrderModel order)
+	{
+		PaymentTransactionModel paymentTransactionModel = null;
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+		try
+		{
+			paymentTransactionModel = mplJusPayRefundService.doRefund(order, order.getTotalPriceWithConv().doubleValue(),
+					PaymentTransactionType.CANCEL, uniqueRequestId);
+			if (null != paymentTransactionModel)
+			{
+				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			}
+			else
+			{
+				LOG.error("Failed to Refund");
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, "FAILURE",
+					order.getTotalPriceWithConv(), PaymentTransactionType.CANCEL, "FAILURE", uniqueRequestId);
+			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+
+			// TISSIT-1784 Code addition started
+			if (CollectionUtils.isNotEmpty(order.getChildOrders()))
+			{
+				for (final OrderModel subOrderModel : order.getChildOrders())
+				{
+					if (subOrderModel != null && CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+						{
+							if (subOrderEntryModel != null)
+							{
+								double refundAmount = 0D;
+								double deliveryCost = 0D;
+								if (subOrderEntryModel.getCurrDelCharge() != null)
+								{
+									deliveryCost = subOrderEntryModel.getCurrDelCharge().doubleValue();
+								}
+
+								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+
+								final RefundTransactionMappingModel refundTransactionMappingModel = modelService
+										.create(RefundTransactionMappingModel.class);
+								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
+								refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+								refundTransactionMappingModel.setCreationtime(new Date());
+								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
+								refundTransactionMappingModel.setRefundAmount(new Double(refundAmount));//TISPRO-216 : Refund amount Set in RTM
+								modelService.save(refundTransactionMappingModel);
+							}
+						}
+					}
+				}
+			}
+		}
+		return paymentTransactionModel;
+	}
+
 }

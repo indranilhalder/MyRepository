@@ -2404,4 +2404,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AUTOMATIC = "AUTOMATIC";
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
+	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
 }

@@ -23,6 +23,8 @@ public interface ForwardPaymentCleanUpDao
 
 	List<OrderModel> fetchPaymentFailedOrders(final Date startTime, final Date endTime);
 
+	List<OrderModel> fetchRmsFailedOrders(final Date startTime, final Date endTime);
+
 	List<MplPaymentAuditModel> fetchAuditsWithoutOrder(final Date startTime, final Date endTime);
 
 	MplConfigurationModel fetchConfigDetails(final String code);

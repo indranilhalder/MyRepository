@@ -131,6 +131,25 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	}
 
 	@Override
+	public List<OrderModel> fetchRmsFailedOrders(final Date startTime, final Date endTime)
+	{
+		final StringBuilder queryString = new StringBuilder(500);
+		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
+		queryString.append(" FROM {" + OrderModel._TYPECODE + " AS ord}");
+		queryString.append(" WHERE {ord:" + OrderModel.STATUS + "} = ?orderStatus");
+		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
+		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("startTime", startTime);
+		query.addQueryParameter("endTime", endTime);
+		query.addQueryParameter("orderType", MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter("orderStatus", OrderStatus.RMS_VERIFICATION_FAILED);
+
+		return flexibleSearchService.<OrderModel> search(query).getResult();
+	}
+
+	@Override
 	public FPCRefundEntryModel fetchRefundEntryForAuditId(final String auditId)
 	{
 		final StringBuilder queryString = new StringBuilder(500);

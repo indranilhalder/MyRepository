@@ -360,8 +360,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				final RefundRequest refundRequest = new RefundRequest();
 				refundRequest.setOrderId(mplPaymentAuditModel.getAuditId());
-				final Random random = new Random(9999);
-				final String uniqueId = mplPaymentAuditModel.getAuditId() + "-" + random.nextInt();
+				final Random random = new Random(System.nanoTime());
+				final String uniqueId = mplPaymentAuditModel.getAuditId() + "-" + random.nextInt(999999999);
 				refundRequest.setUniqueRequestId(uniqueId);
 				if (null != mplPaymentAuditModel.getPaymentAmount())
 				{
@@ -1085,8 +1085,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				final RefundRequest refundRequest = new RefundRequest();
 				refundRequest.setOrderId(mplPaymentAuditModel.getAuditId());
-				final Random random = new Random(9999);
-				final String uniqueId = mplPaymentAuditModel.getAuditId() + "-" + random.nextInt();
+				final Random random = new Random(System.nanoTime());
+				final String uniqueId = mplPaymentAuditModel.getAuditId() + "-" + random.nextInt(999999999);
 				refundRequest.setUniqueRequestId(uniqueId);
 				if (null != mplPaymentAuditModel.getPaymentAmount())
 				{
