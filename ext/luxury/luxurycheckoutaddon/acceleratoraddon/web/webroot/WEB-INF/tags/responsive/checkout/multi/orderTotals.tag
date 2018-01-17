@@ -23,7 +23,17 @@
 					</ycommerce:testId>
 					</span>
 				</li>
-
+				<c:if test="${totalDiscount.value > 0}">
+				<li class="subtotal">
+			       <span class="subTotalSpan">
+			       <spring:theme code="text.account.order.savings"/></span>
+			       <span class="amt">
+		       	   <ycommerce:testId code="Order_Totals_Savings">
+		       	   		<format:price priceData="${totalDiscount}"/>
+		       	   </ycommerce:testId>
+		       	   </span>
+		       </li>
+		       </c:if>
 
 				<c:if test="${cartData.totalDiscounts.value > 0}">
 					<li id="cartPromotionApplied">
