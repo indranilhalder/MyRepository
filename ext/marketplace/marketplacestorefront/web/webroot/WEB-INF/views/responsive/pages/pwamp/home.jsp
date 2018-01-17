@@ -146,55 +146,33 @@
 	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" on="sidebarOpen:AMP.setState({showCloseBtn : true});sidebarClose:AMP.setState({showCloseBtn : false})" layout="nodisplay" side="left">
 	<amp-accordion class="sidebar-menu l1-accordian">
 	<section>
-		<h4 class="l1-options">
-			Department<i class="fa fa-angle-right"></i>
-		</h4>
+		<h4 class="l1-options">Department<i class="fa fa-angle-right"></i></h4>
 		<amp-accordion class="sidebar-menu l2-accordian">
-		<c:forEach items="${component.components}" var="component" varStatus="i">	
-		<section>
-			<h4 class="l2-options">
-				<%-- <a href="${component.link.url}"> --%>
-				${component.navigationNode.title}<!-- </a> -->
-				<i class="fa fa-angle-right"></i>
-			</h4>
-			<amp-accordion class="sidebar-menu l3-accordian">
-			<c:if test="${not empty component.navigationNode.children}">
-			
-			<c:forEach items="${component.navigationNode.children}" var="child1">
-				<%-- ${child1.children[2].title} --%>
-				<c:forEach items="${child1.children}" var="child">
-					<c:if test="${child.visible}">
-					
-					<%-- <c:forEach items="${child.children}" var="subchild">
-						${subchild.linkName}
-					</c:forEach> --%>
-					<section>
-						<h4 class="l3-options">
-							<%-- <a href="${child.links[0].url}"> --%>
-							${child.title}
-							<%-- ${child.children[0].linkName} --%>
-							<!-- </a> -->
-							<i class="fa fa-angle-right"></i>
-						</h4>
-						<ul>
-						<%-- <li>${child.links[0].linkName}</li> --%>
-						<c:forEach items="${child.links}" var="childlink" varStatus="i">
-							<c:if test="${not i.first}">
-								<li><a href="${childlink.url}">${childlink.linkName}</a></li>
-							</c:if>
-						</c:forEach>
-						</ul>
-					</section>
-				
-				
-				
-				</c:if>
-				</c:forEach>
+			<c:forEach items="${component.components}" var="component" varStatus="i">	
+				<section>
+					<h4 class="l2-options">${component.navigationNode.title}<i class="fa fa-angle-right"></i></h4>
+					<amp-accordion class="sidebar-menu l3-accordian">
+						<c:if test="${not empty component.navigationNode.children}">
+							<c:forEach items="${component.navigationNode.children}" var="child1">
+								<c:forEach items="${child1.children}" var="child">
+									<c:if test="${child.visible}">
+										<section>
+											<h4 class="l3-options">${child.title}<i class="fa fa-angle-right"></i></h4>
+											<ul>
+												<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
+													<c:forEach items="${child.links}" var="childlink" begin="${i.index+1}" end="${i.index + component.wrapAfter - 1}">
+														<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+													</c:forEach>
+												</c:forEach>
+											</ul>
+										</section>
+									</c:if>
+								</c:forEach>
+							</c:forEach>
+						</c:if>
+					</amp-accordion>
+				</section>
 			</c:forEach>
-			</c:if>
-			</amp-accordion>
-		</section>
-		</c:forEach>
 		</amp-accordion>
 	</section>
 	<section>
