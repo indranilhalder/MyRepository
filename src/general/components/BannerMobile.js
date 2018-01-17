@@ -37,7 +37,20 @@ export default class BannerMobile extends React.Component {
     }
   }
   slideForward = () => {
+    // const visibleItems = [];
+    // visibleItems.push(
+    //   this.items[(this.state.position + 1) % this.state.numberOfItems]
+    // );
+    // visibleItems.push(
+    //   this.items[
+    //     this.state.position > 0
+    //       ? this.state.position - 1
+    //       : this.state.numberOfItems - 1
+    //   ]
+    // );
+    // visibleItems.push(this.items[this.state.position]);
     this.setState({ direction: "forward" });
+    console.log("here");
   };
   slideBack = () => {
     const visibleItems = [];
@@ -52,38 +65,27 @@ export default class BannerMobile extends React.Component {
       ]
     );
     visibleItems.push(this.items[this.state.position]);
-
-    console.log((this.state.position + 1) % this.state.numberOfItems);
-    console.log(
-      this.state.position > 0
-        ? this.state.position - 1
-        : this.state.numberOfItems - 1
-    );
-    console.log(this.state.position);
-    this.setState({ visibleItems });
-    this.setState({ direction: "back" });
+    this.setState({ visibleItems, direction: "back" });
   };
   swapForward = () => {
     const visibleItems = [];
+    let absolutePosition =
+      this.state.absolutePosition - 1 >= 0
+        ? this.state.absolutePosition - 1
+        : this.state.numberOfItems - 1;
+    const position = absolutePosition % this.state.numberOfItems;
 
-    let position = (this.state.absolutePosition - 1) % this.state.numberOfItems;
-    if (position <= 0) {
-      position = this.state.numberOfItems + position;
-    }
-    let normalPosition = position;
-    let absolutePosition = this.state.absolutePosition - 1;
-    if (normalPosition < 0) {
-      normalPosition = this.state.numberOfItems + normalPosition;
-    }
-    this.setState({ position: normalPosition, absolutePosition }, () => {
-      visibleItems.push(this.state.visibleItems[2]);
-      visibleItems.push(this.state.visibleItems[0]);
+    console.log(position);
+    console.log(absolutePosition);
+    this.setState({ position, absolutePosition }, () => {
       visibleItems.push(this.items[this.state.position]);
+      visibleItems.push(this.state.visibleItems[0]);
+      visibleItems.push(this.state.visibleItems[1]);
       this.setState({ visibleItems }, () => {
         this.setState({ direction: "" });
       });
-      console.log(this.state.position);
     });
+    console.log("here");
   };
 
   swapBack = () => {
@@ -91,6 +93,8 @@ export default class BannerMobile extends React.Component {
     const position =
       (this.state.absolutePosition + 1) % this.state.numberOfItems;
     let absolutePosition = this.state.absolutePosition + 1;
+    console.log(position);
+    console.log(absolutePosition);
     this.setState({ position, absolutePosition }, () => {
       visibleItems.push(this.state.visibleItems[1]);
       visibleItems.push(this.state.visibleItems[2]);
@@ -98,7 +102,6 @@ export default class BannerMobile extends React.Component {
       this.setState({ visibleItems }, () => {
         this.setState({ direction: "" });
       });
-      // console.log(this.state.position);
     });
   };
   animationEnd(evt) {
@@ -108,9 +111,7 @@ export default class BannerMobile extends React.Component {
         this.swapForward();
       }
       if (this.state.direction === "back") {
-        // setTimeout(() => {
         this.swapBack();
-        // }, 1000);
       }
     }
   }
