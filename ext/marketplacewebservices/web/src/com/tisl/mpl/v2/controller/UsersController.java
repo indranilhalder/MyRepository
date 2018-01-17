@@ -11315,4 +11315,172 @@ public class UsersController extends BaseCommerceController
 		}
 		return userResult;
 	}
+
+	/**
+	 * Register in portal via social media login such as facebook and googleplus TPR-1372
+	 *
+	 * @param emailId
+	 * @param socialMedia
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+	@Secured(
+	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/socialMediaRegistration", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserLoginResultWsDto socialCutomerRegistration(@RequestParam(required = true) final boolean isPwa,
+			@RequestParam final String emailId, @RequestParam final String socialMedia,
+			@RequestParam(required = false) final boolean tataTreatsEnable,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto updateCustomerDetailDto = new UpdateCustomerDetailDto();
+		try
+		{
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			final String emailIdLwCase = emailId.toLowerCase();
+			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			{
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacewebservicesConstants.FACEBOOK,
+						tataTreatsEnable, platformDecider);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			{
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacecommerceservicesConstants.GOOGLE,
+						tataTreatsEnable, platformDecider);
+			}
+			if (null != result.getCustomerId())
+			{
+				userLoginResultWsDto.setCustomerId(result.getCustomerId());
+			}
+			if (null != result.getStatus())
+			{
+				userLoginResultWsDto.setStatus(result.getStatus());
+			}
+			//final CustomerModel customerModel = extUserService.getUserForCustomerUid(emailId);
+			if (emailIdLwCase.contains("@"))
+			{
+				updateCustomerDetailDto.setEmailId(emailIdLwCase);
+			}
+			else
+			{
+				updateCustomerDetailDto.setMobileNumber(emailIdLwCase);
+			}
+			userLoginResultWsDto.setCustomerInfo(updateCustomerDetailDto);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userLoginResultWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userLoginResultWsDto.setErrorCode(e.getErrorCode());
+			}
+			userLoginResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userLoginResultWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userLoginResultWsDto.setErrorCode(e.getErrorCode());
+			}
+			userLoginResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userLoginResultWsDto;
+	}
+
+	/**
+	 * Login via social media
+	 *
+	 * @param emailId
+	 * @param socialMedia
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{emailId}/loginSocialUser", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public MplUserResultWsDto socialLogin(@PathVariable final String emailId, @RequestParam final String socialMedia ,@RequestParam(required = true) final boolean isPwa, )
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		try
+		{
+			LOG.debug("****************** Social Media User Login mobile web service ***********" + emailId);
+
+			//Social Media should not be anything other than FB or Google +
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			{
+				result = mobileUserService.loginSocialUser(emailId, socialMedia);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			{
+				result = mobileUserService.loginSocialUser(emailId, socialMedia);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//Return result
+		return result;
+	}
 }
