@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./BrandImage.css";
 import { Image } from "xelpmoc-core";
+import PropTypes from "prop-types";
 export default class BrandImage extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -22,3 +23,12 @@ export default class BrandImage extends React.Component {
     );
   }
 }
+BrandImage.propTypes = {
+  image: PropTypes.string,
+  selected: PropTypes.bool,
+  onClick: PropTypes.func
+};
+BrandImage.defaultProps = {
+  image: "",
+  selected: false
+};
