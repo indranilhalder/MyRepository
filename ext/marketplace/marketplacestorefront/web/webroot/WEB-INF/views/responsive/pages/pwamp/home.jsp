@@ -143,7 +143,7 @@
 		</p>
 	</header>
 
-	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" layout="nodisplay" side="left">
+	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" on="sidebarOpen:AMP.setState({showCloseBtn : true});sidebarClose:AMP.setState({showCloseBtn : false})" layout="nodisplay" side="left">
 	<amp-accordion class="sidebar-menu l1-accordian">
 	<section>
 		<h4 class="l1-options">
@@ -386,6 +386,7 @@
 	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
 	</amp-sidebar>
 
+	<button on="tap:sidebar.close" class="close-menubar hidden" [class]="showCloseBtn ? 'close-menubar display-visible' : 'close-menubar hidden'">&times;</button>
 	<section class="pincode-check hidden" [class]="pinCodeVisible ? 'pincode-check display-visible' : 'pincode-check hidden'">
     <section>
       <!--<form method="GET" action-xhr="/homePincode" target="_top">
