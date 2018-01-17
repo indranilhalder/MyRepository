@@ -749,7 +749,7 @@ p {margin: 0;}
 	.brandStudioImg {height: 180px;}
 	.brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 	.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left;}
-	.brandStudioDescHeading {font-size: 13px;}
+	.brandStudioDescHeading {font-size: 13px; min-height: 15px;}
 	.brandStudioDescInfo {font-size: 12px; color: #666666;white-space: pre-line; max-height: 60px; overflow-y: hidden;}
 	.brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
