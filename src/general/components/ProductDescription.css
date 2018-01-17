@@ -12,7 +12,7 @@
   font-family: semibold;
   font-size: 16px;
   color: #212121;
-  white-space:normal;
+  white-space: normal;
 }
 .headerWhite {
   composes: headerText;
@@ -25,7 +25,7 @@
 }
 
 .description {
-  white-space:normal;
+  white-space: normal;
 }
 .content {
   width: 100%;
@@ -33,6 +33,7 @@
   font-size: 14px;
   line-height: 20px;
   font-family: regular;
+  white-space: normal;
 }
 .contentWhite {
   composes: content;
