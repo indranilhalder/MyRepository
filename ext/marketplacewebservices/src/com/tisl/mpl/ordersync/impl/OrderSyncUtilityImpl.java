@@ -170,7 +170,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.ordersync.OrderSyncUtility#syncOrder(java.util.List)
 	 */
 	@Override
@@ -329,7 +329,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Consignment Status RollBack because of Invoice :" + ExceptionUtils.getStackTrace(e));
+			callTrace.append("Consignment Status RollBack because of Invoice :").append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 		return createInvoice;
