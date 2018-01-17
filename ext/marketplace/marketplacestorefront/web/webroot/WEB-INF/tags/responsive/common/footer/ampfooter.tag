@@ -67,14 +67,13 @@
           
           <c:forEach items="${navigationNodes}" var="node">
         	<c:if test="${node.visible}">
-          		<c:forEach items="${node.links}"
+          		<section>
+          			<c:forEach items="${node.links}"
 							step="${wrapAfter}" varStatus="i">
-							<section>
 								<c:if test="${wrapAfter > i.index}">
 									<c:choose>
 										<c:when test="${empty node.media}">
-										
-											<h4><span class="tata-title"></span> ${node.title}<i class="fa fa-angle-down"></i></h4>
+											<h4><span class="tata-title">Tata</span> MARKETPLACE<i class="fa fa-angle-down"></i></h4>
 											<!-- TEXT NOT SUITABLE -->
 										</c:when>
 										<c:otherwise>
@@ -91,11 +90,11 @@
 										<cms:component component="${childlink}" evaluateRestriction="true" element="li" />
 									</c:forEach>
 								</ul>
-							</section>
+							
 						</c:forEach>
-			              
-			              </c:if>
-        			</c:forEach>
+	              	</section>
+	              </c:if>
+      			</c:forEach>
         			
         			<section>
 	      					<h4>KNOW MORE<i class="fa fa-angle-down"></i></h4>
