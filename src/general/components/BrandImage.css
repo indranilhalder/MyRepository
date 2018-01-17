@@ -1,8 +1,9 @@
 
 .base {
-  width: 33.33%;
-  overflow: hidden;
-  float: left;
+  background-color:#000000;
+  padding-bottom:100%;
+  border-radius: 50%;
+  position: relative;  
 }
 .imageHolder {
   height:60%;
@@ -14,27 +15,20 @@
  left:0;
  margin:auto;
 } 
-.circle{
-  background-color:#000;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  position: relative;  
-  display: inline-block;
-}
 .checkIcon{
-  width: 22px;
-  border-radius: 50%;   
-  height: 22px;
-  top:0px;
+  width: 30px;
+  border-radius:50%;   
+  height: 30px;
+  top:20px;
   position:absolute;
-  right:5px;  
+  right:50px;  
   margin:auto;
-  background:#ff0000  url(./img/3w.svg)no-repeat;
+  background:#ff1744 url(./img/3w.svg)no-repeat;
   background-size:auto 16px;
   background-position:center;
   transition: 300ms;
   transform:scale(0);
+  z-index:1;
 }
 .checkIconActive{
   composes:checkIcon;

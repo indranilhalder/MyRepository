@@ -13,17 +13,11 @@ export default class BrandImage extends React.Component {
       iconClass = styles.checkIconActive;
     }
     return (
-      <div>
-        <center>
-          <div className={styles.base} onClick={() => this.handleClick()}>
-            <div className={styles.circle}>
-              <div className={iconClass} />
-              <div className={styles.imageHolder}>
-                <Image image={this.props.image} />
-              </div>
-            </div>
-          </div>
-        </center>
+      <div className={styles.base} onClick={() => this.handleClick()}>
+        <div className={iconClass} />
+        <div className={styles.imageHolder}>
+          <Image image={this.props.image} />
+        </div>
       </div>
     );
   }
