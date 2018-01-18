@@ -87,9 +87,34 @@ public class HomePageComponentsController
 	{
 
 		BannersCarouselDTO bannerProductCarouselDTO = new BannersCarouselDTO();
+		try
+		{
+			bannerProductCarouselDTO = homePageAppFacade.getBannerProductCarouselDTO(bannerCarouselRequestDTO);
+			System.out.println("Theme offers dto" + bannerProductCarouselDTO);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Error in home page components controller");
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				bannerProductCarouselDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				bannerProductCarouselDTO.setErrorCode(e.getErrorCode());
+			}
+			bannerProductCarouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error in home page components controller");
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			bannerProductCarouselDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
+			bannerProductCarouselDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
+			bannerProductCarouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
 
-		bannerProductCarouselDTO = homePageAppFacade.getBannerProductCarouselDTO(bannerCarouselRequestDTO);
-		System.out.println("Theme offers dto" + bannerProductCarouselDTO);
 
 		return bannerProductCarouselDTO;
 	}
@@ -104,10 +129,37 @@ public class HomePageComponentsController
 			@RequestBody final HomepageComponentRequestDTO videoProductCaraouselRequestDTO)
 	{
 
-		VideoProductCaraouselDTO videoProductCaraouselDTO = new VideoProductCaraouselDTO();
 
-		videoProductCaraouselDTO = homePageAppFacade.getVideoProductCarouselDTO(videoProductCaraouselRequestDTO);
-		System.out.println("Theme offers dto" + videoProductCaraouselDTO);
+		VideoProductCaraouselDTO videoProductCaraouselDTO = new VideoProductCaraouselDTO();
+		try
+		{
+			videoProductCaraouselDTO = homePageAppFacade.getVideoProductCarouselDTO(videoProductCaraouselRequestDTO);
+			System.out.println("Theme offers dto" + videoProductCaraouselDTO);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Error in home page components controller");
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				videoProductCaraouselDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				videoProductCaraouselDTO.setErrorCode(e.getErrorCode());
+			}
+			videoProductCaraouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error in home page components controller");
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			videoProductCaraouselDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
+			videoProductCaraouselDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
+			videoProductCaraouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
+
+
 
 		return videoProductCaraouselDTO;
 	}
