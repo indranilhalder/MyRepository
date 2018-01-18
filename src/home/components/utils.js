@@ -2,9 +2,8 @@ export function transformData(datum) {
   return {
     image: datum.imageURL,
     title: datum.title,
-    description: datum.title,
+    description: datum.description,
     price: datum.mrpPrice && datum.mrpPrice.formattedValue,
-    discountedPrice:
-      datum.discountedPrice && datum.discountedPrice.formattedValue
+    discountPrice: datum.discountedPrice && datum.discountedPrice.formattedValue
   };
 }

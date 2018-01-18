@@ -12,8 +12,7 @@
   font-family: semibold;
   font-size: 16px;
   color: #212121;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
 }
 .headerWhite {
   composes: headerText;
@@ -26,8 +25,7 @@
 }
 
 .description {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
 }
 .content {
   width: 100%;
@@ -35,6 +33,7 @@
   font-size: 14px;
   line-height: 20px;
   font-family: regular;
+  white-space: normal;
 }
 .contentWhite {
   composes: content;
@@ -47,6 +46,7 @@
 }
 .priceHolder {
   display: inline-block;
+  line-height: 24px;
 }
 .discount {
   composes: priceHolder;
