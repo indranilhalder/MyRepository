@@ -8,52 +8,28 @@ export default class DiscoverMoreCarousel extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <Carousel
-          header={this.props.header}
-          elementWidthMobile={30}
-          elementWidthDesktop={30}
-        >
-          <CircleProductImage
-            label="A Laptop"
-            image={
-              "https://static.pexels.com/photos/157627/watch-fashion-accessories-clothes-157627.jpeg"
-            }
-          />
-          <CircleProductImage
-            label="An Icecream"
-            image={
-              "https://truffle-assets.imgix.net/67ce1315-104-icecream-dishland2.jpg"
-            }
-          />
-          <CircleProductImage
-            label="A Mobile"
-            image={
-              "https://images.pexels.com/photos/248528/pexels-photo-248528.jpeg?h=350&auto=compress&cs=tinysrgb"
-            }
-          />
-          <CircleProductImage
-            label="A Laptop"
-            image={
-              "https://static.pexels.com/photos/157627/watch-fashion-accessories-clothes-157627.jpeg"
-            }
-          />
-          <CircleProductImage
-            label="An Icecream"
-            image={
-              "https://truffle-assets.imgix.net/67ce1315-104-icecream-dishland2.jpg"
-            }
-          />
-          <CircleProductImage
-            label="A Mobile"
-            image={
-              "https://images.pexels.com/photos/248528/pexels-photo-248528.jpeg?h=350&auto=compress&cs=tinysrgb"
-            }
-          />
+        <Carousel header={this.props.header}>
+          {this.props.data &&
+            this.props.data.map((datum, i) => {
+              return (
+                <CircleProductImage
+                  image={datum.image}
+                  label={datum.label}
+                  key={i}
+                />
+              );
+            })}
         </Carousel>
       </div>
     );
   }
 }
+DiscoverMoreCarousel.propTypes = {
+  header: PropTypes.string,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({ image: PropTypes.string, label: PropTypes.string })
+  )
+};
 DiscoverMoreCarousel.defaultProps = {
   header: "Discover more from Tata Cliq"
 };
