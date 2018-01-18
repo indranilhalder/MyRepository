@@ -485,7 +485,7 @@
 	</div>
 
 	<!-- What To Buy Now -->
-	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="400" layout="fixed-height"> 
+	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="360" layout="fixed-height"> 
 	<template type="amp-mustache"> 
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
@@ -493,7 +493,7 @@
 		</div>
 		<div>
 			<div id="whatToBuyCompCarousel">
-				<amp-carousel height="400" layout="fixed-height" type="carousel">
+				<amp-carousel height="360" layout="fixed-height" type="carousel">
 				{{#categories}}
 				<div class="whatToBuyItem">
 					<div class="whatToBuyItemImg">

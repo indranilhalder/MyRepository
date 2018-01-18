@@ -248,7 +248,7 @@ header{
 }
 
 #sidebar{
-	width:300px;
+	width:100%;
 	background-color:#FFFFFF;
 }
 
@@ -613,7 +613,7 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 
 .sidebar-zindex {z-index: 1000;}
 
-.close-menubar {left: 288px; position: fixed; top: 0; padding: 0px 10px; z-index: 2147483647; font-size: 34px; background-color: #fff; border: 1px solid #ccc;}
+.close-menubar {left: 80vw; position: fixed; top: 0; padding: 0px 10px; z-index: 2147483647; font-size: 34px; background-color: #fff; border: 1px solid #ccc;}
 
 .search-submit {
   margin: 10px 0;
