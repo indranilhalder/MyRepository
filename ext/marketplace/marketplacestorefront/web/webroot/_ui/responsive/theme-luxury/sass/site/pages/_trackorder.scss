@@ -392,6 +392,12 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
  }
  
 @media (max-width:768px){
+    .header {		
+        border-bottom: 1px solid #eaeaec;		
+    }		
+    .product-block.order-details .list-top-title li:first-child {		
+        width: 100%;		
+    }
  	.product-block.order-details .list-top-title li{
  		display: block;
 	    width: 100%;
