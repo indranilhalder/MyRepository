@@ -1,4 +1,4 @@
-.singleSelectBase {
+.base {
   width: 100%;
   height: auto;
   padding-bottom: 100%;
@@ -7,7 +7,7 @@
   border-radius: 50%;
   background: #f6f6f6;
 }
-.SelectIcon {
+.imageHolder {
   width: 40%;
   height: 40%;
   position: absolute;
@@ -18,7 +18,7 @@
   margin: auto;
   background: transparent;
 }
-.Gym {
+.text {
   text-align: center;
   margin: 10px;
   color: #212121;
