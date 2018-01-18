@@ -295,6 +295,20 @@ header{
 	transform:rotate(180deg);
 }
 
+.sidebar-menu section[expanded] .l1-my-account {color: #fff;}
+
+.user-information > section > div > ul {margin: 0;}
+
+.user-information > section > div > ul > li {
+    padding-left: 20px;
+    line-height: 40px;
+    background-color: #d6d6d6;
+    border-bottom: 1px solid #e6e6e6;
+    list-style-type: none;
+}
+
+.user-information > section > div > ul > li a {line-height: 40px;}
+
 .sidebar-menu h4{
 	background:none;
 	border:none;
