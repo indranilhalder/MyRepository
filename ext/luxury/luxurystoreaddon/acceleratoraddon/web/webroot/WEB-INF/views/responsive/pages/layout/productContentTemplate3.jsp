@@ -70,47 +70,59 @@ $(document).ready(function(){
    </div>
    
    <%-- code changes for carousel start --%>
-   <div class="product-slider">
+   <div class="every-scene">
 		<cms:pageSlot position="Section3A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />
 		</cms:pageSlot>
 		<ul class="product-slider">	
-		<li>
-			<div class="media">
-				<cms:pageSlot position="Section4A" var="feature">
-					<img src="${feature.urlLink }"/>
-				</cms:pageSlot>
-			</div>
-			<div class="media-content">
-				<cms:pageSlot position="Section5A" var="feature">
-					<cms:component component="${feature}" element="div" class="" />
-				</cms:pageSlot>
-			</div>
-		</li>
-		<li>
-			<div class="media">
-				<cms:pageSlot position="Section4B" var="feature">
-					<img src="${feature.urlLink }"/>
-				</cms:pageSlot>
-			</div>
-			<div class="media-content">
-				<cms:pageSlot position="Section5B" var="feature">
-					<cms:component component="${feature}" element="div" class="" />
-				</cms:pageSlot>
-			</div>
-		</li>
-		<li>
-			<div class="media">
-				<cms:pageSlot position="Section4C" var="feature">
-					<img src="${feature.urlLink }"/>
-				</cms:pageSlot>
-			</div>
-			<div class="media-content">
-				<cms:pageSlot position="Section5C" var="feature">
-					<cms:component component="${feature}" element="div" class="" />
-				</cms:pageSlot>
-			</div>
-		</li>
+			<li>
+				<div class="media">
+					<cms:pageSlot position="Section4A" var="feature">
+						<img src="${feature.urlLink }"/>
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section5A" var="feature">
+						<cms:component component="${feature}" element="div" class="" />
+					</cms:pageSlot>
+				</div>
+			</li>
+			<li>
+				<div class="media">
+					<cms:pageSlot position="Section4B" var="feature">
+						<img src="${feature.urlLink }"/>
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section5B" var="feature">
+						<cms:component component="${feature}" element="div" class="" />
+					</cms:pageSlot>
+				</div>
+			</li>
+			<li>
+				<div class="media">
+					<cms:pageSlot position="Section4C" var="feature">
+						<img src="${feature.urlLink }"/>
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section5C" var="feature">
+						<cms:component component="${feature}" element="div" class="" />
+					</cms:pageSlot>
+				</div>
+			</li>
+			<li>
+				<div class="media">
+					<cms:pageSlot position="Section4B" var="feature">
+						<img src="${feature.urlLink }"/>
+					</cms:pageSlot>
+				</div>
+				<div class="media-content">
+					<cms:pageSlot position="Section5B" var="feature">
+						<cms:component component="${feature}" element="div" class="" />
+					</cms:pageSlot>
+				</div>
+			</li>
         </ul>
    </div>	
        <%-- code changes for carousel end --%>
@@ -143,4 +155,24 @@ $(document).ready(function(){
       </div>
    </div>  
   </div>
+   <script type="text/javascript">
+  $(".product-slider").slick({
+      infinite: true,
+      slidesToShow: 3,
+      arrows: true,
+      slidesToScroll: 1,
+      dots: !1,
+      infinite: true,
+      responsive: [ {
+          breakpoint: 768,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              arrows: true,
+              dots: !1,
+          }
+      } ]
+  });
+  
+  </script>
 </div>
