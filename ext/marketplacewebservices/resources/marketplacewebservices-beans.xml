@@ -928,6 +928,11 @@
 		<property name="gender" type="String" />
 		<property name="nickName" type="String" />
 		<property name="dateOfAnniversary" type="String" />
+		<!-- NU-33 -->
+		<property name="favBrand" type="String" />
+		<property name="favCategory" type="String" />
+		<property name="status" type="String" />
+		<property name="message" type="String" />
 	</bean>
 	<!-- ProductDetailsForProductCode mobile web service begins -->
 	<bean class="com.tisl.mpl.wsdto.SellerInformationMobileData">

@@ -2398,4 +2398,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
 	public static final String TIMEOUT_FOR_OTP = "timeout.for.otp".intern();
+	public static final String PROFILE_UPDATE_SUCCESS = "Profile updated successfully";
+	public static final String PROFILE_UPDATE_FAIL = "Profile data is not updated";
 }
