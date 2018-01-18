@@ -307,38 +307,45 @@
 			</c:if>
 
 			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-				<p class="sidebar-divider-item">
-					<c:set var="userName" value="${fname}"/>
-					<a href="<c:url value="/my-account"/>" class="fa fa-user"><spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
-				</p>
-				<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
-	        				<ul>
-	        				<li class="header-myAccount"></li>
-							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
-							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-										code="header.flyout.Personal" /></a></li>
-							<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-										code="header.flyout.orders" /></a></li>
-							<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-										code="header.flyout.cards" /></a></li>
-							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-										code="header.flyout.address" /></a></li>
-                       <c:if test="${isVoucherToBeDisplayed eq true }">
-						    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
+			
+				<amp-accordion class="sidebar-menu l1-accordian user-information">
+					<section>
+						<h4 class="l1-options">
+							<c:set var="userName" value="${fname}"/>
+							<a href="<c:url value="/my-account"/>" class="fa fa-user l1-my-account"> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
+						<i class="fa fa-angle-right"></i></h4>
+						<div>
+							<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
+		        				<ul>
+			        				<li class="header-myAccount"></li>
+									<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+												code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
+									<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
+												code="header.flyout.Personal" /></a></li>
+									<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
+												code="header.flyout.orders" /></a></li>
+									<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
+												code="header.flyout.cards" /></a></li>
+									<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
+												code="header.flyout.address" /></a></li>
+	                       <c:if test="${isVoucherToBeDisplayed eq true }">
+							    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+										code="header.flyout.coupons" /></a></li>
+							</c:if>
+								<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
+											code="header.flyout.invite" /></a></li>
+											
+								<li><ycommerce:testId code="header_signOut">
+										<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
+												code="header.link.logout" />
+										</a></u>
+									</ycommerce:testId>
+								</li>
+								</ul>
 						</c:if>
-							<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-										code="header.flyout.invite" /></a></li>
-										
-							<li><ycommerce:testId code="header_signOut">
-									<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
-											code="header.link.logout" />
-									</a></u>
-								</ycommerce:testId>
-							</li>
-							</ul>
-					</c:if>
+						</div>
+					</section>
+				</amp-accordion>
 			</sec:authorize>
 
 			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
