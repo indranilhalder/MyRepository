@@ -74,7 +74,7 @@ $(document).ready(function(){
 		<cms:pageSlot position="Section3A" var="feature">
 			<cms:component component="${feature}" element="div" class="" />
 		</cms:pageSlot>
-		<ul class="every-scene-carousel">	
+		<ul class="product-slider">	
 		<li>
 			<div class="media">
 				<cms:pageSlot position="Section4A" var="feature">
