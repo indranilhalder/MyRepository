@@ -6,6 +6,7 @@
   width: 100%;
   height: auto;
   position: relative;
+  cursor: pointer;
 }
 .check {
   width: 50px;

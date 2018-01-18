@@ -53,12 +53,15 @@ export default class Carousel extends React.Component {
       <div className={styles.base} styles={{ color: this.props.color }}>
         <MediaQuery query="(min-device-width: 1025px)">
           <div className={headerClass}>
-            <div>
-              <div>{this.props.header}</div>
-              {this.props.subheader && (
-                <div className={styles.subheader}>{this.props.subheader}</div>
-              )}
-            </div>
+            {this.props.header && (
+              <div>
+                <div>{this.props.header}</div>
+                {this.props.subheader && (
+                  <div className={styles.subheader}>{this.props.subheader}</div>
+                )}
+              </div>
+            )}
+            {this.props.headerComponent && this.props.headerComponent}
             <div className={styles.nav}>
               {this.props.seeAll && (
                 <div
@@ -112,6 +115,7 @@ export default class Carousel extends React.Component {
                 )}
             </div>
           )}
+          {this.props.headerComponent && this.props.headerComponent}
         </MediaQuery>
 
         <div className={styles.sliderHolder}>
@@ -169,7 +173,8 @@ Carousel.propTypes = {
   header: PropTypes.string,
   isWhite: PropTypes.bool,
   seeAll: PropTypes.func,
-  withFooter: PropTypes.bool
+  withFooter: PropTypes.bool,
+  headerComponent: PropTypes.element
 };
 
 Carousel.defaultProps = {

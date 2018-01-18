@@ -1,5 +1,6 @@
 import React from "react";
 import Carousel from "./Carousel";
+import MediaQuery from "react-responsive";
 import styles from "./MultiSelectCarousel.css";
 export default class MuliSelectCarousel extends React.Component {
   constructor(props) {
@@ -34,7 +35,6 @@ export default class MuliSelectCarousel extends React.Component {
     const childrenWithProps = React.Children.map(children, (child, i) => {
       return React.cloneElement(child, {
         selected: this.state.selected.includes(child.props.value),
-
         selectItem: () => {
           this.selectItem(child.props.value);
         }
@@ -42,21 +42,26 @@ export default class MuliSelectCarousel extends React.Component {
     });
     return (
       <div className={styles.base}>
-        <div className={styles.header}>
-          <div className={styles.headerText}>{this.props.header}</div>
-          <div className={styles.subheader}>{this.props.subheader}</div>
-          {this.state.selected.length > 0 && (
-            <div
-              className={styles.button}
-              onClick={() => {
-                this.handleApply();
-              }}
-            >
-              Apply
+        <Carousel
+          headerComponent={
+            <div className={styles.header}>
+              <div className={styles.headerText}>{this.props.header}</div>
+              <div className={styles.subheader}>{this.props.subheader}</div>
+              {this.state.selected.length > 0 && (
+                <div
+                  className={styles.button}
+                  onClick={() => {
+                    this.handleApply();
+                  }}
+                >
+                  Apply
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <Carousel>{childrenWithProps}</Carousel>
+          }
+        >
+          {childrenWithProps}
+        </Carousel>
       </div>
     );
   }
