@@ -41,6 +41,6 @@
 @media screen and (max-width: 1024px) {
   .label {
     font-size: 14px;
-    line-height: normal;
+    line-height: initial;
   }
 }
