@@ -7122,9 +7122,9 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 	opacity: 1;
 	top: 90px;
 }
-.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishRemoveSucessPlp>span,div.wishAddSucessQV>span{
+.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishRemoveSucessPlp>span,div.wishAddSucessQV>span,div.wishRemoveSucessQV>span{ 	/* add class TISCSS-182 */
 	margin-left: 30px;
-	    line-height: 20px;
+	line-height: 20px;
 }
 
 .product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV{
@@ -7134,7 +7134,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 .product-info>div.wishAddLogin, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp, div.wishAddLoginPlp,div.wishAddLoginQV, div.wishAlreadyAddedQV{
 	color: #a91f3d !important;
 }
-.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before{
+.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before,div.wishRemoveSucessQV:before{	/* add class TISCSS-182 */
 
     content: "";
     width: 9px;
@@ -7151,7 +7151,7 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
     left: 24px;
     margin: auto;
 }
-.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishRemoveSucessPlp:after,div.wishAddSucessQV:after{
+.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishRemoveSucessPlp:after,div.wishAddSucessQV:after,div.wishRemoveSucessQV:after{	/* add class TISCSS-182 */
 
 	width: 30px;
     height: 30px;
@@ -13143,4 +13143,8 @@ a.tab-emi.active{
     font-size: 14px;
     padding-right: 10px;
     text-decoration: none;
+}
+.Manufacturer.Temp03 h3 {
+    font-size: 20px ! important;
+    margin-bottom: 0;
 }

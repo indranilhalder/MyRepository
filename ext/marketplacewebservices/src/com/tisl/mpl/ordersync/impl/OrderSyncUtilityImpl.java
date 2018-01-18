@@ -159,6 +159,10 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private final StringBuffer callTrace = new StringBuffer(5000);
 
+	private static final String UNCOLLECTED_ORDER = "publishEvent::sendUnCollectedOrderToCRMEvent->";
+	private static final String FOUND = " found.";
+	private static final String UNMARASHALLING_XML = "Unmarshalling XML:->";
+	private static final String FETCH_SELLER_ORDER = "Fetching Seller Order:->";
 	private boolean isError = false;
 
 	@Resource(name = "mplVoucherService")
@@ -181,11 +185,11 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 			final JAXBContext jaxbContext = JAXBContext.newInstance(OrderStatusUpdateDTO.class);
 			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			callTrace.append("Unmarshalling XML:->");
+			callTrace.append(UNMARASHALLING_XML);
 			orderUpdate = (OrderStatusUpdateDTO) jaxbUnmarshaller.unmarshal(orderSyncXML);
 
 			final SellerOrderDTO sellerOrder = orderUpdate.getSellerOrder();
-			callTrace.append("Fetching Seller Order:->");
+			callTrace.append(FETCH_SELLER_ORDER);
 			final String orderUpdateTime = orderUpdate.getOrderUpdateTime();
 
 			if (sellerOrder != null && StringUtils.isNotEmpty(orderUpdateTime))
@@ -216,8 +220,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-
-			callTrace.append("Error in Sync Order" + ExceptionUtils.getStackTrace(e));
+			callTrace.append("Error in Sync Order");
+			callTrace.append(ExceptionUtils.getStackTrace(e));
 
 		}
 		finally
@@ -325,7 +329,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Consignment Status RollBack because of Invoice :" + ExceptionUtils.getStackTrace(e));
+			callTrace.append("Consignment Status RollBack because of Invoice :").append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 		return createInvoice;
@@ -664,12 +668,14 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				try
 				{
 					LOG.debug("Create CRM Ticket for Cancel Initiated Orders");
-					callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
+					callTrace.append(UNCOLLECTED_ORDER);
 					eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 				}
 				catch (final Exception e)
 				{
-					callTrace.append("Exception during CRM Ticket for Cancel Initiated Order Id >>" + ExceptionUtils.getStackTrace(e));
+
+					callTrace.append("Exception during CRM Ticket for Cancel Initiated Order Id >>").append(
+							ExceptionUtils.getStackTrace(e));
 					isError = true;
 				}
 				try
@@ -681,8 +687,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e)
 				{
-					callTrace.append("Exception during Refund Initiation  for Un-Collected Orders >> "
-							+ ExceptionUtils.getStackTrace(e));
+					callTrace.append("Exception during Refund Initiation  for Un-Collected Orders >> ").append(
+							ExceptionUtils.getStackTrace(e));
 					isError = true;
 				}
 
@@ -703,7 +709,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e1)
 				{
-					callTrace.append("Exception during sending mail or SMS >> " + e1.getMessage());
+					callTrace.append("Exception during sending mail or SMS >> ").append(e1.getMessage());
 					isError = true;
 				}
 
@@ -782,14 +788,15 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			}
 			catch (final Exception exception)
 			{
-				callTrace.append("Exception ouccer trigger email " + exception.getMessage());
+				callTrace.append("Exception ouccer trigger email ").append(exception.getMessage());
 				isError = true;
 			}
 			//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 END
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Exception either in consignment update or sending notification " + ExceptionUtils.getStackTrace(e));
+			callTrace.append("Exception either in consignment update or sending notification ").append(
+					ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -913,13 +920,13 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			catch (final UnknownIdentifierException e)
 			{
 				isError = true;
-				throw new ConversionException("No country with the code " + isocode + " found.", e);
+				throw new ConversionException("No country with the code " + isocode + FOUND, e);
 
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
 				isError = true;
-				throw new ConversionException("More than one country with the code " + isocode + " found.", e);
+				throw new ConversionException("More than one country with the code " + isocode + FOUND, e);
 
 			}
 
@@ -949,13 +956,13 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final UnknownIdentifierException e2)
 				{
-					throw new ConversionException("No region with the code " + isocode + " found.", e2);
+					throw new ConversionException("No region with the code " + isocode + FOUND, e2);
 				}
 			}
 			catch (final AmbiguousIdentifierException e)
 			{
 				isError = true;
-				throw new ConversionException("More than one region with the code " + isocode + " found.", e);
+				throw new ConversionException("More than one region with the code " + isocode + FOUND, e);
 			}
 		}
 		return regionModel;
@@ -1006,7 +1013,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("Unable to send Notification..!! " + ExceptionUtils.getStackTrace(e));
+			callTrace.append("Unable to send Notification..!! ").append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 
@@ -1075,13 +1082,13 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
 								newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
 						LOG.debug("Create CRM Ticket for EDtoHD Order Cancel Initiated ");
-						callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
+						callTrace.append(UNCOLLECTED_ORDER);
 						eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 					}
 					catch (final Exception e)
 					{
-						callTrace.append("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> "
-								+ ExceptionUtils.getStackTrace(e));
+						callTrace.append("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> ").append(
+								ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 
@@ -1101,7 +1108,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					}
 					catch (final Exception e)
 					{
-						callTrace.append("Exception occurred while  refund info call to oms " + ExceptionUtils.getStackTrace(e));
+						callTrace.append("Exception occurred while  refund info call to oms ").append(ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 					/* R2.3 REFUND INFO CALL TO OMS END */
@@ -1162,7 +1169,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 					}
 					catch (final Exception e)
 					{
-						callTrace.append("Exception occurred while  refund info call to oms " + ExceptionUtils.getStackTrace(e));
+						callTrace.append("Exception occurred while  refund info call to oms ").append(ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 					/* R2.3 REFUND INFO CALL TO OMS END */
@@ -1182,13 +1189,13 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
 								newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
 						LOG.debug("Create CRM Ticket for SDB Order Cancel Initiated ");
-						callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
+						callTrace.append(UNCOLLECTED_ORDER);
 						eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 					}
 					catch (final Exception e)
 					{
-						callTrace.append("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> "
-								+ ExceptionUtils.getStackTrace(e));
+						callTrace.append("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> ").append(
+								ExceptionUtils.getStackTrace(e));
 						isError = true;
 					}
 					isSDBCheck = Boolean.FALSE;
@@ -1209,13 +1216,13 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 							sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
 									newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE);
 							LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
-							callTrace.append("publishEvent::sendUnCollectedOrderToCRMEvent->");
+							callTrace.append(UNCOLLECTED_ORDER);
 							eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
 						}
 						catch (final Exception e)
 						{
-							callTrace.append("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> "
-									+ ExceptionUtils.getStackTrace(e));
+							callTrace.append("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> ").append(
+									ExceptionUtils.getStackTrace(e));
 							isError = true;
 						}
 						try
@@ -1226,8 +1233,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 						}
 						catch (final Exception e)
 						{
-							callTrace.append("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "
-									+ ExceptionUtils.getStackTrace(e));
+							callTrace.append("Exception during Refund Initiation  SSB Order Cancel Initiated  >> ").append(
+									ExceptionUtils.getStackTrace(e));
 							isError = true;
 						}
 					}
@@ -1292,7 +1299,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				}
 				catch (final Exception e)
 				{
-					callTrace.append("Exception occurred while checking return requests for order entry" + shipment.getShipmentId());
+					callTrace.append("Exception occurred while checking return requests for order entry").append(
+							shipment.getShipmentId());
 					isError = true;
 				}
 
@@ -1507,8 +1515,8 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception e)
 		{
-			callTrace.append("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #"
-					+ ExceptionUtils.getStackTrace(e));
+			callTrace.append("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #").append(
+					ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
 	}
@@ -1666,7 +1674,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final Exception exption)
 		{
-			callTrace.append("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS " + exption.getMessage());
+			callTrace.append("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS ").append(exption.getMessage());
 			isError = true;
 		}
 	}
@@ -1727,7 +1735,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 		}
 		catch (final NullPointerException nullPointer)
 		{
-			callTrace.append("CustomOmsShipmentSyncAdapte::::" + nullPointer.getMessage());
+			callTrace.append("CustomOmsShipmentSyncAdapte::::").append(nullPointer.getMessage());
 			isError = true;
 		}
 

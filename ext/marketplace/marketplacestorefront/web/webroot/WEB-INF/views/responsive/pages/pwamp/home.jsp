@@ -143,58 +143,36 @@
 		</p>
 	</header>
 
-	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" layout="nodisplay" side="left">
+	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" on="sidebarOpen:AMP.setState({showCloseBtn : true});sidebarClose:AMP.setState({showCloseBtn : false})" layout="nodisplay" side="left">
 	<amp-accordion class="sidebar-menu l1-accordian">
 	<section>
-		<h4 class="l1-options">
-			Department<i class="fa fa-angle-right"></i>
-		</h4>
+		<h4 class="l1-options">Department<i class="fa fa-angle-right"></i></h4>
 		<amp-accordion class="sidebar-menu l2-accordian">
-		<c:forEach items="${component.components}" var="component" varStatus="i">	
-		<section>
-			<h4 class="l2-options">
-				<%-- <a href="${component.link.url}"> --%>
-				${component.navigationNode.title}<!-- </a> -->
-				<i class="fa fa-angle-right"></i>
-			</h4>
-			<amp-accordion class="sidebar-menu l3-accordian">
-			<c:if test="${not empty component.navigationNode.children}">
-			
-			<c:forEach items="${component.navigationNode.children}" var="child1">
-				<%-- ${child1.children[2].title} --%>
-				<c:forEach items="${child1.children}" var="child">
-					<c:if test="${child.visible}">
-					
-					<%-- <c:forEach items="${child.children}" var="subchild">
-						${subchild.linkName}
-					</c:forEach> --%>
-					<section>
-						<h4 class="l3-options">
-							<%-- <a href="${child.links[0].url}"> --%>
-							${child.title}
-							<%-- ${child.children[0].linkName} --%>
-							<!-- </a> -->
-							<i class="fa fa-angle-right"></i>
-						</h4>
-						<ul>
-						<%-- <li>${child.links[0].linkName}</li> --%>
-						<c:forEach items="${child.links}" var="childlink" varStatus="i">
-							<c:if test="${not i.first}">
-								<li><a href="${childlink.url}">${childlink.linkName}</a></li>
-							</c:if>
-						</c:forEach>
-						</ul>
-					</section>
-				
-				
-				
-				</c:if>
-				</c:forEach>
+			<c:forEach items="${component.components}" var="component" varStatus="i">	
+				<section>
+					<h4 class="l2-options">${component.navigationNode.title}<i class="fa fa-angle-right"></i></h4>
+					<amp-accordion class="sidebar-menu l3-accordian">
+						<c:if test="${not empty component.navigationNode.children}">
+							<c:forEach items="${component.navigationNode.children}" var="child1">
+								<c:forEach items="${child1.children}" var="child">
+									<c:if test="${child.visible}">
+										<section>
+											<h4 class="l3-options">${child.title}<i class="fa fa-angle-right"></i></h4>
+											<ul>
+												<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
+													<c:forEach items="${child.links}" var="childlink" begin="${i.index+1}" end="${i.index + component.wrapAfter - 1}">
+														<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+													</c:forEach>
+												</c:forEach>
+											</ul>
+										</section>
+									</c:if>
+								</c:forEach>
+							</c:forEach>
+						</c:if>
+					</amp-accordion>
+				</section>
 			</c:forEach>
-			</c:if>
-			</amp-accordion>
-		</section>
-		</c:forEach>
 		</amp-accordion>
 	</section>
 	<section>
@@ -329,51 +307,54 @@
 			</c:if>
 
 			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-				<%-- <c:set var="maxNumberChars" value="25" />
-				<c:if test="${fn:length(user.firstName) gt maxNumberChars}">
-					<c:set target="${user}" property="firstName"
-						value="${fn:substring(user.firstName, 0, maxNumberChars)}..." />
-				</c:if> --%>
-
-				<li class="logged_in dropdown ajaxloginhi" >
-				<span class="material-icons"></span>
-				<ycommerce:testId code="header_LoggedUser">
-					<c:set var="userName" value="${user.firstName}"/>
-							<a href="<c:url value="/my-account"/>"
-								class="headeruserdetails account-userTitle account-userTitle-custom"><spring:theme
-									code="header.hi.blank" arguments="${userName}" htmlEscape="true" />!</a>
-						<%-- </c:if> --%>
-						<span id="mobile-menu-toggle"></span>
-					</ycommerce:testId>
-						<ul class="dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout" role="menu">
-						</ul>
-				</li>
+			
+				<amp-accordion class="sidebar-menu l1-accordian user-information">
+					<section>
+						<h4 class="l1-options">
+							<c:set var="userName" value="${fname}"/>
+							<a href="<c:url value="/my-account"/>" class="fa fa-user l1-my-account"> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
+						<i class="fa fa-angle-right"></i></h4>
+						<div>
+							<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
+		        				<ul>
+			        				<li class="header-myAccount"></li>
+									<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+												code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
+									<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
+												code="header.flyout.Personal" /></a></li>
+									<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
+												code="header.flyout.orders" /></a></li>
+									<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
+												code="header.flyout.cards" /></a></li>
+									<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
+												code="header.flyout.address" /></a></li>
+	                       <c:if test="${isVoucherToBeDisplayed eq true }">
+							    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+										code="header.flyout.coupons" /></a></li>
+							</c:if>
+								<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
+											code="header.flyout.invite" /></a></li>
+											
+								<li><ycommerce:testId code="header_signOut">
+										<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
+												code="header.link.logout" />
+										</a></u>
+									</ycommerce:testId>
+								</li>
+								</ul>
+						</c:if>
+						</div>
+					</section>
+				</amp-accordion>
 			</sec:authorize>
 
 			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-				<div class="content">
-				<div class="right">
-					<ul>
-						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi">
-						<span class="material-icons"></span>
-						<ycommerce:testId
-						code="header_Login_link">
-						<a id="socialLogin" class="headeruserdetails" href="<c:url value="/login"/>" role="button"
-							aria-expanded="false"><%-- <spring:theme
-								code="header.link.flylogin" /> --%></a>
-						<span id="mobile-menu-toggle"></span>	<!-- add for PRDI-409 & PRDI-438 -->
-					</ycommerce:testId>
-
-							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">
-							</ul>
-						</li>
-					</ul>
-				</div></div>
+					<p class="sidebar-divider-item">
+					<a href="<c:url value="/login"/>"><i class="fa fa-user"></i>Sign In/Sign Up</a>
+					</p>
 			</sec:authorize>
 		</c:if>
-	<p class="sidebar-divider-item">
-		<a href="/login"><i class="fa fa-user"></i>Sign In/Sign Up</a>
-	</p>
+	
 	<p class="sidebar-divider-item">
 		<a href="/my-account/wishList"><i class="fa fa-heart"></i>My Wishlists</a>
 	</p>
@@ -386,6 +367,7 @@
 	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
 	</amp-sidebar>
 
+	<button on="tap:sidebar.close" class="close-menubar hidden" [class]="showCloseBtn ? 'close-menubar display-visible' : 'close-menubar hidden'">&times;</button>
 	<section class="pincode-check hidden" [class]="pinCodeVisible ? 'pincode-check display-visible' : 'pincode-check hidden'">
     <section>
       <!--<form method="GET" action-xhr="/homePincode" target="_top">
@@ -432,7 +414,7 @@
 	</ul> -->
 	
 	<!-- Top Deals -->
-	<amp-list src="/pwamp/getBestPicks?version=Online" height="360" layout="fixed-height"> 
+	<amp-list src="/pwamp/getBestPicks?version=Online" height="340" layout="fixed-height"> 
 	<template type="amp-mustache">
 	<div id="topDealsComp">
 		<div class="topDealsTopSection">
@@ -445,7 +427,7 @@
 			<div id="topDealsCompCarousel">
 				
 				
-				<amp-carousel height="360" layout="fixed-height" type="carousel">
+				<amp-carousel height="340" layout="fixed-height" type="carousel">
 				{{#subItems}}
 				<div class="topDealsItem">
 					<div class="topDealsItemImg">
@@ -503,7 +485,7 @@
 	</div>
 
 	<!-- What To Buy Now -->
-	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="400" layout="fixed-height"> 
+	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="340" layout="fixed-height"> 
 	<template type="amp-mustache"> 
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
@@ -511,7 +493,7 @@
 		</div>
 		<div>
 			<div id="whatToBuyCompCarousel">
-				<amp-carousel height="400" layout="fixed-height" type="carousel">
+				<amp-carousel height="340" layout="fixed-height" type="carousel">
 				{{#categories}}
 				<div class="whatToBuyItem">
 					<div class="whatToBuyItemImg">
@@ -623,8 +605,6 @@
 				<div>
 					<p class="h2 stayQuedHeading">{{headerText}}</p>
 					<p>{{text}}</p>
-					<p>These accessories simply add just the right amount of style
-						to any outfit.</p>
 					<div class="stayQuedBottom">
 						<a href="{{details.bannerUrl}}"><button
 								class="stayQuedViewAllBtn">Read The Story</button></a>

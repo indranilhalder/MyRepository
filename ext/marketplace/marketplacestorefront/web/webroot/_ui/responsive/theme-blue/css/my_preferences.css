@@ -144,7 +144,7 @@ body .account.preferences .right-account div.email-pref form fieldset.feedback l
     opacity: 1;
 }
 .button-set {
-    margin-top: 82px;
+    margin-top: 55px;	/* modified for TISCSS-186 */
 }
 body .account.preferences .right-account div.email-pref form::after {
     clear: both;

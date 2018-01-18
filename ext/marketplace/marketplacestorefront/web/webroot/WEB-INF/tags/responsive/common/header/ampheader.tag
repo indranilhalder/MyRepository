@@ -248,7 +248,7 @@ header{
 }
 
 #sidebar{
-	width:300px;
+	width:100%;
 	background-color:#FFFFFF;
 }
 
@@ -294,6 +294,20 @@ header{
 .sidebar-menu section[expanded] .fa-angle-down{
 	transform:rotate(180deg);
 }
+
+.sidebar-menu section[expanded] .l1-my-account {color: #fff;}
+
+.user-information > section > div > ul {margin: 0;}
+
+.user-information > section > div > ul > li {
+    padding-left: 20px;
+    line-height: 40px;
+    background-color: #d6d6d6;
+    border-bottom: 1px solid #e6e6e6;
+    list-style-type: none;
+}
+
+.user-information > section > div > ul > li a {line-height: 40px;}
 
 .sidebar-menu h4{
 	background:none;
@@ -599,6 +613,8 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 
 .sidebar-zindex {z-index: 1000;}
 
+.close-menubar {left: 80vw; position: fixed; top: 0; padding: 0px 10px; z-index: 2147483647; font-size: 34px; background-color: #fff; border: 1px solid #ccc;}
+
 .search-submit {
   margin: 10px 0;
   padding: .5em 1em;
@@ -747,7 +763,7 @@ p {margin: 0;}
 	.brandStudioImg {height: 180px;}
 	.brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 	.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left;}
-	.brandStudioDescHeading {font-size: 13px;}
+	.brandStudioDescHeading {font-size: 13px; min-height: 15px;}
 	.brandStudioDescInfo {font-size: 12px; color: #666666;white-space: pre-line; max-height: 60px; overflow-y: hidden;}
 	.brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
@@ -802,9 +818,9 @@ p {margin: 0;}
 #stayQuedComp, #inspireMeMobileComp {display: block; padding: 10px 20px 10px 0; width: 45%; float: left;}
 .stayQuedCenter {background-color: #f2f2f2; padding: 0 0 0 10px;}
 
-.stayQuedBottom {display: block; text-align: center; padding: 10px;}
+.stayQuedBottom {display: block; padding: 10px; padding-left: 0;}
 .stayQuedBottom a {display: -webkit-inline-box;}
-.stayQuedViewAllBtn {background-color: grey; padding: 10px 30px; border: none; color: white; cursor: pointer;}
+.stayQuedViewAllBtn {background-color: #444; padding: 10px 30px; border: none; color: white; cursor: pointer;}
 
 @media(max-width: 480px) {
 	#stayQuedComp, #inspireMeMobileComp {background-color: #f2f2f2; padding: 5px 0px 15px; width: 100%;}
