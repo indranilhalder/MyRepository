@@ -5,7 +5,7 @@ import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 
 export default class SingleSelect extends React.Component {
-  SingleSelect() {
+  handleClick() {
     if (this.props.onClick) {
       this.props.onClick(this.props.text);
     }
@@ -15,7 +15,7 @@ export default class SingleSelect extends React.Component {
       <div>
         <div
           className={styles.singleSelectBase}
-          onClick={() => this.SingleSelect()}
+          onClick={() => this.handleClick()}
         >
           <div className={styles.SelectIcon}>
             <Image image={this.props.image} color="transparent" />
@@ -28,5 +28,6 @@ export default class SingleSelect extends React.Component {
 }
 SingleSelect.propTypes = {
   text: PropTypes.string,
+  image: PropTypes.string,
   onClick: PropTypes.func
 };
