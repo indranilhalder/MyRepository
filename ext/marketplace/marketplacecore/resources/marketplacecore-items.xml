@@ -3861,6 +3861,24 @@
 					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in 
 						login page -->
 					<!-- Push notification save device key web service ends -->
+					<attribute qualifier="qcVerifyFirstName" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="qcVerifyLastName" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="qcVerifyMobileNo" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 				<indexes>
 					<index name="ORIGINALUID_IDX" unique="true">
