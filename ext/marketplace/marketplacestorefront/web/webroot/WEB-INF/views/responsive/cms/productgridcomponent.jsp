@@ -62,15 +62,15 @@
 </div>
 
 <div class="bottom-pagination pagination-search">
-<div class="">
+
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
-<span class="">
+
 <span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
-</span>
+
 </c:if>
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
-    <ul class="pagination-block">
+    <ul class="pagination-blocks pagination">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
     		<c:choose>
     			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
@@ -85,7 +85,7 @@
     </ul>
 </c:when>
 </c:choose>
-</div>
+
 </div>
 
 <%-- <div class="bottom-pagination pagination-search">
