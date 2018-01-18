@@ -1,0 +1,25 @@
+.singleSelectBase {
+  width: 100%;
+  height: auto;
+  padding-bottom: 100%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+  background: #f6f6f6;
+}
+.SelectIcon {
+  width: 40%;
+  height: 40%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background: transparent;
+}
+.Gym {
+  text-align: center;
+  margin: 10px;
+  color: #212121;
+}
