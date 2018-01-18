@@ -1,5 +1,6 @@
 import React from "react";
 import Carousel from "./Carousel";
+import styles from "./MultiSelectCarousel.css";
 export default class MuliSelectCarousel extends React.Component {
   constructor(props) {
     super(props);
@@ -8,9 +9,25 @@ export default class MuliSelectCarousel extends React.Component {
     };
   }
   selectItem(val) {
-    let selected = [];
-    selected.push(val);
-    this.setState({ selected });
+    let selected = this.state.selected;
+    if (selected.includes(val)) {
+      selected = selected.filter(label => val !== label);
+    } else {
+      if (this.props.limit && this.props.limit <= selected.length) {
+        selected.shift();
+      }
+      selected.push(val);
+    }
+    this.setState({ selected }, () => {
+      if (this.props.onSelect) {
+        this.props.onSelect(this.state.selected);
+      }
+    });
+  }
+  handleApply() {
+    if (this.props.onApply) {
+      this.props.onApply(this.state.selected);
+    }
   }
   render() {
     const children = this.props.children;
@@ -23,6 +40,24 @@ export default class MuliSelectCarousel extends React.Component {
         }
       });
     });
-    return <Carousel>{childrenWithProps}</Carousel>;
+    return (
+      <div className={styles.base}>
+        <div className={styles.header}>
+          <div className={styles.headerText}>{this.props.header}</div>
+          <div className={styles.subheader}>{this.props.subheader}</div>
+          {this.state.selected.length > 0 && (
+            <div
+              className={styles.button}
+              onClick={() => {
+                this.handleApply();
+              }}
+            >
+              Apply
+            </div>
+          )}
+        </div>
+        <Carousel>{childrenWithProps}</Carousel>
+      </div>
+    );
   }
 }
