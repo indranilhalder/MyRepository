@@ -1,5 +1,5 @@
 .base {
-  width:100%;
+  width: 100%;
   height: auto;
   padding-bottom: 56.25%;
   position: relative;
@@ -15,11 +15,13 @@
   left: 0;
   top: 0;
 }
-.imageOverlay{position:absolute;
-width:100%;
-height:100%;
-top:0;left:0;
-background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
+.imageOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
 }
 .name {
   width: 100%;
@@ -48,7 +50,7 @@ background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
   transform: translateY(8px);
 }
 .description {
-  width:100%;
+  width: 100%;
   height: auto;
   color: #fff;
   font-family: regular;
@@ -59,7 +61,7 @@ background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
   line-height: 20px;
   bottom: 40px;
   margin: auto;
-  padding:0px 100px 0 40px;
+  padding: 0px 100px 0 40px;
 }
 .logo {
   width: auto;
@@ -70,8 +72,22 @@ background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
   top: -50px;
 }
 @media only screen and (max-width: 1024px) {
-  .imageOverlay{background:transparent;}
-  .base{width:100%;}
-  .description{bottom:-20px;width: calc(100% - 30px); padding: 15px 30px;  border-radius: 5px;  background: #212121;}
-  .logo{height:25px;  top: 15px; left: 15px;}
+  .imageOverlay {
+    background: transparent;
   }
+  .base {
+    width: 100%;
+  }
+  .description {
+    bottom: -20px;
+    width: calc(100% - 30px);
+    padding: 15px 30px;
+    border-radius: 5px;
+    background: #212121;
+  }
+  .logo {
+    height: 25px;
+    top: 15px;
+    left: 15px;
+  }
+}
