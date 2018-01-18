@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.bin.service;
 
+import de.hybris.platform.core.model.user.CustomerModel;
+
 import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
@@ -29,4 +31,10 @@ public interface BinService
 	 *
 	 */
 	public void generateFileData();
+
+	//TPR-7486
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel Customer);
+
+	//TPR-7486
+	public String fetchBanknameFromBin(final String bin) throws EtailNonBusinessExceptions;
 }

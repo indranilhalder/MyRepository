@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.servicelayer.search.SearchResult;
 
 import java.util.Date;
 import java.util.List;
@@ -49,4 +50,20 @@ public interface FetchSalesOrderService
 	public Map<String, String> fetchOrderIdsToday();
 
 	public CronJobModel getCronDetailsCode(String code);
+
+	/**
+	 * TPR-7415
+	 *
+	 * @param mplConfigDate
+	 * @param startTime
+	 * @return List<OrderModel>
+	 */
+	public SearchResult<List<Object>> fetchSpecifiedDataForPymntScss(Date mplConfigDate, Date startTime);
+
+	/**
+	 * TPR-7415
+	 *
+	 * @return List<OrderModel>
+	 */
+	public SearchResult<List<Object>> fetchSpecifiedDataForPymntScss();
 }

@@ -17,6 +17,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,24 +50,24 @@ public class ReturnInitiationController extends BaseController
 {
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
-	
+
 	@Resource(name = "returnRTSValidator")
 	private Validator returnRTSValidator;
-	
+
 	private static final String APPLICATION_TYPE = "application/xml";
 	private static final Logger LOG = Logger.getLogger(ReturnInitiationController.class);
-	
+
 	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ReturnInitiateResponse initiationRequest(@RequestBody final ReturnInitiateRequestDTO returnRequest) 
-				throws WebserviceValidationException
+	public ReturnInitiateResponse initiationRequest(@RequestBody final ReturnInitiateRequestDTO returnRequest)
+			throws WebserviceValidationException
 	{
 		Marshaller marshaller = null;
 		final StringWriter stringWriter = new StringWriter();
-   	final List<OrderLineData> listdata = new ArrayList<OrderLineData>();
-   	final ReturnInitiateResponse responseDTO = new ReturnInitiateResponse();
-	
-   	final Errors errors = new BeanPropertyBindingResult(returnRequest, "returnRequest");
+		final List<OrderLineData> listdata = new ArrayList<OrderLineData>();
+		final ReturnInitiateResponse responseDTO = new ReturnInitiateResponse();
+
+		final Errors errors = new BeanPropertyBindingResult(returnRequest, "returnRequest");
 		returnRTSValidator.validate(returnRequest, errors);
 		if (errors.hasErrors())
 		{
@@ -84,6 +85,16 @@ public class ReturnInitiationController extends BaseController
 				lineData.setRefundMode(data.getRefundMode());
 				lineData.setReturnStoreId(data.getReturnStoreId());
 				lineData.setStoreCreditNo(data.getStoreCreditNo());
+				//TPR-5954 || Start
+				if (StringUtils.isBlank(data.getSubReasonCode()))
+				{
+					lineData.setSubReasonCode(data.getSubReasonCode());
+				}
+				if (StringUtils.isBlank(data.getComments()))
+				{
+					lineData.setComments(data.getComments());
+				}
+				//TPR-5954 || Start
 				listdata.add(lineData);
 			}
 			if (CollectionUtils.isNotEmpty(listdata))
@@ -101,7 +112,7 @@ public class ReturnInitiationController extends BaseController
 						dto.setIsReturnEligible(response.getIsReturnEligible());
 						dto.setIsReturnInitiated(response.getIsReturnInitiated());
 						orderLines.add(dto);
-					}	
+					}
 					responseDTO.setOrderLines(orderLines);
 				}
 				try
@@ -121,7 +132,7 @@ public class ReturnInitiationController extends BaseController
 					}
 					LOG.info(" Return initiation From SP Response " + stringWriter.toString());
 				}
-				catch (JAXBException e)
+				catch (final JAXBException e)
 				{
 					LOG.error("Error in order Cancellation from SP Response");
 					e.printStackTrace();
@@ -141,7 +152,8 @@ public class ReturnInitiationController extends BaseController
 				responseDTO.setErrorCode(e.getErrorCode());
 			}
 		}
-		catch (final EtailBusinessExceptions e) {
+		catch (final EtailBusinessExceptions e)
+		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
@@ -152,11 +164,11 @@ public class ReturnInitiationController extends BaseController
 				responseDTO.setErrorCode(e.getErrorCode());
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			responseDTO.setErrorCode(e.getMessage());
-			LOG.error("ReturnInitiationController Error getting"+e.getMessage());
+			LOG.error("ReturnInitiationController Error getting" + e.getMessage());
 		}
-		return responseDTO;	
+		return responseDTO;
 	}
 }

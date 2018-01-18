@@ -199,7 +199,8 @@ public class NotificationServiceImpl implements NotificationService
 			}
 
 			//For voucher notification
-			final UserModel user = extendedUserService.getUserForUid(emailId);
+			//final UserModel user = extendedUserService.getUserForUid(emailId);
+			final UserModel user = extendedUserService.getUserForUid(customerId);//TISUAT-6231
 
 			final List<VoucherStatusNotificationModel> voucherNotificationList = user.getVoucher();
 
@@ -433,7 +434,7 @@ public class NotificationServiceImpl implements NotificationService
 			}
 			catch (final Exception e1)
 			{ // YTODO
-				  // Auto-generated catch block
+			  // Auto-generated catch block
 				LOG.error("Exception during sending mail or SMS 3 >> " + e1.getMessage());
 			}
 
@@ -492,7 +493,7 @@ public class NotificationServiceImpl implements NotificationService
 			}
 			catch (final Exception e1)
 			{ // YTODO
-				  // Auto-generated catch block
+			  // Auto-generated catch block
 				LOG.error("Exception during sending mail or SMS 4>> " + e1.getMessage());
 			}
 
@@ -537,8 +538,8 @@ public class NotificationServiceImpl implements NotificationService
 					pushData = new PushNotificationData();
 					if (null != orderReferenceNumber)
 					{
-						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
+						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED.replace(
+								MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
 						pushData.setOrderId(orderReferenceNumber);
 					}
 					if (null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
@@ -745,8 +746,8 @@ public class NotificationServiceImpl implements NotificationService
 		{
 			final Boolean isRead = Boolean.FALSE;
 			VoucherStatusNotificationModel voucherStatus = null;
-			final String customerStatus = getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
+			final String customerStatus = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
 			if (voucher instanceof PromotionVoucherModel)
 			{
@@ -761,8 +762,8 @@ public class NotificationServiceImpl implements NotificationService
 				}
 				final DateRestrictionModel dateRestrObj = getCouponRestrictionService().getDateRestriction(voucher);
 				final UserRestrictionModel userRestrObj = getCouponRestrictionService().getUserRestriction(voucher);
-				final List<PrincipalModel> userList = userRestrObj != null
-						? getCouponRestrictionService().getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
+				final List<PrincipalModel> userList = userRestrObj != null ? getCouponRestrictionService()
+						.getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
 				//final List<String> restrUserUidList = new ArrayList<String>();
 
 				if (dateRestrObj != null && userRestrObj != null && userRestrObj.getPositive().booleanValue()
@@ -864,8 +865,8 @@ public class NotificationServiceImpl implements NotificationService
 
 		try
 		{
-			final NpsEmailProcessModel npsEmailProcessModel = (NpsEmailProcessModel) getBusinessProcessService()
-					.createProcess("npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
+			final NpsEmailProcessModel npsEmailProcessModel = (NpsEmailProcessModel) getBusinessProcessService().createProcess(
+					"npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
 
 			LOG.info("Starting Nps Feedback Mail in try block");
 			npsEmailProcessModel.setOrder(orderModel);

@@ -42,6 +42,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -500,7 +501,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -616,9 +617,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param sellerArticleSKUID
 	 */
 	@Override
@@ -832,7 +833,19 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	{
 		ServicesUtil.validateParameterNotNull(deliveryCode, "deliveryCode cannot be null");
 		ServicesUtil.validateParameterNotNull(sellerArticleSKU, "sellerArticleSKU cannot be null");
-
+		String deliveryCodeType = "";
+		if (deliveryCode.equalsIgnoreCase("home-delivery"))
+		{
+			deliveryCodeType = "HD";
+		}
+		else if (deliveryCode.equalsIgnoreCase("express-delivery"))
+		{
+			deliveryCodeType = "ED";
+		}
+		else if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+		{
+			deliveryCodeType = "CNC";
+		}
 		Double deliveryCost = Double.valueOf(0.0);
 		String fulfillmentType = "";
 		String tshipThresholdValue = configurationService.getConfiguration().getString(
@@ -852,8 +865,34 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 			{
 				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
 				{
+					LOG.debug("ENTRY LEVEL FULFILMENT TYPE" + entry.getFulfillmentType());
+
 					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
 					MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = null;
+					if (null != pincoderesponseDataList && pincoderesponseDataList.size() > 0)
+					{
+						for (final PinCodeResponseData responseData : pincoderesponseDataList)
+						{
+							if (entry.getSelectedUSSID().equals(responseData.getUssid()))
+							{
+								for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
+								{
+									if (StringUtils.isNotEmpty(detailsData.getFulfilmentType())
+											&& (detailsData.getType().equalsIgnoreCase(deliveryCodeType)))
+
+
+									{
+										fulfillmentType = detailsData.getFulfilmentType();
+										//mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // If entry price greater than threshold no charge must be taken
+									}
+								}
+							}
+						}
+					}
+					if (fulfillmentType.equalsIgnoreCase(""))
+					{
+						fulfillmentType = entry.getFulfillmentType();
+					}
 
 					//TISEE-289
 					//for fine jewellery
@@ -866,7 +905,12 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						{
 							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
 							mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
-									MarketplacecommerceservicesConstants.INR, jewelleryInfo.get(0).getPCMUSSID());
+									MarketplacecommerceservicesConstants.INR, jewelleryInfo.get(0).getPCMUSSID(), fulfillmentType);
+							if (null == mplZoneDeliveryModeValueModel)
+							{
+								mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+										MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+							}
 						}
 						else
 						{
@@ -878,7 +922,15 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					{
 						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
 						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
-								MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+								MarketplacecommerceservicesConstants.INR, sellerArticleSKU, fulfillmentType);
+
+
+						if (null == mplZoneDeliveryModeValueModel)
+						{
+							mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+									MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+						}
+
 					}
 					Collection<RichAttributeModel> richAttributeModelList = null;
 					if (null != sellerInfoModel)
@@ -898,37 +950,19 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						//Blocked for TPR-579
 
 						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
-						if (null != pincoderesponseDataList && pincoderesponseDataList.size() > 0)
-						{
-							for (final PinCodeResponseData responseData : pincoderesponseDataList)
-							{
-								if (entry.getSelectedUSSID().equals(responseData.getUssid()))
-								{
-									for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
-									{
-										if (null != detailsData.getFulfilmentType()
-												&& detailsData.getFulfilmentType().equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-												&& entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
 
-										{
-											mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // If entry price greater than threshold no charge must be taken
-										}
-									}
-								}
-							}
-						}
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 *
-						 *
-						 *
+						 * 
+						 * 
+						 * 
 						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
 						 * which check configuration from HAC // if
 						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
 						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
-						 *
+						 * 
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
 					}
@@ -939,8 +973,214 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					{
 						deliveryFulfillModesEnum = mplZoneDeliveryModeValueModel.getDeliveryFulfillModes();
 					}
-					if (null != deliveryFulfillModesEnum && mplZoneDeliveryModeValueModel.getValue() != null
-							&& fulfillmentType.equalsIgnoreCase(deliveryFulfillModesEnum.getCode()))
+					if (null != deliveryFulfillModesEnum && mplZoneDeliveryModeValueModel.getValue() != null)
+					{
+						if (entry.getIsBOGOapplied().booleanValue())
+						{
+							// PRDI-378 starts here
+							/*
+							 * deliveryCost = Double.valueOf(entry.getQualifyingCount().doubleValue()
+							 * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							 */
+
+							deliveryCost = Double.valueOf((entry.getQuantity().doubleValue() - entry.getFreeCount().doubleValue())
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							// PRDI-378 ends here
+						}
+						else
+						{
+							deliveryCost = Double.valueOf(entry.getQuantity().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
+						}
+
+					}
+
+					entry.setCurrDelCharge(deliveryCost);
+					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
+							+ deliveryCost);
+
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModelEntry = entry.getMplDeliveryMode();
+					DeliveryModeModel deliveryModeModel = null;
+					if (null != mplZoneDeliveryModeValueModelEntry)
+					{
+						deliveryModeModel = mplZoneDeliveryModeValueModelEntry.getDeliveryMode();
+					}
+					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry
+					if (null != deliveryModeModel && !deliveryModeModel.getCode().equals(MarketplaceFacadesConstants.C_C)
+							&& null != entry.getDeliveryPointOfService())
+					{
+						entry.setDeliveryPointOfService(null);
+					}
+
+					getModelService().save(entry);
+					break;
+				}
+			}
+		}
+		return deliveryCost;
+	}
+
+	@Override
+	public Double populateDeliveryMethodDataMobile(final String deliveryCode, final String sellerArticleSKU,
+			final CartModel cartModel)
+	{
+		ServicesUtil.validateParameterNotNull(deliveryCode, "deliveryCode cannot be null");
+		ServicesUtil.validateParameterNotNull(sellerArticleSKU, "sellerArticleSKU cannot be null");
+		String deliveryCodeType = "";
+		if (deliveryCode.equalsIgnoreCase("home-delivery"))
+		{
+			deliveryCodeType = "HD";
+		}
+		else if (deliveryCode.equalsIgnoreCase("express-delivery"))
+		{
+			deliveryCodeType = "ED";
+		}
+		else if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+		{
+			deliveryCodeType = "CNC";
+		}
+		Double deliveryCost = Double.valueOf(0.0);
+		String fulfillmentType = "";
+		String tshipThresholdValue = configurationService.getConfiguration().getString(
+				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+				.toString(0);
+
+		List<PinCodeResponseData> pincoderesponseDataList = null;
+		pincoderesponseDataList = sessionService
+				.getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+
+		LOG.debug("******responceData******** " + pincoderesponseDataList);
+
+		if (cartModel != null)
+		{
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
+				{
+					LOG.debug("ENTRY LEVEL FULFILMENT TYPE" + entry.getFulfillmentType());
+
+					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
+					MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = null;
+					if (null != pincoderesponseDataList && pincoderesponseDataList.size() > 0)
+					{
+						for (final PinCodeResponseData responseData : pincoderesponseDataList)
+						{
+							if (entry.getSelectedUSSID().equals(responseData.getUssid()))
+							{
+								for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
+								{
+									if (StringUtils.isNotEmpty(detailsData.getFulfilmentType())
+											&& (detailsData.getType().equalsIgnoreCase(deliveryCodeType)))
+
+
+									{
+										fulfillmentType = detailsData.getFulfilmentType();
+										//mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // If entry price greater than threshold no charge must be taken
+									}
+								}
+							}
+						}
+					}
+					//TISEE-289
+					//for fine jewellery
+					SellerInformationModel sellerInfoModel = null;
+					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(sellerArticleSKU);
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+							//							mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
+							//									MarketplacecommerceservicesConstants.INR, jewelleryInfo.get(0).getPCMUSSID(), fulfillmentType);
+							//							if (null == mplZoneDeliveryModeValueModel)
+							//							{
+							//								mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+							//										MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+							//							}
+						}
+						else
+						{
+							LOG.error("No entry for JewelleryInformationModel for " + sellerArticleSKU);
+						}
+
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+						//						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
+						//								MarketplacecommerceservicesConstants.INR, sellerArticleSKU, fulfillmentType);
+						//
+						//
+						//						if (null == mplZoneDeliveryModeValueModel)
+						//						{
+						//							mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+						//									MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+						//						}
+
+					}
+					Collection<RichAttributeModel> richAttributeModelList = null;
+					if (null != sellerInfoModel)
+					{
+						richAttributeModelList = sellerInfoModel.getRichAttribute();
+					}
+					DeliveryFulfillModesEnum deliveryFulfillModes = null;
+					if (null != sellerInfoModel)
+					{
+						deliveryFulfillModes = ((List<RichAttributeModel>) richAttributeModelList).get(0).getDeliveryFulfillModes();
+					}
+					if (deliveryFulfillModes != null)
+					{
+
+						//BUG-ID TISRLEE-1561 03-01-2017
+						if (fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH))
+						{
+							fulfillmentType = ((List<RichAttributeModel>) richAttributeModelList).get(0).getDeliveryFulfillModeByP1()
+									.getCode();
+						}
+						else
+						{
+							fulfillmentType = deliveryFulfillModes.getCode();
+						}
+						LOG.debug("fulfillmentType mobile" + fulfillmentType);
+						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
+								MarketplacecommerceservicesConstants.INR, sellerArticleSKU, fulfillmentType);
+
+
+						if (null == mplZoneDeliveryModeValueModel)
+						{
+							mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(deliveryCode,
+									MarketplacecommerceservicesConstants.INR, "DUMMYTSHIP", "TSHIP");
+						}
+
+						//Blocked for TPR-579
+
+						// For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code which check configuration from HAC
+
+						/*
+						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
+						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
+						 * 
+						 * 
+						 * 
+						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
+						 * which check configuration from HAC // if
+						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
+						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
+						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
+						 * 
+						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
+						 */
+					}
+
+					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
+					DeliveryFulfillModesEnum deliveryFulfillModesEnum = null;
+					if (null != mplZoneDeliveryModeValueModel)
+					{
+						deliveryFulfillModesEnum = mplZoneDeliveryModeValueModel.getDeliveryFulfillModes();
+					}
+					if (null != deliveryFulfillModesEnum && mplZoneDeliveryModeValueModel.getValue() != null)
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{
@@ -1125,7 +1365,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
 	 * .data.AddressData)

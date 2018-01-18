@@ -282,19 +282,19 @@ tr.d0 td {
 				<c:forEach var="channel"
 							items="${product.potentialPromotions[0].channels}">
 				<c:if test="${channel eq 'Web'||channel eq ''||channel==null}">	
-			<div class="pdp-promo-title pdp-title">
+			<%-- <div class="pdp-promo-title pdp-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-				<!-- <a class="details">View more</a> --> <!-- commented for TPR-589  -->
-			</div>
+				<!-- <a class="details">View more</a> --> <!-- commented for TPR-589  --> <!-- commented for CAR-327  -->
+			</div> --%>
 			</c:if> <!-- end if check for channel web -->
 			</c:forEach>
 			</c:when>
 			
 			<c:otherwise>
-			<div class="pdp-promo-title pdp-title">
+			<%-- <div class="pdp-promo-title pdp-title">
 				<b>OFFER:</b> ${product.potentialPromotions[0].title}
-			<!-- 	<a class="details">View more</a> --><!-- commented for TPR-589  -->
-			</div>
+			<!-- 	<a class="details">View more</a> --><!-- commented for TPR-589  --> <!-- commented for CAR-327  -->
+			</div> --%>
 			</c:otherwise>
 			</c:choose>			
 			</c:if>
@@ -709,6 +709,8 @@ tr.d0 td {
 </div>
 
 <div id="stw_widget_hf" class="lazy-reached-stw"></div>
+<div id="msd_widget_hf" class="lazy-reached-stw"></div>
+
 
 <div class="add-to-wishlist-container">
 <form>

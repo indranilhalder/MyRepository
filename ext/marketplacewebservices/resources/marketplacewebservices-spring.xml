@@ -440,4 +440,49 @@
         <property name="userService" ref="userService"/>
     </bean>
  
+ 
+ <bean id="mplOrderSyncUtility"
+			class="com.tisl.mpl.ordersync.impl.OrderSyncUtilityImpl">	
+			<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategyNew" />
+			<property name="modelService" ref="modelService" />
+			<property name="timeService" ref="timeService" />
+			<property name="orderStatusMapping" ref="orderStatusMapping" />
+			<property name="pointOfServiceService" ref="pointOfServiceService"/>
+			<property name="customerNameStrategy" ref="customerNameStrategy" />
+			<property name="commonI18NService" ref="commonI18NService" />
+			<property name="consignmentStatusMapping" ref="consignmentStatusMapping" />
+			<property name="warehouseService" ref="warehouseService" />
+			<property name="consignmentProcessNotifier" ref="consignmentProcessNotifier" />
+			<property name="configurationService" ref="configurationService"></property>
+			</bean>
+			
+			
+			<alias name="defaultMplConsignmentStatusMappingStrategy" alias="consignmentStatusMappingStrategyNew" />
+	<bean id="defaultMplConsignmentStatusMappingStrategy"
+		class="com.tisl.mpl.integration.oms.mapping.MplConsignmentStatusMappingStrategy">
+		<property name="consignmentStatusMapping" ref="consignmentStatusMapping" />
+        <property name="pickupOverrideStatusMapping" ref="pickupOverrideConsignmentStatusMapping" />
+	</bean>
+	
+	
+		<bean id="sendNotificationEventListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+
+	<!--R2.3 Secondary Status Listener -->
+	<bean id="sendNotificationSecondaryStatusListener"
+		class="com.tisl.mpl.ordersync.event.SendNotificationSecondaryStatusListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+				
 </beans>
+
+
+

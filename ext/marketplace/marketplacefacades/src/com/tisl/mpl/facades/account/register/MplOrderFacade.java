@@ -31,6 +31,15 @@ public interface MplOrderFacade
 {
 	List<ReturnReasonData> getReturnReasonForOrderItem();
 
+	//TPR-5954
+	public List<ReturnReasonData> getCatSpecificRetReason(final String L2CatName) throws Exception;
+
+	//TPR-5954
+	public List<ReturnReasonData> getSubReasonCode(final String parentReturnReasonCode) throws Exception;
+
+	//TPR-5954
+	public String fetchReasonDesc(final String reasonCode) throws Exception;
+
 	/**
 	 * Returns the order history of the current user for given statuses.
 	 *
@@ -72,11 +81,11 @@ public interface MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	Map<String, Map<String, String>> fetchOrderSerialNoDetails(final List<OrderModel> orderModelList)
@@ -84,22 +93,22 @@ public interface MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	Map<String, Boolean> fetchOrderInvoiceDetails(final List<OrderModel> orderModelList) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, OrderData subOrder) throws EtailNonBusinessExceptions;

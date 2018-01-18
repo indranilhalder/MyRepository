@@ -39,7 +39,8 @@
    </title>
 	<%-- Meta Content --%>
 	<meta name="apple-itunes-app" content="app-id=1101619385">
-<meta name="google-play-app" content="app-id=com.tul.tatacliq">
+	<meta name="google-play-app" content="app-id=com.tul.tatacliq">
+	
 
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
@@ -83,7 +84,8 @@
 	<!-- PRDI-422 ends-->
 	
 	
-	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
+	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU"/>
+	 
 	
 	
 	<c:set var="host" value="${header.host}"/>
@@ -294,6 +296,7 @@
 		
 		
 		<meta property="fb:app_id" content="484004418446735"/>
+		<meta property="og:site_name" content="Tata CLiQ" />
 
 		
 		<meta property="al:ios:app_store_id" content="1101619385" />
@@ -305,8 +308,6 @@
 		<meta property="al:android:url" content="${canonical}" />
 		<meta property="al:android:app_name" content="Tata Cliq" />
 		
-		
-	
 	<%-- Favourite Icon --%>
 	<%-- <spring:theme code="img.favIcon" text="/" var="favIconPath"/> --%>
     <%-- <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" /> --%>
@@ -456,7 +457,8 @@
  					&& $("#pageType").val() != "productsearch" 
  					&& $("input[name=productGrid]").length == 0
  					&& $("input[name=apparelCategoryLandingPage]").length == 0
-					&& $("input[name=BrandLayoutPage]").length == 0){
+					&& $("input[name=BrandLayoutPage]").length == 0
+					&& $("#pageType").val() != "/faq"){
  			callGigya();
  			}
  		});

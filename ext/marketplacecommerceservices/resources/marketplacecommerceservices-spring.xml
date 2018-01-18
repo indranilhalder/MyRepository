@@ -67,6 +67,10 @@
 	<bean id="mplMediService"
 		class="com.tils.mpl.media.impl.MplMediaServiceImpl">
 	</bean>
+	
+	<bean id="mplboostSearchQueryPopulator" class="com.tisl.mpl.solr.search.MplBoostSearchQueryPopulator"
+    parent="boostSearchQueryPopulator" />
+    
 <!-- Optimization Fix PDP End -->
 	<!-- PDP RestrictedPincode end -->
 	<!-- The hybris platform provides one single Spring application context 
@@ -119,6 +123,11 @@
 				<ref bean="commerceSearchSortPopulator" />
 				<ref bean="commerceSearchTextPopulator" />
 				<ref bean="commerceSearchFiltersPopulator" />
+				<ref bean="mplSearchSolrQueryTypeFacetsPopulator"/>
+                                <ref bean="mplboostSearchQueryPopulator"/>
+                                <ref bean="conditionalSortFilteringIndexedTypePopulator" />
+                                <ref bean="facetReconfigurationPopulator"/>
+
 			</list>
 		</property>
 	</bean>
@@ -658,6 +667,7 @@
 		<property name="externalTaxesService" ref="externalTaxesService" />
 		<property name="commercePlaceOrderMethodHooks" ref="commercePlaceOrderMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
+		<property name="mplVoucherService" ref="mplVoucherService" />
 		<!-- TPR-3782 -->
  		<property name="priceBreakupService" ref="priceBreakupService" />
 
@@ -1981,13 +1991,13 @@
 		</bean>
 		
 	<!-- TPR-3487 -->	
-	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+<!-- 	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
 
 	<bean id="SaveDeliveryCostInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="DeliveryCostInterceptor" />
 		<property name="typeCode" value="AbstractOrder" />	
-	</bean>	
+	</bean>	 -->
 	<!-- TPR-3487 -->		
 		
 	<!-- Bean for Promotion Job starts-->
@@ -2000,6 +2010,20 @@
  	</bean>
  	<!-- Bean for Promotion Job ends-->
 
+
+	<!-- Bean for Indexing timestamp update in MplConfiguration  Starts -->
+	
+	<bean id="mplLastIndexTimeService" 
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplLastIndexTimeServiceImpl"/>
+		
+	<bean id="mplLastIndexTimeDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplLastIndexTimeDaoImpl"/>
+		
+	<bean id="updateLastRunTimeJob" class="com.tisl.mpl.marketplacecommerceservices.jobs.UpdateLastRunTimeJob" autowire="byName"/>
+	
+	<!-- Bean for Indexing timestamp update in MplConfiguration  ends  -->
+	
+	
 	<!-- LW-245 -->
 	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
 		parent="abstractJobPerformable"
@@ -2180,7 +2204,14 @@
 	</bean>
 <!-- TPR-1984 END -->
 
+<!-- Size Guide Upload starts -->
+<bean id="sizeGuideUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.SizeGuideUploadPrepareInterceptor" autowire="byName"></bean>
+<bean id="sizeGuideUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+	<property name="interceptor" ref="sizeGuideUploadPrepareInterceptor"></property>
+	<property name="typeCode" value="SizeGuideUpload"></property>
+</bean>
 
+<!-- Size Guide Upload ends -->
 
 
 	<!-- Jewellery Changes Start --> 
@@ -2409,7 +2440,47 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
+	
+	<bean id="mplWebFormDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplWebFormDaoImpl" >
+	</bean>
+	
+	<bean id="mplWebFormService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplWebFormServiceImpl" >
+	</bean>
 
+	<bean id="refundClearPerformableDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
+
+	<bean id="refundClearPerformableService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultRefundClearPerformableServiceImpl">
+			<property name="modelService" ref="modelService" />
+	</bean>
+
+  <!-- TPR-7412 start -->   
+  <alias name="mplUtrNoArnNoService" alias="mplUtrNoArnNoService" />
+	<bean id="mplUtrNoArnNoService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplUtrNoArnNoSeviceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplUtrNoArnNoDao" alias="mplUtrNoArnNoDao" />
+	<bean id="mplUtrNoArnNoDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplUtrNoArnNoDaoImpl"
+			autowire="byName">
+	</bean>
+	<!--  TPR-7412 end -->
+
+	<!-- SDI-2924 -->
+	<bean id="forwardPaymentCleanUpService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ForwardPaymentCleanUpServiceImpl" />
+	<bean id="forwardPaymentCleanUpDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ForwardPaymentCleanUpDaoImpl">
+	</bean>
+	<!-- TPR-7415 -->
+    <bean id="omsSubmissionPendingReportJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.OmsSubmissionPendingReportJob"
+		autowire="byName">
+	</bean>
     
 </beans>
 

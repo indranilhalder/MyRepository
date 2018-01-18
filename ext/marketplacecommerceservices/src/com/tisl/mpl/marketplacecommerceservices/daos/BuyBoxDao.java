@@ -120,5 +120,12 @@ public interface BuyBoxDao
 
 	public List<BuyBoxModel> getVariantListForPriceRange(final String code);
 
+	//SDI-4195
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	List<BuyBoxModel> getBuyboxStockForSearch(String ProductCode) throws EtailNonBusinessExceptions;
+
 
 }

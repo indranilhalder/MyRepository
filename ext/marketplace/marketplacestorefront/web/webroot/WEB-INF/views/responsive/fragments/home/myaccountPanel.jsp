@@ -9,6 +9,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('myAcc.voucher.display.flag')" var="isVoucherToBeDisplayed"/>
 
 <c:if test="${empty userName}">
 	
@@ -43,8 +44,10 @@
 							 <li class="header-SignInShare"><%-- <spring:theme
 									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->
 
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li> 
+                         <c:if test="${isVoucherToBeDisplayed eq true }">
+							<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>  
+                         </c:if>
 							 
 							<%-- <li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li> --%>			<!-- UF-249 -->
@@ -95,9 +98,10 @@
 							
 											<li class="header-SignInShare"><%-- <spring:theme
 									code="header.flyout.credits" /> --%></li>				<!-- UF-249 -->
-
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li> 
+                       <c:if test="${isVoucherToBeDisplayed eq true }">
+						    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
+						</c:if>
 									
 							<%-- <li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li> --%>		<!-- UF-249 -->

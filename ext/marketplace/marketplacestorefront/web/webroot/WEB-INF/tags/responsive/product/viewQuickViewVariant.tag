@@ -299,14 +299,59 @@
 
 						<c:choose>
 							<c:when test="${product.rootCategory =='HomeFurnishing'}">
+							
+							<c:set var="isVolume" value="false"/>
+							<c:set var="isWeight" value="false"/>
+							
+							<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.weight')" var="weightVariant"/>
+							<c:set var = "categoryListArray" value = "${fn:split(weightVariant, ',')}" />
+																			
+							<c:forEach items="${product.categories}" var="categories">
+										<c:forEach items = "${categoryListArray}" var="weightVariantArray">
+										<c:if test="${categories.code eq weightVariantArray}">
+											<c:set var="isWeight" value="true"/>
+										</c:if> 
+										</c:forEach>				
+							</c:forEach> 
+							
+							<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.volume')" var="volumeVariant"/>
+										<c:set var = "categoryListArray" value = "${fn:split(volumeVariant, ',')}" />
+																			
+										<c:forEach items="${product.categories}" var="categories">
+											<c:forEach items = "${categoryListArray}" var="volumeVariantArray">
+											<c:if test="${categories.code eq volumeVariantArray}">
+												<c:set var="isVolume" value="true"/>
+											</c:if> 
+										</c:forEach>				
+										</c:forEach>
+										
+							
 							<c:if test="${!fn:containsIgnoreCase(productSizeQuick, 'No Size')}">
-								<span class="home-pdp-size"> <spring:theme
-										code="product.variant.size.HF"></spring:theme>
-									<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+							<c:choose>
+							
+							<c:when test="${true eq isWeight}">
+							<span class="home-pdp-size"> 
+								<spring:theme code="product.variant.weight"></spring:theme>
+								<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 								</span>
+							</c:when>
+							<c:when test="${true eq isVolume}">
+							<span class="home-pdp-size"> 
+								<spring:theme code="product.variant.volume"></spring:theme>
+								<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+								</span>
+							</c:when>
+							<c:otherwise>
+							<span class="home-pdp-size"> 
+								<spring:theme code="product.variant.size.HF"></spring:theme>
+								<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+							</span>
+							</c:otherwise>
+							
+							</c:choose>
 							</c:if>
-
-								<span class="home-pdp-quantity"> <spring:theme
+							
+							<span class="home-pdp-quantity"> <spring:theme
 										code="product.variant.quantity"></spring:theme>
 									<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 									<select id="quantity_dropdown" class="variant-select">
@@ -317,10 +362,10 @@
 								</span>
 							</c:when>
 							<c:otherwise>
-
+								<span>
 								<spring:theme code="product.variant.size"></spring:theme>
 								<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-
+								</span>
 							</c:otherwise>
 						</c:choose>
 					</c:otherwise>

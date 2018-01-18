@@ -370,7 +370,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -550,8 +550,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
 			/*
 			 * } else
-			 * 
-			 * 
+			 *
+			 *
 			 * {
 			 */
 			for (final List<Object> obj : result.getResult())
@@ -671,5 +671,86 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		return orderlist;
 	}
 
+	/*
+	 * TPR-7415 (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOmsSubmissionPendingOrderList(java.util.Date,
+	 * java.util.Date)
+	 */
+	@Override
+	public SearchResult<List<Object>> getOmsSubmissionPendingOrderList(final Date startTime, final Date endTime)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch  specified details");
+		}
+		//		final String queryString = //
+		//		SELECT_CLASS
+		//				+ OrderModel.PK
+		//				+ "} "//
+		//				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} ,{" + EnumerationValueModel._TYPECODE + " as e} where {p."
+		//				+ OrderModel.STATUS + "}={e." + EnumerationValueModel.PK + "}" + " and {p." + OrderModel.CREATIONTIME
+		//				+ "} BETWEEN ?earlierDate and ?presentDate and " + "{p." + OrderModel.TYPE + "} = ?type" + " and ({e."
+		//				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PAYMENT_SUCCESSFUL.getCode() + "' OR {e."
+		//				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode() + "')";
+
+		//SDI-4300
+		final String queryString = "SELECT {a.pk},{b.pk},oh2.p_description FROM {order as a},{orderentry as b},({{select {ohe1:lineid} as p_lineid, max({ohe1:timestamp}) as p_timestamp from {orderhistoryentry as ohe1} group by {lineid}}})  oh1 ,({{select {ohe2:lineid} as p_lineid,{ohe2:timestamp} as p_timestamp,{ohe2:description},{ohe2:order} from  {orderhistoryentry as ohe2}}}) oh2 WHERE    {a.type} = ?type and  {a.pk} = {b.ORDER} AND {a.VERSIONID} IS NULL and oh1.p_lineid = {b.orderlineid}	and oh1.p_lineid = oh2.p_lineid and oh1.p_timestamp = oh2.p_timestamp AND (  oh1.p_timestamp BETWEEN ?earlierDate and ?presentDate) and  oh2.p_description in ('PAYMENT_SUCCESSFUL','PENDING_SELLER_ASSIGNMENT')";
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch  specified details success");
+			LOG.debug(EARLIER_DATE.intern() + startTime);
+			LOG.debug(PRESENT_DATE.intern() + endTime);
+		}
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(EARLIER_DATE.intern(), startTime);
+		query.addQueryParameter(PRESENT_DATE.intern(), endTime);
+		query.addQueryParameter(TYPE, SUB);
+		query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, String.class));
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("********** specified data query" + query);
+		}
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		return result;
+	}
+
+
+	/*
+	 * TPR-7415 (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getOmsSubmissionPendingOrderList()
+	 */
+	@Override
+	public SearchResult<List<Object>> getOmsSubmissionPendingOrderList()
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch details");
+		}
+		//		final String queryString = //
+		//		SELECT_CLASS
+		//				+ OrderModel.PK
+		//				+ "} "//
+		//				+ FROM_CLASS + OrderModel._TYPECODE + " AS p} ,{" + EnumerationValueModel._TYPECODE + " as e} where {p."
+		//				+ OrderModel.STATUS + "}={e." + EnumerationValueModel.PK + "} and " + "{p." + OrderModel.TYPE + "} = ?type"
+		//				+ " and ({e." + EnumerationValueModel.CODE + "}='" + OrderStatus.PAYMENT_SUCCESSFUL.getCode() + "' OR {e."
+		//				+ EnumerationValueModel.CODE + "}='" + OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode() + "')";
+
+		final String queryString = "SELECT {a.pk},{b.pk},oh2.p_description FROM {order as a},{orderentry as b},({{select {ohe1:lineid} as p_lineid, max({ohe1:timestamp}) as p_timestamp from {orderhistoryentry as ohe1} group by {lineid}}})  oh1 ,({{select {ohe2:lineid} as p_lineid,{ohe2:timestamp} as p_timestamp,{ohe2:description},{ohe2:order} from  {orderhistoryentry as ohe2}}}) oh2 WHERE    {a.type} = ?type and  {a.pk} = {b.ORDER} AND {a.VERSIONID} IS NULL and oh1.p_lineid = {b.orderlineid}	and oh1.p_lineid = oh2.p_lineid and oh1.p_timestamp = oh2.p_timestamp and  oh2.p_description in ('PAYMENT_SUCCESSFUL','PENDING_SELLER_ASSIGNMENT')";
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("db call fetch details success");
+		}
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(TYPE, SUB);
+		query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, String.class));
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("********** fetch order details query " + query);
+		}
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+		return result;
+	}
 
 }

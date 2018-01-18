@@ -48,7 +48,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 			query.append(MarketplacecommerceservicesConstants.BULK_SMS_2.toString());
 
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
-			fQuery.setResultClassList(Arrays.asList(String.class, String.class, String.class, String.class, String.class,
+			fQuery.setResultClassList(Arrays.asList(Double.class, String.class, String.class, String.class, String.class,
 					String.class));
 			StringBuilder msg = new StringBuilder();
 			final SearchResult<List<Object>> rows = search(fQuery);
@@ -58,13 +58,13 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 			{
 				msg = new StringBuilder();
 				bulkSmsPerBatch = new BulkSmsPerBatch();
-				msg.append("Hey ");
+				msg.append(MarketplacecommerceservicesConstants.BULK_CUSTOMER_SMS_1);
 				msg.append((String) (row.get(4)));
-				msg.append(", We have successfully refunded Rs ");
-				msg.append((String) row.get(0));
-				msg.append(" to your bank account against Tata CLiQ order no ");
+				msg.append(MarketplacecommerceservicesConstants.BULK_CUSTOMER_SMS_2);
+				msg.append(String.valueOf(row.get(0)));
+				msg.append(MarketplacecommerceservicesConstants.BULK_CUSTOMER_SMS_3);
 				msg.append((String) row.get(3));
-				msg.append(" For delay over 5 days please contact your bank with ref number ");
+				msg.append(MarketplacecommerceservicesConstants.BULK_CUSTOMER_SMS_4);
 				if (null != row.get(1))
 				{
 					msg.append(row.get(1));
@@ -73,7 +73,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 				{
 					msg.append(row.get(2));
 				}
-				msg.append(".For few banks, It may take up to 10-15 days to reflect in your account.");
+				msg.append(MarketplacecommerceservicesConstants.BULK_CUSTOMER_SMS_5);
 				bulkSmsPerBatch.setMobileNo((String) row.get(5));
 				bulkSmsPerBatch.setMsg(msg.toString());
 				bulkSmsPerBatch.setTxnId((String) row.get(3));
@@ -84,44 +84,42 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getCause());
+			throw ex;
 		}
 		return bulkSmsPerBatchList;
 	}
 
 	@Override
-	public String getAllTransactionsForSms() throws Exception
+	public String getAllTransactionsForSms(final String queryString) throws Exception
 	{
 		String dynamicQuery = null;
 		try
 		{
 			final StringBuilder query = new StringBuilder();
-			final String queryString = "select {transactionId} from {RefundTransactionEntry}";
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 			fQuery.setResultClassList(Arrays.asList(String.class));
 			final SearchResult<String> rows = search(fQuery);
 			for (final String row : rows.getResult())
 			{
-				query.append("'");
+				query.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
 				query.append(row);
-				query.append("'");
-				query.append(",");
+				query.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+				query.append(MarketplacecommerceservicesConstants.COMMA);
 			}
 			dynamicQuery = query.substring(0, query.length() - 1);
-
-			System.out.println("=========================================" + dynamicQuery.toString());
-
 		}
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getCause());
+			throw ex;
 		}
 		return dynamicQuery;
 	}
 
 	@Override
-	public void deleteRows(final String str) throws Exception
+	public List<RefundTransactionEntryModel> getModelForChangeStaus(final String str) throws Exception
 	{
-		final StringBuilder query = new StringBuilder();
+		final StringBuilder query = new StringBuilder(100);
 		try
 		{
 			query.append("select {pk} from {RefundTransactionEntry} where {transactionid} in ( ");
@@ -131,11 +129,35 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
 			final List<RefundTransactionEntryModel> refundSmsPkList = flexibleSearchService.<RefundTransactionEntryModel> search(
 					fQuery).getResult();
-			modelService.removeAll(refundSmsPkList);
+			//modelService.removeAll(refundSmsPkList);
+			return refundSmsPkList;
 		}
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getCause());
+			throw ex;
+		}
+	}
+
+
+	@Override
+	public int eligibleSmsCount() throws Exception
+	{
+		try
+		{
+			final String queryString = "select {transactionId} from {RefundTransactionEntry} WHERE {status}='"
+					+ MarketplacecommerceservicesConstants.RECEIVED + "'";
+
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.setResultClassList(Arrays.asList(String.class));
+			final SearchResult<String> rows = search(fQuery);
+			return rows.getCount();
+
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getCause());
+			throw ex;
 		}
 	}
 

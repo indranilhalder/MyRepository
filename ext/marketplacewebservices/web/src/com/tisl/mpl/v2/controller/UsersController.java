@@ -69,6 +69,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -193,6 +194,7 @@ import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
@@ -203,9 +205,11 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileServic
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.OrderStatusCodeMasterModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -222,13 +226,17 @@ import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
+import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
+import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
 import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
 import com.tisl.mpl.wsdto.GetCustomerDetailDto;
+import com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
@@ -244,7 +252,9 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
+import com.tisl.mpl.wsdto.ParentChildReason;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
@@ -255,6 +265,7 @@ import com.tisl.mpl.wsdto.ReturnReasonDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
+import com.tisl.mpl.wsdto.SubReasonsMap;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
@@ -286,7 +297,8 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 	private CheckoutCustomerStrategy checkoutCustomerStrategy;
-
+	@Resource(name = "ordersHelper")
+	private OrdersHelper ordersHelper;
 	@Resource(name = "modelService")
 	private ModelService modelService;
 	@Resource(name = "customerGroupFacade")
@@ -452,36 +464,28 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
+	@Resource(name = "mplWebFormFacade")
+	private MplWebFormFacade mplWebFormFacade;
+
+	@Autowired
+	private ExtendedUserServiceImpl userexService;
+
+	@Resource(name = "oauthTokenService")
+	private OAuthTokenService oauthTokenService;
+	@Autowired
+	private MplCustomerProfileFacade mplCustomerProfileFacade;
+
+	@Resource(name = "i18NFacade")
+	private I18NFacade i18NFacade;
+
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
+
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
 	private static final String NO_JUSPAY_MERCHANTKEY = "No juspayMerchantKey is defined in local properties";
 
-	//@Autowired
-	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
-	//	@Autowired Critical Sonar fixes Unused private Field
-	//	private CommerceCartService commerceCartService;
-	//	@Autowired
-	//	private ExtendedUserService extendedUserService;
-	/**
-	 * @return the voucherService
-	 */
-	public VoucherService getVoucherService()
-	{
-		return voucherService;
-	}
-
-	/**
-	 * @param voucherService
-	 *           the voucherService to set
-	 */
-	public void setVoucherService(final VoucherService voucherService)
-	{
-		this.voucherService = voucherService;
-	}
-
-	//	@Autowired Critical Sonar fixes Unused private Field
-	//	private MplNetBankingServiceImpl mplNetBankingServiceImpl;
 	@Autowired
 	private MplNetBankingFacade mplNetBankingFacade;
 	private static final int MAX_FIELD_LENGTH = 255;
@@ -519,9 +523,6 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private HttpServletRequest request;
-
-	//Sonar fix
-	//private static final String PAYMENT_M_RUPEE_MERCHANT_ID = "payment.mRupee.merchantID";
 
 	/**
 	 * TPR-1372
@@ -698,12 +699,27 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
-			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
+			@RequestParam(required = false) final boolean tataTreatsEnable,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
 		{
+			//SDI-639 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			//SDI-639 ends here
+
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
@@ -715,12 +731,12 @@ public class UsersController extends BaseCommerceController
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
 				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacewebservicesConstants.FACEBOOK,
-						tataTreatsEnable);
+						tataTreatsEnable, platformDecider);
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
 				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacecommerceservicesConstants.GOOGLE,
-						tataTreatsEnable);
+						tataTreatsEnable, platformDecider);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -6717,7 +6733,29 @@ public class UsersController extends BaseCommerceController
 	/**
 	 * @Description : For Juspay Order Creation. It returns juspayMerchantKey, juspayMerchantId,
 	 *              juspayReturnUrl,juspayOrderId --TPR-629
+	 *
+	 * @param firstName
+	 * @param lastName
+	 * @param addressLine1
+	 * @param addressLine2
+	 * @param addressLine3
+	 * @param country
+	 * @param city
+	 * @param state
+	 * @param pincode
+	 * @param cardSaved
+	 * @param sameAsShipping
+	 * @param userId
+	 * @param cartGuid
+	 * @param platform
+	 * @param bankName
+	 * @param item
+	 * @param token
+	 *           Receives token generated using https://juspay.in/docs/api/ec/#tokenize api
+	 * @param cardRefNo
+	 *           Card reference no. of saved card.
 	 * @return OrderCreateInJusPayWsDto
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
@@ -6729,7 +6767,9 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String state, @RequestParam final String pincode, @RequestParam final String cardSaved,
 			@RequestParam final String sameAsShipping, @PathVariable final String userId, @RequestParam final String cartGuid,
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
-			@RequestBody(required = false) final InventoryReservListRequestWsDTO item) throws EtailNonBusinessExceptions
+			@RequestBody(required = false) final InventoryReservListRequestWsDTO item,
+			@RequestParam(required = false) final String token, @RequestParam(required = false) final String cardRefNo,
+			@RequestParam(required = false) final String cardFingerPrint) throws EtailNonBusinessExceptions
 	{
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
@@ -6807,81 +6847,163 @@ public class UsersController extends BaseCommerceController
 					if (CollectionUtils.isNotEmpty(voucherList))
 					{
 						VoucherModel appliedVoucher = null;
+						//TPR-7486
+						boolean mplCartVoucher = false;
+						final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
-						final DiscountModel discount = voucherList.get(0);
-
-						if (discount instanceof PromotionVoucherModel)
+						//final DiscountModel discount = voucherList.get(0);
+						for (final DiscountModel discount : voucherList)
 						{
-							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
 
-							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-							for (final RestrictionModel restriction : restrictions)
+
+							if (discount instanceof PromotionVoucherModel)
 							{
-								if (restriction instanceof PaymentModeRestrictionModel)
+								//final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+								//appliedVoucher = promotionVoucherModel;
+								//TPR-7486
+								if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
 								{
-									boolean willApply = false;
+									final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+									appliedVoucher = promotionVoucherModel;
+									mplCartVoucher = false;
+								}
+								else
+								{
+									final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+									appliedVoucher = promotionVoucherModel;
+									mplCartVoucher = true;
+								}
 
-									final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode (user)
-
-									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-											.getPaymentTypeData(); //Voucher Payment mode
-									final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
-
-									//	bank name missing	final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
-
-									if (CollectionUtils.isNotEmpty(paymentTypeList))
+								final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+								for (final RestrictionModel restriction : restrictions)
+								{
+									if (restriction instanceof PaymentModeRestrictionModel)
 									{
-										if (StringUtils.isNotEmpty(paymentModeCard))
+										boolean willApply = false;
+
+										final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode (user)
+
+										final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+												.getPaymentTypeData(); //Voucher Payment mode
+										final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
+
+										//	bank name missing	final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+
+										if (CollectionUtils.isNotEmpty(paymentTypeList))
 										{
-											for (final PaymentTypeModel paymentType : paymentTypeList)
+											if (StringUtils.isNotEmpty(paymentModeCard))
 											{
-												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+												for (final PaymentTypeModel paymentType : paymentTypeList)
 												{
-													if (CollectionUtils.isEmpty(bankLists))
+													if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 													{
-														willApply = true;
+														if (CollectionUtils.isEmpty(bankLists))
+														{
+															willApply = true;
+														}
+														else
+														{
+															willApply = getMplPaymentFacade().validateBank(bankLists, bankName);
+														}
+														break;
 													}
-													else
-													{
-														willApply = getMplPaymentFacade().validateBank(bankLists, bankName);
-													}
+
+
 												}
-												break;
-
 											}
+
+										}
+
+
+										if (mplCartVoucher)
+										{ //MplCartOfferVoucherModel
+											voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
 										}
 										else
-										{
-											willApply = true;
+										{ //PromotionVoucherModel
+											voucherMap.put("promovoucher", Boolean.valueOf(willApply));
 										}
+
+										//if (willApply == false)
+										if (!willApply)//SonarFix
+										{
+
+											if (StringUtils.isEmpty(bankName))
+											{
+
+												failFlag = true;
+												failErrorCode = MarketplacecommerceservicesConstants.B9079;
+											}
+
+										}
+
 									}
-
-									//if (willApply == false)
-									if (!willApply)//SonarFix
-									{
-
-										if (StringUtils.isEmpty(bankName))
-										{
-
-											failFlag = true;
-											failErrorCode = MarketplacecommerceservicesConstants.B9079;
-										}
-
-
-										else
-										{
-											orderCreateInJusPayWsDto
-													.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
-											failFlag = true;
-											failErrorCode = MarketplacecommerceservicesConstants.B9078;
-											//failErrorCode = MarketplacecommerceservicesConstants.B9509;
-										}
-									}
-
 								}
 							}
 						}
+						//ERROR MESSAGE FOR COUPON AND VOUCHER
+						boolean checkcartVoucher1 = true;
+						boolean checkPromovoucher2 = true;
+						for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+						{
+
+							if (voucherentry.getKey().equals("mplcartvoucher"))
+							{
+								if (!voucherentry.getValue().booleanValue())
+								{
+									checkcartVoucher1 = false;
+								}
+							}
+							if (voucherentry.getKey().equals("promovoucher"))
+							{
+								if (!voucherentry.getValue().booleanValue())
+								{
+									checkPromovoucher2 = false;
+								}
+							}
+						}
+						if (!checkcartVoucher1 && !checkPromovoucher2)
+						{ //both coupon and voucher
+							orderCreateInJusPayWsDto
+									.setErrorMessage(MarketplacecommerceservicesConstants.CARTANDCOUPONBOTHFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+						}
+						else if (!checkcartVoucher1)
+						{ // only voucher
+							orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.CARTCOUPONFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+						}
+						else if (!checkPromovoucher2)
+						{ //only coupon
+						  //return "coupon";
+							orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
+							failFlag = true;
+							failErrorCode = MarketplacecommerceservicesConstants.B9078;
+						}
+						//ERROR MESSAGE FOR COUPON AND VOUCHER
+
+						//TPR-7448 Starts here
+						if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
+						{
+							final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(cart, token, cardSaved,
+									cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
+							if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+							{
+								failFlag = true;
+								failErrorCode = (String) tuple3.getSecond();
+								if (StringUtils.isNotEmpty((String) tuple3.getThird()))
+								{
+									orderCreateInJusPayWsDto.setErrorMessage((String) tuple3.getThird());
+								}
+							}
+						}
+						else
+						{
+							LOG.error("Both token and cardFingerPrint are empty for mobile(cart)");
+						}
+						//TPR-7448 Ends here
 					}
 
 					//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NULL
@@ -7015,77 +7137,157 @@ public class UsersController extends BaseCommerceController
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
 					VoucherModel appliedVoucher = null;
+					//TPR-7486
+					boolean mplCartVoucher = false;
+					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
 
-					final DiscountModel discount = voucherList.get(0);
-
-					if (discount instanceof PromotionVoucherModel)
+					//final DiscountModel discount = voucherList.get(0);
+					for (final DiscountModel discount : voucherList)
 					{
-						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-						appliedVoucher = promotionVoucherModel;
 
-						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-						for (final RestrictionModel restriction : restrictions)
+						if (discount instanceof PromotionVoucherModel)
 						{
-							if (restriction instanceof PaymentModeRestrictionModel)
+							//final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							//appliedVoucher = promotionVoucherModel;
+							//TPR-7486
+							if (discount instanceof PromotionVoucherModel && !(discount instanceof MplCartOfferVoucherModel))
 							{
-								boolean willApply = false;
+								final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = false;
+							}
+							else
+							{
+								final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+								appliedVoucher = promotionVoucherModel;
+								mplCartVoucher = true;
+							}
 
-								final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode (user)
-
-								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-										.getPaymentTypeData(); //Voucher Payment mode
-								final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
-
-								//	bank name missing	final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
-
-								if (CollectionUtils.isNotEmpty(paymentTypeList))
+							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+							for (final RestrictionModel restriction : restrictions)
+							{
+								if (restriction instanceof PaymentModeRestrictionModel)
 								{
-									if (StringUtils.isNotEmpty(paymentModeCard))
+									boolean willApply = false;
+
+									final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode (user)
+
+									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+											.getPaymentTypeData(); //Voucher Payment mode
+									final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
+
+									//	bank name missing	final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+
+									if (CollectionUtils.isNotEmpty(paymentTypeList))
 									{
-										for (final PaymentTypeModel paymentType : paymentTypeList)
+										if (StringUtils.isNotEmpty(paymentModeCard))
 										{
-											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											for (final PaymentTypeModel paymentType : paymentTypeList)
 											{
-												if (CollectionUtils.isEmpty(bankLists))
+												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
 												{
-													willApply = true;
+													if (CollectionUtils.isEmpty(bankLists))
+													{
+														willApply = true;
+													}
+													else
+													{
+														willApply = getMplPaymentFacade().validateBank(bankLists, bankName);
+													}
+													break;
 												}
-												else
-												{
-													willApply = getMplPaymentFacade().validateBank(bankLists, bankName);
-												}
+
 											}
-											break;
-
 										}
+
+									}
+									if (mplCartVoucher)
+									{ //MplCartOfferVoucherModel
+										voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
 									}
 									else
-									{
-										willApply = true;
+									{ //PromotionVoucherModel
+										voucherMap.put("promovoucher", Boolean.valueOf(willApply));
 									}
-								}
 
-								//if (willApply == false)
-								if (!willApply) //SonarFix
-								{
-									if (StringUtils.isEmpty(bankName))
+									//if (willApply == false)
+									if (!willApply) //SonarFix
 									{
-										//orderCreateInJusPayWsDto.setErrorMessage("Bank name is missing");
-										failFlag = true;
-										failErrorCode = MarketplacecommerceservicesConstants.B9079;
-									}
-									else
-									{
-										orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
-										failFlag = true;
-										failErrorCode = MarketplacecommerceservicesConstants.B9078;
-									}
-								}
+										if (StringUtils.isEmpty(bankName))
+										{
+											//orderCreateInJusPayWsDto.setErrorMessage("Bank name is missing");
+											failFlag = true;
+											failErrorCode = MarketplacecommerceservicesConstants.B9079;
+										}
 
+									}
+
+								}
 							}
 						}
 					}
+					//ERROR MESSAGE FOR COUPON AND VOUCHER
+					boolean checkcartVoucher1 = true;
+					boolean checkPromovoucher2 = true;
+					for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
+					{
 
+						if (voucherentry.getKey().equals("mplcartvoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkcartVoucher1 = false;
+							}
+						}
+						if (voucherentry.getKey().equals("promovoucher"))
+						{
+							if (!voucherentry.getValue().booleanValue())
+							{
+								checkPromovoucher2 = false;
+							}
+						}
+					}
+					if (!checkcartVoucher1 && !checkPromovoucher2)
+					{ //both coupon and voucher
+						orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.CARTANDCOUPONBOTHFAILUREMESSAGE);
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9078;
+					}
+					else if (!checkcartVoucher1)
+					{ // only voucher
+						orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.CARTCOUPONFAILUREMESSAGE);
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9078;
+					}
+					else if (!checkPromovoucher2)
+					{ //only coupon
+					  //return "coupon";
+						orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9078;
+					}
+					//ERROR MESSAGE FOR COUPON AND VOUCHER
+
+					//TPR-7448 Starts here
+					if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
+					{
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token,
+								cardSaved, cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
+						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+						{
+							failFlag = true;
+							failErrorCode = (String) tuple3.getSecond();
+							if (StringUtils.isNotEmpty((String) tuple3.getThird()))
+							{
+								orderCreateInJusPayWsDto.setErrorMessage((String) tuple3.getThird());
+							}
+						}
+					}
+					else
+					{
+						LOG.error("Both token and cardFingerPrint are empty for mobile(order)");
+					}
+					//TPR-7448 Ends here
 				}
 				//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NOT NULL
 
@@ -7258,10 +7460,17 @@ public class UsersController extends BaseCommerceController
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		CommonCouponsDTO couponDto = new CommonCouponsDTO();
+		final String userRestrictionFlag = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.ISVOUCHERTOBEDISPLAYED);
+		LOG.debug("The userRestrictionFlag is " + userRestrictionFlag);
 		try
 		{
 			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
-			couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			//CAR-330
+			if (StringUtils.isNotEmpty(userRestrictionFlag) && StringUtils.equalsIgnoreCase(userRestrictionFlag, "true"))
+			{
+				couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			}
 			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -7557,7 +7766,10 @@ public class UsersController extends BaseCommerceController
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
-
+				if (null != returnReasonData)
+				{
+					LOG.info("list size primary" + returnReasonData.getReturnReasonDetailsList().size());
+				}
 
 
 				//	returnModes.setQuickDrop(true);
@@ -7593,6 +7805,7 @@ public class UsersController extends BaseCommerceController
 							if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 							{
 								productRichAttrOfQuickDrop = (productRichAttributeModel.get(0).getReturnAtStoreEligible().toString());
+								LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
 							}
 						}
 						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -7611,6 +7824,7 @@ public class UsersController extends BaseCommerceController
 											&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 									{
 										sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+										LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
 									}
 								}
 							}
@@ -7620,6 +7834,10 @@ public class UsersController extends BaseCommerceController
 										.equalsIgnoreCase("yes")))
 								{
 									returnModes.setQuickDrop(true);
+								}
+								else
+								{
+									returnModes.setQuickDrop(false);
 								}
 							}
 
@@ -7645,6 +7863,7 @@ public class UsersController extends BaseCommerceController
 			}
 			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
 			{
+				LOG.info("list size>>>>" + returnReasonData.getReturnReasonDetailsList().size());
 				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
 				{
 					if (!isFineJew
@@ -7731,6 +7950,7 @@ public class UsersController extends BaseCommerceController
 						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
 						}
 					}
 
@@ -7765,6 +7985,7 @@ public class UsersController extends BaseCommerceController
 										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 								{
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+									LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
 								}
 							}
 						}
@@ -7980,6 +8201,10 @@ public class UsersController extends BaseCommerceController
 						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
 						{
 							returnModes.setQuickDrop(true);
+						}
+						else
+						{
+							returnModes.setQuickDrop(false);
 						}
 					}
 					break;
@@ -8911,6 +9136,953 @@ public class UsersController extends BaseCommerceController
 	}
 
 	/**
+	 * This method sorts the list of net banking banks.
+	 *
+	 * @param toSortList
+	 * @return List
+	 *
+	 *         This method was developed for TPR-4855
+	 */
+	private List sortedList(final List<NetBankingWsDTO> toSortList)
+	{
+		final Comparator<NetBankingWsDTO> byName = (final NetBankingWsDTO o1, final NetBankingWsDTO o2) -> o1.getBankName()
+				.compareTo(o2.getBankName());
+		Collections.sort(toSortList, byName);
+		return toSortList;
+	}
+
+
+	/**
+	 * @param emailId
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER, ROLE_CLIENT })
+	@RequestMapping(value = "/{userId}/submitTicket", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CRMWebFormDataResponse getTicketSubmitForm(@PathVariable final String userId, @RequestParam final String ticketType,
+			@RequestParam(required = false) final String orderCode, @RequestParam(required = false) final String subOrderCode,
+			@RequestParam(required = false) final String transactionId, @RequestParam final String contactEmail,
+			@RequestParam final String contactMobile, @RequestParam final String contactName, @RequestParam final String nodeL0,
+			@RequestParam final String nodeL1, @RequestParam final String nodeL2, @RequestParam final String nodeL3,
+			@RequestParam final String nodeL4, @RequestParam(required = false) final String comment,
+			@RequestParam(required = false) final String attachmentFiles) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+	{
+		CRMWebFormDataResponse crmWebFormDTO = new CRMWebFormDataResponse();
+		final CRMWebFormDataRequest crmTicket = new CRMWebFormDataRequest();
+		boolean errorFlag = false;
+		String errorMessage = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(ticketType))
+			{
+				crmTicket.setTicketType(ticketType);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :ticketType";
+			}
+
+			if (StringUtils.isNotEmpty(contactEmail))
+			{
+				crmTicket.setContactEmail(contactEmail);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :contactEmail";
+			}
+
+			if (StringUtils.isNotEmpty(contactName))
+			{
+				crmTicket.setContactName(contactName);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :contactName";
+			}
+
+			if (StringUtils.isNotEmpty(contactMobile))
+			{
+				crmTicket.setContactMobile(contactMobile);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :contactMobile";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL0))
+			{
+				crmTicket.setNodeL0(nodeL0);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L0 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL1))
+			{
+				crmTicket.setNodeL1(nodeL1);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L1 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL2))
+			{
+				crmTicket.setNodeL2(nodeL2);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L2 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL3))
+			{
+				crmTicket.setNodeL3(nodeL3);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L3 ";
+			}
+
+			if (StringUtils.isNotEmpty(nodeL4))
+			{
+				crmTicket.setNodeL4(nodeL4);
+			}
+			else
+			{
+				errorFlag = true;
+				errorMessage = MarketplacecommerceservicesConstants.MANDATORY_PARAMETERS_CANNOT_BE_BLANK + " :issue L4 ";
+			}
+			crmTicket.setOrderCode(orderCode);
+			crmTicket.setSubOrderCode(subOrderCode);
+			crmTicket.setTransactionId(transactionId);
+			crmTicket.setComment(comment);
+			crmTicket.setAttachmentFiles(attachmentFiles);
+			if (errorFlag)
+			{
+
+				crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				crmWebFormDTO.setErrorMessage(errorMessage);
+				crmWebFormDTO.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			}
+			else
+			{
+				crmWebFormDTO = mplWebFormFacade.getTicketSubmitForm(crmTicket);
+				crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				crmWebFormDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmWebFormDTO.setErrorCode(e.getErrorCode());
+			}
+			crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				crmWebFormDTO.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmWebFormDTO.setErrorCode(e.getErrorCode());
+			}
+			crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return crmWebFormDTO;
+	}
+
+	/**
+	 * TPR-5954 Category specific return reason
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/newReturnProductDetails", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReturnRequestDTO newReturnProductDetails(@RequestParam final String orderCode, @RequestParam final String transactionId)
+			throws EtailNonBusinessExceptions
+	{
+		final String returnCancelFlag = "R";
+		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
+		final ReturnReasonDetails returnReasonData = null;
+		final ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
+				"finejewellery.reverseseal.sellername");
+		boolean isFineJew = false;
+		boolean showRevSeal = false;
+		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		String sellerRichAttrOfQuickDrop = "";
+		String productRichAttrOfQuickDrop = "";
+		ProductModel productModel = null;
+		String L2Cat = null;
+		ParentChildReason parentChildReason = null;
+		List<SubReasonsMap> subReasonList = null;
+		try
+		{
+			//TPR-7140
+			//Initial on load conditons
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(entry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					break;
+				}
+			}
+
+			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
+					returnCancelFlag);
+			if (orderproductWsDto.size() > 0)
+			{
+
+				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
+				//returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+
+
+
+				//	returnModes.setQuickDrop(true);
+				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
+
+				if (StringUtils.isNotEmpty(revSealSellerList))
+				{
+					final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+					for (final OrderProductWsDTO orderEntry : orderproductWsDto)
+					{
+						if (sellerList.contains(orderEntry.getSellerName()))
+						{
+							showRevSeal = true;
+							revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
+							revSealFrJwlry.setYes("Y");
+							revSealFrJwlry.setNo("N");
+							LOG.debug("Reverse seal section will be shown");
+							break;
+						}
+					}
+				}
+
+				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
+				{
+
+					if (orderEntryDto.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+					{
+						productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+						List<RichAttributeModel> productRichAttributeModel = null;
+						if (null != productModel && productModel.getRichAttribute() != null)
+						{
+							productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+							if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+							{
+								productRichAttrOfQuickDrop = (productRichAttributeModel.get(0).getReturnAtStoreEligible().toString());
+								LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
+							}
+						}
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						for (final SellerInformationModel sellerInformationModel : sellerInfo)
+						{
+							/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntryDto.getUSSID()))
+							{
+								List<RichAttributeModel> sellerRichAttributeModel = null;
+								if (sellerInformationModel.getRichAttribute() != null)
+								{
+									sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+									if (sellerRichAttributeModel != null
+											&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+									{
+										sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+										LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
+									}
+								}
+							}
+							if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+							{
+								if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop
+										.equalsIgnoreCase("yes")))
+								{
+									returnModes.setQuickDrop(true);
+								}
+								else
+								{
+									returnModes.setQuickDrop(false);
+								}
+							}
+
+						}
+						//break;
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							isFineJew = true;
+
+							if (showRevSeal)
+							{
+								returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							}
+							returnModes.setSelfCourier(false);
+							returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+							break;
+						}
+						break;
+					}
+				}
+				returnRequestDTO.setReturnModes(returnModes);
+
+				//TPR-5954 || Category specific return reason || Start
+				//final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+				Collection<CategoryModel> superCategories = productModel.getSupercategories();
+
+				outer: for (final CategoryModel category : superCategories)
+				{
+					if (category.getCode().startsWith("MPH"))
+					{
+						superCategories = category.getSupercategories();
+						for (final CategoryModel category1 : superCategories)
+						{
+							if (category1.getCode().startsWith("MPH"))
+							{
+								superCategories = category1.getSupercategories();
+								for (final CategoryModel category2 : superCategories)
+								{
+									if (category2.getCode().startsWith("MPH"))
+									{
+										L2Cat = category2.getCode();
+										break outer;
+									}
+								}
+							}
+						}
+
+					}
+				}
+				List<ReturnReasonData> reasonDataList = getMplOrderFacade().getCatSpecificRetReason(L2Cat);
+				if (null == reasonDataList || reasonDataList.isEmpty())
+				{
+					reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+				}
+				final List<ParentChildReason> ParentChildReasonList = new ArrayList<ParentChildReason>();
+				for (final ReturnReasonData data : reasonDataList)
+				{
+					parentChildReason = new ParentChildReason();
+					parentChildReason.setParentReturnReason(data.getReasonDescription());
+					parentChildReason.setParentReasonCode(data.getCode());
+					final List<ReturnReasonData> subReturnReasonData = mplOrderFacade.getSubReasonCode(data.getCode());
+					if (null != subReturnReasonData && !subReturnReasonData.isEmpty())
+					{
+						subReasonList = new ArrayList<SubReasonsMap>();
+						for (final ReturnReasonData subData : subReturnReasonData)
+						{
+							final SubReasonsMap subReasonsMap = new SubReasonsMap();
+							subReasonsMap.setSubReasonCode(subData.getCode());
+							subReasonsMap.setSubReturnReason(subData.getReasonDescription());
+							subReasonList.add(subReasonsMap);
+						}
+						parentChildReason.setSubReasons(subReasonList);
+					}
+					ParentChildReasonList.add(parentChildReason);
+				}
+				returnRequestDTO.setReturnReasonMap(ParentChildReasonList);
+				//TPR-5954 || Category specific return reason || End
+			}
+			else
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+				returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9076));
+			}
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			returnRequestDTO.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+			returnRequestDTO.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			returnRequestDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return returnRequestDTO;
+	}
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/newReturnInitiate", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public MplUserResultWsDto newInitiateRefund(@RequestBody final ReturnRequestDTO returnData) throws Exception
+	{
+		boolean cancellationStatus = false;
+		final String orderCode = returnData.getOrderCode();
+		final String transactionId = returnData.getTransactionId();
+		final String pinCode = returnData.getPincode();
+		final ReturnInfoData returnInfoData = new ReturnInfoData();
+		final MplUserResultWsDto output = new MplUserResultWsDto();
+		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		String productRichAttrOfQuickDrop = "";
+		String sellerRichAttrOfQuickDrop = "";
+		//Default values
+		returnModes.setSchedulePickup(true);
+		returnModes.setSelfCourier(true);
+		boolean isFineJwlry = false;
+		String ussid = "";
+		try
+		{
+			final CustomerData customerData = customerFacade.getCurrentCustomer();
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			OrderEntryData subOrderEntry = new OrderEntryData();
+			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+				{
+					subOrderEntry = entry;
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(subOrderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if (null != productModel && productModel.getRichAttribute() != null)
+					{
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(subOrderEntry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + subOrderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = subOrderEntry.getSelectedUssid();
+					}
+
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
+
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null)
+							{
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null
+										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+
+					}
+					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+					{
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						{
+							returnModes.setQuickDrop(true);
+						}
+						else
+						{
+							returnModes.setQuickDrop(false);
+						}
+					}
+					break;
+				}
+
+			}
+			if (null != subOrderEntry.getProduct()
+					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(subOrderEntry.getProduct()
+							.getRootCategory()))
+			{
+				isFineJwlry = true;
+			}
+
+			//for schedule pickup
+			if (StringUtils.isNotBlank(returnData.getReturnMethod())
+					&& MarketplacecommerceservicesConstants.RETURN_SCHEDULE.equalsIgnoreCase(returnData.getReturnMethod()))
+			{
+				final List<String> times = MplTimeconverUtility.splitTime(returnData.getScheduleReturnTime());
+				String timeSlotFrom = null;
+				String timeSlotto = null;
+				for (final String time : times)
+				{
+					if (null == timeSlotFrom)
+					{
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("Return Pickup Slot From Time :" + timeSlotFrom + " for the TransactionId :"
+									+ returnData.getTransactionId());
+						}
+						timeSlotFrom = time;
+					}
+					else
+					{
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("Return Pickup Slot From Time :" + timeSlotto + " for the TransactionId :"
+									+ returnData.getTransactionId());
+						}
+						timeSlotto = time;
+					}
+
+				}
+				boolean returnLogisticsCheck = true;
+				String returnFulfillmentType = null;
+				final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
+
+				.checkReturnLogistics(subOrderDetails, pinCode, transactionId);
+				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
+				{
+					if (response.getTransactionId().equalsIgnoreCase(returnData.getTransactionId()))
+					{
+						if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
+						{
+							returnLogisticsCheck = false;
+							output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							returnModes.setSelfCourier(true);//TPR-7140
+							returnModes.setSchedulePickup(false);
+
+
+						}
+						else if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+						{
+							returnFulfillmentType = response.getReturnFulfillmentType();
+							output.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+						}
+					}
+				}
+				if (!returnLogisticsCheck)
+				{
+					output.setReturnModes(returnModes);
+					return output;
+				}
+				final String returnPickupDate = returnData.getScheduleReturnDate();
+				returnInfoData.setReasonCode(returnData.getReturnReasonCode());
+				if (returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+				{
+					returnInfoData.setRefundType(MarketplacecommerceservicesConstants.N);
+				}
+				else
+				{
+					returnInfoData.setRefundType(MarketplacecommerceservicesConstants.S);
+				}
+				returnInfoData.setReturnPickupDate(dateUtilHelper.convertDateWithFormat(returnPickupDate));
+				returnInfoData.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
+				returnInfoData.setTimeSlotFrom(timeSlotFrom);
+				returnInfoData.setTimeSlotTo(timeSlotto);
+				returnInfoData.setUssid(returnData.getUssid());
+				returnInfoData.setReturnMethod(returnData.getReturnMethod());
+				returnInfoData.setReturnFulfillmentMode(returnFulfillmentType);
+				if (null != returnData.getSubReasonCode())
+				{
+					returnInfoData.setSubReasonCode(returnData.getSubReasonCode());
+				}
+				if (null != returnData.getComment())
+				{
+					returnInfoData.setComments(returnData.getComment());
+				}
+				returnAddrData.setAddressLane1(returnData.getAddrLine1());
+				returnAddrData.setAddressLane2(returnData.getAddrLine2());
+				returnAddrData.setAddressLine3(returnData.getAddrLine3());
+				returnAddrData.setLandmark(returnData.getLandMark());
+				returnAddrData.setCity(returnData.getCity());
+				returnAddrData.setCountry(returnData.getCountry());
+				returnAddrData.setFirstName(returnData.getFirstName());
+				returnAddrData.setLastName(returnData.getLastName());
+				returnAddrData.setMobileNo(returnData.getPhoneNumber());
+				returnAddrData.setState(getStateCode(returnData.getState()));
+				returnAddrData.setPincode(returnData.getPincode());
+				//TPR-4134
+				if (null != returnData.getReverseSealAvailable())
+				{
+					returnInfoData.setReverseSealLostflag(returnData.getReverseSealAvailable());
+				}
+
+				if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
+				{
+					cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnInfoData,
+							customerData, SalesApplication.MOBILE, returnAddrData);
+				}
+				//TISPRDT-2546
+				if (isFineJwlry)
+				{
+					final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(orderCode);
+					if (null != returnRequestModelList && returnRequestModelList.size() > 0)
+					{
+						for (final ReturnRequestModel mm : returnRequestModelList)
+						{
+							for (final ReturnEntryModel mmmodel : mm.getReturnEntries())
+							{
+								if (subOrderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
+								{
+									if (null != mm.getTypeofreturn() && null != mm.getTypeofreturn().getCode())
+									{
+										if (mm.getTypeofreturn().getCode()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+										{
+											//To check if we need to send the error code
+											output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+											//output.setErrorCode(MarketplacecommerceservicesConstants.B9307);
+											return output;
+										}
+									}
+								}
+							}
+
+						}
+					}
+				}
+				if (!cancellationStatus)
+				{
+					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					LOG.error("*****implementReturnItem status error*****");
+					returnModes.setSchedulePickup(true);
+					returnModes.setSelfCourier(false);
+					output.setReturnModes(returnModes);
+					return output;
+				}
+				else
+				{
+					output.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+			}
+
+			//for quick drop
+			if (returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_METHOD_QUICKDROP))
+			{
+				try
+				{
+					final RTSAndRSSReturnInfoRequestData infoRequestData = new RTSAndRSSReturnInfoRequestData();
+					final List<String> stores = returnData.getStoreIds();
+					if (null != subOrderDetails.getPurchaseOrderNumber())
+					{
+						infoRequestData.setOrderId(subOrderDetails.getPurchaseOrderNumber());
+					}
+					else
+					{
+						infoRequestData.setOrderId(returnData.getOrderCode());
+					}
+					infoRequestData.setRTSStore(stores);
+					infoRequestData.setTransactionId(transactionId);
+					infoRequestData.setReturnType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
+					//return info call to OMS
+					cancelReturnFacade.retrunInfoCallToOMS(infoRequestData);
+					output.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Eception occurred while doing return in quickDrop Mehod for order " + orderCode + " exception is "
+							+ e.getMessage());
+					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(subOrderEntry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					returnModes.setQuickDrop(true);
+					output.setReturnModes(returnModes);//TPR-7140
+					return output;
+				}
+			}
+
+			if (returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+			{
+				final CODSelfShipData selfShipData = new CODSelfShipData();
+				selfShipData.setCustomerNumber(customerData.getUid());
+				selfShipData.setTitle(returnData.getTitle());
+				selfShipData.setName(returnData.getAccountHolderName());
+				selfShipData.setBankAccount(returnData.getAccountNumber());
+				selfShipData.setBankName(returnData.getBankName());
+				selfShipData.setBankKey(returnData.getIFSCCode());
+				selfShipData.setOrderNo(returnData.getOrderCode());
+				selfShipData.setTransactionID(returnData.getTransactionId());
+				selfShipData.setPaymentMode(returnData.getRefundMode());
+
+				if (null != returnData.getIsCODorder()
+						&& returnData.getIsCODorder().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+				{
+					//set ordertag POSTPAIDRRF for COD orders
+					selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+				}
+				else
+				{
+					//set ordertag POSTPAIDRRF for PREPAID orders
+					selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
+				}
+				try
+				{
+					//inser or update Customer Bank Details
+					cancelReturnFacade.insertUpdateCustomerBankDetails(selfShipData);
+				}
+
+				catch (final EtailNonBusinessExceptions e)
+				{
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+
+				}
+
+				try
+				{
+
+					// sending COD BANK Details to fico
+					final OrderModel orderModel = orderModelDao.getOrderModel(orderCode);
+					AbstractOrderEntryModel entry = modelService.create(AbstractOrderEntryModel.class);
+					for (final AbstractOrderEntryModel e : orderModel.getEntries())
+					{
+						if (null != e.getTransactionID() && e.getTransactionID().equalsIgnoreCase(transactionId))
+						{
+							entry = e;
+						}
+					}
+					final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+					selfShipData.setOrderNo(orderCode);
+					selfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
+					selfShipData.setTransactionType(MarketplacecommerceservicesConstants.RETURN_TRANSACTON_TYPE_01);
+					selfShipData
+							.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderModel.getCreationtime())));
+					selfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderModel.getCreationtime())));
+					selfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_POSTPAID);
+					selfShipData.setCustomerNumber(orderModel.getUser().getUid());
+
+					selfShipData.setTransactionID(transactionId);
+					if (null != entry.getTotalPrice())
+					{
+						selfShipData.setAmount(entry.getTotalPrice().toString());
+					}
+					if (null != entry.getNetAmountAfterAllDisc())
+					{
+						selfShipData.setAmount(entry.getNetAmountAfterAllDisc().toString());
+					}
+					cancelReturnFacade.codPaymentInfoToFICO(selfShipData);
+				}
+				catch (final EtailNonBusinessExceptions e)
+				{
+					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
+							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+				}
+			}
+			//for self Courier
+			if (returnData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF))
+			{
+				LOG.debug(" returnForm>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " + returnData.toString());
+
+				final ReturnInfoData returnInfoDataObj = new ReturnInfoData();
+				returnInfoDataObj.setTicketTypeCode(MarketplacecommerceservicesConstants.RETURN_TYPE);
+				returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
+				returnInfoDataObj.setUssid(returnData.getUssid());
+				returnInfoDataObj.setReturnMethod(returnData.getReturnMethod());
+				returnInfoDataObj.setReasonCode(returnData.getReturnReasonCode());
+				final boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,
+						returnInfoDataObj, customerData, SalesApplication.MOBILE, returnAddrData);
+				if (!cancellationStatusForSelfShip)
+				{
+					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					returnModes.setSelfCourier(true);
+					returnModes.setSchedulePickup(false);
+				}
+				else
+				{
+					output.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				output.setReturnModes(returnModes);//TPR-7140
+				return output;
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				output.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				output.setErrorCode(e.getErrorCode());
+			}
+			output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			return output;
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			if (null != e.getMessage())
+			{
+				output.setError(e.getMessage());
+			}
+			output.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			return output;
+		}
+		return output;
+	}
+
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
+	@RequestMapping(value = "/{userId}/getOrderTransactions", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public GetOrderHistoryListWsDTO getOrdersHistoryList(@RequestParam(required = false) final String statuses,
+			@RequestParam final int currentPage,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sort,
+			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final ShowMode showMode)
+	{
+
+		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
+		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
+
+		final int orderCount = 0;
+		final int start = 0, end = 0;
+		OrderData orderDetails = null;
+		try
+		{
+			final int pageSizeConFig = configurationService.getConfiguration().getInt(
+					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
+
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+					pageSizeConFig, sort, showMode);
+
+			if (null == searchPageDataParentOrder.getResults())
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9046);
+			}
+			else
+			{
+				//LOG.info("Number of Orders " + orderCount);
+				for (final OrderHistoryData orderData : searchPageDataParentOrder.getResults())
+				{
+					orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderData.getCode());
+					//this scenario will occour only when product is missing in order entries.
+					if (null == orderDetails)
+					{
+						continue;
+					}
+					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					orderTrackingListWsDTO.add(order);
+				}
+				if (searchPageDataParentOrder.getPagination() != null
+						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
+				{
+					final int totalNum = Integer.parseInt(String.valueOf(searchPageDataParentOrder.getPagination()
+							.getTotalNumberOfResults()));
+					orderHistoryListData.setTotalNoOfOrders(totalNum);
+
+					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
+					orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
+					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else
+				{
+					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
+				}
+				orderHistoryListData.setPageSize(pageSizeConFig);
+
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				orderHistoryListData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				orderHistoryListData.setErrorCode(e.getErrorCode());
+			}
+			orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				orderHistoryListData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				orderHistoryListData.setErrorCode(e.getErrorCode());
+			}
+			orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			orderHistoryListData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			orderHistoryListData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderHistoryListData;
+	}
+
+	/**
 	 * @return the mplProductWebService
 	 */
 	public MplProductWebServiceImpl getMplProductWebService()
@@ -8961,11 +10133,6 @@ public class UsersController extends BaseCommerceController
 		this.mplPaymentService = mplPaymentService;
 	}
 
-	@Autowired
-	private ExtendedUserServiceImpl userexService;
-
-	@Resource(name = "oauthTokenService")
-	private OAuthTokenService oauthTokenService;
 
 	/**
 	 * @return the oauthTokenService
@@ -9001,16 +10168,10 @@ public class UsersController extends BaseCommerceController
 		this.mplPaymentFacade = mplPaymentFacade;
 	}
 
-	@Autowired
-	private MplCustomerProfileFacade mplCustomerProfileFacade;
-
 	protected CheckoutCustomerStrategy getCheckoutCustomerStrategy()
 	{
 		return checkoutCustomerStrategy;
 	}
-
-	@Resource(name = "i18NFacade")
-	private I18NFacade i18NFacade;
 
 	public ModelService getModelService()
 	{
@@ -9917,19 +11078,21 @@ public class UsersController extends BaseCommerceController
 	}
 
 	/**
-	 * This method sorts the list of net banking banks.
-	 *
-	 * @param toSortList
-	 * @return List
-	 *
-	 *         This method was developed for TPR-4855
+	 * @return the voucherService
 	 */
-	private List sortedList(final List<NetBankingWsDTO> toSortList)
+	public VoucherService getVoucherService()
 	{
-		final Comparator<NetBankingWsDTO> byName = (final NetBankingWsDTO o1, final NetBankingWsDTO o2) -> o1.getBankName()
-				.compareTo(o2.getBankName());
-		Collections.sort(toSortList, byName);
-		return toSortList;
+		return voucherService;
 	}
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+
 
 }

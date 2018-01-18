@@ -354,7 +354,15 @@ sendAddToBagWl: function(formId){
 				var productName=$("#"+formId+" input[name=productName]").val();
 				console.log("cartImageSrc:"+cartImageSrc+" code:"+productCodePost+" name:"+productName);
 				
-				Header.showAddToBagPopOver(productCodePost, cartImageSrc, productName);
+				// Condition is Added to disable the popup only for Luxury site. TISPRDT-7587 Start
+				var isLuxury = $("#isLuxury").val();
+				console.log("isLuxury"+ isLuxury);
+				if(!isLuxury || isLuxury!='true') {
+			      Header.showAddToBagPopOver(productCodePost, cartImageSrc, productName);
+				}else{
+            	  console.log("DO NOT execute POPUP");
+				}
+				//TISPRDT-7587 - END. 
 				// End TISPRD-9318
 				//$("#"+formId+"Title").show().fadeOut(7000);
 				//ACC.product.displayAddToCart(data,formId,false);				

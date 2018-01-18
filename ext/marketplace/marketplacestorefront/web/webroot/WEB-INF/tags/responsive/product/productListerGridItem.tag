@@ -292,7 +292,7 @@
 							test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'HomeFurnishing'}">
 							<c:if test="${not empty product.displaySize && product.displaySize ne '[NO SIZE]'}">
 							<li class="product-size-list">
-							<span class="product-size">Size: <span class="size-col">${product.displaySize}</span>
+							<span class="product-size">${product.displayLength}: <span class="size-col">${product.displaySize}</span>
 							</span>
 							</li>
 							</c:if>

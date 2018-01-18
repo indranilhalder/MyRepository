@@ -1118,6 +1118,40 @@ $(document).ready(function(){
 	}
 	
 });	
+
+function fetchCatSpecificReason(element){
+	try{
+	var code=$("#returnReason :selected").val();
+		  $.ajax({
+			  url: ACC.config.encodedContextPath+"/my-account/returns/fetchSubReason",
+			  type: "GET",
+			  data :"parentReasonCode="+code,
+			  success: function(data) {
+				  var options = $("#returnSubReason");
+				  $("#returnSubReason").html('');
+				  	options.append($("<option />").val("").text("Select sub reason"));
+				    $.each(data, function(item,obj) {					
+				        options.append($("<option />").val(obj.code).text(obj.reasonDescription));
+				    });
+				    if($.isEmptyObject(data)){
+				    	$("select[name=subReturnReason]").hide();
+				    }
+				    else
+			    	{
+				    	$("select[name=subReturnReason]").show();
+			    	}
+			  },
+			  error:function(data){
+				  console.log("Error in fetchCatSpecificReason"+data);
+			  }
+		  });
+	}
+	catch(e)
+	{
+		console.log("Error:"+e);
+	}
+}
+
 //TPR-7140		
 function hideRspShowRss(){
 	var hideRsp=$("#hideRsp").text();
@@ -1130,3 +1164,4 @@ function hideRspShowRss(){
 		$(".selectReturnMethod.self input[name='returnMethod']").prop( "checked", true );
 	}
 }
+

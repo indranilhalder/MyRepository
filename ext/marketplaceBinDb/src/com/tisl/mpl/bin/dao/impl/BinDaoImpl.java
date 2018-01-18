@@ -4,6 +4,7 @@
 package com.tisl.mpl.bin.dao.impl;
 
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -145,5 +146,53 @@ public class BinDaoImpl implements BinDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return bankList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.bin.dao.BinDao#fetchBankFromCustomerSavedCard(java.lang.String,
+	 * de.hybris.platform.core.model.user.CustomerModel)
+	 */
+	//TPR-7486
+	@Override
+	public String fetchBankFromCustomerSavedCard(final String cardRefNum, final CustomerModel customer)
+	{
+		List<String> bankName = null;
+		final String binVersion = getConfigurationService().getConfiguration().getString(
+				MarketplaceBinDbConstants.BIN_PRESENT_VERSION, MarketplacecommerceservicesConstants.EMPTY);
+		try
+		{
+			final String queryString = MarketplaceBinDbConstants.BANKFORSAVEDCARDBINQUERY;
+
+			//forming the flexible search query
+			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
+
+			final List resultClassList = new ArrayList();
+			resultClassList.add(String.class);
+			bankQuery.setResultClassList(resultClassList);
+
+			bankQuery.addQueryParameter(MarketplaceBinDbConstants.CARDREFNO, cardRefNum);
+			bankQuery.addQueryParameter(MarketplaceBinDbConstants.BIN_VERSION, binVersion);
+			bankQuery.addQueryParameter(MarketplaceBinDbConstants.BINCUSTOMER, customer);
+			bankName = getFlexibleSearchService().<String> search(bankQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return CollectionUtils.isNotEmpty(bankName) ? bankName.get(0) : null;
 	}
 }

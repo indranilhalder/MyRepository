@@ -22,6 +22,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -62,7 +64,6 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
-import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -99,63 +100,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private static final String OAuth_2_CMS_PAGE = "oauth2callback";
 	private HttpSessionRequestCache httpSessionRequestCache;
 
-	@Resource(name = "GigyaService")
-	private GigyaService gigyaservice;
-
 	@Autowired
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
-	private String gigyaUID;
-	private String signature;
-	private String timestamp;
-
-
-	public GigyaService getGigyaservice()
-	{
-		return gigyaservice;
-	}
-
-	public void setGigyaservice(final GigyaService gigyaservice)
-	{
-		this.gigyaservice = gigyaservice;
-	}
-
-
-	/**
-	 * @return the gigyaUID
-	 */
-	public String getGigyaUID()
-	{
-		return gigyaUID;
-	}
-
-	/**
-	 * @param gigyaUID
-	 *           the gigyaUID to set
-	 */
-	public void setGigyaUID(final String gigyaUID)
-	{
-		this.gigyaUID = gigyaUID;
-	}
-
-	public String getSignature()
-	{
-		return signature;
-	}
-
-	public void setSignature(final String signature)
-	{
-		this.signature = signature;
-	}
-
-	public String getTimestamp()
-	{
-		return timestamp;
-	}
-
-	public void setTimestamp(final String timestamp)
-	{
-		this.timestamp = timestamp;
-	}
 
 	@Resource(name = ModelAttributetConstants.HTTP_SESSION_REQUEST_CACHE)
 	public void setHttpSessionRequestCache(final HttpSessionRequestCache accHttpSessionRequestCache)
@@ -165,6 +111,9 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	@Autowired
 	private CartFacade cartFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	protected static final String REDIRECT_URL_CHOOSE_DELIVERY_METHOD = "/checkout/multi/delivery-method/choose";
 
@@ -329,30 +278,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				form.setLastName(lName);
 			}
 
-			if (StringUtils.isNotEmpty(uid))
-			{
-
-
-				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
-
-
-				setGigyaUID(decodedUid);
-			}
-			if (StringUtils.isNotEmpty(signature))
-			{
-
-				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
-
-
-				setSignature(decodedSignature);
-			}
-			if (StringUtils.isNotEmpty(timestamp))
-			{
-
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
-
-				setTimestamp(decodedTimestamp);
-			}
 			if (StringUtils.isNotEmpty(gender))
 			{
 				form.setGender(gender);
@@ -377,12 +302,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				storeReferer(referer, request, response);
 			}
 
-			if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
-			{
-				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
-			}
-
-			return "Invalid Signature";
+			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -464,6 +384,66 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	{
 		try
 		{
+			boolean isExist = false; //SDI-639
+
+			//SDI-639 starts here
+			int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+			//added for IQA starts here
+			final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+			String userAgent = null;
+
+			if (StringUtils.isNotEmpty(userAgentHeader))
+			{
+				userAgent = request.getHeader(userAgentHeader);
+
+				if (StringUtils.isNotEmpty(userAgent))
+				{
+					userAgent = userAgent.toLowerCase();
+				}
+			}
+			//added for IQA ends here
+			if (StringUtils.isNotEmpty(userAgent))
+			{
+				String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+				//added for IQA starts here
+				if (StringUtils.isNotEmpty(mobileDevices))
+				{
+					mobileDevices = mobileDevices.toLowerCase();
+				}
+				//added for IQA ends here
+
+				if (StringUtils.isNotEmpty(mobileDevices))
+				{
+					final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+							.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+					if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
+					{
+						for (final String mobDevice : mobileDeviceArray)
+						{
+							if (userAgent.contains(mobDevice))
+							{
+								isExist = true;
+								break;
+							}
+						}
+					}
+				}
+				if (isExist)
+				{
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
+				}
+				else
+				{
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+				}
+			}
+			else
+			{
+				platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+			}
+			LOG.debug("The platform number is " + platformNumber);
+			//SDI-639 ends here
 			if (bindingResult.hasErrors())
 			{
 				model.addAttribute(form);
@@ -494,7 +474,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			LOG.debug("Method processRegisterUserRequestForOAuth2, EMAIL " + form.getEmail());
 			LOG.debug("Method processRegisterUserRequestForOAuth2, PASSWORD  " + data.getPassword());
 
-			data = registerCustomerFacade.registerSocial(data, isMobile);
+			data = registerCustomerFacade.registerSocial(data, isMobile, platformNumber);
 
 			if (null != data)
 			{
@@ -618,15 +598,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	{
 
-		/*
-		 * Closed as it was needed for Gigya Authentication
-		 *
-		 * @RequestParam(ModelAttributetConstants.UID) final String uid,
-		 *
-		 * @RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
-		 *
-		 * @RequestParam(ModelAttributetConstants.SIGNATURE) final String signature
-		 */
 		try
 		{
 			LOG.debug("Method socialLogin, REFERER " + referer);
@@ -658,20 +629,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			{
 				form.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 			}
-			//Closed as it was needed for Gigya Authentication
-			/*
-			 * if (StringUtils.isNotEmpty(uid)) { final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
-			 * setGigyaUID(decodedUid); } if (StringUtils.isNotEmpty(signature)) {
-			 * 
-			 * final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
-			 * 
-			 * 
-			 * setSignature(decodedSignature); } if (StringUtils.isNotEmpty(timestamp)) {
-			 * 
-			 * final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
-			 * 
-			 * setTimestamp(decodedTimestamp); }
-			 */
 
 
 			String socialLogin = "";
@@ -691,13 +648,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			{
 				storeReferer(referer, request, response);
 			}
-			//Closed as it was needed for Gigya Authentication
-			//if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
-			//	{
 			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
-			//	}
-
-			//	return "Invalid Signature";
 		}
 		catch (final EtailBusinessExceptions e)
 		{

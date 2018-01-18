@@ -4,6 +4,9 @@
 package com.tisl.mpl.storefront.web.forms;
 
 import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -45,6 +48,62 @@ public class MplReturnsForm
 	private String ussid;
 	private String transactionType;
 	private String reverseSeal;
+	//TPR-5954
+	private String comments;
+	private String subReturnReason;
+	private String imagePath;
+	private List<MultipartFile> images;
+
+	/**
+	 * @return the comments
+	 */
+	public String getComments()
+	{
+		return comments;
+	}
+
+	/**
+	 * @param comments
+	 *           the comments to set
+	 */
+	public void setComments(final String comments)
+	{
+		this.comments = comments;
+	}
+
+	/**
+	 * @return the subReturnReason
+	 */
+	public String getSubReturnReason()
+	{
+		return subReturnReason;
+	}
+
+	/**
+	 * @param subReturnReason
+	 *           the subReturnReason to set
+	 */
+	public void setSubReturnReason(final String subReturnReason)
+	{
+		this.subReturnReason = subReturnReason;
+	}
+
+	/**
+	 * @return the imagePath
+	 */
+	public String getImagePath()
+	{
+		return imagePath;
+	}
+
+	/**
+	 * @param imagePath
+	 *           the imagePath to set
+	 */
+	public void setImagePath(final String imagePath)
+	{
+		this.imagePath = imagePath;
+	}
 
 	/**
 	 * @return the transactionType
@@ -617,6 +676,23 @@ public class MplReturnsForm
 				+ ", state=" + state + ", country=" + country + ", isDefault=" + isDefault + ", scheduleReturnDate="
 				+ scheduleReturnDate + ", scheduleReturnTime=" + scheduleReturnTime + ", isCODorder=" + isCODorder + ", orderCode="
 				+ orderCode + ", transactionId=" + transactionId + ", ussid=" + ussid + ", reverseSeal=" + reverseSeal + "]";
+	}
+
+	/**
+	 * @return the images
+	 */
+	public List<MultipartFile> getImages()
+	{
+		return images;
+	}
+
+	/**
+	 * @param images
+	 *           the images to set
+	 */
+	public void setImages(final List<MultipartFile> images)
+	{
+		this.images = images;
 	}
 
 }

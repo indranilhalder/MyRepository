@@ -509,6 +509,8 @@ public final class ModelAttributetConstants
 	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
 	public static final String BASEPRICEMAP = "basePriceMap";
 	public static final String MRPPRICEMAP = "mrpPriceMap";
+	public static final String DELCHARGE = "deliveryPrice";
+
 	//Add to Cart
 	public static final String WISHLISTDATA = "wishlistDatas";
 	public static final String QUANTITY = "quantity";
@@ -973,9 +975,11 @@ public final class ModelAttributetConstants
 	//For New Social Login
 	public static final String FB_API_KEY = "mplfbid";
 	public static final String GOOGLE_API_KEY = "mplgoogleid";
+	public static final String FB_API_KEY_LUXURY = "luxfbid";
+	public static final String GOOGLE_API_KEY_LUXURY = "luxgoogleid";
 	public static final String USE_NATIVE_API_SOCIAL = "useNativeSocial";
-	
-// TPR-3878 START
+
+	// TPR-3878 START
 	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
 	public static final String MOVEMENT = "Movement";
 	public static final String MOVEMENT_LIST = "movementList";
@@ -983,5 +987,6 @@ public final class ModelAttributetConstants
 	public static final String SPECIAL_FEATURES = "special Features";
 	public static final String FEATURES = "Features";
 	// TPR-3878 END
-
+	public static final String SUB_REASON = "subReason";
+	public static final String NEW_COMMENTS = "newComments";
 }

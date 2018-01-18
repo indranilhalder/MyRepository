@@ -18,7 +18,6 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -66,6 +65,7 @@ import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
+import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 
 
@@ -1670,11 +1670,14 @@ public class GenericUtilityMethods
 				PriceDataFactory.class);
 		Long cartTotalMrp = Long.valueOf(0);
 		double cartTotalNetSelPrice = 0.0D;
-		double couponDiscount = 0.0D;
+		//double couponDiscount = 0.0D;
 		double cartEntryNetSellPrice = 0.0D;
 		final DecimalFormat df = new DecimalFormat("#.##");
 		double totalDeliveryCharge = 0;
 		Long cartEntryMrp = Long.valueOf(0);
+		double cartDiscount = 0.0D;
+
+		double cartCouponDiscount = 0;
 
 		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
 		{
@@ -1687,19 +1690,25 @@ public class GenericUtilityMethods
 
 					cartTotalMrp = Long.valueOf(cartTotalMrp.longValue() + cartEntryMrp.longValue());
 
-					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
-					{
-						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
-					}
-					else
-					{
-						cartEntryNetSellPrice = Double
-								.parseDouble(df.format((null == entry.getBasePrice() ? 0.0d : entry.getBasePrice().doubleValue())
-										* (null == entry.getQuantity() ? 0.0d : entry.getQuantity().doubleValue())));
-					}
+					//					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					//					{
+					//						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
+					//					}
+					//					else
+					//					{
+					//						cartEntryNetSellPrice = Double
+					//								.parseDouble(df.format((null == entry.getBasePrice() ? 0.0d : entry.getBasePrice().doubleValue())
+					//										* (null == entry.getQuantity() ? 0.0d : entry.getQuantity().doubleValue())));
+					//					}
+
+					cartEntryNetSellPrice = entry.getTotalPrice().doubleValue();
 					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
 
-					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
+					//couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
+
+					cartDiscount += (null == entry.getCartLevelDisc() ? 0.0d : entry.getCartLevelDisc().doubleValue());
+
+					cartCouponDiscount += (null == entry.getCartCouponValue() ? 0.0d : entry.getCartCouponValue().doubleValue());
 
 					totalDeliveryCharge += ((null == entry.getCurrDelCharge() ? 0.0d : entry.getCurrDelCharge().doubleValue()) + (null == entry
 							.getScheduledDeliveryCharge() ? 0.0d : entry.getScheduledDeliveryCharge().doubleValue()));
@@ -1715,10 +1724,12 @@ public class GenericUtilityMethods
 		//SDI-2156
 		//if (abstractOrderModel instanceof CartModel)
 		//{
-			//couponDiscount = 0.0D;
+		//couponDiscount = 0.0D;
 		//}
 
-		final BigDecimal totalDiscount = new BigDecimal(cartTotalMrp.longValue() - cartTotalNetSelPrice - couponDiscount);
+		final BigDecimal totalDiscount = new BigDecimal((cartTotalMrp.longValue() - cartTotalNetSelPrice) + cartDiscount
+				+ cartCouponDiscount);
+
 		final PriceData totalDiscountVal = priceDataFactory.create(PriceDataType.BUY, totalDiscount,
 				MarketplacecommerceservicesConstants.INR);
 		if (null != model)
@@ -1911,4 +1922,47 @@ public class GenericUtilityMethods
 		return checkFlag;
 	}
 
+	/**
+	 * SDI_2801
+	 * 
+	 * @param cartModel
+	 * @param cartDataDetails
+	 */
+	public static void getCartPriceDetailsMobile(final AbstractOrderModel cartModel, final CartDataDetailsWsDTO cartDataDetails)
+	{
+		Long cartTotalMrp = Long.valueOf(0);
+		double cartTotalNetSelPrice = 0.0D;
+		double cartEntryNetSellPrice = 0.0D;
+		Long cartEntryMrp = Long.valueOf(0);
+		double cartDiscount = 0.0D;
+
+		double cartCouponDiscount = 0;
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		{
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (!entry.getGiveAway().booleanValue())
+				{
+					cartEntryMrp = Long.valueOf((null == entry.getMrp() ? 0l : entry.getMrp().longValue())
+							* (null == entry.getQuantity() ? 0l : entry.getQuantity().longValue()));
+
+					cartTotalMrp = Long.valueOf(cartTotalMrp.longValue() + cartEntryMrp.longValue());
+
+					cartEntryNetSellPrice = entry.getTotalPrice().doubleValue();
+					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
+
+					cartDiscount += (null == entry.getCartLevelDisc() ? 0.0d : entry.getCartLevelDisc().doubleValue());
+
+					cartCouponDiscount += (null == entry.getCartCouponValue() ? 0.0d : entry.getCartCouponValue().doubleValue());
+
+				}
+			}
+		}
+
+		final BigDecimal totalDiscount = new BigDecimal((cartTotalMrp.longValue() - cartTotalNetSelPrice) + cartDiscount
+				+ cartCouponDiscount);
+
+		cartDataDetails.setSubtotalPrice(String.valueOf(cartTotalMrp));
+		cartDataDetails.setDiscountPrice(String.valueOf(totalDiscount));
+	}
 }

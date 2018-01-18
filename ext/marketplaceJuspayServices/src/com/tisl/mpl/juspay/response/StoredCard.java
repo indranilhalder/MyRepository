@@ -215,6 +215,12 @@ public class StoredCard
 		return this;
 	}
 
+	public StoredCard withCardFingerprint(final String cardFingerprint)
+	{
+		this.cardFingerprint = cardFingerprint;
+		return this;
+	}
+
 	@Override
 	public String toString()
 	{

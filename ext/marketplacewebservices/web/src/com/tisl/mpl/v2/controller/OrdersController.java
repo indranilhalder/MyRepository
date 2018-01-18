@@ -87,6 +87,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -143,7 +144,6 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 
 /**
@@ -1494,24 +1494,16 @@ public class OrdersController extends BaseCommerceController
 
 		final GetOrderHistoryListWsDTO getOrderHistoryListWsDTO = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
-		int orderCount = 0, start = 0, end = 0;
+		final int orderCount = 0, start = 0, end = 0;
 		OrderData orderDetails = null;
 		try
 		{
-			//			final SearchPageData<OrderData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage, pageSize, sort,
-			//					userId);
-			//TISEE-6323
-			//	final SearchPageData<OrderHistoryData> searchPageDataParentOrder1 = ordersHelper.getParentOrders(0, pageSize, sort);
-
 			//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-
 			final int pageSizeConFig = Integer.parseInt(configurationService.getConfiguration()
 					.getString(MarketplacewebservicesConstants.ORDER_HISTORY_PAGESIZE_WEBSERVICE, "10").trim());
 
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(0, pageSizeConFig, sort,
-					showMode);
-
-
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+					pageSizeConFig, sort, showMode);
 			if (null == searchPageDataParentOrder.getResults())
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E9046);
@@ -1522,59 +1514,32 @@ public class OrdersController extends BaseCommerceController
 				for (final OrderHistoryData orderData : searchPageDataParentOrder.getResults())
 				{
 					orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderData.getCode());
-
-
 					//this scenario will occour only when product is missing in order entries.
 					if (null == orderDetails)
 					{
 						continue;
 					}
-
-
 					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails);
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);
-						orderCount++;
 					}
 				}
-				if (orderTrackingListWsDTO.size() > 0)
+				if (searchPageDataParentOrder.getPagination() != null
+						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
 				{
-					/*
-					 * if (searchPageDataParentOrder.getPagination() != null &&
-					 * searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0l) { final Long total =
-					 * Long.valueOf(searchPageDataParentOrder.getPagination().getTotalNumberOfResults());
-					 * getOrderHistoryListWsDTO.setTotalNoOfOrders(Integer.valueOf(total.toString())); }
-					 */
-					getOrderHistoryListWsDTO.setTotalNoOfOrders(Integer.valueOf(orderCount));
-					//setting start end
-					//					start = currentPage * pageSize;
-					//					end = start + pageSize;
-
+					final int totalNum = Integer.parseInt(String.valueOf(searchPageDataParentOrder.getPagination()
+							.getTotalNumberOfResults()));
+					getOrderHistoryListWsDTO.setTotalNoOfOrders(totalNum);
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-
-					start = currentPage * pageSizeConFig;
-					end = start + pageSizeConFig;
-
-					if (end > orderTrackingListWsDTO.size())
-					{
-						end = orderTrackingListWsDTO.size();
-					}
-					if (start < orderTrackingListWsDTO.size() && start <= end)
-					{
-						getOrderHistoryListWsDTO.setOrderData(orderTrackingListWsDTO.subList(start, end));
-						getOrderHistoryListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-					else
-					{
-						getOrderHistoryListWsDTO.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
-					}
+					getOrderHistoryListWsDTO.setOrderData(orderTrackingListWsDTO);
+					getOrderHistoryListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else
 				{
 					getOrderHistoryListWsDTO.setStatus(MarketplacecommerceservicesConstants.CARTDATA);
 				}
-
+				getOrderHistoryListWsDTO.setPageSize(pageSizeConFig);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)

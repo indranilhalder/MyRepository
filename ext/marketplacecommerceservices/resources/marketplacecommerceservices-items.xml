@@ -43,7 +43,9 @@
 			elementtype="City" autocreate="true" generate="false"
 			type="list" />
 		<!-- TPR-970	ends --> 
-					
+		<collectiontype code="validUssidList"
+			elementtype="AbstractOrderEntry" autocreate="true" generate="true"
+			type="list" />			
 				
 	</collectiontypes>
 
@@ -94,6 +96,7 @@
 			<value code="Percentage" />
 			<value code="Amount" />
 			<value code="Free" />
+			<value code="Forced" />
 		</enumtype>
 	</enumtypes>
 	
@@ -2453,6 +2456,14 @@
 						optional="true" />
 					<persistence type="property" />
 				</attribute>
+				<attribute qualifier="shippingCharge" autocreate="true"
+					type="java.lang.Double">
+					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
+					<description>shipping charge</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
 				<attribute qualifier="discountPrices" autocreate="true"
 					type="PromotionPriceRowCollectionType">
 					<description>Fixed price for discount in specific currencies.</description>
@@ -2547,6 +2558,12 @@
 				<attribute qualifier="orderEntryNumber" autocreate="true"
 					type="java.lang.Integer">
 					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="validProductUssidList" autocreate="true"
+					type="validUssidList">
+					<description>The validProductUssidList in the order</description>
 					<modifiers read="true" write="true" optional="true" />
 					<persistence type="property" />
 				</attribute>
@@ -2996,6 +3013,53 @@
 			</attributes>
 		</itemtype>  
 		<!-- TPR-629 ends -->
+		
+		<!-- TPR-7408 starts here -->
+		
+		<itemtype code="AbstractPromotion" autocreate="false" generate="false">
+			<attributes>
+			
+                 <attribute qualifier="promoCostCentreOnePercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre One Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+
+                 <attribute qualifier="promoCostCentreTwoPercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre Two Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+
+				 <attribute qualifier="promoCostCentreThreePercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre Three Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+				
+			</attributes>
+			
+         </itemtype>
+		
+		
+		<!-- TPR-7408 ends here -->		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		<!-- TPR-3893 starts here -->
 		<!-- *** PROMOTION QUANTITY PRICES ROW redeclared here for Bundling Promotions with Percentage Slabs*** -->
@@ -3469,6 +3533,47 @@
 		</typegroup>
 		 <!-- PR-15 ends -->
 		
+		<!-- TPR-7448 Starts here -->
+		<!-- Juspay Order Status -->
+		<typegroup name="JuspayCardStatus">
+		 <itemtype code="JuspayCardStatus" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.JuspayCardStatus">
+				<deployment table="MplJuspayCrdStatus" typecode="16003" />
+		 		<attributes>
+					<attribute qualifier="card_token" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="card_reference" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="card_fingerprint" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="guid" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="customerId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="channel" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+		</itemtype>
+		</typegroup>
+		<!-- TPR-7448 Ends here -->
 		
 	</itemtypes>
 	

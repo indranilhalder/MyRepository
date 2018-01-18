@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%-- plugins --%>
+
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/enquire.min.js"></script>
 <script type="text/javascript"
@@ -170,15 +171,7 @@
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/tealium.js"></script>
 	
-	<!-- Start Added for new Social Login Changes -->
-	<script type="text/javascript"
-	src="${commonResourcePath}/js/plugins/facebook2_10.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/plugins/googleLogin.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/acc.socialLogin.js"></script>
-	
-	<!-- End Added for new Social Login Changes -->
+
 	<%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.dtm.js"></script> --%>
 
@@ -309,6 +302,11 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.singlePageCheckout.js"></script>	
 </c:if>
+<!-- Web form TPR-5989 -->
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/simpleUpload.min.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.webform.js"></script>	
+
+
 
 <c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
 	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery-2.1.1.min.js"></script>

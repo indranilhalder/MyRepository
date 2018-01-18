@@ -36,7 +36,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
-import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 
 
 /**
@@ -69,8 +68,12 @@ public class DefaultExtendedPromoCartPopulator extends CartPopulator
 						final AbstractPromotionModel promotion = promotionResultModel.getPromotion();
 
 						if (promotionResultModel.getCertainty().floatValue() == 1.0F
-								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel || promotion instanceof BuyAandBGetPromotionOnShippingChargesModel /*
+																																																			   * ||
+																																																			   * promotion
+																																																			   * instanceof
+																																																			   * BuyAboveXGetPromotionOnShippingChargesModel
+																																																			   */))
 						{
 							isShippingPromoApplied = true;
 							break;
@@ -99,7 +102,7 @@ public class DefaultExtendedPromoCartPopulator extends CartPopulator
 				{
 					target.setTotalPriceWithConvCharge(createPrice(source, Double.valueOf(0.0d)));
 				}
-				//TCL-818 & TCL-947			
+				//TCL-818 & TCL-947
 				if (null != source.getCurrency().getSymbol())
 				{
 

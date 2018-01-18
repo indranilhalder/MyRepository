@@ -667,6 +667,8 @@ public interface MplCartFacade extends CartFacade
 	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData,
 			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
 
+
+
 	/**
 	 * @param cartModel
 	 * @throws EtailNonBusinessExceptions
@@ -700,5 +702,20 @@ public interface MplCartFacade extends CartFacade
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
 			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId);
 
+	/**
+	 * @param storeLocationRequestDataList
+	 * @return
+	 */
+	public List<StoreLocationResponseData> getStoreLocationsforCnCMobile(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId, CartModel cartModel);
+
+
 	public String populatePriceDisclaimerCart(final CartModel cartModel);
+
+	/**
+	 * @param cartModel
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	double getReviewOrderDelCost(CartModel cartModel) throws EtailNonBusinessExceptions;
 }
