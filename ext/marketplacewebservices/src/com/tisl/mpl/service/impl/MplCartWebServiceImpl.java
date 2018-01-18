@@ -1898,23 +1898,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			for (final DeliveryDetailsData delData : pinCodeReslist)
 			{
-				if ((MarketplacecommerceservicesConstants.ED.equalsIgnoreCase(delData.getType()))
-						&& (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+				//SDI-5027
+				if (!delDataPriorityList.contains(delData))
 				{
-					delDataPriorityList.add(delData);
-					break;
-				}
-				else if ((MarketplacecommerceservicesConstants.HD.equalsIgnoreCase(delData.getType()))
-						&& (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
-				{
-					delDataPriorityList.add(delData);
-					break;
-				}
-				else if ((MarketplacecommerceservicesConstants.CnC.equalsIgnoreCase(delData.getType()))
-						&& (MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(delivModel.getCode())))
-				{
-					delDataPriorityList.add(delData);
-					break;
+					//Adding the data in the list only if it is not present
+					if ((MarketplacecommerceservicesConstants.ED.equalsIgnoreCase(delData.getType()))
+							&& (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+					{
+						delDataPriorityList.add(delData);
+						break;
+					}
+					else if ((MarketplacecommerceservicesConstants.HD.equalsIgnoreCase(delData.getType()))
+							&& (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+					{
+						delDataPriorityList.add(delData);
+						break;
+					}
+					else if ((MarketplacecommerceservicesConstants.CnC.equalsIgnoreCase(delData.getType()))
+							&& (MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(delivModel.getCode())))
+					{
+						delDataPriorityList.add(delData);
+						break;
+					}
 				}
 			}
 		}
@@ -3273,8 +3278,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
