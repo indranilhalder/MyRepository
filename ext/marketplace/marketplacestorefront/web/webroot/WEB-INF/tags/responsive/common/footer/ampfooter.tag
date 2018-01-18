@@ -23,8 +23,8 @@
         <section class="footer-child-last mobile-item">
             <p>#NEWSLETTER</p>
             <form method="get"
-            	action="https://www.tatacliq.com/newsLetterSubscriptionEmail"
-			  	action-xhr="https://www.tatacliq.com/newsLetterSubscriptionEmail"
+            	action="/newsLetterSubscriptionEmail"
+			  	action-xhr="/newsLetterSubscriptionEmail"
 			  target="_top">
             <div><input class="footer-last-input" placeholder="Your Email Id" name="email" />
             <input class="footer-last-btn" type="submit" value="SUBSCRIBE" /></div>
