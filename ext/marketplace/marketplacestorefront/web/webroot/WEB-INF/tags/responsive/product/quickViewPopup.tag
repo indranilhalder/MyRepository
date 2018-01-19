@@ -778,24 +778,24 @@ display:none;
 			<span id="fulFilledBySshipQuick"  style="display:none;"></span>
 	</div>
 	</div>
-	 <ul class="star-review" id="quick_view_rating">
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
-				<li class="empty"></li>
+<!-- 	 <ul class="star-review" id="quick_view_rating"> -->
+<!-- 				<li class="empty"></li> -->
+<!-- 				<li class="empty"></li> -->
+<!-- 				<li class="empty"></li> -->
+<!-- 				<li class="empty"></li> -->
+<!-- 				<li class="empty"></li> -->
 		
-		<%-- 	<c:choose>
-				<c:when test="${not empty product.ratingCount}">
+<%-- 		<%-- 	<c:choose> --%>
+<%-- 				<c:when test="${not empty product.ratingCount}"> --%>
 			
-					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
-				</c:when>
-				<c:otherwise> --%>
-					<%-- <span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span> --%>
-					<span class="gig-rating-readReviewsLink_quick"><a href="${productUrl}#ReviewSecion"></a></span>	<!-- UF-25 -->
-				<%-- </c:otherwise>
-			</c:choose> --%>
-			</ul>    
+<%-- 					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span> --%>
+<%-- 				</c:when> --%>
+<%-- 				<c:otherwise> --%> --%>
+<%-- 					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span> --%>
+<%-- 					<span class="gig-rating-readReviewsLink_quick"><a href="${productUrl}#ReviewSecion"></a></span>	<!-- UF-25 --> --%>
+<%-- 				</c:otherwise>
+<%-- 			</c:choose> --%> --%>
+<!-- 			</ul>     -->
 <!-- adding to wishlist -->
 				<ul class="wish-share">
 					  <%--   <li><!-- <span id="addedMessage" style="display:none"></span> -->
