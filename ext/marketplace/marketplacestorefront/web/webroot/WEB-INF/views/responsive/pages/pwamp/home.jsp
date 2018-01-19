@@ -528,8 +528,6 @@
 				</div>
 				<div class="stayOne">
 					<div>
-						<p>&nbsp;</p>
-						<p>&nbsp;</p>
 						<p class="h2 stayQuedHeading">{{promoText1}}</p>
 						<p>{{promoText2}}</p>
 						<div class="stayQuedBottom">
@@ -543,11 +541,11 @@
 			</amp-list>
 		</div>
 		
-		<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="280" layout="fixed-height"> 
-		<template type="amp-mustache">
 		<!-- New In -->
 		<div id="newInComp">
-			<div class="newInTopSection">
+			<amp-list src="/pwamp/getNewAndExclusive?version=Online" height="320" layout="fixed-height"> 
+		<template type="amp-mustache">
+		<div class="newInTopSection">
 				<h2 class="homeViewHeading">
 					{{title}} <small class="homeViewAllBtn"><a href="/search/viewOnlineProducts">View
 							All</a></small>
@@ -556,7 +554,7 @@
 			<div>
 				<div id="newInCompCarousel">
 					 
-						<amp-carousel height="280"
+						<amp-carousel height="320"
 						layout="fixed-height" type="carousel">
 						{{#newAndExclusiveProducts}} <a href="{{productUrl}}"><div
 							class="newInItem">
@@ -578,9 +576,9 @@
 			<div class="brandStudioBottom">
 				<button class="brandStudioViewAllBtn">View All</button>
 			</div>
-		</div>
 		</template> 
 	</amp-list>
+		</div>
 	</div>
 
 
