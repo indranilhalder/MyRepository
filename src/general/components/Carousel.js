@@ -61,7 +61,9 @@ export default class Carousel extends React.Component {
                 )}
               </div>
             )}
-            {this.props.headerComponent && this.props.headerComponent}
+            {this.props.headerComponent &&
+              !this.props.header &&
+              this.props.headerComponent}
             <div className={styles.nav}>
               {this.props.seeAll && (
                 <div
@@ -94,7 +96,7 @@ export default class Carousel extends React.Component {
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
           {this.props.header &&
-            !this.props.headerComponent(
+            !this.props.headerComponent && (
               <div
                 className={headerClass}
                 style={{ paddingRight: buttonSpace }}
