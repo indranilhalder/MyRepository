@@ -15,6 +15,14 @@
   left: 0;
   top: 0;
 }
+.imageOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
+}
 .name {
   width: 100%;
   height: 28px;
@@ -42,26 +50,45 @@
   transform: translateY(8px);
 }
 .description {
-  width: calc(100% - 30px);
+  width: 80%;
   height: auto;
-  padding: 15px 30px;
   color: #fff;
   font-family: regular;
-  background: #212121;
-  border-radius: 5px;
   font-size: 14px;
   position: absolute;
   left: 0;
   right: 0;
   line-height: 20px;
-  bottom: -40px;
-  margin: auto;
+  bottom: 40px;
+  padding: 0 0 0 40px;
 }
 .logo {
   width: auto;
   max-width: 100%;
   height: 30px;
   position: absolute;
-  left: 15px;
-  top: 15px;
+  left: 40px;
+  top: -50px;
+}
+@media only screen and (max-width: 1024px) {
+  .imageOverlay {
+    background: transparent;
+  }
+  .base {
+    width: 100%;
+  }
+  .description {
+    width: 100%;
+    bottom: -20px;
+    margin: auto;
+    width: calc(100% - 30px);
+    padding: 15px 30px;
+    border-radius: 5px;
+    background: #212121;
+  }
+  .logo {
+    height: 25px;
+    top: 15px;
+    left: 15px;
+  }
 }

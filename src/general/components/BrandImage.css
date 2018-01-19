@@ -1,31 +1,37 @@
+
 .base {
-  width: 100%;
-  overflow: hidden;
-  padding-bottom: 100%;
-  position: relative;
-  background-color: white;
-}
-.inactive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0px;
-  left: 0px;
-  overflow: hidden;
-  border-radius: 5px;
-  border-width: 2px;
-  border-color: #dedede;
-  border-style: solid;
-  padding: 5px;
+  background-color:#000000;
+  padding-bottom:100%;
+  border-radius: 50%;
+  position: relative;  
+  width:100%;
 }
 .imageHolder {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 5px;
-  border-radius: 5px;
+  height:60%;
+  width:60%;
+ position:absolute;
+ top:0;
+ bottom:0;
+ right:0;
+ left:0;
+ margin:auto;
+} 
+.checkIcon{
+  width: 30px;
+  border-radius:50%;   
+  height: 30px;
+  top:20px;
+  position:absolute;
+  right:50px;  
+  margin:auto;
+  background:#ff1744 url(./img/3w.svg)no-repeat;
+  background-size:auto 16px;
+  background-position:center;
+  transition: 300ms;
+  transform:scale(0);
+  z-index:1;
 }
-.active {
-  composes: inactive;
-  border-color: #8d8d8d;
+.checkIconActive{
+  composes:checkIcon;
+  transform: scale(1);
 }
