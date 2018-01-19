@@ -109,7 +109,7 @@
 					</c:otherwise>
 				</c:choose>
 				
-				<input type="button" value="cancel" class="cancelBtn">
+				<input type="button" value="Cancel" class="cancelBtn">
 				
 			
 			

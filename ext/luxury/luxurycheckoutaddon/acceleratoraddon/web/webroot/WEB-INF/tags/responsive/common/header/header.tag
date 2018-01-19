@@ -35,15 +35,15 @@
 			<div class="wishAddSucessPlp">
 			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 			</div>
-			<div class="wishAlreadyAddedPlp">
+			<%-- <div class="wishAlreadyAddedPlp">
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-			</div>
+			</div> --%>
 			<!-- Changes for INC144313867 -->
 			<div class="wishRemoveSucessPlp">
 			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 			</div>
 	<!-- TPR-844 -->
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <header>	
 	<!-- For Infinite Analytics Start -->

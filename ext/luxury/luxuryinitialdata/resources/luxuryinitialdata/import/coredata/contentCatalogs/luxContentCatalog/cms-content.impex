@@ -250,17 +250,17 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 
 
 
-INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
-;;NewArrivalsBarComponent;New Arrivals;10;NewArrivalsNavNode;NewArrivalsCategoryLink;;AUTO;NewArrivalsBarComponent
-;;WomenBarComponent;Women;10;WomenNavNode;WomenCategoryLink;;AUTO;WomenBarComponent
-;;MenBarComponent;Men;10;MenNavNode;MenCategoryLink;;AUTO;MenBarComponent
-;;LifestyleBarComponent;Lifestyle;10;LifestyleNavNode;LifestyleCategoryLink;;AUTO;LifestyleBarComponent
-;;BeautyBarComponent;Beauty;10;BeautyNavNode;BeautyCategoryLink;;AUTO;BeautyBarComponent
-;;DesignersBarComponent;Designers;10;DesignersNavNode;DesignersCategoryLink;;AUTO;DesignersBarComponent
-;;OnSaleBarComponent;On Sale;10;OnSaleNavNode;OnSaleCategoryLink;;AUTO;OnSaleBarComponent
+#INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
+#;;NewArrivalsBarComponent;New Arrivals;10;NewArrivalsNavNode;NewArrivalsCategoryLink;;AUTO;NewArrivalsBarComponent
+#;;WomenBarComponent;Women;10;WomenNavNode;WomenCategoryLink;;AUTO;WomenBarComponent
+#;;MenBarComponent;Men;10;MenNavNode;MenCategoryLink;;AUTO;MenBarComponent
+#;;LifestyleBarComponent;Lifestyle;10;LifestyleNavNode;LifestyleCategoryLink;;AUTO;LifestyleBarComponent
+#;;BeautyBarComponent;Beauty;10;BeautyNavNode;BeautyCategoryLink;;AUTO;BeautyBarComponent
+#;;DesignersBarComponent;Designers;10;DesignersNavNode;DesignersCategoryLink;;AUTO;DesignersBarComponent
+#;;OnSaleBarComponent;On Sale;10;OnSaleNavNode;OnSaleCategoryLink;;AUTO;OnSaleBarComponent
 
-INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
-;;NavBarComponent;Luxury Navigation Bar Collection Component;NewArrivalsBarComponent,WomenBarComponent,MenBarComponent,LifestyleBarComponent,BeautyBarComponent,DesignersBarComponent,OnSaleBarComponent;
+INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;
+;;NavBarComponent;Luxury Navigation Bar Collection Component;
 
 
 
@@ -879,7 +879,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
 ;;AppSideContentSlot;;true;AppInfo
 ;;ErrorPageBannerComponent-slot;Error PageBanner Slot;true;ErrorPageBannerComponent
-
+;;PopularSearchSlot;Popular Search;true;;
+;;SeoFooterSlot;Seo Footer;true;;
 
 ####################STATIC PAGES ########################
 ;;BodyContent-Overview;Body Content for Overview Page;true;PersonalInformationMediaParagraphComponent,OrderHistoryMediaParagraphComponent,SavedCardsMediaParagraphComponent,SavedAddressesMediaParagraphComponent;
@@ -1052,6 +1053,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;GenderPageWhyShopOnLuxury;WhyShopOnLuxury;;Gender-WhyShopOnLuxurySlot;true
 ;;GenderPageFooter;Footer;;FooterSlot;true
 
+;;GenderPagePopularSearch;PopularSearch;;PopularSearchSlot;true
+;;GenderPageSeoFooter;SeoFooter;;SeoFooterSlot;true
 
 ########### Luxury Cart Page Template ##########################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='CartPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
@@ -1072,7 +1075,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;PlaceholderContentSlot-CartPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
 ;;WishListCartSlot-CartPage;WishListCartSlot;;WishListCartSlot;true
 
-
+;;PopularSearch-CartPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-CartPage;SeoFooter;;SeoFooterSlot;true
 
 ########### Luxury Search Page Template ##########################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
@@ -1091,6 +1095,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;WishList-SearchResultsGrid;WishList;;WishListSlot;true
 ;;Bottom-HeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-SearchResultsGrid;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-SearchResultsGrid;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='ProductGridPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;LuxNew-ProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true
@@ -1108,7 +1114,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;LuxNewWishList-SearchResultsGrid;WishList;;WishListSlot;true
 ;;LuxNewBottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
 
-
+;;LuxNewPopularSearch-SearchResultsGrid;PopularSearch;;PopularSearchSlot;true
+;;LuxNewSeoFooter-SearchResultsGrid;SeoFooter;;SeoFooterSlot;true
 
 ########### luxury Content pages Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryContentPageTemplate'];validComponentTypes(code);compTypeGroup(code)
@@ -1127,6 +1134,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;BottomHeaderSlot;;BreadcrumbComponent
 ;PlaceholderContentSlot;;;
 
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 # Product Grid Page Template
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductGridPageTemplate'];validComponentTypes(code);compTypeGroup(code)
@@ -1147,7 +1156,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 #TPR-4471 END
 ;PlaceholderContentSlot;;;
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 ########### Content Slot Name for Luxury WishList Page Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryAccountWishlistPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1163,7 +1173,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 ########### Content Slot Name for Luxury Home Page Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;TopHeaderSlot;;;wide
@@ -1180,7 +1191,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;HomePageCurosel;;;wide
 ;WhyShopOnLuxury;;;wide
 ;Footer;;;wide
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 ########### Content Slot Name for Luxury Product Details Page Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;TopHeaderSlot;;;wide
@@ -1208,7 +1220,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;ConfigureProductsCountSlot;;ConfigureProductsCountComponent
 #pin code
 ;PinCodeServiceSlot;;PincodeServiceComponent
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 ########### Content Slot Name for Luxury Category Landing Page Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;CategoryCurosel;;;wide
@@ -1218,6 +1231,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Categorybanner2Slot;;;wide
 ;Categorybanner3Slot;;;wide
 ;Categorybanner4Slot;;;wide
+
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 ########### Content Slot Name for Luxury Brand Landing Page Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
@@ -1229,6 +1245,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Brand-NavigationBarSlot;;;wide
 ;Brand-WhyShopOnLuxurySlot;;;wide
 ;Brand-FooterSlot;;;wide
+
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 ########### Content Slot Name for Luxury Cart Page Template ##########################
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CartPageTemplate'];validComponentTypes(code);compTypeGroup(code)
@@ -1248,6 +1267,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;PlaceholderContentSlot;;;
 ;WishListCartSlot;;ProductAddToCartComponent
 
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountUpdateProfilePageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1263,7 +1284,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountUpdatePasswordPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1278,7 +1300,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountOrderHistoryPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
@@ -1292,7 +1315,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountOrderDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1307,7 +1331,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountPaymentDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
@@ -1322,7 +1347,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountAddressBookPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
@@ -1337,7 +1363,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;Section1;;CMSParagraphComponent;
 ;Section2;;CMSMediaParagraphComponent;
@@ -1353,7 +1380,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
@@ -1368,7 +1396,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 # Error Page Template
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;TopHeaderSlot;;;wide               
@@ -1382,7 +1411,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SideContent;;MplBigPromoBannerComponent;
 #;MiddleContent;;AccountNavigationCollectionComponent;
 ;BottomContent;;;wide
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 
 # App Page Template
@@ -1397,7 +1427,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;SideContent;;;wide
 
-
+;PopularSearch;;CMSParagraphComponent;
+;SeoFooter;;CMSParagraphComponent;
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateProfilePageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountUpdateProfilePage;SiteLogo;;SiteLogoSlot;true
@@ -1411,7 +1442,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-AccountUpdateProfilePage;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
-
+;;PopularSearch-AccountUpdateProfilePage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountUpdateProfilePage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdatePasswordPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountUpdatePassword;SiteLogo;;SiteLogoSlot;true
@@ -1424,6 +1456,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountUpdatePassword;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountUpdatePassword;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountUpdatePassword;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountUpdatePassword;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountOrderHistoryPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountOrderHistoryPage;SiteLogo;;SiteLogoSlot;true
@@ -1437,6 +1471,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-AccountOrderHistoryPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
+;;PopularSearch-AccountOrderHistoryPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountOrderHistoryPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountOrderDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountOrderDetailsPage;SiteLogo;;SiteLogoSlot;true
@@ -1450,6 +1486,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountOrderDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountOrderDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountOrderDetailsPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountOrderDetailsPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountPaymentDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountPaymentDetailsPage;SiteLogo;;SiteLogoSlot;true
@@ -1462,6 +1500,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountPaymentDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountPaymentDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountPaymentDetailsPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountPaymentDetailsPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountAddressBookPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountAddressBookPage;SiteLogo;;SiteLogoSlot;true
@@ -1473,6 +1513,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SearchBox-AccountAddressBookPage;SearchBox;;SearchBoxSlot;true
 ;;TopHeaderSlot-AccountAddressBookPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountAddressBookPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+;;PopularSearch-AccountAddressBookPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountAddressBookPage;SeoFooter;;SeoFooterSlot;true
 
 ################## Luxury Category Page Template #################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
@@ -1489,6 +1532,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;CategoryHeroBanner;CategoryHeroBanner;;CategoryHeroBanner;true
 ;;Category-Page-Curosel;CategoryCurosel;;CategoryCurosel;true
 
+;;CategoryPagePopularSearch;PopularSearch;;PopularSearchSlot;true
+;;CategoryPageSeoFooter;SeoFooter;;SeoFooterSlot;true
+
 ################## Luxury Wishlist Page Template #################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='luxuryAccountWishlistPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;TopHeaderSlot-luxuryAccountWishlistPage;TopHeaderSlot;;TopHeaderSlot;true
@@ -1504,6 +1550,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;WhyShopOnLuxury-luxuryAccountWishlistPage;WhyShopOnLuxury;;WhyShopOnLuxury;true
 ;;Footer-luxuryAccountWishlistPage;Footer;;FooterSlot;true
 
+;;PopularSearch-luxuryAccountWishlistPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-luxuryAccountWishlistPage;SeoFooter;;SeoFooterSlot;true
 
 
 ################## Luxury Home Page Template #################
@@ -1524,6 +1572,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;WhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true
 ;;Footer;Footer;;FooterSlot;true
 
+;;PopularSearch-homepage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-homepage;SeoFooter;;SeoFooterSlot;true
 
 ################## Luxury PDP Page Template #################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
@@ -1550,7 +1600,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 #pincode
 ;;PinCodeService-LuxuryProductDetails;PinCodeService;;PinCodeServiceSlot;true
 
-
+;;PopularSearch-LuxuryProductDetails;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-LuxuryProductDetails;SeoFooter;;SeoFooterSlot;true
 
 ################## Luxury Content Page Template #################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='LuxuryContentPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
@@ -1565,7 +1616,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-LuxuryContentPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-LuxuryContentPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
-
+;;PopularSearch-LuxuryContentPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-LuxuryContentPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
@@ -1579,6 +1631,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountCouponDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountCouponDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountCouponDetailsPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountCouponDetailsPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountOverviewPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountOverviewPageTemplate;SiteLogo;;SiteLogoSlot;true
@@ -1592,6 +1646,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountOverviewPageTemplate;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountOverviewPageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountOverviewPageTemplate;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountOverviewPageTemplate;SeoFooter;;SeoFooterSlot;true
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountAddressBookPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountAddressBookPage;SiteLogo;;SiteLogoSlot;true
 ;;HomepageLink-AccountAddressBookPage;HomepageNavLink;;HomepageNavLinkSlot;true
@@ -1603,6 +1660,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SearchBox-AccountAddressBookPage;SearchBox;;SearchBoxSlot;true
 ;;TopHeaderSlot-AccountAddressBookPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountAddressBookPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+;;PopularSearch-AccountAddressBookPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountAddressBookPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountPaymentDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountPaymentDetailsPage;SiteLogo;;SiteLogoSlot;true
@@ -1616,6 +1676,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountPaymentDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountPaymentDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountPaymentDetailsPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountPaymentDetailsPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountOrderDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountOrderDetailsPage;SiteLogo;;SiteLogoSlot;true
@@ -1629,6 +1691,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountOrderDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountOrderDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountOrderDetailsPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountOrderDetailsPage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateProfilePageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountUpdateProfilePage;SiteLogo;;SiteLogoSlot;true
@@ -1642,6 +1706,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountUpdateProfilePage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountUpdateProfilePage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+;;PopularSearch-AccountUpdateProfilePage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountUpdateProfilePage;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;Section1-ContactUsPageTemplate;Section1;;Section1-contact;true
@@ -1657,6 +1723,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-ContactUsPageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;Footer-ContactUsPageTemplate;Footer;;FooterSlot;true  
 
+;;PopularSearch-ContactUsPageTemplate;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-ContactUsPageTemplate;SeoFooter;;SeoFooterSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
@@ -1669,7 +1737,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountCouponDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountCouponDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
-
+;;PopularSearch-AccountCouponDetailsPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AccountCouponDetailsPage;SeoFooter;;SeoFooterSlot;true
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
@@ -1685,6 +1754,9 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 #;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
 ;;ErrorPageBannerComponent-ErrorPage;MiddleContent;;ErrorPageBannerComponent-slot;true
 
+;;PopularSearch-ErrorPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-ErrorPage;SeoFooter;;SeoFooterSlot;true
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AppPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;TopHeaderSlot-AppPage;TopHeaderSlot;;TopHeaderSlot;true          
 ;;MiddleHeaderHelpLink-AppPage;MiddleHeader;;MiddleHeader;true          
@@ -1696,7 +1768,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;Footer-AppPage;Footer;;FooterSlot;true
 ;;SideContent-AppPage;SideContent;;AppSideContentSlot;true 
 
-
+;;PopularSearch-AppPage;PopularSearch;;PopularSearchSlot;true
+;;SeoFooter-AppPage;SeoFooter;;SeoFooterSlot;true
 
 
 ################## Slot for Luxury Category Page  #################
@@ -1772,3 +1845,4 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;app-page;APP Page;AppPageTemplate;/app-page
 
+###########################################################

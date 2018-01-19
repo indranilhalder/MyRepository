@@ -19,6 +19,8 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,22 +44,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginLuxuryController
 {
 
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private SessionService sessionService;
+	
 	protected static final String SPRING_SECURITY_LAST_USERNAME = "SPRING_SECURITY_LAST_USERNAME";
 	protected static final String IS_SIGN_IN_ACTIVE = "isSignInActive";
 	protected static final String Y_CAPS_VAL = "Y";
-	private static final Logger LOG = Logger.getLogger(LoginLuxuryController.class);
+	
 
+
+	/**
+	 * 
+	 */
+	public LoginLuxuryController()
+	{
+		super();
+	}
+
+	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/signin")
 	public String getLoginFragment(final Model model, final LoginForm form, @RequestParam(value = IS_SIGN_IN_ACTIVE, required = false) final String isSignInActive)
 	{
-//		LOG.info("inside getLoginFragment");
-//		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-//		model.addAttribute("userName", currentCustomer.getFirstName());
+
 
 		if (null != isSignInActive && !StringUtils.isEmpty(isSignInActive)){
 			model.addAttribute(IS_SIGN_IN_ACTIVE, isSignInActive);

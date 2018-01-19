@@ -958,7 +958,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
     $("#savingsOnProductId").html(""), void 0 === savingsOnProduct && (null != mrp && null != spPrice ? (savingPriceCal = mrp.doubleValue - spPrice.doubleValue, 
     savingPriceCalPer = savingPriceCal / mrp.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100)) : null != mrp && null != mop && (savingPriceCal = mrp.doubleValue - mop.doubleValue, 
     savingPriceCalPer = savingPriceCal / mrp.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100))), 
-    null != mrp && $("#mrpPriceId").append(mrp.formattedValueNoDecimal), null != mop && $("#mopPriceId").append(mop.formattedValueNoDecimal), 
+    null != mrp && $("#mrpPriceId").append(mrp.formattedValueNoDecimal), null != mop && $("#mopPriceId").html('<span>Price:</span><span>'+mop.formattedValueNoDecimal+'</span>'), 
     null != spPrice && $("#spPriceId").append(spPrice.formattedValueNoDecimal), null != savingsOnProduct && $("#savingsOnProductId").append("(-" + savingsOnProduct + " %)"), 
     null != savingsOnProduct && 0 != savingsOnProduct && $("#savingsOnProductId").show(), 
     "" == mrp.value) $("#mrpPriceId").hide(), $("#savingsOnProductId").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
@@ -967,7 +967,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
     $("#spPriceId").show(), $("#mopPriceId").hide(), $("#mrpPriceId").removeClass("sale").addClass("old"); else {
         var freebiePriceThresVal = $("#freebiePriceThreshId").val();
         if (null != mop && 0 != mop.value && mop.value > freebiePriceThresVal) mop.value == mrp.value ? ($("#mrpPriceId").removeClass("old").addClass("sale"), 
-        $("#mrpPriceId").show(), $("#mrpPriceId").css("text-decoration", ""), $("#mopPriceId").hide(), 
+        $("#mrpPriceId").show(), $("#mrpPriceId").css("text-decoration", ""),$(".price-feature").addClass("nonsale"), $("#mopPriceId").hide(),
         $("#spPriceId").hide()) : ($("#mrpPriceId").css("text-decoration", "line-through"), 
         $("#mrpPriceId").show(), $("#mopPriceId").show(), $("#spPriceId").hide(), $("#mrpPriceId").removeClass("sale").addClass("old")); else if (0 != mop.value && mop.value <= freebiePriceThresVal) {
             $(".size").hide(), $(".color-swatch").hide(), $(".reviews").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
@@ -980,7 +980,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
             populateFreebieMsg(prodCode));
             $.isEmptyObject(freebieproductMsg) ? $("#freebieProductMsgId").show() : ($("#freebieProductMsgId").html(freebieMsg), 
             $("#freebieProductMsgId").show());
-        } else $("#mrpPriceId").show();
+        }else{$(".price-feature").addClass("nonsale"); $("#mrpPriceId").show();}
     }
     void 0 != spPrice || null != spPrice ? ($("#prodPrice").val(spPrice.value), $("#price-for-mad").val(spPrice.value)) : void 0 != mop || null != mop ? ($("#prodPrice").val(mop.value), 
     $("#price-for-mad").val(mop.value)) : ($("#prodPrice").val(mrp.value), $("#price-for-mad").val(mrp.value)), 
@@ -1091,17 +1091,6 @@ function getRating(key, productCode, category) {
         $("#ratingDiv .gig-rating-readReviewsLink").text(data.streamInfo.ratingCount + " REVIEWS")), 
         $("#customer").text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     });
-    var ratingsParams = {
-        categoryID: category,
-        streamID: productCode,
-        containerID: "ratingDiv",
-        linkedCommentsUI: "commentsDiv",
-        showCommentButton: "true",
-        onAddReviewClicked: function(response) {
-            CheckUserLogedIn();
-        }
-    };
-    gigya.comments.showRatingUI(ratingsParams);
 }
 
 function CheckUserLogedIn() {
@@ -1623,22 +1612,27 @@ function getBuyBoxDataAjax(productCode, variantCodesJson) {
                 $(".primary_promo_title").hide(), $(".primary_promo_img").hide())));
                 var allStockZero = data.allOOStock, sellerName = data.sellerName, sellerID = data.sellerId, oosMicro = data.isOOsForMicro;
                 $("#sellerNameId").html(sellerName), $("#sellerSelId").val(sellerID), data.othersSellersCount > 0 && 1 == oosMicro ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
                 $("#otherSellerInfoId").show(), $("#otherSellersId").html(data.othersSellersCount), 
                 $("#otherSellerLinkId").show()) : isOOS() && data.othersSellersCount > 0 ? ($("#addToCartButton").hide(), 
-                $("#outOfStockId").show(), $('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"),$("#buyNowButton").hide(), $("#otherSellerInfoId").hide(), 
+                $("#outOfStockId").show(), $("#buyNowButton").hide(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
                 $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
                 $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : isOOS() && 0 == data.othersSellersCount ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
                 $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
                 $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : "Y" == allStockZero && data.othersSellersCount > 0 && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
-                $("#outOfStockId").show(), $('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"),$("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
+                $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
+                $(".addtocart-component").removeClass("col-md-6"), $(".addtocart-component").addClass("col-md-12"), 
                 $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), 
                 $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
                 $("#variant li a").each(function() {
                     $(this).removeAttr("href"), $(this).parent().addClass("strike");
                 })) : "Y" == allStockZero && 0 == data.othersSellersCount && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
                 $("#variant li a").each(function() {
                     $(this).removeAttr("href"), $(this).parent().addClass("strike");
                 }), $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), 
@@ -16868,7 +16862,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -17144,6 +17138,8 @@ TATA.CommonFunctions = {
             TATA.CommonFunctions.loadSignInForm(elem), $("#mypopUpModal").modal(), $(".modal-backdrop").on("click", function() {
                 $("#mypopUpModal").modal("hide");
             });
+        }), $(".header-search .main-nav-close").on("click", function() {
+            $(this).parent(".header-search").removeClass("active");
         });
     },
     DocumentClick: function() {
@@ -17283,10 +17279,6 @@ TATA.CommonFunctions = {
             }
         });
     },
-    setHeader: function(data) {
-        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : ($("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show(), 
-        $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount));
-    },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
         return productURL.substring(n + 1, productURL.length).toUpperCase();
@@ -17371,21 +17363,25 @@ TATA.CommonFunctions = {
     Header: {
         MobileMenu: function() {
             $(window).width() < 768 && ($(".mega-menu li span").each(function() {
-                $(this).prev().css("pointer-events", "none");
-            }), $(".mega-menu > li ").on("click", function() {
-                $(".mega-menu li span").each(function() {
+                //$(this).prev().css("pointer-events", "none");
+            }), 
+            $(".mega-menu > li ").on("click", function() {
+                /*$(".mega-menu li span").each(function() {
                     $(this).prev().css("pointer-events", "none");
                 }), $(".mega-menu > li ").each(function() {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(this).addClass("parent"), $(".sub-menu-toggle", this).first().addClass("active").next(".sub-menu").addClass("active"), 
-                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");
-            }), $(document).on("click", ".open-inner-menu li", function() {
-                $(".open-inner-menu li").each(function() {
+                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");*/
+            }), 
+            $(document).on("click", ".open-inner-menu li", function() {
+               /* $(".open-inner-menu li").each(function() {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
-                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");
+                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");*/
             })), $("#hamburger-menu").on("click", function() {
-                $("body").addClass("menu-open");
+            	var curr_menu = sessionStorage.getItem('active-menu');
+                $("body").addClass("menu-open"); if(!curr_menu){$(".header-left .tab-link").first().addClass("current");} 
+                $(".main-nav .tab-content").first().addClass("current");
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
             }), $("#main-nav .sub-menu-toggle").on("click", function() {
@@ -17400,8 +17396,21 @@ TATA.CommonFunctions = {
                 $(this).find(".mini-bag").hide();
             });
         },
+        Headermegamenutab: function() {
+            $("ul.tabs li").hover(function() {
+                var tab_id = $(this).attr("data-tab");
+                $("ul.tabs li").removeClass("current"), $(".tab-content").removeClass("current"), 
+                $(this).addClass("current"), $("#" + tab_id).addClass("current");
+            }), $("ul.tabs li, .mega-menu.tab-content").mouseout(function() {
+                $(".tab-content").removeClass("current"), $("ul.tabs li").removeClass("current");
+            }), $(".mega-menu.tab-content").mouseover(function() {
+                var tab_id = $(this).attr("id");
+                $("ul.tabs li").removeClass("current"), $(".tab-content").removeClass("current"), 
+                $(this).addClass("current"), $("ul.tabs").find('li[data-tab="' + tab_id + '"]').addClass("current");
+            });
+        },
         init: function() {
-            this.MobileMenu(), this.HeaderMinicart();
+            this.MobileMenu(), this.HeaderMinicart(); this.Headermegamenutab();
         }
     },
     Footer: function() {
@@ -17505,7 +17514,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -17668,19 +17677,7 @@ TATA.CommonFunctions = {
     LANDING: {
         owlCarosel_customize: function() {
             $(window).width() <= 767 && $(".sort-by-fature .selectboxit-text").html("SORT"), 
-            $(".luxgender-carousel .js-owl-carousel").owlCarousel({
-                dots: !0,
-                loop: !0,
-                merge: !0,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    768: {
-                        items: 4
-                    }
-                }
-            }), $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
+            $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
                 dots: !0,
                 loop: !0,
                 items: 1,
@@ -18056,6 +18053,12 @@ $(document).ready(function() {
     }), $("#apply_filter").click(function() {
         $(".plp-leftbar-close a").trigger("click");
     }), checkforPriceFilter();
+}), $(document).ready(function() {
+    $("body.page-cartPage #checkout-id a").removeClass("checkout-disabled"), $("body.page-cartPage #checkout-id a").click(function(event) {
+        if ("" === $("#defaultPinCodeIds").val() || 0 == $("#defaultPinCodeIds").val().length) return $("#defaultPinCodeIds").focus(), 
+        $("#defaultPinCodeIds").css("border", "1px solid red"), event.preventDefault(), 
+        !1;
+    });
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
@@ -19252,16 +19255,3 @@ $("#popUpExpAddress").on("hidden.bs.modal", function() {
 }), $(".card_exp_month, .card_exp_year").on("change", function() {
     $(this).css("color", "#000");
 });
-
- $(document).ready(function() {
-        $("body.page-cartPage #checkout-id a").removeClass("checkout-disabled");
-        $("body.page-cartPage #checkout-id a").click(function (event) {
-            if ($("#defaultPinCodeIds").val() === '' || $("#defaultPinCodeIds").val().length == 0) {
-                $("#defaultPinCodeIds").focus();
-                $("#defaultPinCodeIds").css('border', '1px solid red');
-                event.preventDefault();
-                return false;
-            }
-        })
-    });
-

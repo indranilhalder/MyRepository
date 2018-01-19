@@ -18,7 +18,7 @@ $pickupInStoreMode=BUY_AND_COLLECT
 $customerAllowedToIgnoreSuggestions=true
 $paymentProvider=Mockup
 $promoGrp=luxPromoGrp
-$checkoutFlowGroup=marketplaceMultiPathCheckoutGroup
+$checkoutFlowGroup=luxuryMultiPathCheckoutGroup
 $classificationCatalog=pcmClassification
 
 INSERT_UPDATE PromotionGroup;Identifier[unique=true];
@@ -50,6 +50,16 @@ INSERT_UPDATE PaymentType;mode;isAvailable;modeId[unique=true];baseStore(uid)[de
 ;EMI;true;luxEMI
 ;COD;true;luxCOD
 ;Cheque;false;luxCheque
+
+
+INSERT_UPDATE PaymentType;mode;isAvailable;modeId[unique=true];baseStore(uid)[default=$storeUid]
+;Credit Card;true;mplCreditCard;mpl;
+;Debit Card;true;mplDebitCard;mpl
+;Netbanking;true;mplNetBanking;mpl
+;EMI;true;mplEMI;mpl
+;COD;true;mplCOD;mpl
+;Cheque;false;mplCheque;mpl
+
 
 INSERT_UPDATE Bank;bankName;bankCode[unique=true];baseStore(uid)
 ;HDFC Bank;HDFB;
