@@ -70,5 +70,7 @@ export default class MultiSelectCarousel extends React.Component {
 MultiSelectCarousel.propTypes = {
   header: PropTypes.string,
   subheader: PropTypes.string,
-  selected: PropTypes.arrayOf(PropTypes.string)
+  selected: PropTypes.arrayOf(PropTypes.string),
+  onSelect: PropTypes.func,
+  onApply: PropTypes.func
 };
