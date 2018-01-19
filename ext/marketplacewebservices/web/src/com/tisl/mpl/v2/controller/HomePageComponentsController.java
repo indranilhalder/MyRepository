@@ -114,6 +114,7 @@ public class HomePageComponentsController
 			bannerProductCarouselDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
 			bannerProductCarouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
+
 		return bannerProductCarouselDTO;
 	}
 
@@ -154,6 +155,7 @@ public class HomePageComponentsController
 			videoProductCaraouselDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
 			videoProductCaraouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
+
 		return videoProductCaraouselDTO;
 	}
 
