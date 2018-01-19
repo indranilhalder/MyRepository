@@ -1,6 +1,7 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
 import SingleSelect from "../../general/components/SingleSelect";
+import styles from "./SingleQuestion.css";
 export default class SingleQuestion extends React.Component {
   handleClick(val) {
     if (this.props.onApply) {
@@ -10,7 +11,9 @@ export default class SingleQuestion extends React.Component {
   render() {
     return (
       <Carousel
-        header={this.props.header}
+        headerComponent={
+          <div className={styles.header}>{this.props.header}</div>
+        }
         elementWidthDesktop={20}
         elementWidthMobile={30}
       >
