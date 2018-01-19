@@ -709,7 +709,19 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 			}
 			createRefundEntry(shipment, shipmentNewStatus, consignmentModel, orderModel);
-			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
+			
+			//SDI-5018
+			boolean isReturnClosedExitInHistory = false;
+
+			if (ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus)) //if new status coming as RETURN_CLOSED
+			{
+				isReturnClosedExitInHistory = isOrderHistoryPresent(orderModel, ConsignmentStatus.RETURN_CLOSED.toString(),
+						consignmentModel.getCode());
+
+			}
+			//SDI-5018
+
+			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) && !isReturnClosedExitInHistory)
 			{
 				if (!checkConsignmentStatus)
 				{
@@ -890,13 +902,29 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				target.setLastname(names[1]);
 			}
 		}
-
-		final CountryModel countryModel = getCountryModel(source.getCountryIso3166Alpha2Code());
-		target.setCountry(countryModel);
-
-		final RegionModel regionModel = getRegionModel(countryModel, source.getCountrySubentity());
-		target.setRegion(regionModel);
-
+		
+		CountryModel countryModel = null;
+		try
+		{
+			countryModel = getCountryModel(source.getCountryIso3166Alpha2Code());
+			target.setCountry(countryModel);
+		}
+		catch (final Exception e)
+		{
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
+		}
+		
+		try
+		{
+			final RegionModel regionModel = getRegionModel(countryModel, source.getCountrySubentity());
+			target.setRegion(regionModel);
+		}
+		catch (final Exception e)
+		{
+			callTrace.append(ExceptionUtils.getStackTrace(e));
+			isError = true;
+		}
 
 	}
 

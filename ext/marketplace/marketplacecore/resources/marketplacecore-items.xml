@@ -932,6 +932,29 @@
 			<value code="Automatic"></value>
 			<value code="Manual"></value>		
 		</enumtype>
+		<!-- SDI-4494 -->
+		<enumtype code="FPCRefundStatus" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="CREATED"></value>
+			<value code="PENDING"></value>
+			<value code="REFUND_INITIATED"></value>
+			<value code="REFUND_IN_PROGRESS"></value>
+			<value code="REFUND_SUCCESSFUL"></value>
+			<value code="NOT_APPLICABLE"></value>
+		</enumtype>
+		<enumtype code="FPCRefundType" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="PAYMENT_FAILED"></value>
+			<value code="PAYMENT_TIMEOUT"></value>
+			<value code="ORDER_NOT_GENERATED"></value>
+			<value code="DUPLICATE_PAYMENT"></value>
+			<value code="RMS_VERIFICATION_FAILED"></value>
+		</enumtype>
+		<enumtype code="FPCRefundMethod" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="AUTOMATIC"></value>
+			<value code="MANUAL"></value>		
+		</enumtype>
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" 
 			dynamic="true"> <description>Component Type For Components</description> 
 			<value code="BannerCarousel" /> <value code="Banners3CarouselType" /> <value 
@@ -2348,7 +2371,7 @@
 				</attributes>
 				<!-- Index Addition 08/01/2017 Start -->
 				<indexes>
-					<index name="IDX_PRICEROWS_SITE" unique="true">
+					<index name="IDX_PRICEROWS_SITE" unique="false">
 						<key attribute="sellerArticleSKU" />
 						<key attribute="siteId" />
 						<key attribute="itemtype" />
@@ -3889,7 +3912,7 @@
 				</attributes>
 				<!-- Index Addition 08/01/2017 Start -->
 				<indexes>
-					<index name="IDX_ADR_CELL" unique="true">
+					<index name="IDX_ADR_CELL" unique="false">
 						<key attribute="cellphone" />
 					</index>
 				</indexes>
@@ -14133,6 +14156,67 @@
 					<modifiers unique="false" optional="false" search="true"/>
 				</attribute>
 			</attributes>
+		</itemtype>
+	</typegroup>	
+	
+	<!-- SDI-4494 -->
+	<typegroup name="FPCRefundGroup">
+		<itemtype code="FPCRefundEntry" autocreate="true" generate="true">
+			<deployment table="fpcrefundentries" typecode="27390" />
+			<attributes>
+				<attribute autocreate="true" qualifier="auditId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="audit" type="MplPaymentAudit"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="parentAuditId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="cartGUID" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="order" type="Order"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="refundStatus" type="FPCRefundStatus"
+					generate="true"> 
+					<persistence type="property" />
+					<defaultvalue>em().getEnumerationValue("FPCRefundStatus","CREATED")</defaultvalue>					
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="refundType" type="FPCRefundType"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="refundMethod" type="FPCRefundMethod"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="isExpired" type="java.lang.Boolean"
+					generate="true"> 
+					<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+			</attributes>
+			<indexes>
+				<index name="FPCAUDITID_IDX" unique="true">
+					<key attribute="auditId" />
+				</index>
+			</indexes>
 		</itemtype>
 	</typegroup>		
   </itemtypes>
