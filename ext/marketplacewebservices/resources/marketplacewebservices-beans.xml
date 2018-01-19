@@ -1002,6 +1002,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.KnowMoreDTO>"></property>
 		<property name="fulfillmentType" type="String"></property>
 		<property name="brandName" type="String"></property>
+		<property name="brandInfo" type="String"></property><!--TPR-6228/SDI-2805 -->
 		<property name="rootCategory" type="String"></property>
 		<property name="productFlag" type="String"></property>
 		<property name="productLogoUrl" type="String"></property>
