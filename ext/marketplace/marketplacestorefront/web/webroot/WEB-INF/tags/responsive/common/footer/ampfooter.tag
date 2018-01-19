@@ -63,9 +63,8 @@
             </p>
         </section>
         <section class="footer-child">
-          <amp-accordion>
-          
-          <c:forEach items="${navigationNodes}" var="node">
+          <amp-accordion disable-session-states>
+          	<c:forEach items="${navigationNodes}" var="node">
         	<c:if test="${node.visible}">
           		<section>
           			<c:forEach items="${node.links}"
@@ -84,18 +83,21 @@
 										</c:otherwise>
 									</c:choose>
 								</c:if>
-								<ul>
-									<c:forEach items="${node.links}" var="childlink"
-										begin="${i.index}" end="${i.index + wrapAfter - 1}">
-										<cms:component component="${childlink}" evaluateRestriction="true" element="li" />
-									</c:forEach>
-								</ul>
-							
 						</c:forEach>
+						<div>
+							<c:forEach items="${node.links}"
+								step="${wrapAfter}" varStatus="i">
+										<ul>
+											<c:forEach items="${node.links}" var="childlink"
+												begin="${i.index}" end="${i.index + wrapAfter - 1}">
+												<cms:component component="${childlink}" evaluateRestriction="true" element="li" />
+											</c:forEach>
+										</ul>
+							</c:forEach>
+						</div>
 	              	</section>
 	              </c:if>
       			</c:forEach>
-        			
         			<section>
 	      					<h4>KNOW MORE<i class="fa fa-angle-down"></i></h4>
 			              <div class="footer-section-content">

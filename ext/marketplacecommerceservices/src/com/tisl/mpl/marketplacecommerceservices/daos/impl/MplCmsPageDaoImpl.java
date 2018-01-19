@@ -521,4 +521,30 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		final List<AmpMenifestModel> menifestJsonModels = flexibleSearchService.<AmpMenifestModel> search(query).getResult();
 		return menifestJsonModels;
 	}
+
+	/*
+	 * UBI-605 (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getLandingPageForCategoryCode(java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getLandingPageForCategoryCode(final String categoryCode)
+	{
+		final String queryString = MarketplacecommerceservicesConstants.LANDING_PAGE_BY_CATEGORY_CODE_QUERY;
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		query.addQueryParameter("categoryCode", categoryCode);
+		query.addQueryParameter("catalogVersion", ONLINE_CATALOG_VERSION);
+
+		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
+
+		if (CollectionUtils.isNotEmpty(contentPages))
+		{
+			return contentPages.get(0);
+		}
+
+		return null;
+	}
+
+
 }
