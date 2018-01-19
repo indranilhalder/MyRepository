@@ -860,6 +860,9 @@ sendAddToBagQuick:function(formId){
 		},
 		complete: function(){
 	        //$('#ajax-loader').hide();//mismatch issue
+			//SDI-1585:My bag counter shows zero after a product is added from a PLP page quick view
+			forceUpdateHeader();
+			//SDI-1585 end
 			$("#bag-clickSpin,.bagspinner").remove();
 	    },
 		error : function(resp) {
