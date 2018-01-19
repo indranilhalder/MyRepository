@@ -63,7 +63,7 @@
             </p>
         </section>
         <section class="footer-child">
-          <amp-accordion>
+          <amp-accordion disable-session-states>
           
           <c:forEach items="${navigationNodes}" var="node">
         	<c:if test="${node.visible}">
