@@ -13,7 +13,7 @@ export default class ProductCapsuleCircle extends React.Component {
     return (
       <div className={styles.base} onClick={() => this.handleClick}>
         <div className={styles.imageHolder}>
-          <Image image={this.props.image} />
+          <Image image={this.props.image} fit="contain" />
         </div>
       </div>
     );
