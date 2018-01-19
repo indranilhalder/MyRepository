@@ -2194,6 +2194,7 @@ public class ProductPageController extends MidPageController
 				}
 			}
 			LOG.debug("===========After Samsung block=================");
+
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
@@ -4741,13 +4742,23 @@ public class ProductPageController extends MidPageController
 	{
 		if (null != productData.getBrand())
 		{
+			if (productData.getBrand().getBrandCode() != null)
+			{
+				//UBI-605
+				final ContentPageModel brandLandingPage = mplCmsPageService.getLandingPageForCategoryCode(productData.getBrand()
+						.getBrandCode());
+				if (brandLandingPage != null)
+				{
+					model.addAttribute("msiteBrandCode", getBrandCodeFromSuperCategories(productData.getBrand().getBrandCode()));
+				}
+			}
 			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
 					.getBrand().getBrandname().toLowerCase() : null);
 			/*
 			 * model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ?
 			 * productData .getBrand().getBrandCode().toLowerCase() : null);
 			 */
-			model.addAttribute("msiteBrandCode", getBrandCodeFromSuperCategories(productData.getBrand().getBrandCode()));
+
 
 			if (null != productData.getBrand().getBrandDescription())
 			{

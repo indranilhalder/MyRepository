@@ -311,4 +311,32 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		}
 		return null;
 	}
+
+	/*
+	 * UBI-605 (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategoryCode(java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getLandingPageForCategoryCode(final String categoryCode)
+	{
+		ContentPageModel landingPage = null;
+		try
+		{
+			landingPage = mplCmsPageDao.getLandingPageForCategoryCode(categoryCode);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			LOG.error("Could not find a landing page for the given category " + categoryCode);
+		}
+		catch (final Exception ex)
+		{
+			LOG.info(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			LOG.error("Could not find a landing page for the given category " + categoryCode);
+		}
+
+		return landingPage;
+	}
 }

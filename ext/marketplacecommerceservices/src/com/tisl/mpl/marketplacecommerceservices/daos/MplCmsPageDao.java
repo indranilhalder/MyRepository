@@ -33,6 +33,14 @@ public interface MplCmsPageDao extends CMSPageDao
 {
 	ContentPageModel getLandingPageForCategory(CategoryModel category);
 
+	/**
+	 * UBI-605
+	 * 
+	 * @param categoryCode
+	 * @return ContentPageModel
+	 */
+	ContentPageModel getLandingPageForCategoryCode(String categoryCode);
+
 	ContentPageModel getCategoryLandingPageForMobile(CategoryModel category, CMSChannel cms);
 
 	ContentPageModel getLandingPageForSeller(SellerMasterModel sellerMaster);
