@@ -1833,11 +1833,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 
 				/* Added in R2.3 TISRLUAT-812 start */
-				if (null != abstractOrderEntry.getEdScheduledDate())
+				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				if (null != abstractOrderEntry.getEdScheduledDate()
+						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
+								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
-				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom())
+				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				if (null != abstractOrderEntry.getTimeSlotTo()
+						&& null != abstractOrderEntry.getTimeSlotFrom()
+						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
+								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -3278,8 +3285,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
