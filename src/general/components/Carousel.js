@@ -93,28 +93,32 @@ export default class Carousel extends React.Component {
           </div>
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
-          {this.props.header && (
-            <div className={headerClass} style={{ paddingRight: buttonSpace }}>
-              <div>{this.props.header}</div>
-              {this.props.subheader && (
-                <div className={styles.subheader}>{this.props.subheader}</div>
-              )}
-              {this.props.seeAll &&
-                !this.props.withFooter && (
-                  <div className={styles.mobileButton}>
-                    <Button
-                      label={this.props.buttonText}
-                      type="hollow"
-                      color={buttonColor}
-                      width={100}
-                      onClick={() => {
-                        this.props.seeAll();
-                      }}
-                    />
-                  </div>
+          {this.props.header &&
+            !this.props.headerComponent(
+              <div
+                className={headerClass}
+                style={{ paddingRight: buttonSpace }}
+              >
+                <div>{this.props.header}</div>
+                {this.props.subheader && (
+                  <div className={styles.subheader}>{this.props.subheader}</div>
                 )}
-            </div>
-          )}
+                {this.props.seeAll &&
+                  !this.props.withFooter && (
+                    <div className={styles.mobileButton}>
+                      <Button
+                        label={this.props.buttonText}
+                        type="hollow"
+                        color={buttonColor}
+                        width={100}
+                        onClick={() => {
+                          this.props.seeAll();
+                        }}
+                      />
+                    </div>
+                  )}
+              </div>
+            )}
           {this.props.headerComponent && this.props.headerComponent}
         </MediaQuery>
 

@@ -1,6 +1,5 @@
 import React from "react";
 import Carousel from "./Carousel";
-import MediaQuery from "react-responsive";
 import styles from "./MultiSelectCarousel.css";
 export default class MuliSelectCarousel extends React.Component {
   constructor(props) {
