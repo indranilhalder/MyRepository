@@ -1,7 +1,8 @@
 import React from "react";
 import Carousel from "./Carousel";
+import PropTypes from "prop-types";
 import styles from "./MultiSelectCarousel.css";
-export default class MuliSelectCarousel extends React.Component {
+export default class MultiSelectCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,3 +66,9 @@ export default class MuliSelectCarousel extends React.Component {
     );
   }
 }
+
+MultiSelectCarousel.propTypes = {
+  header: PropTypes.string,
+  subheader: PropTypes.string,
+  selected: PropTypes.arrayOf(PropTypes.string)
+};
