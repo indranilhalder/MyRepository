@@ -14,7 +14,9 @@ export default class CircleProductImage extends React.Component {
         <div className={styles.imageHolder}>
           <Image image={this.props.image} />
         </div>
-        <div className={styles.label}>{this.props.label}</div>
+        {this.props.label && (
+          <div className={styles.label}>{this.props.label}</div>
+        )}
       </div>
     );
   }
