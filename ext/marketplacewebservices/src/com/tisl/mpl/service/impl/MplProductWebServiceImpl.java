@@ -36,11 +36,13 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
 import de.hybris.platform.solrfacetsearch.handler.KeywordRedirectHandler;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
@@ -192,6 +194,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "mplDefaultPriceDataFactory")
 	private DefaultPriceDataFactory priceDataFactory;
+	
+	@Autowired
+	private UserService userService;
 	/**
 	 * @throws CMSItemNotFoundException
 	 * @desc This service fetches all the details of A+ content based on product code
@@ -3144,6 +3149,20 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		double maxPrice = 30000.0D;
 		String priceOptions = null;
 		try {
+			
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+			if(null != customer) {
+				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
+					egvProductData.setIsWalletCreated(true);
+				}else {
+					egvProductData.setIsWalletCreated(false);
+					egvProductData.setFirstName(customer.getQcVerifyFirstName());
+					egvProductData.setLastName(customer.getQcVerifyLastName());
+					egvProductData.setMobileNumber(customer.getQcVerifyMobileNo());
+				}
+			}
+			
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
 			{
 				minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);

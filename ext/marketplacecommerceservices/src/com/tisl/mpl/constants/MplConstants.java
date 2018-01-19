@@ -29,6 +29,8 @@ public final class MplConstants
 
 	//	ExtendedUserServiceImpl
 	public static final String M4_ASSERT_UID_NULL = "The given userID is null!";
+	public static final String M4_ASSERT_MOBILE_NULL = "The given Mobile Number is null!";
+
 	public static final String M5_CANNOT_FIND_USER = "The given userID is null!";
 
 	//	ExtDefaultCustomerServiceImpl

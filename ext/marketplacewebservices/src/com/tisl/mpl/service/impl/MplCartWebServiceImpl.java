@@ -3660,6 +3660,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			{
 				if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
 				{
+					responce.setIsWalletCreated(true);
 					customerWalletDetailData = mplWalletFacade
 							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
 					if (null != customerWalletDetailData.getWallet() && null!= customerWalletDetailData.getWallet().getBalance()

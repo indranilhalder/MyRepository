@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNullStandardMessage;
-
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.customer.PasswordMismatchException;
 import de.hybris.platform.commerceservices.customer.impl.DefaultCustomerAccountService;
@@ -17,6 +16,7 @@ import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.impl.UniqueAttributesInterceptor;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundException;
 
@@ -60,6 +60,9 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 
 	@Autowired
 	private MplPreferenceService mplPreferenceService;
+	
+	@Autowired
+	private ModelService modelService;
 
 	/**
 	 * @return the mplCustomerWebService
@@ -569,6 +572,21 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		return otp;
+	}
+
+	@Override
+	public void registerWalletMobileNumber(String firstName, String lastName, String mobileNumber)
+	{
+		try {
+			CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+			customer.setQcVerifyFirstName(firstName);
+			customer.setQcVerifyLastName(firstName);
+			customer.setQcVerifyMobileNo(mobileNumber);
+			modelService.save(customer);
+		}catch(Exception e) {
+			LOG.error("Exception occurred while saving customer qc details"+e.getMessage(),e);
+		}
+		
 	}
 
 

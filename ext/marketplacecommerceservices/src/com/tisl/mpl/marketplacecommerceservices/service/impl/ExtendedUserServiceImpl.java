@@ -1,7 +1,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNull;
-
 import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserGroupModel;
@@ -215,6 +214,30 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+	}
+	
+	/**
+	 * @description checking uniqueness of MobileNumber for Wallet Creation
+	 * @return boolean
+	 */
+	@Override
+	public boolean isMobileUniqueForWallet(final String mobileNumber)
+	{
+		try
+		{
+			validateParameterNotNull(mobileNumber, MplConstants.M4_ASSERT_MOBILE_NULL);
+			final UserModel user = this.userDao.findUserByWalletMobileNumber(mobileNumber);
+			if (user == null)
+			{
+				return true;
+			}
+			return false;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	
 	}
 
 	/**

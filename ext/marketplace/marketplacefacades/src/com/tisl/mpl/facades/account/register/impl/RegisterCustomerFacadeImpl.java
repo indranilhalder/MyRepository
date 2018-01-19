@@ -369,6 +369,24 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	/**
+	 * @description this method is used to check uniqueness of MobileNumber For Wallet
+	 * @param data
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkUniquenessOfMobileForWallet(final String mobileNumber)
+	{
+		boolean flag = false;
+		flag = extUserService.isMobileUniqueForWallet(mobileNumber);
+		//		if (!flag)
+		//		{
+		//			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+		//		}
+		return flag;
+
+	}
+
+	/**
 	 * @description this is called to set uid for registration process
 	 * @param registerData
 	 * @param customer
@@ -480,7 +498,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				 */
 				/*
 				 * Closing checks at gigya end for new Implementation Start
-				 * 
+				 *
 				 * try { LOG.debug("Method  registerSocial,Gigys's UID " + newCustomer.getUid());
 				 * LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 				 * LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
@@ -498,12 +516,12 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				 * newCustomer.getOriginalUid());
 				 * LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" +
 				 * registerData.getUid());
-				 * 
+				 *
 				 * LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" +
 				 * registerData.getLogin()); } //gigya code change for removing duplicate UID end
-				 * 
+				 *
 				 * } catch (final Exception e) { LOG.error("error notifing gigya of new registration", e); }
-				 * 
+				 *
 				 * //} Closing checks at gigya end for new Implementation Stop
 				 */
 				return data;
@@ -552,9 +570,9 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
 				return registerData;
 				/*
-				 *
+				 * 
 				 * Closing checks at gigya end for new Implementation Start
-				 *
+				 * 
 				 * // final String gigyaMethod = configurationService.getConfiguration().getString( ///closing gigya methods
 				 * // MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION); // LOG.debug("GIGYA METHOD" +
 				 * gigyaMethod); // // // //changes start for gigya duplicate uid check start // //TISUAT-5868 // if
@@ -774,5 +792,17 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 		this.orderModelService = orderModelService;
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.register.RegisterCustomerFacade#registerWalletMobileNumber(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void registerWalletMobileNumber(final String firstName, final String lastName, final String mobileNumber)
+	{
+		extDefaultCustomerService.registerWalletMobileNumber(firstName, lastName, mobileNumber);
+	}
 
 }

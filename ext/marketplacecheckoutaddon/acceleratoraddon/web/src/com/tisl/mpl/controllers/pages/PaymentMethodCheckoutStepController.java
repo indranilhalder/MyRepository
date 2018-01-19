@@ -13,10 +13,6 @@
  */
 package com.tisl.mpl.controllers.pages;
 
-import com.tisl.mpl.facades.egv.data.EgvDetailsData;
-import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
-import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
-
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.ValidationResults;
@@ -28,15 +24,15 @@ import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -148,6 +144,7 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
@@ -172,6 +169,8 @@ import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
+import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplEgvFormValidator;
 import com.tisl.mpl.util.DiscountUtility;
@@ -3113,7 +3112,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//Redirection when transaction is successful i.e. CHARGED
 					if (null != orderStatusResponse)
 					{
-						
+
 
 						/**
 						 * Wallet Changes
@@ -4550,8 +4549,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
 			final String guid, final String paymentinfo, @RequestParam(required = false) final String token,
-			@RequestParam(required = false) final String cardFingerPrint,
-			final Model model,final boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			@RequestParam(required = false) final String cardFingerPrint, final Model model, final boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 
@@ -4635,8 +4633,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					try
 					{
-						orderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
-								guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, uid);
+						orderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode, cardSaved,
+								sameAsShipping, guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
+								paymentAddressLine3, uid);
 					}
 					catch (final ModelSavingException e)
 					{
@@ -5006,16 +5005,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						//final OrderData orderData = getMplCheckoutFacade().placeOrder();
 						getMplCheckoutFacade().placeOrder();
 					}
-						/**
-						 * Change for Wallet
-						 */
-						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
-						{
-							cart.setTotalPrice(totalCartVal);
-						}
-						/**
-						 * Change for Wallet end
-						 */
+					/**
+					 * Change for Wallet
+					 */
+					if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+					{
+						cart.setTotalPrice(totalCartVal);
+					}
+					/**
+					 * Change for Wallet end
+					 */
 
 					else
 					{
@@ -5246,7 +5245,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB,0.0d);
+								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0d);
 						mplVoucherService.updateCardPerOfferVoucherEntry(orderModel);//TPR-7448
 					}
 				}
@@ -6109,7 +6108,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -6127,16 +6126,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final List<OrderEntryData> sellerList = cartData.getEntries();
 		for (final OrderEntryData seller : sellerList)
 		{
-			if(seller.getSelectedSellerInformation()!=null){
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (cartLevelSellerID != null)
+			if (seller.getSelectedSellerInformation() != null)
 			{
-				cartLevelSellerID += "_" + sellerID;
-			}
-			else
-			{
-				cartLevelSellerID = sellerID;
-			}
+				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+				if (cartLevelSellerID != null)
+				{
+					cartLevelSellerID += "_" + sellerID;
+				}
+				else
+				{
+					cartLevelSellerID = sellerID;
+				}
 			}
 		}
 		return cartLevelSellerID;
@@ -7176,6 +7176,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		return codEligible;
 	}
+
 	//UF-281/282 End
 	//GiFT CART Payment Start 13-09-2017
 	@RequireHardLogIn
@@ -7268,15 +7269,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				model.addAttribute("isCart", Boolean.TRUE);
 				model.addAttribute("isEGVCart", Boolean.TRUE);
 
-				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL,
-						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
-				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
-						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
+				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL, getConfigurationService()
+						.getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
+				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE, getConfigurationService().getConfiguration()
+						.getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
 
 				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION, getConfigurationService().getConfiguration()
 						.getString(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION_VALUE));
-				model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
-						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
+				model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME, getConfigurationService().getConfiguration()
+						.getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
 				model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
 				//Terms n Conditions Link
 				model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
@@ -7406,10 +7407,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @return
 	 * @throws InvalidCartException
 	 */
-	private String createJuspayOrderForEGV(final String firstName, final String lastName, final String country, final String state,
-			final String city, final String pincode, final String cardSaved, final String sameAsShipping, final String guid,
-			String orderId, final StringBuilder returnUrlBuilder, final String paymentAddressLine1, final String paymentAddressLine2,
-			final String paymentAddressLine3, final String uid) throws InvalidCartException
+	private String createJuspayOrderForEGV(final String firstName, final String lastName, final String country,
+			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
+			final String guid, String orderId, final StringBuilder returnUrlBuilder, final String paymentAddressLine1,
+			final String paymentAddressLine2, final String paymentAddressLine3, final String uid) throws InvalidCartException
 	{
 		try
 		{
@@ -7442,7 +7443,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			return "EGVOderError";
 		}
 	}
-	
+
 
 	@RequestMapping(value = "/useWalletForPayment", method = RequestMethod.POST)
 	@RequireHardLogIn
@@ -7463,22 +7464,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				//final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 
-//				final BalanceBucketWise balBucketwise = mplWalletFacade
-//						.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+				//				final BalanceBucketWise balBucketwise = mplWalletFacade
+				//						.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
 
 				if (null != cart.getTotalWalletAmount())
 				{
 					final Double WalletAmt = cart.getTotalWalletAmount();
-					
-					double totalCartAmt = cart.getTotalPrice().doubleValue();
-					
-				//	System.out.println("totalAmt"+totalCartAmt);
 
-//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
-//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+					final double totalCartAmt = cart.getTotalPrice().doubleValue();
 
-					System.out.println("**************  totalAmt"+totalCartAmt);
-					
+					//	System.out.println("totalAmt"+totalCartAmt);
+
+					//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+					//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+
+					System.out.println("**************  totalAmt" + totalCartAmt);
+
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
 					{
 
@@ -7522,7 +7523,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getModelService().refresh(cart);
 				jsonObject.put("juspayAmt", 0);
 			}
-		
+
 		}
 		catch (
 
@@ -7555,16 +7556,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (null != cart.getTotalWalletAmount())
 				{
 					final Double WalletAmt = cart.getTotalWalletAmount();
-					
-					double totalCartAmt = cart.getTotalPrice().doubleValue();
-					
-				//	System.out.println("totalAmt"+totalCartAmt);
 
-//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
-//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+					final double totalCartAmt = cart.getTotalPrice().doubleValue();
 
-					System.out.println("**************  totalAmt"+totalCartAmt);
-					
+					//	System.out.println("totalAmt"+totalCartAmt);
+
+					//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+					//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+
+					System.out.println("**************  totalAmt" + totalCartAmt);
+
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
 					{
 						cart.setSplitModeInfo("CliqCash");
@@ -7589,7 +7590,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getModelService().refresh(cart);
 			}
 			return jsonObject;
-		
+
 		}
 		catch (final Exception ex)
 		{
@@ -7597,7 +7598,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		return jsonObject;
 	}
-	
+
 
 	/**
 	 * @param request
@@ -7605,8 +7606,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = "/useWalletDetail", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody JSONObject getCurrentUserWallet(final HttpServletRequest request)
-			throws UnsupportedEncodingException, JSONException
+	public @ResponseBody JSONObject getCurrentUserWallet(final HttpServletRequest request) throws UnsupportedEncodingException,
+			JSONException
 	{
 		final JSONObject jsonObject = new JSONObject();
 		BalanceBucketWise balBucketwise = new BalanceBucketWise();
@@ -7617,8 +7618,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
 				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
-		
-		System.out.println("totalCartAmt Load Wallet ***** "+totalCartAmt);
+
+		System.out.println("totalCartAmt Load Wallet ***** " + totalCartAmt);
 
 		double cashBalance = 0;
 		double egvBalance = 0;
@@ -7634,9 +7635,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
 
-				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets() && null != balBucketwise.getWallet())
+				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets()
+						&& null != balBucketwise.getWallet())
 				{
-					
+
 					cart.setTotalWalletAmount(balBucketwise.getWallet().getBalance());
 					getModelService().save(cart);
 					getModelService().refresh(cart);
@@ -7645,29 +7647,29 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
 						{
-							egvBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							egvBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0" : ""
+									+ Double.parseDouble(bucketType.getAmount().toString()));
 							egvBalance = Double.parseDouble(df.format(egvBalance));
 						}
 						if (bucketType.getType().equalsIgnoreCase("CREDIT"))
 						{
-							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0" : ""
+									+ Double.parseDouble(bucketType.getAmount().toString()));
 							cashBalance = Double.parseDouble(df.format(cashBalance));
 						}
 						if (bucketType.getType().equalsIgnoreCase("GOODWILL") || bucketType.getType().equalsIgnoreCase("PROMOTION")
 								|| bucketType.getType().equalsIgnoreCase("CASHBACK"))
 						{
 
-							walletPoint += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							walletPoint += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0" : ""
+									+ Double.parseDouble(bucketType.getAmount().toString()));
 							walletPoint = Double.parseDouble(df.format(walletPoint));
 						}
 
 					}
 
-					totalWalletAmt = Double.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
-							: "" + Double.parseDouble(balBucketwise.getWallet().getBalance().toString()));
+					totalWalletAmt = Double.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0" : ""
+							+ Double.parseDouble(balBucketwise.getWallet().getBalance().toString()));
 					totalWalletAmt = Double.parseDouble(df.format(totalWalletAmt));
 
 					if (Double.parseDouble("" + totalWalletAmt) < Double.parseDouble("" + totalCartAmt))
@@ -7831,7 +7833,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 
-						//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+				//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 
 				//TPR3780 STARTS HERE
@@ -8066,13 +8068,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-	
-	
+
+
 	@RequireHardLogIn
 	@RequestMapping(value = "/addEGV", method = RequestMethod.GET)
 	public String showAddEGVPopup(final Model model)
 
-			throws CMSItemNotFoundException, QCServiceCallException
+	throws CMSItemNotFoundException, QCServiceCallException
 	{
 
 		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
@@ -8106,9 +8108,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					custInfo.setLastName(currentCustomer.getLastName());
 				}
 
-				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+				customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 				customerRegisterReq.setCustomer(custInfo);
-				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
 				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
 						.createWalletContainer(customerRegisterReq);
 
@@ -8132,7 +8134,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
 					{
-						
+
 						return "SUCCESS";
 					}
 					else

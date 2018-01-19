@@ -1234,6 +1234,10 @@
 		<property name="paymentOffers" type="com.tisl.mpl.wsdto.OfferListWsData" />
 		<property name="merchantID" type="String" />
 		<property name="merchantKey" type="String" />
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -3709,7 +3713,11 @@
 	<bean class="com.tisl.mpl.wsdto.UserCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="balanceClearedAsOf" type="String" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
-		<property name="buckets" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketsWsDto>"  />                
+		<property name="buckets" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketsWsDto>"  /> 
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	               
 	</bean> 
 
      
@@ -3750,6 +3758,16 @@
 		<property name="giftCartImageUrl" type="String" />
 		<property name="tncURL" type="String" />
 		<property name="sellerimageUrl" type="String" />
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO">		
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
 	</bean>
 	
 	<!-- Added  For Buying Of EGV Functionality End  -->

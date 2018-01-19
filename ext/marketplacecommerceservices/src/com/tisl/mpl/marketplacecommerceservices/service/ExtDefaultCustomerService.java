@@ -28,4 +28,6 @@ public interface ExtDefaultCustomerService extends CustomerAccountService
 	public ExtRegisterData registerUserForSocialSignup(final CustomerModel customerModel, final int platformNumber);
 
 	public String generateOTPNumber(final String customerUid);
+
+	public void registerWalletMobileNumber(String firstName, String lastName, String mobileNumber);
 }
