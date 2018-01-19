@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 export default class SingleSelect extends React.Component {
   handleClick() {
     if (this.props.onClick) {
-      this.props.onClick(this.props.text);
+      this.props.onClick(this.props.value);
     }
   }
   render() {
@@ -24,6 +24,7 @@ export default class SingleSelect extends React.Component {
 }
 SingleSelect.propTypes = {
   text: PropTypes.string,
+  value: PropTypes.string,
   image: PropTypes.string,
   onClick: PropTypes.func
 };
