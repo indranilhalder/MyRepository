@@ -17,7 +17,11 @@ export default class BrandImage extends React.Component {
       <div className={styles.base} onClick={() => this.handleClick()}>
         <div className={iconClass} />
         <div className={styles.imageHolder}>
-          <Image image={this.props.image} />
+          <Image
+            image={this.props.image}
+            color="transparent"
+            fit={this.props.fit}
+          />
         </div>
       </div>
     );
@@ -30,5 +34,6 @@ BrandImage.propTypes = {
 };
 BrandImage.defaultProps = {
   image: "",
-  selected: false
+  selected: false,
+  fit: "contain"
 };
