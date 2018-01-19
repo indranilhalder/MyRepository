@@ -668,4 +668,7 @@ public class MarketplacewebservicesConstants
 	public static final String OMS_SYNC_SAVE_LOG_DEFAULT = "Y";
 
 	public static final String PAYTM = "PAYTM".intern();
+
+
+	public static final String H9002 = "H9002";
 }

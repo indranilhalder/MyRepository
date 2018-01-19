@@ -190,7 +190,7 @@
 		<bean id="mplSendOrderFromCommerceToSamsung" class="com.tisl.mpl.service.impl.MplSendOrderFromCommerceToSamsungImpl" />
 		
 		<!-- Added for TPR-5989 -->
-		<bean id="clientIntegration" class="com.tisl.mpl.service.ClientIntegrationImpl" /> 
-		
+		<bean id="clientIntegration" class="com.tisl.mpl.service.ClientIntegrationImpl" />
+		 
 </beans>
 

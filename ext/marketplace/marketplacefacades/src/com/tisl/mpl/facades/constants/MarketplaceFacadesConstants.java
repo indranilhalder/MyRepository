@@ -209,6 +209,8 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String WARRANTY = "Warranty";
 	public static final String WARRANTY_DETAILS_HF = "Warranty Details";
 
+	public static final String H9001 = "H9001";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty
