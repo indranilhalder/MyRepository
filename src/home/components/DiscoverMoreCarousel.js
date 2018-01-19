@@ -27,9 +27,7 @@ export default class DiscoverMoreCarousel extends React.Component {
 }
 DiscoverMoreCarousel.propTypes = {
   header: PropTypes.string,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({ image: PropTypes.string, label: PropTypes.string })
-  )
+  discoverMoreCarouselData: PropTypes.object
 };
 DiscoverMoreCarousel.defaultProps = {
   header: "Discover more from Tata Cliq"

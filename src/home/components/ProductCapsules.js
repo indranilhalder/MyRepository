@@ -3,7 +3,6 @@ import Carousel from "../../general/components/Carousel";
 import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle";
 import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
-
 export default class ProductCapsules extends React.Component {
   render() {
     const productCapsulesData = this.props.feedComponentData.data;
@@ -36,9 +35,7 @@ export default class ProductCapsules extends React.Component {
   }
 }
 ProductCapsules.propTypes = {
-  header: PropTypes.string,
-  subheader: PropTypes.string,
-  data: PropTypes.arrayOf(PropTypes.shape({ image: PropTypes.string }))
+  header: PropTypes.string
 };
 ProductCapsules.defaultProps = {
   header: "Saved products"
