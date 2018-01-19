@@ -1031,7 +1031,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				$("body,html").animate({scrollTop:0},500);
 				
 				// Re-write URL after ajax
-				window.history.replaceState(response,"",pageURL);
+				window.history.replaceState({},"",pageURL);
 				//INC144316143
 				var pathName = window.location.pathname;
 			    var query = window.location.search;
@@ -1057,7 +1057,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				  	}
 				}
 
-				window.history.replaceState(response,"",pageURL);
+				window.history.replaceState({},"",pageURL);
 			}
 			//TISSPTEN-130 ends
 			// TPR-158 and TPR-413 starts here
