@@ -303,13 +303,13 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 			
 			////SDI-2112 starts
- +			if (subOrderEntry.getConsignment().getStatus().getCode().equalsIgnoreCase(ConsignmentStatus.RETURN_INITIATED.getCode()))
- +			{
- +				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
- +						ModelAttributetConstants.RETURN_ALREADY_INITIATED);
- +				return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
- +			}
- +			////SDI-2112 ends
+ 			if (subOrderEntry.getConsignment().getStatus().getCode().equalsIgnoreCase(ConsignmentStatus.RETURN_INITIATED.getCode()))
+ 			{
+ 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+ 						ModelAttributetConstants.RETURN_ALREADY_INITIATED);
+ 				return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+ 			}
+ 			////SDI-2112 ends
 			
 
 
