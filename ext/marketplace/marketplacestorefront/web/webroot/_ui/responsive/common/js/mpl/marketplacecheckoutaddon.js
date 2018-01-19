@@ -5217,6 +5217,12 @@ function populateAddress(){
 		 	{
 			 $("#myCounter").html((120));
 		 	}
+			//added for SDI 3691 starts 
+			if(($("#address1Emi").val())=="")
+		 	{
+			 $("#myCounter1").html((120));
+		 	}
+			//added for SDI 3691 ends
 		}
 }
 
