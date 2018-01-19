@@ -6,15 +6,16 @@ import styles from "./DiscoverMoreCarousel.css";
 
 export default class DiscoverMoreCarousel extends React.Component {
   render() {
+    const discoverMoreCarouselData = this.props.feedComponentData.data;
     return (
       <div className={styles.base}>
-        <Carousel header={this.props.header}>
-          {this.props.data &&
-            this.props.data.map((datum, i) => {
+        <Carousel header={this.props.feedComponentData.title}>
+          {discoverMoreCarouselData.data &&
+            discoverMoreCarouselData.data.map((datum, i) => {
               return (
                 <CircleProductImage
-                  image={datum.image}
-                  label={datum.label}
+                  image={datum.imageURL}
+                  label={datum.title}
                   key={i}
                 />
               );
