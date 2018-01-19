@@ -144,14 +144,14 @@
 	</header>
 
 	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" on="sidebarOpen:AMP.setState({showCloseBtn : true}),closeLeftMenu.show;sidebarClose:AMP.setState({showCloseBtn : false})" layout="nodisplay" side="left">
-	<amp-accordion class="sidebar-menu l1-accordian">
+	<amp-accordion class="sidebar-menu l1-accordian" disable-session-states>
 	<section>
 		<h4 class="l1-options">Department<i class="fa fa-angle-right"></i></h4>
-		<amp-accordion class="sidebar-menu l2-accordian">
+		<amp-accordion class="sidebar-menu l2-accordian" disable-session-states>
 			<c:forEach items="${component.components}" var="component" varStatus="i">	
 				<section>
 					<h4 class="l2-options">${component.navigationNode.title}<i class="fa fa-angle-right"></i></h4>
-					<amp-accordion class="sidebar-menu l3-accordian">
+					<amp-accordion class="sidebar-menu l3-accordian" disable-session-states>
 						<c:if test="${not empty component.navigationNode.children}">
 							<c:forEach items="${component.navigationNode.children}" var="child1">
 								<c:forEach items="${child1.children}" var="child">
@@ -179,7 +179,7 @@
 		<h4 class="l1-options">
 			Brand<i class="fa fa-angle-right"></i>
 		</h4>
-		<amp-accordion class="sidebar-menu l2-accordian"> <c:forEach
+		<amp-accordion class="sidebar-menu l2-accordian" disable-session-states> <c:forEach
 			items="${shopByBrandDataList}" var="shopByBrands">
 			<c:choose>
 				<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
@@ -308,7 +308,7 @@
 
 			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 			
-				<amp-accordion class="sidebar-menu l1-accordian user-information">
+				<amp-accordion class="sidebar-menu l1-accordian user-information" disable-session-states>
 					<section>
 						<h4 class="l1-options">
 							<c:set var="userName" value="${fname}"/>
