@@ -760,356 +760,256 @@ function toggleNextPrevButton(){
  * Released under Apache 2.0 license
  * http://apache.org/licenses/LICENSE-2.0.html
  */
- var initLoad = true;
-(function ($, window, document, undefined) {
-
-    'use strict';
-
-    var old = $.fn.twbsPagination;
-
-    // PROTOTYPE AND CONSTRUCTOR
-
-    var TwbsPagination = function (element, options) {
-        this.$element = $(element);
-        this.options = $.extend({}, $.fn.twbsPagination.defaults, options);
-
+(function(e, d, a, f) {
+    var b = e.fn.twbsPagination;
+    var c = function(i, g) {
+        this.$element = e(i);
+        this.options = e.extend({}, e.fn.twbsPagination.defaults, g);
         if (this.options.startPage < 1 || this.options.startPage > this.options.totalPages) {
-            throw new Error('Start page option is incorrect');
+            throw new Error("Start page option is incorrect")
         }
-
         this.options.totalPages = parseInt(this.options.totalPages);
         if (isNaN(this.options.totalPages)) {
-            throw new Error('Total pages option is not correct!');
+            throw new Error("Total pages option is not correct!")
         }
-
         this.options.visiblePages = parseInt(this.options.visiblePages);
         if (isNaN(this.options.visiblePages)) {
-            throw new Error('Visible pages option is not correct!');
+            throw new Error("Visible pages option is not correct!")
         }
-
-        if (this.options.onPageClick instanceof Function) {
-            this.$element.first().on('page', this.options.onPageClick);
+        if (this.options.totalPages == 1) {
+            return this
         }
-
-        // hide if only one page exists
-        if (this.options.hideOnlyOnePage && this.options.totalPages == 1) {
-            this.$element.trigger('page', 1);
-            return this;
-        }
-
         if (this.options.totalPages < this.options.visiblePages) {
-            this.options.visiblePages = this.options.totalPages;
+            this.options.visiblePages = this.options.totalPages
         }
-
+        if (this.options.onPageClick instanceof Function) {
+            this.$element.first().on("page", this.options.onPageClick)
+        }
         if (this.options.href) {
             this.options.startPage = this.getPageFromQueryString();
             if (!this.options.startPage) {
-                this.options.startPage = 1;
+                this.options.startPage = 1
             }
         }
-
-        var tagName = (typeof this.$element.prop === 'function') ?
-            this.$element.prop('tagName') : this.$element.attr('tagName');
-
-        if (tagName === 'UL') {
-            this.$listContainer = this.$element;
+        var h = (typeof this.$element.prop === "function") ? this.$element.prop("tagName") : this.$element.attr("tagName");
+        if (h === "UL") {
+            this.$listContainer = this.$element
         } else {
-            this.$listContainer = $('<ul></ul>');
+            this.$listContainer = e("<ul></ul>")
         }
-
         this.$listContainer.addClass(this.options.paginationClass);
-
-        if (tagName !== 'UL') {
-            this.$element.append(this.$listContainer);
+        if (h !== "UL") {
+            this.$element.append(this.$listContainer)
         }
-
         if (this.options.initiateStartPageClick) {
-            this.show(this.options.startPage);
+            this.show(this.options.startPage)
         } else {
-            this.currentPage = this.options.startPage;
             this.render(this.getPages(this.options.startPage));
-            this.setupEvents();
+            this.setupEvents()
         }
-
-        return this;
+        return this
     };
-
-    TwbsPagination.prototype = {
-
-        constructor: TwbsPagination,
-
-        destroy: function () {
+    c.prototype = {
+        constructor: c,
+        destroy: function() {
             this.$element.empty();
-            this.$element.removeData('twbs-pagination');
-            this.$element.off('page');
-
-            return this;
+            this.$element.removeData("twbs-pagination");
+            this.$element.off("page");
+            return this
         },
-
-        show: function (page) {
-            if (page < 1 || page > this.options.totalPages) {
-                throw new Error('Page is incorrect.');
+        show: function(g) {
+            if (g < 1 || g > this.options.totalPages) {
+                throw new Error("Page is incorrect.")
             }
-            this.currentPage = page;
-
-            this.render(this.getPages(page));
+            this.currentPage = g;
+            this.render(this.getPages(g));
             this.setupEvents();
-
-            this.$element.trigger('page', page);
-
-            return this;
+            this.$element.trigger("page", g);
+            return this
         },
-
-        enable: function () {
-            this.show(this.currentPage);
+        buildListItems: function(g) {
+            var l = [];
+            if (this.options.first) {
+                l.push(this.buildItem("first", 1))
+            }
+            if (this.options.prev) {
+                var k = g.currentPage > 1 ? g.currentPage - 1 : this.options.loop ? this.options.totalPages : 1;
+                l.push(this.buildItem("prev", k))
+            }
+            for (var h = 0; h < g.numeric.length; h++) {
+                l.push(this.buildItem("page", g.numeric[h]))
+            }
+            if (this.options.next) {
+                var j = g.currentPage < this.options.totalPages ? g.currentPage + 1 : this.options.loop ? 1 : this.options.totalPages;
+                l.push(this.buildItem("next", j))
+            }
+            if (this.options.last) {
+                l.push(this.buildItem("last", this.options.totalPages))
+            }
+            return l
         },
-
-        disable: function () {
-            var _this = this;
-            this.$listContainer.off('click').on('click', 'li', function (evt) {
-                evt.preventDefault();
+        buildItem: function(i, j) {
+            var k = e("<li></li>"),
+                h = e("<a></a>"),
+                g = this.options[i] ? this.makeText(this.options[i], j) : j;
+            k.addClass(this.options[i + "Class"]);
+            k.data("page", j);
+            k.data("page-type", i);
+            k.append(h.attr("href", (window.location.pathname).replace(/page-[0-9]+/, 'page-'+j)+this.makeHref(j)).addClass(this.options.anchorClass).html(g));
+            return k
+        },
+        getPages: function(j) {
+            var g = [];
+            var k = Math.floor(this.options.visiblePages / 2);
+            var l = j - k + 1 - this.options.visiblePages % 2;
+            var h = j + k;
+            if (l <= 0) {
+                l = 1;
+                h = this.options.visiblePages
+            }
+            if (h > this.options.totalPages) {
+                l = this.options.totalPages - this.options.visiblePages + 1;
+                h = this.options.totalPages
+            }
+            var i = l;
+            while (i <= h) {
+                g.push(i);
+                i++
+            }
+            return {
+                currentPage: j,
+                numeric: g
+            }
+        },
+        render: function(g) {
+            var i = this;
+            this.$listContainer.children().remove();
+            var h = this.buildListItems(g);
+            jQuery.each(h, function(j, k) {
+                i.$listContainer.append(k)
             });
-            this.$listContainer.children().each(function () {
-                var $this = $(this);
-                if (!$this.hasClass(_this.options.activeClass)) {
-                    $(this).addClass(_this.options.disabledClass);
-                }
-            });
-        },
-
-        buildListItems: function (pages) {
-            var listItems = [];
-
-            if (this.options.first && initLoad) {
-                listItems.push(this.buildItem('first', 1));
-            }
-
-            if (this.options.prev && initLoad) {
-                var prev = pages.currentPage > 1 ? pages.currentPage - 1 : this.options.loop ? this.options.totalPages  : 1;
-                listItems.push(this.buildItem('prev', prev));
-            }
-
-           // $("#pagination li")
-		   if(initLoad){
-			for (var i = 0; i < $("#pagination li.block").length; i++) {
-              //listItems.push(this.buildItem('page', pages.numeric[i]));
-			  $($("#pagination li")[i]).data('page', pages.numeric[i]);
-			  $($("#pagination li")[i]).data('page-type', 'page');
-			  listItems.push($("#pagination li")[i]);
-            }
-		   }
-			$("#pagination li.block").hide();
-			
-			for (var i = 0; i < pages.numeric.length; i++) {
-				$($("#pagination li.block")[(pages.numeric[i]-1)]).show();
-			}
-
-            if (this.options.next && initLoad) {
-                var next = pages.currentPage < this.options.totalPages ? pages.currentPage + 1 : this.options.loop ? 1 : this.options.totalPages;
-                listItems.push(this.buildItem('next', next));
-            }
-
-            if (this.options.last && initLoad) {
-                listItems.push(this.buildItem('last', this.options.totalPages));
-            }
-			initLoad = false;
-			$("#pagination").find("li").removeClass("active");
-            return listItems;
-        },
-
-        buildItem: function (type, page) {
-            var $itemContainer = $('<li></li>'),
-                $itemContent = $('<a></a>'),
-                itemText = this.options[type] ? this.makeText(this.options[type], page) : page;
-
-            $itemContainer.addClass(this.options[type + 'Class']);
-            $itemContainer.data('page', page);
-            $itemContainer.data('page-type', type);
-            $itemContainer.append($itemContent.attr('href', this.makeHref(page)).addClass(this.options.anchorClass).html(itemText));
-
-            return $itemContainer;
-        },
-
-        getPages: function (currentPage) {
-            var pages = [];
-
-            var half = Math.floor(this.options.visiblePages / 2);
-            var start = currentPage - half + 1 - this.options.visiblePages % 2;
-            var end = currentPage + half;
-
-            // handle boundary case
-            if (start <= 0) {
-                start = 1;
-                end = this.options.visiblePages;
-            }
-            if (end > this.options.totalPages) {
-                start = this.options.totalPages - this.options.visiblePages + 1;
-                end = this.options.totalPages;
-            }
-
-            var itPage = start;
-            while (itPage <= end) {
-                pages.push(itPage);
-                itPage++;
-            }
-
-            return {"currentPage": currentPage, "numeric": pages};
-        },
-
-        render: function (pages) {
-            var _this = this;
-            //this.$listContainer.children().remove();
-            var items = this.buildListItems(pages);
-            $.each(items, function(key, item){
-                _this.$listContainer.append(item);
-            });
-
-            this.$listContainer.children().each(function () {
-                var $this = $(this),
-                    pageType = $this.data('page-type');
-
-                switch (pageType) {
-                    case 'page':
-                        if ($this.data('page') === pages.currentPage) {
-                            $this.addClass(_this.options.activeClass);
+            this.$listContainer.children().each(function() {
+                var k = e(this),
+                    j = k.data("page-type");
+                switch (j) {
+                    case "page":
+                        if (k.data("page") === g.currentPage) {
+                            k.addClass(i.options.activeClass)
                         }
                         break;
-                    case 'first':
-                            $this.toggleClass(_this.options.disabledClass, pages.currentPage === 1);
+                    case "first":
+                        k.toggleClass(i.options.disabledClass, g.currentPage === 1);
                         break;
-                    case 'last':
-                            $this.toggleClass(_this.options.disabledClass, pages.currentPage === _this.options.totalPages);
+                    case "last":
+                        k.toggleClass(i.options.disabledClass, g.currentPage === i.options.totalPages);
                         break;
-                    case 'prev':
-                            $this.toggleClass(_this.options.disabledClass, !_this.options.loop && pages.currentPage === 1);
+                    case "prev":
+                        k.toggleClass(i.options.disabledClass, !i.options.loop && g.currentPage === 1);
                         break;
-                    case 'next':
-                            $this.toggleClass(_this.options.disabledClass,
-                                !_this.options.loop && pages.currentPage === _this.options.totalPages);
+                    case "next":
+                        k.toggleClass(i.options.disabledClass, !i.options.loop && g.currentPage === i.options.totalPages);
                         break;
                     default:
-                        break;
+                        break
                 }
-
-            });
+            })
         },
-
-        setupEvents: function () {
-            var _this = this;
-            this.$listContainer.off('click').on('click', 'li', function (evt) {
-                var $this = $(this);
-                if ($this.hasClass(_this.options.disabledClass) || $this.hasClass(_this.options.activeClass)) {
-                    return false;
-                }
-                // Prevent click event if href is not set.
-                !_this.options.href && evt.preventDefault();
-				
-				if($(this).find("a").hasClass("anchor")){
-				var no = $(this).find("a").text();
-                _this.show(parseInt(no));
-				}else{
-				_this.show(parseInt($this.data('page')));
-				}
-				
-               // _this.show(parseInt($this.data('page')));
-            });
+        setupEvents: function() {
+            var g = this;
+            this.$listContainer.off("click").on("click", "li", function(h) {
+                var i = e(this);
+                if (i.hasClass(g.options.disabledClass) || i.hasClass(g.options.activeClass)) {
+                    return false
+                }!g.options.href && h.preventDefault();
+                g.show(parseInt(i.data("page")))
+            })
         },
-
-        makeHref: function (page) {
-            return this.options.href ? this.generateQueryString(page) : "#";
+        makeHref: function(g) {
+            return this.options.href ? this.generateQueryString(g) : "#"
         },
-
-        makeText: function (text, page) {
-            return text.replace(this.options.pageVariable, page)
-                .replace(this.options.totalPagesVariable, this.options.totalPages)
+        makeText: function(h, g) {
+            return h.replace(this.options.pageVariable, g).replace(this.options.totalPagesVariable, this.options.totalPages)
         },
-        getPageFromQueryString: function (searchStr) {
-            var search = this.getSearchString(searchStr),
-                regex = new RegExp(this.options.pageVariable + '(=([^&#]*)|&|#|$)'),
-                page = regex.exec(search);
-            if (!page || !page[2]) {
-                return null;
+        getPageFromQueryString: function(g) {
+            var h = this.getSearchString(g),
+                i = new RegExp(this.options.pageVariable + "(=([^&#]*)|&|#|$)"),
+                j = i.exec(h);
+            if (!j || !j[2]) {
+                return null
             }
-            page = decodeURIComponent(page[2]);
-            page = parseInt(page);
-            if (isNaN(page)) {
-                return null;
+            j = decodeURIComponent(j[2]);
+            j = parseInt(j);
+            if (isNaN(j)) {
+                return null
             }
-            return page;
+            return j
         },
-        generateQueryString: function (pageNumber, searchStr) {
-            var search = this.getSearchString(searchStr),
-                regex = new RegExp(this.options.pageVariable + '=*[^&#]*');
-            if (!search) return '';
-            return '?' + search.replace(regex, this.options.pageVariable + '=' + pageNumber);
-
-        },
-        getSearchString: function (searchStr) {
-            var search = searchStr || window.location.search;
-            if (search === '') {
-                return null;
+        generateQueryString: function(g, h) {
+            var i = this.getSearchString(h),
+                j = new RegExp(this.options.pageVariable + "=*[^&#]*");
+            if (!i) {
+                return ""
             }
-            if (search.indexOf('?') === 0) search = search.substr(1);
-            return search;
+            return "?" + i.replace(j, this.options.pageVariable + "=" + g)
         },
-        getCurrentPage: function () {
-            return this.currentPage;
+        getSearchString: function(g) {
+            var h = g || d.location.search;
+            if (h === "") {
+                return null
+            }
+            if (h.indexOf("?") === 0) {
+                h = h.substr(1)
+            }
+            return h
         }
     };
-
-    // PLUGIN DEFINITION
-
-    $.fn.twbsPagination = function (option) {
-        var args = Array.prototype.slice.call(arguments, 1);
-        var methodReturn;
-
-        var $this = $(this);
-        var data = $this.data('twbs-pagination');
-        var options = typeof option === 'object' ? option : {};
-
-        if (!data) $this.data('twbs-pagination', (data = new TwbsPagination(this, options) ));
-        if (typeof option === 'string') methodReturn = data[ option ].apply(data, args);
-
-        return ( methodReturn === undefined ) ? $this : methodReturn;
+    e.fn.twbsPagination = function(i) {
+        var h = Array.prototype.slice.call(arguments, 1);
+        var k;
+        var l = e(this);
+        var j = l.data("twbs-pagination");
+        var g = typeof i === "object" ? i : {};
+        if (!j) {
+            l.data("twbs-pagination", (j = new c(this, g)))
+        }
+        if (typeof i === "string") {
+            k = j[i].apply(j, h)
+        }
+        return (k === f) ? l : k
     };
-
-    $.fn.twbsPagination.defaults = {
+    e.fn.twbsPagination.defaults = {
         totalPages: 1,
         startPage: 1,
         visiblePages: 5,
         initiateStartPageClick: true,
-        hideOnlyOnePage: false,
         href: false,
-        pageVariable: '{{page}}',
-        totalPagesVariable: '{{total_pages}}',
+        pageVariable: "{{page}}",
+        totalPagesVariable: "{{total_pages}}",
         page: null,
-        first: 'First',
-        prev: 'Previous',
-        next: 'Next',
-        last: 'Last',
+        first: "First",
+        prev: "Previous",
+        next: "Next",
+        last: "Last",
         loop: false,
         onPageClick: null,
-        paginationClass: 'pagination',
-        nextClass: 'page-item next',
-        prevClass: 'page-item prev',
-        lastClass: 'page-item last',
-        firstClass: 'page-item first',
-        pageClass: 'page-item',
-        activeClass: 'active',
-        disabledClass: 'disabled',
-        anchorClass: 'page-link'
+        paginationClass: "pagination",
+        nextClass: "page-item next",
+        prevClass: "page-item prev",
+        lastClass: "page-item last",
+        firstClass: "page-item first",
+        pageClass: "page-item",
+        activeClass: "active",
+        disabledClass: "disabled",
+        anchorClass: "page-link"
     };
-
-    $.fn.twbsPagination.Constructor = TwbsPagination;
-
-    $.fn.twbsPagination.noConflict = function () {
-        $.fn.twbsPagination = old;
-        return this;
+    e.fn.twbsPagination.Constructor = c;
+    e.fn.twbsPagination.noConflict = function() {
+        e.fn.twbsPagination = b;
+        return this
     };
-
-    $.fn.twbsPagination.version = "1.4.1";
-
+    e.fn.twbsPagination.version = "1.4"
 })(window.jQuery, window, document);
+
 
 
 /*$(window).on("resize",function(){
