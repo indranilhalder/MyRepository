@@ -7,6 +7,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
@@ -300,6 +301,16 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				}
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 			}
+			
+			////SDI-2112 starts
+ +			if (subOrderEntry.getConsignment().getStatus().getCode().equalsIgnoreCase(ConsignmentStatus.RETURN_INITIATED.getCode()))
+ +			{
+ +				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+ +						ModelAttributetConstants.RETURN_ALREADY_INITIATED);
+ +				return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+ +			}
+ +			////SDI-2112 ends
+			
 
 
 			//TPR-5954 || Category specific return reason || Start
