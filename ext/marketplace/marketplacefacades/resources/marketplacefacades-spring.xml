@@ -2107,14 +2107,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			</list>
 		</property>
 	</bean>
+	<!--  Added for NU-35 start-->
 	<bean id="homePageAppFacade" class="com.tisl.mpl.facade.homeapi.impl.HomePageAppFacadeImpl">
-		<property name="homePageAppService" ref="homePageAppService"></property>
 		<property name="buyBoxService" ref="buyBoxService"></property>
-		<!-- <property name="productConfiguredPopulator" ref="productConfiguredPopulator"></property> -->
-		<!-- <property name="customProductConverter" ref="customAjaxProductConverter"></property>	 -->	
 		<property name="productConverter" ref="productConverter"/>
-		<!-- <property name="productFacade" ref="accProductFacade" /> -->
 		<property name="mediaFormat" value="searchPage" />
 	</bean>
+	<!--  Added for NU-35 end-->
 </beans>
 

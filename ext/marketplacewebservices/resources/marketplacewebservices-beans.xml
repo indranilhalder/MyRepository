@@ -3578,7 +3578,7 @@
 	</bean>
 	<!-- Added for TPR-5954 || End -->
 
-<!--  Added for NU-35 -->
+<!--  Added for NU-35 start-->
 
 	<bean class="com.tisl.mpl.wsdto.OffersDTO">
 		<property name="title" type="String" />
@@ -3679,6 +3679,6 @@
 		<property name="mbox" type="String" />
 		<property name="mboxParameters" type="String" />				
 	</bean>
-	
+	<!--  Added for NU-35 end-->
 	
 </beans>

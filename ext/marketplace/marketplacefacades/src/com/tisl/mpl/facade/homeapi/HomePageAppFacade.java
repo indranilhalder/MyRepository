@@ -5,7 +5,6 @@ package com.tisl.mpl.facade.homeapi;
 
 import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
 import com.tisl.mpl.wsdto.BannersCarouselDTO;
-import com.tisl.mpl.wsdto.ComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
 import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
@@ -17,7 +16,6 @@ import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
  */
 public interface HomePageAppFacade
 {
-	public void getAdobeTargetDataOfferWidget(ComponentRequestDTO componentRequestDTO);
 
 	public ThemeOffersDTO getThemeOffersComponentDTO(HomepageComponentRequestDTO themeOffersRequestDTO);
 

@@ -35,12 +35,10 @@ import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
-import com.tisl.mpl.service.HomePageAppService;
 import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
 import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselJSONDTO;
 import com.tisl.mpl.wsdto.BannersCarouselDTO;
 import com.tisl.mpl.wsdto.BannersCarouselJSONDTO;
-import com.tisl.mpl.wsdto.ComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomeProductsDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.ThemeOffersDTO;
@@ -57,19 +55,10 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 {
 	private static final Logger LOG = Logger.getLogger(HomePageAppFacadeImpl.class);
 
-	@Resource(name = "homePageAppService")
-	private HomePageAppService homePageAppService;
-
 	private BuyBoxService buyBoxService;
 
 	@Resource(name = "commonI18NService")
 	private CommonI18NService commonI18NService;
-
-	//	private Converter<ProductModel, ProductData> customProductConverter;
-	//
-	//	private ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator;
-
-	//private ProductFacade productFacade;
 
 	@Resource(name = "productService")
 	private MplProductService mplProductService;
@@ -115,40 +104,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		this.commonI18NService = commonI18NService;
 	}
 
-	/**
-	 * @return the customProductConverter
-	 */
-	//	public Converter<ProductModel, ProductData> getCustomProductConverter()
-	//	{
-	//		return customProductConverter;
-	//	}
-	//
-	//	/**
-	//	 * @param customProductConverter
-	//	 *           the customProductConverter to set
-	//	 */
-	//	public void setCustomProductConverter(final Converter<ProductModel, ProductData> customProductConverter)
-	//	{
-	//		this.customProductConverter = customProductConverter;
-	//	}
-	//
-	//	/**
-	//	 * @return the productConfiguredPopulator
-	//	 */
-	//	public ConfigurablePopulator<ProductModel, ProductData, ProductOption> getProductConfiguredPopulator()
-	//	{
-	//		return productConfiguredPopulator;
-	//	}
-	//
-	//	/**
-	//	 * @param productConfiguredPopulator
-	//	 *           the productConfiguredPopulator to set
-	//	 */
-	//	public void setProductConfiguredPopulator(
-	//			final ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator)
-	//	{
-	//		this.productConfiguredPopulator = productConfiguredPopulator;
-	//	}
 
 	/**
 	 * @return the mediaFormat
@@ -184,53 +139,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		this.productConverter = productConverter;
 	}
 
-	//	/**
-	//	 * @return the productFacade
-	//	 */
-	//	public ProductFacade getProductFacade()
-	//	{
-	//		return productFacade;
-	//	}
-	//
-	//	/**
-	//	 * @param productFacade
-	//	 *           the productFacade to set
-	//	 */
-	//	public void setProductFacade(final ProductFacade productFacade)
-	//	{
-	//		this.productFacade = productFacade;
-	//	}
-
-	/**
-	 * @return the homePageAppService
-	 */
-	public HomePageAppService getHomePageAppService()
-	{
-		return homePageAppService;
-	}
-
-	/**
-	 * @param homePageAppService
-	 *           the homePageAppService to set
-	 */
-	public void setHomePageAppService(final HomePageAppService homePageAppService)
-	{
-		this.homePageAppService = homePageAppService;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getAdobeTargetData()
-	 */
-	@Override
-	public void getAdobeTargetDataOfferWidget(final ComponentRequestDTO ComponentRequestDTO)
-	{
-		// YTODO Auto-generated method stub
-		final String st = homePageAppService.getAdobeTargetDataOfferWidget(ComponentRequestDTO);
-	}
-
-
 	/*
 	 * (non-Javadoc)
 	 *
@@ -263,16 +171,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 			}
 
 			productCodes = themeOffersJSONDTO.getItemIds();
-
-			//			final List<HomeProductsDTO> productsdto = themeOffersJSONDTO.getItemIds();
-			//
-			//			for (final HomeProductsDTO productdto : productsdto)
-			//			{
-			//				if (StringUtils.isNotEmpty(productdto.getPrdId()))
-			//				{
-			//					productCodes.add(productdto.getPrdId().toUpperCase());
-			//				}
-			//			}
 
 			if (CollectionUtils.isNotEmpty(productCodes))
 			{
@@ -330,13 +228,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 			{
 				productCodes = bannersCarouselJSONDTO.getItemIds();
 			}
-			//			for (final HomeProductsDTO productdto : productsdto)
-			//			{
-			//				if (StringUtils.isNotEmpty(productdto.getPrdId()))
-			//				{
-			//					productCodes.add(productdto.getPrdId().toUpperCase());
-			//				}
-			//			}
 
 			if (CollectionUtils.isNotEmpty(productCodes))
 			{
@@ -393,13 +284,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 			{
 				productCodes = videoProductJSONDTO.getItemIds();
 			}
-			//			for (final HomeProductsDTO productdto : productsdto)
-			//			{
-			//				if (StringUtils.isNotEmpty(productdto.getPrdId()))
-			//				{
-			//					productCodes.add(productdto.getPrdId().toUpperCase());
-			//				}
-			//			}
 
 			if (CollectionUtils.isNotEmpty(productCodes))
 			{
@@ -458,13 +342,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 			{
 				productCodes = automatedBrandProductCarouselJSONDTO.getItemIds();
 			}
-			//			for (final HomeProductsDTO productdto : productsdto)
-			//			{
-			//				if (StringUtils.isNotEmpty(productdto.getPrdId()))
-			//				{
-			//					productCodes.add(productdto.getPrdId().toUpperCase());
-			//				}
-			//			}
 
 			if (CollectionUtils.isNotEmpty(productCodes))
 			{
@@ -500,8 +377,6 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		final List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
 		final HomeProductsDTO productdto = new HomeProductsDTO();
 		List<ProductData> productDataList = new ArrayList<ProductData>();
-		//		final List<String> listingIds = (List<String>) CollectionUtils.collect(productsdto, new BeanToPropertyValueTransformer(
-		//				"prdId"));
 		final CurrencyModel currency = commonI18NService.getCurrency(MarketplaceFacadesConstants.INR);
 		final String currencySymbol = currency.getSymbol();
 		final String currencyIso = currency.getIsocode();
@@ -510,31 +385,14 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		final List<ProductModel> productModelList = mplProductService.getProductListForCodeList(
 				catalogVersionService.getCatalogVersion("mplProductCatalog", "Online"), listingIds);
 
-		LOG.info("*************" + productModelList.size());
+		LOG.info("*************Home Page app components controller" + productModelList.size());
 
-		//final Collection<ProductOption> options = Arrays.asList(ProductOption.BASIC, ProductOption.IMAGES);
 		productDataList = Converters.convertAll(productModelList, getProductConverter());
-		//final ProductData productData = getProductConverter()..convert(productModel);
-
-		//		for (final ProductModel productModel : productModelList)
-		//		{
-		//			final ProductData productData = productFacade.getProductForOptions(productModel,
-		//					Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY, ProductOption.IMAGES));
-		//			//			ProductData productData = new ProductData();
-		//			//			productData = getCustomProductConverter().convert(productModel);
-		//			//			if (options != null)
-		//			//			{
-		//			//				getProductConfiguredPopulator().populate(productModel, productData, options);
-		//			//			}
-		//
-		//			productDataList.add(productData);
-		//		}
 
 
 		for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 		{
 			ProductData productdata = new ProductData();
-			//final String buyBoxListingIdLwrCase = buyBoxModel.getProduct().toLowerCase();
 			final String buyBoxListingId = buyBoxModel.getProduct();
 			if (listingIds.contains(buyBoxListingId))
 			{
@@ -582,13 +440,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 							return finder.getFormat().equals(imageFormat);
 						}
 					});
-					//				for (final ImageData imageData : productdata.getImages())
-					//				{
-					//					if (imageData.getFormat().equalsIgnoreCase(imageFormat))
-					//					{
-					//						productdto.setImageURL(imageData.getUrl());
-					//					}
-					//				}
+
 					if (StringUtils.isNotEmpty(imageData.getUrl()))
 					{
 						productdto.setImageURL(imageData.getUrl());
