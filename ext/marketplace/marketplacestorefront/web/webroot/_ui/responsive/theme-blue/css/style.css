@@ -10227,7 +10227,7 @@ body .account .right-account .order-history .pagination li{
     font-weight: lighter;
     margin-top: 3px;
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 5px;	/* modify for SDI-2915 */
     color: #7e7e7e;
       }
       #productYouCare .home-product-you-care-carousel-img img {
@@ -32648,12 +32648,12 @@ body.page-homepage .trending h1 > span{
 }
 #productYouCare .short-info > h3 span {
     color: #fff;
-    font-size: 14px;
-    padding: 20px 15px;
+    font-size: 11px;	/* modify for SDI-2915 */
+    padding: 20px 8px;	/* modify right & left padding for SDI-2915 */
 }
 #productYouCare .short-info > h3 span:after {
     color: #fff;
-    font-size: 16px;
+    font-size: 15px;	/* modify for SDI-2915 */
 }
 .qued-content a.button.maroon:hover {
     background-color: transparent;
