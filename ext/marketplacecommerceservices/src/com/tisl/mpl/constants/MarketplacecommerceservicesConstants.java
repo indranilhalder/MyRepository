@@ -2398,11 +2398,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
-	
-	//SDI-4494	
+
+	//SDI-4494
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOMATIC = "AUTOMATIC";
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
+
+	//Report for bulk cancellation
+	public static final String DATA_FOR_BULK_CANCELLATION_PROCESS = "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'";
+	public static final String bulk_cancellation_report_path = "bulk.cancellation.report.path";
 }
