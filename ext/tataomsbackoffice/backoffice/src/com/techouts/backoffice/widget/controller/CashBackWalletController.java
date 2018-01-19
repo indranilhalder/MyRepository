@@ -320,9 +320,9 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer ){
 			}if (null != currentCustomer.getLastName()){
 				custInfo.setLastName(currentCustomer.getLastName());
 			}
-			customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 			customerRegisterReq.setCustomer(custInfo);
-			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
 			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
 			if (customerRegisterResponse.getResponseCode() == 0)
 			{
