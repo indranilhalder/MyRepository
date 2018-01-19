@@ -1009,7 +1009,7 @@ function toggleNextPrevButton(){
     };
     e.fn.twbsPagination.version = "1.4"
 })(window.jQuery, window, document);
-
+$('.pagination-blocks').twbsPagination(settings);
 
 
 /*$(window).on("resize",function(){
