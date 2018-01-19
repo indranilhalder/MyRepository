@@ -3852,7 +3852,11 @@ $(document).ready(function(){
 				$(this).find('li.viewDetails').css('margin-bottom','30px');
 			}
 		});
+		$(".homepage-banner #rotatingImageTimeout").remove();	/*add for SDI-3883*/
 	}	
+	else{
+		$(".homepage-banner #rotatingImageTimeoutMobile").remove();		/*add for SDI-3883*/
+	}
 });
 /*PRDI-402 end*/
 /* start change of PRDI-92 */
