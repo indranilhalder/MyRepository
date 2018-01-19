@@ -340,7 +340,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.ValidateOtpWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 	</bean>
-
+<!--NU 34  -->
 	<bean class="com.tisl.mpl.wsdto.GetCustomerDetailDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="emailID" type="String" />
 		<property name="firstName" type="String" />
@@ -350,6 +350,7 @@
 		<property name="dateOfAnniversary" type="String" />
 		<property name="mobileNumber" type="String" />
 		<property name="nickName" type="String" />
+		<property name="InvitationDetails" type="com.tisl.mpl.data.InvitationDetails" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyMobileWsDTO"

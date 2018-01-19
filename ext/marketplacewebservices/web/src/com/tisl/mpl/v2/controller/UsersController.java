@@ -156,6 +156,7 @@ import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
+import com.tisl.mpl.data.InvitationDetails;
 import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.ReturnInfoData;
@@ -11831,5 +11832,107 @@ public class UsersController extends BaseCommerceController
 				}
 			}
 		}
+	}
+
+	/**
+	 * @description method is called to get the Profile Details
+	 * @param emailid
+	 * @param fields
+	 * @return GetCustomerDetailDto NU-34
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailid}/getCustomerProfile", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public GetCustomerDetailDto getMyProfile(@PathVariable final String emailid, final String fields,
+			@RequestParam(required = true) final boolean isPwa)
+	{
+		final GetCustomerDetailDto customer = new GetCustomerDetailDto();
+		MplCustomerProfileData customerData = new MplCustomerProfileData();
+
+		if (null == emailid && StringUtils.isEmpty(emailid))
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+		}
+		else
+		{
+			try
+			{
+				final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
+				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
+				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
+				if (null != customerData)
+				{
+					final String messageText = configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY);
+
+					final String affiliateId = customerData.getUid();
+					final String specificUrl = MarketplacecommerceservicesConstants.LINK_LOGIN
+							+ MarketplacecommerceservicesConstants.QS + MarketplacecommerceservicesConstants.AFFILIATEID
+							+ MarketplacecommerceservicesConstants.EQUALS + affiliateId;
+					final String inviteFriendUrl = urlForMobileEmailContext(request, specificUrl);
+
+					final InvitationDetails invite = new InvitationDetails();
+					invite.setFriendsInviteMessage(messageText);
+					invite.setSiteUrl(inviteFriendUrl);
+					if (StringUtils.isNotEmpty(customerData.getFirstName())
+							&& !customerData.getFirstName().equals(MarketplacecommerceservicesConstants.SPACE))
+					{
+						customer.setFirstName(customerData.getFirstName());
+					}
+					if (StringUtils.isNotEmpty(customerData.getLastName())
+							&& !customerData.getLastName().equals(MarketplacecommerceservicesConstants.SPACE))
+					{
+
+						customer.setLastName(customerData.getLastName());
+					}
+					if (StringUtils.isNotEmpty(customerData.getDateOfBirth()))
+					{
+						customer.setDateOfBirth(customerData.getDateOfBirth());
+					}
+					if (StringUtils.isNotEmpty(customerData.getGender()))
+					{
+						customer.setGender(customerData.getGender());
+					}
+					if (StringUtils.isNotEmpty(customerData.getMobileNumber()))
+					{
+						customer.setMobileNumber(customerData.getMobileNumber());
+					}
+					customer.setInvitationDetails(invite);
+					customer.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+				}
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				if (null != e.getErrorMessage())
+				{
+					customer.setError(e.getErrorMessage());
+				}
+				if (null != e.getErrorCode())
+				{
+					customer.setErrorCode(e.getErrorCode());
+				}
+				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			catch (final EtailBusinessExceptions e)
+			{
+				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+				if (null != e.getErrorMessage())
+				{
+					customer.setError(e.getErrorMessage());
+				}
+				if (null != e.getErrorCode())
+				{
+					customer.setErrorCode(e.getErrorCode());
+				}
+				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		return customer;
 	}
 }
