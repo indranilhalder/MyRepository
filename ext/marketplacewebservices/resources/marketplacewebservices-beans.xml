@@ -335,11 +335,12 @@
 		<property name="friendsInviteMessageText" type="String" />
 		<property name="wishlistNames" type="java.util.List&lt;java.lang.String>" />
 		<property name="category" type="java.util.Map&lt;String,String>" />
+		<property name="message" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ValidateOtpWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 	</bean>
-
+<!--NU 34  -->
 	<bean class="com.tisl.mpl.wsdto.GetCustomerDetailDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="emailID" type="String" />
 		<property name="firstName" type="String" />
@@ -349,6 +350,7 @@
 		<property name="dateOfAnniversary" type="String" />
 		<property name="mobileNumber" type="String" />
 		<property name="nickName" type="String" />
+		<property name="InvitationDetails" type="com.tisl.mpl.data.InvitationDetails" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyMobileWsDTO"
@@ -900,8 +902,24 @@
 		<property name="sessionSecret" type="String" />
 		<property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.MplRegistrationResultWsDto">
+		<property name="status" type="String" />
+		<property name="isTemporaryPassword" type="String" />
+		<property name="message" type="String" />
+		<property name="username" type="String" />
+		<property name="errorCode" type="String"></property>
+	</bean>
 	<!-- Registration Mobile web service -->
-
+	<!-- NU-30 || Start -->
+	<bean class="com.tisl.mpl.wsdto.UserLoginResultWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="status" type="String" />
+		<property name="message" type="String" />
+		<property name="customerId" type="String" />
+		<property name="isTemporaryPassword" type="String" />
+		<property name="isSocialMedia" type="String" />
+		<property name="customerInfo" type="com.tisl.mpl.wsdto.UpdateCustomerDetailDto"></property>
+	</bean>
+	<!-- NU-30 || End -->
 	<bean class="com.tisl.mpl.wsdto.UpdateCustomerDetailDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="firstName" type="String" />
 		<property name="lastName" type="String" />
@@ -911,6 +929,11 @@
 		<property name="gender" type="String" />
 		<property name="nickName" type="String" />
 		<property name="dateOfAnniversary" type="String" />
+		<!-- NU-33 -->
+		<property name="favBrand" type="String" />
+		<property name="favCategory" type="String" />
+		<property name="status" type="String" />
+		<property name="message" type="String" />
 	</bean>
 	<!-- ProductDetailsForProductCode mobile web service begins -->
 	<bean class="com.tisl.mpl.wsdto.SellerInformationMobileData">

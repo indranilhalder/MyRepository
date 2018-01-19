@@ -246,6 +246,11 @@
 		<property name="friendsEmailList" type="java.util.List&lt;String>"/>
 	</bean>
 	
+	<bean class="com.tisl.mpl.data.InvitationDetails">
+		<property name="friendsInviteMessage" type="String"/>
+		<property name="siteUrl" type="String"/>
+	</bean>
+	
 	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
 	<property name="ussid" type="String">
 			<description>The Selected Entries USSID</description>

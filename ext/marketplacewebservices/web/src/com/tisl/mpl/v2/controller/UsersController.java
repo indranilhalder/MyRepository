@@ -156,12 +156,14 @@ import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
+import com.tisl.mpl.data.InvitationDetails;
 import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.ReturnLogisticsResponseDetails;
 import com.tisl.mpl.data.WishlistData;
+import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -248,6 +250,7 @@ import com.tisl.mpl.wsdto.MplOrderNotificationWsDto;
 import com.tisl.mpl.wsdto.MplOrderTrackingNotificationsListWsDto;
 import com.tisl.mpl.wsdto.MplPreferenceDataForMobile;
 import com.tisl.mpl.wsdto.MplPreferenceListWsDto;
+import com.tisl.mpl.wsdto.MplRegistrationResultWsDto;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
@@ -268,6 +271,7 @@ import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
 import com.tisl.mpl.wsdto.SubReasonsMap;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
+import com.tisl.mpl.wsdto.UserLoginResultWsDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WalletPaymentWsDTO;
@@ -10075,6 +10079,63 @@ public class UsersController extends BaseCommerceController
 		return orderHistoryListData;
 	}
 
+	@Secured(
+	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/customerRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public MplRegistrationResultWsDto registerUser(@RequestParam final String loginId,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+
+	{
+		LOG.debug("****************** User Registration mobile web service ***********" + loginId);
+		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
+		try
+		{
+			final String emailIdLwCase = loginId.toLowerCase();
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			userResult = mobileUserService.registerAppUser(emailIdLwCase, platformDecider);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setMessage(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userResult;
+	}
+
+
 	/**
 	 * @return the mplProductWebService
 	 */
@@ -11087,5 +11148,791 @@ public class UsersController extends BaseCommerceController
 		this.voucherService = voucherService;
 	}
 
+	@Secured(
+	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/registrationOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserLoginResultWsDto registrationOTPVerification(@RequestParam final String username,
+			@RequestParam final String password, @RequestParam(required = true) final String otp,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
 
+	{
+		LOG.debug("****************** User Registration mobile web service ***********" + username);
+		MplUserResultWsDto userResult = new MplUserResultWsDto();
+		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
+		try
+		{
+			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.REG);
+			if (validOtpFlag)
+			{
+				final String emailIdLwCase = username.toLowerCase();
+				LOG.debug("The platform number is " + platformNumber);
+				int platformDecider;
+				if (StringUtils.isNotEmpty(platformNumber))//IQA
+				{
+					platformDecider = Integer.parseInt(platformNumber);
+				}
+				else
+				{
+					platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
+				}
+				LOG.debug("The platform number is " + platformDecider);
+				userResult = mobileUserService.registerNewMplUserWithMobile(emailIdLwCase, password, true, platformDecider);
+				//final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
+				userLoginResultWsDto.setStatus(userResult.getStatus());
+				userLoginResultWsDto.setCustomerId(userResult.getCustomerId());
+				userLoginResultWsDto.setMessage("OTP verified. Registration Successful");
+				if (emailIdLwCase.contains("@"))
+				{
+					customerInfo.setEmailId(emailIdLwCase);
+				}
+				else
+				{
+					customerInfo.setMobileNumber(emailIdLwCase);
+				}
+				userLoginResultWsDto.setCustomerInfo(customerInfo);
+			}
+
+			else
+			{
+				userResult.setError("Invalid otp");
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userLoginResultWsDto;
+	}
+
+	/**
+	 * Login user from mobile
+	 *
+	 * @param emailId
+	 * @param password
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{emailId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserLoginResultWsDto customerLogin(@PathVariable final String emailId, @RequestParam final String password)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		final UserLoginResultWsDto userResult = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
+		//		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+		CustomerModel customerModel = null;
+		try
+		{
+			//CAR Project performance issue fixed
+
+
+			//customerModel = mplPaymentWebFacade.getCustomer(emailId);
+
+			LOG.debug("****************** User Login mobile web service ***********" + emailId);
+			//Login user with username and password
+			//	isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
+			result = mobileUserService.loginUser(emailId, password);
+			if (result.getStatus().equalsIgnoreCase("Success"))
+			{
+				customerModel = (CustomerModel) userService.getCurrentUser();
+				if (null != customerModel.getDateOfBirth())
+				{
+					customerInfo.setDateOfBirth(customerModel.getDateOfBirth().toString());
+				}
+				customerInfo.setFirstName(customerModel.getFirstName());
+				customerInfo.setLastName(customerModel.getLastName());
+				if (null != customerModel.getGender())
+				{
+					customerInfo.setGender(customerModel.getGender().toString());
+				}
+				customerInfo.setMobileNumber(customerModel.getMobileNumber());
+				customerInfo.setEmailId(customerModel.getOriginalUid());
+				userResult.setCustomerInfo(customerInfo);
+			}
+			userResult.setStatus(result.getStatus());
+			userResult.setCustomerId(result.getCustomerId());
+			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
+			//Return result
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userResult;
+	}
+
+	/**
+	 * Register in portal via social media login such as facebook and googleplus TPR-1372
+	 *
+	 * @param emailId
+	 * @param socialMedia
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+	@Secured(
+	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/socialMediaRegistration", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserLoginResultWsDto socialCutomerRegistration(@RequestParam(required = true) final boolean isPwa,
+			@RequestParam final String emailId, @RequestParam final String socialMedia,
+			@RequestParam(required = false) final boolean tataTreatsEnable,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto updateCustomerDetailDto = new UpdateCustomerDetailDto();
+		try
+		{
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			final String emailIdLwCase = emailId.toLowerCase();
+			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			{
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacewebservicesConstants.FACEBOOK,
+						tataTreatsEnable, platformDecider);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			{
+				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacecommerceservicesConstants.GOOGLE,
+						tataTreatsEnable, platformDecider);
+			}
+			if (null != result.getCustomerId())
+			{
+				userLoginResultWsDto.setCustomerId(result.getCustomerId());
+			}
+			if (null != result.getStatus())
+			{
+				userLoginResultWsDto.setStatus(result.getStatus());
+			}
+			//final CustomerModel customerModel = extUserService.getUserForCustomerUid(emailId);
+			if (emailIdLwCase.contains("@"))
+			{
+				updateCustomerDetailDto.setEmailId(emailIdLwCase);
+			}
+			else
+			{
+				updateCustomerDetailDto.setMobileNumber(emailIdLwCase);
+			}
+			userLoginResultWsDto.setCustomerInfo(updateCustomerDetailDto);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userLoginResultWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userLoginResultWsDto.setErrorCode(e.getErrorCode());
+			}
+			userLoginResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userLoginResultWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userLoginResultWsDto.setErrorCode(e.getErrorCode());
+			}
+			userLoginResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return userLoginResultWsDto;
+	}
+
+	/**
+	 * Login via social media
+	 *
+	 * @param emailId
+	 * @param socialMedia
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "{emailId}/loginSocialUser", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserLoginResultWsDto socialLogin(@PathVariable final String emailId, @RequestParam final String socialMedia,
+			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		final UserLoginResultWsDto userResult = new UserLoginResultWsDto();
+		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
+		//		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
+		CustomerModel customerModel = null;
+		try
+		{
+			LOG.debug("****************** Social Media User Login mobile web service ***********" + emailId);
+
+			//Social Media should not be anything other than FB or Google +
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			{
+				result = mobileUserService.loginSocialUser(emailId, socialMedia);
+			}
+			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			{
+				result = mobileUserService.loginSocialUser(emailId, socialMedia);
+			}
+			if (result.getStatus().equalsIgnoreCase("Success"))
+			{
+				customerModel = (CustomerModel) userService.getCurrentUser();
+				if (null != customerModel.getDateOfBirth())
+				{
+					customerInfo.setDateOfBirth(customerModel.getDateOfBirth().toString());
+				}
+				customerInfo.setFirstName(customerModel.getFirstName());
+				customerInfo.setLastName(customerModel.getLastName());
+				if (null != customerModel.getGender())
+				{
+					customerInfo.setGender(customerModel.getGender().toString());
+				}
+				if (null != customerModel.getMobileNumber())
+				{
+					customerInfo.setMobileNumber(customerModel.getMobileNumber());
+				}
+				customerInfo.setEmailId(customerModel.getOriginalUid());
+				userResult.setCustomerInfo(customerInfo);
+			}
+			userResult.setStatus(result.getStatus());
+			userResult.setCustomerId(result.getCustomerId());
+			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				userResult.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				userResult.setErrorCode(e.getErrorCode());
+			}
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//Return result
+		return userResult;
+	}
+
+	/**
+	 * @description method is called to update the Profile of a customer
+	 * @param firstName
+	 * @param lastName
+	 * @param emailid
+	 * @param dateOfBirth
+	 * @param dateOfAnniversary
+	 * @param gender
+	 * @param mobilenumber
+	 * @param fields
+	 * @param request
+	 * @return UpdateCustomerDetailDto
+	 * @throws RequestParameterException
+	 * @throws DuplicateUidException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/updateprofile", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UpdateCustomerDetailDto updateCustomerProfile(@PathVariable final String userId,
+			@RequestParam(required = false) final String emailid, @RequestParam(required = false) final String firstName,
+			@RequestParam(required = false) final String lastName, @RequestParam(required = false) final String dateOfBirth,
+			final String dateOfAnniversary, @RequestParam(required = false) final String nickName,
+			@RequestParam(required = false) final String gender, @RequestParam(required = false) final String mobilenumber,
+			@RequestParam(required = true) final boolean isPwa, @RequestParam(required = true) final boolean ProfileDataRequired,
+			final String fields, final HttpServletRequest request) throws RequestParameterException, DuplicateUidException
+	{
+
+		boolean duplicateEmail = false;
+		final UpdateCustomerDetailDto updateCustomerDetailDto = new UpdateCustomerDetailDto();
+		final UpdateCustomerDetailDto withoutCustomerInfo = new UpdateCustomerDetailDto();
+		final UpdateCustomerDetailDto updateCustomerDetailError = new UpdateCustomerDetailDto();
+		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		if (null == customerData)
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+		}
+		else
+		{
+			final String userIdLwCase = userId.toLowerCase();
+			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
+			final String channel = MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE;
+			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(
+					customerData.getDisplayUid(), channel);
+			if (null == customerToSave)
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+			}
+			else
+			{
+				customerToSave.setUid(customerData.getUid());
+				customerToSave.setDisplayUid(userIdLwCase);
+				try
+				{
+					if (!StringUtils.isEmpty(firstName) && DefaultCommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
+							&& StringUtils.length(firstName) <= MarketplacecommerceservicesConstants.NAME)
+					{
+						customerToSave.setFirstName(firstName);
+					}
+					else
+					{
+						customerToSave.setFirstName(null);
+					}
+					if (!StringUtils.isEmpty(lastName) && DefaultCommonAsciiValidator.validateAlphaWithSpaceNoSpCh(lastName)
+							&& StringUtils.length(lastName) <= MarketplacecommerceservicesConstants.NAME)
+					{
+						customerToSave.setLastName(lastName);
+					}
+					else
+					{
+						customerToSave.setLastName(null);
+					}
+
+					if (StringUtils.isNotEmpty(nickName) && StringUtils.length(nickName) <= MarketplacecommerceservicesConstants.NAME
+							&& DefaultCommonAsciiValidator.validateAlphaWithSpaceNoSpCh(nickName))
+					{
+						customerToSave.setNickName(nickName);
+					}
+					else
+					{
+						customerToSave.setNickName(null);
+					}
+					if (StringUtils.isNotEmpty(mobilenumber))
+					{
+						if (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH
+								&& mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+						{
+							customerToSave.setMobileNumber(mobilenumber);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+						}
+					}
+					else
+					{
+						customerToSave.setMobileNumber(null);
+					}
+					if (null != gender)
+					{
+						if (gender.equalsIgnoreCase(MarketplacecommerceservicesConstants.MALE_CAPS))
+						{
+							customerToSave.setGender(gender);
+						}
+						else if (gender.equalsIgnoreCase(MarketplacecommerceservicesConstants.FEMALE_CAPS))
+						{
+							customerToSave.setGender(gender);
+						}
+						else if (gender.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMPTYSPACE)
+								|| gender.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPACE))
+						{
+							customerToSave.setGender(null);
+						}
+					}
+					if (StringUtils.isNotEmpty(dateOfBirth))
+					{
+						final boolean birthdateValid = isThisDateValid(dateOfBirth,
+								MarketplacecommerceservicesConstants.DMY_DATE_FORMAT);
+						final boolean isNotFutureDate = isNotFutureDate(dateOfBirth,
+								MarketplacecommerceservicesConstants.DMY_DATE_FORMAT,
+								MarketplacecommerceservicesConstants.DMY_DATE_FORMAT_INT);
+						if (birthdateValid)
+						{
+							customerToSave.setDateOfBirth(dateOfBirth);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9026);
+						}
+						if (isNotFutureDate)
+						{
+							customerToSave.setDateOfBirth(dateOfBirth);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9031);
+						}
+					}
+					else
+					{
+						customerToSave.setDateOfBirth(null);
+					}
+					if (StringUtils.isNotEmpty(dateOfAnniversary))
+					{
+						final boolean anniversarydateValid = isThisDateValid(dateOfAnniversary,
+								MarketplacecommerceservicesConstants.DMY_DATE_FORMAT);
+						if (anniversarydateValid)
+						{
+							customerToSave.setDateOfAnniversary(dateOfAnniversary);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9026);
+						}
+					}
+					else
+					{
+						customerToSave.setDateOfAnniversary(null);
+					}
+					if (StringUtils.isNotEmpty(emailid))
+					{
+						if (StringUtils.length(emailid) < 240 || DefaultCommonAsciiValidator.validateEmailAddress(emailid)
+								|| DefaultCommonAsciiValidator.validDomain(emailid))
+						{
+							customerToSave.setEmailId(emailid);
+						}
+						else
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9011);
+						}
+					}
+					customerToSave.setUid(customerData.getUid());
+					if (StringUtils.isNotEmpty(emailid))
+					{
+						customerToSave.setDisplayUid(emailid);
+					}
+					else
+					{
+						customerToSave.setDisplayUid(customerToSave.getDisplayUid());
+					}
+					if (StringUtils.isNotEmpty(emailid))
+					{
+						if (!customerData.getDisplayUid().equalsIgnoreCase(emailid.trim().toLowerCase()))
+						{
+							if (mplCustomerProfileFacade.checkUniquenessOfEmail(customerToSave.getEmailId()))
+							{
+								mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+							}
+							else
+							{
+								duplicateEmail = true;
+								updateCustomerDetailError.setError(MarketplacecommerceservicesConstants.DUPLICATE_EMAIL);
+								updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+								return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+							}
+						}
+					}
+					final String specificUrl = MarketplacecommerceservicesConstants.LINK_MY_ACCOUNT
+							+ MarketplacecommerceservicesConstants.LINK_UPDATE_PROFILE;
+					final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
+					mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+					mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, customerToSave.getDisplayUid(),
+							profileUpdateUrl);
+					if (StringUtils.isNotEmpty(customerToSave.getDateOfAnniversary()))
+					{
+						updateCustomerDetailDto.setDateOfAnniversary(customerToSave.getDateOfAnniversary());
+					}
+					if (StringUtils.isNotEmpty(customerToSave.getFirstName()))
+					{
+						updateCustomerDetailDto.setFirstName(customerToSave.getFirstName());
+					}
+					if (StringUtils.isNotEmpty(customerToSave.getLastName()))
+					{
+						updateCustomerDetailDto.setLastName(customerToSave.getLastName());
+					}
+					if (StringUtils.isNotEmpty(customerToSave.getNickName()))
+					{
+						updateCustomerDetailDto.setNickName(customerToSave.getNickName());
+					}
+					if (StringUtils.isNotEmpty(customerToSave.getEmailId()))
+					{
+						updateCustomerDetailDto.setEmailId(customerToSave.getEmailId());
+					}
+
+					if (StringUtils.isNotEmpty(customerToSave.getMobileNumber()))
+					{
+						updateCustomerDetailDto.setMobileNumber(customerToSave.getMobileNumber());
+					}
+					if (StringUtils.isNotEmpty(customerToSave.getGender()))
+					{
+						updateCustomerDetailDto.setGender(customerToSave.getGender());
+					}
+					if (StringUtils.isNotEmpty(customerToSave.getDateOfBirth()))
+					{
+						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
+					}
+					//					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+					//					final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
+					//							MarketplacewebservicesConstants.USE_GIGYA);
+					//					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
+					//					{
+					//						final String gigyaMethod = configurationService.getConfiguration().getString(
+					//								MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+					//						String fnameGigya = null;
+					//						String lnameGigya = null;
+					//
+					//						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getFirstName()))
+					//						{
+					//							fnameGigya = updateCustomerDetailDto.getFirstName().trim();
+					//						}
+					//						else
+					//						{
+					//
+					//							fnameGigya = MarketplacewebservicesConstants.EMPTY;
+					//						}
+					//						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getLastName()))
+					//						{
+					//							lnameGigya = updateCustomerDetailDto.getLastName().trim();
+					//						}
+					//						else
+					//						{
+					//							lnameGigya = MarketplacewebservicesConstants.EMPTY;
+					//						}
+					//
+					//						gigyaFacade.notifyGigya(updateCustomerDetailDto.getEmailId(), null, fnameGigya, lnameGigya,
+					//								updateCustomerDetailDto.getEmailId().trim(), gigyaMethod);
+					//					}
+				}
+				catch (final DuplicateUidException e)
+				{
+					ExceptionUtil.etailNonBusinessExceptionHandler(
+
+					new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0001));
+				}
+				catch (final EtailNonBusinessExceptions e)
+				{
+					ExceptionUtil.etailNonBusinessExceptionHandler(e);
+					if (null != e.getErrorMessage())
+					{
+						updateCustomerDetailError.setError(e.getErrorMessage());
+					}
+					updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					updateCustomerDetailDto.setMessage(MarketplacecommerceservicesConstants.PROFILE_UPDATE_FAIL);
+					return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+				}
+				catch (final EtailBusinessExceptions e)
+				{
+					ExceptionUtil.etailBusinessExceptionHandler(e, null);
+					if (null != e.getErrorMessage())
+					{
+						updateCustomerDetailError.setError(e.getErrorMessage());
+					}
+					updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					updateCustomerDetailDto.setMessage(MarketplacecommerceservicesConstants.PROFILE_UPDATE_FAIL);
+					return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+				}
+				if (!duplicateEmail)
+				{
+					if (ProfileDataRequired)
+					{
+						updateCustomerDetailDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						return dataMapper.map(updateCustomerDetailDto, UpdateCustomerDetailDto.class, fields);
+					}
+					else
+					{
+						withoutCustomerInfo.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						withoutCustomerInfo.setMessage(MarketplacecommerceservicesConstants.PROFILE_UPDATE_SUCCESS);
+						return withoutCustomerInfo;
+					}
+				}
+				else
+				{
+					updateCustomerDetailError.setError(MarketplacecommerceservicesConstants.DUPLICATE_EMAIL);
+					updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					updateCustomerDetailDto.setMessage(MarketplacecommerceservicesConstants.PROFILE_UPDATE_FAIL);
+					return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @description method is called to get the Profile Details
+	 * @param emailid
+	 * @param fields
+	 * @return GetCustomerDetailDto NU-34
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailid}/getCustomerProfile", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public GetCustomerDetailDto getMyProfile(@PathVariable final String emailid, final String fields,
+			@RequestParam(required = true) final boolean isPwa)
+	{
+		final GetCustomerDetailDto customer = new GetCustomerDetailDto();
+		MplCustomerProfileData customerData = new MplCustomerProfileData();
+
+		if (null == emailid && StringUtils.isEmpty(emailid))
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+		}
+		else
+		{
+			try
+			{
+				final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
+				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
+				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
+				if (null != customerData)
+				{
+					final String messageText = configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY);
+
+					final String affiliateId = customerData.getUid();
+					final String specificUrl = MarketplacecommerceservicesConstants.LINK_LOGIN
+							+ MarketplacecommerceservicesConstants.QS + MarketplacecommerceservicesConstants.AFFILIATEID
+							+ MarketplacecommerceservicesConstants.EQUALS + affiliateId;
+					final String inviteFriendUrl = urlForMobileEmailContext(request, specificUrl);
+
+					final InvitationDetails invite = new InvitationDetails();
+					invite.setFriendsInviteMessage(messageText);
+					invite.setSiteUrl(inviteFriendUrl);
+					if (StringUtils.isNotEmpty(customerData.getFirstName())
+							&& !customerData.getFirstName().equals(MarketplacecommerceservicesConstants.SPACE))
+					{
+						customer.setFirstName(customerData.getFirstName());
+					}
+					if (StringUtils.isNotEmpty(customerData.getLastName())
+							&& !customerData.getLastName().equals(MarketplacecommerceservicesConstants.SPACE))
+					{
+
+						customer.setLastName(customerData.getLastName());
+					}
+					if (StringUtils.isNotEmpty(customerData.getDateOfBirth()))
+					{
+						customer.setDateOfBirth(customerData.getDateOfBirth());
+					}
+					if (StringUtils.isNotEmpty(customerData.getGender()))
+					{
+						customer.setGender(customerData.getGender());
+					}
+					if (StringUtils.isNotEmpty(customerData.getMobileNumber()))
+					{
+						customer.setMobileNumber(customerData.getMobileNumber());
+					}
+					customer.setInvitationDetails(invite);
+					customer.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
+				}
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				if (null != e.getErrorMessage())
+				{
+					customer.setError(e.getErrorMessage());
+				}
+				if (null != e.getErrorCode())
+				{
+					customer.setErrorCode(e.getErrorCode());
+				}
+				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			catch (final EtailBusinessExceptions e)
+			{
+				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+				if (null != e.getErrorMessage())
+				{
+					customer.setError(e.getErrorMessage());
+				}
+				if (null != e.getErrorCode())
+				{
+					customer.setErrorCode(e.getErrorCode());
+				}
+				customer.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		return customer;
+	}
 }

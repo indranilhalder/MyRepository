@@ -73,6 +73,7 @@
 			<value code="Easy_Checkout" />
 			<value code="C2C" />
 			<value code="CDA" />
+			<value code="REG" /> <!-- NU-30 -->
 		</enumtype>
 		<enumtype generate="true" code="oISPaymentTypeEnum" autocreate="true"
 			dynamic="true">

@@ -3832,6 +3832,10 @@
 					<index name="ORIGINALUID_IDX" unique="true">
 						<key attribute="originalUid" />
 					</index>
+					<index name="MOBILENO_IDX" unique="true">
+						<key attribute="mobileNumber" />
+						<key attribute="originalUid" />
+					</index>
 				</indexes>
 			</itemtype>
 			<itemtype code="Address" autocreate="false" generate="false">
