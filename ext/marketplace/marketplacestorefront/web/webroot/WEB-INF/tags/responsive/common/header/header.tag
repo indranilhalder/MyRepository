@@ -333,15 +333,15 @@ if(pathname =='/checkout/multi/delivery-method/select'){
 }
 </script>
 
-<div class="wishAddSucessQV">
+<div id="wishAddQV" class="wishAddSucessQV">
 	<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 </div>
-<div class="wishRemoveSucessQV">
+<div id="wishRemoveQV" class="wishRemoveSucessQV">
 	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 </div>
-<div class="wishAddLoginQV">
+<div id="wishLoginQV" class="wishAddLoginQV">
 	<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 </div>
-<div class="wishAlreadyAddedQV">
+<div id="wishAddedQV" class="wishAlreadyAddedQV">
 	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 </div>
