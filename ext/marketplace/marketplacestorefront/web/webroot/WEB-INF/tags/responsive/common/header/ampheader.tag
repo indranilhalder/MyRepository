@@ -754,7 +754,7 @@ p {margin: 0;}
 
 @media(max-width: 480px) {
 	.brandStudioBottom {display: none;}
-	.homeViewAllBtn a {display: block; font-size: 14px;}
+	.homeViewAllBtn a, .homeViewAllBtn a:hover {display: block; font-size: 14px;}
 	.homeViewHeading {text-align: left; font-size: 18px; padding-bottom: 5px;}
 	.brandStudioTop {padding: 0px 15px;}
 	.brandsYouLove {margin: 20px;}
