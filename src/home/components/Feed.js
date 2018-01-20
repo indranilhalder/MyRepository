@@ -4,6 +4,9 @@ import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
+import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
+import ProductCapsules from "./ProductCapsules.js";
+import FollowingBrands from "./FollowingBrands";
 import ThemeOffer from "./ThemeOffer.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
@@ -14,7 +17,10 @@ const typeComponentMapping = {
   bannerProductCarousel: props => <BannerProductCarousel {...props} />,
   automatedBrandProductCarousel: props => (
     <AutomatedBrandProductCarousel {...props} />
-  )
+  ),
+  productCapsules: props => <ProductCapsules {...props} />,
+  discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
+  followedWidget: props => <FollowingBrands {...props} />
 };
 
 class Feed extends Component {

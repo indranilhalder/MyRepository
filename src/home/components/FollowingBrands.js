@@ -10,23 +10,21 @@ export default class FollowingBrands extends React.Component {
     }
   };
   render() {
-    const data = this.props.data;
-    data.push({ url: this.props.circle, fit: "25px", onClick: this.newFollow });
-    data.push({ url: this.props.circle, fit: "25px", onClick: this.newFollow });
-    data.push({ url: this.props.circle, fit: "25px", onClick: this.newFollow });
+    const followWidgetData = this.props.feedComponentData.data;
     return (
-      <Carousel header={BrandImage.defaultProps.header}>
-        {data.map((datum, i) => {
-          return (
-            <BrandImage
-              key={i}
-              image={datum.url}
-              value={datum.value}
-              fit={datum.fit}
-              onClick={datum.onClick}
-            />
-          );
-        })}
+      <Carousel header={this.props.feedComponentData.title}>
+        {followWidgetData.length > 0 &&
+          followWidgetData.map((datum, i) => {
+            return (
+              <BrandImage
+                key={i}
+                image={datum.imageURL}
+                value={datum.type}
+                fit={datum.type}
+                onClick={datum.onClick}
+              />
+            );
+          })}
       </Carousel>
     );
   }

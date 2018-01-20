@@ -3,25 +3,27 @@ import Carousel from "../../general/components/Carousel";
 import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle";
 import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
-
 export default class ProductCapsules extends React.Component {
   render() {
-    const numberOfProducts = this.props.data ? this.props.data.length : 0;
+    const productCapsulesData = this.props.feedComponentData.data;
+    const numberOfProducts = productCapsulesData
+      ? productCapsulesData.length
+      : 0;
     const subHeader = `You have ${numberOfProducts} products in your list`;
     return (
       <div className={styles.base}>
         <Carousel
-          header={this.props.header}
+          header={this.props.feedComponentData.title}
           subheader={subHeader}
           buttonText="See all"
-          seeAll={this.props.seeAll}
+          seeAll={this.props.feedComponentData.btnText}
           elementWidthMobile={30}
         >
-          {this.props.data &&
-            this.props.data.map((datum, i) => {
+          {productCapsulesData.length > 0 &&
+            productCapsulesData.map((datum, i) => {
               return (
                 <ProductCapsuleCircle
-                  image={datum.image}
+                  image={datum.imageURL}
                   label={datum.label}
                   key={i}
                 />
@@ -33,9 +35,7 @@ export default class ProductCapsules extends React.Component {
   }
 }
 ProductCapsules.propTypes = {
-  header: PropTypes.string,
-  subheader: PropTypes.string,
-  data: PropTypes.arrayOf(PropTypes.shape({ image: PropTypes.string }))
+  header: PropTypes.string
 };
 ProductCapsules.defaultProps = {
   header: "Saved products"
