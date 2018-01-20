@@ -4,6 +4,8 @@ import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
+import BannerSeparator from "../../general/components/BannerSeparator.js";
+import SingleQuestion from "./SingleQuestion.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
@@ -18,6 +20,8 @@ const typeComponentMapping = {
   automatedBrandProductCarousel: props => (
     <AutomatedBrandProductCarousel {...props} />
   ),
+  singleSelectQuestion: props => <SingleQuestion {...props} />,
+  bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
   discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
   followedWidget: props => <FollowingBrands {...props} />

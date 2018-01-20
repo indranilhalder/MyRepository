@@ -10,22 +10,27 @@ export default class SingleQuestion extends React.Component {
     }
   }
   render() {
+    const feedComponentData = this.props.feedComponentData;
+    let singleQuestionData = this.props.feedComponentData.data.items;
+
     return (
       <Carousel
         headerComponent={
-          <div className={styles.header}>{this.props.header}</div>
+          <div className={styles.header}>
+            {this.props.feedComponentData.data.title}
+          </div>
         }
         elementWidthDesktop={20}
         elementWidthMobile={30}
       >
-        {this.props.data &&
-          this.props.data.map((datum, i) => {
+        {singleQuestionData &&
+          singleQuestionData.map((datum, i) => {
             return (
               <SingleSelect
                 key={i}
-                text={datum.text}
-                value={datum.value}
-                image={datum.image}
+                text={datum.title}
+                value={datum.description}
+                image={datum.imageURL}
                 onClick={val => {
                   this.handleClick(val);
                 }}
