@@ -3,19 +3,30 @@
  */
 package com.tisl.mpl.facades.wallet.impl;
 
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
+import com.tisl.mpl.data.OTPResponseData;
+import com.tisl.mpl.enums.OTPTypeEnum;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
@@ -29,7 +40,10 @@ import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.service.MplWalletServices;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
+
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -54,7 +68,16 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
-
+	
+	@Autowired
+	private ConfigurationService configurationService;
+	
+	@Autowired
+	private OTPGenericService otpGenericService;
+	
+	@Autowired
+	private SendSMSFacade sendSMSFacade;
+	
 	/**
 	 * @return the mplPaymentService
 	 */
@@ -346,4 +369,85 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		final String transactionId = generateQCTransactionId();
 		return getMplWalletServices().deactivateQCUserAccount(walletId,transactionId);
 	}
+	
+	@Override
+	public WalletCreateData getWalletCreateData()
+	{
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		WalletCreateData walletCreateData = new WalletCreateData();
+	   if (StringUtils.isNotEmpty(currentCustomer.getQcVerifyFirstName()))
+		{
+			walletCreateData.setQcVerifyFirstName(currentCustomer.getQcVerifyFirstName());
+		}
+		else
+		{
+			walletCreateData.setQcVerifyFirstName(currentCustomer.getFirstName());
+		}
+		if (StringUtils.isNotEmpty(currentCustomer.getQcVerifyLastName()))
+		{
+			walletCreateData.setQcVerifyLastName(currentCustomer.getQcVerifyLastName());
+		}
+		else
+		{
+			walletCreateData.setQcVerifyLastName(currentCustomer.getLastName());
+		}
+		if (StringUtils.isNotEmpty(currentCustomer.getQcVerifyMobileNo()))
+		{
+			walletCreateData.setQcVerifyMobileNo(currentCustomer.getQcVerifyMobileNo());
+		}
+		else
+		{
+			walletCreateData.setQcVerifyMobileNo(currentCustomer.getMobileNumber());
+		}
+		return walletCreateData;
+	}
+	
+	@Override
+	public OTPResponseData validateOTP(final String customerID, final String enteredOTPNumber)
+	{
+
+		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(customerID, null, enteredOTPNumber,
+				OTPTypeEnum.QC_OTP,
+				Long.parseLong(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+		return otpResponse;
+	}
+	
+	@Override
+	public String generateOTP(final CustomerModel customerModel, final String mobileNumber)
+	{
+		String otp = null;
+		try
+		{
+			otp = otpGenericService.generateOTP(customerModel.getUid(), OTPTypeEnum.QC_OTP.getCode(), mobileNumber);
+			sendNotificationForWalletCreate(customerModel, otp, mobileNumber);
+			
+		}
+
+		catch (final Exception exception)
+		{
+			LOG.error("MplWalletFacadeImpl:...:OTP Genrate" + exception.getMessage());
+		}
+		return otp;
+	}
+	
+	/***
+	 * Send Notification For Wallet_Create 
+	 *
+	 */
+	@Override
+	public void sendNotificationForWalletCreate(final CustomerModel customerModel, final String otPNumber, final String mobileNumber)
+	{
+		final String mplCustomerName = customerModel.getFirstName();
+		final String contactNumber = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
+		sendSMSFacade.sendSms(
+				MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+				MarketplacecommerceservicesConstants.SMS_MESSAGE_WALLET_CREATE_OTP
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO,
+								mplCustomerName != null ? mplCustomerName : "There")
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, otPNumber)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, contactNumber), mobileNumber);
+
+	}
+	
 }

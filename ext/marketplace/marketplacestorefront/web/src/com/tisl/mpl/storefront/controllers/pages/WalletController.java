@@ -18,26 +18,32 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
+import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -50,7 +56,9 @@ import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
+import com.tisl.mpl.storefront.web.forms.WalletCreateForm;
 
 
 /**
@@ -91,11 +99,16 @@ public class WalletController extends AbstractPageController
 	private OrderModelService orderModelService;
 	@Autowired
 	private ExtendedUserService extendedUserService;
-	
+
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
 	protected static final String REDIM_WALLET_FROM_EMAIL = "/redimWalletFromEmail/";
+	protected static final String WALLET_CREATE_VALIDATE_OTP_URL = "/validateWalletOTP";	
+	protected static final String WALLET_CREATE_OTP_POPUP = "/walletOTPPopup";
+	protected static final String WALLET_CREATE_OTP_GENERATE = "/walletCreateOTP";
+
+
 	final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
 	@ModelAttribute("getCurrentDate")
@@ -143,7 +156,7 @@ public class WalletController extends AbstractPageController
 			}
 			else if (null != response && null != response.getResponseCode() && response.getResponseCode() != Integer.valueOf(0))
 			{
-				setValidErrorCodeHandling(response.getResponseCode().intValue(),redirectAttributes);
+				setValidErrorCodeHandling(response.getResponseCode().intValue(), redirectAttributes);
 				LOG.error("card Add Error " + response.getResponseMessage());
 				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
 			}
@@ -209,9 +222,9 @@ public class WalletController extends AbstractPageController
 					custInfo.setLastName(currentCustomer.getLastName());
 				}
 
-				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+				customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 				customerRegisterReq.setCustomer(custInfo);
-				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
 				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
 						.createWalletContainer(customerRegisterReq);
 				if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
@@ -253,9 +266,11 @@ public class WalletController extends AbstractPageController
 
 				else
 				{
-				/*	GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-							"text.cliqcash.use.wallet.fail", null);*/
-					setValidErrorCodeHandling(customerRegisterResponse.getResponseCode().intValue() ,redirectAttributes);
+					/*
+					 * GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+					 * "text.cliqcash.use.wallet.fail", null);
+					 */
+					setValidErrorCodeHandling(customerRegisterResponse.getResponseCode().intValue(), redirectAttributes);
 					System.out.println("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 					LOG.error("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
@@ -288,96 +303,185 @@ public class WalletController extends AbstractPageController
 		model.addAttribute("dateFormat", dateFormat);
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
-    private void setValidErrorCodeHandling(final int errorCode ,final RedirectAttributes redirectAttributes){
-   	 if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10004).intValue()){
+
+	private void setValidErrorCodeHandling(final int errorCode, final RedirectAttributes redirectAttributes)
+	{
+		if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10004).intValue())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.ERROR_CODE_10004_DESC, null);
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10027).intValue())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.ERROR_CODE_10027_DESC, null);
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10528).intValue())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.ERROR_CODE_10528_DESC, null);
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10086).intValue())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.ERROR_CODE_10086_DESC, null);
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10096).intValue())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.ERROR_CODE_10096_DESC, null);
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10550).intValue())
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					ModelAttributetConstants.ERROR_CODE_10550_DESC, null);
+		}
+		else
+		{
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, "text.cliqcash.add.money.Fail",
+					null);
+		}
+	}
+
+
+
+
+	/* Add Cliq cash amount from Email */
+	@RequestMapping(value = REDIM_WALLET_FROM_EMAIL, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String getRedimWalletForEmail(
+			@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode, final Model model,
+			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
+	{
+		try
+		{
+			OrderModel orderModel = orderModelService.getOrderModel(orderCode);
+			String recipientId = orderModel.getRecipientId();
+			CustomerModel walletCustomer = null;
+			try
+			{
+				walletCustomer = extendedUserService.getUserForOriginalUid(recipientId);
+			}
+			catch (Exception exception)
+			{
+				LOG.error("Exception occur while adding money for customer wallet" + exception.getMessage());
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						ModelAttributetConstants.ERROR_CODE_10004_DESC , null);
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10027).intValue()){
+						"mpl.gift.card.add.error.message.newuser");
+				return REDIRECT_PREFIX + "/login";
+			}
+			if (walletCustomer == null)
+			{
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						ModelAttributetConstants.ERROR_CODE_10027_DESC , null);
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10528).intValue()){
+						"mpl.gift.card.add.error.message.newuser");
+				return REDIRECT_PREFIX + "/login";
+			}
+
+			CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			if (!currentCustomer.getOriginalUid().equalsIgnoreCase(walletCustomer.getOriginalUid()))
+			{
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						ModelAttributetConstants.ERROR_CODE_10528_DESC , null);
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10086).intValue()){
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						ModelAttributetConstants.ERROR_CODE_10086_DESC , null);
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10096).intValue()){
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						ModelAttributetConstants.ERROR_CODE_10096_DESC , null);
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10550).intValue()){
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						ModelAttributetConstants.ERROR_CODE_10550_DESC , null);
-			  }else{
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						"text.cliqcash.add.money.Fail", null);
-			  }
-    }
-    
-    
-    
-    
-    /*Add Cliq cash amount  from Email*/  
- 	@RequestMapping(value = REDIM_WALLET_FROM_EMAIL, method = RequestMethod.GET)
-   @RequireHardLogIn
- 	public String getRedimWalletForEmail(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
- 			final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
- 	{
- 		try
- 		{
- 			OrderModel orderModel = orderModelService.getOrderModel(orderCode);
- 			String recipientId=orderModel.getRecipientId();
- 			CustomerModel walletCustomer=null;
- 			try{
- 				walletCustomer =  extendedUserService.getUserForOriginalUid(recipientId);
- 			}catch(Exception exception){
- 				LOG.error("Exception occur while adding money for customer wallet"+exception.getMessage());
- 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
- 						"mpl.gift.card.add.error.message.newuser");
- 				return REDIRECT_PREFIX + "/login";
- 			}	 
- 			if(walletCustomer==null){
- 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
- 						"mpl.gift.card.add.error.message.newuser");
- 				return REDIRECT_PREFIX + "/login";
- 			}
- 			
- 			CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
- 			if(!currentCustomer.getOriginalUid().equalsIgnoreCase(walletCustomer.getOriginalUid())){	
- 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
- 						"mpl.gift.card.add.error.message.anotheruser");
- 				return REDIRECT_PREFIX + "/login";
- 			}
- 			
- 			String cardNumber=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber();
- 			String cardPin=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardPinNumber();
- 			 
- 			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(cardNumber,cardPin);
- 			if(response!=null && response.getResponseCode() !=null){
- 				LOG.info("Code Response" + response.getResponseMessage()+response.getResponseCode().intValue());
- 			}
- 			if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
- 			{
- 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
- 						"text.cliqcash.add.money.success", null);
- 				LOG.info("card Added Sucesss " + response.getResponseMessage());
- 				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
- 			}
- 			else if (null != response && null != response.getResponseCode() && response.getResponseCode() != Integer.valueOf(0))
- 			{
- 				setValidErrorCodeHandling(response.getResponseCode().intValue(),redirectAttributes);
- 				LOG.error("card Add Error " + response.getResponseMessage());
- 				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
- 			}
- 		}
- 		catch (final Exception ex)
- 		{
- 			GlobalMessages.addMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, "text.cliqcash.add.money.Fail",
- 					null);
- 			ex.printStackTrace();
- 		}
- 		return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
- 	}
-    
+						"mpl.gift.card.add.error.message.anotheruser");
+				return REDIRECT_PREFIX + "/login";
+			}
+
+			String cardNumber = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
+					.getCardNumber();
+			String cardPin = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
+					.getCardPinNumber();
+
+			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(cardNumber, cardPin);
+			if (response != null && response.getResponseCode() != null)
+			{
+				LOG.info("Code Response" + response.getResponseMessage() + response.getResponseCode().intValue());
+			}
+			if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+						"text.cliqcash.add.money.success", null);
+				LOG.info("card Added Sucesss " + response.getResponseMessage());
+				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+			}
+			else if (null != response && null != response.getResponseCode() && response.getResponseCode() != Integer.valueOf(0))
+			{
+				setValidErrorCodeHandling(response.getResponseCode().intValue(), redirectAttributes);
+				LOG.error("card Add Error " + response.getResponseMessage());
+				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+			}
+		}
+		catch (final Exception ex)
+		{
+			GlobalMessages.addMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, "text.cliqcash.add.money.Fail",
+					null);
+			ex.printStackTrace();
+		}
+		return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+	}
+
+	@RequestMapping(value = WALLET_CREATE_OTP_POPUP, method = RequestMethod.GET)
+	public String getWalletCreateForm(Model model)
+	{
+		WalletCreateForm walletForm = new WalletCreateForm();
+		WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+		populateWalateCreateData(walletForm, walletCreateData);
+		model.addAttribute("walletForm", walletForm);
+		return "pages/account/walletCreateOtpPopup";
+	}
+
+
+	
+	@RequestMapping(value = WALLET_CREATE_OTP_GENERATE, method = RequestMethod.POST)
+		@ResponseBody
+		public String createOTP(@RequestParam(value = "mobileNumber") final String mobileNumber)
+		{
+			String isNewOTPCreated;
+			LOG.debug("Create  OTP For QC Verifaction");
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			isNewOTPCreated = mplWalletFacade.generateOTP(currentCustomer,mobileNumber);
+			return isNewOTPCreated;
+		}
+	
+
+	
+	@RequestMapping(value = WALLET_CREATE_VALIDATE_OTP_URL, method =RequestMethod.POST)
+	public String getVerificationOTP(@ModelAttribute("walletForm") final WalletCreateForm walletForm, final Model model) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
+
+	{
+		if (StringUtils.isNotEmpty(walletForm.getOtpNumber()))
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			OTPResponseData response = mplWalletFacade.validateOTP(currentCustomer.getOriginalUid(), walletForm.getOtpNumber());
+			if (response.getOTPValid().booleanValue())
+			{
+				return "success";
+			}
+			else
+			{
+				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+				populateWalateCreateData(walletForm, walletCreateData);
+				model.addAttribute("walletForm", walletForm);
+				model.addAttribute("errorMSG", "error");
+			}
+		}
+		else
+		{
+			return "success";
+		}
+		model.addAttribute("walletForm", walletForm);
+		return "success";
+	}
+
+	/**
+	 * @param walletForm
+	 * @param walletCreateData
+	 */
+	private void populateWalateCreateData(WalletCreateForm walletForm, WalletCreateData walletCreateData)
+	{
+		walletForm.setQcVerifyFirstName(walletCreateData.getQcVerifyFirstName());
+		walletForm.setQcVerifyLastName(walletCreateData.getQcVerifyLastName());
+		walletForm.setQcVerifyMobileNo(walletCreateData.getQcVerifyMobileNo());
+	}
+	
 }
 
 

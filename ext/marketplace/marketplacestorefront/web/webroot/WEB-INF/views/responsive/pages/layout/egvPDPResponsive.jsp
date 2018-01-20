@@ -17,40 +17,41 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <template:page pageTitle="${pageTitle}">
-<div>
-	<br />
-	<div class="clearfix">
-		<div class="col-sm-6 giftContSub giftContSub1">
-			<div class="giftFinalTempContainer">
-				<br />
-				<div class="giftFinalTemp">
-					<div class="giftFinalTempTop">
-						<img src="../_ui/responsive/theme-blue/images/GiftCard.jpg" />
-					</div>
-					<div class="giftFinalTempMiddle">
-						<span><i id="updatedGiftCardMessageText"><spring:theme code="egv.product.msg.default"/></i></span>
-					</div>
-					<div class="giftFinalTempBottom">
-						<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="col-sm-6 giftContSub giftContSub2">
-			
-			<div class="clearfix">
-				<div class="">
-					<div class="col-sm-2">
-					<!-- <span class="Gift_Main_Heading">Tata CliQ</span> -->
-					</div>
-					<div class="col-sm-10">
-					<span class="Gift_Card"><spring:theme code="egv.product.msg.giftCard"/></span>
-					<br />&nbsp;
+	<div>
+		<br />
+		<div class="clearfix">
+			<div class="col-sm-6 giftContSub giftContSub1">
+				<div class="giftFinalTempContainer">
+					<br />
+					<div class="giftFinalTemp">
+						<div class="giftFinalTempTop">
+							<img src="../_ui/responsive/theme-blue/images/GiftCard.jpg" />
+						</div>
+						<div class="giftFinalTempMiddle">
+							<span><i id="updatedGiftCardMessageText"><spring:theme
+										code="egv.product.msg.default" /></i></span>
+						</div>
+						<div class="giftFinalTempBottom">
+							<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
+						</div>
 					</div>
 				</div>
 			</div>
-			<!-- <div class="clearfix">
+
+			<div class="col-sm-6 giftContSub giftContSub2">
+
+				<div class="clearfix">
+					<div class="">
+						<div class="col-sm-2">
+							<!-- <span class="Gift_Main_Heading">Tata CliQ</span> -->
+						</div>
+						<div class="col-sm-10">
+							<span class="Gift_Card"><spring:theme
+									code="egv.product.msg.giftCard" /></span> <br />&nbsp;
+						</div>
+					</div>
+				</div>
+				<!-- <div class="clearfix">
 				<div class="col-sm-2 stepTexts">
 					STEP &nbsp;<span class="Oval">1</span><br />&nbsp; 
 				</div>
@@ -81,240 +82,387 @@
 				</div>
 			</div>
 			<br />&nbsp; -->
-			<div class="clearfix">
-				<div class="col-sm-12">
-					<!-- <span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp; -->
-					<div id="moreGiftDesignTemplates" class="giftDesignModel">
-						  Modal content
-						  <div class="giftDesignModelContent">
-							<span class="giftDesignModelClose">&times;</span>
-							<div class="giftModalContainer clearfix">
-								<div class="giftCategoryTab">
-								  <button class="tablinks" onclick="selectCategory(event, 'giftBirthdays')" id="defaultGiftCategory">Birthdays</button>
-								  <button class="tablinks" onclick="selectCategory(event, 'giftAnniversary')">Anniversary</button>
-								  <button class="tablinks" onclick="selectCategory(event, 'giftFestivals')">Festivals</button>
-								  <button class="tablinks" onclick="selectCategory(event, 'giftGraduations')">Graduations</button>
-								  <button class="tablinks" onclick="selectCategory(event, 'giftBrands')">Brands</button>
-								</div>
-								
-								<div id="giftBirthdays" class="giftCategoryTabcontent">
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+				<div class="clearfix">
+					<div class="col-sm-12">
+						<!-- <span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp; -->
+						<div id="moreGiftDesignTemplates" class="giftDesignModel">
+							Modal content
+							<div class="giftDesignModelContent">
+								<span class="giftDesignModelClose">&times;</span>
+								<div class="giftModalContainer clearfix">
+									<div class="giftCategoryTab">
+										<button class="tablinks"
+											onclick="selectCategory(event, 'giftBirthdays')"
+											id="defaultGiftCategory">Birthdays</button>
+										<button class="tablinks"
+											onclick="selectCategory(event, 'giftAnniversary')">Anniversary</button>
+										<button class="tablinks"
+											onclick="selectCategory(event, 'giftFestivals')">Festivals</button>
+										<button class="tablinks"
+											onclick="selectCategory(event, 'giftGraduations')">Graduations</button>
+										<button class="tablinks"
+											onclick="selectCategory(event, 'giftBrands')">Brands</button>
+									</div>
+
+									<div id="giftBirthdays" class="giftCategoryTabcontent">
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p> 
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-									  
-									  <div class="extGiftTempItem col-sm-3">
-										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-										<div>
-											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+
+										<div class="extGiftTempItem col-sm-3">
+											<div class="extGiftTemplateImg">
+												<img
+													src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" />
+											</div>
+											<div>
+												<p>
+													<strong>Tanishq</strong>
+												</p>
+												<p class="extGiftDesc">Special Birthday Gift Cards with
+													additional benifits...</p>
+												<br />
+												<p>
+													<strong>&#8377; 500</strong>
+												</p>
+											</div>
 										</div>
-									  </div>
-								</div>
-								
-								<div id="giftAnniversary" class="giftCategoryTabcontent">
-								  <h3>Anniversary</h3>
-								</div>
-								
-								<div id="giftFestivals" class="giftCategoryTabcontent">
-								  <h3>Festivals</h3>
-								</div>
-								
-								<div id="giftGraduations" class="giftCategoryTabcontent">
-								  <h3>Graduations</h3>
-								</div>
-								
-								<div id="giftBrands" class="giftCategoryTabcontent">
-								  <h3>Brands</h3>
+									</div>
+
+									<div id="giftAnniversary" class="giftCategoryTabcontent">
+										<h3>Anniversary</h3>
+									</div>
+
+									<div id="giftFestivals" class="giftCategoryTabcontent">
+										<h3>Festivals</h3>
+									</div>
+
+									<div id="giftGraduations" class="giftCategoryTabcontent">
+										<h3>Graduations</h3>
+									</div>
+
+									<div id="giftBrands" class="giftCategoryTabcontent">
+										<h3>Brands</h3>
+									</div>
 								</div>
 							</div>
-						  </div>
-						
+
 						</div>
+					</div>
 				</div>
-			</div>
-			<div class="clearfix">
-				<div class="col-sm-2 stepTexts">
-					<!-- STEP &nbsp;<span class="Oval">1</span> --><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<span><spring:theme code="egv.product.msg.enterCardDetails"/></span><br />&nbsp;
-					
+				<div class="clearfix">
+					<div class="col-sm-2 stepTexts">
+						<!-- STEP &nbsp;<span class="Oval">1</span> -->
+						<br />&nbsp;
+					</div>
+					<div class="col-sm-10">
+						<span><spring:theme code="egv.product.msg.enterCardDetails" /></span><br />&nbsp;
+
 						<c:if test="${not empty erroMsg}">
-						<div id="backend_validation_section" class="backend_validation_fail">
-						<span style="color: red;">
-						    ${erroMsg}
-						    </span>
-						    </div>
+							<div id="backend_validation_section"
+								class="backend_validation_fail">
+								<span style="color: red;"> ${erroMsg} </span>
+							</div>
 						</c:if>
 						<br />&nbsp;
+					</div>
 				</div>
-			</div>
-			<form:form method="POST" id="egvDetailsform" onsubmit="return validateForm();" 
-							action="${request.contextPath}/checkout/multi/payment-method/giftCartPayment"
-							commandName="egvDetailsform">
-			<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-					<spring:theme code="egv.product.msg.giftAmount"/> <br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<div class="btn-group" data-toggle="buttons">
-						<c:forEach items="${amountList}" var="amount">
-							<span class="btn giftAmountBtns">
-								<input type="radio" name="giftRange" value="${amount}">&#8377; ${amount}
-							</span>
-						</c:forEach>
-					</div>
-					<div><br /><spring:theme code="egv.product.msg.or"/><br />&nbsp;
-					
-					
-					<div class="alert alert-warning" id="customAmountError">
-						
-					</div>
-					</div>
-							<input  class="giftCard_input" id="customGiftValue" type="text" maxlength="5" placeholder="Enter Custom Amount" onkeypress="return isNumber(event)" /><br />&nbsp;
+				<form:form method="POST" id="egvDetailsform"
+					onsubmit="return validateForm();"
+					action="${request.contextPath}/checkout/multi/payment-method/giftCartPayment"
+					commandName="egvDetailsform">
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.giftAmount" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<div class="btn-group" data-toggle="buttons">
+								<c:forEach items="${amountList}" var="amount">
+									<span class="btn giftAmountBtns"> <input type="radio"
+										name="giftRange" value="${amount}">&#8377; ${amount}
+									</span>
+								</c:forEach>
+							</div>
+							<div>
+								<br />
+								<spring:theme code="egv.product.msg.or" />
+								<br />&nbsp;
+
+
+								<div class="alert alert-warning" id="customAmountError"></div>
+							</div>
+							<input class="giftCard_input" id="customGiftValue" type="text"
+								maxlength="5" placeholder="Enter Custom Amount"
+								onkeypress="return isNumber(event)" /><br />&nbsp;
 							<form:input path="giftRange" type="hidden" id="customAmount" />
-							<form:input path="productCode" type="hidden" value="${product.code}" id="productCode" />
-				</div>
+							<form:input path="productCode" type="hidden"
+								value="${product.code}" id="productCode" />
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.to" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<form:input path="toEmailAddress"
+								class="giftCard_input giftCard_toEmail" type="email"
+								placeholder="Enter Recipient e-mail Address" />
+							<br />&nbsp;
+							<div class="alert alert-warning" id="giftCardEmailError"></div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.firstName" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<form:input path="fromFirstName"
+								class="giftCard_input giftCard_fromFirstName"
+								id="giftCard_fromFirstName" type="text" placeholder="First Name" />
+							<br />&nbsp;
+							<div class="alert alert-warning" id="giftCardFromFirstNameError"></div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.lastName" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<form:input path="fromLastName"
+								class="giftCard_input giftCard_fromLastName"
+								id="giftCard_fromLastName" type="text" placeholder="Last Name" />
+							<br />&nbsp;
+							<div class="alert alert-warning" id="giftCardFromLastNameError"></div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.from" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<form:input path="fromEmailAddress"
+								class="giftCard_input giftCard_fromName" id="giftCard_fromName"
+								type="text" placeholder="From Name" />
+							<br />&nbsp;
+							<div class="alert alert-warning" id="giftCardFromNameError"></div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.phone" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<form:input path="fromPhoneNo"
+								class="giftCard_input giftCard_phoneNo" type="text"
+								maxlength="10" placeholder="Mobile Number"
+								onkeypress="return isNumber(event)" />
+							<br />&nbsp;
+							<div class="alert alert-warning" id="giftCardPhoneNoError"></div>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2 headingTexts">
+							<spring:theme code="egv.product.msg.message" />
+							<br />&nbsp;
+						</div>
+						<div class="col-sm-10">
+							<input type="hidden" id="customAmount" />
+							<form:textarea path="messageBox" id="giftCardMessageText"
+								class="giftCard_textarea" maxlength="150"
+								placeholder="Write a message"></form:textarea>
+							<br />&nbsp;
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="col-sm-2">&nbsp;</div>
+						<div class="col-sm-10">
+							<spring:theme code="egv.product.msg.qty" />
+							&nbsp; <input type="text" class="qtyField" disabled value="1" />
+							<c:choose>
+								<c:when test="${isOTPValidtion ne true}">
+									<div class="priAccution">
+										<button type="button" onclick="createWallet()"
+											class="giftBuyBtn pull-right">Create Wallet</button>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<button type="submit" class="giftBuyBtn pull-right">
+										<spring:theme code="egv.product.msg.buyNow" />
+									</button>
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</div>
+				</form:form>
+
 			</div>
-			<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-					<spring:theme code="egv.product.msg.to"/><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<form:input path="toEmailAddress"  class="giftCard_input giftCard_toEmail" type="email" placeholder="Enter Recipient e-mail Address" /><br />&nbsp;
-					<div class="alert alert-warning" id="giftCardEmailError"></div>
-				</div>
-			</div>
-			<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-					<spring:theme code="egv.product.msg.firstName"/><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<form:input path="fromFirstName" class="giftCard_input giftCard_fromFirstName" id="giftCard_fromFirstName" type="text" placeholder="First Name" /><br />&nbsp;
-					<div class="alert alert-warning" id="giftCardFromFirstNameError"></div>
-				</div>
-			</div>
-			<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-					<spring:theme code="egv.product.msg.lastName"/><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<form:input path="fromLastName" class="giftCard_input giftCard_fromLastName" id="giftCard_fromLastName" type="text" placeholder="Last Name" /><br />&nbsp;
-					<div class="alert alert-warning" id="giftCardFromLastNameError"></div>
-				</div>
-			</div>
-		 	<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-					<spring:theme code="egv.product.msg.from"/><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<form:input path="fromEmailAddress" class="giftCard_input giftCard_fromName" id="giftCard_fromName" type="text" placeholder="From Name" /><br />&nbsp;
-					<div class="alert alert-warning" id="giftCardFromNameError"></div>
-				</div>
-			</div>
-			<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-				 <spring:theme code="egv.product.msg.phone"/><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<form:input path="fromPhoneNo" class="giftCard_input giftCard_phoneNo" type="text" maxlength="10" placeholder="Mobile Number" onkeypress="return isNumber(event)" /><br />&nbsp;
-					<div class="alert alert-warning" id="giftCardPhoneNoError"></div>
-				</div>
-			</div>
-			<div class="clearfix">
-				<div class="col-sm-2 headingTexts">
-					<spring:theme code="egv.product.msg.message"/><br />&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<input type="hidden" id="customAmount" />
-					<form:textarea path="messageBox" id="giftCardMessageText" class="giftCard_textarea" maxlength="150" placeholder="Write a message"></form:textarea><br />&nbsp;
-				</div>
-			</div>
-			<div class="clearfix">
-				<div class="col-sm-2">
-					&nbsp;
-				</div>
-				<div class="col-sm-10">
-					<spring:theme code="egv.product.msg.qty"/> &nbsp; <input  type="text" class="qtyField" disabled value="1" />
-					<button  type="submit" class="giftBuyBtn pull-right"><spring:theme code="egv.product.msg.buyNow"/></button>
-				</div>
-			</div> 
-			</form:form>
-		
-		</div>
-		
-		<div class="col-sm-6 giftContSub giftContSub3">
-			<div class="col-sm-12">
-				<br /> &nbsp;
-				<div class="giftTermsDesc">
-					<span><spring:theme code="egv.product.msg.soldBy"/><strong><spring:theme code="egv.product.msg.qc"/></strong>
-					</span>
+
+			<div class="col-sm-6 giftContSub giftContSub3">
+				<div class="col-sm-12">
+					<br /> &nbsp;
+					<div class="giftTermsDesc">
+						<span><spring:theme code="egv.product.msg.soldBy" /><strong><spring:theme
+									code="egv.product.msg.qc" /></strong> </span>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<br />&nbsp;
+	<br />&nbsp;
+<div class="createWalletModel" id="createWalletPopup">
+		<div class="createWalletModel-content">
+			<button type="button" onclick="closepop()" id="closePop">Click</button>
+			<span id="createWalletPopup" class="close">&times;</span>
+			<div id="createWalletData"></div>
+
+		</div>
+
+	</div>
 </template:page>
 <script>
 	
@@ -535,3 +683,112 @@ function validateForm() {
 	// Get the element with id="defaultOpen" and click on it
 	document.getElementById("defaultGiftCategory").click();
   </script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+var createWalletModel = document.getElementById('createWalletPopup');
+var createWalletData = document.getElementById('createWalletData');
+var createWalletPopup = document.getElementById('createWalletPopup');
+function createWallet() {
+	$.ajax({
+		type : "GET",
+		url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
+		contentType : "html/text",
+		success : function(response){
+			createWalletData.innerHTML=response;
+			createWalletModel.style.display = "block";      
+				  },	
+				failure : function(data) {
+				}
+			}); 
+	
+}
+
+function closepop(){
+	
+	    	createWalletModel.style.display = "none";
+	
+}
+window.onclick = function(event) {
+/*     if (event.target == createWalletModel) {
+    	createWalletModel.style.display = "none";
+    } */
+}
+/* createWalletPopup.onclick = function() {
+	createWalletModel.style.display = "none";
+} */
+var count=0;
+function createWalletOTP(){
+	  $(".mobileNumberError").hide();
+	 var mobileNo=$("#mobileNo").val();
+     var isString = isNaN(mobileNo);
+     
+     if(isString==true || mobileNo.trim()==''){
+			$(".mobileNumberError").show();
+			$(".mobileNumberError").text("Enter only Numbers");
+	  	}
+     else if(!/^[0-9]+$/.test(mobileNo))
+        {
+	  		  $(".mobileNumberError").show();
+	          $(".mobileNumberError").text("Enter only Numbers");
+      }
+     else if(mobileNo.length > 0 && mobileNo.length < 9 ){
+	    	  $(".mobileNumberError").show();
+	          $(".mobileNumberError").text("Enter correct mobile number");
+	  	}
+     else{
+ 	count++;
+	if(count <= 4){
+	 $.ajax({
+			type : "POST",
+			url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
+			data :"mobileNumber="+mobileNo,
+			success : function(response) {
+				$(".wcOTPError").show();
+				$(".wcOTPError").text("OTP Succesfully generated ");
+			}
+		}); 
+	 
+	}else{
+		$(".otpError").show();
+		$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
+	}  
+	  	}
+} 
+
+</script>
+
+
+<style>
+.createWalletModel {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.createWalletModel-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+}
+
+#closePop {
+	float: right;
+}
+</style>

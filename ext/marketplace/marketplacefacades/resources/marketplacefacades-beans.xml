@@ -1384,5 +1384,11 @@
 		<property name="prodTotalPrice" type="String" />
 		<property name="customerOrderStatus" type="String" />
 	</bean>
+
+	<bean class="com.tisl.mpl.facades.cms.data.WalletCreateData">
+		<property name="qcVerifyFirstName" type="String" />
+		<property name="qcVerifyLastName" type="String" />
+		<property name="qcVerifyMobileNo" type="String" />
+	</bean>
 	
 </beans>

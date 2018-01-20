@@ -3,6 +3,13 @@
  */
 package com.tisl.mpl.facades.wallet;
 
+import de.hybris.platform.core.model.user.CustomerModel;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import com.tisl.mpl.data.OTPResponseData;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
@@ -54,4 +61,13 @@ public interface MplWalletFacade
 	public CustomerWalletDetailResponse activateQCUserAccount(String walletId);
 	
 	public CustomerWalletDetailResponse deactivateQCUserAccount(String walletId);
+	
+	public WalletCreateData getWalletCreateData();
+	
+	public OTPResponseData validateOTP(final String customerID, final String enteredOTPNumber);
+	
+	public void sendNotificationForWalletCreate(final CustomerModel customerModel, final String otPNumber, final String mobileNumber);
+	
+	public String generateOTP(final CustomerModel customerModel, final String mobileNumber);
+
 }

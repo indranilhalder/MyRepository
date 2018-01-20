@@ -2437,4 +2437,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Peek-a-boo {0}! One-time password Create Wallet{1}. Please feel free to call us at {2} in case of any queries.";
+
 }

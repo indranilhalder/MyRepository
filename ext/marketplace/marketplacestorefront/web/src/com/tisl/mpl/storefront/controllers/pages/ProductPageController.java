@@ -5324,10 +5324,10 @@ public class ProductPageController extends MidPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
-			
+			CustomerModel currentCustomer=null;
 			try
 			{
-				CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+				 currentCustomer = (CustomerModel) userService.getCurrentUser();
 				if(currentCustomer ==null){
 					return REDIRECT_PREFIX + "/login";
 				}
@@ -5343,7 +5343,12 @@ public class ProductPageController extends MidPageController
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			populateProductDetailForDisplay(productModel, model, request);
-
+			if (currentCustomer.getIsWalletActivated() != null)
+			{
+				model.addAttribute("isOTPValidtion", currentCustomer.getIsWalletActivated().booleanValue());
+			}else{
+				model.addAttribute("isOTPValidtion",Boolean.FALSE);
+			}
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
 			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
