@@ -9555,8 +9555,7 @@ footer .banner {
       .half.square > div *:first-child {
         margin-top: 0px; }
       .half.square > div *:last-child {
-        margin: 20px auto; 
-        margin-top: 0px; }	/* add for SDI-4659 */
+        margin: 20px auto; }	
   .half.square h3 {
     font-size: 24px;
     line-height: 1.5;
@@ -77565,7 +77564,7 @@ background: url(../images/search_image.png) no-repeat;}
 	/*Brand Studio Mobile Component*/
 	#brandsYouLove {display: none !important;}
 	#brandsYouLoveMobileComp {display: block; background-color: #f2f2f2;padding: 30px 0px;}
-	.brandsCarouselItem {width: 260px; height: 370px; margin: 18px; border-radius: 4px; background-color: white; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);}	/* modify height for SDI-4486 */
+	.brandsCarouselItem {width: 260px; height: 320px; margin: 18px; border-radius: 4px; background-color: white; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);}
 	.brandStudioImg {height: 180px;}
 	.brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 	.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left; line-height: 1.33;}
@@ -77575,7 +77574,7 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	.brandsCarouselItem .home-brands-you-love-main-image-heading {padding: 13px 7px; text-overflow: ellipsis !important; overflow: hidden; white-space: nowrap;}
 	.brandsCarouselItem .home-brands-you-love-main-image-desc {padding: 0px 7px; color: #666666; height: 65px;}
-	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; padding-top: 60px; text-align: left;}	/* add padding-top for SDI-4486 */
+	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; text-align: left;}	
 	.brandsCarouselItem .visit-store-wrapper a {color: #0066c0;}
 	
 	#brandsYouLoveMobileComp .owl-controls .owl-page {display: none;}
