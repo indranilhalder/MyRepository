@@ -12,10 +12,12 @@ export default class ThemeOffer extends React.Component {
 
   render() {
     const feedComponentData = this.props.feedComponentData;
+
     let carouselData;
-    if (feedComponentData.data instanceof Array) {
-      carouselData = this.props.feedComponentData.data.map(transformData);
+    if (feedComponentData.data.items instanceof Array) {
+      carouselData = this.props.feedComponentData.data.items.map(transformData);
     }
+
     return (
       <FeedComponent
         backgroundImage={Background}
