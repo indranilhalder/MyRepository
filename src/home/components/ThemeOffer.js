@@ -13,19 +13,27 @@ export default class ThemeOffer extends React.Component {
 
   render() {
     const feedComponentData = this.props.feedComponentData;
+    let themeData = [];
 
-    let carouselData = [];
-    if (feedComponentData.data.items instanceof Array) {
-      carouselData = this.props.feedComponentData.data.items.map(transformData);
-    }
+    if (
+      feedComponentData.data.offers &&
+      feedComponentData.data.offers.length < 4
+    ) {
+      let themeOffersData = feedComponentData.data.offers;
+      let count = 4 - themeOffersData.length;
+      let themeItemsData = [...feedComponentData.data.items].slice(0, count);
+      themeData = [...themeOffersData, ...themeItemsData];
 
-    let offerData = [];
-    if (feedComponentData.data.offers instanceof Array) {
-      offerData = this.props.feedComponentData.data.offers.map(transformData);
-    }
-    let themeOfferData;
-    if (offerData || carouselData) {
-      themeOfferData = [...offerData, ...carouselData].slice(0, 4);
+      if (themeData instanceof Array) {
+        themeData = themeData.map(transformData);
+      }
+    } else {
+      if (feedComponentData.data.offers) {
+        themeData = feedComponentData.data.offers.slice(0, 4);
+        if (themeData instanceof Array) {
+          themeData = themeData.map(transformData);
+        }
+      }
     }
 
     return (
@@ -39,7 +47,7 @@ export default class ThemeOffer extends React.Component {
             this.handleClick();
           }
         }}
-        data={themeOfferData}
+        data={themeData}
       />
     );
   }
