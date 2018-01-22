@@ -11,7 +11,13 @@ import {
 export default class SingleQuestion extends React.Component {
   handleClick(val) {
     if (this.props.onApply) {
-      this.props.onApply(val);
+      console.log("ON CLICK");
+      console.log(this.props.feedComponentData.data.questionId);
+      this.props.onApply(
+        val,
+        this.props.feedComponentData.data.questionId,
+        this.props.positionInFeed
+      );
     }
   }
   render() {
@@ -24,6 +30,7 @@ export default class SingleQuestion extends React.Component {
         />
       );
     }
+
     return (
       <Carousel
         headerComponent={
@@ -40,7 +47,7 @@ export default class SingleQuestion extends React.Component {
               <SingleSelect
                 key={i}
                 text={datum.title}
-                value={datum.description}
+                value={datum.optionId}
                 image={datum.imageURL}
                 onClick={val => {
                   this.handleClick(val);

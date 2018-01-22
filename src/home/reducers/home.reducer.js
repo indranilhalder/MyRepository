@@ -2,7 +2,7 @@ import * as homeActions from "../actions/home.actions";
 import extend from "lodash/extend";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
-
+import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
 const home = (
   state = {
     homeFeed: [],
@@ -12,6 +12,7 @@ const home = (
   },
   action
 ) => {
+  let componentData;
   switch (action.type) {
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
@@ -24,6 +25,7 @@ const home = (
       let homeFeedData = map(homeFeedClonedData, subData => {
         return extend({}, subData, { loading: false, data: {}, status: "" });
       });
+
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData,
@@ -34,6 +36,32 @@ const home = (
         status: action.status,
         error: action.error,
         loading: false
+      });
+
+    case homeActions.SINGLE_SELECT_REQUEST:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].submitLoading = true;
+      return Object.assign({}, state, {
+        status: action.status,
+        homeFeed: homeFeedData
+      });
+    case homeActions.SINGLE_SELECT_FAILURE:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].submitLoading = false;
+
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        homeFeed: homeFeedData
+      });
+    case homeActions.SINGLE_SELECT_SUCCESS:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].submitLoading = false;
+      homeFeedData[action.positionInFeed].type = PRODUCT_RECOMMENDATION_TYPE;
+      homeFeedData[action.positionInFeed].data = action.data;
+      return Object.assign({}, state, {
+        status: action.status,
+        homeFeed: homeFeedData
       });
 
     case homeActions.COMPONENT_DATA_REQUEST:

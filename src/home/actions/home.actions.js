@@ -11,39 +11,46 @@ export const SINGLE_SELECT_FAILURE = "SINGLE_SELECT_FAILURE";
 export const HOME_FEED_PATH = "homepage";
 export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
 
-export function singleSelectRequest() {
+export function singleSelectRequest(positionInFeed) {
   return {
     type: SINGLE_SELECT_REQUEST,
-    status: REQUESTING
+    status: REQUESTING,
+    positionInFeed
   };
 }
 
-export function singleSelectFailure(error) {
+export function singleSelectFailure(error, positionInFeed) {
   return {
     type: SINGLE_SELECT_FAILURE,
     status: ERROR,
-    error
+    error,
+    positionInFeed
   };
 }
-export function singleSelectSuccess() {
+export function singleSelectSuccess(resultJson, positionInFeed) {
   return {
     type: SINGLE_SELECT_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    data: resultJson,
+    positionInFeed
   };
 }
 
-export function selectSingleSelectResponse() {
+export function selectSingleSelectResponse(value, questionId, positionInFeed) {
   return async (dispatch, getState, { api }) => {
-    dispatch(singleSelectRequest());
+    dispatch(singleSelectRequest(positionInFeed));
     try {
-      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH);
+      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
+        questionId,
+        optionId: [value]
+      });
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(singleSelectSuccess(resultJson));
+      dispatch(singleSelectSuccess(resultJson, positionInFeed));
     } catch (e) {
-      dispatch(singleSelectFailure(e.message));
+      dispatch(singleSelectFailure(e.message, positionInFeed));
     }
   };
 }
@@ -80,7 +87,8 @@ export function homeFeed() {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(homeFeedSuccess(resultJson));
+
+      dispatch(homeFeedSuccess(resultJson.items));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }

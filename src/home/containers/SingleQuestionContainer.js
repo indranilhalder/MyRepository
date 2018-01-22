@@ -5,16 +5,20 @@ import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
   return {
-    onApply: () => {
-      dispatch(selectSingleSelectResponse());
+    onApply: (val, questionId, positionInFeed) => {
+      dispatch(selectSingleSelectResponse(val, questionId, positionInFeed));
     }
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   const feedComponentData = state.home.homeFeed[ownProps.positionInFeed];
+  console.log("SINGLE QUESTION CONTAINER");
+  console.log(feedComponentData);
   return {
-    loading: feedComponentData.status
+    feedComponentData: feedComponentData,
+    loading: feedComponentData.submitLoading,
+    positionInFeed: ownProps.positionInFeed
   };
 };
 

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import WidgetContainer from "../containers/WidgetContainer";
 import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
+import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import SingleQuestion from "./SingleQuestion.js";
@@ -15,19 +16,21 @@ import MultiSelectQuestion from "./MultiSelectQuestion.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 
+export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
+
 const typeComponentMapping = {
-  // themeOffers: props => <ThemeOffer {...props} />,
-  // productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  // bannerProductCarousel: props => <BannerProductCarousel {...props} />,
-  // automatedBrandProductCarousel: props => (
-  //   <AutomatedBrandProductCarousel {...props} />
-  // ),
-  singleSelectQuestion: props => <SingleQuestionContainer {...props} />
-  // bannerSeparator: props => <BannerSeparator {...props} />,
-  // productCapsules: props => <ProductCapsules {...props} />,
-  // discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
-  // followedWidget: props => <FollowingBrands {...props} />,
-  // multiSelectQuestion: props => <MultiSelectQuestion {...props} />
+  themeOffers: props => <ThemeOffer {...props} />,
+  productRecommendationWidget: props => <RecommendationWidget {...props} />,
+  bannerProductCarousel: props => <BannerProductCarousel {...props} />,
+  videoProductCarousel: props => <VideoProductCarousel {...props} />,
+  automatedBrandProductCarousel: props => (
+    <AutomatedBrandProductCarousel {...props} />
+  ),
+  singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
+  bannerSeparator: props => <BannerSeparator {...props} />,
+  productCapsules: props => <ProductCapsules {...props} />,
+  discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
+  followedWidget: props => <FollowingBrands {...props} />
 };
 
 class Feed extends Component {
