@@ -615,7 +615,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					productModel = pr.getProduct();
 					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
 					{
-						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							maximum_configured_quantiy = siteConfigService.getInt(
+									MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+						}
+						//SDI-4069 ends
 
 						//TPR-6117  start
 
@@ -1044,7 +1051,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 */
 				//TISJEW-3517
 				boolean isExchangeApplicable = false;
-				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+
+				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+				if (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+				{
+					maximum_configured_quantiy = siteConfigService.getInt(
+							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+				}
+				//SDI-4069 ends
+
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				//TPR-1083
 				if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
