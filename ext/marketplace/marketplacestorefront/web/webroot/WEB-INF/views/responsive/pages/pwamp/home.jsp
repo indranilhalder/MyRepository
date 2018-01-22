@@ -144,158 +144,163 @@
 	</header>
 
 	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" on="sidebarOpen:AMP.setState({showCloseBtn : true}),closeLeftMenu.show;sidebarClose:AMP.setState({showCloseBtn : false})" layout="nodisplay" side="left">
-	<amp-accordion class="sidebar-menu l1-accordian" disable-session-states>
-	<section>
-		<h4 class="l1-options">Department<i class="fa fa-angle-right"></i></h4>
-		<amp-accordion class="sidebar-menu l2-accordian" disable-session-states>
-			<c:forEach items="${component.components}" var="component" varStatus="i">	
-				<section>
-					<h4 class="l2-options">${component.navigationNode.title}<i class="fa fa-angle-right"></i></h4>
-					<amp-accordion class="sidebar-menu l3-accordian" disable-session-states>
-						<c:if test="${not empty component.navigationNode.children}">
-							<c:forEach items="${component.navigationNode.children}" var="child1">
-								<c:forEach items="${child1.children}" var="child">
-									<c:if test="${child.visible}">
-										<section>
-											<h4 class="l3-options">${child.title}<i class="fa fa-angle-right"></i></h4>
-											<ul>
-												<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
-													<c:forEach items="${child.links}" var="childlink" begin="${i.index+1}" end="${i.index + component.wrapAfter - 1}">
-														<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+	<ul class="left-accordion-menu">
+		<li>
+			<input type="radio" name="l1-group" id="l1-department" />
+        	<label for="l1-department"><span>Department</span><i class="fa fa-angle-right"></i></label>
+        	<ul class="l1-menu-section">
+        		<c:forEach items="${component.components}" var="component" varStatus="i">	
+        			<li>
+        				<input type="radio" name="l2-dept-group" id="l2-dept-${component.navigationNode.uid}" />
+            			<label for="l2-dept-${component.navigationNode.uid}"><span>${component.navigationNode.title}</span><i class="fa fa-angle-right"></i></label>
+        				<c:if test="${not empty component.navigationNode.children}">
+	        				<ul class="l2-menu-section">
+	        					<c:forEach items="${component.navigationNode.children}" var="child1">
+	        						<c:forEach items="${child1.children}" var="child">
+	        							<c:if test="${child.visible}">
+	        								<li>
+								                <input type="radio" name="l3-dept-group" id="l3-dept-${child.uid}" />
+								                <label for="l3-dept-${child.uid}"><span>${child.title}</span><i class="fa fa-angle-right"></i></label>
+								                <ul class="l3-menu-section">
+													<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
+														<c:forEach items="${child.links}" var="childlink" begin="${i.index+1}" end="${i.index + component.wrapAfter - 1}">
+															<li><a href="${childlink.url}">${childlink.linkName}</a></li>
+														</c:forEach>
 													</c:forEach>
+												</ul>
+								              </li>
+	        							</c:if>
+	        						</c:forEach>
+	        					</c:forEach>
+	        				</ul>
+        				</c:if>
+        			</li>
+        		</c:forEach>
+        	</ul>
+		</li>
+		<li>
+	        <input type="radio" name="l1-group" id="l1-brand" />
+	        <label for="l1-brand"><span>Brand</span><i class="fa fa-angle-right"></i></label>
+        	<ul class="l1-menu-section">
+        		<c:forEach items="${shopByBrandDataList}" var="shopByBrands">
+        			<c:choose>
+						<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
+							<li>
+					            <input type="radio" name="l2-brand-group" id="l2-brand-AtoZ" />
+					            <label for="l2-brand-AtoZ"><span>A-Z List</span><i class="fa fa-angle-right"></i></label>
+					            <ul class="l2-menu-section">
+					              <li>
+					              	<div class="a2z-section">
+									<amp-selector role="tablist" layout="container"
+										class="a2zTabContainer">
+									<c:forEach items="${groupedAlphabets}" var="entry">	
+									<div role="tab" class="a2zTabButton" selected option="${entry.key}">${entry.key}-${entry.value}</div>
+									</c:forEach>
+									<c:forEach items="${AToEBrands}" var="entry" varStatus="i">	
+									<div role="tab" class="a2zTabButton" selected option="A-E">A-E</div>
+									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+										<div>
+											<ul class="a-z-ul">
+												<h3>${entry.key}</h3>
+												<c:set var="values" value="${entry.value}" />
+												<c:forEach items="${values}" var="item">
+												<c:set var="catName" value="${fn:split(item.name, '||')}" />
+												<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+												<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
 												</c:forEach>
 											</ul>
-										</section>
-									</c:if>
-								</c:forEach>
-							</c:forEach>
-						</c:if>
-					</amp-accordion>
-				</section>
-			</c:forEach>
-		</amp-accordion>
-	</section>
-	<section>
-		<h4 class="l1-options">
-			Brand<i class="fa fa-angle-right"></i>
-		</h4>
-		<amp-accordion class="sidebar-menu l2-accordian" disable-session-states> <c:forEach
-			items="${shopByBrandDataList}" var="shopByBrands">
-			<c:choose>
-				<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
-					<section>
-						<h4 class="l2-options">
-							A-Z List<i class="fa fa-angle-right"></i>
-						</h4>
-						<div class="a2z-section">
-							<amp-selector role="tablist" layout="container"
-								class="a2zTabContainer">
-<%-- 							<c:forEach items="${groupedAlphabets}" var="entry">	
-							<div role="tab" class="a2zTabButton" selected option="${entry.key}">${entry.key}-${entry.value}</div>
-							</c:forEach> --%>
-							<c:forEach items="${AToEBrands}" var="entry" varStatus="i">	
-							<div role="tab" class="a2zTabButton" selected option="A-E">A-E</div>
-							<div role="tabpanel" class="a2zTabContent" data="${i.index}">
-								<div>
-									<ul class="a-z-ul">
-										<h3>${entry.key}</h3>
-										<c:set var="values" value="${entry.value}" />
-										<c:forEach items="${values}" var="item">
-										<c:set var="catName" value="${fn:split(item.name, '||')}" />
-										<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
-										<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
-										</c:forEach>
-									</ul>
+										</div>
+									</div>
+									</c:forEach>
+									<c:forEach items="${FToJBrands}" var="entry" varStatus="i">	
+									<div role="tab" class="a2zTabButton" selected option="F-J">F-J</div>
+									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+										<div>
+											<ul class="a-z-ul">
+												<h3>${entry.key}</h3>
+												<c:set var="values" value="${entry.value}" />
+												<c:forEach items="${values}" var="item">
+												<c:set var="catName" value="${fn:split(item.name, '||')}" />
+												<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+												<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
+												</c:forEach>
+											</ul>
+										</div>
+									</div>
+									</c:forEach>
+									<c:forEach items="${KToOBrands}" var="entry" varStatus="i">	
+									<div role="tab" class="a2zTabButton" selected option="K-O">K-O</div>
+									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+										<div>
+											<ul class="a-z-ul">
+												<h3>${entry.key}</h3>
+												<c:set var="values" value="${entry.value}" />
+												<c:forEach items="${values}" var="item">
+												<c:set var="catName" value="${fn:split(item.name, '||')}" />
+												<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+												<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
+												</c:forEach>
+											</ul>
+										</div>
+									</div>
+									</c:forEach>
+									<c:forEach items="${PToTBrands}" var="entry" varStatus="i">	
+									<div role="tab" class="a2zTabButton" selected option="P-T">P-T</div>
+									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+										<div>
+											<ul class="a-z-ul">
+												<h3>${entry.key}</h3>
+												<c:set var="values" value="${entry.value}" />
+												<c:forEach items="${values}" var="item">
+												<c:set var="catName" value="${fn:split(item.name, '||')}" />
+												<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+												<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
+												</c:forEach>
+											</ul>
+										</div>
+									</div>
+									</c:forEach>
+									<c:forEach items="${UToZBrands}" var="entry" varStatus="i">	
+									<div role="tab" class="a2zTabButton" selected option="U-Z">U-Z</div>
+									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+										<div>
+											<ul class="a-z-ul">
+												<h3>${entry.key}</h3>
+												<c:set var="values" value="${entry.value}" />
+												<c:forEach items="${values}" var="item">
+												<c:set var="catName" value="${fn:split(item.name, '||')}" />
+												<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
+												<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
+												</c:forEach>
+											</ul>
+										</div>
+									</div>
+									</c:forEach>
+									</amp-selector>
 								</div>
-							</div>
-							</c:forEach>
-							<c:forEach items="${FToJBrands}" var="entry" varStatus="i">	
-							<div role="tab" class="a2zTabButton" selected option="F-J">F-J</div>
-							<div role="tabpanel" class="a2zTabContent" data="${i.index}">
-								<div>
-									<ul class="a-z-ul">
-										<h3>${entry.key}</h3>
-										<c:set var="values" value="${entry.value}" />
-										<c:forEach items="${values}" var="item">
-										<c:set var="catName" value="${fn:split(item.name, '||')}" />
-										<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
-										<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</div>
-							</c:forEach>
-							<c:forEach items="${KToOBrands}" var="entry" varStatus="i">	
-							<div role="tab" class="a2zTabButton" selected option="K-O">K-O</div>
-							<div role="tabpanel" class="a2zTabContent" data="${i.index}">
-								<div>
-									<ul class="a-z-ul">
-										<h3>${entry.key}</h3>
-										<c:set var="values" value="${entry.value}" />
-										<c:forEach items="${values}" var="item">
-										<c:set var="catName" value="${fn:split(item.name, '||')}" />
-										<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
-										<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</div>
-							</c:forEach>
-							<c:forEach items="${PToTBrands}" var="entry" varStatus="i">	
-							<div role="tab" class="a2zTabButton" selected option="P-T">P-T</div>
-							<div role="tabpanel" class="a2zTabContent" data="${i.index}">
-								<div>
-									<ul class="a-z-ul">
-										<h3>${entry.key}</h3>
-										<c:set var="values" value="${entry.value}" />
-										<c:forEach items="${values}" var="item">
-										<c:set var="catName" value="${fn:split(item.name, '||')}" />
-										<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
-										<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</div>
-							</c:forEach>
-							<c:forEach items="${UToZBrands}" var="entry" varStatus="i">	
-							<div role="tab" class="a2zTabButton" selected option="U-Z">U-Z</div>
-							<div role="tabpanel" class="a2zTabContent" data="${i.index}">
-								<div>
-									<ul class="a-z-ul">
-										<h3>${entry.key}</h3>
-										<c:set var="values" value="${entry.value}" />
-										<c:forEach items="${values}" var="item">
-										<c:set var="catName" value="${fn:split(item.name, '||')}" />
-										<c:url var="brandlistUrl" value="/${catName[1]}/c-${fn:toLowerCase(item.code)}"></c:url>
-										<li class="a-z-li"><a href="${brandlistUrl}">${catName[0]}</a></li>
-										</c:forEach>
-									</ul>
-								</div>
-							</div>
-							</c:forEach>
-							</amp-selector>
-						</div>
-					</section>
-
-				</c:when>
-				<c:otherwise>
-					<section>
-						<h4 class="l2-options">${shopByBrands.masterBrandName}<i
-								class="fa fa-angle-right"></i>
-						</h4>
-						<ul>
-							<c:forEach items="${shopByBrands.subBrandList}"
-								var="subShopByBrand">
-								<li><a href="${subShopByBrand.subBrandUrl}">${subShopByBrand.subBrandName}</a></li>
-							</c:forEach>
-						</ul>
-					</section>
-				</c:otherwise>
-			</c:choose>
-
-		</c:forEach> </amp-accordion>
-	</section>
-	</amp-accordion>
+								
+					              </li>
+					            </ul>
+					          </li>
+						</c:when>
+						<c:otherwise>
+						
+							<li>
+					            <input type="radio" name="l2-brand-group" id="l2-brand-Electronics" />
+					            <label for="l2-brand-Electronics"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
+					            <ul class="l2-menu-section">
+									<c:forEach items="${shopByBrands.subBrandList}"
+										var="subShopByBrand">
+										<li><a href="${subShopByBrand.subBrandUrl}">${subShopByBrand.subBrandName}</a></li>
+									</c:forEach>
+								</ul>
+					          </li>
+						</c:otherwise>
+					</c:choose>
+        		</c:forEach>
+        	</ul>
+        </li>
+	</ul>
 	
 	<c:if test="${empty hideHeaderLinks}">
 			<c:if test="${uiExperienceOverride}">
@@ -608,7 +613,7 @@
 								class="stayQuedViewAllBtn">Read The Story</button></a>
 					</div>
 					<div class="stayQuedBottom">
-						<a href="https://www.tatacliq.com/que/"><button
+						<a href="/que/"><button
 								class="stayQuedViewAllBtn">Read More</button></a>
 					</div>
 				</div>
