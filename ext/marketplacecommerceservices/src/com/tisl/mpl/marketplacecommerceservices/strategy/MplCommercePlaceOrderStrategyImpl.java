@@ -112,7 +112,32 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	private PriceBreakupService priceBreakupService;
 
+        /**
+	 * The method sets Subtotal
+	 *
+	 * @param oModel
+	 */
+	private void setCartSubTotal(final CartModel cModel)
+	{
+		double subtotal = 0.0;
+		if (cModel != null)
+		{
+			final List<AbstractOrderEntryModel> entries = cModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final Long quantity = entry.getQuantity();
+				final Double basePrice = entry.getBasePrice();
 
+				if (quantity != null && basePrice != null)
+				{
+					final double entryTotal = basePrice.doubleValue() * quantity.doubleValue();
+					subtotal += entryTotal;
+				}
+			}
+			cModel.setSubtotal(Double.valueOf(subtotal));
+			modelService.save(cModel);
+		}
+	}
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
 			EtailNonBusinessExceptions
@@ -190,6 +215,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			}
 
 			//TISPRD-958
+		        //SDI-4707
+			setCartSubTotal(cartModel);
 
 			OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
 

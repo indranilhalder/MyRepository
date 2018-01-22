@@ -28,7 +28,7 @@
 		<div class="form_field_error"></div>
 	</c:if>	
 	<div class="form-input-lists mb-20">
-		<formElement:formInputBox idKey="j_username" labelKey="" path="j_username" inputCSS="text" mandatory="true" placeholder="Enter Your Email Address"/>
+		<formElement:formInputBox idKey="j_username" labelKey="" path="j_username" inputCSS="text" mandatory="true" placeholder="ENTER YOUR EMAIL ADDRESS"/>
 		<formElement:formPasswordBox idKey="j_password" labelKey="" path="j_password" inputCSS="text password form-control" mandatory="true"/>
 		<c:if test="${not empty message}">
 			<span class="errors"><spring:theme code="${message}"/></span>
@@ -50,8 +50,8 @@
 	<p class="h4">
 		<ycommerce:testId code="luxury_header_Register_link">
 			<a class="header-login-target-link register_link" data-target-id="sign-up" href="<c:url value="/luxurylogin/register?isSignInActive=N"/>">
-				<span><spring:theme code="luxury.header.flyout.signup.member"/></span>
-				<spring:theme code="luxury.header.link.register" />				
+				<%-- <span><spring:theme code="luxury.header.flyout.signup.member"/></span> --%>
+				<spring:theme code="luxury.header.link.signup.register" />				
 			</a>
 		</ycommerce:testId>
 	</p>

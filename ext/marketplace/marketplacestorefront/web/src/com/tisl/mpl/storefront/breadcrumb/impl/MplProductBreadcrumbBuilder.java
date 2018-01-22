@@ -77,7 +77,9 @@ public class MplProductBreadcrumbBuilder extends ProductBreadcrumbBuilder
 				LOG.debug("====Step 8==========");
 				//if (!(categoryModel instanceof ClassificationClassModel))
 				if (categoryModel.getCode().startsWith(
-						configurationService.getConfiguration().getString("marketplace.mplcatalog.salescategory.code")))
+						configurationService.getConfiguration().getString("marketplace.mplcatalog.salescategory.code"))
+						|| configurationService.getConfiguration().getString("luxury.salescategories")
+								.contains(categoryModel.getCode().substring(0, 3)))
 				{
 					LOG.debug("====Step 9==========");
 					if (toDisplay == null)

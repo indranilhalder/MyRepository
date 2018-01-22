@@ -13,7 +13,7 @@
 <!-- <h3 class="company author"></h3> -->
 <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
 	<div class="price-feature">
-	   <span id="mrpPriceId" style="display:none"></span>
+	<span><spring:theme code="text.product.mrp"/></span><span id="mrpPriceId" style="display:none"></span><span><spring:theme code="text.product.alltaxes"/></span>
 	   
 	   <span class="saving-price text-danger" sale" id="spPriceId" style="display:none"><span itemprop="price">${product_list_price}</span>
 	   
@@ -28,12 +28,13 @@
 	   </c:choose></span>
 	  
 	 
-	 <span class="savings pdp-savings saving-price text-danger" id="savingsOnProductId" style="display:none">               
+	<!--  <span class="savings pdp-savings saving-price text-danger" id="savingsOnProductId" style="display:none">               
 	    <span></span>
-	 </span>
+	 </span> -->
 	 
 	 </div> 
-	  <p><span class="our-price"  id="mopPriceId" style="display:none"></span></p>
+	  <p><span class="our-price"  id="mopPriceId" style="display:none"></span>
+	   <span class="savings pdp-savings saving-price text-danger" id="savingsOnProductId" style="display:none"></span></p>
 	 <br>
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		

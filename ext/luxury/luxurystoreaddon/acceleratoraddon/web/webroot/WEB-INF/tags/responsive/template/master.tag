@@ -26,12 +26,13 @@
 		<c:choose>
 		<c:when test="${isCategoryPage}">
 		
-		 ${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}
+		 <c:set var="titleSocialTags" value="${not empty metaPageTitle ?metaPageTitle:not empty pageTitle ? pageTitle : 'Tata'}"/>
 		</c:when>
 		<c:otherwise>
-			 ${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
+			 <c:set var="titleSocialTags" value="${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}"/>
 		</c:otherwise>
 	   </c:choose>	
+	   <c:out value="${titleSocialTags}" escapeXml="false"/>
    </title>
 	<%-- Meta Content --%>
 	   <meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095”/>
@@ -39,12 +40,12 @@
 
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
 <meta name="msApplication-PackageFamilyName" content="microsoft.build_8wekyb3d8bbwe"/> -->
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="favHost"/>
 <%-- <link rel="icon" href="//${favHost}/_ui/responsive/common/images/preload.png" type="image/png"> --%>
 
 <!-- TISPT-325 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/>
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticResourceHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
 
@@ -72,7 +73,10 @@
 	
 	
 	<%-- Additional meta tags --%>
-	<htmlmeta:meta items="${metatags}"/>
+	<%-- <htmlmeta:meta items="${metatags}"/> --%>
+	
+	<meta name="keywords" content="${keywords}">
+  	<meta name="description" content="${description}">
 	
 	<!-- Tag for Google Webmaster Tool Verification -->
 	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
@@ -136,18 +140,18 @@
 	</c:choose> --%>
 	
 	
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.handle')" var="twitterHandle"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('twitter.luxury.handle')" var="twitterHandle"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="favHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="favHost"/>
 	<!-- Changes for TISPT-113 -->
 	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('media.dammedia.host')" var="mediaHost"/> --%>
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.media.url')" var="seoMediaURL"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('seo.luxury.media.url')" var="seoMediaURL"/>
 	
 	<!-- Markup for Google+ -->	
 	<!-- Code Added For INC_11638 - Start -->
-	 <meta itemprop="name" content="${metaTitle}">
+	 <meta itemprop="name" content="${titleSocialTags}">
 	<!-- Code Added For INC_11638 - End -->	
-	<meta itemprop="description" content="${metaDescription}">
+	<meta itemprop="description" content="${description}">
 	<%-- <meta itemprop="image" content="${protocolString[0]}://${mediaHost}${seoMediaURL}"> --%>
 	
 	<!-- TPR-514-itemprop tag chnages on PDP pages-->
@@ -169,10 +173,10 @@
 	<%-- twitter-card added for INC_10384 --%>
 	<!-- Code Added For INC_11638 - Start -->
 	<meta name="twitter:card" content="summary_large_image">	
-	<meta name="twitter:title" content="${metaTitle}">
+	<meta name="twitter:title" content="${titleSocialTags}">
 	<!-- Code Added For INC_11638 - End -->		
 	<meta name="twitter:site" content="${twitterHandle}">	
-	<meta name="twitter:description" content="${metaDescription}">
+	<meta name="twitter:description" content="${description}">
 	<%-- <meta name="twitter:image:src" content="${protocolString[0]}://${mediaHost}${seoMediaURL}">
 	 --%>
 	 
@@ -190,7 +194,7 @@
 	
 	<!-- FB Open Graph data -->	
 	<!-- Code Added For INC_11638 - Start -->
-	<meta property="og:title" content="${metaTitle}" />
+	<meta property="og:title" content="${titleSocialTags}" />
 	<!-- Code Added For INC_11638 - End -->
 	<meta property="og:url" content="${canonical}" />
 	
@@ -208,7 +212,7 @@
 	</c:choose>
 	
 	
-	<meta property="og:description" content="${metaDescription}" />
+	<meta property="og:description" content="${description}" />
 	<meta property="og:site_name" content="Tata CLiQ Luxury" />
 	
 		<!-- Code Added For INC_11638 - Start -->
@@ -235,7 +239,7 @@
      <link rel="shortcut icon" type="image/x-icon" media="all" href="${baseURL}/favicon.ico" />
     
 	<!-- DNS prefetching starts -->
-	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticResourceHost"/> --%>
+	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticResourceHost"/> --%>
 	<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/> --%>	
 

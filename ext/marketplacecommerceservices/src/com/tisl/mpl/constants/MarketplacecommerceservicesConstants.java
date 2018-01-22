@@ -2403,4 +2403,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
 	//UBI-605
 	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
+	
+	//SDI-4494	
+	public static final String MANUAL = "MANUAL";
+	public static final String AUTOMATIC = "AUTOMATIC";
+	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
+	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
+	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
 }

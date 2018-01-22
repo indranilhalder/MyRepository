@@ -4,14 +4,17 @@
 package com.tisl.lux.core.celldecorator;
 
 import de.hybris.platform.util.CSVCellDecorator;
+import de.hybris.platform.util.Config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.tisl.lux.constants.LuxurystoreaddonConstants;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
 /**
@@ -23,9 +26,9 @@ public class LuxuryVariantProductCategoryDecorator implements CSVCellDecorator
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @param position,srcLine
-	 * 
+	 *
 	 * @return finalvalue
 	 */
 	@Override
@@ -66,17 +69,33 @@ public class LuxuryVariantProductCategoryDecorator implements CSVCellDecorator
 		//Splitting Comma Separted Entries into Array
 		final String[] categoryListLessInvertedcomma = categoryList.split(",");
 
-		//if luxury remove MSH
-		if (luxIndicator.equalsIgnoreCase(LuxurystoreaddonConstants.LUXURY))
+		final String luxurySaleIndicatorMapping = Config.getString("luxurySaleIndicatorMapping", "luxury-LSH,indiluxe-ISH");
+		final Map<String, String> luxurySaleIndicatorMap = new HashMap<String, String>();
+		for (final String actualElement : luxurySaleIndicatorMapping.split(MarketplacecommerceservicesConstants.COMMA))
 		{
+			luxurySaleIndicatorMap.put(actualElement.split(MarketplacecommerceservicesConstants.HYPHEN)[Integer
+					.parseInt(MarketplacecommerceservicesConstants.KEY)], actualElement
+					.split(MarketplacecommerceservicesConstants.HYPHEN)[Integer.parseInt(MarketplacecommerceservicesConstants.VALUE)]);
+		}
 
+		final String saleCategoryCode = luxurySaleIndicatorMap.get(luxIndicator);
+
+		//if luxury remove MSH
+		if (luxurySaleIndicatorMap.keySet().contains(luxIndicator))
+		{
 			for (final String category : categoryListLessInvertedcomma)
 			{
 				if (!category.contains(LuxurystoreaddonConstants.MSH))
 				{
-					finalCategoryList.add(category);
+					if (luxurySaleIndicatorMap.values().contains(category.substring(0, 3)) && category.contains(saleCategoryCode))
+					{
+						finalCategoryList.add(category);
+					}
+					else if (!luxurySaleIndicatorMap.values().contains(category.substring(0, 3)))
+					{
+						finalCategoryList.add(category);
+					}
 				}
-
 			}
 		}
 

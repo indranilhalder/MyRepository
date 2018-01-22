@@ -8,7 +8,7 @@
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="true"/>
-<div class="content"><div class="header-promo text-center only-in-cart"><p>Free Shipping + free returns <a href="#">Know More</a></p></div></div>
+<!-- <div class="content"><div class="header-promo text-center only-in-cart"><<p>Free Shipping + free returns <a href="#">Know More</a></p></div></div> -->
 <template:page pageTitle="${pageTitle}">
 
 

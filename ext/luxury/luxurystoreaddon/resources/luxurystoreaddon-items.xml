@@ -331,7 +331,19 @@
 	
 	<itemtype code="LuxEnhancedSearchBoxComponent" autocreate="true"
 				generate="true" extends="SearchBoxComponent"
-				jaloclass="com.tisl.mpl.core.jalo.LuxEnhancedSearchBoxComponent">				
+				jaloclass="com.tisl.mpl.core.jalo.LuxEnhancedSearchBoxComponent">
+				
+				<description>Represents Enhanced Search Box component that displays a list of categories below to the search Box</description>
+				<attributes>
+					<!-- category collections -->
+					<attribute autocreate="true" qualifier="searchBoxCategories"
+						type="SNSCategoryCollection">
+						<description>list of categories to be loaded in the dropdown.</description>
+						<persistence type="property" />
+						<modifiers search="false" />
+					</attribute>
+				</attributes>
+							
 				</itemtype>
 	
 	<itemtype code="LuxuryAddToCartAction" autocreate="true"

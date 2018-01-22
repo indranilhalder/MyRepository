@@ -81,6 +81,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.model.CustomSkuComponentModel;
@@ -142,6 +143,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
+
+	@Autowired
+	private CommonUtils commonUtils;
 
 
 	//Below Lines Commented as Sonar Fix
@@ -312,8 +316,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			//Storing the user preferred search results count
 			updateUserPreferences(pageSize);
 
-			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
-					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
+			if (!commonUtils.isLuxurySite() && StringUtils.isNotEmpty(searchCode)
+					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+					&& !(searchCode.substring(0, 5).equals(categoryCode)))
 			{
 				searchCode = searchCode.substring(0, 5);
 
@@ -433,7 +438,23 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					/* TPR-1283 CHANGES --Starts */
 					//Added for heading change of the PLP of brand facet
-					final String supercatcode = categoryCode.substring(0, 5);
+					String supercatcode = null;
+					if (commonUtils.isLuxurySite())
+					{
+						if (categoryCode.length() > 4)
+						{
+							supercatcode = categoryCode.substring(0, 5);
+						}
+						else
+						{
+							supercatcode = categoryCode;
+						}
+					}
+					else
+					{
+						supercatcode = categoryCode.substring(0, 5);
+					}
+
 					if (categoryCode != supercatcode)
 					{
 						final String header = brandName + " " + cateName;
@@ -541,7 +562,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			//Storing the user preferred search results count
 			updateUserPreferences(pageSize);
 
-			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+			if (!commonUtils.isLuxurySite() && StringUtils.isNotEmpty(searchCode)
+					&& !(searchCode.substring(0, 5).equals(categoryCode))
 					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
 			{
 				searchCode = searchCode.substring(0, 5);
@@ -776,7 +798,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			//Storing the user preferred search results count
 			updateUserPreferences(pageSize);
 
-			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+			if (!commonUtils.isLuxurySite() && StringUtils.isNotEmpty(searchCode)
+					&& !(searchCode.substring(0, 5).equals(categoryCode))
 					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
 			{
 				searchCode = searchCode.substring(0, 5);
@@ -1037,7 +1060,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				} // End Change for // CAR-236
 
 				//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-				if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+				if (!commonUtils.isLuxurySite() && StringUtils.isNotEmpty(searchCode)
+						&& !(searchCode.substring(0, 5).equals(categoryCode))
 						&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
 				{
 					searchCode = searchCode.substring(0, 5);
@@ -1387,7 +1411,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 					count = preferencesData.getPageSize().intValue();
 				} // End Change for // CAR-236
 
-				if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+				if (!commonUtils.isLuxurySite() && StringUtils.isNotEmpty(searchCode)
+						&& !(searchCode.substring(0, 5).equals(categoryCode))
 						&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
 				{
 					searchCode = searchCode.substring(0, 5);

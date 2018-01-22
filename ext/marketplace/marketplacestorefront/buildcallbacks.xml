@@ -83,6 +83,7 @@
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js/minified" name="mpstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/combined" name="lxstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js" name="mpstorefront.js.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/js" name="luxstorefront.js.dir" />
 	<property location="**.js" name="alljs.file.expression" />
 
 	<!-- Start properties for min-css for mpl -->
@@ -317,13 +318,69 @@
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
-						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
-						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.accountaddress.js"/>
-						<arg line="--js !${mpstorefront.js.dir}/mpl/**feedback.js"/>
-						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.productDetail.js"/>
-						<arg line="--js !${mpstorefront.js.dir}/mpl/**marketplacecheckoutaddon.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/_autoload.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.accountpagination.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.autocomplete.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.brandcomponent.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.carousel.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.cart.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.cartitem.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.checkout.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.checkoutsteps.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.click2call.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.click2chat.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.collapsible.panel.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.colorbox.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.common.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.comparenow.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.contactus.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.dtm.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.forgottenpassword.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.global.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.helpmeshop.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.imagegallery.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.langcurrencyselector.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.lazypagination.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.micrositeautocomplete.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.minicart.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.myrecommendation.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.navigation.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.newWishlist.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.nowtrending.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.paginationsize.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.paginationsort.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.pickupinstore.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.product.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.quickview.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.ratingstars.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.refinements.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.returns.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.reviewrating.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.search.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.sellerDetails.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.signinflyout.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.singlePageCheckout.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.storefinder.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.tabs.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.track.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.trackorder.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/jquery.lazyload.min.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/matchMedia.addListener.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/matchMedia.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/miscellaneous.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/owl.carousel.custom.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/smart-app-banner.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/STWidget.js"/>
+						<arg line="--js ${mpstorefront.js.dir}/mpl/tealium.js" />
+						<arg line="--js ${luxstorefront.js.dir}/feedback.js" />
+						<arg line="--js ${luxstorefront.js.dir}/custom-search.js" />
+						<arg line="--js ${luxstorefront.js.dir}/popular-search.js" />
+						<arg line="--js ${luxstorefront.js.dir}/dropdown-menu.js" />
+						<arg line="--js ${luxstorefront.js.dir}/display-price.js" />
+						<arg line="--js ${luxstorefront.js.dir}/mobile-menu.js" />
 						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
+					<echo message="Minifying JS for Luxury is completed..." />
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />

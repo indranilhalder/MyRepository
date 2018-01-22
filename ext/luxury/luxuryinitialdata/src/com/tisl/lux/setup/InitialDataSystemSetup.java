@@ -59,6 +59,14 @@ public class InitialDataSystemSetup extends AbstractSystemSetup
 	private SampleDataImportService sampleDataImportService;
 
 	/**
+	 * 
+	 */
+	public InitialDataSystemSetup()
+	{
+		super();
+	}
+
+	/**
 	 * Generates the Dropdown and Multi-select boxes for the project data import
 	 */
 	@Override
