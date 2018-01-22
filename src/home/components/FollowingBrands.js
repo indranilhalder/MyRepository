@@ -13,8 +13,8 @@ export default class FollowingBrands extends React.Component {
     const followWidgetData = this.props.feedComponentData.data;
     return (
       <Carousel header={this.props.feedComponentData.title}>
-        {followWidgetData.length > 0 &&
-          followWidgetData.map((datum, i) => {
+        {followWidgetData.items &&
+          followWidgetData.items.map((datum, i) => {
             return (
               <BrandImage
                 key={i}
