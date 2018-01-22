@@ -23,16 +23,11 @@ export default class ThemeOffer extends React.Component {
       let count = 4 - themeOffersData.length;
       let themeItemsData = [...feedComponentData.data.items].slice(0, count);
       themeData = [...themeOffersData, ...themeItemsData];
-
-      if (themeData instanceof Array) {
-        themeData = themeData.map(transformData);
-      }
+      themeData = themeData.map(transformData);
     } else {
       if (feedComponentData.data.offers) {
         themeData = feedComponentData.data.offers.slice(0, 4);
-        if (themeData instanceof Array) {
-          themeData = themeData.map(transformData);
-        }
+        themeData = themeData.map(transformData);
       }
     }
 
