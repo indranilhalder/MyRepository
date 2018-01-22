@@ -72,7 +72,7 @@
 								<c:if test="${wrapAfter > i.index}">
 									<c:choose>
 										<c:when test="${empty node.media}">
-											<h4><span class="tata-title">Tata</span> MARKETPLACE<i class="fa fa-angle-down"></i></h4>
+											<h4>${node.title}<i class="fa fa-angle-down"></i></h4>
 											<!-- TEXT NOT SUITABLE -->
 										</c:when>
 										<c:otherwise>
