@@ -14,17 +14,17 @@ export default class ThemeOffer extends React.Component {
   render() {
     const feedComponentData = this.props.feedComponentData;
 
-    let carouselData;
+    let carouselData = [];
     if (feedComponentData.data.items instanceof Array) {
       carouselData = this.props.feedComponentData.data.items.map(transformData);
     }
 
-    let offerData;
+    let offerData = [];
     if (feedComponentData.data.offers instanceof Array) {
       offerData = this.props.feedComponentData.data.offers.map(transformData);
     }
     let themeOfferData;
-    if (feedComponentData.data.items) {
+    if (offerData || carouselData) {
       themeOfferData = [...offerData, ...carouselData].slice(0, 4);
     }
 
