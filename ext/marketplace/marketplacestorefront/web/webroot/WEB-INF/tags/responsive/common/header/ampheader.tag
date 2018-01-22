@@ -281,11 +281,11 @@ header{
 
 .sidebar-menu ul li a .fa-circle{font-size:4px; margin-left:1px;}
 .sidebar-menu .fa-circle, .sidebar-menu .fa-angle-down, .fa-angle-right{
-	width:35px;
-	height:35px;
+	/*width:35px;
+	height:35px;*/
 	position:absolute;
 	right:0px;
-	font-size:4px;
+	/*font-size:4px;*/
 	color:#acacac;
 }
 
@@ -339,7 +339,7 @@ header{
     padding-left: 20px;
     color: #3a3a3a;
     border-bottom: solid 1px rgba(0,0,0,0.1);
-	line-height:40px;
+	line-height:50px;
 }
 .sidebar-divider-item a {color: #3a3a3a;}
 .sidebar-divider-item a i {width: 20px;}
@@ -421,6 +421,26 @@ padding-top:0px;
 	float: right;
 }
 
+/*Auto Collapse Menu CSS*/
+.left-accordion-menu {margin: 0;}
+.left-accordion-menu li {list-style-type: none;}
+.left-accordion-menu li label {line-height: 50px; display: inline-block; width: 100%; font-size: 14px;border-bottom: solid 1px rgba(0,0,0,0.1)}
+.left-accordion-menu > li > label > span {padding-left: 15px;}
+.l1-menu-section > li > label {border-bottom: 1px solid #e6e6e6; background-color: #d6d6d6;}
+.l1-menu-section > li > label > span {padding-left: 25px;}
+.l2-menu-section > li > label, .l2-menu-section > li > a {line-height: 40px; border-bottom: 1px solid #e6e6e6; background-color: #c5c4c4;}
+.l2-menu-section > li > label > span, .l2-menu-section > li > a {padding-left: 35px; color: #000;}
+.l3-menu-section > li {border-bottom: 1px solid #e6e6e6; background-color: #b9b8b8;}
+.l3-menu-section > li > a {padding-left: 45px; color: #000; line-height: 30px;}
+.left-accordion-menu li label i {float: right; margin-right: 15px;margin-top: 15px;}
+.l2-menu-section li label i {margin-top: 10px;}
+.left-accordion-menu input[type=radio] {display: none;}
+.left-accordion-menu input[type=radio]:checked + label + ul,
+.left-accordion-menu input[type=radio]:checked + label .fa-angle-right:before {content: "\f107";}
+.left-accordion-menu input[type=radio]:checked + label:nth-of-type(n) + ul {display: block;}
+.left-accordion-menu > li > input[type=radio]:checked + label {background-color: #a9133d; color: #fff;}
+.left-accordion-menu ul {display: none; margin: 0;}
+/*Auto Collapse Menu CSS*/
 .department-menu {
 	width: 150px;
 	float: left;
@@ -613,7 +633,7 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 
 .sidebar-zindex {z-index: 1000;}
 
-.close-menubar {left: 80vw; position: fixed; top: 0; padding: 0px 10px; z-index: 2147483647; font-size: 34px; background-color: #fff; border: 1px solid #ccc;}
+.close-menubar {left: 80vw; position: fixed; top: 0; padding: 0px 10px; z-index: 2147483647; font-size: 34px; background-color: #fff; border: 1px solid #ddd; width: 50px; line-height: 50px;}
 
 .search-submit {
   margin: 10px 0;
@@ -1076,7 +1096,7 @@ amp-selector [option][selected] {
   background: white;
 }
 
-.tata-title {color: #a9143c;}
+.footer-child h4 span {color: #a9143c;}
 
 @media (max-width: 480px){
   .footer-section-content {
