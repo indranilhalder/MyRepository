@@ -5,7 +5,48 @@ export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
 export const COMPONENT_DATA_REQUEST = "COMPONENT_DATA_REQUEST";
 export const COMPONENT_DATA_SUCCESS = "COMPONENT_DATA_SUCCESS";
 export const COMPONENT_DATA_FAILURE = "COMPONENT_DATA_FAILURE";
+export const SINGLE_SELECT_REQUEST = "SINGLE_SELECT_REQUEST";
+export const SINGLE_SELECT_SUCCESS = "SINGLE_SELECT_SUCCESS";
+export const SINGLE_SELECT_FAILURE = "SINGLE_SELECT_FAILURE";
 export const HOME_FEED_PATH = "homepage";
+export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
+
+export function singleSelectRequest() {
+  return {
+    type: SINGLE_SELECT_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function singleSelectFailure(error) {
+  return {
+    type: SINGLE_SELECT_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function singleSelectSuccess() {
+  return {
+    type: SINGLE_SELECT_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function selectSingleSelectResponse() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(singleSelectRequest());
+    try {
+      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH);
+      const resultJson = await result.json();
+      if (resultJson.status === "FAILURE") {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(singleSelectSuccess(resultJson));
+    } catch (e) {
+      dispatch(singleSelectFailure(e.message));
+    }
+  };
+}
 
 export function homeFeedRequest() {
   return {

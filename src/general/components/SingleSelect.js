@@ -13,11 +13,12 @@ export default class SingleSelect extends React.Component {
     return (
       <div>
         <div className={styles.base} onClick={() => this.handleClick()}>
-          <div className={styles.imageHolder}>
+          {/*<div className={styles.imageHolder}>
             <Image image={this.props.image} color="transparent" />
           </div>
         </div>
-        <div className={styles.text}>{this.props.text}</div>
+        <div className={styles.text}>{this.props.text}</div>*/}
+        </div>
       </div>
     );
   }
