@@ -39,7 +39,8 @@ export function homeFeed() {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(homeFeedSuccess(resultJson));
+
+      dispatch(homeFeedSuccess(resultJson.items));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }

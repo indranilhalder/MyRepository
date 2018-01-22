@@ -18,6 +18,15 @@ export default class ThemeOffer extends React.Component {
       carouselData = this.props.feedComponentData.data.items.map(transformData);
     }
 
+    let offerData;
+    if (feedComponentData.data.offers instanceof Array) {
+      offerData = this.props.feedComponentData.data.offers.map(transformData);
+    }
+    let themeOfferData;
+    if (feedComponentData.data.items) {
+      themeOfferData = [...offerData, ...carouselData];
+    }
+
     return (
       <FeedComponent
         backgroundImage={Background}
@@ -29,7 +38,7 @@ export default class ThemeOffer extends React.Component {
             this.handleClick();
           }
         }}
-        data={carouselData}
+        data={themeOfferData}
       />
     );
   }

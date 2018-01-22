@@ -24,6 +24,7 @@ const home = (
       let homeFeedData = map(homeFeedClonedData, subData => {
         return extend({}, subData, { loading: false, data: {}, status: "" });
       });
+
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData,
