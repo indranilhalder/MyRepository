@@ -852,6 +852,35 @@ $(document).ready(function()
 						}
 					});
 				}	
+				/*start of SDI-3988*/
+				wishlistHover = setTimeout(function(){
+			    	$.ajax({
+			            url: ACC.config.encodedContextPath + "/headerWishlist",
+			            type: 'GET',
+			            //data: "&productCount=" + $(this).attr("data-count"),
+			            data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
+			            success: function(html) {
+			            	alert("ready");
+			                $("div.wishlist-info").html(html);
+			                var wlCode = [];
+							$(".wlCode").each(function(){
+								wlCode.push($(this).text().trim());
+							});
+							$(".plpWlcode").each(function(){
+								var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+								//wlPlpCode.push(productCode.toUpperCase());
+								
+								for(var i = 0; i < wlCode.length; i++) {
+									if(productCode.toUpperCase() == wlCode[i]) {
+										console.log("Controle Inside");
+										$(this).siblings(".plp-wishlist").addClass("added");
+									}
+								}
+							});
+			            }
+			        });
+				},700);
+				/*end of SDI-3988*/
 			});
 		/*Start TISSQAEE-325*/
 		$(document).ajaxComplete(function(){
@@ -900,6 +929,3 @@ $(document).ready(function()
 	    }
     });
 });
-		
-
-		
