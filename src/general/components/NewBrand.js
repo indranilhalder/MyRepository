@@ -2,12 +2,8 @@ import React from "react";
 import styles from "./NewBrand.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
-// import CoreButton from './Button';
 import Follow from "./Follow";
 import Logo from "./Logo";
-import { Icon } from "xelpmoc-core";
-import newBrandIcon from "./img/Nike.svg";
-import newBrandImage from "./img/brandGirl.jpg";
 
 export default class NewBrand extends React.Component {
   onFollowClick() {
@@ -30,15 +26,12 @@ export default class NewBrand extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div
-          className={styles.imageHolder}
-          style={{ backgroundImage: `url(${this.props.image})` }}
-        >
-          {/* <Image image={this.props.newBrandImage} color="transparent" /> */}
+        <div className={styles.imageHolder}>
+          <Image image={this.props.image} color="transparent" />
           <div className={styles.brandOverlay}>
             <div className={styles.brandTextHolder}>
               <div className={styles.brandWrapper}>
-                <div className={styles.brandText}>24 new products</div>
+                <div className={styles.brandText}>{this.props.label}</div>
               </div>
               <div className={styles.brandButton}>
                 <Follow
@@ -53,8 +46,8 @@ export default class NewBrand extends React.Component {
                 />
               </div>
             </div>
-            <div className={styles.brandIcon}>
-              <Logo image={this.props.newBrandImage} />
+            <div className={styles.brandLogo}>
+              <Logo image={this.props.logo} />
             </div>
           </div>
         </div>
@@ -64,13 +57,12 @@ export default class NewBrand extends React.Component {
 }
 NewBrand.propTypes = {
   image: PropTypes.string,
+  label: PropTypes.string,
   onFollowClick: PropTypes.func,
   onUnFollowClick: PropTypes.func,
   follow: PropTypes.bool,
-  newBrandImage: PropTypes.string
+  logo: PropTypes.string
 };
 NewBrand.defaultProps = {
-  image: newBrandImage,
-  follow: true,
-  newBrandImage: newBrandIcon
+  follow: false
 };
