@@ -73,7 +73,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 	final static Double refundStartTime = new Double(120);
 
-	//	private static final String REFUND = "REFUND_SUCCESSFUL";
 	private static final String SUCCESS = "SUCCESS";
 
 	@Override
@@ -195,22 +194,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				{
 					makeRefundUpdateStatus(refund, order, consignment, refundTransactionMap, orderEntry);
 				}
-
-				if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase(SUCCESS)
-						&& refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
-				{
-					//update order status only
-					final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(uniqRequestID);
-					updateStatusOnly(refundTransactionModel, uniqRequestID, order, consignment);
-				}
-				else if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("FAILURE")
-						&& refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
-				{
-					//do refund
-					//update order status
-					makeRefundUpdateStatus(refund, order, juspayOrderID, uniqRequestID);
-				}
-
 			}
 			else if (refundStatus.equals(MarketplacecommerceservicesConstants.SUCCESS))
 			{
@@ -418,44 +401,23 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				}
 
 
-			if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS) && cancelledForRisk)
-			{
-				updateOrderStatusCancelledForRisk(order);
-				if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS") && cancelledForRisk)
+				if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS) && cancelledForRisk)
 				{
 					updateOrderStatusCancelledForRisk(order);
 				}
 				else if (refundReason.equalsIgnoreCase(JuspayRefundType.CANCELLED.toString())
-						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 				{
 					updateStatus(ConsignmentStatus.ORDER_CANCELLED, consignment, order);
 					updateOrderStatusCancelled(rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 				}
 				else if (refundReason.equalsIgnoreCase(JuspayRefundType.RETURN.toString())
-						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 				{
 					updateStatus(ConsignmentStatus.RETURN_COMPLETED, consignment, order);
 					updateOrderStatusReturn(rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 				}
 			}
-			else if (refundReason.equalsIgnoreCase(JuspayRefundType.CANCELLED.toString())
-					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
-			{
-				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
-				updateOrderStatusCancelled(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
-			}
-			else if (refundReason.equalsIgnoreCase(JuspayRefundType.RETURN.toString())
-					&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
-			{
-				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.RETURN_COMPLETED);
-				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
-			}
-			else if (!StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
-			{
-				orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.REFUND_IN_PROGRESS);
-				updateOrderStatusReturn(order, rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
-			}
-
 		}
 		catch (final Exception e)
 		{
@@ -507,129 +469,6 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		}
 	}
 
-	private void updateOrderStatusCancelled(final OrderModel order)
-	{
-		// YTODO Auto-generated method stub
-		try
-		{
-			orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage(), e);
-		}
-	}
-
-	private void updateOrderStatusReturn(final OrderModel order)
-	{
-		// YTODO Auto-generated method stub
-		try
-		{
-			orderStatusSpecifier.setOrderStatus(order.getParentReference(), OrderStatus.ORDER_CANCELLED);
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * @param auditId
-	 * @param order
-	 * @param refundRequestIdList
-	 * @return
-	 */
-	private void fetchPostingStatusTakeAction(final String auditId, final OrderModel order,
-			final ArrayList<String> refundRequestIdList, final ConsignmentModel consignment)
-	{
-		List<JuspayOrderStatusModel> orderStatusList = new ArrayList<JuspayOrderStatusModel>();
-		// YTODO Auto-generated method stub
-		orderStatusList = refundClearPerformableDao.fetchWebhookTableStatus(auditId);
-		final ArrayList<String> juspayOrderStatusRequestIdList = new ArrayList<String>();
-		try
-		{
-
-
-			if (CollectionUtils.isNotEmpty(orderStatusList))
-			{
-				//Fetching the latest entry in JuspayOrderStaus from query
-				final List<JuspayRefundResponseModel> RefundResponseList = orderStatusList.get(0).getRefunds();
-
-
-
-				for (final JuspayRefundResponseModel juspayRefundResponseModel : RefundResponseList)
-				{
-					juspayOrderStatusRequestIdList.add(juspayRefundResponseModel.getUniqueRequestId());
-
-					if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
-							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase(SUCCESS))
-					{
-						//update order status only
-						final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(juspayRefundResponseModel
-								.getUniqueRequestId());
-
-						if (null != refundTransactionModel)
-						{
-
-							updateStatusOnly(refundTransactionModel, juspayRefundResponseModel.getUniqueRequestId(), order, consignment);
-						}
-
-					}
-					else if (StringUtils.isNotEmpty(juspayRefundResponseModel.getStatus())
-							&& juspayRefundResponseModel.getStatus().equalsIgnoreCase("PENDING"))
-					{
-						LOG.error("PENDING post from juspay, chekstatus and making refund for order: " + order.getCode());
-						checkStatusMakeRefund(auditId, order, juspayRefundResponseModel.getUniqueRequestId(), consignment);
-					}
-				}
-			}
-
-			//Filtering out the not posted refundlist in webhook / JuspayOrderStatus
-			if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isNotEmpty(juspayOrderStatusRequestIdList))
-			{
-				refundRequestIdList.removeAll(juspayOrderStatusRequestIdList);
-				if (CollectionUtils.isNotEmpty(refundRequestIdList))
-				{
-					for (final String reqid : refundRequestIdList)
-					{
-						checkStatusMakeRefund(auditId, order, reqid, consignment);
-					}
-				}
-			}
-			//If the number of return request is only one and that too not posted by juspay
-			else if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isEmpty(juspayOrderStatusRequestIdList))
-			{
-				for (final String reqid : refundRequestIdList)
-				{
-					checkStatusMakeRefund(auditId, order, reqid, consignment);
-				}
-			}
-
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage(), e);
-		}
-
-
-	}
-
-	@Override
-	public void saveCronDetails(final Date startTime, final String code)
-	{
-		final MplConfigurationModel oModel = refundClearPerformableDao.getCronDetails(code);
-		if (null != oModel && null != oModel.getMplConfigCode())
-		{
-			LOG.debug("Saving CronJob Run Time :" + startTime);
-			oModel.setMplConfigDate(startTime);
-			getModelService().save(oModel);
-			LOG.debug("Cron Job Details Saved for Code :" + code);
-		}
-	}
-
-	/**
-	 * @return the configurationService
-	 */
 	public ConfigurationService getConfigurationService()
 	{
 		return configurationService;
