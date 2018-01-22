@@ -1,6 +1,6 @@
 import React from "react";
 import ReactPlayer from "react-player";
-
+import PropTypes from "prop-types";
 export default class Video extends React.Component {
   render() {
     return (
@@ -13,3 +13,7 @@ export default class Video extends React.Component {
     );
   }
 }
+Video.propTypes = {
+  url: PropTypes.string,
+  playing: PropTypes.bool
+};

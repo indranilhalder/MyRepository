@@ -1,6 +1,7 @@
 import React from "react";
 import Video from "./Video";
 import Logo from "./Logo";
+import PropTypes from "prop-types";
 import styles from "./ProductVideo.css";
 export default class ProductVideo extends React.Component {
   constructor(props) {
@@ -37,3 +38,8 @@ export default class ProductVideo extends React.Component {
     );
   }
 }
+ProductVideo.propTypes = {
+  url: PropTypes.string,
+  logo: PropTypes.string,
+  description: PropTypes.string
+};
