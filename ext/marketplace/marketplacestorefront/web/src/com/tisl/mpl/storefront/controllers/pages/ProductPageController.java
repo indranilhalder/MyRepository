@@ -3430,7 +3430,115 @@ public class ProductPageController extends MidPageController
 						buyboxJson.put(ModelAttributetConstants.SELLERMESSAGE, message);
 					}
 				}
+				
+				//SDI-4334
+				if (!buyboxJson.isNull("mrp"))
+				{
+					buyboxJson.getJSONObject("mrp").remove("priceType");
+					buyboxJson.getJSONObject("mrp").remove("_classname");
+					buyboxJson.getJSONObject("mrp").remove("class");
+					buyboxJson.getJSONObject("mrp").remove("_type");
+				}
 
+				if (!buyboxJson.isNull("price"))
+				{
+					buyboxJson.getJSONObject("price").remove("priceType");
+					buyboxJson.getJSONObject("price").remove("_classname");
+					buyboxJson.getJSONObject("price").remove("class");
+					buyboxJson.getJSONObject("price").remove("_type");
+				}
+
+				if (!buyboxJson.isNull("minPrice"))
+				{
+					buyboxJson.getJSONObject("minPrice").remove("priceType");
+					buyboxJson.getJSONObject("minPrice").remove("_classname");
+					buyboxJson.getJSONObject("minPrice").remove("class");
+					buyboxJson.getJSONObject("minPrice").remove("_type");
+				}
+
+				if (!buyboxJson.isNull("specialPrice"))
+				{
+					buyboxJson.getJSONObject("specialPrice").remove("priceType");
+					buyboxJson.getJSONObject("specialPrice").remove("_classname");
+					buyboxJson.getJSONObject("specialPrice").remove("class");
+					buyboxJson.getJSONObject("specialPrice").remove("_type");
+				}
+
+
+				if (!buyboxJson.isNull("specialPriceMobile"))
+				{
+					buyboxJson.getJSONObject("specialPriceMobile").remove("priceType");
+					buyboxJson.getJSONObject("specialPriceMobile").remove("_classname");
+					buyboxJson.getJSONObject("specialPriceMobile").remove("class");
+					buyboxJson.getJSONObject("specialPriceMobile").remove("_type");
+				}
+
+				final JSONArray arr = buyboxJson.getJSONArray("buyboxList");
+				if (null != arr)
+				{
+				
+					final int i = arr.size();
+					if (i > 0)
+					{
+						for (final Object o : arr)
+						{
+							if (o instanceof JSONObject)
+							{
+								if (!((JSONObject) o).isNull("mrpPriceValue"))
+								{
+									((JSONObject) o).getJSONObject("mrpPriceValue").remove("priceType");
+									((JSONObject) o).getJSONObject("mrpPriceValue").remove("_classname");
+									((JSONObject) o).getJSONObject("mrpPriceValue").remove("class");
+									((JSONObject) o).getJSONObject("mrpPriceValue").remove("_type");
+								}
+
+								if (!((JSONObject) o).isNull("mrp"))
+								{
+									((JSONObject) o).getJSONObject("mrp").remove("priceType");
+									((JSONObject) o).getJSONObject("mrp").remove("_classname");
+									((JSONObject) o).getJSONObject("mrp").remove("class");
+									((JSONObject) o).getJSONObject("mrp").remove("_type");
+								}
+
+								if (!((JSONObject) o).isNull("price"))
+								{
+									((JSONObject) o).getJSONObject("price").remove("priceType");
+									((JSONObject) o).getJSONObject("price").remove("_classname");
+									((JSONObject) o).getJSONObject("price").remove("class");
+									((JSONObject) o).getJSONObject("price").remove("_type");
+								}
+								if (!((JSONObject) o).isNull("minPrice"))
+								{
+									((JSONObject) o).getJSONObject("minPrice").remove("priceType");
+									((JSONObject) o).getJSONObject("minPrice").remove("_classname");
+									((JSONObject) o).getJSONObject("minPrice").remove("class");
+									((JSONObject) o).getJSONObject("minPrice").remove("_type");
+								}
+								if (!((JSONObject) o).isNull("specialPrice"))
+								{
+									((JSONObject) o).getJSONObject("specialPrice").remove("priceType");
+									((JSONObject) o).getJSONObject("specialPrice").remove("_classname");
+									((JSONObject) o).getJSONObject("specialPrice").remove("class");
+									((JSONObject) o).getJSONObject("specialPrice").remove("_type");
+								}
+
+
+								if (!((JSONObject) o).isNull("specialPriceMobile"))
+								{
+									((JSONObject) o).getJSONObject("specialPriceMobile").remove("priceType");
+									((JSONObject) o).getJSONObject("specialPriceMobile").remove("_classname");
+									((JSONObject) o).getJSONObject("specialPriceMobile").remove("class");
+									((JSONObject) o).getJSONObject("specialPriceMobile").remove("_type");
+								}
+
+								((JSONObject) o).remove("class");
+								((JSONObject) o).remove("_classname");
+							}
+						}
+
+					}
+				
+				}
 			}
 			else
 			{
