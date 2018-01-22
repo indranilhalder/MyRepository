@@ -11,8 +11,6 @@ import {
 export default class SingleQuestion extends React.Component {
   handleClick(val) {
     if (this.props.onApply) {
-      console.log("ON CLICK");
-      console.log(this.props.feedComponentData.data.questionId);
       this.props.onApply(
         val,
         this.props.feedComponentData.data.questionId,

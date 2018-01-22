@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 export default class SingleSelect extends React.Component {
   handleClick() {
-    console.log("SINGLE SELECT CLICK");
     if (this.props.onClick) {
       this.props.onClick(this.props.value);
     }

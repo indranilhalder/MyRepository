@@ -13,8 +13,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   const feedComponentData = state.home.homeFeed[ownProps.positionInFeed];
-  console.log("SINGLE QUESTION CONTAINER");
-  console.log(feedComponentData);
   return {
     feedComponentData: feedComponentData,
     loading: feedComponentData.submitLoading,

@@ -40,9 +40,6 @@ const home = (
     case homeActions.SINGLE_SELECT_REQUEST:
     case homeActions.MULTI_SELECT_SUBMIT_REQUEST:
       homeFeedData = cloneDeep(state.homeFeed);
-      console.log("MULTI SELECT SUBMIT REQUEST");
-      console.log(action.positionInFeed);
-      console.log(homeFeedData);
       homeFeedData[action.positionInFeed].submitLoading = true;
       return Object.assign({}, state, {
         status: action.status,
