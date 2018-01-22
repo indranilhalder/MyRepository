@@ -616,7 +616,7 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 }
 
 .pincode-check {
-  position: absolute; z-index: 2147483648; top: 200px; right: 30px; left: 30px; background: white;
+  position: fixed; z-index: 2147483648; top: 200px; right: 30px; left: 30px; background: white;
 }
 
 .pincode-check > section {padding: 0 10px 10px;}
