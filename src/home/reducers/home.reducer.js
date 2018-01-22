@@ -12,7 +12,6 @@ const home = (
   },
   action
 ) => {
-  let componentData;
   switch (action.type) {
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
@@ -39,13 +38,18 @@ const home = (
       });
 
     case homeActions.SINGLE_SELECT_REQUEST:
+    case homeActions.MULTI_SELECT_SUBMIT_REQUEST:
       homeFeedData = cloneDeep(state.homeFeed);
+      console.log("MULTI SELECT SUBMIT REQUEST");
+      console.log(action.positionInFeed);
+      console.log(homeFeedData);
       homeFeedData[action.positionInFeed].submitLoading = true;
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData
       });
     case homeActions.SINGLE_SELECT_FAILURE:
+    case homeActions.MULTI_SELECT_SUBMIT_FAILURE:
       homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].submitLoading = false;
 
@@ -54,7 +58,9 @@ const home = (
         error: action.error,
         homeFeed: homeFeedData
       });
+
     case homeActions.SINGLE_SELECT_SUCCESS:
+    case homeActions.MULTI_SELECT_SUBMIT_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].submitLoading = false;
       homeFeedData[action.positionInFeed].type = PRODUCT_RECOMMENDATION_TYPE;

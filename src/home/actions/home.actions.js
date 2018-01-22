@@ -8,8 +8,56 @@ export const COMPONENT_DATA_FAILURE = "COMPONENT_DATA_FAILURE";
 export const SINGLE_SELECT_REQUEST = "SINGLE_SELECT_REQUEST";
 export const SINGLE_SELECT_SUCCESS = "SINGLE_SELECT_SUCCESS";
 export const SINGLE_SELECT_FAILURE = "SINGLE_SELECT_FAILURE";
+export const MULTI_SELECT_SUBMIT_REQUEST = "MULTI_SELECT_SUBMIT_REQUEST";
+export const MULTI_SELECT_SUBMIT_SUCCESS = "MULTI_SELECT_SUBMIT_SUCCESS";
+export const MULTI_SELECT_SUBMIT_FAILURE = "MULTI_SELECT_SUBMIT_FAILURE";
 export const HOME_FEED_PATH = "homepage";
 export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
+export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
+
+export function multiSelectSubmitRequest(positionInFeed) {
+  return {
+    type: MULTI_SELECT_SUBMIT_REQUEST,
+    status: REQUESTING,
+    positionInFeed
+  };
+}
+
+export function multiSelectSubmitFailure(positionInFeed, errorMsg) {
+  return {
+    type: MULTI_SELECT_SUBMIT_FAILURE,
+    status: ERROR,
+    error: errorMsg
+  };
+}
+
+export function multiSelectSubmitSuccess(resultJson, positionInFeed) {
+  return {
+    type: MULTI_SELECT_SUBMIT_SUCCESS,
+    status: SUCCESS,
+    data: resultJson,
+    positionInFeed
+  };
+}
+
+export function multiSelectSubmit(values, questionId, positionInFeed) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(multiSelectSubmitRequest(positionInFeed));
+    try {
+      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
+        optionId: values,
+        questionId
+      });
+      const resultJson = await result.json();
+      if (resultJson.status === "FAILURE") {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(multiSelectSubmitSuccess(resultJson, positionInFeed));
+    } catch (e) {
+      dispatch(multiSelectSubmitFailure(e.message, positionInFeed));
+    }
+  };
+}
 
 export function singleSelectRequest(positionInFeed) {
   return {
