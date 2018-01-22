@@ -18,19 +18,19 @@ import MDSpinner from "react-md-spinner";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeComponentMapping = {
-  // themeOffers: props => <ThemeOffer {...props} />,
+  themeOffers: props => <ThemeOffer {...props} />,
   productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  // bannerProductCarousel: props => <BannerProductCarousel {...props} />,
-  // videoProductCarousel: props => <VideoProductCarousel {...props} />,
-  // automatedBrandProductCarousel: props => (
-  //   <AutomatedBrandProductCarousel {...props} />
-  // ),
-  multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />
-  // singleSelectQuestion: props => <SingleQuestionContainer {...props} />
-  // bannerSeparator: props => <BannerSeparator {...props} />,
-  // productCapsules: props => <ProductCapsules {...props} />,
-  // discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
-  // followedWidget: props => <FollowingBrands {...props} />
+  bannerProductCarousel: props => <BannerProductCarousel {...props} />,
+  videoProductCarousel: props => <VideoProductCarousel {...props} />,
+  automatedBrandProductCarousel: props => (
+    <AutomatedBrandProductCarousel {...props} />
+  ),
+  multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
+  singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
+  bannerSeparator: props => <BannerSeparator {...props} />,
+  productCapsules: props => <ProductCapsules {...props} />,
+  discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
+  followedWidget: props => <FollowingBrands {...props} />
 };
 
 class Feed extends Component {
