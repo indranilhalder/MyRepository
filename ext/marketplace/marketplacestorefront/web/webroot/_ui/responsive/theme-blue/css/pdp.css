@@ -11284,6 +11284,13 @@ height: 80%;
  }	
 }
 @media(max-width:767px){
+.Manufacturer.Temp03 h3 {
+    font-size: 14px ! important;
+    
+}
+#emiTableDiv {
+    overflow-y: hidden ! important;
+}
 .page-productDetails .trending h2 {		
 		margin: 20px 25px;		
 	}
