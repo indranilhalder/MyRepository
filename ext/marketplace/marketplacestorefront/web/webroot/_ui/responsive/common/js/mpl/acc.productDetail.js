@@ -4532,6 +4532,12 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
+			//SDI-4334
+			var spPrice = data['specialPrice'];
+			var mrpPrice = data['mrp'];
+			var mop = data['price'];
+			var savingsOnProduct= data['savingsOnProduct'];
+			dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 			//TPR-1375
 			for(var i in data['buyboxList'] ){
 				buyBoxList.push(data['buyboxList'][i]);
@@ -4866,10 +4872,10 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#jewelDetailsUssid").html(data['sellerArticleSKU'].substring(6));
 					}
 
-					var spPrice = data['specialPrice'];
+					/*var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
 					var mop = data['price'];
-					var savingsOnProduct= data['savingsOnProduct'];
+					var savingsOnProduct= data['savingsOnProduct'];*/
 					$("#stock").val(data['availablestock']);
 					//SDI-1023
 					if($("#pageType").val() == "/sellersdetailpage")
@@ -4882,7 +4888,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					});
 					displayDeliveryDetails(sellerName);
 					//TISPRM-33 savingsOnProduct added
-					dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+					//dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 					
 					//Add to Wishlist PDP CR
 					var ussIdWishlist = data['sellerArticleSKU'];
