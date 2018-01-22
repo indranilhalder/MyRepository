@@ -3,6 +3,7 @@ import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import Background from "./img/bg.jpg";
 import { transformData } from "./utils.js";
+
 export default class ThemeOffer extends React.Component {
   handleClick() {
     if (this.props.seeAll) {
@@ -24,7 +25,7 @@ export default class ThemeOffer extends React.Component {
     }
     let themeOfferData;
     if (feedComponentData.data.items) {
-      themeOfferData = [...offerData, ...carouselData];
+      themeOfferData = [...offerData, ...carouselData].slice(0, 4);
     }
 
     return (
