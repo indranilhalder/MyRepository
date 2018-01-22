@@ -1,5 +1,6 @@
 import React from "react";
 import ProductImage from "./ProductImage";
+import PropTypes from "prop-types";
 import styles from "./CustomerQuestion.css";
 export default class CustomerQuestion extends React.Component {
   handleClick(val) {
@@ -33,3 +34,11 @@ export default class CustomerQuestion extends React.Component {
     );
   }
 }
+
+CustomerQuestion.propTypes = {
+  selectItem: PropTypes.func,
+  selected: PropTypes.bool,
+  image: PropTypes.string,
+  header: PropTypes.string,
+  description: PropTypes.string
+};

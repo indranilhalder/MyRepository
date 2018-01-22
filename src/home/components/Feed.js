@@ -6,13 +6,16 @@ import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
-import SingleQuestion from "./SingleQuestion.js";
+import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
 import ThemeOffer from "./ThemeOffer.js";
+import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
+
+export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeComponentMapping = {
   themeOffers: props => <ThemeOffer {...props} />,
@@ -22,7 +25,8 @@ const typeComponentMapping = {
   automatedBrandProductCarousel: props => (
     <AutomatedBrandProductCarousel {...props} />
   ),
-  singleSelectQuestion: props => <SingleQuestion {...props} />,
+  multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
+  singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
   bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
   discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
