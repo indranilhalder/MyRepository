@@ -1,36 +1,36 @@
-.base{
-    width: 100%;
-    height: auto;
-    padding:30px;
-    object-fit: contain;
-    background-image: linear-gradient(285deg, #fce38a, #f38181);
-    background-image: url(./img/saveDownload.png)no-repeat;
+.base {
+  width: 100%;
+  height: auto;
+  padding: 30px;
+  object-fit: contain;
+  background-image: linear-gradient(285deg, #fce38a, #f38181);
+  background-image: url(./img/download.svg)no-repeat;
 }
-.downloadInnerBox{
-        width:100%;
-        height:auto;
-        position:relative;
-        padding-left:45px;
+.downloadInnerBox {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding-left: 45px;
 }
-.downloadBox{
-        width:100%;
-        height:auto;
-        color:#fff;
-        font-size:16px;
-        line-height:20px;
-        font-weight:bold;
+.downloadBox {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: bold;
 }
-.downloadLabel{
-        width:100%;
-        height:auto;
-        color:#fff;
-        font-size:14px;
-        line-height:20px;
+.downloadLabel {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
 }
-.downloadIcon{
-        width:40px;
-        height:40px;
-        position:absolute;
-        left:0;
-        top:0;
+.downloadIcon {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
