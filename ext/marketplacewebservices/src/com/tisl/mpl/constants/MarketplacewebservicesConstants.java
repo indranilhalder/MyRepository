@@ -637,6 +637,7 @@ public class MarketplacewebservicesConstants
 	public static final String PAYMENT__MODE_JUSPAY = "Juspay";
 	public static final String USER_CLIQCASH_DETAILS = "/{userId}/cliqcash/getUserCliqCashDetails";
 	public static final String CHECK_WALLET_MOBILE_NUMBER = "/{userId}/checkWalletMobileNumber";
+	public static final String VERIFY_WALLET_OTP = "/{userId}/verifyWalletOtp";
 	public static final String BUCKET_DETAILS = "getBucketDetails";
 	
 	public static final String BUYING_EGV_MIN_PRICE = "mpl.buyingEgv.minPrice".intern();
