@@ -69,5 +69,15 @@ public interface MplWalletFacade
 	public void sendNotificationForWalletCreate(final CustomerModel customerModel, final String otPNumber, final String mobileNumber);
 	
 	public String generateOTP(final CustomerModel customerModel, final String mobileNumber);
+	
+	/**
+	 * @param registerCustomerRequest
+	 * @param walletId
+	 * @param transactionId
+	 * @return
+	 */
+	public CustomerWalletDetailResponse updateCustomerWallet(QCCustomerRegisterRequest registerCustomerRequest, String walletId,
+			String transactionId);
+
 
 }

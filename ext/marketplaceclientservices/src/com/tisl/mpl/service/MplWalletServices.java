@@ -69,4 +69,14 @@ public interface MplWalletServices
 	
 	public CustomerWalletDetailResponse deactivateQCUserAccount(final String walletId, final String transactionId);
 
+
+	/**
+	 * @param registerCustomerRequest
+	 * @param walletId
+	 * @param transactionId
+	 * @return
+	 */
+	CustomerWalletDetailResponse updateCustomerWallet(QCCustomerRegisterRequest registerCustomerRequest, String walletId,
+			String transactionId);
+
 }

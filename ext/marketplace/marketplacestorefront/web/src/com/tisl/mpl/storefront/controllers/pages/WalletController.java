@@ -207,8 +207,8 @@ public class WalletController extends AbstractPageController
 			}
 			else
 			{
-
-				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+				model.addAttribute("isOTPValidtion",Boolean.FALSE);
+				/*final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 				final Customer custInfo = new Customer();
 				custInfo.setEmail(currentCustomer.getOriginalUid());
 				custInfo.setEmployeeID(currentCustomer.getUid());
@@ -267,16 +267,16 @@ public class WalletController extends AbstractPageController
 
 				else
 				{
-					/*
+					
 					 * GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 					 * "text.cliqcash.use.wallet.fail", null);
-					 */
+					 
 					setValidErrorCodeHandling(customerRegisterResponse.getResponseCode().intValue(), redirectAttributes);
 					System.out.println("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 					LOG.error("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
-				}
+				}*/
 			}
 			model.addAttribute("isCustomerWalletActive", currentCustomer.getIsWalletActivated().booleanValue());
 		}

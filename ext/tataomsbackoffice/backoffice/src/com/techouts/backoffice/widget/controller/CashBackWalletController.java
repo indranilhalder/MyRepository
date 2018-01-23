@@ -98,7 +98,7 @@ public class CashBackWalletController extends DefaultWidgetController
 	private static final String USER_DOES_NOT_WALLET = "user does not have wallet Id";
 	private static final String BUCKET_TYPE_PROMOTION = "PROMOTION";
 	private static final String BUCKET_TYPE_CASHBACK = "CASHBACK";
-	private static final String WALLET_UPLOAD_FILE_HEADER = "Customer Name,Email ID,Amount,Bucket name,Transaction ID,Wallet ID,Card Number,Card Expiry,Batch Number,Comments";
+	private static final String WALLET_UPLOAD_FILE_HEADER = "First name,Last Name,Email ID,Amount,Bucket name,Transaction ID,Wallet ID,Card Number,Card Expiry,Batch Number,Comments";
 	private static final String WALLET_CANCEL_FILE_HEADER =  "Customer Email ID,Transaction ID,Wallet ID, BatchNumber , Comments";
    private static final String WALLET_UPLOAD = "WalletUplaod";
    private static final String CANCEL_UPLOAD = "CancelLoad";
@@ -142,15 +142,18 @@ public class CashBackWalletController extends DefaultWidgetController
          		      	  CilqCashWalletPojo pojo = new CilqCashWalletPojo();
          		            List<String> line = CSVFileReaderUtils.parseLine(scanner.nextLine());
          		            try{
-            		            pojo.setCustomerName(line.get(0));
-            		            pojo.setCustomerEmailId(line.get(1));
-            		            pojo.setAmount(line.get(2));
-            		            pojo.setBucketName(line.get(3));
-               		            if(null != line.get(1) && !line.get(1).isEmpty() && line.get(1).contains("@")){
+         		            	pojo.setCustomerFirstName(line.get(0));
+            		            pojo.setCustomerLastName(line.get(1));
+            		            pojo.setCustomerEmailId(line.get(2));
+            		            pojo.setAmount(line.get(3));
+            		            pojo.setBucketName(line.get(4));
+               		            if(null != line.get(0) && !line.get(0).isEmpty() && null != line.get(1) && !line.get(1).isEmpty() 
+               		            		&&  null != line.get(2) && !line.get(2).isEmpty() && line.get(2).contains("@") 
+               		            		&&  null != line.get(3) && !line.get(3).isEmpty() &&  null != line.get(4) && !line.get(4).isEmpty()){
                		            cilqCashWalletPojoList.add(pojo);
                		            }
          		            }catch(Exception e){
-         		            	Messagebox.show("Please upload file valid format like  Customer Name ,Customer Email ,Amount , Bucket Type ", "Error Message", Messagebox.OK, Messagebox.ERROR);
+         		            	Messagebox.show("Please upload file valid format like  First Name,Last Name ,Customer Email ,Amount , Bucket Type ", "Error Message", Messagebox.OK, Messagebox.ERROR);
          		            	messageFlag=true;
          		            }
          		        }
@@ -220,7 +223,7 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
     			}
      	  }else if(currentCustomer.getCustomerWalletDetail() == null && currentCustomer.getIsWalletActivated() == null){
      		try{
-     			final String customerRegisterResponse = createQCWalletForCustomer(currentCustomer);
+     			final String customerRegisterResponse = createQCWalletForCustomer(currentCustomer,walletObj);
     				if (customerRegisterResponse.equalsIgnoreCase(SUCCESS_MSG)){
     					response = addAmountToQCWallet(currentCustomer,walletObj);
     					 if(null != response && response.getResponseCode()== 0){
@@ -252,7 +255,8 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
 private StringBuilder genarateCsvFile(final QCRedeeptionResponse response,final CilqCashWalletPojo walletObj,
 		final boolean responseCheck,final String commentMsg,final StringBuilder  builder,final String fileCheck){
 	  if(fileCheck.equalsIgnoreCase(WALLET_UPLOAD)){
-	  builder.append(walletObj.getCustomerName() +",");
+	  builder.append(walletObj.getCustomerFirstName() +",");
+	  builder.append(walletObj.getCustomerLastName() +",");
 	  builder.append(walletObj.getCustomerEmailId() +",");
 	  builder.append(walletObj.getAmount() +",");
 	  builder.append(walletObj.getBucketName() +",");
@@ -307,18 +311,21 @@ private QCRedeeptionResponse  addAmountToQCWallet(final  CustomerModel currentCu
 	
 	return response;
 }
-private String createQCWalletForCustomer(final  CustomerModel currentCustomer ){
+private String createQCWalletForCustomer(final  CustomerModel currentCustomer,final CilqCashWalletPojo walletObj ){
 	String commentMsg =null;
 	try{
 			final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 			final Customer custInfo = new Customer();
+			custInfo.setFirstname(walletObj.getCustomerFirstName());
+			custInfo.setLastName(walletObj.getCustomerLastName());
 			custInfo.setEmail(currentCustomer.getOriginalUid());
 			custInfo.setEmployeeID(currentCustomer.getUid());
 			custInfo.setCorporateName("Tata Unistore Ltd");
-			if (null != currentCustomer.getFirstName()){
-				custInfo.setFirstname(currentCustomer.getFirstName());
-			}if (null != currentCustomer.getLastName()){
-				custInfo.setLastName(currentCustomer.getLastName());
+		   if(null!= walletObj.getCustomerFirstName()){
+				custInfo.setFirstname(walletObj.getCustomerFirstName());
+			}
+			if(null!= walletObj.getCustomerLastName()){
+				custInfo.setLastName(walletObj.getCustomerLastName());
 			}
 			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 			customerRegisterReq.setCustomer(custInfo);
@@ -333,7 +340,7 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer ){
 				custWalletDetail.setServiceProvider("Tata Unistore Ltd");
 				modelService.save(custWalletDetail);
 				currentCustomer.setCustomerWalletDetail(custWalletDetail);
-				currentCustomer.setIsWalletActivated(false);
+				currentCustomer.setIsWalletActivated(Boolean.TRUE);
 				modelService.save(currentCustomer);
   		    commentMsg =SUCCESS_MSG;
 			}else{
