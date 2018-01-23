@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 export default class OfferWidget extends React.Component {
   handleClick = () => {
     if (this.props.onClick) {
+      this.props.onClick();
     }
   };
   render() {
