@@ -472,7 +472,7 @@ public class WalletController extends AbstractPageController
 				registerCustomerFacade.registerWalletMobileNumber(walletForm.getQcVerifyFirstName(), walletForm.getQcVerifyLastName(),
 						walletForm.getQcVerifyMobileNo());
 
-				return getNewCustomerWallet(currentCustomer);
+				return getNewCustomerWallet(currentCustomer, walletForm.getQcVerifyMobileNo());
 			}
 			else
 			{
@@ -502,7 +502,7 @@ public class WalletController extends AbstractPageController
 	/**
 	 * @param currentCustomer
 	 */
-	public String getNewCustomerWallet(final CustomerModel currentCustomer)
+	public String getNewCustomerWallet(final CustomerModel currentCustomer, final String mobileNumber)
 	{
 		final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 		final Customer custInfo = new Customer();
@@ -517,6 +517,10 @@ public class WalletController extends AbstractPageController
 		if (null != currentCustomer.getLastName())
 		{
 			custInfo.setLastName(currentCustomer.getLastName());
+		}
+		if (null != mobileNumber)
+		{
+			custInfo.setPhoneNumber(mobileNumber);
 		}
 
 		customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
