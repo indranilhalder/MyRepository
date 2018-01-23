@@ -221,7 +221,7 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
     			}catch (final Exception ex){
     				ex.printStackTrace();
     			}
-     	  }else if(currentCustomer.getCustomerWalletDetail() == null && currentCustomer.getIsWalletActivated() == null){
+     	  }else if(currentCustomer.getCustomerWalletDetail() == null && !currentCustomer.getIsWalletActivated()){
      		try{
      			final String customerRegisterResponse = createQCWalletForCustomer(currentCustomer,walletObj);
     				if (customerRegisterResponse.equalsIgnoreCase(SUCCESS_MSG)){
