@@ -580,8 +580,11 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 		try {
 			CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 			customer.setQcVerifyFirstName(firstName);
-			customer.setQcVerifyLastName(firstName);
+			customer.setQcVerifyLastName(lastName);
 			customer.setQcVerifyMobileNo(mobileNumber);
+			customer.setFirstName(firstName);
+			customer.setLastName(lastName);
+			customer.setMobileNumber(mobileNumber);
 			modelService.save(customer);
 		}catch(Exception e) {
 			LOG.error("Exception occurred while saving customer qc details"+e.getMessage(),e);

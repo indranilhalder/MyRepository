@@ -32,7 +32,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +42,7 @@ import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
@@ -56,7 +56,6 @@ import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
-import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
 import com.tisl.mpl.storefront.web.forms.WalletCreateForm;
 
@@ -99,12 +98,14 @@ public class WalletController extends AbstractPageController
 	private OrderModelService orderModelService;
 	@Autowired
 	private ExtendedUserService extendedUserService;
+	@Autowired
+	RegisterCustomerFacade registerCustomerFacade;
 
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
 	protected static final String REDIM_WALLET_FROM_EMAIL = "/redimWalletFromEmail/";
-	protected static final String WALLET_CREATE_VALIDATE_OTP_URL = "/validateWalletOTP";	
+	protected static final String WALLET_CREATE_VALIDATE_OTP_URL = "/validateWalletOTP";
 	protected static final String WALLET_CREATE_OTP_POPUP = "/walletOTPPopup";
 	protected static final String WALLET_CREATE_OTP_GENERATE = "/walletCreateOTP";
 
@@ -355,14 +356,14 @@ public class WalletController extends AbstractPageController
 	{
 		try
 		{
-			OrderModel orderModel = orderModelService.getOrderModel(orderCode);
-			String recipientId = orderModel.getRecipientId();
+			final OrderModel orderModel = orderModelService.getOrderModel(orderCode);
+			final String recipientId = orderModel.getRecipientId();
 			CustomerModel walletCustomer = null;
 			try
 			{
 				walletCustomer = extendedUserService.getUserForOriginalUid(recipientId);
 			}
-			catch (Exception exception)
+			catch (final Exception exception)
 			{
 				LOG.error("Exception occur while adding money for customer wallet" + exception.getMessage());
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
@@ -376,7 +377,7 @@ public class WalletController extends AbstractPageController
 				return REDIRECT_PREFIX + "/login";
 			}
 
-			CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 			if (!currentCustomer.getOriginalUid().equalsIgnoreCase(walletCustomer.getOriginalUid()))
 			{
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
@@ -384,12 +385,12 @@ public class WalletController extends AbstractPageController
 				return REDIRECT_PREFIX + "/login";
 			}
 
-			String cardNumber = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
+			final String cardNumber = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
 					.getCardNumber();
-			String cardPin = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
+			final String cardPin = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
 					.getCardPinNumber();
 
-			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(cardNumber, cardPin);
+			final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(cardNumber, cardPin);
 			if (response != null && response.getResponseCode() != null)
 			{
 				LOG.info("Code Response" + response.getResponseMessage() + response.getResponseCode().intValue());
@@ -418,70 +419,129 @@ public class WalletController extends AbstractPageController
 	}
 
 	@RequestMapping(value = WALLET_CREATE_OTP_POPUP, method = RequestMethod.GET)
-	public String getWalletCreateForm(Model model)
+	public String getWalletCreateForm(final Model model)
 	{
-		WalletCreateForm walletForm = new WalletCreateForm();
-		WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+		final WalletCreateForm walletForm = new WalletCreateForm();
+		final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
 		populateWalateCreateData(walletForm, walletCreateData);
 		model.addAttribute("walletForm", walletForm);
 		return "pages/account/walletCreateOtpPopup";
 	}
 
 
-	
-	@RequestMapping(value = WALLET_CREATE_OTP_GENERATE, method = RequestMethod.POST)
-		@ResponseBody
-		public String createOTP(@RequestParam(value = "mobileNumber") final String mobileNumber)
-		{
-			String isNewOTPCreated;
-			LOG.debug("Create  OTP For QC Verifaction");
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			isNewOTPCreated = mplWalletFacade.generateOTP(currentCustomer,mobileNumber);
-			return isNewOTPCreated;
-		}
-	
 
-	
-	@RequestMapping(value = WALLET_CREATE_VALIDATE_OTP_URL, method =RequestMethod.POST)
-	public String getVerificationOTP(@ModelAttribute("walletForm") final WalletCreateForm walletForm, final Model model) throws CMSItemNotFoundException,
-			UnsupportedEncodingException
+	@RequestMapping(value = WALLET_CREATE_OTP_GENERATE, method = RequestMethod.POST)
+	@ResponseBody
+	public String createOTP(@RequestParam(value = "mobileNumber") final String mobileNumber)
+	{
+		String isNewOTPCreated;
+		LOG.debug("Create  OTP For QC Verifaction");
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		final boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(mobileNumber);
+		if (!isUsed)
+		{
+			return "isUsed";
+		}
+		isNewOTPCreated = mplWalletFacade.generateOTP(currentCustomer, mobileNumber);
+		return isNewOTPCreated;
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = WALLET_CREATE_VALIDATE_OTP_URL, method =
+	{ RequestMethod.POST, RequestMethod.GET })
+	public String getVerificationOTP(@ModelAttribute("walletForm") final WalletCreateForm walletForm, final Model model)
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 
 	{
+		LOG.info("OTP Verification ");
 		if (StringUtils.isNotEmpty(walletForm.getOtpNumber()))
 		{
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			OTPResponseData response = mplWalletFacade.validateOTP(currentCustomer.getOriginalUid(), walletForm.getOtpNumber());
+			final OTPResponseData response = mplWalletFacade.validateOTP(currentCustomer.getUid(), walletForm.getOtpNumber());
+			//OTP Validation Check
 			if (response.getOTPValid().booleanValue())
 			{
+				final boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(walletForm.getQcVerifyMobileNo());
+				if (!isUsed)
+				{
+
+					return "isUsed";
+				}
+				//Checking Mobile  number duplicate
+				registerCustomerFacade.registerWalletMobileNumber(walletForm.getQcVerifyFirstName(), walletForm.getQcVerifyLastName(),
+						walletForm.getQcVerifyMobileNo());
+				getNewCustomerWallet(currentCustomer);
 				return "success";
 			}
 			else
 			{
-				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
-				populateWalateCreateData(walletForm, walletCreateData);
-				model.addAttribute("walletForm", walletForm);
-				model.addAttribute("errorMSG", "error");
+				return "OTPERROR";
 			}
 		}
 		else
 		{
-			return "success";
+			return "OTPERROR";
 		}
-		model.addAttribute("walletForm", walletForm);
-		return "success";
 	}
 
 	/**
 	 * @param walletForm
 	 * @param walletCreateData
 	 */
-	private void populateWalateCreateData(WalletCreateForm walletForm, WalletCreateData walletCreateData)
+	private void populateWalateCreateData(final WalletCreateForm walletForm, final WalletCreateData walletCreateData)
 	{
 		walletForm.setQcVerifyFirstName(walletCreateData.getQcVerifyFirstName());
 		walletForm.setQcVerifyLastName(walletCreateData.getQcVerifyLastName());
 		walletForm.setQcVerifyMobileNo(walletCreateData.getQcVerifyMobileNo());
 	}
-	
+
+
+
+
+	/**
+	 * @param currentCustomer
+	 */
+	public String getNewCustomerWallet(final CustomerModel currentCustomer)
+	{
+		final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+		final Customer custInfo = new Customer();
+		custInfo.setEmail(currentCustomer.getOriginalUid());
+		custInfo.setEmployeeID(currentCustomer.getUid());
+		custInfo.setCorporateName("Tata Unistore Ltd");
+
+		if (null != currentCustomer.getFirstName())
+		{
+			custInfo.setFirstname(currentCustomer.getFirstName());
+		}
+		if (null != currentCustomer.getLastName())
+		{
+			custInfo.setLastName(currentCustomer.getLastName());
+		}
+
+		customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
+		customerRegisterReq.setCustomer(custInfo);
+		customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
+		final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
+		if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
+		{
+			final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+			custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
+			custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
+			custWalletDetail.setCustomer(currentCustomer);
+			custWalletDetail.setServiceProvider("Tata Unistore Ltd");
+			modelService.save(custWalletDetail);
+			currentCustomer.setCustomerWalletDetail(custWalletDetail);
+			currentCustomer.setIsWalletActivated(true);
+			modelService.save(currentCustomer);
+		}
+		else
+		{
+
+			return "qcDown";
+		}
+	}
+
 }
 
 

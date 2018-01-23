@@ -9,45 +9,104 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<div>
-	<span class="accountPopupClose close">&times;</span> <br />
 
-	<div class="orderStatementContainer">
-
-		<form:form method="POST"
+<style>
+.otp-button {
+    background-color: #a9143c;
+    display: inline;
+    color: white;
+    font-size: 12px;
+    font-weight: 400;
+    height: 36px;
+    padding: 10px 20px;}
+    
+.otp-error-text {
+	text-align: left;
+}
+    
+#otp-submit-section {display: none;}
+</style>
+		<form:form method="POST" id="walletForm"
 			action="${request.contextPath}/wallet/validateWalletOTP"
 			commandName="walletForm">
-			<div class="row">
-				<div class="col-md-7 NOP">
-					<div class="row">
-						<div class="col-md-6 form-group">
-							<label for="firstName"><spring:theme
-									code="text.order.returns.firstname" /></label>
-							<!-- PRDI-124 start-->
-							<form:input path="qcVerifyFirstName" class="" id="firstName"
-								value="${walletForm.qcVerifyFirstName}" placeholder="First Name"
-								maxlength="140" />
+			<div class="row text-center">
+				<div class="col-md-12">
+					<div class="clearfix">
+						<div class="row">
+								<div class="clearfix col-sm-3 text-right">
+									<label for="otpFirstName"><spring:theme
+										code="text.order.returns.firstname" /></label>
+								</div>
+								<div class="clearfix col-sm-9">
+									<form:input path="qcVerifyFirstName" class="giftCard_input" id="otpFirstName"
+									value="${walletForm.qcVerifyFirstName}" placeholder="Enter First Name"
+									maxlength="140" />
+                                   <div class="otp-error-text error_text otpFirstNameError"></div>
+									
+								</div>
+						</div>
+						<br />
+						<div class="row">
+								<div class="clearfix col-sm-3 text-right">
+									<label for="otpLastName"><spring:theme
+										code="text.order.returns.lastname" /></label>
+								</div>
+								<div class="clearfix col-sm-9">
+									<form:input path="qcVerifyLastName" id="otpLastName" class="giftCard_input"
+									value="${walletForm.qcVerifyLastName}" placeholder="Enter Last Name"
+									maxlength="140" />
+									<div class="otp-error-text error_text otpLastNameError"></div>
+								</div>
+								
+						</div>
+						<br />
+						<div class="row">
+								<div class="clearfix col-sm-3 text-right">
+									<label for="otpPhonenumber"><spring:theme
+								code="text.order.returns.phonenumber" /></label>
+								</div>
+								<div class="clearfix col-sm-9">
+									<form:input path="qcVerifyMobileNo"  maxlength="10" class="giftCard_input" onkeypress="return isNumber(event)" id="otpPhonenumber"
+									value="${walletForm.qcVerifyMobileNo}" placeholder="Enter Mobile Number" />
+								<div class="error_text otp-error-text mobileNumberError"></div>
+								</div>
 						</div>
 					</div>
 				</div>
+				
 			</div>
-			<div class="row">
-				<div class="col-md-7 NOP">
-					<div class="row">
-						<div class="col-md-6 form-group">
-
-							<label for="lastName"><spring:theme
-									code="text.order.returns.lastname" /></label>
-							<form:input path="qcVerifyLastName" id="lastName"
-								value="${walletForm.qcVerifyLastName}" placeholder="Last Name"
-								maxlength="140" />
-							<div class="error_text lastNameError"></div>
+			<br />
+			<div class="row text-center">
+					<button type="button" class="otp-button" onclick="createWalletOTP()">GENERATE OTP
+					</button>
+					<div class="error_text wcOTPError"></div>
+			</div>
+			<div id="otp-submit-section">
+				<hr />
+				<div class="row text-center">
+					<div class="col-md-12">
+						<div class="clearfix">
+							<div class="row">
+									<div class="clearfix col-sm-3 text-right">
+										<label for="otpValue">Enter OTP</label>
+									</div>
+									<div class="clearfix col-sm-6">
+										<form:input path="otpNumber" class="giftCard_input" id="otpValue" maxlength="6" />									
+									</div>
+							</div>
 						</div>
 					</div>
+					<br />&nbsp;
+					<div class="col-md-12 text-center">
+						<div class="error_text main_error"></div>
+						<button type="button" onclick="submitWalletData()"
+						class="otp-button">
+						VERIFY
+						</button>
+					</div>
 				</div>
-
 			</div>
-			<div class="row">
+			<%-- <div class="row">
 				<div class="col-md-8 form-group">
 					<label for="phonenumber"><spring:theme
 							code="text.order.returns.phonenumber" /></label>
@@ -55,17 +114,17 @@
 						value="${walletForm.qcVerifyMobileNo}" placeholder="Mobile Number" />
 					<div class="error_text mobileNumberError"></div>
 				</div>
-			</div>
+			</div> --%>
 
-			<div class="row">
-				<div class="col-md-8 form-group">
+			<!-- <div class="row">
+				<div class="col-md-8">
 					<button type="button" onclick="createWalletOTP()">OTP Request
 					</button>
 					<div class="error_text wcOTPError"></div>
 				</div>
-			</div>
+			</div> -->
 
-			<div class="row">
+		<%-- 	 <div class="row">
 				<div class="col-md-8 form-group">
 					<label for="otp">Enter OTP Number</label>
 					<form:input path="otpNumber" maxlength="6" />
@@ -77,9 +136,6 @@
 					class="btn btn-primary saveBlockData">
 					<spring:theme code="text.order.returns.savebutton" />
 				</button>
-			</div>
+			</div>  --%>
 
 		</form:form>
-	</div>
-
-</div>

@@ -15,7 +15,38 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<style>
+.createWalletModel {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
 
+/* Modal Content */
+.createWalletModel-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 50%;
+}
+
+#closePop {
+	float: right;
+}
+#createWalletData {
+	display: inline-block;
+	width: 100%;
+}
+</style>
 <template:page pageTitle="${pageTitle}">
 	<div>
 		<br />
@@ -352,7 +383,7 @@
 							<div class="alert alert-warning" id="giftCardEmailError"></div>
 						</div>
 					</div>
-					<div class="clearfix">
+					<%-- <div class="clearfix">
 						<div class="col-sm-2 headingTexts">
 							<spring:theme code="egv.product.msg.firstName" />
 							<br />&nbsp;
@@ -364,8 +395,8 @@
 							<br />&nbsp;
 							<div class="alert alert-warning" id="giftCardFromFirstNameError"></div>
 						</div>
-					</div>
-					<div class="clearfix">
+					</div> --%>
+					<%-- <div class="clearfix">
 						<div class="col-sm-2 headingTexts">
 							<spring:theme code="egv.product.msg.lastName" />
 							<br />&nbsp;
@@ -377,7 +408,7 @@
 							<br />&nbsp;
 							<div class="alert alert-warning" id="giftCardFromLastNameError"></div>
 						</div>
-					</div>
+					</div> --%>
 					<div class="clearfix">
 						<div class="col-sm-2 headingTexts">
 							<spring:theme code="egv.product.msg.from" />
@@ -391,7 +422,7 @@
 							<div class="alert alert-warning" id="giftCardFromNameError"></div>
 						</div>
 					</div>
-					<div class="clearfix">
+					<%-- <div class="clearfix">
 						<div class="col-sm-2 headingTexts">
 							<spring:theme code="egv.product.msg.phone" />
 							<br />&nbsp;
@@ -404,7 +435,7 @@
 							<br />&nbsp;
 							<div class="alert alert-warning" id="giftCardPhoneNoError"></div>
 						</div>
-					</div>
+					</div> --%>
 					<div class="clearfix">
 						<div class="col-sm-2 headingTexts">
 							<spring:theme code="egv.product.msg.message" />
@@ -427,7 +458,9 @@
 								<c:when test="${isOTPValidtion ne true}">
 									<div class="priAccution">
 										<button type="button" onclick="createWallet()"
-											class="giftBuyBtn pull-right">Create Wallet</button>
+											class="giftBuyBtn pull-right">
+											<spring:theme code="egv.product.msg.buyNow" />
+										</button>
 									</div>
 								</c:when>
 								<c:otherwise>
@@ -456,7 +489,7 @@
 	<br />&nbsp;
 <div class="createWalletModel" id="createWalletPopup">
 		<div class="createWalletModel-content">
-			<button type="button" onclick="closepop()" id="closePop">Click</button>
+			<button type="button" onclick="closepop()" id="closePop"><span class="glyphicon glyphicon-remove-circle"></span></button>
 			<span id="createWalletPopup" class="close">&times;</span>
 			<div id="createWalletData"></div>
 
@@ -485,9 +518,9 @@ var formValid = true;
 function validateForm() {
 	formValid = true;
 	var fname = $(".giftCard_fromName").val();
-	var firstName = $(".giftCard_fromFirstName").val();
-	var lastName = $(".giftCard_fromLastName").val();
-	var fMobile = $(".giftCard_phoneNo").val();
+	/* var firstName = $(".giftCard_fromFirstName").val();
+	var lastName = $(".giftCard_fromLastName").val(); */
+	/* var fMobile = $(".giftCard_phoneNo").val(); */
 	var toEmail = $(".giftCard_toEmail").val();
 	var letters = new RegExp(/^[A-z]*$/);
 	var emailValidExpression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -501,46 +534,34 @@ function validateForm() {
 	}
 	
   //Name Validation
-	 if(fname == null || fname.trim() == '' ){
+	if(fname == null || fname.trim() == '' ){
 			$("#giftCardFromNameError").show();
 			$("#giftCardFromNameError").text("From name cannot be blank.");
 			formValid = false;
-	}/* else if(letters.test(fname) == false){
-		$("#giftCardFromNameError").show();
-		$("#giftCardFromNameError").text("From name should contain only alphabets.");
-			formValid = false;
-	} */else {
+	}else {
 		$("#giftCardFromNameError").hide();
 	}
   
 	//First Name Validation
-	 if(firstName == null || firstName.trim() == '' ){
+	 /* if(firstName == null || firstName.trim() == '' ){
 			$("#giftCardFromFirstNameError").show();
 			$("#giftCardFromFirstNameError").text("First name cannot be blank.");
 			formValid = false;
-	}/* else if(letters.test(firstName) == false){
-		$("#giftCardFromFirstNameError").show();
-		$("#giftCardFromFirstNameError").text("First name should contain only alphabets.");
-			formValid = false;
-	} */else {
+	}else {
 		$("#giftCardFromFirstNameError").hide();
 	}
-	
+	 */
 	//Last Name Validation
-	 if(lastName == null || lastName.trim() == '' ){
+	/*  if(lastName == null || lastName.trim() == '' ){
 			$("#giftCardFromLastNameError").show();
 			$("#giftCardFromLastNameError").text("Last name cannot be blank.");
 			formValid = false;
-	}/* else if(letters.test(lastName) == false){
-		$("#giftCardFromLastNameError").show();
-		$("#giftCardFromNameError").text("Last name should contain only alphabets.");
-			formValid = false;
-	} */else {
+	}else {
 		$("#giftCardFromLastNameError").hide();
-	}
+	} */
   
   //Mobile No Validation
-	if(fMobile == null || fMobile.trim() == '' ){
+	/* if(fMobile == null || fMobile.trim() == '' ){
 			$("#giftCardPhoneNoError").show();
 			$("#giftCardPhoneNoError").text("Phone number cannnot be blank.");
 			formValid = false;
@@ -550,7 +571,7 @@ function validateForm() {
 			formValid = false;
 	}else {
 		$("#giftCardPhoneNoError").hide();
-	}
+	} */
   
 	//Email Validation
 	 if(toEmail == null || toEmail.trim() == '' ){
@@ -617,11 +638,11 @@ function validateForm() {
 	    });
 		
 		//Auto Update Name from First and Last names
-		$(".giftCard_fromFirstName, .giftCard_fromLastName").on('keyup blur', function(){
+		/* $(".giftCard_fromFirstName, .giftCard_fromLastName").on('keyup blur', function(){
 			var firstName = document.getElementById('giftCard_fromFirstName').value;
 			var lastName = document.getElementById('giftCard_fromLastName').value;
 			document.getElementById('giftCard_fromName').value = firstName+" "+lastName;
-		    });
+		    }); */
 		
 		//Updating Amount
 		$("input[name=giftRange]").on('change', function (){
@@ -640,7 +661,7 @@ function validateForm() {
 	
 	  // GIFT DESIGN POPUP
     // Get the modal
-		var giftDesignModal = document.getElementById('moreGiftDesignTemplates');
+		/* var giftDesignModal = document.getElementById('moreGiftDesignTemplates');
 		
 		// Get the button that opens the modal
 		var giftDesignBtn = document.getElementById("showMoreGiftDesignTemplates");
@@ -663,7 +684,7 @@ function validateForm() {
 		    if (event.target == giftDesignModal) {
 		    	giftDesignModal.style.display = "none";
 		    }
-		}
+		} */
 		
 	// GIFT CATEGORY MENU
 	function selectCategory(evt, categoryName) {
@@ -695,18 +716,19 @@ var createWalletModel = document.getElementById('createWalletPopup');
 var createWalletData = document.getElementById('createWalletData');
 var createWalletPopup = document.getElementById('createWalletPopup');
 function createWallet() {
-	$.ajax({
-		type : "GET",
-		url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
-		contentType : "html/text",
-		success : function(response){
-			createWalletData.innerHTML=response;
-			createWalletModel.style.display = "block";      
-				  },	
-				failure : function(data) {
-				}
-			}); 
-	
+	if(validateForm()) {
+		$.ajax({
+			type : "GET",
+			url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
+			contentType : "html/text",
+			success : function(response){
+				createWalletData.innerHTML=response;
+				createWalletModel.style.display = "block";   
+					  },	
+					failure : function(data) {
+					}
+				}); 
+	}
 }
 
 function closepop(){
@@ -724,10 +746,32 @@ window.onclick = function(event) {
 } */
 var count=0;
 function createWalletOTP(){
-	  $(".mobileNumberError").hide();
-	 var mobileNo=$("#mobileNo").val();
+	    $(".mobileNumberError").hide();
+	    $(".otpLastNameError").hide();
+	    $(".otpFirstNameError").hide();
+	    var mobileNo=$("#otpPhonenumber").val();
+	    var firstName = $("#otpFirstName").val();
+		var lastName = $("#otpLastName").val();
+		
      var isString = isNaN(mobileNo);
-     
+
+ 	//First Name Validation
+ 	if(firstName == null || firstName.trim() == '' ){
+ 			$(".otpFirstNameError").show();
+ 			$(".otpFirstNameError").text("First name cannot be blank.");
+ 			formValid = false;
+ 	}else {
+ 		$(".otpFirstNameError").hide();
+ 	}
+ 	
+ 	//Last Name Validation
+     if(lastName == null || lastName.trim() == '' ){
+ 			$(".otpLastNameError").show();
+ 			$(".otpLastNameError").text("Last name cannot be blank.");
+ 			formValid = false;
+ 	}else {
+ 		$(".otpLastNameError").hide();
+ 	} 
      if(isString==true || mobileNo.trim()==''){
 			$(".mobileNumberError").show();
 			$(".mobileNumberError").text("Enter only Numbers");
@@ -749,46 +793,54 @@ function createWalletOTP(){
 			url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
 			data :"mobileNumber="+mobileNo,
 			success : function(response) {
+				if(response =='isUsed'){
+					$(".mobileNumberError").show();
+					$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
+					$('#otp-submit-section').hide();
+				}else{
 				$(".wcOTPError").show();
-				$(".wcOTPError").text("OTP Succesfully generated ");
+				$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
+				$('#otp-submit-section').show();
+				}
 			}
 		}); 
 	 
 	}else{
 		$(".otpError").show();
 		$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
-	}  
+	}
 	  	}
 } 
 
+
+function submitWalletData(){
+	var data = $("#walletForm").serialize();
+	alert(data);
+	 $.ajax({
+			type : "GET",
+			url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
+			data :data,
+			contentType: "text/application/html",
+			success : function(response) {
+				
+			   if(response =="isUsed"){
+					$(".mobileNumberError").text("This mobile number is alredy used. Please enter other mobile number for this account");
+					$(".mobileNumberError").show();
+				}
+				else if(response=='OTPERROR'){
+					$(".wcOTPError").text("OTP verification failed. Please try again");
+					$(".wcOTPError").show();
+				}
+				else if(response=='qcDown'){
+					$(".wcOTPError").text("Unable to verify mobile number. Please try after sometime");
+					$(".wcOTPError").show();
+				}
+				else {
+                    $('#egvDetailsform').submit();
+				} 
+				
+			}
+		}); 
+} 
+
 </script>
-
-
-<style>
-.createWalletModel {
-	display: none; /* Hidden by default */
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	padding-top: 100px; /* Location of the box */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0, 0, 0); /* Fallback color */
-	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.createWalletModel-content {
-	background-color: #fefefe;
-	margin: auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 80%;
-}
-
-#closePop {
-	float: right;
-}
-</style>
