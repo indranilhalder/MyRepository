@@ -19,3 +19,8 @@ export default class ThemeProductWidget extends React.Component {
     );
   }
 }
+ThemeProductWidget.propTypes = {
+  label: PropTypes.string,
+  price: PropTypes.string,
+  image: PropTypes.string
+};

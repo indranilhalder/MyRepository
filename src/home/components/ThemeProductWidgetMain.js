@@ -15,7 +15,6 @@ export default class ThemeProductWidgetMain extends React.Component {
       <div
         className={styles.base}
         style={{
-          backgroundColor: this.props.backgroundColor,
           backgroundImage: `url(${this.props.backgroundImage})`
         }}
       >
@@ -49,16 +48,19 @@ export default class ThemeProductWidgetMain extends React.Component {
   }
 }
 ThemeProductWidgetMain.propTypes = {
-  header: PropTypes.string,
-  label: PropTypes.string,
-  price: PropTypes.string,
-  image: PropTypes.string,
-  backgroundColor: PropTypes.string,
-  backgroundImage: PropTypes.string,
-  logo: PropTypes.string,
-  isWhite: PropTypes.bool,
-  seeAll: PropTypes.func,
-  elementWidthMobile: PropTypes.number
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      header: PropTypes.string,
+      label: PropTypes.string,
+      price: PropTypes.string,
+      image: PropTypes.string,
+      backgroundImage: PropTypes.string,
+      logo: PropTypes.string,
+      isWhite: PropTypes.bool,
+      seeAll: PropTypes.func,
+      elementWidthMobile: PropTypes.number
+    })
+  )
 };
 ThemeProductWidgetMain.defaultProps = {
   header: "New arrivals"
