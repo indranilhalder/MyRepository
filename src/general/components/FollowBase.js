@@ -24,10 +24,3 @@ export default class FollowBase extends React.Component {
     );
   }
 }
-FollowBase.propTypes = {
-  header: PropTypes.string,
-  followBaseCarouselData: PropTypes.object
-};
-FollowBase.defaultProps = {
-  header: " More brand from Tata Cliq"
-};
