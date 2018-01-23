@@ -19,6 +19,7 @@ export default class ProductCapsules extends React.Component {
           buttonText="See all"
           seeAll={this.props.feedComponentData.btnText}
           elementWidthMobile={30}
+          withFooter={false}
         >
           {this.props.feedComponentData.data.items &&
             this.props.feedComponentData.data.items.map((datum, i) => {
