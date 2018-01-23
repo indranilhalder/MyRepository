@@ -471,8 +471,8 @@ public class WalletController extends AbstractPageController
 				//Checking Mobile  number duplicate
 				registerCustomerFacade.registerWalletMobileNumber(walletForm.getQcVerifyFirstName(), walletForm.getQcVerifyLastName(),
 						walletForm.getQcVerifyMobileNo());
-				getNewCustomerWallet(currentCustomer);
-				return "success";
+
+				return getNewCustomerWallet(currentCustomer);
 			}
 			else
 			{
@@ -534,12 +534,10 @@ public class WalletController extends AbstractPageController
 			currentCustomer.setCustomerWalletDetail(custWalletDetail);
 			currentCustomer.setIsWalletActivated(true);
 			modelService.save(currentCustomer);
-		}
-		else
-		{
 
-			return "qcDown";
+			return "success";
 		}
+		return "qcDown";
 	}
 
 }
