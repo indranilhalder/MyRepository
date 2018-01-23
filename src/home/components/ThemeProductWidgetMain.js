@@ -51,9 +51,7 @@ ThemeProductWidgetMain.propTypes = {
   header: PropTypes.string,
   backgroundImage: PropTypes.string,
   logo: PropTypes.string,
-  isWhite: PropTypes.bool,
   seeAll: PropTypes.func,
-  elementWidthMobile: PropTypes.number,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string,
