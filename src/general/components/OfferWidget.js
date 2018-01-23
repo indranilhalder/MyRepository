@@ -49,7 +49,6 @@ export default class OfferWidget extends React.Component {
     );
   }
 }
-
 OfferWidget.propTypes = {
   image: PropTypes.string,
   onClick: PropTypes.func,
