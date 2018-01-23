@@ -1,10 +1,10 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
-import ThemeProductWidget from "../../general/components/ThemeProductWidget";
+import ThemeProduct from "../../general/components/ThemeProduct";
 import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
-import styles from "./ThemeProductWidgetMain.css";
-export default class ThemeProductWidgetMain extends React.Component {
+import styles from "./ThemeProductWidget.css";
+export default class ThemeProductWidget extends React.Component {
   handleClick() {
     if (this.props.seeAll) {
       this.props.seeAll();
@@ -33,7 +33,7 @@ export default class ThemeProductWidgetMain extends React.Component {
           {this.props.data &&
             this.props.data.map((datum, i) => {
               return (
-                <ThemeProductWidget
+                <ThemeProduct
                   image={datum.image}
                   label={datum.label}
                   price={datum.price}
@@ -47,7 +47,7 @@ export default class ThemeProductWidgetMain extends React.Component {
     );
   }
 }
-ThemeProductWidgetMain.propTypes = {
+ThemeProductWidget.propTypes = {
   header: PropTypes.string,
   backgroundImage: PropTypes.string,
   logo: PropTypes.string,
@@ -60,6 +60,6 @@ ThemeProductWidgetMain.propTypes = {
     })
   )
 };
-ThemeProductWidgetMain.defaultProps = {
+ThemeProductWidget.defaultProps = {
   header: "New arrivals"
 };
