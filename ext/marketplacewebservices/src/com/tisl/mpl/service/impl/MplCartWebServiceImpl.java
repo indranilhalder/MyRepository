@@ -85,6 +85,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -96,7 +98,6 @@ import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
@@ -117,12 +118,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.pojo.request.Customer;
-import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
-import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
@@ -136,8 +135,6 @@ import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -230,6 +227,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
+	
+	@Autowired
+	private MplEgvWalletService mplEgvWalletService;
 	
 
 	/**
@@ -3644,118 +3644,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.tisl.mpl.service.MplCartWebService#getUserCliqCashDetails(java.lang.String)
-	 */
-	@Override
-	public UserCliqCashWsDto getUserCliqCashDetails(CustomerModel currentCustomer)
-	{
-		double balanceAmount = 0.0D;
-		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
-		UserCliqCashWsDto responce = new UserCliqCashWsDto();
-		TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
-		try
-		{
-			if (null != currentCustomer)
-			{
-				if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
-				{
-					responce.setIsWalletCreated(true);
-					customerWalletDetailData = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-					if (null != customerWalletDetailData.getWallet() && null!= customerWalletDetailData.getWallet().getBalance()
-							&& customerWalletDetailData.getWallet().getBalance().doubleValue() >= 0.0D)
-					{
-						balanceAmount = customerWalletDetailData.getWallet().getBalance().doubleValue();
-					}
-				}
-				else
-				{
-					final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-					final Customer custInfo = new Customer();
-					custInfo.setEmail(currentCustomer.getOriginalUid());
-					custInfo.setEmployeeID(currentCustomer.getUid());
-					custInfo.setCorporateName("Tata Unistore Ltd");
-
-					if (null != currentCustomer.getFirstName())
-					{
-						custInfo.setFirstname(currentCustomer.getFirstName());
-					}
-					if (null != currentCustomer.getLastName())
-					{
-						custInfo.setLastName(currentCustomer.getLastName());
-					}
-
-					customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
-					customerRegisterReq.setCustomer(custInfo);
-					customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-					final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
-							.createWalletContainer(customerRegisterReq);
-					if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
-							&& customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
-					{
-						final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-						custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-						custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-						custWalletDetail.setCustomer(currentCustomer);
-						custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-
-						modelService.save(custWalletDetail);
-
-						currentCustomer.setCustomerWalletDetail(custWalletDetail);
-						currentCustomer.setIsWalletActivated(Boolean.TRUE);
-						modelService.save(currentCustomer);
-						customerWalletDetailData = mplWalletFacade
-								.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-						if (null != customerWalletDetailData.getWallet() && null != customerWalletDetailData.getWallet().getBalance()
-								&& customerWalletDetailData.getWallet().getBalance().doubleValue() >= 0.0D)
-						{
-							balanceAmount = customerWalletDetailData.getWallet().getBalance().doubleValue();
-						}
-					}else if(null != customerRegisterResponse) {
-						responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-						responce.setError(customerRegisterResponse.getResponseMessage());
-						return responce;
-					}
-				}
-
-				if (balanceAmount < 0.0D)
-				{
-					balanceAmount = 0.0D;
-				}
-				if (balanceAmount >= 0.0D)
-				{
-					final BigDecimal walletAmount = new BigDecimal(balanceAmount);
-					final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
-							MarketplacecommerceservicesConstants.INR);
-					if (null != priceData)
-					{
-						totalCliqCashBalance.setCurrencyIso(priceData.getCurrencyIso());
-						totalCliqCashBalance.setDoubleValue(priceData.getDoubleValue());
-						totalCliqCashBalance.setFormattedValue(priceData.getFormattedValue());
-						totalCliqCashBalance.setPriceType(priceData.getPriceType());
-						totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-						totalCliqCashBalance.setValue(priceData.getValue());
-						responce.setTotalCliqCashBalance(totalCliqCashBalance);
-						if (null != customerWalletDetailData.getApiWebProperties())
-						{
-							responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
-						}
-						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-					}
-
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			LOG.error("Exception occurred while gettig  cliqCash details");
-		}
-		return responce;
-
-	}
-
+	
 
 
 

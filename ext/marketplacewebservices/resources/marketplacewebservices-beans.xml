@@ -3645,14 +3645,16 @@
 		<property name="isWalletLimitReached" type="boolean" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto"/>
 		<property name="applyCliqCash" type="com.tisl.mpl.wsdto.ApplyCliqCashWsDto"/>
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	
 	</bean>	
 	
 	
 	
 	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO">
 		<property name="productID" type="String" />
-		<property name="firstName" type="String" />
-		<property name="lastName" type="String" />
 		<property name="priceSelectedByUserPerQuantity" type="Double" />
 		<property name="quantity" type="int" />
 		<property name="receiverName" type="String" />
@@ -3770,6 +3772,13 @@
 		<property name="mobileNumber" type="String" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO" >		
+		<property name="balanceClearedAsOf" type="String" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="isWalletCreated" type="boolean" />	
+	</bean>
+	
+
 	<!-- Added  For Buying Of EGV Functionality End  -->
 	
 </beans>

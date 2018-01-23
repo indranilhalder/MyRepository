@@ -69,7 +69,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -91,6 +90,7 @@ import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.reviews.GigyaFacade;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
@@ -112,15 +112,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
-import com.tisl.mpl.pojo.request.Customer;
-import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
-import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.v2.controller.UsersController.AddressField;
@@ -129,6 +127,7 @@ import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
+import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
 import com.tisl.mpl.wsdto.ErrorDTO;
 import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO;
@@ -350,6 +349,9 @@ public class WalletController
 	
 	@Autowired
 	private RegisterCustomerFacade registerCustomerFacade;
+	
+	@Autowired
+	private MplEgvWalletService mplEgvWalletService;
 
 
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
@@ -516,7 +518,6 @@ public class WalletController
 
 	{
 		LOG.info("Redeeming CLiq Cash Voucher Card Number " + couponCode);
-		boolean customerRegisteredwithQc = false;
 		RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
 		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
@@ -531,52 +532,18 @@ public class WalletController
 			if (null != currentCustomer
 					&& (null == currentCustomer.getIsWalletActivated() || !currentCustomer.getIsWalletActivated().booleanValue()))
 			{
-				LOG.debug("Customer Is not Regitered with QC .. Registering with email " + currentCustomer.getOriginalUid());
-				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-				final Customer custInfo = new Customer();
-				custInfo.setEmail(currentCustomer.getOriginalUid());
-				custInfo.setEmployeeID(currentCustomer.getUid());
-				custInfo.setCorporateName("Tata Unistore Ltd");
-
-				if (null != currentCustomer.getFirstName())
-				{
-					custInfo.setFirstname(currentCustomer.getFirstName());
+				redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
+				redeemCliqVoucherWsDTO.setIsWalletCreated(false);
+				WalletCreateData walletCreateData =mplWalletFacade.getWalletCreateData();
+				if(null != walletCreateData) {
+					redeemCliqVoucherWsDTO.setFirstName(walletCreateData.getQcVerifyFirstName());
+					redeemCliqVoucherWsDTO.setLastName(walletCreateData.getQcVerifyLastName());
+					redeemCliqVoucherWsDTO.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
 				}
-				if (null != currentCustomer.getLastName())
-				{
-					custInfo.setLastName(currentCustomer.getLastName());
-				}
-
-				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
-				customerRegisterReq.setCustomer(custInfo);
-				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
-						.createWalletContainer(customerRegisterReq);
-				if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
-						&& customerRegisterResponse.getResponseCode().intValue() == 0)
-				{
-					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-					custWalletDetail.setCustomer(currentCustomer);
-					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-					modelService.save(custWalletDetail);
-					currentCustomer.setCustomerWalletDetail(custWalletDetail);
-					currentCustomer.setIsWalletActivated(Boolean.TRUE);
-					modelService.save(currentCustomer);
-					customerRegisteredwithQc = true;
-					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}
-				else
-				{
-					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-				}
+				redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				return redeemCliqVoucherWsDTO;
 			}
 			else
-			{
-				customerRegisteredwithQc = true;
-			}
-			if (customerRegisteredwithQc)
 			{
 				LOG.debug("Calling To QC For Adding money to Wallet");
 				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
@@ -646,10 +613,6 @@ public class WalletController
 						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
 					}
 				}
-			}
-			else
-			{
-				redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -880,8 +843,7 @@ public class WalletController
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		if (null != currentCustomer)
 		{
-
-			responce = mplCartWebService.getUserCliqCashDetails(currentCustomer);
+			responce = mplEgvWalletService.getUserCliqCashDetails(currentCustomer);
 			if (null == responce)
 			{
 				responce = new UserCliqCashWsDto();
@@ -933,16 +895,25 @@ public class WalletController
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5013);
 				}
 				
-				if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
+				CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+				if(null != customer && null != customer.getQcVerifyMobileNo()  && !customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(request.getMobileNumber().trim()))
 				{
-					registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
-					//Set success flag
-					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
+					{
+						
+						registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+						mplWalletFacade.generateOTP(customer,request.getMobileNumber());
+						//Set success flag
+						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
+					}
+				}else {
+					mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
-				}
+				
 			}else
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
@@ -959,6 +930,36 @@ public class WalletController
 	}
 	return responce;
 }
+
+
+@Secured(
+		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+		@RequestMapping(value = MarketplacewebservicesConstants.VERIFY_WALLET_OTP, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+		@ResponseBody
+		public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam final String otp)
+				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+
+	{
+		EgvWalletCreateResponceWsDTO responce =null;
+		try
+		{
+			if (null != otp && !otp.isEmpty())
+			{
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp);
+			}
+		}
+		catch (final Exception ex)
+		{
+			{
+				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				responce.setError(ex.getMessage());
+				LOG.error("Exception occrred while saving mobile number for QC wallet " + ex.getMessage());
+			}
+		}
+		return responce;
+	}
+
 
 
 /**

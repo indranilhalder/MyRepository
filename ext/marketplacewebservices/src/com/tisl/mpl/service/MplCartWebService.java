@@ -185,7 +185,6 @@ public interface MplCartWebService
 			throws CommerceCartRestorationException, CommerceCartMergingException;
 	
 	ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel order,Double walletAmount);
-	public UserCliqCashWsDto getUserCliqCashDetails(CustomerModel currentCustomer);
 	
 
 }
