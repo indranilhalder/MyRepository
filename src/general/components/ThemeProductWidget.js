@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 export default class ThemeProductWidget extends React.Component {
   render() {
-    console.log(this.props.isWhite);
     let className = styles.base;
     if (this.props.isWhite) {
       className = styles.colorWhite;
