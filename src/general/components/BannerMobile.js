@@ -12,8 +12,8 @@ export default class BannerMobile extends React.Component {
           })
         : null,
       numberOfItems: React.Children.count(this.props.children),
-      position: 2,
-      absolutePosition: 2
+      position: 0,
+      absolutePosition: 0
     };
     this.items = this.props.children
       ? React.Children.map(this.props.children, (child, i) => {
@@ -37,34 +37,26 @@ export default class BannerMobile extends React.Component {
     }
   }
   slideForward = () => {
-    // const visibleItems = [];
-    // visibleItems.push(
-    //   this.items[(this.state.position + 1) % this.state.numberOfItems]
-    // );
-    // visibleItems.push(
-    //   this.items[
-    //     this.state.position > 0
-    //       ? this.state.position - 1
-    //       : this.state.numberOfItems - 1
-    //   ]
-    // );
-    // visibleItems.push(this.items[this.state.position]);
-    this.setState({ direction: "forward" });
-    console.log("here");
+    const visibleItems = [];
+    visibleItems.push(this.state.visibleItems[0]);
+    visibleItems.push(this.state.visibleItems[1]);
+    visibleItems.push(
+      this.items[
+        this.state.position - 1 >= 0
+          ? (this.state.position - 1) % this.state.numberOfItems
+          : this.state.numberOfItems - 1
+      ]
+    );
+    this.setState({ visibleItems, direction: "forward" });
   };
   slideBack = () => {
     const visibleItems = [];
     visibleItems.push(
-      this.items[(this.state.position + 1) % this.state.numberOfItems]
+      this.items[(this.state.position + 3) % this.state.numberOfItems]
     );
-    visibleItems.push(
-      this.items[
-        this.state.position > 0
-          ? this.state.position - 1
-          : this.state.numberOfItems - 1
-      ]
-    );
-    visibleItems.push(this.items[this.state.position]);
+    visibleItems.push(this.state.visibleItems[1]);
+    visibleItems.push(this.state.visibleItems[2]);
+
     this.setState({ visibleItems, direction: "back" });
   };
   swapForward = () => {
@@ -75,17 +67,26 @@ export default class BannerMobile extends React.Component {
         : this.state.numberOfItems - 1;
     const position = absolutePosition % this.state.numberOfItems;
 
-    console.log(position);
-    console.log(absolutePosition);
     this.setState({ position, absolutePosition }, () => {
       visibleItems.push(this.items[this.state.position]);
-      visibleItems.push(this.state.visibleItems[0]);
-      visibleItems.push(this.state.visibleItems[1]);
+      visibleItems.push(
+        this.items[
+          this.state.position + 1 < this.state.numberOfItems
+            ? this.state.position + 1
+            : 0
+        ]
+      );
+      visibleItems.push(
+        this.items[
+          this.state.position + 2 < this.state.numberOfItems
+            ? this.state.position + 2
+            : this.state.position + 2 - this.state.numberOfItems
+        ]
+      );
       this.setState({ visibleItems }, () => {
         this.setState({ direction: "" });
       });
     });
-    console.log("here");
   };
 
   swapBack = () => {
@@ -93,12 +94,23 @@ export default class BannerMobile extends React.Component {
     const position =
       (this.state.absolutePosition + 1) % this.state.numberOfItems;
     let absolutePosition = this.state.absolutePosition + 1;
-    console.log(position);
-    console.log(absolutePosition);
+
     this.setState({ position, absolutePosition }, () => {
-      visibleItems.push(this.state.visibleItems[1]);
-      visibleItems.push(this.state.visibleItems[2]);
       visibleItems.push(this.items[this.state.position]);
+      visibleItems.push(
+        this.items[
+          this.state.position + 1 < this.state.numberOfItems
+            ? this.state.position + 1
+            : 0
+        ]
+      );
+      visibleItems.push(
+        this.items[
+          this.state.position + 2 < this.state.numberOfItems
+            ? this.state.position + 2
+            : this.state.position + 2 - this.state.numberOfItems
+        ]
+      );
       this.setState({ visibleItems }, () => {
         this.setState({ direction: "" });
       });
