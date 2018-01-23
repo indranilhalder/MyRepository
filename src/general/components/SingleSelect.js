@@ -24,7 +24,7 @@ export default class SingleSelect extends React.Component {
 }
 SingleSelect.propTypes = {
   text: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.number,
   image: PropTypes.string,
   onClick: PropTypes.func
 };

@@ -5,11 +5,12 @@ import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
 export default class ProductCapsules extends React.Component {
   render() {
-    const productCapsulesData = this.props.feedComponentData.data;
-    const numberOfProducts = productCapsulesData
-      ? productCapsulesData.length
+    const productCapsulesData = this.props.feedComponentData;
+    const numberOfProducts = productCapsulesData.data.items
+      ? productCapsulesData.data.items.length
       : 0;
     const subHeader = `You have ${numberOfProducts} products in your list`;
+
     return (
       <div className={styles.base}>
         <Carousel
@@ -18,9 +19,10 @@ export default class ProductCapsules extends React.Component {
           buttonText="See all"
           seeAll={this.props.feedComponentData.btnText}
           elementWidthMobile={30}
+          withFooter={false}
         >
-          {productCapsulesData.length > 0 &&
-            productCapsulesData.map((datum, i) => {
+          {this.props.feedComponentData.data.items &&
+            this.props.feedComponentData.data.items.map((datum, i) => {
               return (
                 <ProductCapsuleCircle
                   image={datum.imageURL}
