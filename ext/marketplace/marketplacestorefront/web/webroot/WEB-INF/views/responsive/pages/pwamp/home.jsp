@@ -464,13 +464,14 @@
 
 	<!-- Brands You Love -->
 	<div id="brandsYouLoveMobileComp" class="">
+		<amp-list src="/pwamp/getBrandsYouLove?version=Online" height="320"
+					layout="fixed-height"> <template type="amp-mustache">
 		<div class="brandStudioTop">
-			<h2 class="homeViewHeading">Brand Studio</h2>
+			<h2 class="homeViewHeading">{{title}}</h2>
 		</div>
 		<div>
 			<div id="brandsYouLoveMobileCompCarousel">
-				<amp-list src="/pwamp/getBrandsYouLove?version=Online" height="320"
-					layout="fixed-height"> <template type="amp-mustache">
+				
 				<amp-carousel height="320" layout="fixed-height" type="carousel">
 				{{#subComponents}}
 				<div class="brandsCarouselItem">
@@ -487,9 +488,11 @@
 						</p>
 					</div>
 				</div>
-				{{/subComponents}} </amp-carousel> </template> </amp-list>
+				{{/subComponents}} </amp-carousel>
 			</div>
 		</div>
+		 </template> 
+		</amp-list>
 		<!-- <div class="brandStudioBottom">
 			<button class="brandStudioViewAllBtn">View All Brands</button>
 		</div> -->
