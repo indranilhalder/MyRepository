@@ -1,0 +1,29 @@
+.base {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  text-align: center;
+  color: #212121;
+}
+.colorWhite {
+  composes: base;
+  color: #fff;
+}
+.label {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+  font-family: semibold;
+  padding-top: 10px;
+}
+.price {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+  font-family: regular;
+  padding-top: 5px;
+}
