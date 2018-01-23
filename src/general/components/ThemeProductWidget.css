@@ -19,11 +19,7 @@
   padding-top: 10px;
 }
 .price {
-  width: 100%;
-  height: auto;
-  font-size: 14px;
-  text-align: center;
-  line-height: 20px;
+  composes: label;
   font-family: regular;
   padding-top: 5px;
 }
