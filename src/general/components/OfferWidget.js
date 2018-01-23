@@ -12,7 +12,7 @@ export default class OfferWidget extends React.Component {
     }
   };
   render() {
-    var data = this.props.data;
+    let data = this.props.data;
     return (
       <Carousel elementWidthMobile={90} elementWidthDesktop={33.33}>
         {data.map((datum, i) => {
@@ -22,9 +22,9 @@ export default class OfferWidget extends React.Component {
                 <Image image={datum.image} key={i} />
               </div>
               <div className={styles.overlay} />{" "}
-              <div className={styles.logo}>
+              <div className={styles.ovalImage}>
                 <div className={styles.text} key={i}>
-                  {OfferWidget.defaultProps.text}
+                  {datum.text}
                 </div>
               </div>
               <div className={styles.textHolder}>
@@ -57,7 +57,6 @@ OfferWidget.propTypes = {
 
 OfferWidget.defaultProps = {
   case: "hollow",
-  text: "Up to 40% off ",
   off: "40% off",
   textLine: "Beautiful watches at amazing prices",
   value: "Shop now",
