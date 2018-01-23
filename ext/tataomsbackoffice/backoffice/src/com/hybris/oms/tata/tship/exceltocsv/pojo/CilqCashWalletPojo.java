@@ -9,7 +9,10 @@ package com.hybris.oms.tata.tship.exceltocsv.pojo;
  */
 public class CilqCashWalletPojo
 {
-      private String customerName;
+     
+		
+		private String customerFirstName;
+      private String customerLastName;
       private String customerEmailId;
       private String amount;
       private String bucketName;
@@ -20,20 +23,36 @@ public class CilqCashWalletPojo
       private String batchNumber;
       private String comments;
       private String remarks;
-		/**
-		 * @return the customerName
-		 */
-		public String getCustomerName()
-		{
-			return customerName;
-		}
-		/**
-		 * @param customerName the customerName to set
-		 */
-		public void setCustomerName(String customerName)
-		{
-			this.customerName = customerName;
-		}
+      
+      /**
+   	 * @return the customerFirstName
+   	 */
+   	public String getCustomerFirstName()
+   	{
+   		return customerFirstName;
+   	}
+   	/**
+   	 * @param customerFirstName the customerFirstName to set
+   	 */
+   	public void setCustomerFirstName(String customerFirstName)
+   	{
+   		this.customerFirstName = customerFirstName;
+   	}
+   	/**
+   	 * @return the customerLastName
+   	 */
+   	public String getCustomerLastName()
+   	{
+   		return customerLastName;
+   	}
+   	/**
+   	 * @param customerLastName the customerLastName to set
+   	 */
+   	public void setCustomerLastName(String customerLastName)
+   	{
+   		this.customerLastName = customerLastName;
+   	}
+		
 		/**
 		 * @return the customerEmailId
 		 */
@@ -177,14 +196,16 @@ public class CilqCashWalletPojo
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString()
 		{
-			return "CilqCashWalletPojo [customerName=" + customerName + ", customerEmailId=" + customerEmailId + ", amount="
-					+ amount + ", bucketName=" + bucketName + ", transactionId=" + transactionId + ", walletId=" + walletId
-					+ ", cardNumber=" + cardNumber + ", cardExpiry=" + cardExpiry + ", batchNumber=" + batchNumber + ", comments="
-					+ comments + ", remarks=" + remarks + "]";
+			return "CilqCashWalletPojo [customerFirstName=" + customerFirstName + ", customerLastName=" + customerLastName
+					+ ", customerEmailId=" + customerEmailId + ", amount=" + amount + ", bucketName=" + bucketName + ", transactionId="
+					+ transactionId + ", walletId=" + walletId + ", cardNumber=" + cardNumber + ", cardExpiry=" + cardExpiry
+					+ ", batchNumber=" + batchNumber + ", comments=" + comments + ", remarks=" + remarks + "]";
 		}
-		
-      
 }

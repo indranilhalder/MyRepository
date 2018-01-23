@@ -450,4 +450,11 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 	}
 	
+	@Override
+	public CustomerWalletDetailResponse updateCustomerWallet(QCCustomerRegisterRequest registerCustomerRequest, String walletId,
+			String transactionId){
+		return getMplWalletServices().updateCustomerWallet(registerCustomerRequest,walletId,generateQCTransactionId());
+
+	}
+	
 }

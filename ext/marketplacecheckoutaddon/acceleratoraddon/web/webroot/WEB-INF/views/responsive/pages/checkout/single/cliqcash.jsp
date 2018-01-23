@@ -12,7 +12,45 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="dateStyle" value="dd/MM/yyyy	" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<style>
+.createWalletModel {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.createWalletModel-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 50%;
+}
+
+#closePop {
+	float: right;
+}
+#createWalletData {
+	display: inline-block;
+	width: 100%;
+}
+</style>
 <template:page pageTitle="${pageTitle}">
 
 
@@ -52,14 +90,14 @@
 					</table>
 				</div>
 				
-				<c:choose>
-				<c:when test="${isCustomerWalletActive}">
+				<%-- <c:choose>
+				<c:when test="${isCustomerWalletActive}"> --%>
 						<div class="cliqCashContainerRight">
 					     <a class="cliqCashBtns" href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
 				     	</a>
 				     </div>
-				</c:when>
+				<%-- </c:when>
 				<c:otherwise>
 				<div class="cliqCashContainerRight">
 					     <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
@@ -68,11 +106,12 @@
 				     </div>
 				
 				</c:otherwise>
-				</c:choose>
+				</c:choose> --%>
 		
 			</div>
 		</div>
 		<br />
+	
 		<div class="cliqCashBannerSection">
 		   <div class="cliqCashBannerSectionInfo">
 		   Don't forget to redeem your <br /><span class="cliqCashBannerSectionInfoC1">CliQ Cash during checkout</span>
@@ -256,24 +295,154 @@
 
 		<br />&nbsp;<br />&nbsp;<br />
 	</div>
-	<script>
-		function selectSection(evt, categoryType) {
-			var i, tabcontent, tablinks;
-			tabcontent = document
-					.getElementsByClassName("cliqCashContainerTwoContent");
-			for (i = 0; i < tabcontent.length; i++) {
-				tabcontent[i].style.display = "none";
-			}
-			tablinks = document.getElementsByClassName("cliqCashTablinks");
-			for (i = 0; i < tablinks.length; i++) {
-				tablinks[i].className = tablinks[i].className.replace(
-						" active", "");
-			}
-			document.getElementById(categoryType).style.display = "block";
-			evt.currentTarget.className += " active";
-		}
+	
+	<div class="createWalletModel" id="createWalletPopup">
+		<div class="createWalletModel-content">
+			<button type="button" onclick="closepop()" id="closePop"><span class="glyphicon glyphicon-remove-circle"></span></button>
+			<span id="createWalletPopup" class="close">&times;</span>
+			<div id="createWalletData"></div>
 
-		document.getElementById("defaultCliqCashCategory").click();
+		</div>
+
+	</div>
+	
+		
+	<script>
+	$(document).ready(function(){
+		var modelAttributeValue = '${isOTPValidtion}';
+		  if(modelAttributeValue === 'false'){
+			  createWallet();
+		  }
+		});
+	
+	var createWalletModel = document.getElementById('createWalletPopup');
+	var createWalletData = document.getElementById('createWalletData');
+	var createWalletPopup = document.getElementById('createWalletPopup');
+	function createWallet() {
+			$.ajax({
+				type : "GET",
+				url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
+				contentType : "html/text",
+				success : function(response){
+					createWalletData.innerHTML=response;
+					createWalletModel.style.display = "block";   
+						  },	
+						failure : function(data) {
+						}
+					}); 
+	}
+
+	function closepop(){
+		
+		    	createWalletModel.style.display = "none";
+		
+	}
+	window.onclick = function(event) {
+	/*     if (event.target == createWalletModel) {
+	    	createWalletModel.style.display = "none";
+	    } */
+	}
+	/* createWalletPopup.onclick = function() {
+		createWalletModel.style.display = "none";
+	} */
+	var count=0;
+	function createWalletOTP(){
+		    $(".mobileNumberError").hide();
+		    $(".otpLastNameError").hide();
+		    $(".otpFirstNameError").hide();
+		    var mobileNo=$("#otpPhonenumber").val();
+		    var firstName = $("#otpFirstName").val();
+			var lastName = $("#otpLastName").val();
+			
+	     var isString = isNaN(mobileNo);
+
+	 	//First Name Validation
+	 	if(firstName == null || firstName.trim() == '' ){
+	 			$(".otpFirstNameError").show();
+	 			$(".otpFirstNameError").text("First name cannot be blank.");
+	 			formValid = false;
+	 	}else {
+	 		$(".otpFirstNameError").hide();
+	 	}
+	 	
+	 	//Last Name Validation
+	     if(lastName == null || lastName.trim() == '' ){
+	 			$(".otpLastNameError").show();
+	 			$(".otpLastNameError").text("Last name cannot be blank.");
+	 			formValid = false;
+	 	}else {
+	 		$(".otpLastNameError").hide();
+	 	} 
+	     if(isString==true || mobileNo.trim()==''){
+				$(".mobileNumberError").show();
+				$(".mobileNumberError").text("Enter only Numbers");
+		  	}
+	     else if(!/^[0-9]+$/.test(mobileNo))
+	        {
+		  		  $(".mobileNumberError").show();
+		          $(".mobileNumberError").text("Enter only Numbers");
+	      }
+	     else if(mobileNo.length > 0 && mobileNo.length < 9 ){
+		    	  $(".mobileNumberError").show();
+		          $(".mobileNumberError").text("Enter correct mobile number");
+		  	}
+	     else{
+	 	count++;
+		if(count <= 4){
+		 $.ajax({
+				type : "POST",
+				url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
+				data :"mobileNumber="+mobileNo,
+				success : function(response) {
+					if(response =='isUsed'){
+						$(".mobileNumberError").show();
+						$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
+						$('#otp-submit-section').hide();
+					}else{
+					$(".wcOTPError").show();
+					$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
+					$('#otp-submit-section').show();
+					}
+				}
+			}); 
+		 
+		}else{
+			$(".otpError").show();
+			$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
+		}
+		  	}
+	} 
+
+
+	function submitWalletData(){
+		var data = $("#walletForm").serialize();
+		 $.ajax({
+				type : "GET",
+				url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
+				data :data,
+				contentType: "text/application/html",
+				success : function(response) {
+					
+				   if(response =="isUsed"){
+						$(".mobileNumberError").text("This mobile number is alredy used. Please enter other mobile number for this account");
+						$(".mobileNumberError").show();
+					}
+					else if(response=='OTPERROR'){
+						$(".wcOTPError").text("OTP verification failed. Please try again");
+						$(".wcOTPError").show();
+					}
+					else if(response=='qcDown'){
+						$(".wcOTPError").text("Unable to verify mobile number. Please try after sometime");
+						$(".wcOTPError").show();
+					}
+					else {
+						closepop();
+						
+					} 
+					
+				}
+			}); 
+	} 
 	</script>
 
 </template:page>
