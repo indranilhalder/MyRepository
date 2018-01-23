@@ -1,10 +1,12 @@
 import React from "react";
-import Carousel from "./Carousel";
+import NewBrand from "../../general/components/NewBrand.js";
+import Carousel from "../../general/components/Carousel.js";
 import PropTypes from "prop-types";
 import styles from "./FollowBase.css";
-import NewBrand from "./NewBrand.js";
+
 export default class FollowBase extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <Carousel elementWidthMobile={80} elementWidthDesktop={33.333}>
