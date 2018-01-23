@@ -143,15 +143,21 @@
 		</p>
 	</header>
 
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homepage.amp.menu.radio')" var="isMenuRadio"/>
+<c:choose>
+<c:when test="${isMenuRadio}"><c:set var="leftMenuStyle" value="radio"></c:set></c:when>
+<c:otherwise><c:set var="leftMenuStyle" value="checkbox"></c:set></c:otherwise>
+</c:choose>
+	
 	<amp-sidebar id="sidebar" class="" [class]="pinCodeVisible ? 'sidebar-zindex' : ''" on="sidebarOpen:AMP.setState({showCloseBtn : true}),closeLeftMenu.show;sidebarClose:AMP.setState({showCloseBtn : false})" layout="nodisplay" side="left">
 	<ul class="left-accordion-menu">
 		<li>
-			<input type="radio" name="l1-group" id="l1-department" />
+			<input type="${leftMenuStyle}" name="l1-group" id="l1-department" />
         	<label for="l1-department"><span>Department</span><i class="fa fa-angle-right"></i></label>
         	<ul class="l1-menu-section">
         		<c:forEach items="${component.components}" var="component" varStatus="i">	
         			<li>
-        				<input type="radio" name="l2-dept-group" id="l2-dept-${component.navigationNode.uid}" />
+        				<input type="${leftMenuStyle}" name="l2-dept-group" id="l2-dept-${component.navigationNode.uid}" />
             			<label for="l2-dept-${component.navigationNode.uid}"><span>${component.navigationNode.title}</span><i class="fa fa-angle-right"></i></label>
         				<c:if test="${not empty component.navigationNode.children}">
 	        				<ul class="l2-menu-section">
@@ -159,7 +165,7 @@
 	        						<c:forEach items="${child1.children}" var="child">
 	        							<c:if test="${child.visible}">
 	        								<li>
-								                <input type="radio" name="l3-dept-group" id="l3-dept-${child.uid}" />
+								                <input type="${leftMenuStyle}" name="l3-dept-group" id="l3-dept-${child.uid}" />
 								                <label for="l3-dept-${child.uid}"><span>${child.title}</span><i class="fa fa-angle-right"></i></label>
 								                <ul class="l3-menu-section">
 													<c:forEach items="${child.links}" step="${component.wrapAfter}" var="childlink" varStatus="i">
@@ -179,14 +185,14 @@
         	</ul>
 		</li>
 		<li>
-	        <input type="radio" name="l1-group" id="l1-brand" />
+	        <input type="${leftMenuStyle}" name="l1-group" id="l1-brand" />
 	        <label for="l1-brand"><span>Brand</span><i class="fa fa-angle-right"></i></label>
         	<ul class="l1-menu-section">
         		<c:forEach items="${shopByBrandDataList}" var="shopByBrands">
         			<c:choose>
 						<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
 							<li>
-					            <input type="radio" name="l2-brand-group" id="l2-brand-AtoZ" />
+					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-AtoZ" />
 					            <label for="l2-brand-AtoZ"><span>A-Z List</span><i class="fa fa-angle-right"></i></label>
 					            <ul class="l2-menu-section">
 					              <li>
@@ -286,7 +292,7 @@
 						<c:otherwise>
 						
 							<li>
-					            <input type="radio" name="l2-brand-group" id="l2-brand-Electronics" />
+					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-Electronics" />
 					            <label for="l2-brand-Electronics"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
 					            <ul class="l2-menu-section">
 									<c:forEach items="${shopByBrands.subBrandList}"
