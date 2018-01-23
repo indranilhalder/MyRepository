@@ -416,7 +416,6 @@
 
 	function submitWalletData(){
 		var data = $("#walletForm").serialize();
-		alert(data);
 		 $.ajax({
 				type : "GET",
 				url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
