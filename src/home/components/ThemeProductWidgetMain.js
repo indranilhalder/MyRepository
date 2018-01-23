@@ -5,6 +5,11 @@ import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import styles from "./ThemeProductWidgetMain.css";
 export default class ThemeProductWidgetMain extends React.Component {
+  handleClick() {
+    if (this.props.seeAll) {
+      this.props.seeAll();
+    }
+  }
   render() {
     return (
       <div
@@ -14,13 +19,14 @@ export default class ThemeProductWidgetMain extends React.Component {
           backgroundImage: `url(${this.props.backgroundImage})`
         }}
       >
+        <div className={styles.overlay} />
         <div className={styles.logo}>
           <Logo image={this.props.logo} />
         </div>
         <Carousel
           header={this.props.header}
           buttonText="Shop all"
-          seeAll={this.props.seeAll}
+          seeAll={this.handleClick}
           elementWidthMobile={45}
           withFooter={false}
           isWhite={true}
@@ -48,8 +54,10 @@ ThemeProductWidgetMain.propTypes = {
   price: PropTypes.string,
   image: PropTypes.string,
   backgroundColor: PropTypes.string,
+  backgroundImage: PropTypes.string,
   logo: PropTypes.string,
   isWhite: PropTypes.bool,
+  seeAll: PropTypes.func,
   elementWidthMobile: PropTypes.number
 };
 ThemeProductWidgetMain.defaultProps = {
