@@ -13,8 +13,12 @@ export default class ThemeProductWidget extends React.Component {
     return (
       <div className={className}>
         <CircleProductImage image={this.props.image} />
-        <div className={styles.label}>{this.props.label}</div>
-        <div className={styles.price}>Rs.{this.props.price}</div>
+        {this.props.label && (
+          <div className={styles.label}>{this.props.label}</div>
+        )}
+        {this.props.price && (
+          <div className={styles.price}>Rs.{this.props.price}</div>
+        )}
       </div>
     );
   }
