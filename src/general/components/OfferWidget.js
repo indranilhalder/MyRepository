@@ -13,7 +13,7 @@ export default class OfferWidget extends React.Component {
   render() {
     var data = this.props.data;
     return (
-      <Carousel elementWidthMobile={75} elementWidthDesktop={45}>
+      <Carousel elementWidthMobile={90} elementWidthDesktop={33.33}>
         {data.map((datum, i) => {
           return (
             <div className={styles.base}>
@@ -35,7 +35,7 @@ export default class OfferWidget extends React.Component {
                       color={this.props.color}
                       label={this.props.value}
                       onClick={() => this.handleClick()}
-                      width={150}
+                      width={130}
                       padding-right={20}
                     />
                   </div>
@@ -56,8 +56,6 @@ OfferWidget.propTypes = {
 };
 
 OfferWidget.defaultProps = {
-  logo:
-    " https://media.dcrainmaker.com/images/2016/05/Garmin-Vivomove-Rosegold-Sport-Faces1.jpg",
   case: "hollow",
   text: "Up to 40% off ",
   off: "40% off",

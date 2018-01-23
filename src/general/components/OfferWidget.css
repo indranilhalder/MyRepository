@@ -45,24 +45,22 @@
 
 .textLine {
   font-family: semibold;
-  font-size: 14px;
+  font-size: 30px;
   color: #ffffff;
   bottom: 0;
   position: absolute;
   margin: auto;
   word-break: break-word;
   text-align: left;
-  padding-bottom: 20px;
   padding: 0px 20px;
+  padding-bottom: 20px;
   width: 100%;
   word-wrap: break-word;
   white-space: pre-wrap;
 }
 .buttonHolder {
   width: 100%;
-  padding-bottom: 20px;
   padding-top: 20px;
-  padding-right: 20px;
 }
 .textHolder {
   width: auto;
