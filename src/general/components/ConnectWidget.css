@@ -30,22 +30,30 @@
 }
 .ConnectWidgetLabel {
 	float: left;
-	height: auto;
 	width: 100%;
 	color: #fff;
 	font-size: 14px;
-	line-height: 20px;
+	line-height: 38px;
+}
+.ConnectWidgetText {
+	float: left;
+	width: 100%;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 2px;
 }
 .ConnectWidgetKnowMoreAuto {
 	width: 100%;
 	height: auto;
 	float: left;
 	font-size: 14px;
+	font-weight: bold;
 }
 .ConnectWidgetKnowMore {
 	float: left;
 	height: 1px;
-	width: 78px;
+	width: 70px;
 	background-color: #fff;
 	border-bottom-color: #fff;
 }

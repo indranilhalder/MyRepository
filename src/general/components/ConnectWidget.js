@@ -6,6 +6,11 @@ import image from "./img/Connect_Small.svg";
 import iconImageURL from "./img/Connect_Small.svg";
 
 export default class ConnectWidget extends React.Component {
+  handleClick(val) {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -15,7 +20,12 @@ export default class ConnectWidget extends React.Component {
           </div>
           <div className={styles.headerTextBox}>{this.props.headerText}</div>
           <div className={styles.ConnectWidgetLabel}>{this.props.text}</div>
-          <div className={styles.ConnectWidgetLabel}>{this.props.knowMore}</div>
+          <div
+            className={styles.ConnectWidgetText}
+            onClick={() => this.handleClick()}
+          >
+            {this.props.knowMore}
+          </div>
           <div className={styles.ConnectWidgetKnowMoreAuto}>
             <div className={styles.ConnectWidgetKnowMore} />
           </div>
