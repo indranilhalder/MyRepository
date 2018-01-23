@@ -1,0 +1,51 @@
+.base {
+	width: 100%;
+	height: 128px;
+	border-radius: 4.2px;
+	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
+	position: relative;
+}
+.ConnectWidgetHolder {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	padding: 20px 20px 20px 70px;
+	margin: auto;
+}
+.ConnectWidgetIcon {
+	width: 40px;
+	height: 40px;
+	left: 20px;
+	top: 20px;
+	position: absolute;
+}
+.headerTextBox {
+	float: left;
+	width: 100%;
+	height: auto;
+	color: #fff;
+	font-size: 15px;
+	line-height: 20px;
+	font-weight: bold;
+}
+.ConnectWidgetLabel {
+	float: left;
+	height: auto;
+	width: 100%;
+	color: #fff;
+	font-size: 14px;
+	line-height: 20px;
+}
+.ConnectWidgetKnowMoreAuto {
+	width: 100%;
+	height: auto;
+	float: left;
+	font-size: 14px;
+}
+.ConnectWidgetKnowMore {
+	float: left;
+	height: 1px;
+	width: 78px;
+	background-color: #fff;
+	border-bottom-color: #fff;
+}
