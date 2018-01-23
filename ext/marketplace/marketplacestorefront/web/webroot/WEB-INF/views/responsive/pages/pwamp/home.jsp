@@ -598,11 +598,11 @@
 
 	<!-- Inspire Me -->
 	<div id="inspireMeMobileComp">
-		<div class="inspireMeMobileTopSection">
-			<h2 class="homeViewHeading">Inspire Me</h2>
-		</div>
 		<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="240" layout="fixed-height"> 
 		<template type="amp-mustache"> 
+		<div class="inspireMeMobileTopSection">
+			<h2 class="homeViewHeading">{{title}}</h2>
+		</div>
 			<amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
 			{{#subComponents}}
 		<div class="inspireMeCenter">
