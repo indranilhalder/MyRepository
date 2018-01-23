@@ -815,7 +815,8 @@ function createWalletOTP(){
 
 function submitWalletData(){
 	var data = $("#walletForm").serialize();
-	alert(data);
+	$(".mobileNumberError").hide();
+	$(".wcOTPError").hide();
 	 $.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
@@ -832,7 +833,7 @@ function submitWalletData(){
 					$(".wcOTPError").show();
 				}
 				else if(response=='qcDown'){
-					$(".wcOTPError").text("Unable to verify mobile number. Please try after sometime");
+					$(".wcOTPError").text("Unable to verify mobile number due to server error. Please try after sometime");
 					$(".wcOTPError").show();
 				}
 				else {
