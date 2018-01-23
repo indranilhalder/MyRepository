@@ -3,29 +3,37 @@ import styles from "./BrandImage.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 export default class BrandImage extends React.Component {
-  onSelected = () => {
-    if (this.props.onSelect) {
-      this.props.onSelect();
+  handleClick() {
+    if (this.props.onClick) {
+      this.props.onClick();
     }
-  };
+  }
   render() {
+    let iconClass = styles.checkIcon;
+    if (this.props.selected) {
+      iconClass = styles.checkIconActive;
+    }
     return (
-      <div className={styles.base} onClick={this.onSelected}>
-        <div className={this.props.selected ? styles.active : styles.inactive}>
-          <div className={styles.imageHolder}>
-            <Image image={this.props.source} />
-          </div>
+      <div className={styles.base} onClick={() => this.handleClick()}>
+        <div className={iconClass} />
+        <div className={styles.imageHolder}>
+          <Image
+            image={this.props.image}
+            color="transparent"
+            fit={this.props.fit}
+          />
         </div>
       </div>
     );
   }
 }
 BrandImage.propTypes = {
-  source: PropTypes.string,
+  image: PropTypes.string,
   selected: PropTypes.bool,
-  onSelect: PropTypes.func
+  onClick: PropTypes.func
 };
 BrandImage.defaultProps = {
-  source: "",
-  selected: false
+  image: "",
+  selected: false,
+  fit: "contain"
 };

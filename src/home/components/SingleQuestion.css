@@ -1,0 +1,14 @@
+.header {
+  width: 100%;
+  font-size: 14px;
+  line-height: 24px;
+  font-family: semibold;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+@media screen and (min-width: 1025px) {
+  .header {
+    font-size: 30px;
+    line-height: 36px;
+  }
+}
