@@ -49,7 +49,7 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('site.name')" var="siteName"/>
 <meta name="apple-itunes-app" content="app-id=1101619385">
 <meta name="google-play-app" content="app-id=com.tul.tatacliq">
-<meta http-equiv="Content-Type" content="text/html"/>
+<!-- <meta http-equiv="Content-Type" content="text/html"/> -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <meta name="keywords" content="${keywords}">
