@@ -55,8 +55,15 @@
             </p>
             <p><spring:theme code="text.download.app" /></p>
             <p>
-              <c:forEach items="${footerAppImageList}" var="banner">
-					<a href="${banner.urlLink}" class="appios" target="_blank"><span class="spriteImg"></span></a>
+             <c:forEach items="${footerAppImageList}" var="banner">
+              <c:choose>
+              <c:when test="${fn:contains(banner.urlLink,'apple')}">
+              <a href="${banner.urlLink}" target="_blank"><i class="fa fa-apple"></i></a>
+              </c:when>
+              <c:otherwise>
+              <a href="${banner.urlLink}" target="_blank"><i class="fa fa-android"></i></a>
+              </c:otherwise>
+              </c:choose>
 			</c:forEach>
               <!-- <a href="#"><i class="fa fa-android"></i></a>
         	  <a href="#"><i class="fa fa-apple"></i></a> -->
