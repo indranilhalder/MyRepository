@@ -15,7 +15,6 @@
   width: 78px;
   height: 78px;
   position: absolute;
-
   left: 20px;
   border-radius: 50%;
   top: 20px;
@@ -45,17 +44,6 @@
 }
 
 .textLine {
-  /* font-family: semibold;
-  font-size: 30px;
-  color: #ffffff;
-  bottom: 0;
-  position: absolute;
-  margin: auto;
-  word-break: break-word;
-  text-align: left;
-  padding-bottom: 20px;
-  padding: 0px 20px; */
-
   font-family: semibold;
   font-size: 14px;
   color: #ffffff;
