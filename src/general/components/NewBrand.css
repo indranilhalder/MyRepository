@@ -1,6 +1,6 @@
 .base {
 	width: 100%;
-	padding-bottom: 56.25%;
+	padding-bottom: 70.6%;
 	height: auto;
 	position: relative;
 	background-size: cover;
@@ -13,6 +13,7 @@
 	top: 0;
 	bottom: 0;
 	position: absolute;
+	border-radius: 4px;
 }
 
 .brandOverlay {
@@ -28,9 +29,7 @@
 	bottom: 0;
 	left: 0;
 	right: 0;
-	padding-right: 130px;
-	padding-left: 20px;
-	padding-bottom: 20px;
+	padding: 20px 110px 30px 20px;
 }
 
 .brandLogo {
@@ -55,6 +54,7 @@
 	display: inline-block;
 	vertical-align: top;
 	line-height: normal;
+	white-space: normal;
 }
 
 .brandButton {
