@@ -273,8 +273,8 @@ header{
 .sidebar-menu i{
 	font-size:14px;
 	width:35px;
-	height:35px;
-	line-height:35px;
+	height:50px;
+	line-height:50px;
 	text-align:center;
 	border-radius:35px;
 }
@@ -313,7 +313,7 @@ header{
 	background:none;
 	border:none;
   color: #3a3a3a;
-  line-height: 40px;
+  line-height: 50px;
   font-size: 14px;
   border-bottom: 1px solid #e6e6e6;
 }
@@ -434,11 +434,11 @@ padding-top:0px;
 .l3-menu-section > li > a {padding-left: 45px; color: #000; line-height: 30px;}
 .left-accordion-menu li label i {float: right; margin-right: 15px;margin-top: 15px;}
 .l2-menu-section li label i {margin-top: 10px;}
-.left-accordion-menu input[type=radio] {display: none;}
-.left-accordion-menu input[type=radio]:checked + label + ul,
-.left-accordion-menu input[type=radio]:checked + label .fa-angle-right:before {content: "\f107";}
-.left-accordion-menu input[type=radio]:checked + label:nth-of-type(n) + ul {display: block;}
-.left-accordion-menu > li > input[type=radio]:checked + label {background-color: #a9133d; color: #fff;}
+.left-accordion-menu input[type=radio], .left-accordion-menu input[type=checkbox] {display: none;}
+.left-accordion-menu input[type=radio]:checked + label + ul, .left-accordion-menu input[type=checkbox]:checked + label + ul
+.left-accordion-menu input[type=radio]:checked + label .fa-angle-right:before, .left-accordion-menu input[type=checkbox]:checked + label .fa-angle-right:before {content: "\f107";}
+.left-accordion-menu input[type=radio]:checked + label:nth-of-type(n) + ul, .left-accordion-menu input[type=checkbox]:checked + label:nth-of-type(n) + ul {display: block;}
+.left-accordion-menu > li > input[type=radio]:checked + label, .left-accordion-menu > li > input[type=checkbox]:checked + label {background-color: #a9133d; color: #fff;}
 .left-accordion-menu ul {display: none; margin: 0;}
 /*Auto Collapse Menu CSS*/
 .department-menu {
