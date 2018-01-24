@@ -1,17 +1,11 @@
-.connectBase {
+.base {
   width: 100%;
   background-image: linear-gradient(292deg, #48dfe6, #4facfe);
-  height: auto;
   float: left;
   padding: 15px;
   height: 100vh;
 }
-.container {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 30px;
-  float: left;
-}
+
 .iconHolder {
   width: 60px;
   height: 60px;
@@ -35,12 +29,14 @@
   font-size: 14px;
   float: left;
   color: #fff;
+  padding-left: 1px;
 }
 .header {
   width: 100%;
   height: auto;
   font-family: regular;
   float: left;
+  padding: 12px;
 }
 .icondiv {
   width: 100%;

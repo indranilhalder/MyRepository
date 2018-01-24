@@ -14,36 +14,34 @@ export default class ConnectBaseWidget extends React.Component {
   render() {
     let data = this.props.data;
     return (
-      <div className={styles.container}>
-        <div className={styles.connectBase}>
-          <div className={styles.header}>
-            <div className={styles.icondiv}>
-              <div className={styles.iconHolder}>
-                <Icon image={Connect} size={50} />
-              </div>
-              <div className={styles.text}>{this.props.text}</div>
+      <div className={styles.base}>
+        <div className={styles.header}>
+          <div className={styles.icondiv}>
+            <div className={styles.iconHolder}>
+              <Icon image={Connect} size={50} />
             </div>
-            <div className={styles.heading}>{this.props.heading}</div>
+            <div className={styles.text}>{this.props.text}</div>
           </div>
-          {data.map((datum, i) => {
-            return (
-              <ConnectWidgetModal
-                key={i}
-                title={datum.title}
-                description={datum.description}
-                ImageURL={datum.ImageURL}
-              />
-            );
-          })}
-          <div className={styles.buttonBox}>
-            <div
-              className={styles.button}
-              onClick={() => {
-                this.handleClick();
-              }}
-            >
-              {this.props.knowMore}
-            </div>
+          <div className={styles.heading}>{this.props.heading}</div>
+        </div>
+        {data.map((datum, i) => {
+          return (
+            <ConnectWidgetModal
+              key={i}
+              title={datum.title}
+              description={datum.description}
+              ImageURL={datum.ImageURL}
+            />
+          );
+        })}
+        <div className={styles.buttonBox}>
+          <div
+            className={styles.button}
+            onClick={() => {
+              this.handleClick();
+            }}
+          >
+            {this.props.knowMore}
           </div>
         </div>
       </div>
