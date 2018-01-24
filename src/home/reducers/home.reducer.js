@@ -78,6 +78,7 @@ const home = (
     case homeActions.COMPONENT_DATA_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
       homeFeedData[action.positionInFeed].data = action.data;
+
       homeFeedData[action.positionInFeed].loading = false;
       return Object.assign({}, state, {
         status: action.status,
