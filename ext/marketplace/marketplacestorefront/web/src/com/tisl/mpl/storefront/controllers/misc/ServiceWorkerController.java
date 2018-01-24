@@ -72,17 +72,21 @@ public class ServiceWorkerController
 
 		final AmpServiceWorkerData ampServiceWorkerData = mplCmsFacade.getAmpServiceWorkerData();
 		String serviceWorkerJS = null;
-		if (null != ampServiceWorkerData && null != ampServiceWorkerData.getCacheName()
-				&& null != ampServiceWorkerData.getCacheVersion() && null != ampServiceWorkerData.getFilesToCache())
+
+		if (null != ampServiceWorkerData && null != ampServiceWorkerData.getServiceworkerJs())
 		{
-			final String cacheName = ampServiceWorkerData.getCacheName();
-			final String cacheVersion = ampServiceWorkerData.getCacheVersion();
-			final String filesToCache = "'" + ampServiceWorkerData.getFilesToCache() + "'";
-			final String CACHE_PLUS_VERSION = "'" + cacheName + "-" + cacheVersion + "'";
 			serviceWorkerJS = ampServiceWorkerData.getServiceworkerJs();
-			serviceWorkerJS = serviceWorkerJS.replaceAll("CACHE_PLUS_VERSION", CACHE_PLUS_VERSION);
-			serviceWorkerJS = serviceWorkerJS.replaceAll("FILES_TO_CACHE", filesToCache);
 		}
+		/*
+		 * if (null != ampServiceWorkerData && null != ampServiceWorkerData.getCacheName() && null !=
+		 * ampServiceWorkerData.getCacheVersion() && null != ampServiceWorkerData.getFilesToCache()) { final String
+		 * cacheName = ampServiceWorkerData.getCacheName(); final String cacheVersion =
+		 * ampServiceWorkerData.getCacheVersion(); final String filesToCache = "'" +
+		 * ampServiceWorkerData.getFilesToCache() + "'"; final String CACHE_PLUS_VERSION = "'" + cacheName + "-" +
+		 * cacheVersion + "'"; serviceWorkerJS = ampServiceWorkerData.getServiceworkerJs(); serviceWorkerJS =
+		 * serviceWorkerJS.replaceAll("CACHE_PLUS_VERSION", CACHE_PLUS_VERSION); serviceWorkerJS =
+		 * serviceWorkerJS.replaceAll("FILES_TO_CACHE", filesToCache); }
+		 */
 
 
 		response.setContentType("application/javascript");
@@ -145,7 +149,7 @@ public class ServiceWorkerController
 			menifestJson = ampMenifestData.getMenifestJson();
 		}
 
-		response.setContentType("application/javascript");
+		response.setContentType("application/json");
 		//response.getWriter().write(manifest.toString());
 		response.getWriter().write(menifestJson);
 	}

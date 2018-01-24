@@ -19,7 +19,7 @@
 		</c:otherwise>
 	</c:choose>
 	<!-- TPR-5733 -->
-	<c:if test="${fn:length(footerLinkList) gt 0}">
+<%-- 	<c:if test="${fn:length(footerLinkList) gt 0}">
 	<div id="footerLink">
 		<c:set var="rowcount" value="-1"></c:set>
 		<c:forEach items="${footerLinkList}" var="footerLinkRow">
@@ -39,7 +39,7 @@
 			</div>
 		</c:forEach>
 	</div>
-</c:if>
+</c:if> --%>
 </div>
 <div class="banner">
 	<span>${notice}</span>
