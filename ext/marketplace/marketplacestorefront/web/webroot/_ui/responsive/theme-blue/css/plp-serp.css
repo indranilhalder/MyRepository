@@ -5189,3 +5189,8 @@ a.pageNo.active{
 }
 }
 /* End Pagination link */
+.pagination li {
+    font-size: 14px;
+    display: inline-block;
+    margin: 0 2px;
+}
