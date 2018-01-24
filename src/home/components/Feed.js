@@ -27,7 +27,7 @@ const typeComponentMapping = {
     <AutomatedBrandProductCarousel {...props} />
   ),
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
-  followBaseWidget: props => <FollowBase {...props} />,
+  // followBaseWidget: props => <FollowBase {...props} />,
   singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
   bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
@@ -65,7 +65,6 @@ class Feed extends Component {
     this.props.homeFeed();
   }
   render() {
-    console.log(this.props.homeFeedData);
     if (this.props.loading) {
       return this.renderLoader();
     }
