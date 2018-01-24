@@ -6,7 +6,6 @@ import styles from "./FollowBase.css";
 
 export default class FollowBase extends React.Component {
   render() {
-    console.log(this.props.feedComponentData);
     const feedComponentData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
@@ -33,3 +32,20 @@ export default class FollowBase extends React.Component {
     );
   }
 }
+
+FollowBase.propTypes = {
+  feedComponentData: PropTypes.shape({
+    title: PropTypes.string,
+    data: PropTypes.shape({
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          imageURL: PropTypes.string,
+          brandLogo: PropTypes.string,
+          title: PropTypes.string,
+          id: PropTypes.string,
+          isFollowing: PropTypes.bool
+        })
+      )
+    })
+  })
+};

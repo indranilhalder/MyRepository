@@ -27,7 +27,7 @@ const typeComponentMapping = {
     <AutomatedBrandProductCarousel {...props} />
   ),
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
-  // followBaseWidget: props => <FollowBase {...props} />,
+  followBaseWidget: props => <FollowBase {...props} />,
   singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
   bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
