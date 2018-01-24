@@ -1246,7 +1246,7 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 }
 .updatePassword-wrapper {
     border: 1px solid #dfd1d5;
-    width: 33%;
+    width: 90%;		/* change for TISPRDT-8237 */
     margin: 0 auto;
 }
 .updatePassword {
@@ -1328,3 +1328,8 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 	    padding: 35px 12px ! important;
 	}
 }	
+/* start for TISPRDT-8238 */
+.has-error .help-block {
+	padding-bottom: 18px !important;
+}
+/* end for TISPRDT-8238 */
