@@ -1226,9 +1226,9 @@ footer #footerLink div.column ul li:last-child:after {
 }
 
 @media ( max-width :790px) {
-	body.page-cartPage .callouts {
+	/* body.page-cartPage .callouts {
 		margin-top: -7px;
-	}
+	} */
 	footer>div>ul>li h3.toggle {
 		cursor: pointer;
 	}

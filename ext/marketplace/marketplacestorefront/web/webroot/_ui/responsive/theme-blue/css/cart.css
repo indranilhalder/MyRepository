@@ -4752,9 +4752,9 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 }
 
 @media ( max-width :790px) {
-	body.page-cartPage .callouts {
+	/* body.page-cartPage .callouts {
 		margin-top: -7px;
-	}
+	} */
 	.temp4-features li .contOvrlay .media-content p {
 		font-size: 12px;
 		letter-spacing: 0;
