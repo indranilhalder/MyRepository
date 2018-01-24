@@ -7,12 +7,7 @@ export default class Grid extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div
-          className={styles.gridHolder}
-          style={{
-            padding: `${this.props.offset / 2}px`
-          }}
-        >
+        <div className={styles.gridHolder}>
           {this.props.children &&
             this.props.children.map((child, i) => {
               return (
