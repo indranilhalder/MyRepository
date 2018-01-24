@@ -1,0 +1,12 @@
+.base {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.gridHolder {
+  width: 100%;
+  height: auto;
+}
+.element {
+  display: inline-block;
+}
