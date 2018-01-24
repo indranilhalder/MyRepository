@@ -5,21 +5,21 @@
 	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
 	position: relative;
 }
-.ConnectWidgetHolder {
+.ConnectHolder {
 	width: 100%;
 	height: 100%;
 	position: absolute;
 	padding: 20px 20px 20px 70px;
 	margin: auto;
 }
-.ConnectWidgetIcon {
+.icon {
 	width: 40px;
 	height: 40px;
 	left: 20px;
 	top: 20px;
 	position: absolute;
 }
-.headerTextBox {
+.textBox {
 	float: left;
 	width: 100%;
 	height: auto;
@@ -28,14 +28,14 @@
 	line-height: 20px;
 	font-weight: bold;
 }
-.ConnectWidgetLabel {
+.label {
 	float: left;
 	width: 100%;
 	color: #fff;
 	font-size: 14px;
 	line-height: 38px;
 }
-.ConnectWidgetText {
+.text {
 	float: left;
 	width: 100%;
 	color: #fff;
@@ -43,14 +43,14 @@
 	font-weight: bold;
 	margin-bottom: 2px;
 }
-.ConnectWidgetKnowMoreAuto {
+.knowMore {
 	width: 100%;
 	height: auto;
 	float: left;
 	font-size: 14px;
 	font-weight: bold;
 }
-.ConnectWidgetKnowMore {
+.knowMoreselect {
 	float: left;
 	height: 1px;
 	width: 70px;

@@ -14,20 +14,17 @@ export default class ConnectWidget extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.ConnectWidgetHolder}>
-          <div className={styles.ConnectWidgetIcon}>
+        <div className={styles.ConnectHolder}>
+          <div className={styles.icon}>
             <Image image={this.props.ConnectWidgetImage} color="transparent" />
           </div>
-          <div className={styles.headerTextBox}>{this.props.headerText}</div>
-          <div className={styles.ConnectWidgetLabel}>{this.props.text}</div>
-          <div
-            className={styles.ConnectWidgetText}
-            onClick={() => this.handleClick()}
-          >
+          <div className={styles.textBox}>{this.props.headerText}</div>
+          <div className={styles.label}>{this.props.text}</div>
+          <div className={styles.text} onClick={() => this.handleClick()}>
             {this.props.knowMore}
           </div>
-          <div className={styles.ConnectWidgetKnowMoreAuto}>
-            <div className={styles.ConnectWidgetKnowMore} />
+          <div className={styles.knowMore}>
+            <div className={styles.knowMoreselect} />
           </div>
         </div>
       </div>
