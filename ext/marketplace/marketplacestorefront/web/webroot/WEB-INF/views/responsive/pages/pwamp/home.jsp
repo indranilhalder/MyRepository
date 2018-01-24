@@ -192,21 +192,22 @@
 			<c:set var="brandNumId" value="1" scope="page" />
         		<c:forEach items="${shopByBrandDataList}" var="shopByBrands">
         			<c:choose>
-						<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
+						<c:when test="${shopByBrands.masterBrandName eq 'A-Z List'}">
 							<li>
 					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-AtoZ" />
-					            <label for="l2-brand-AtoZ"><span>A-Z List</span><i class="fa fa-angle-right"></i></label>
+					            <label for="l2-brand-AtoZ"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
 					            <ul class="l2-menu-section">
 					              <li>
 					              	<div class="a2z-section">
 									<amp-selector role="tablist" layout="container"
 										class="a2zTabContainer">
-									<c:forEach items="${groupedAlphabets}" var="entry">	
+									<%-- <c:forEach items="${groupedAlphabets}" var="entry">	
 									<div role="tab" class="a2zTabButton" selected option="${entry.key}">${entry.key}-${entry.value}</div>
-									</c:forEach>
-									<c:forEach items="${AToEBrands}" var="entry" varStatus="i">	
+									</c:forEach> --%>
 									<div role="tab" class="a2zTabButton" selected option="A-E">A-E</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${AToEBrands}" var="entry" varStatus="i">	
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -218,11 +219,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
+									</div>
+									<div role="tab" class="a2zTabButton" option="F-J">F-J</div>
+									<div role="tabpanel" class="a2zTabContent">
 									<c:forEach items="${FToJBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="F-J">F-J</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -234,11 +235,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
-									<c:forEach items="${KToOBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="K-O">K-O</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									</div>
+									<div role="tab" class="a2zTabButton" option="K-O">K-O</div>	
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${KToOBrands}" var="entry" varStatus="i">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -250,11 +251,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
-									<c:forEach items="${PToTBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="P-T">P-T</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									</div>
+									<div role="tab" class="a2zTabButton" option="P-T">P-T</div>
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${PToTBrands}" var="entry" varStatus="i">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -266,11 +267,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
-									<c:forEach items="${UToZBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="U-Z">U-Z</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									</div>
+									<div role="tab" class="a2zTabButton" option="U-Z">U-Z</div>
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${UToZBrands}" var="entry" varStatus="i">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -282,8 +283,8 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
+									</div>
 									</amp-selector>
 								</div>
 								
@@ -637,7 +638,7 @@
 		</amp-list>
 	</div>
 	
-	<div class="amp-tealium" style="position:absolute;top:75%;">
+	<div class="amp-tealium" class="amp-analytics-class">
 		<c:set var="site_region" value="en"/>
 		<c:set var="user_type" value="${user_type}"/>
 		<c:set var="user_login_type" value="${userLoginType}"/>
@@ -663,7 +664,7 @@
 		<c:set var="post_author" value="null"/>
 		
 		<amp-iframe height="1" width="1"
-		 src="${base}/iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
+		 src="${base}iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
 		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
 	</div>
 	
