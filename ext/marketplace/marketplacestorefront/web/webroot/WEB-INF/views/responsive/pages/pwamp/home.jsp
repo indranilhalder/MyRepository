@@ -189,6 +189,7 @@
 	        <input type="${leftMenuStyle}" name="l1-group" id="l1-brand" />
 	        <label for="l1-brand"><span>Brand</span><i class="fa fa-angle-right"></i></label>
         	<ul class="l1-menu-section">
+			<c:set var="brandNumId" value="1" scope="page" />
         		<c:forEach items="${shopByBrandDataList}" var="shopByBrands">
         			<c:choose>
 						<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
@@ -293,8 +294,8 @@
 						<c:otherwise>
 						
 							<li>
-					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-Electronics" />
-					            <label for="l2-brand-Electronics"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
+					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-item${brandNumId}" />
+					            <label for="l2-brand-item${brandNumId}"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
 					            <ul class="l2-menu-section">
 									<c:forEach items="${shopByBrands.subBrandList}"
 										var="subShopByBrand">
@@ -302,6 +303,7 @@
 									</c:forEach>
 								</ul>
 					          </li>
+						<c:set var="brandNumId" value="${brandNumId + 1}" scope="page"/>
 						</c:otherwise>
 					</c:choose>
         		</c:forEach>
