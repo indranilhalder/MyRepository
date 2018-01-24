@@ -166,6 +166,8 @@ a{text-decoration:none;}
 .top-header > a:first-child {color: #a9143c;}
 .top-header > a:last-child {color: #fff; background-color: #000;}
 
+.amp-analytics-class {position:absolute;top:75%;}
+
 header{
 	position:sticky;
 	/*height:60px;*/
