@@ -31,10 +31,12 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
@@ -51,6 +53,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +73,7 @@ import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -111,6 +115,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
@@ -121,6 +126,7 @@ import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.v2.controller.UsersController.AddressField;
 import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
@@ -150,7 +156,6 @@ public class WalletController
 	private CustomerFacade customerFacade;
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
-	private CheckoutCustomerStrategy checkoutCustomerStrategy;
 	@Resource(name = "ordersHelper")
 	private OrdersHelper ordersHelper;
 	@Resource(name = "modelService")
@@ -352,15 +357,12 @@ public class WalletController
 	
 	@Autowired
 	private MplEgvWalletService mplEgvWalletService;
-
-
+	
+	@Autowired
+   private MplCouponFacade mplCouponFacade;
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
-	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
-	private static final String ROLE_CLIENT = "ROLE_CLIENT";
 	private static final String APPLICATION_TYPE = "application/json";
-	private static final String USER_ID = "/{userId}";
-	private static final String ROLE_GUEST = "ROLE_GUEST";
 	
 	/**
 	 * This API is used to USe Cliq Cash While Placing Order 
@@ -389,13 +391,13 @@ public class WalletController
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				LOG.info("Applying  cliq Cash For Card Guid " + cartGuid);
-				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, null);
+				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, null);
 			}
 			else
 			{
 				//orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 				LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
-				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, null);
+				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, null);
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -456,6 +458,20 @@ public class WalletController
 				cart.setPayableWalletAmount(Double.valueOf(0.0D));
 				modelService.save(cart);
 				modelService.refresh(cart);
+				
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
+
+				boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+				String cartCouponCode =null;
+				 if(isCartVoucherPresent) {
+					 cartCouponCode = cartCouponObj.getSecond();
+					 mplCouponFacade.removeLastCartCoupon(cart);
+				 }
+				 if (isCartVoucherPresent)
+					{
+						cartCouponCode = cartCouponObj.getSecond();
+						mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null);
+					}
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
@@ -472,6 +488,21 @@ public class WalletController
 					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(orderModel);
 					modelService.refresh(orderModel);
+					
+					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(order.getDiscounts());
+
+					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+					String cartCouponCode =null;
+					 if(isCartVoucherPresent) {
+						 cartCouponCode = cartCouponObj.getSecond();
+						 mplCouponFacade.removeLastCartCoupon(cart);
+					 }
+					 if (isCartVoucherPresent)
+						{
+							cartCouponCode = cartCouponObj.getSecond();
+							mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
+						}
+					
 					removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
@@ -496,6 +527,34 @@ public class WalletController
 
 
 
+
+
+/**
+ * @param discounts
+ * @return
+ */
+	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
+	{
+		boolean flag = false;
+		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
+					flag = true;
+					couponCode = object.getVoucherCode();
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
+
+		return cartCouponObj;
+	}
 
 
 /**
@@ -579,12 +638,12 @@ public class WalletController
 							if (null == orderModel)
 							{
 								cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-								applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, response.getWallet().getBalance());
+								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
 
 							}
 							else if (null != cartGuid)
 							{
-								applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
 							}
 							if (null != applyCliqCashWsDto)
 							{
@@ -882,21 +941,11 @@ public class WalletController
 	{
 			if (null != request)
 			{
-				if (null == request.getFirstName() || request.getFirstName().isEmpty())
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5011);
-				}
-				else if (null == request.getLastName() || request.getLastName().isEmpty())
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5012);
-				}
-				else if (null == request.getMobileNumber() || request.getMobileNumber().isEmpty())
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5013);
-				}
+				validateRequest(responce,request);
 				
 				CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-				if(null != customer && null != customer.getQcVerifyMobileNo()  && !customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(request.getMobileNumber().trim()))
+				if(null != customer &&  ( null == customer.getQcVerifyMobileNo() || 
+						(!customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(request.getMobileNumber().trim()))))
 				{
 					if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
 					{
@@ -916,9 +965,21 @@ public class WalletController
 				
 			}else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5015);
 			}
 		
+	}catch (final EtailBusinessExceptions e)
+	{
+		ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		if (null != e.getErrorMessage())
+		{
+			responce.setError(e.getErrorMessage());
+		}
+		if (null != e.getErrorCode())
+		{
+			responce.setErrorCode(e.getErrorCode());
+		}
+		responce.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 	}
 	catch (final Exception ex)
 	{
@@ -929,6 +990,42 @@ public class WalletController
 		}
 	}
 	return responce;
+}
+
+
+/**
+ * @param request
+ */
+private ErrorDTO validateRequest(ErrorDTO responce,EgvWalletCreateRequestWsDTO request)
+{
+	if(null == request) {
+		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5015));
+		responce.setErrorCode(MarketplacecommerceservicesConstants.B5015);
+		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+	}
+	else if (null == request.getFirstName() || request.getFirstName().isEmpty())
+	{
+		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5011));
+		responce.setErrorCode(MarketplacecommerceservicesConstants.B5011);
+		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+
+	}
+	else if (null == request.getLastName() || request.getLastName().isEmpty())
+	{
+		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5012));
+		responce.setErrorCode(MarketplacecommerceservicesConstants.B5012);
+		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+
+	}
+	else if (null == request.getMobileNumber() || request.getMobileNumber().isEmpty())
+	{
+		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5013));
+		responce.setErrorCode(MarketplacecommerceservicesConstants.B5013);
+		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+
+	}
+	return responce;
+	
 }
 
 
@@ -947,7 +1044,27 @@ public class WalletController
 			{
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp);
+					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+			}else {
+				responce = new EgvWalletCreateResponceWsDTO();
+				responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5014));
+				responce.setErrorCode(MarketplacecommerceservicesConstants.B5014);
+				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				responce.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				responce.setErrorCode(e.getErrorCode());
+			}
+			responce.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception ex)
 		{

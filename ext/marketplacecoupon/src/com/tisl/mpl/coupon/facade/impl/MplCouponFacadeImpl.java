@@ -1605,7 +1605,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					synchronized (cartModel)
 					{
 						//Checks if voucherCode is valid
-						validateVoucherCodeParameter(voucherCode);
+						validateVoucherCodeParameter(voucherCode);  // checks coupon code is blank/Empty 
 						if (!isVoucherCodeValid(voucherCode))
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
@@ -1676,7 +1676,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						else
 						{
 							LOG.debug("Step 7:::Voucher can be redeemed");
-							isVoucherRedeemable = getVoucherService().redeemVoucher(voucherCode, cartModel);
+							isVoucherRedeemable = getVoucherService().redeemVoucher(voucherCode, cartModel); // Setting Global Level Discounts 
 							if (!isVoucherRedeemable)
 							{
 								throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);

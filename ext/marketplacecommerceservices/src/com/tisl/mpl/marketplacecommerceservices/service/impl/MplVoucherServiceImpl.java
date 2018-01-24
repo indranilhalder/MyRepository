@@ -1283,7 +1283,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				final double cartSubTotal = getSubTotal(cartModel);
 				double voucherCalcValue = 0.0;
 				double discountCalcValue = 0.0;
-
+            double cliqCashAmount = 0.0D;
+         	if(null != cartModel.getPayableWalletAmount() && cartModel.getPayableWalletAmount().doubleValue() > 0.0D){
+         		cliqCashAmount =  cartModel.getPayableWalletAmount().doubleValue();
+         	}
 				List<DiscountValue> discountList = new ArrayList<>(cartModel.getGlobalDiscountValues()); //Discount values against the cart
 				String voucherCode = null;
 
@@ -1321,12 +1324,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel,
 							Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
 				}
-				else if (voucherCalcValue != 0 && (cartSubTotal - discountCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
+				else if (voucherCalcValue != 0 && (cartSubTotal - (discountCalcValue + cliqCashAmount) <= 0) )//When discount value is greater than cart totals after applying promotion
 				{
 					LOG.debug("Step 14:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
 					discountData = releaseCartVoucherAfterCheck(cartModel, null, voucherCode, null, applicableOrderEntryList,
 							voucherList);
 				}
+				
 				else
 				//In other cases
 				{

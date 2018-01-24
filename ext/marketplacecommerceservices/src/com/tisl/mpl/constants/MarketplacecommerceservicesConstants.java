@@ -1085,6 +1085,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5012 = "B5012";
 	public static final String B5013 = "B5013";
 	public static final String B5014 = "B5014";
+	public static final String B5015 = "B5015";
+	
+	
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";

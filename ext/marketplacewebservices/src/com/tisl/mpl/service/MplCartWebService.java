@@ -182,9 +182,6 @@ public interface MplCartWebService
 	 * @throws CommerceCartMergingException
 	 */
 	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
-			throws CommerceCartRestorationException, CommerceCartMergingException;
-	
-	ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel order,Double walletAmount);
-	
+			throws CommerceCartRestorationException, CommerceCartMergingException;	
 
 }

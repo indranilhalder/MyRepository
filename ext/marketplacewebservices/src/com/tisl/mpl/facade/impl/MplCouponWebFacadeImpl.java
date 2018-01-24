@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -38,6 +39,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.service.MplCouponWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
@@ -60,6 +62,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
 
+	@Autowired
+	private MplEgvWalletService mplEgvWalletService;
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
 	 */
@@ -125,7 +129,12 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					//Apply the voucher
 					couponRedStatus = mplCouponFacade.applyVoucher(couponCode, cartModel, null);
 
-
+				// EGV Changes Start 
+					Double walletPayableAmount = cartModel.getPayableWalletAmount();
+               if(null != walletPayableAmount && walletPayableAmount.doubleValue() > 0.0D) {
+               	mplEgvWalletService.useCliqCash(cartModel);
+               }
+            // EGV Changes END 
 					LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
 
 					//Calculate and set data attributes
@@ -136,11 +145,15 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 					//Update paymentInfo in session
 					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
-
-					if (StringUtils.isNotEmpty(cartCouponCode))
-					{
-						data = reapplyCartCoupon(data, cartCouponCode, cartModel);
-					}
+					
+					// EGV Changes Start 
+               if(cartModel.getTotalPrice().doubleValue() > cartModel.getPayableWalletAmount().doubleValue()  ){
+               	if (StringUtils.isNotEmpty(cartCouponCode))
+   					{
+   						data = reapplyCartCoupon(data, cartCouponCode, cartModel);
+   					}
+               }
+             // EGV Changes END
 
 					//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
@@ -175,6 +188,12 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//Apply the voucher
 				couponRedStatus = mplCouponFacade.applyVoucher(couponCode, null, orderModel);
 
+			// EGV Changes Start 
+            Double walletPayableAmount = orderModel.getPayableWalletAmount();
+            if(null != walletPayableAmount && walletPayableAmount.doubleValue() > 0.0D) {
+            	mplEgvWalletService.useCliqCash(orderModel);
+            }
+         // EGV Changes END
 				LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
 
 				//Calculate and set data attributes
@@ -187,10 +206,15 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//Update paymentInfo in session
 				mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
 
-				if (StringUtils.isNotEmpty(cartCouponCode))
-				{
-					data = reapplyCartCoupon(data, cartCouponCode, orderModel);
-				}
+				
+			// EGV Changes Start 
+            if(orderModel.getTotalPrice().doubleValue() > orderModel.getPayableWalletAmount().doubleValue()  ){
+            	if (StringUtils.isNotEmpty(cartCouponCode))
+					{
+						data = reapplyCartCoupon(data, cartCouponCode, orderModel);
+					}
+            }
+         //EGV Changes END
 
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
@@ -284,6 +308,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		}
 		return applycouponDto;
 	}
+
 
 	/* TPR 7486 */
 	@Override
@@ -475,6 +500,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
+			double  walletPayableAmount = 0.0D;
 			//Release coupon for cartModel
 			if (null != cartModel)
 			{
@@ -497,7 +523,14 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				mplCouponFacade.recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
 				//data = mplCouponFacade.calculateValues(null, cartModel, true, redeem);
-				if (StringUtils.isNotEmpty(cartCouponCode))
+				
+			// EGV Changes Start 
+				walletPayableAmount = cartModel.getPayableWalletAmount().doubleValue();
+            if(walletPayableAmount > 0.0D) {
+            	mplEgvWalletService.useCliqCash(cartModel);
+            }
+         // EGV Changes END 
+				if (StringUtils.isNotEmpty(cartCouponCode) && cartModel.getTotalPrice().doubleValue() > cartModel.getPayableWalletAmount().doubleValue())
 				{
 					try
 					{
@@ -557,7 +590,13 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				mplCouponFacade.recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
 
 				//data = mplCouponFacade.calculateValues(orderModel, null, true, redeem);
-				if (StringUtils.isNotEmpty(cartCouponCode))
+			// EGV Changes Start 
+				walletPayableAmount = orderModel.getPayableWalletAmount().doubleValue();
+            if( walletPayableAmount> 0.0D) {
+            	mplEgvWalletService.useCliqCash(orderModel);
+            }
+         // EGV Changes END 
+				if (StringUtils.isNotEmpty(cartCouponCode) && orderModel.getTotalPrice().doubleValue() > orderModel.getPayableWalletAmount().doubleValue())
 				{
 					try
 					{

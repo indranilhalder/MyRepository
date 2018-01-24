@@ -24,6 +24,7 @@ public interface MplEgvWalletService
 	public UserCliqCashWsDto getCustomerWalletAmount(CustomerWalletDetailResponse customerWalletDetailData);
 	public UserCliqCashWsDto getUserCliqCashDetails(CustomerModel currentCustomer);
 	ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel order,Double walletAmount);
+	public void useCliqCash(AbstractOrderModel order);
 
 
 	

@@ -9,7 +9,6 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.util.Tuple2;
@@ -141,6 +140,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 								.getCustomerWalletDetail().getWalletId());
 						UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
+						responce.setIsWalletCreated(true);
 						responce.setBalanceClearedAsOf(userCliqCashData.getBalanceClearedAsOf());
 						responce.setTotalCliqCashBalance(userCliqCashData.getTotalCliqCashBalance());
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -235,11 +235,11 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			{
 				if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
 				{
-					responce =new UserCliqCashWsDto();
-					responce.setIsWalletCreated(true);
+					
 					customerWalletDetailData = mplWalletFacade
 							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
 					responce=getCustomerWalletAmount(customerWalletDetailData);
+					responce.setIsWalletCreated(true);
 					responce.setTotalCliqCashBalance(responce.getTotalCliqCashBalance());
 					responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
 				}
@@ -295,6 +295,13 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			}
 			
 			
+			final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
+
+			 isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+			 if(isCartVoucherPresent) {
+				 cart = mplCouponFacade.removeLastCartCoupon(cart);
+			 }
+			
 			applyCliqCashWsDto.setDiscount(Double.valueOf(0));
 			applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 			if (null != walletAmount &&  walletAmount.doubleValue() > 0.0D)
@@ -314,18 +321,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					//cart.setTotalPrice(value);
 					modelService.save(cart);
 					modelService.refresh(cart);
-					
-					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
 
-					 isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
 					 commerceCartService.recalculateCart((CartModel)cart);
-					 cart = mplCouponFacade.removeLastCartCoupon(cart);
-					if (isCartVoucherPresent)
-					{
-						cartCouponCode = cartCouponObj.getSecond();
-						mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
-					}
-					
+//					
+//					if (isCartVoucherPresent)
+//					{
+//						cartCouponCode = cartCouponObj.getSecond();
+//						mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
+//					}
+//					
 					
 					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setIsRemainingAmount(false);
@@ -339,6 +343,25 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				//  else if Customer Is Not having Enough Money In Cliq Cash , Then Saving SplitModeInfo as SPLIT_MODE 
 				else
 				{
+					
+					applyCliqCashWsDto.setIsRemainingAmount(true);
+					if (walletAmount.doubleValue() > 0.0D)
+					{
+						applyCliqCashWsDto.setCliqCashApplied(walletAmount);
+					}
+					applyCliqCashWsDto.setIsRemainingAmount(true);
+					
+					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
+					cart.setPayableWalletAmount(walletAmount);
+					cart.setTotalWalletAmount(walletAmount);
+					modelService.save(cart);
+					modelService.refresh(cart);
+					
+					if (isCartVoucherPresent)
+						{
+							cartCouponCode = cartCouponObj.getSecond();
+							mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
+						}
 					double juspayTotalAmt = 0.0D;
 					if (null != totalAmt && totalAmt.doubleValue() > 0.0D && walletAmount.doubleValue() > 0.0D)
 					{
@@ -348,20 +371,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					{
 						juspayTotalAmt = cart.getTotalPrice().doubleValue();
 					}
-					applyCliqCashWsDto.setIsRemainingAmount(true);
-					if (walletAmount.doubleValue() > 0.0D)
-					{
-						applyCliqCashWsDto.setCliqCashApplied(walletAmount);
-					}
-					applyCliqCashWsDto.setIsRemainingAmount(true);
 					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
+					if (isCartVoucherPresent)
+						{
+							cartCouponCode = cartCouponObj.getSecond();
+							mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
+						}
 					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-					cart.setPayableWalletAmount(walletAmount);
-					cart.setTotalWalletAmount(walletAmount);
-					modelService.save(cart);
-					modelService.refresh(cart);
+					
 					applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 
@@ -399,6 +417,41 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
 
 		return cartCouponObj;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.service.MplEgvWalletService#useCliqCash(de.hybris.platform.core.model.order.AbstractOrderModel)
+	 */
+	@Override
+	public void useCliqCash(AbstractOrderModel order)
+	{
+		try
+		{
+			double cartTotal = order.getTotalPrice().doubleValue();
+			double totalWalletAmount = order.getTotalWalletAmount().doubleValue();
+			double payableWalletAmount = 0.0D;
+			if (totalWalletAmount > 0.0D)
+			{
+				if (cartTotal > totalWalletAmount)
+				{
+					payableWalletAmount = totalWalletAmount;
+				}
+				else if (cartTotal < totalWalletAmount)
+				{
+					payableWalletAmount = cartTotal;
+				}
+				order.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
+				modelService.save(order);
+			}
+			LOG.debug("Cart Total Amount "+cartTotal);
+			LOG.debug("Wallet Total Amount "+totalWalletAmount);
+			LOG.debug("payableWallet  Amount "+payableWalletAmount);
+		}
+		catch (Exception e)
+		{
+			LOG.error("Exception occurred while using cliqCash " + e.getMessage(), e);
+		}
+
 	}
 	
 
