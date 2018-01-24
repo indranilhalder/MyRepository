@@ -1699,8 +1699,11 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
 	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId,
 			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) final String gender,
-			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury)
+			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury, final HttpServletResponse response)
 	{
+		final String ampAnalyticsHost = configurationService.getConfiguration().getString("amp.analytics.source.origin",
+				"*.tatacliq.com");
+		response.setHeader("AMP-Access-Control-Allow-Source-Origin", ampAnalyticsHost);
 		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
 		emailId = emailId.toLowerCase();
 		if (!validateEmailAddress(emailId))
