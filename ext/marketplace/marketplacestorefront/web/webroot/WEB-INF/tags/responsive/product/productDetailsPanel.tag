@@ -185,18 +185,18 @@ tr.d0 td {
 			<!-- end change for INC144314454 -->
 		</div>
 		
-		<div class="wishAddSucess">
+		<div class="wishAddSucess" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishRemoveSucess">
+		<div class="wishRemoveSucess" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishAddLogin">
+		<div class="wishAddLogin" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>
-		<div class="wishAlreadyAdded">
+		<div class="wishAlreadyAdded" style="display: none;">	<!-- add style for TISCSS-166 -->
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 
@@ -220,10 +220,10 @@ tr.d0 td {
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
 				<c:choose>
 					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
-				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
-				</c:when>
+						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/c/${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
+					</c:when>
 					<c:otherwise>
-				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
 					</c:otherwise>
 				</c:choose>
 				<!-- CKD:TPR-250-End-->

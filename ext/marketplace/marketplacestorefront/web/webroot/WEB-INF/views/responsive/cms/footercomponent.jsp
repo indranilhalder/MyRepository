@@ -18,6 +18,28 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
+	<!-- TPR-5733 -->
+	<c:if test="${fn:length(footerLinkList) gt 0}">
+	<div id="footerLink">
+		<c:set var="rowcount" value="-1"></c:set>
+		<c:forEach items="${footerLinkList}" var="footerLinkRow">
+			<div class="column">
+				<ul>
+					<c:forEach items="${footerLinkRow.value}" var="footerlinkColumnObj">
+						<c:choose>
+							<c:when test="${footerlinkColumnObj.key eq 0}">
+								<li class="header"><a href="${footerlinkColumnObj.value.footerLinkURL}"><b>${footerlinkColumnObj.value.footerLinkName}</b></a></li>
+							</c:when>
+							<c:otherwise>
+								<li class="node"><a href="${footerlinkColumnObj.value.footerLinkURL}">${footerlinkColumnObj.value.footerLinkName}</a></li>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</ul>
+			</div>
+		</c:forEach>
+	</div>
+</c:if>
 </div>
 <div class="banner">
 	<span>${notice}</span>

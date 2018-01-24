@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -613,9 +614,31 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 											MarketplacecommerceservicesConstants.EMPTYSPACE);
 								}
 								bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-								bannerJson.put("promoText1", bannerImage.getMajorPromoText());
-								bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
-								bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
+								if (StringUtils.isNotEmpty(bannerImage.getMajorPromoText()))
+								{
+									bannerJson.put("promoText1", Jsoup.parse(bannerImage.getMajorPromoText()).text());
+								}
+								else
+								{
+									bannerJson.put("promoText1", "");
+								}
+								if (StringUtils.isNotEmpty(bannerImage.getMinorPromo1Text()))
+								{
+									bannerJson.put("promoText2", Jsoup.parse(bannerImage.getMinorPromo1Text()).text());
+								}
+								else
+								{
+									bannerJson.put("promoText2", "");
+								}
+								if (StringUtils.isNotEmpty(bannerImage.getMinorPromo2Text()))
+								{
+									bannerJson.put("promoText3", Jsoup.parse(bannerImage.getMinorPromo2Text()).text());
+								}
+								else
+								{
+									bannerJson.put("promoText3", "");
+								}
+
 								bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
 								bannerJsonArray.add(bannerJson);
 							}

@@ -1,0 +1,188 @@
+body .account .right-account .my-reviews h2 {
+	font-size: 24px;
+	padding: 10px 0 0 10px;
+}
+
+body .account .right-account .my-reviews .wrapper>p {
+	font-size: 12px;
+	padding-left: 10px;
+	margin-bottom: 20px;
+	font-weight: 500;
+}
+
+body .account .right-account p.noReview {
+	font-size: 14px;
+	padding: 0;
+	font-weight: 500;
+	color: #a9143c;
+	text-align: center;
+	margin: 10px 0;
+}
+
+.reviews .toolbar {
+	background-color: #f0f4f5;
+	padding: 10px 0;
+}
+
+body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .toolbar .wrapper
+	{
+	margin-top: 0;
+}
+
+body .account .right-account .reviews .toolbar .account-only {
+	display: block;
+}
+
+body .account .right-account .reviews .toolbar .account-only {
+	display: block;
+}
+
+body .account .right-account .reviews .toolbar .account-only h2 {
+	text-transform: capitalize;
+}
+
+body .account .right-account .reviews .toolbar .wrapper::after {
+	clear: both;
+	content: "";
+	display: table;
+}
+
+body .account .right-account .reviews .toolbar .pagination {
+	float: right;
+	padding: 0 10px;
+	padding-left: 0;
+	line-height: 40px;
+}
+
+.product-tile+.new-review:hover {
+	color: #a9143c !important;
+	text-decoration: underline !important;
+}
+
+.product-tile+.new-review {
+	color: #a9143c !important;
+	text-align: left;
+	padding: 0;
+	margin-top: 10px;
+}
+
+.product-tile+.new-review {
+	display: block;
+	font-size: 12px;
+	padding: 10px;
+	color: #a9143c;
+	text-decoration: underline;
+}
+
+body .account .right-account .reviews h2 {
+	font-size: 18px;
+	padding: 10px 0 0 10px;
+}
+
+body .account .right-account .my-reviews {
+	border: 1px solid #f0f4f5;
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .toolbar .wrapper
+	{
+	margin-top: 0;
+}
+
+.product-tile+.new-review {
+	color: #a9143c !important;
+	text-align: left;
+	padding: 0;
+	margin-top: 10px;
+	text-decoration: underline;
+	display: block;
+	font-size: 12px;
+}
+body .account .right-account .reviews .review-list .wrapper>li .review .details {
+    width: 55% !important;
+}
+body .account .right-account .reviews .review-list .wrapper>li .review .stats {
+    width: 45% !important;
+    position: relative !important;
+}
+.reviews .review-list>.wrapper>li .review .stats .rate-details.two-block .before {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+}
+#reviewPluginContainer h2.modal-title span.popUpProductTitle {
+    font-size: inherit;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+.status.statusShipped {
+    background: url(../images/my-account-sprite-v1.png) no-repeat -161px 0;
+    height: 30px;
+    width: 82px;
+    float: right;
+    margin-bottom: 11px;
+}
+.status.statusDelivered {
+    background: url(../images/my-account-sprite-v1.png) no-repeat -240px 0;
+    height: 30px;
+    width: 82px;
+    float: right;
+    margin-bottom: 11px;
+}
+.status.statusConfirmed{
+    background: url(../images/my-account-sprite-v1.png) no-repeat -91px 0px;
+    height: 30px;
+    width: 68px;
+    float: right;
+    margin-bottom: 11px;
+}
+#deleteReview h2.modal-title, #updateReview h2.modal-title, #reviewPluginContainer h2.modal-title, h2.modal-title#myModalLabel {
+    font-size: inherit;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+#reviewPluginContainer .modal-header {
+    padding-right: 35px;
+}
+body .account .right-account .reviews .review-list .wrapper>li .review{
+	    width: 75% !important;
+}
+@media (min-width: 651px){
+	body .account .right-account .reviews .review-list .account-only.product {
+	    width: 25%;
+	    padding: 30px;
+	    padding-right: 0;
+	}
+}
+body .account .right-account .reviews .review-list .account-only.product {
+    display: inline-block;
+    float: left;
+}
+.rate-bar .rating {
+    float: left;
+    width: .1px;
+    min-width: .1px;
+    height: 100%;
+    text-align: center;
+    max-width: 100%;
+    background-color: #a9143c;
+    -webkit-transition: width .3s;
+    -moz-transition: width .3s;
+    transition: width .3s;
+}
+body.page-reviews .right-account .reviews .review-list .wrapper>li .product .product-tile {
+    padding: 0;
+}
+body .account .right-account .reviews .navigation .btn-placement {
+    display: none;
+    width: auto;
+    float: right;
+    position: relative;
+    white-space: nowrap;
+}

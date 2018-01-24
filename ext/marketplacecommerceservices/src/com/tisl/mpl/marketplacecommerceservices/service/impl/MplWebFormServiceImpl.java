@@ -3,18 +3,12 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.List;
 
 import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
 
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.core.model.MplWebCrmModel;
@@ -22,7 +16,6 @@ import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
-import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.service.ClientIntegration;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
@@ -37,8 +30,8 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Resource
 	private ModelService modelService;
 
-	@Resource
-	private BusinessProcessService businessProcessService;
+	//	@Resource
+	//	private BusinessProcessService businessProcessService;
 
 	@Resource
 	private MplWebFormDao mplWebFormDao;
@@ -52,18 +45,18 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Resource
 	private ConfigurationService configurationService;
 
-	@Resource(name = "orderModelService")
-	private OrderModelService orderModelService;
+	//	@Resource(name = "orderModelService")
+	//	private OrderModelService orderModelService;
 
-	@Resource(name = "orderConverter")
-	private Converter<OrderModel, OrderData> orderConverter;
+	//	@Resource(name = "orderConverter")
+	//	private Converter<OrderModel, OrderData> orderConverter;
 
 
 	private static final String SUCCESS = "success";
 	private static final String FAILURE = "failure";
 
 
-	private static final Logger LOG = Logger.getLogger(MplWebFormServiceImpl.class);
+	//	private static final Logger LOG = Logger.getLogger(MplWebFormServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)

@@ -230,7 +230,7 @@ public class MiscsController extends BaseController
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
 	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
-	private static final String FAILURE = "Failure";
+	//	private static final String FAILURE = "Failure";
 	public static final String RETURN_TYPE_COD = "01";
 	private static final String SUCCESS = "Success";
 
@@ -707,9 +707,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1434,7 +1434,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1447,11 +1447,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; }
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1970,9 +1970,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2160,8 +2160,8 @@ public class MiscsController extends BaseController
 		long delay = 0;
 		List<AbstractOrderEntryModel> orderEntriesModel = null;
 		Map<String, String> dataMap = null;//Added for TPR-5954
-		StringBuilder imgUrl = null;//Added for TPR-5954
-		final String subQuery = null;//Added for TPR-5954
+		//		StringBuilder imgUrl = null;//Added for TPR-5954
+		//		final String subQuery = null;//Added for TPR-5954
 		try
 		{
 			//Converting XML to JAVA Object
@@ -2203,7 +2203,7 @@ public class MiscsController extends BaseController
 						dataMap = new HashMap<String, String>();
 						dataMap.put("comments", oneTouchCrmObj.getComments());
 						dataMap.put("subreasoncode", oneTouchCrmObj.getSubReturnReasonCode());
-						imgUrl = new StringBuilder();
+						//						imgUrl = new StringBuilder();
 						/*
 						 * if (null != oneTouchCrmObj.getUploadImage()) { for (final String up :
 						 * oneTouchCrmObj.getUploadImage()) { imgUrl.append(up); imgUrl.append(","); } subQuery =

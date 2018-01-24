@@ -1,0 +1,500 @@
+body .body-Content .account#account-invite .account-header,
+body .body-Content .account .account-header {
+    display: none;
+}
+body .account .account-header select.menu-select {
+    display: none;
+}
+.errorMessage {
+    clear: both;
+}
+.copycode_message {
+    z-index: 9;
+    width: 301px;
+    height: 48px;
+    opacity: 0.9;
+    border-radius: 24px;
+    background-color: #444444;
+    position: fixed;
+    color: #fff;
+    text-align: center;
+    padding-top: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    display: none;
+}
+body.page-coupons .account .wrapper {
+    padding-right: 30px;
+}
+/* .right-account {
+   display:none
+} */
+
+@media (max-width: 790px){
+body .account .right-account .info.responsiveProfile h2 {
+    margin-bottom: 0;
+    margin-top: 16px;
+}
+}
+
+/* Breadcrumbs start*/
+.breadcrumbs {
+    margin: 10px 0 0px;
+    font-size: 11px;
+    padding-top: 10px;
+    color: #535353;
+    max-width: 1400px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-weight: normal;
+    clear: both;
+    width: 100%;
+}
+.breadcrumbs li {
+    color: #535353;
+    letter-spacing: 0.6px;
+    font-size: 11px;
+    display: inline-block;
+    float: left;
+}
+.breadcrumbs li a {
+    color: gray;
+}
+.breadcrumbs li:before {
+    content: '/';
+}
+.breadcrumbs li.active {
+   color: #878787;
+   font-weight: normal;
+}
+.breadcrumbs::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+/* Breadcrumbs End*/
+
+/* Left Nav start */
+body .account .account-header {
+    width: 100%;
+    text-align: center;
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+    color: #A9143C;
+    font-size: 28px;
+    font-weight: 400;
+    padding-bottom: 0;
+    display: none;
+}
+body .account .left-nav {
+    width: 25%;
+    float: left;
+    padding-left: 30px;
+}
+body .account .left-nav ul {
+    padding-bottom: 5px;
+}
+body .account .wrapper::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .left-nav ul li {
+    font-weight: 500;
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    margin: 16px 0;
+}	
+body .account .left-nav h2 {
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 32px 0;
+    margin-top: -18px;
+    height: 18px;
+    font-size: 14px;
+    line-height: 1.29;
+    letter-spacing: 0.6px;
+    margin-bottom: 16px;
+    color: #000000;
+}
+body .account .left-nav ul li a {
+    color: #666666;
+}
+body .account .wrapper {
+    margin-top: 35px;
+    clear: both;
+    overflow: visible;
+    margin-bottom: 50px;
+}
+body .account .left-nav ul li.active a {
+    color: #a5173c;
+    /* text-decoration: underline; */
+}
+/* Left Nav End */
+
+
+/* invite your friends start*/
+body .account .right-account {
+   /*  width: 100%;
+    margin-bottom: 50px;
+    padding: 0; */
+    width: 75%;
+    float: right;
+    padding: 0;
+    margin: 0 0 150px;
+    text-align: left;
+    margin-top: -6px;
+}
+body #account-invite .right-account>div.invites {
+    padding-bottom: 0px !important;
+    padding-top: 0px;
+}
+body #account-invite .right-account>div {
+    background: #fff;
+    border: none;
+    padding: 20px;
+    margin-bottom: 0;
+    position: relative;
+}
+body .account .right-account>div>h2 {
+    margin-bottom: 0px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    font-size: 28px;
+    line-height: 1.29;
+    height: 36px;
+}
+body .account .right-account>div>p {
+    color: #666666;
+    letter-spacing: 0.6px;
+    margin-bottom: 19px;
+    line-height: 1.4;
+}
+body #account-invite .right-account>div form {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    position: relative;
+    padding-top: 30px;
+    border-top: solid 1px #eeeeee;
+   /*  padding: 20px 0; */
+}
+body #account-invite .right-account>div input[type="text"] {
+    border: none;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    color: #666666;
+    padding-left: 0px;
+    height: auto;
+    line-height: 1.4;
+}
+#friendsEmail {
+    width: 100% !important;
+}
+.invites #friendsEmail {
+    float: left;
+}
+.invite-text-lbl.label-float {
+    float: left;
+}
+label.massage-text-lbl {
+    margin-top: 24px;
+    margin-bottom: 6px;
+}
+body .account .right-account form label {
+    margin-bottom: 1px;
+    line-height: 1;
+    letter-spacing: 0.6px;
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+}
+body #account-invite .right-account>div form .mytextarea#mytextarea {
+    height: 43px;
+    padding: 0;
+    width: 100%;
+    border: none;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    color: #666666;
+    margin-bottom: 0px;
+    resize: none;
+}
+.invites button#inviteFriends {
+    position: absolute;
+    right: 0px;
+    top: 30px;
+}
+button#inviteFriends {
+    min-width: 179px;
+}
+body .account .right-account button.blue {
+    background-color: #A9143C;
+    width: auto;
+}
+body .account .right-account .blue {
+    height: 42px;
+    line-height: 40px;
+    font-size: 12px;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    min-width: 200px;
+    font-weight: 500;
+    clear: both;
+    color: #fff;
+    text-align: center;
+}
+body #account-invite .right-account>div.social-invites {
+    border-bottom: 1px solid #eee;
+    padding-top: 30px;
+    margin-right: 20px;
+    padding-right: 0;
+    margin-left: 20px;
+    padding-left: 0;
+    padding-bottom: 30px;
+    clear: both;
+}
+body #account-invite .right-account>div.social-invites:before, body #account-invite .right-account>div span.or {
+    display: none;
+}
+.invite-text-lbl {
+    margin-bottom: 6px ! important;
+    line-height: 1;
+    letter-spacing: .6px;
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+}
+body #account-invite .right-account>div input[type="text"], body#account-invite .right-account>div textarea {
+    width: 100%;
+}
+.right-account .social-invites label, .right-account .social-invites p {
+    display: inline-block;
+}
+.right-account .social-invites p {
+    margin-bottom: 9px ! important;
+}
+body .account .right-account>div>p {
+    color: #666666;
+    letter-spacing: 0.6px;
+    margin-bottom: 19px;
+    line-height: 1.4;
+}
+body #account-invite .right-account>div.social-invites .social {
+    position: absolute;
+    right: 0px;
+    top: 30px;
+    text-align: right;
+    padding: 0px;
+    background: transparent;
+}
+body #account-invite .right-account>div.social-invites .social .links {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding: 0 ! important;
+    border: none ! important;
+}
+.social .links {
+    white-space: nowrap;
+}
+.social::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body #account-invite .right-account>div.social-invites .social .links a.fb {
+    background-image: url(../images/fb-icon-invite.PNG);
+}
+body #account-invite .right-account>div.social-invites .social .links a.tw {
+    background-image: url(../images/twiter-icon-invite.PNG);
+    border-width: 1px 1px 1px 0px;
+}
+body #account-invite .right-account>div.social-invites .social .links a.gp {
+    background-image: url(../images/gplus-icon-invite.PNG);
+    border-width: 1px 1px 1px 0px;
+}
+body #account-invite .right-account>div.social-invites .social .links a {
+    display: inline-block;
+    height: 45px;
+    width: 52px;
+    background-repeat: no-repeat;
+    border: 1px solid #bbb;
+}
+.social a {
+    margin: 0 ! important;
+    font-family: 'Montserrat';
+}
+body #account-invite .right-account>div.personal-invites {
+    padding-top: 30px;
+    margin-right: 20px;
+    padding-right: 0;
+    margin-left: 20px;
+    padding-left: 0;
+    padding-bottom: 39px;
+    border-bottom: 1px solid #eeeeee;
+}
+body #account-invite .right-account>div.personal-invites input {
+    margin-top: 0px !important;
+    background-color: transparent !important;
+}
+body #account-invite .right-account>div input[type="text"] {
+    border: none;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    color: #666666;
+    padding-left: 0px;
+    height: auto;
+    line-height: 1.4;
+}
+.copy-link {
+    width: 70px;
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    text-align: right;
+    color: #a5173c;
+    position: absolute;
+    right: 0px;
+}
+.copycode_message {
+    z-index: 9;
+    width: 301px;
+    height: 48px;
+    opacity: 0.9;
+    border-radius: 24px;
+    background-color: #444444;
+    position: fixed;
+    color: #fff;
+    text-align: center;
+    padding-top: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    display: none;
+}
+body .account .right-account {
+    width: 100%;
+    margin-bottom: 50px;
+    padding: 0;
+}
+/* invite your friends End*/
+
+@media (max-width: 1024px) and (min-width: 791px)
+{
+.account .wrapper {
+    padding: 0 12px;
+}
+}
+@media (max-width: 790px){
+body .account .left-nav {
+    display: none;
+}
+}
+
+@media (max-width: 767px)
+{
+body .account .right-account {
+    margin-top: -29px;
+}
+body #account-invite .right-account>div.social-invites, body #account-invite .right-account>div.personal-invites {
+    padding-left: 0;
+    margin-right: 0;
+    margin-left: 0;
+}
+body #account-invite .right-account>div.personal-invites {
+    padding-bottom: 48px;
+}
+body .account .right-account button#inviteFriends.blue {
+    width: auto !important;
+    margin-top: 0px !important;
+}
+.invites button#inviteFriends {
+    position: relative;
+    left: 0;
+    top: 15px;
+    margin-bottom: 48px;
+}
+.copy-link {
+    position: relative;
+    left: 0;
+    top: 0;
+    margin-top: 30px;
+    display: inline-block;
+}
+body .account .right-account form label.invite-text-lbl {
+    font-size: 16px ! important;
+}
+.copy-link {
+    position: relative;
+    left: 0;
+    top: 0;
+    margin-top: 30px;
+    display: inline-block;
+}
+body #account-invite .right-account>div.personal-invites {
+    padding-bottom: 48px;
+}
+}
+@media (max-width: 790px)
+{
+body .account .left-nav {
+    display: none;
+}
+body .account .right-account {
+    border-top: 1px solid #eeeeee;
+}
+body #account-invite .right-account>div.invites {
+    padding: 0;
+}
+}
+@media (min-width: 791px){
+body .account .right-account {
+    width: 75%;
+    float: right;
+    padding: 0;
+    margin: 0 0 150px;
+    text-align: left;
+    margin-top: -6px;
+}
+body .account#account-invite .right-account {
+    padding: 0px;
+}
+body #account-invite .right-account>div input[type="text"], body#account-invite .right-account>div textarea {
+    width: 70%;
+}
+.social {
+    padding-left: 0;
+    padding-bottom: 15px;
+    text-align: left;
+}
+}
+@media (max-width: 990px)
+{
+body .account .left-nav {
+    padding-right: 10px;
+}
+}
+@media (max-width: 768px){
+body #account-invite .right-account>div.social-invites .social {
+    position: relative;
+    left: 0;
+    top: 30;
+    padding-bottom: 48px;
+}
+}
+@media (max-width: 420px){
+body #account-invite .right-account>div form .mytextarea#mytextarea {
+    height: 60px;
+}
+}
+
+
+

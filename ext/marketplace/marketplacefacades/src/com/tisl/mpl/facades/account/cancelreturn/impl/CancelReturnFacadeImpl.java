@@ -2050,16 +2050,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * orderCancelEntry : orderCancelRequest.getEntriesToCancel()) { final AbstractOrderEntryModel orderEntry =
 	 * orderCancelEntry.getOrderEntry(); final List<PaymentTransactionModel> tranactions = new
 	 * ArrayList<PaymentTransactionModel>( subOrderModel.getPaymentTransactions());
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(tranactions)) { for (final PaymentTransactionModel transaction : tranactions) { if
 	 * (CollectionUtils.isNotEmpty(transaction.getEntries())) { for (final PaymentTransactionEntryModel entry :
 	 * transaction.getEntries()) { if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null &&
 	 * entry.getPaymentMode().getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)) {
 	 * orderCancelRequest.setAmountToRefund(NumberUtils.DOUBLE_ZERO); return orderCancelRequest; } } } } }
-	 * 
+	 *
 	 * double deliveryCost = 0D; if (orderEntry.getCurrDelCharge() != null) { deliveryCost =
 	 * orderEntry.getCurrDelCharge().doubleValue(); }
-	 * 
+	 *
 	 * refundAmount = orderEntryData.getNetAmountAfterAllDisc().doubleValue() + deliveryCost; } //Setting Refund Amount
 	 * orderCancelRequest.setAmountToRefund(new Double(refundAmount)); return orderCancelRequest; }
 	 */
@@ -4695,7 +4695,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			final String returningTransactionId = returntransactionId;
 			//	returningTransactionId = sessionService.getAttribute("transactionId");
-			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
 				final ReturnLogistics returnLogistics = new ReturnLogistics();
@@ -4710,12 +4709,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					}
 					if (StringUtils.isNotEmpty(eachEntry.getOrderLineId()))
 					{
-						transactionId = eachEntry.getOrderLineId();
 						returnLogistics.setTransactionId(eachEntry.getOrderLineId());
 					}
 					else if (StringUtils.isNotEmpty(eachEntry.getTransactionId()))
 					{
-						transactionId = eachEntry.getTransactionId();
 						returnLogistics.setTransactionId(eachEntry.getTransactionId());
 					}
 				}

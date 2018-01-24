@@ -21,10 +21,12 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
-import java.util.Date;
+import org.apache.solr.client.solrj.response.RangeFacet.Date;
 
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 
 /**
@@ -2395,9 +2397,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
-
+	public static final String AMP_SERVICEWORKER_QUERY = "select pk from {AmpServiceworker}";
+	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	//UBI-605
+	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
 	
 	//SDI-4494	
 	public static final String MANUAL = "MANUAL";
