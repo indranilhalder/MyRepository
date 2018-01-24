@@ -159,7 +159,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -207,7 +207,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -329,9 +329,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 			if (orderId != null)
 			{
 				orderModel.setCode(orderId);
-				//fix for SDI-3630 -- fix for handling orders with cancelled transaction--starts
-				orderModel.setVersionID(null);
-				//fix for SDI-3630 -- fix for handling orders with cancelled transaction--ends
+
 				orderModel = flexibleSearchService.getModelByExample(orderModel);
 			}
 		}
@@ -348,7 +346,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrderByAgent(java.lang.String,
 	 * java.lang.String)
 	 */
