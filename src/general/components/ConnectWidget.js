@@ -1,29 +1,21 @@
 import React from "react";
 import styles from "./ConnectWidget.css";
-import { Image } from "xelpmoc-core";
+import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import image from "./img/Connect_Small.svg";
 import iconImageURL from "./img/Connect_Small.svg";
-
 export default class ConnectWidget extends React.Component {
-  handleClick(val) {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
-  }
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.ConnectHolder}>
+        <div className={styles.innerBox}>
           <div className={styles.icon}>
-            <Image image={this.props.ConnectWidgetImage} color="transparent" />
+            <Icon image={iconImageURL} size={40} />
           </div>
-          <div className={styles.textBox}>{this.props.headerText}</div>
+          <div className={styles.connectBox}>{this.props.headerText}</div>
           <div className={styles.label}>{this.props.text}</div>
-          <div className={styles.text} onClick={() => this.handleClick()}>
-            {this.props.knowMore}
+          <div className={styles.buttonBox}>
+            <div className={styles.button}>{this.props.knowMore}</div>
           </div>
-          <div className={styles.knowMore} />
         </div>
       </div>
     );
@@ -36,7 +28,7 @@ ConnectWidget.propTypes = {
   knowMore: PropTypes.string
 };
 ConnectWidget.defaultProps = {
-  ConnectWidgetImage: image,
+  ConnectWidgetImage: Icon,
   headerText: "Faster Delivery, Easier Returns.",
   text: "Introducing Connect Service",
   knowMore: "know more"

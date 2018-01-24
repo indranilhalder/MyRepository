@@ -1,60 +1,69 @@
 .base {
 	width: 100%;
-	height: 128px;
-	border-radius: 4.2px;
+	height: auto;
+	padding: 30px;
+	object-fit: contain;
 	background-image: linear-gradient(292deg, #48dfe6, #4facfe);
-	position: relative;
 }
-.ConnectHolder {
+.innerBox {
 	width: 100%;
-	height: 100%;
-	position: absolute;
-	padding: 20px 20px 20px 70px;
-	margin: auto;
+	height: auto;
+	position: relative;
+	padding-left: 50px;
 }
-.icon {
-	width: 40px;
-	height: 40px;
-	left: 20px;
-	top: 20px;
-	position: absolute;
-}
-.textBox {
-	float: left;
+.connectBox {
 	width: 100%;
 	height: auto;
 	color: #fff;
 	font-size: 15px;
 	line-height: 20px;
-	font-weight: bold;
+	font-family: semibold;
+	margin-bottom: 5px;
 }
 .label {
-	float: left;
-	width: 100%;
-	color: #fff;
-	font-size: 14px;
-	line-height: 38px;
-}
-.text {
-	float: left;
-	width: 100%;
-	color: #fff;
-	font-size: 14px;
-	font-weight: bold;
-	margin-bottom: 2px;
-}
-.knowMore {
 	width: 100%;
 	height: auto;
-	float: left;
-	font-size: 14px;
-	font-weight: bold;
-	position: relative;
+	color: #fff;
+	font-size: 12px;
+	line-height: 20px;
+	margin-bottom: 5px;
 }
-.knowMore:after {
+.icon {
+	width: 40px;
+	height: 40px;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.buttonBox {
+	height: auto;
+	color: #fff;
+	font-size: 12px;
+	line-height: 20px;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+.button {
+	width: 75px;
+	height: auto;
+	color: #fff;
+	font-size: 14px;
+	line-height: 20px;
+	position: relative;
+	padding-bottom: 3px;
+	font-family: semibold;
+}
+.button:after {
+	height: 1px;
+	width: 100%;
+	color: #fff;
+	font-size: 15px;
+	line-height: 20px;
 	content: '';
 	position: absolute;
-	height: 1px;
-	width: 70px;
 	background-color: #fff;
+	left: 0;
+	bottom: 0;
+	margin-bottom: 2px;
+	display: inline-block;
 }
