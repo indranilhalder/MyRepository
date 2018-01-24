@@ -916,7 +916,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
 				//TPR-6228/SDI-2805
-				if (StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
 				{
 					productDetailMobile
 							.setBrandInfo(productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
