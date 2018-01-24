@@ -1130,7 +1130,8 @@ amp-selector [option][selected] {
   .footer-child ul {margin-bottom: 15px;}
   .footer-copyright {padding: 0 25px; line-height: 48px; margin-bottom: 20px; font-size: 11px; letter-spacing: .6px;}
   .footer-child h4 i, .footer-child h4 i:before {font-size: 18px; line-height: 48px;}
-  .footer-child, .footer-child-last {
+  .footer-child {width: 100%; float: left;}
+  .footer-child-last {
     width: auto; float: left;
   }
   .footer-child-last {padding: 20px;}
