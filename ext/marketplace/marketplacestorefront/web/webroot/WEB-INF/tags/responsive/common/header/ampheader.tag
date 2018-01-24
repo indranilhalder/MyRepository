@@ -440,6 +440,7 @@ padding-top:0px;
 .left-accordion-menu input[type=radio]:checked + label:nth-of-type(n) + ul, .left-accordion-menu input[type=checkbox]:checked + label:nth-of-type(n) + ul {display: block;}
 .left-accordion-menu > li > input[type=radio]:checked + label, .left-accordion-menu > li > input[type=checkbox]:checked + label {background-color: #a9133d; color: #fff;}
 .left-accordion-menu ul {display: none; margin: 0;}
+.left-accordion-menu .a2zTabContent ul {display: block;}
 /*Auto Collapse Menu CSS*/
 .department-menu {
 	width: 150px;
@@ -898,6 +899,7 @@ p {margin: 0;}
 
 .a2z-section {
   color: #3a3a3a;
+  background-color: #c5c4c4;
   font-weight: 600;
 }
 
@@ -921,7 +923,8 @@ p {margin: 0;}
 }
 
 .a2zTabContent {
-		padding-left: 10px;
+    padding-left: 10px;
+    padding-top: 20px;
     display: none;
     width: -webkit-fill-available;
     order: 1; /* must be greater than the order of the tab buttons to flex to the next line */
@@ -929,6 +932,8 @@ p {margin: 0;}
     max-height: 300px;
     overflow: auto;
 }
+
+.a2zTabContent a {color: #000; padding: 5px;}
 
 .a2zTabContent ul li {list-style-type: none; padding-left: 15px;}
 
