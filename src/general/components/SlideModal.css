@@ -1,0 +1,31 @@
+.base {
+  width: 100%;
+  min-height: 100%;
+  position: absolute;
+  right: 0;
+  padding-left: 40px;
+  transform: translateX(100%);
+  animation: slideIn 300ms forwards;
+}
+.cancel {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: url(./img/cancel.svg)no-repeat;
+  background-position: center;
+  background-size: 25px;
+}
+.content {
+  width: 100%;
+  height: auto;
+}
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
