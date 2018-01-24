@@ -464,7 +464,7 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin {
     margin: 10px 0;
 }
 body .right-account .order-history .cancellation-request-block .return-form .return-container {
-    margin-bottom: 20px ! important;
+    /* margin-bottom: 20px ! important; */	/* commented for TISPRDT-8222 */
 }
 body .right-account .order-history .cancellation-request-block.success>div h2.trackOrderLnHt {
     margin-bottom: 0px ! important;
