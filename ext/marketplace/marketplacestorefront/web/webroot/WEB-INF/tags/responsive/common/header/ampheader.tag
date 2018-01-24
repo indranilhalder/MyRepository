@@ -1073,8 +1073,10 @@ amp-selector [option][selected] {
   border: 1px solid #ddd;
   padding: 10px;
   margin-top: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
+
+.footer-child-last > form {margin-bottom: 30px;}
 
 .footer-last-btn {padding: 10px; background-color: #444; border: 1px solid #444; color: white;}
 
@@ -1095,6 +1097,9 @@ amp-selector [option][selected] {
   color: #444;
   background: white;
 }
+
+.newsletter-success {color: green;}
+.newsletter-error {color: red;}
 
 .footer-child h4 span {color: #a9143c;}
 
@@ -1119,7 +1124,7 @@ amp-selector [option][selected] {
   .footer-copyright {padding: 0 25px; line-height: 48px; margin-bottom: 20px; font-size: 11px; letter-spacing: .6px;}
   .footer-child h4 i, .footer-child h4 i:before {font-size: 18px; line-height: 48px;}
   .footer-child, .footer-child-last {
-    width: 100%; float: left;
+    width: auto; float: left;
   }
   .footer-child-last {padding: 20px;}
 }
