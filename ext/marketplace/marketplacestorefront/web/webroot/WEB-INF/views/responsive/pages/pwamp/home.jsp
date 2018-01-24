@@ -620,7 +620,7 @@
 			<div class="stayOne">
 				<div>
 					<p class="h2 stayQuedHeading">{{headerText}}</p>
-					<p>{{text}}</p>
+					<p>{{details.text}}</p>
 					<div class="stayQuedBottom">
 						<a href="{{details.bannerUrl}}"><button
 								class="stayQuedViewAllBtn">Read The Story</button></a>

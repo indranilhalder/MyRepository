@@ -21,7 +21,7 @@
 <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
 <script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
 <!--AMP HTML files require a canonical link pointing to the regular HTML. If no HTML version exists, it should point to itself.-->
-<link rel="canonical" href="/pwamp">
+<link rel="canonical" href="https://www.tatacliq.com">
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> -->
 <link rel="manifest" href="/manifest.json">
