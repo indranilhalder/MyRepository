@@ -12,7 +12,6 @@ export default class ProductVideo extends React.Component {
     };
   }
   render() {
-    console.log(this.props);
     let overlayClass = styles.overlay;
     if (this.state.playing) {
       overlayClass = styles.overlayHidden;

@@ -14,7 +14,6 @@ export default class VideoProductCarousel extends React.Component {
     if (feedComponentData.items) {
       data = feedComponentData.items.map(transformData);
     }
-    console.log(feedComponentData);
     return (
       <FeedComponent
         banner={
