@@ -11718,7 +11718,7 @@ height: 80%;
     text-align: left;
 	}
 	.Manufacturer.Temp02 h3, .Manufacturer.Temp02 ul.pdpFeatures li h4 {
-    font-size: 14px;
+    font-size: 14px !important;		/* add important for TISPRDT-8215 */
 	}
 	.Manufacturer.Temp02 h3::after {
     margin: 0;

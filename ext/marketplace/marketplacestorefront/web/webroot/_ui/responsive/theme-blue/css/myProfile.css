@@ -354,6 +354,9 @@ body .account .right-account .responsiveProfile.password .blue.changePass, body 
 body .account .right-account .responsiveProfile.password .blue.changePass {
     display: none;
 }
+body #account-invite .right-account>div.invites>h2 {
+	margin-top: 16px;	/* add for TISPRDT-8255 */
+}
 }
 
 /* alert error */

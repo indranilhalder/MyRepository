@@ -1460,3 +1460,40 @@ body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncompone
 	color: inherit;
 }
 /* end change of TISPRDT-8223 */
+/* start change of TISPRDT-8262 */
+@media (max-width: 790px) {
+	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-header-italic {
+		font-size: 77px;
+    	color: #a9143c;
+    	font-weight: bold;
+    	margin-top: 7px;
+	}
+	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child {
+		color: #a9143c;
+    	font-size: 15.31px;
+	}
+	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child {
+		font-size: 16px;
+    	width: 64%;
+	}
+	body.template-pages-layout-errorPageTemplate .hero .major-promos a.button {
+		margin-top: 30px;
+    	margin-bottom: 10px;
+    	padding: 12.5px 0;
+	}
+	body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent h1 {
+		text-align: center;
+	}
+	body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent>div ul li {
+		padding: 10px;
+	}
+	body.template-pages-layout-errorPageTemplate .hero .major-promos li {
+		padding-bottom: 0;
+	}
+}
+@media (max-width: 640px) {
+	body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent>div {
+		width: 49%;
+	}
+}
+/* end change of TISPRDT-8262 */

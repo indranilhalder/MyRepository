@@ -112,6 +112,7 @@ body .account .right-account .order-history .product-block li.header>ul>li:first
 .pagination {
     line-height: 30px;
     padding: 0 30px;
+    display: inline-block;	/* add for TISPRDT-8260 */
 }
 body .account .right-account .order-history .pagination {
     display: inline-block;
