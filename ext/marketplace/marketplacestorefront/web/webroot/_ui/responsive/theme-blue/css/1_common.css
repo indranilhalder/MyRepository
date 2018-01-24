@@ -1380,3 +1380,83 @@ opacity
     font-weight: 500;
     cursor: pointer;
 }
+/* start change of TISPRDT-8223 */
+body.template-pages-layout-errorPageTemplate .hero .major-promos {
+	left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+    top: 60px;
+    transform: none;
+    -webkit-transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    height: 100%;
+}
+body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-header-italic {
+	font-size: 102px;
+    color: #fff;
+    font-weight: bold;
+}
+body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description {
+	padding: 0;
+    margin: 0;
+}
+body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child {
+	text-transform: uppercase;
+    color: #fff;
+    font-size: 20.31px;
+    padding: 20px 0;
+}
+body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child {
+	    font-size: 18.5px;
+    padding: 10px 0;
+    width: 30%;
+    margin: auto;
+    line-height: 22px;
+    color: #333;
+}
+body.template-pages-layout-errorPageTemplate .hero .major-promos a.button {
+	width: 240px;
+    opacity: .9;
+    font-weight: bold;
+    font-size: 12px !important;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 17.5px 0;
+    color: #fff;
+}
+body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent {
+	border: 1px solid #ccc;
+    padding-bottom: 20px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3), 0 0 40px rgba(0,0,0,0.1) inset;
+    margin-top: 25px;
+    position: relative;
+    padding-top: 64px;
+}
+body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent>div {
+	width: 24.5%;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 10px;
+}
+body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent h1 {
+	padding: 20px;
+    padding-left: 10px;
+    font-size: 24px;
+    color: #333;
+    font-weight: 500;
+    position: absolute;
+    width: 100%;
+    top: 0;
+}
+body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent>div ul li {
+	padding: 3px 3px 3px 10px;
+    color: #4a4a4a;
+}
+body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent>div ul li a {
+	color: inherit;
+}
+/* end change of TISPRDT-8223 */
