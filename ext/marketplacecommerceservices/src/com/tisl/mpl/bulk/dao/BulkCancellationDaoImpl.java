@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.bulk.dao;
 
-import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -57,22 +55,15 @@ public class BulkCancellationDaoImpl implements BulkCancellationDao
 		}
 	}
 
-	@Override
-	public List<BulkCancellationProcessModel> getOrderCancelData()
-	{
-		try
-		{
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(
-					MarketplacecommerceservicesConstants.DATA_FOR_BULK_CANCELLATION_PROCESS);
-
-			return flexibleSearchService.<BulkCancellationProcessModel> search(query).getResult();
-
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e);
-		}
-
-	}
+	/*
+	 * @Override public List<BulkCancellationProcessModel> getOrderCancelData() { try { final FlexibleSearchQuery query =
+	 * new FlexibleSearchQuery( MarketplacecommerceservicesConstants.DATA_FOR_BULK_CANCELLATION_PROCESS);
+	 * 
+	 * return flexibleSearchService.<BulkCancellationProcessModel> search(query).getResult();
+	 * 
+	 * } catch (final Exception e) { throw new EtailNonBusinessExceptions(e); }
+	 * 
+	 * }
+	 */
 
 }

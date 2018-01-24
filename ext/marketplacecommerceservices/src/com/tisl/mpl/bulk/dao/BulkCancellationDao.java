@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.bulk.dao;
 
-import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 
 import java.util.List;
@@ -18,6 +17,6 @@ public interface BulkCancellationDao
 
 	List<CronJobModel> fetchJobDetails(String code);
 
-	List<BulkCancellationProcessModel> getOrderCancelData();
+	/* List<BulkCancellationProcessModel> getOrderCancelData(); */
 
 }

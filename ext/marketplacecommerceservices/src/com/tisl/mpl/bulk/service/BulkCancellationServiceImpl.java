@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.bulk.service;
 
-import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 
 import java.util.List;
@@ -51,10 +50,9 @@ public class BulkCancellationServiceImpl implements BulkCancellationService
 		return getBulkCancellationDao().fetchJobDetails(code);
 	}
 
-	@Override
-	public List<BulkCancellationProcessModel> getOrderCancelData()
-	{
-		return getBulkCancellationDao().getOrderCancelData();
-	}
+	/*
+	 * @Override public List<BulkCancellationProcessModel> getOrderCancelData() { return
+	 * getBulkCancellationDao().getOrderCancelData(); }
+	 */
 
 }
