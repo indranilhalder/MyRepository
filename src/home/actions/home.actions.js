@@ -144,7 +144,6 @@ export function homeFeed() {
 }
 
 export function componentDataRequest(positionInFeed) {
-  console.log("request");
   return {
     type: COMPONENT_DATA_REQUEST,
     status: REQUESTING,
@@ -153,7 +152,6 @@ export function componentDataRequest(positionInFeed) {
 }
 
 export function componentDataSuccess(data, positionInFeed) {
-  console.log("success");
   return {
     type: COMPONENT_DATA_SUCCESS,
     status: SUCCESS,
@@ -163,7 +161,6 @@ export function componentDataSuccess(data, positionInFeed) {
 }
 
 export function componentDataFailure(positionInFeed, error) {
-  console.log("fail");
   return {
     type: COMPONENT_DATA_FAILURE,
     status: ERROR,
@@ -183,7 +180,7 @@ export function getComponentData(positionInFeed, fetchURL) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      // console.log(resultJson);
+
       dispatch(componentDataSuccess(resultJson, positionInFeed));
     } catch (e) {
       dispatch(componentDataFailure(positionInFeed, e.message));
