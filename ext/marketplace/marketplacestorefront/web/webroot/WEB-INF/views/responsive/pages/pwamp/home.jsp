@@ -14,10 +14,11 @@
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.utility.host')"
 		var="host" />
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 	<c:set var="base" value="https://${host}" />
 	<!-- <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker> -->
 	<div class="top-header">
-		<a href="/">Marketplace</a> <a href="${luxuryHost}">Luxury</a>
+		<a href="/">Marketplace</a> <a href="${luxuryHost}" target="_blank">Luxury</a>
 	</div>
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'>
