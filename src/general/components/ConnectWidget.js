@@ -23,9 +23,7 @@ export default class ConnectWidget extends React.Component {
           <div className={styles.text} onClick={() => this.handleClick()}>
             {this.props.knowMore}
           </div>
-          <div className={styles.knowMore}>
-            <div className={styles.knowMoreselect} />
-          </div>
+          <div className={styles.knowMore} />
         </div>
       </div>
     );

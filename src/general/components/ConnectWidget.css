@@ -49,11 +49,12 @@
 	float: left;
 	font-size: 14px;
 	font-weight: bold;
+	position: relative;
 }
-.knowMoreselect {
-	float: left;
+.knowMore:after {
+	content: '';
+	position: absolute;
 	height: 1px;
 	width: 70px;
 	background-color: #fff;
-	border-bottom-color: #fff;
 }
