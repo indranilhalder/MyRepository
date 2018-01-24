@@ -500,9 +500,9 @@ var allSellers='${allsellers}';
 				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
 				<c:choose>
-					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
+					<c:when test="${not empty pdpBrandURL}">
 						<h2 class="company">
-							<a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a>
+							<a href="${pdpBrandURL}">${product.brand.brandname}</a>
 						</h2>
 					</c:when>
 					<c:otherwise>

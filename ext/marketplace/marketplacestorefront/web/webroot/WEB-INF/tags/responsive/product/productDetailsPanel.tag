@@ -219,8 +219,8 @@ tr.d0 td {
 				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
 				<c:choose>
-					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
-						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/c/${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
+					<c:when test="${not empty pdpBrandURL}">
+						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="${pdpBrandURL}">${product.brand.brandname}</a></span></h3>
 					</c:when>
 					<c:otherwise>
 						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>

@@ -4740,18 +4740,21 @@ public class ProductPageController extends MidPageController
 
 	private void prepareBrandInfoData(final Model model, final ProductData productData)
 	{
-		if (null != productData.getBrand())
+		//UBI-605 || TPR-7679
+		if (CollectionUtils.isNotEmpty(productData.getCategories()))
 		{
-			if (productData.getBrand().getBrandCode() != null)
+			for (final CategoryData category : productData.getCategories())
 			{
-				//UBI-605
-				final ContentPageModel brandLandingPage = mplCmsPageService.getLandingPageForCategoryCode(productData.getBrand()
-						.getBrandCode());
-				if (brandLandingPage != null)
+				if (category.getCode().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
-					model.addAttribute("msiteBrandCode", getBrandCodeFromSuperCategories(productData.getBrand().getBrandCode()));
+					model.addAttribute("msiteBrandCode", category.getCode());
+					model.addAttribute("pdpBrandURL", category.getUrl());
 				}
 			}
+		}
+
+		if (null != productData.getBrand())
+		{
 			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
 					.getBrand().getBrandname().toLowerCase() : null);
 			/*
