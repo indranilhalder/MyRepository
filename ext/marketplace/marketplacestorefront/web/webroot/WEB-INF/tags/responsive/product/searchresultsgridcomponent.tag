@@ -3,7 +3,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
-
+<style>
+.source{
+display: none;
+}
+</style>
 <input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 
 <%-- <c:set value="${(searchPageData.pagination.currentPage * searchPageData.pagination.pageSize) + 1}" var="currentPageStart"/>
@@ -81,10 +85,11 @@
 <span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
 </span>
 </c:if>
+--%>
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
-<div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
-    <ul class="pagination-block">
+<!-- <div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div> -->
+    <ul class="pagination-block source">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
     	<c:choose>
     		<c:when test="${loop.index eq 1}">
@@ -113,11 +118,9 @@
     	</c:choose>
         </c:forEach>
     </ul>
-    <div class="next-block"><a href="#next-page"><span>Next</span></a></div>
+    <!-- <div class="next-block"><a href="#next-page"><span>Next</span></a></div> -->
 </c:when>
 </c:choose>
-</div>
-</div> --%>
 
 <div class="bottom-pagination pagination-search">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
