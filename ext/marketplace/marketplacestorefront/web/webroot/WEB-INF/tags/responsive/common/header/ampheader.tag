@@ -767,7 +767,7 @@ p {margin: 0;}
 .brandStudioImg a {height: inherit;}
 .brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 .brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 10px 8px 0px; text-align: left;}
-.brandStudioDescHeading {font-size: 13px; font-weight: bold;}
+.brandStudioDescHeading {font-size: 13px; font-weight: bold; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
 .brandStudioDescInfo {font-size: 12px; color: #666666; white-space: pre-line; height: 75px;}
 .brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
