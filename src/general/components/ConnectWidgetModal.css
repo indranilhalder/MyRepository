@@ -1,0 +1,43 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: relative;
+  float: left;
+  padding: 10px;
+}
+.title {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  font-family: regular;
+  padding-top: 5px;
+  color: #fff;
+}
+.description {
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  font-family: regular;
+  padding-bottom: 10px;
+  color: #fff;
+}
+.icon {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #fff;
+}
+.manage {
+  height: auto;
+  position: relative;
+  padding: 0 0 10px 40px;
+  float: left;
+  margin: auto;
+  width: 100%;
+}
+.knowmore {
+  width: 100%;
+  height: auto;
+}

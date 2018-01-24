@@ -1,0 +1,82 @@
+.connectBase {
+  width: 100%;
+  background-image: linear-gradient(292deg, #48dfe6, #4facfe);
+  height: auto;
+  float: left;
+  padding: 15px;
+  height: 100vh;
+}
+.container {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  float: left;
+}
+.iconHolder {
+  width: 60px;
+  height: 60px;
+  float: left;
+}
+.text {
+  width: auto;
+  height: auto;
+  color: #fff;
+  font-family: semibold;
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 65px;
+}
+.heading {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  float: left;
+  color: #fff;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  float: left;
+}
+.icondiv {
+  width: 100%;
+  height: 60px;
+  position: relative;
+  float: left;
+}
+.buttonBox {
+  height: auto;
+  color: #fff;
+  font-size: 12px;
+  line-height: 20px;
+  margin-bottom: 5px;
+  display: inline-block;
+  padding-left: 48px;
+}
+.button {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+  padding-bottom: 3px;
+  font-family: semibold;
+}
+.button:after {
+  height: 1px;
+  font-size: 15px;
+  line-height: 20px;
+  content: "";
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  left: 0;
+  bottom: 0;
+  margin-bottom: 2px;
+  display: inline-block;
+}
