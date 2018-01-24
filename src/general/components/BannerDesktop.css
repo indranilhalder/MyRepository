@@ -1,7 +1,6 @@
 .base {
   width: 100%;
-  height: auto;
-  padding-bottom: 33%;
+  height: 500px;
   position: relative;
 }
 .item {

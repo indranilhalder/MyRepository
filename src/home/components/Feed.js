@@ -5,6 +5,7 @@ import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
+import HeroBanner from "./HeroBanner.js";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
@@ -18,6 +19,7 @@ import MDSpinner from "react-md-spinner";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeComponentMapping = {
+  heroBanner: props => <HeroBanner {...props} />,
   themeOffers: props => <ThemeOffer {...props} />,
   productRecommendationWidget: props => <RecommendationWidget {...props} />,
   bannerProductCarousel: props => <BannerProductCarousel {...props} />,
