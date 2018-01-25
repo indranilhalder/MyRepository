@@ -1139,7 +1139,39 @@ amp-selector [option][selected] {
   }
   .footer-child-last {padding: 20px;}
 }
-
+/* start style definiton for TISPRDT-8283 */
+.MsoNormal {
+	margin-bottom: 0.0001pt; 
+	text-align: justify; 
+	line-height: normal; 
+	background-image: initial; 
+	background-position: initial; 
+	background-size: initial; 
+	background-repeat: initial; 
+	background-attachment: initial; 
+	background-origin: initial; 
+	background-clip: initial; 
+	vertical-align: baseline;
+}
+.MsoNormalSpan {
+	font-size:9pt;
+	font-family:Montserrat;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";
+	color:#222222;
+	border:none windowtext 1pt;
+	mso-border-alt:none windowtext 0cm;
+	padding:0cm;
+	mso-fareast-language:EN-IN;
+}
+.MsoNormalAnchor {
+	color: #000;
+	text-decoration: none;
+}
+.helloSpan {
+	color:#1155CC;
+}
+/* end style definiton for TISPRDT-8283 */
 </style>
 <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
 </head>

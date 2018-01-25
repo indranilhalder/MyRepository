@@ -1047,6 +1047,39 @@ footer #footerLink div.column ul li:last-child:after {
 	font-size: 10px;
 }
 /*live chat end*/
+/* start style definiton for TISPRDT-8283 */
+.MsoNormal {
+	margin-bottom: 0.0001pt; 
+	text-align: justify; 
+	line-height: normal; 
+	background-image: initial; 
+	background-position: initial; 
+	background-size: initial; 
+	background-repeat: initial; 
+	background-attachment: initial; 
+	background-origin: initial; 
+	background-clip: initial; 
+	vertical-align: baseline;
+}
+.MsoNormalSpan {
+	font-size:9pt;
+	font-family:Montserrat;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";
+	color:#222222;
+	border:none windowtext 1pt;
+	mso-border-alt:none windowtext 0cm;
+	padding:0cm;
+	mso-fareast-language:EN-IN;
+}
+.MsoNormalAnchor {
+	color: #000;
+	text-decoration: none;
+}
+.helloSpan {
+	color:#1155CC;
+}
+/* end style definiton for TISPRDT-8283 */
 /*Footer media queries start*/
 @media ( min-width : 791px) {
 	.body-Content {
