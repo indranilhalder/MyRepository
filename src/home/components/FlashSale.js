@@ -45,7 +45,6 @@ FlashSale.propTypes = {
   offerTime: PropTypes.string,
   headingText: PropTypes.string,
   subHeader: PropTypes.string,
-  icon: PropTypes.string,
   backgroundImage: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
