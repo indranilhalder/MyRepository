@@ -3526,7 +3526,10 @@ ACC.singlePageCheckout = {
 		}); 
         
     	xhrResponse.complete(function(response, textStatus, jqXHR) {
+    		
+    		if (usedCliqCashFlag == true){
 			  useWalletForPaymentAjax();
+    		}
 		});
         
         xhrResponse.always(function(){
@@ -3633,7 +3636,9 @@ ACC.singlePageCheckout = {
         
         
 		xhrResponse.complete(function(response, textStatus, jqXHR) {
+			if (usedCliqCashFlag == true){
 			  useWalletForPaymentAjax();
+			}
 		});
 		
         

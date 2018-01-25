@@ -6,6 +6,8 @@ var couponApplied=false;
 var bankNameSelected=null;
 
 var globalCliqCashMode=false;
+var usedCliqCashFlag=false;
+
 
 var checkTamperingPlaceOrder = false; //TISUAT-6107 fix
 
@@ -6616,7 +6618,7 @@ function useWalletForPaymentAjax(){
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
 				
-				
+				usedCliqCashFlag = true;
 				
 				if(data.disableJsMode){
 					//alert(data.disableJsMode);
@@ -6704,7 +6706,9 @@ function useWalletForPaymentAjax(){
 				}
 				
 			}else{
-				$(".cliqCashInfoSection").hide();
+				usedCliqCashFlag = false;
+				
+				$(".cliqCashInfoSection").remove();
 				document.getElementById('totalWithConvField').innerHTML ="";
 				document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
 				
@@ -9490,7 +9494,9 @@ $("#couponSubmitButton").click(function(){
  				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 		},
 	 		complete : function(data){
+	 			if (usedCliqCashFlag == true){
 	 			          useWalletForPaymentAjax();
+	 			}
 	 					}
 	 		
 	 		
@@ -9581,7 +9587,9 @@ function removeAppliedVoucher(){
  		error : function(resp) {
  		},
  		complete : function(data){
+ 			if (usedCliqCashFlag == true){
 	          useWalletForPaymentAjax();
+ 			}
 			}
  	});	 
 //});
