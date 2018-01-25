@@ -3879,6 +3879,13 @@
 							optional="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+				  <attribute qualifier="isqcOtpVerify" autocreate="true"
+						type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 				<indexes>
 					<index name="ORIGINALUID_IDX" unique="true">

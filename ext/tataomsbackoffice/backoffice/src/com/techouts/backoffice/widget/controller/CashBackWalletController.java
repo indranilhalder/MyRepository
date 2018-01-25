@@ -260,7 +260,7 @@ private StringBuilder genarateCsvFile(final QCRedeeptionResponse response,final 
 	  builder.append(walletObj.getCustomerEmailId() +",");
 	  builder.append(walletObj.getAmount() +",");
 	  builder.append(walletObj.getBucketName() +",");
-	 if(!responseCheck){
+	 if(!responseCheck && null!=response  ){
 		 builder.append(response.getTransactionId()+",");
 		 builder.append(response.getWalletNumber()+",");
 		 builder.append(response.getBatchNumber()+",");
@@ -327,20 +327,26 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
 			if(null!= walletObj.getCustomerLastName()){
 				custInfo.setLastName(walletObj.getCustomerLastName());
 			}
-			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
+			customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
 			customerRegisterReq.setCustomer(custInfo);
 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
 			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
 			if (customerRegisterResponse.getResponseCode() == 0)
 			{
 				final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+				custWalletDetail.setFirstName(walletObj.getCustomerFirstName());
+				custWalletDetail.setLastName(walletObj.getCustomerLastName());
 				custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
 				custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
 				custWalletDetail.setCustomer(currentCustomer);
 				custWalletDetail.setServiceProvider("Tata Unistore Ltd");
 				modelService.save(custWalletDetail);
+				currentCustomer.setFirstName(walletObj.getCustomerFirstName());
+				currentCustomer.setLastName(walletObj.getCustomerLastName());
 				currentCustomer.setCustomerWalletDetail(custWalletDetail);
 				currentCustomer.setIsWalletActivated(Boolean.TRUE);
+				currentCustomer.setQcVerifyFirstName(walletObj.getCustomerFirstName());
+				currentCustomer.setQcVerifyLastName(walletObj.getCustomerLastName());
 				modelService.save(currentCustomer);
   		    commentMsg =SUCCESS_MSG;
 			}else{
