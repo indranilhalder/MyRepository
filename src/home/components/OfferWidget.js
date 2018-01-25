@@ -26,7 +26,7 @@ export default class OfferWidget extends React.Component {
           {data &&
             data.map((datum, i) => {
               return (
-                <div className={styles.base}>
+                <div className={styles.base} key={i}>
                   <div className={styles.imageHolder}>
                     <Image image={datum.imageURL} key={i} />
                   </div>
