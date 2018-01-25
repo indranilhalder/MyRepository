@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./ConnectBothWidget.css";
+import styles from "./ConnectBaseWidget.css";
 import ConnectBothWidget from "./ConnectBothWidget";
 import Connect from "./img/Connect_Small.svg";
 import { Icon } from "xelpmoc-core";

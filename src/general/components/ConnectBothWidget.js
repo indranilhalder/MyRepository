@@ -18,7 +18,6 @@ export default class ConnectBothWidget extends React.Component {
     );
   }
 }
-
 ConnectBothWidget.PropsTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
