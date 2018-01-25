@@ -1,5 +1,6 @@
 import React from "react";
 import Video from "./Video";
+import { Image } from "xelpmoc-core";
 import Logo from "./Logo";
 import PropTypes from "prop-types";
 import styles from "./ProductVideo.css";
@@ -18,6 +19,9 @@ export default class ProductVideo extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.video}>
+          <Image image={this.props.image} color="transparent" />
+        </div>
+        <div className={styles.video} style={{ backgroundColor: "#212121" }}>
           <Video url={this.props.url} playing={this.state.playing} />
         </div>
         <div
@@ -41,5 +45,6 @@ export default class ProductVideo extends React.Component {
 ProductVideo.propTypes = {
   url: PropTypes.string,
   logo: PropTypes.string,
+  image: PropTypes.string,
   description: PropTypes.string
 };

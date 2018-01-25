@@ -5,11 +5,13 @@ import AutomatedBrandProductCarousel from "./AutomatedBrandProductCarousel.js";
 import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
+import FollowBase from "./FollowBase.js";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
+import OfferWidget from "./OfferWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import styles from "./Feed.css";
@@ -25,7 +27,9 @@ const typeComponentMapping = {
   automatedBrandProductCarousel: props => (
     <AutomatedBrandProductCarousel {...props} />
   ),
+  offersWidget: props => <OfferWidget {...props} />,
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
+  followBaseWidget: props => <FollowBase {...props} />,
   singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
   bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
