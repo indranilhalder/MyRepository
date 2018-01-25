@@ -6,20 +6,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<div class="footer-text">
-	<%-- ${footerText} --%>
-	<c:choose>
-		<c:when test="${not empty categoryFooterTxt}">
-			${categoryFooterTxt}
-		</c:when>
-		<c:otherwise>
-		<c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}">
-			${footerText}
-			</c:if>
-		</c:otherwise>
-	</c:choose>
-	<!-- TPR-5733 -->
-<%-- 	<c:if test="${fn:length(footerLinkList) gt 0}">
+	<!-- SEO TPR-5733 -->
+	<c:if test="${fn:length(footerLinkList) gt 0}">
 	<div id="footerLink">
 		<c:set var="rowcount" value="-1"></c:set>
 		<c:forEach items="${footerLinkList}" var="footerLinkRow">
@@ -39,7 +27,20 @@
 			</div>
 		</c:forEach>
 	</div>
-</c:if> --%>
+</c:if> 
+<div class="footer-text">
+	<%-- ${footerText} --%>
+	<c:choose>
+		<c:when test="${not empty categoryFooterTxt}">
+			${categoryFooterTxt}
+		</c:when>
+		<c:otherwise>
+		<c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}">
+			${footerText}
+			</c:if>
+		</c:otherwise>
+	</c:choose>
+
 </div>
 <div class="banner">
 	<span>${notice}</span>
