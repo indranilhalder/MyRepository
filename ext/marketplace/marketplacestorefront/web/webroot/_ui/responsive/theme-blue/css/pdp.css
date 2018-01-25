@@ -12865,7 +12865,7 @@ li.download-app a:before, span.material-icons, header .content .right>ul>li.wish
 }
 
 /* HOME-210 start */
-.homefurnishing-overview:nth-child(2) {
+/*.homefurnishing-overview:nth-child(2) {
     float: right ! important;
 }
 .homefurnishing-overview:nth-child(3) {
@@ -12873,14 +12873,14 @@ li.download-app a:before, span.material-icons, header .content .right>ul>li.wish
 }
 .homefurnishing-overview:nth-child(4) {
     clear:both;
-}
+}*/
 @media (max-width: 767px){
-.homefurnishing-overview:nth-child(2) {
+/*.homefurnishing-overview:nth-child(2) {
     float: left ! important;
 }
 .homefurnishing-overview:nth-child(3) {
     float: left ! important;
-}
+}*/
 }
 
 /* HOME-210 End */
