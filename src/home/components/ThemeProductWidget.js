@@ -11,32 +11,37 @@ export default class ThemeProductWidget extends React.Component {
     }
   }
   render() {
+    const data = this.props.feedComponentData.data;
     return (
       <div
         className={styles.base}
         style={{
-          backgroundImage: `url(${this.props.backgroundImage})`
+          backgroundImage: `url(${data.backgroundImageURL})`
         }}
       >
         <div className={styles.overlay} />
         <div className={styles.logo}>
-          <Logo image={this.props.logo} />
+          <Logo image={data.brandLogo} />
         </div>
         <Carousel
-          header={this.props.header}
+          header={data.title}
           buttonText="Shop all"
           seeAll={this.handleClick}
           elementWidthMobile={45}
           withFooter={false}
           isWhite={true}
         >
-          {this.props.data &&
-            this.props.data.map((datum, i) => {
+          {data.items &&
+            data.items.map((datum, i) => {
               return (
                 <ThemeProduct
                   image={datum.image}
-                  label={datum.label}
-                  price={datum.price}
+                  label={datum.title}
+                  price={
+                    datum.discountedPrice
+                      ? datum.discountedPrice
+                      : datum.mrpPrice
+                  }
                   key={i}
                   isWhite={true}
                 />
