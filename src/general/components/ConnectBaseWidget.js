@@ -47,7 +47,6 @@ export default class ConnectBaseWidget extends React.Component {
     );
   }
 }
-
 ConnectBaseWidget.propTypes = {
   text: PropTypes.string,
   image: PropTypes.string,

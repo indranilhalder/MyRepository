@@ -2,8 +2,9 @@
   width: 100%;
   background-image: linear-gradient(292deg, #48dfe6, #4facfe);
   float: left;
-  padding: 15px;
   height: 100vh;
+  padding: 15px;
+  
 }
 .iconHolder {
   width: 60px;

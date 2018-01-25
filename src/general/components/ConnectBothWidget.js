@@ -3,6 +3,7 @@ import styles from "./ConnectBothWidget.css";
 import { Icon } from "xelpmoc-core";
 import delivery from "./img/delivery.png";
 import PropTypes from "prop-types";
+
 export default class ConnectBothWidget extends React.Component {
   render() {
     return (
