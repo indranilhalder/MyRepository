@@ -5218,7 +5218,7 @@ p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{
 		.confirmation .left-block .payments.tab-view .tabs .product-block li.header>ul li {
 		border: none;
 	}
-	.cart.wrapper .left-block .payments.tab-view, .confirmation .left-block .payments.tab-view
+	.confirmation .left-block .payments.tab-view	/* remove class for TISPRDT-8280 */
 		{
 		margin-top: 30px;
 	}
