@@ -8,9 +8,6 @@
 .compare {
 	margin-top: 10px;
 }
-/* .comparison-table:first-child {
-	margin-top: 30px;
-} */
 .comparison-table {
 	width: 100%;
     margin-bottom: 15px;
@@ -103,6 +100,3 @@
 	}
 }
 /* end change of TISCSS-68 */
-.comparison-table:first-child {
-    margin-top: 30px;
-}
