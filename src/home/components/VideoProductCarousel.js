@@ -19,7 +19,8 @@ export default class VideoProductCarousel extends React.Component {
         banner={
           <ProductVideo
             url={feedComponentData.videoURL}
-            logo={feedComponentData.imageURL}
+            image={feedComponentData.imageURL}
+            logo={feedComponentData.brandLogo}
             description={feedComponentData.description}
           />
         }
