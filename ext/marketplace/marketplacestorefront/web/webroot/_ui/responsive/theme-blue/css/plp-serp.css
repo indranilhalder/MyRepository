@@ -5096,6 +5096,13 @@ select:focus {
     margin: 0;
 }
 /*----PLP/SERP css end----*/
+/* start position move for TISPRDT-8291 */
+.pagination li {
+    font-size: 14px;
+    display: inline-block;
+    margin: 0 2px;
+}
+/* end position move for TISPRDT-8291 */
 /* Start Pagination link */
 .bottom-pagination.pagination-search{
 	display: inline-block;
@@ -5189,8 +5196,3 @@ a.pageNo.active{
 }
 }
 /* End Pagination link */
-.pagination li {
-    font-size: 14px;
-    display: inline-block;
-    margin: 0 2px;
-}
