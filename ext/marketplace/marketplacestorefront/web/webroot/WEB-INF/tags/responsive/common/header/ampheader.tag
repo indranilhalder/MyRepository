@@ -496,7 +496,9 @@ padding-top:0px;
 	float: left;
 }
 
-.header-search-btn {padding: 10px; background-color: #f8f8f8; border: 1px solid #ddd; border-left: none; cursor: pointer; height: 38px; float: left; width: 60px;}
+.header-search-btn {background-color: #f8f8f8; border: 1px solid #ddd; border-left: none; cursor: pointer; height: 38px; float: left; width: 60px;}
+
+.header-search-btn a i {color: #000; font-size: 20px;}
 
 .shop-by-department, .shop-by-brand {display: none; height: 500px; width: 100%; position: absolute; border-top: 1px solid #ddd; background: #fff; z-index: 1; left: 0; top: 60px;}
 
