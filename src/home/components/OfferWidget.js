@@ -3,6 +3,7 @@ import styles from "./OfferWidget.css";
 import { Image } from "xelpmoc-core";
 import Button from "../../general/components/Button";
 import Carousel from "../../general/components/Carousel";
+import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
 
 export default class OfferWidget extends React.Component {
@@ -30,25 +31,33 @@ export default class OfferWidget extends React.Component {
                   <div className={styles.imageHolder}>
                     <Image image={datum.imageURL} key={i} />
                   </div>
-                  <div className={styles.overlay} />
+                  <MediaQuery query="(min-device-width: 1025px)">
+                    <div
+                      className={styles.overlay}
+                      onClick={() => this.handleClick()}
+                    />
+                  </MediaQuery>
+                  <MediaQuery query="(max-device-width: 1024px)">
+                    <div className={styles.overlay} />
+                  </MediaQuery>
                   <div className={styles.ovalImage}>
                     <div className={styles.text} key={i}>
                       {datum.discountText}
                     </div>
                   </div>
-                  <div className={styles.textHolder}>
-                    <div className={styles.textLine}>
-                      {datum.title}
+                  <div className={styles.textLine}>
+                    {datum.title}
+                    <MediaQuery query="(max-device-width: 1024px)">
                       <div className={styles.buttonHolder}>
                         <Button
-                          type={this.props.case}
-                          color={this.props.color}
+                          type="hollow"
+                          color="#fff"
                           label={datum.btnText}
                           onClick={() => this.handleClick()}
                           width={130}
                         />
                       </div>
-                    </div>
+                    </MediaQuery>
                   </div>
                 </div>
               );
@@ -72,12 +81,4 @@ OfferWidget.propTypes = {
   }),
   onClick: PropTypes.func,
   textLine: PropTypes.string
-};
-
-OfferWidget.defaultProps = {
-  case: "hollow",
-  off: "40% off",
-  textLine: "Beautiful watches at amazing prices",
-  value: "Shop now",
-  color: "#fff"
 };
