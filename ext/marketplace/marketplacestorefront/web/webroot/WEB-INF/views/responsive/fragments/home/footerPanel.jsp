@@ -97,7 +97,7 @@
 		</ul>
 	</li>
 </ul>
-<c:if test="${fn:length(footerLinkList) gt 0}">
+<!-- <c:if test="${fn:length(footerLinkList) gt 0}">
 	<div id="footerLink">
 		<c:set var="rowcount" value="-1"></c:set>
 		<c:forEach items="${footerLinkList}" var="footerLinkRow">
@@ -117,7 +117,7 @@
 			</div>
 		</c:forEach>
 	</div>
-</c:if>
+</c:if> -->
 
 <!-- The script is used for validating email in news letter sign up Section -->
 <script>
