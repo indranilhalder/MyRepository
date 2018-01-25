@@ -84,6 +84,7 @@ import javax.validation.Valid;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -7456,9 +7457,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		jsonObject.put("apportionMode", "Juspay");
 		final CartModel cart = getCartService().getSessionCart();
 		final DecimalFormat df = new DecimalFormat("#.##");
+		String cartCouponCode= StringUtils.EMPTY;
+		Boolean isCartVoucherPresent = Boolean.FALSE;
+		 double totalCartAmt =0.0d;
 		try
 		{
 
+			totalCartAmt = cart.getTotalPrice().doubleValue();
+			
 			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
 
@@ -7469,9 +7475,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (null != cart.getTotalWalletAmount())
 				{
+					
+					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
+
+					 isCartVoucherPresent = cartCouponObj.getFirst();
+
+					if (isCartVoucherPresent.booleanValue())
+					{
+						 cartCouponCode = cartCouponObj.getSecond();
+					}
+					
 					final Double WalletAmt = cart.getTotalWalletAmount();
 
-					final double totalCartAmt = cart.getTotalPrice().doubleValue();
+					
 
 					//	System.out.println("totalAmt"+totalCartAmt);
 
@@ -7491,6 +7507,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("apportionMode", "CliqCash");
 						jsonObject.put("cliqCashAmt", WalletAmt);
 						jsonObject.put("totalCartAmt", totalCartAmt);
+						jsonObject.put("cartCouponCode", cartCouponCode);
+						jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
 						//jsonObject.put("juspayAmt", 0);
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -7506,7 +7524,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("juspayAmt", juspayTotalAmt);
 						jsonObject.put("cliqCashAmt", WalletAmt);
 						jsonObject.put("totalCartAmt", totalCartAmt);
+						jsonObject.put("cartCouponCode", cartCouponCode);
+						jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
 						cart.setSplitModeInfo("Split");
+						cart.setTotalPrice(Double.valueOf(juspayTotalAmt));
 						jsonObject.put("apportionMode", "Split");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -7515,13 +7536,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
+				
+				if(cart.getSplitModeInfo().equalsIgnoreCase("cliqcash")){
+				jsonObject.put("juspayAmt", Double.valueOf(totalCartAmt));
+				cart.setTotalPrice(Double.valueOf(totalCartAmt));
+				}
+				if(cart.getSplitModeInfo().equalsIgnoreCase("split")){
+					jsonObject.put("juspayAmt", Double.valueOf(totalCartAmt) + cart.getTotalWalletAmount());
+					cart.setTotalPrice(Double.valueOf(totalCartAmt) + cart.getTotalWalletAmount());
+				}
+
 				jsonObject.put("disableJsMode", false);
 				cart.setSplitModeInfo("Juspay");
 				jsonObject.put("apportionMode", "Juspay");
 				getSessionService().setAttribute("WalletTotal", "" + 0);
+				
 				getModelService().save(cart);
 				getModelService().refresh(cart);
-				jsonObject.put("juspayAmt", 0);
+				
 			}
 
 		}
@@ -7568,6 +7600,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
 					{
+						cart.setPayableWalletAmount(Double.valueOf(totalCartAmt));
 						cart.setSplitModeInfo("CliqCash");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -7576,6 +7609,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					else
 					{
 						jsonObject.put("disableJsMode", false);
+						cart.setPayableWalletAmount(WalletAmt);
 						cart.setSplitModeInfo("Split");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -7586,6 +7620,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				jsonObject.put("disableJsMode", false);
 				cart.setSplitModeInfo("Juspay");
+				cart.setPayableWalletAmount(Double.valueOf(0));
 				getModelService().save(cart);
 				getModelService().refresh(cart);
 			}
@@ -8205,6 +8240,29 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			errorMessage = "Error";
 		}
 		return errorMessage;
+	}
+	
+	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
+	{
+		boolean flag = false;
+		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
+					flag = true;
+					couponCode = object.getVoucherCode();
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
+
+		return cartCouponObj;
 	}
 
 }

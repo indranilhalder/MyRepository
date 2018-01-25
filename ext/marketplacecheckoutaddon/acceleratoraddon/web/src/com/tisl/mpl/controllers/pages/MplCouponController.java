@@ -100,6 +100,7 @@ public class MplCouponController
 		boolean couponRedStatus = false;
 		String couponMessageInformation = null;//Added for TPR-4461
 		boolean isCartVoucherPresent = false;
+		boolean egvSplitMode = false;
 
 		//Redeem coupon for cartModel
 		if (orderModel == null)
@@ -116,6 +117,11 @@ public class MplCouponController
 				{
 					cartCouponCode = cartCouponObj.getSecond();
 					cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel); // Removing any Cart level Coupon Offer
+				}
+				//Removing CliqCash Amount
+				if(cartModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+					egvSplitMode = true;
+					cartModel.setTotalPrice(cartModel.getTotalPrice() + cartModel.getTotalWalletAmount());
 				}
 
 				//Apply the voucher
@@ -142,8 +148,14 @@ public class MplCouponController
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
 
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
+				
+				//ReApply CliqCash Amount
+				if(egvSplitMode){
+					
+					cartModel.setTotalPrice(cartModel.getTotalPrice() - cartModel.getTotalWalletAmount());
+				}
 
-				if (StringUtils.isNotEmpty(cartCouponCode))
+				if (StringUtils.isNotEmpty(cartCouponCode) && !cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 				{
 					data = reapplyCartCoupon(data, cartCouponCode, cartModel);
 				}
@@ -792,6 +804,8 @@ public class MplCouponController
 		VoucherDiscountData data = new VoucherDiscountData();
 		try
 		{
+		
+			
 			final String couponCode = getMplCouponFacade().getCouponCode(manuallyselectedvoucher);
 
 			OrderModel orderModel = null;
@@ -805,6 +819,11 @@ public class MplCouponController
 			if (orderModel == null)
 			{
 				CartModel cartModel = getCartService().getSessionCart();
+				
+				if(cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+					
+					return data;
+				}
 
 				try
 				{
@@ -826,6 +845,12 @@ public class MplCouponController
 				try
 				{
 					orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel);
+					
+					if(orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+						
+						return data;
+					}
+					
 					if (StringUtils.isNotEmpty(couponCode))
 					{
 						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, null, orderModel);

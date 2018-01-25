@@ -3408,8 +3408,7 @@ ACC.singlePageCheckout = {
 		$("#offer_section_responsive_error_msgDiv").css("display","none");
 		document.getElementById("offer_section_responsive_error_msg").innerHTML="";
 		}
-		
-		
+	     
 			
 		$('input:radio[name=offer_name]').each(function () { 
 			if($(this).val() == offerID) {
@@ -3430,7 +3429,7 @@ ACC.singlePageCheckout = {
 			}
 		});
 		
-		
+	if(globalCliqCashMode == false){
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/usevoucher";
 		var guid = $('#guid').val();
@@ -3451,7 +3450,7 @@ ACC.singlePageCheckout = {
 			}
 
 		});
-        
+
         xhrResponse.done(function(response, textStatus, jqXHR) {
         	$("#paymentoffersPopup").modal('hide'); //for poppup
         	
@@ -3526,10 +3525,23 @@ ACC.singlePageCheckout = {
             	
 		}); 
         
+    	xhrResponse.complete(function(response, textStatus, jqXHR) {
+			  useWalletForPaymentAjax();
+		});
+        
         xhrResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();
 		});
-        
+	}
+		else {
+			if(ACC.singlePageCheckout.getIsResponsive()){
+			$("#offer_section_responsive_error_msg").html("!Oops, Bank Promotion cant apply with CliqCash Only as Payment mode.");
+			$("#offer_section_responsive_error_msgDiv").css("display","block");
+		} else {
+			$("#juspayErrorMsg").html("!Oops, Bank Promotion cant apply with CliqCash Only as Payment mode.");
+			$("#juspayconnErrorDiv").css("display","block");
+		}
+		}
 		
 	},
 	getTopoffers:function(val){
@@ -3544,7 +3556,8 @@ ACC.singlePageCheckout = {
 		   });
 		    return status;
 	},
-	releasePromoVoucher:function(offerID){		
+	releasePromoVoucher:function(offerID){	
+		
     	//$('.promoapplied').prop('checked', false);
     	//$('.promoapplied').removeClass("promoapplied"); 
     	//release voucher ajax call
@@ -3560,7 +3573,7 @@ ACC.singlePageCheckout = {
 		var guid = $('#guid').val();
 		var data= {manuallyselectedvoucher:offerID,guid:guid};
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
-        
+
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 			//internet issue
@@ -3587,6 +3600,7 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
+        	
             $("#paymentoffersPopup").modal('hide'); //for poppup
         	
         	if(response.couponRedeemed == false && response.totalPrice != undefined && response.totalPrice != null) { //coupon released successfully
@@ -3616,6 +3630,12 @@ ACC.singlePageCheckout = {
         	
             	
 		}); 
+        
+        
+		xhrResponse.complete(function(response, textStatus, jqXHR) {
+			  useWalletForPaymentAjax();
+		});
+		
         
         xhrResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();

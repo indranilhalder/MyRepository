@@ -2534,23 +2534,23 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE
 				 */
-				if (null != cart.getIsEGVCart() && !cart.getIsEGVCart().booleanValue())
-				{
-
-					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
-					{
-						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
-						{
-
-							cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-						}
-					}
-
-
-					/**
-					 * QC CHANGE end
-					 */
-				}
+//				if (null != cart.getIsEGVCart() && !cart.getIsEGVCart().booleanValue())
+//				{
+//
+//					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+//					{
+//						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+//						{
+//
+//							cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+//						}
+//					}
+//
+//
+//					/**
+//					 * QC CHANGE end
+//					 */
+//				}
 
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
 			}
@@ -2561,19 +2561,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				 * QC CHANGE
 				 */
 
-				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
-				{
-					if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
-					{
-
-						order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-					}
-				}
-
-
-				/**
-				 * QC CHANGE end
-				 */
+//				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+//				{
+//					if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
+//					{
+//
+//						order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+//					}
+//				}
+//
+//
+//				/**
+//				 * QC CHANGE end
+//				 */
 
 
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, order.getGuid());
