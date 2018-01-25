@@ -454,6 +454,12 @@ body .account .right-account {
 body #account-invite .right-account>div.invites {
     padding: 0;
 }
+/* start change of TISPRDT-8278 */
+.copycode_message {
+	top: auto;
+    bottom: 30px;
+}
+/* end change of TISPRDT-8278 */
 }
 @media (min-width: 791px){
 body .account .right-account {
