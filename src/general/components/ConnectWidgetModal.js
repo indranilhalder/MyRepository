@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ConnectWidgetModal.css";
 import { Icon } from "xelpmoc-core";
-import delivery from "./img/delivery.svg";
+import delivery from "./img/delivery.png";
 import PropTypes from "prop-types";
 export default class ConnectWidgetModal extends React.Component {
   render() {
