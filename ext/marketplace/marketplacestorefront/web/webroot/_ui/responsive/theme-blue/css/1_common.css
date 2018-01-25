@@ -1375,6 +1375,7 @@ opacity
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    text-transform: uppercase;	/* add for TISPRDT-8244 */
 }
 .pagination li.prev, .pagination li.next {
     font-weight: 500;
