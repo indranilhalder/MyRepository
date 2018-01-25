@@ -1,3 +1,9 @@
+.holder {
+  width: 100%;
+  height: auto;
+  padding: 20px 0;
+  background: #ececec;
+}
 .base {
   width: 100%;
   height: auto;
