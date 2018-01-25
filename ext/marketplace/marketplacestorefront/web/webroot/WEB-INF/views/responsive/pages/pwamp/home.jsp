@@ -465,6 +465,36 @@
 	</div>
 	</template> 
 	</amp-list>
+	
+	<div class="amp-tealium amp-analytics-class">
+		<c:set var="site_region" value="en"/>
+		<c:set var="user_type" value="${user_type}"/>
+		<c:set var="user_login_type" value="${userLoginType}"/>
+		<c:set var="user_id" value="${user_id}"/>
+		<c:set var="page_type" value="home"/>
+		<c:set var="page_name" value="homepage"/>
+		<c:set var="product_category" value="null"/>
+		<c:set var="page_subcategory_name" value="null"/>
+		<c:set var="page_subcategory_name_L3" value="null"/>
+		<c:set var="session_id" value="${sessionId}"/>
+		<c:set var="visitor_ip" value="${visitorIp}"/>
+		<c:set var="site_currency" value="INR"/>
+		<c:set var="site_section" value="home"/>
+		<c:set var="IA_company" value="${pageContext.request.serverName}"/>
+		<c:set var="fb_content_type" value="null"/>
+		<c:set var="product_sku_quick_view" value="null"/>
+		<c:set var="page_subcategory_L1" value="null"/>
+		<c:set var="page_subcategory_L2" value="null"/>
+		<c:set var="page_subcategory_L3" value="null"/>
+		<c:set var="product_mrp" value="null"/>
+		<c:set var="post_category" value="null"/>
+		<c:set var="post_title" value="null"/>
+		<c:set var="post_author" value="null"/>
+		
+		<amp-iframe height="1" width="1"
+		 src="${base}iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
+		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
+	</div>
 
 	<!-- Brands You Love -->
 	<div id="brandsYouLoveMobileComp" class="">
@@ -636,36 +666,6 @@
 		</amp-carousel> 
 		</template> 
 		</amp-list>
-	</div>
-	
-	<div class="amp-tealium" class="amp-analytics-class">
-		<c:set var="site_region" value="en"/>
-		<c:set var="user_type" value="${user_type}"/>
-		<c:set var="user_login_type" value="${userLoginType}"/>
-		<c:set var="user_id" value="${user_id}"/>
-		<c:set var="page_type" value="home"/>
-		<c:set var="page_name" value="homepage"/>
-		<c:set var="product_category" value="null"/>
-		<c:set var="page_subcategory_name" value="null"/>
-		<c:set var="page_subcategory_name_L3" value="null"/>
-		<c:set var="session_id" value="${sessionId}"/>
-		<c:set var="visitor_ip" value="${visitorIp}"/>
-		<c:set var="site_currency" value="INR"/>
-		<c:set var="site_section" value="home"/>
-		<c:set var="IA_company" value="${pageContext.request.serverName}"/>
-		<c:set var="fb_content_type" value="null"/>
-		<c:set var="product_sku_quick_view" value="null"/>
-		<c:set var="page_subcategory_L1" value="null"/>
-		<c:set var="page_subcategory_L2" value="null"/>
-		<c:set var="page_subcategory_L3" value="null"/>
-		<c:set var="product_mrp" value="null"/>
-		<c:set var="post_category" value="null"/>
-		<c:set var="post_title" value="null"/>
-		<c:set var="post_author" value="null"/>
-		
-		<amp-iframe height="1" width="1"
-		 src="${base}iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
-		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
 	</div>
 	
 	<footer:ampfooter />
