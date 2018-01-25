@@ -185,19 +185,19 @@ tr.d0 td {
 			<!-- end change for INC144314454 -->
 		</div>
 		
-		<div class="wishAddSucess" style="display: none;">	<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+		<div class="wishAddSucess">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishRemoveSucess" style="display: none;">	<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+		<div class="wishRemoveSucess">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishAddLogin" style="display: none;">	<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+		<div class="wishAddLogin">	<!-- add style for TISCSS-166 -->
+			<span  style="display: none;"><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>
-		<div class="wishAlreadyAdded" style="display: none;">	<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		<div class="wishAlreadyAdded">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 
 		<div class="product-detail ${product.rootCategory}">

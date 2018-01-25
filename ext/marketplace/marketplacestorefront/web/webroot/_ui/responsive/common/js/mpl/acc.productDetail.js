@@ -668,11 +668,11 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 
 //	if(loggedIn == 'false') {
 	if(!headerLoggedinStatus) {
-		$(".wishAddLogin").css("display","block");	/*add for TISCSS-166*/
+		$(".wishAddLogin>span").css("display","block");	/*add for TISCSS-166*/
 		$(".wishAddLogin").addClass("active");
 		setTimeout(function(){
 			$(".wishAddLogin").removeClass("active");
-			$(".wishAddLogin").css("display","none");	/*add for TISCSS-166*/
+			$(".wishAddLogin>span").css("display","none");	/*add for TISCSS-166*/
 		},3000)
 	}
 	else {
@@ -692,11 +692,11 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
 					//$('#addedMessage').html(msg);
-					$(".wishAddSucess").css("display","block");		/*add for TISCSS-166*/
+					$(".wishAddSucess>span").css("display","block");		/*add for TISCSS-166*/
 					$(".wishAddSucess").addClass("active");
 					setTimeout(function(){
 						$(".wishAddSucess").removeClass("active");
-						$(".wishAddSucess").css("display","none");	/*add for TISCSS-166*/
+						$(".wishAddSucess>span").css("display","none");	/*add for TISCSS-166*/
 					},3000)
 					$("#add_to_wishlist").attr("disabled",true);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
@@ -3355,11 +3355,11 @@ function loadDefaultWishListName_SizeGuide() {
 						console.log('Error Adding trackers when remove from cart: '+err.message);					
 					}
 				}
-				$(".wishRemoveSucess").css("display","block");	/*add for TISCSS-166*/
+				$(".wishRemoveSucess>span").css("display","block");	/*add for TISCSS-166*/
 				$(".wishRemoveSucess").addClass("active");
 				setTimeout(function(){
 					$(".wishRemoveSucess").removeClass("active");
-					$(".wishRemoveSucess").css("display","none");	/*add for TISCSS-166*/
+					$(".wishRemoveSucess>span").css("display","none");	/*add for TISCSS-166*/
 				},3000)
 				$("#add_to_wishlist").attr("disabled",false);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
