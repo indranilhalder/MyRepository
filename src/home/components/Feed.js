@@ -6,6 +6,7 @@ import BannerProductCarousel from "./BannerProductCarousel.js";
 import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
+import FollowBase from "./FollowBase.js";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
@@ -28,6 +29,7 @@ const typeComponentMapping = {
     <AutomatedBrandProductCarousel {...props} />
   ),
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
+  followBaseWidget: props => <FollowBase {...props} />,
   singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
   bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
