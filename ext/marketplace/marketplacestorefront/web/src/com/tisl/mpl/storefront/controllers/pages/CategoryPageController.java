@@ -1390,6 +1390,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
+		getFooterContent("FooterSlot", model);
 		String returnStatement = null;
 		//EQA review comments added
 		try
