@@ -37,7 +37,7 @@
   float: left;
   padding: 12px;
 }
-.icondiv {
+.iconBase{
   width: 100%;
   height: 60px;
   position: relative;

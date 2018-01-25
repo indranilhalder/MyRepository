@@ -1,10 +1,9 @@
 import React from "react";
-import styles from "./ConnectBaseWidget.css";
-import ConnectWidgetModal from "./ConnectWidgetModal";
+import styles from "./ConnectBothWidget.css";
+import ConnectBothWidget from "./ConnectBothWidget";
 import Connect from "./img/Connect_Small.svg";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
-
 export default class ConnectBaseWidget extends React.Component {
   handleClick = () => {
     if (this.props.onClick) {
@@ -16,7 +15,7 @@ export default class ConnectBaseWidget extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
-          <div className={styles.icondiv}>
+          <div className={styles.iconBase}>
             <div className={styles.iconHolder}>
               <Icon image={Connect} size={50} />
             </div>
@@ -26,7 +25,7 @@ export default class ConnectBaseWidget extends React.Component {
         </div>
         {data.map((datum, i) => {
           return (
-            <ConnectWidgetModal
+            <ConnectBothWidget
               key={i}
               title={datum.title}
               description={datum.description}
