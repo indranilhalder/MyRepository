@@ -19,6 +19,7 @@ import de.hybris.platform.solrfacetsearch.provider.FieldNameProvider;
 import de.hybris.platform.solrfacetsearch.provider.FieldValue;
 import de.hybris.platform.solrfacetsearch.provider.FieldValueProvider;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldValueProvider;
+import de.hybris.platform.util.Config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -193,7 +194,8 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 		final List<CategoryModel> categoryModel = new ArrayList<CategoryModel>();
 		for (final CategoryModel catModel : categoryPath)
 		{
-			if (catModel.getCode().startsWith("LSH"))
+			if (!catModel.getCode().equals("LSH")
+					&& Config.getString("luxury.salescategories", "LSH1,ISH1").contains(catModel.getCode().substring(0, 3)))
 			{
 				categoryModel.add(catModel);
 			}
