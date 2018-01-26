@@ -327,7 +327,7 @@
 					<section>
 						<h4 class="l1-options">
 							<c:set var="userName" value="${fname}"/>
-							<a href="<c:url value="/my-account"/>" class="l1-my-account"><span class="sidebar-myaccount"></span> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
+							<a href="<c:url value="/my-account"/>" class="fa l1-my-account"><span class="sidebar-myaccount"></span> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
 						<i class="fa fa-angle-right"></i></h4>
 						<div>
 							<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
