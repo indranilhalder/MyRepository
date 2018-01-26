@@ -113,7 +113,7 @@ body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFF
 .fa-navicon:before, .fa-reorder:before, .fa-bars:before {content: "\f0c9";}
 .fa-search:before {content: "\f002";}
 .fa-user:before {content: "\f007";}
-.fa-heart:before {content: "\f004";}
+.fa-heart:before {content: "\f08a";}
 .fa-mobile-phone:before, .fa-mobile:before {content: "\f10b";}
 .fa-angle-right:before {content: "\f105";}
 .fa-angle-down:before {content: "\f107";}
@@ -204,6 +204,25 @@ header{
   line-height: 30px;
   display: inline-block;
   margin-left: 10px;
+}
+
+.sidebar-divider-item span, .sidebar-myaccount {
+	width: 25px;
+    display: inline-block;
+    vertical-align: middle;
+    height: 26px;
+    filter: invert(100%);
+    margin-right: 5px;
+}
+
+.sidebar-myaccount {margin-left: -5px;}
+
+.sidebar-profile span, .sidebar-myaccount {
+	background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -352px -176px;
+ }
+ 
+.sidebar-download-app span {
+	background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -302px -175px;
 }
 
 .header-icon-2 a span {
@@ -339,7 +358,7 @@ header{
 .sidebar-divider-item{
     font-family: 'Montserrat';
     font-size: 14px;
-    padding-left: 20px;
+    padding-left: 15px;
     color: #3a3a3a;
     border-bottom: solid 1px rgba(0,0,0,0.1);
 	line-height:50px;
@@ -438,7 +457,7 @@ padding-top:0px;
 .left-accordion-menu li label i {float: right; margin-right: 15px;margin-top: 15px;}
 .l2-menu-section li label i {margin-top: 10px;}
 .left-accordion-menu input[type=radio], .left-accordion-menu input[type=checkbox] {display: none;}
-.left-accordion-menu input[type=radio]:checked + label + ul, .left-accordion-menu input[type=checkbox]:checked + label + ul
+.left-accordion-menu input[type=radio]:checked + label + ul, .left-accordion-menu input[type=checkbox]:checked + label + ul,
 .left-accordion-menu input[type=radio]:checked + label .fa-angle-right:before, .left-accordion-menu input[type=checkbox]:checked + label .fa-angle-right:before {content: "\f107";}
 .left-accordion-menu input[type=radio]:checked + label:nth-of-type(n) + ul, .left-accordion-menu input[type=checkbox]:checked + label:nth-of-type(n) + ul {display: block;}
 .left-accordion-menu > li > input[type=radio]:checked + label, .left-accordion-menu > li > input[type=checkbox]:checked + label {background-color: #a9133d; color: #fff;}
