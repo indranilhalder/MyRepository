@@ -321,6 +321,8 @@ header{
 
 .user-information > section > div > ul {margin: 0;}
 
+.user-information section[expanded] .sidebar-myaccount {filter: none;}
+
 .user-information > section > div > ul > li {
     padding-left: 20px;
     line-height: 40px;
