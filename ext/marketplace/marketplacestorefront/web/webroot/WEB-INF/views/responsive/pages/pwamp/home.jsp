@@ -466,7 +466,7 @@
 	</template> 
 	</amp-list>
 	
-	<div class="amp-tealium amp-analytics-class">
+	<div class="amp-tealium">
 		<c:set var="site_region" value="en"/>
 		<c:set var="user_type" value="${user_type}"/>
 		<c:set var="user_login_type" value="${userLoginType}"/>
@@ -492,7 +492,7 @@
 		<c:set var="post_author" value="null"/>
 		
 		<amp-iframe height="1" width="1"
-		 src="${base}iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
+		 src="${base}/iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
 		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
 	</div>
 
