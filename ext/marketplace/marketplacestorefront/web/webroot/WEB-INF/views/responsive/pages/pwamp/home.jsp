@@ -327,7 +327,7 @@
 					<section>
 						<h4 class="l1-options">
 							<c:set var="userName" value="${fname}"/>
-							<a href="<c:url value="/my-account"/>" class="fa fa-user l1-my-account"> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
+							<a href="<c:url value="/my-account"/>" class="l1-my-account"><span class="sidebar-myaccount"></span> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
 						<i class="fa fa-angle-right"></i></h4>
 						<div>
 							<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
@@ -364,8 +364,8 @@
 			</sec:authorize>
 
 			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-					<p class="sidebar-divider-item">
-					<a href="<c:url value="/login"/>"><i class="fa fa-user"></i>Sign In/Sign Up</a>
+					<p class="sidebar-divider-item sidebar-profile">
+					<a href="<c:url value="/login"/>"><span></span>Sign In/Sign Up</a>
 					</p>
 			</sec:authorize>
 		</c:if>
@@ -376,8 +376,8 @@
 	<p class="sidebar-divider-item">
 		<a href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
 	</p>
-	<p class="sidebar-divider-item">
-		<a href="${request.contextPath}/apps"><i class="fa fa-mobile-phone"></i>Download App</a>
+	<p class="sidebar-divider-item sidebar-download-app">
+		<a href="${request.contextPath}/apps"><span></span>Download App</a>
 	</p>
 	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
 	</amp-sidebar>
