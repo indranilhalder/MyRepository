@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { homeFeed } from "../actions/home.actions";
 import Feed from "../components/Feed";
+
 import { withRouter } from "react-router-dom";
 const mapDispatchToProps = dispatch => {
   return {

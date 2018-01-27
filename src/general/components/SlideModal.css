@@ -3,6 +3,7 @@
   min-height: 100%;
   position: absolute;
   right: 0;
+  top: 0;
   padding-left: 40px;
   transform: translateX(100%);
   animation: slideIn 300ms forwards;
@@ -10,7 +11,7 @@
 .cancel {
   width: 40px;
   height: 40px;
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   background: url(./img/cancel.svg)no-repeat;
@@ -20,6 +21,8 @@
 .content {
   width: 100%;
   height: auto;
+  max-height: 100vh;
+  overflow: auto;
 }
 @keyframes slideIn {
   0% {

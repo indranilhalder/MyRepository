@@ -11,6 +11,7 @@
   justify-content: center;
   -webkit-justify-content: center;
   z-index: 200;
+  overflow: hidden;
 }
 .background {
   background: rgba(0, 0, 0, 0.7);
@@ -22,12 +23,14 @@
 }
 @media only screen and (max-width: 1024px) {
   .base {
-    width: 100%;
+    width: 100vw;
+    /* overflow-x: hidden;
+    overflow-y: visible; */
     height: auto;
-    min-height: 100%;
+    min-height: 100vh;
     position: absolute;
-    top: initial;
-    bottom: 0;
+    /* top: initial;
+    bottom: 0; */
   }
   .background {
     background: none;

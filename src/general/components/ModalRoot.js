@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
-
+import ConnectDetails from "../../home/components/ConnectDetailsWithModal";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -61,10 +61,12 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           submitOtp={() => this.submitOtpForgotPassword()}
         />
-      )
+      ),
+      ConnectDetails: <ConnectDetails closeModal={() => this.handleClose()} />
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
+
     const Modal = this.props.modalStatus ? (
       <ModalPanel
         closeModal={() => {
