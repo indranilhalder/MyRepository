@@ -23,5 +23,7 @@ body {
     pointer-events: none;
     transition: 200ms;
     position: fixed;
+    left: 0;
+    top: 0;
   }
 }
