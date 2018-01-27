@@ -1,0 +1,62 @@
+@media screen and (max-width: 1024px) {
+  .base {
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  .slider {
+    white-space: nowrap;
+    width: 100%;
+    height: 58.33vw;
+    position: relative;
+  }
+  .forward {
+    composes: slider;
+    transition: transform 300ms;
+  }
+  .back {
+    composes: slider;
+    transition: transform 300ms;
+  }
+  .forward .item:nth-child(3) {
+    left: -166% !important;
+  }
+  .forward .item:nth-child(1) {
+    transform: scale(0.86) !important;
+    transition: transform 300ms;
+  }
+  .back .item:nth-child(1) {
+    left: 166% !important;
+  }
+  .back .item:nth-child(3) {
+    transform: scale(0.86) !important;
+    transition: transform 300ms;
+  }
+  .forward .item:nth-child(2),
+  .back .item:nth-child(2) {
+    transition: transform 300ms;
+    transform: scale(0.737) !important;
+  }
+  .transition {
+    composes: slider;
+    transition: transform 300ms;
+  }
+  .item {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    transform: scale(0.737);
+  }
+  .item:nth-child(1) {
+    left: -83%;
+  }
+  .item:nth-child(2) {
+    left: 0;
+    transform: scale(0.86);
+  }
+  .item:nth-child(3) {
+    left: 83%;
+  }
+}
