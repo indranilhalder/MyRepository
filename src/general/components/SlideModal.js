@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./SlideModal.css";
 export default class SlideModal extends React.Component {
   handleClose() {
@@ -20,3 +21,7 @@ export default class SlideModal extends React.Component {
     );
   }
 }
+
+SlideModal.propTypes = {
+  closeModal: PropTypes.func
+};
