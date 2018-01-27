@@ -58,6 +58,15 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 				}
 			}
 
+			//CliqCash Remove check
+			if (anOrder.getAttribute("splitModeInfo").equals("Split"))
+			{
+				if (anOrder.getAttribute("totalWalletAmount") != null)
+				{
+					currentTotal -= Double.parseDouble(anOrder.getAttribute("totalWalletAmount").toString());
+				}
+			}
+
 			// Coupon Evaluation
 
 			if (isPositiveAsPrimitive())
