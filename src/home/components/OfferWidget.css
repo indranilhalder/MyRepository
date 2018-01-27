@@ -1,7 +1,15 @@
+.holder {
+  width: 100%;
+  height: auto;
+  padding: 20px 0;
+  background: #ececec;
+}
 .base {
   width: 100%;
   height: auto;
   padding-bottom: 100%;
+  overflow: hidden;
+  border-radius: 4px;
   position: relative;
 }
 .imageHolder {
@@ -23,6 +31,7 @@
   text-align: center;
   display: inline-block;
   line-height: 78px;
+  pointer-events: none;
 }
 .overlay {
   width: 100%;
@@ -51,8 +60,7 @@
   margin: auto;
   word-break: break-word;
   text-align: left;
-  padding: 0px 20px;
-  padding-bottom: 20px;
+  padding: 0px 20px 20px 20px;
   width: 100%;
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -64,4 +72,28 @@
 .textHolder {
   width: auto;
   height: auto;
+}
+
+@media screen and (min-width: 1025px) {
+  .ovalImage {
+    width: auto;
+    height: 36px;
+    padding: 0 15px;
+    border-radius: 4px;
+    line-height: 36px;
+    left: initial;
+    right: 20px;
+  }
+  .text {
+    width: auto;
+    word-wrap: normal;
+    white-space: nowrap;
+  }
+  .textLine {
+    padding: 0px 40px 40px 40px;
+    pointer-events: none;
+  }
+  .overlay {
+    cursor: pointer;
+  }
 }

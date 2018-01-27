@@ -180,6 +180,7 @@ export function getComponentData(positionInFeed, fetchURL) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(componentDataSuccess(resultJson, positionInFeed));
     } catch (e) {
       dispatch(componentDataFailure(positionInFeed, e.message));
