@@ -11,32 +11,37 @@ export default class ThemeProductWidget extends React.Component {
     }
   }
   render() {
+    const data = this.props.feedComponentData.data;
     return (
       <div
         className={styles.base}
         style={{
-          backgroundImage: `url(${this.props.backgroundImage})`
+          backgroundImage: `url(${data.backgroundImageURL})`
         }}
       >
         <div className={styles.overlay} />
         <div className={styles.logo}>
-          <Logo image={this.props.logo} />
+          <Logo image={data.brandLogo} />
         </div>
         <Carousel
-          header={this.props.header}
-          buttonText="Shop all"
+          header={data.title}
+          buttonText={data.btnText}
           seeAll={this.handleClick}
           elementWidthMobile={45}
           withFooter={false}
           isWhite={true}
         >
-          {this.props.data &&
-            this.props.data.map((datum, i) => {
+          {data.items &&
+            data.items.map((datum, i) => {
               return (
                 <ThemeProduct
                   image={datum.image}
-                  label={datum.label}
-                  price={datum.price}
+                  label={datum.title}
+                  price={
+                    datum.discountedPrice
+                      ? datum.discountedPrice
+                      : datum.mrpPrice
+                  }
                   key={i}
                   isWhite={true}
                 />
@@ -48,18 +53,19 @@ export default class ThemeProductWidget extends React.Component {
   }
 }
 ThemeProductWidget.propTypes = {
-  header: PropTypes.string,
-  backgroundImage: PropTypes.string,
-  logo: PropTypes.string,
-  seeAll: PropTypes.func,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      price: PropTypes.string,
-      image: PropTypes.string
+  feedComponentData: PropTypes.shape({
+    data: PropTypes.shape({
+      backgroundImageURL: PropTypes.string,
+      brandLogo: PropTypes.string,
+      btnText: PropTypes.string,
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string,
+          mrpPrice: PropTypes.string,
+          discountedPrice: PropTypes.string,
+          imageURL: PropTypes.string
+        })
+      )
     })
-  )
-};
-ThemeProductWidget.defaultProps = {
-  header: "New arrivals"
+  })
 };
