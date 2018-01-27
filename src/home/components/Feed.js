@@ -14,6 +14,7 @@ import FollowingBrands from "./FollowingBrands";
 import FlashSale from "./FlashSale";
 import OfferWidget from "./OfferWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
+import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
@@ -30,6 +31,7 @@ const typeComponentMapping = {
   ),
   flashSales: props => <FlashSale {...props} />,
   offersWidget: props => <OfferWidget {...props} />,
+  themeProductWidget: props => <ThemeProductWidget {...props} />,
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
   followBaseWidget: props => <FollowBase {...props} />,
   singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
