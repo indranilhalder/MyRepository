@@ -7,6 +7,7 @@ import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
+import ConnectWidget from "./ConnectWidget";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
@@ -33,6 +34,7 @@ const typeComponentMapping = {
   ),
   flashSales: props => <FlashSale {...props} />,
   offersWidget: props => <OfferWidget {...props} />,
+  connectBanner: props => <ConnectWidget {...props} />,
   themeProductWidget: props => <ThemeProductWidget {...props} />,
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
   followBaseWidget: props => <FollowBase {...props} />,
