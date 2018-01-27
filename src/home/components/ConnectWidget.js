@@ -27,14 +27,6 @@ export default class ConnectWidget extends React.Component {
             <div className={styles.connectBox}>{this.props.header}</div>
             <div className={styles.label}>{this.props.text}</div>
             <div className={styles.buttonBox}>
-              {/* <div
-                className={styles.button}
-                onClick={() => {
-                  this.handleClick();
-                }}
-              >
-                {this.props.knowMore}
-              </div> */}
               <ConnectKnowMoreContainer />
             </div>
           </div>
