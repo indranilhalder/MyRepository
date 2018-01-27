@@ -45,7 +45,7 @@ export default class Follow extends Component {
         textStyle={{
           color: "#FFFFFF",
           fontSize: 14,
-          fontFamily: "regular"
+          fontFamily: "semibold"
         }}
         onClick={() => this.handleClick()}
       />
@@ -53,7 +53,7 @@ export default class Follow extends Component {
   }
 }
 
-Follow.PropTypes = {
+Follow.propTypes = {
   onFollowClick: PropTypes.func,
   onUnFollowClick: PropTypes.func,
   follow: PropTypes.bool
