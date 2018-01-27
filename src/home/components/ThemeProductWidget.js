@@ -25,7 +25,7 @@ export default class ThemeProductWidget extends React.Component {
         </div>
         <Carousel
           header={data.title}
-          buttonText="Shop all"
+          buttonText={data.btnText}
           seeAll={this.handleClick}
           elementWidthMobile={45}
           withFooter={false}
@@ -53,18 +53,19 @@ export default class ThemeProductWidget extends React.Component {
   }
 }
 ThemeProductWidget.propTypes = {
-  header: PropTypes.string,
-  backgroundImage: PropTypes.string,
-  logo: PropTypes.string,
-  seeAll: PropTypes.func,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      price: PropTypes.string,
-      image: PropTypes.string
+  feedComponentData: PropTypes.shape({
+    data: PropTypes.shape({
+      backgroundImageURL: PropTypes.string,
+      brandLogo: PropTypes.string,
+      btnText: PropTypes.string,
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string,
+          mrpPrice: PropTypes.string,
+          discountedPrice: PropTypes.string,
+          imageURL: PropTypes.string
+        })
+      )
     })
-  )
-};
-ThemeProductWidget.defaultProps = {
-  header: "New arrivals"
+  })
 };
