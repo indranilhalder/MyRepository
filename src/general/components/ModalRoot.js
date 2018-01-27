@@ -62,7 +62,12 @@ export default class ModalRoot extends React.Component {
           submitOtp={() => this.submitOtpForgotPassword()}
         />
       ),
-      ConnectDetails: <ConnectDetails closeModal={() => this.handleClose()} />
+      ConnectDetails: (
+        <ConnectDetails
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
+        />
+      )
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];

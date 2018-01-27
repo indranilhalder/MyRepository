@@ -11,28 +11,34 @@ export default class ConnectBaseWidget extends React.Component {
     }
   };
   render() {
-    let data = this.props.data;
+    console.log(this.props);
+    let data = this.props.data.data;
+
     return (
-      <div className={styles.base}>
+      <div
+        className={styles.base}
+        style={{ backgroundImage: `url(${data.backgroundImageURL})` }}
+      >
         <div className={styles.header}>
           <div className={styles.iconBase}>
             <div className={styles.iconHolder}>
-              <Icon image={Connect} size={50} />
+              <Icon image={data.imageURL} size={50} />
             </div>
-            <div className={styles.text}>{this.props.text}</div>
+            <div className={styles.text}>Connect</div>
           </div>
-          <div className={styles.heading}>{this.props.heading}</div>
+          <div className={styles.heading}>{data.description}</div>
         </div>
-        {data.map((datum, i) => {
-          return (
-            <ConnectBothWidget
-              key={i}
-              title={datum.title}
-              description={datum.description}
-              ImageURL={datum.ImageURL}
-            />
-          );
-        })}
+        {data.items &&
+          data.items.map((datum, i) => {
+            return (
+              <ConnectBothWidget
+                key={i}
+                title={datum.title}
+                description={datum.description}
+                imageURL={datum.imageURL}
+              />
+            );
+          })}
         <div className={styles.buttonBox}>
           <div
             className={styles.button}
@@ -40,7 +46,7 @@ export default class ConnectBaseWidget extends React.Component {
               this.handleClick();
             }}
           >
-            {this.props.knowMore}
+            know more
           </div>
         </div>
       </div>

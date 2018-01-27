@@ -1,6 +1,9 @@
-.base {
+.holder {
   width: 100%;
   height: auto;
+}
+.base {
+  composes: holder;
 }
 .inCard {
   composes: base;

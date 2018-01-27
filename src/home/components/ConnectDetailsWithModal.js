@@ -1,16 +1,12 @@
 import React from "react";
 import SlideModal from "../../general/components/SlideModal";
+import ConnectBaseWidget from "./ConnectBaseWidget";
 export default class ConnectDetailsWithModal extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <SlideModal {...this.props}>
-        <div
-          style={{
-            width: "100%",
-            height: "150vh",
-            backgroundImage: "linear-gradient(292deg, #48dfe6, #4facfe)"
-          }}
-        />
+        <ConnectBaseWidget {...this.props.data} />
       </SlideModal>
     );
   }
