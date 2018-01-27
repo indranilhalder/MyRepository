@@ -1,0 +1,23 @@
+.button {
+  width: 75px;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+  padding-bottom: 3px;
+  font-family: semibold;
+}
+.button:after {
+  height: 1px;
+  width: 100%;
+  color: #fff;
+  font-size: 15px;
+  line-height: 20px;
+  content: "";
+  position: absolute;
+  background-color: #fff;
+  left: 0;
+  bottom: 0;
+  display: inline-block;
+}
