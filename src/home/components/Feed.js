@@ -11,6 +11,7 @@ import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
+import FlashSale from "./FlashSale";
 import OfferWidget from "./OfferWidget.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
@@ -28,6 +29,7 @@ const typeComponentMapping = {
   automatedBrandProductCarousel: props => (
     <AutomatedBrandProductCarousel {...props} />
   ),
+  flashSales: props => <FlashSale {...props} />,
   offersWidget: props => <OfferWidget {...props} />,
   themeProductWidget: props => <ThemeProductWidget {...props} />,
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
