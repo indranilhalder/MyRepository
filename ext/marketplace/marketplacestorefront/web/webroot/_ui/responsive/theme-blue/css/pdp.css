@@ -13166,3 +13166,11 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td {
     font-size: 12px;
 }
 /* end change of TISPRDT-8253 */
+.brands-main h1, .cmsBrands h1, .cmsMultiBrands h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 30px 0 10px 0;
+    position: relative;
+    color: #000;
+    font-family: inherit;
+}
