@@ -73,10 +73,10 @@ display: none;
 <span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
  
 </c:if>
---%>
+
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
-<!-- <div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div> -->
+<div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
     <ul class="pagination-block source">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
     	<c:choose>
@@ -106,10 +106,10 @@ display: none;
     	</c:choose>
         </c:forEach>
     </ul>
-    <!-- <div class="next-block"><a href="#next-page"><span>Next</span></a></div> -->
+    <div class="next-block"><a href="#next-page"><span>Next</span></a></div>
 </c:when>
 </c:choose>
-
+--%>
 
 <div class="bottom-pagination pagination-search">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
