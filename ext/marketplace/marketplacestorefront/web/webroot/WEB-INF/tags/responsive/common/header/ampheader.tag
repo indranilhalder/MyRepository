@@ -1055,6 +1055,30 @@ amp-selector [option][selected] {
   padding-bottom: 5px;
 }
 
+.footer-top-content #footerLink {
+    border-top: 0;
+    padding: 30px 26px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+footer #footerLink div.column ul li {
+	display: inline-block;
+	padding: 7px 0;
+}
+
+footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a {color: #000;}
+
+footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
+
+footer #footerLink div.column ul {margin: 0;}
+
+footer #footerLink div.column ul li {
+    display: inline-block;
+    color: #878787;
+    padding: 7px 0;
+}
+
 .footer-top-content {clear: both;}
 .footer-top-child {padding: 0 24px 20px; float: left; background: #f9f9f9; margin: 0;line-height: normal;}
 .footer-top-content p:before {
