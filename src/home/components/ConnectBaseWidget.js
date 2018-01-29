@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./ConnectBaseWidget.css";
 import ConnectBothWidget from "./ConnectBothWidget";
-import Connect from "./img/Connect_Small.svg";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 export default class ConnectBaseWidget extends React.Component {
@@ -11,8 +10,7 @@ export default class ConnectBaseWidget extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
-    let data = this.props.data.data;
+    let data = this.props.data;
 
     return (
       <div
@@ -54,14 +52,16 @@ export default class ConnectBaseWidget extends React.Component {
   }
 }
 ConnectBaseWidget.propTypes = {
-  text: PropTypes.string,
-  image: PropTypes.string,
-  heading: PropTypes.string,
-  onClick: PropTypes.func,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      description: PropTypes.string
-    })
-  )
+  data: PropTypes.shape({
+    backgroundImageURL: PropTypes.string,
+    description: PropTypes.string.apply,
+    imageURL: PropTypes.string,
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        imageURL: PropTypes.string,
+        title: PropTypes.string,
+        description: PropTypes.string
+      })
+    )
+  })
 };

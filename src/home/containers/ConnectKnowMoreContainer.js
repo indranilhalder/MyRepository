@@ -6,14 +6,14 @@ import ConnectKnowMore from "../components/ConnectKnowMore.js";
 import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps.data);
   return {
-    data: ownProps.data
+    data: ownProps.feedComponentData
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
     showConnectModal: data => {
+      console.log(data);
       dispatch(showModal(CONNECT_DETAILS, data));
     }
   };

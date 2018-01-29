@@ -14,7 +14,6 @@ export default class ConnectWidget extends React.Component {
   }
   render() {
     let className = styles.base;
-
     if (this.props.feedComponentData["sub-type"] === "bannerInCard") {
       className = styles.inCard;
     }
@@ -22,7 +21,7 @@ export default class ConnectWidget extends React.Component {
     return (
       <div className={styles.holder}>
         <MediaQuery query="(min-device-width: 1025px)">
-          <ConnectBaseWidget data={this.props.feedComponentData} />
+          <ConnectBaseWidget data={this.props.feedComponentData.data} />
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
           <div className={className}>
@@ -45,14 +44,12 @@ export default class ConnectWidget extends React.Component {
   }
 }
 ConnectWidget.propTypes = {
-  ConnectWidgetImage: PropTypes.string,
   header: PropTypes.string,
   text: PropTypes.string,
   knowMore: PropTypes.string,
   onClick: PropTypes.func
 };
 ConnectWidget.defaultProps = {
-  ConnectWidgetImage: Icon,
   header: "Faster Delivery, Easier Returns.",
   text: "Introducing Connect Service"
 };
