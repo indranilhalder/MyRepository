@@ -15,7 +15,7 @@ export default class PlpAds extends React.Component {
       <div className={styles.base}>
         <div className={styles.plpInnerBox}>
           <div className={styles.icon}>
-            <Icon image={this.props.Image} size={40} />
+            <Icon image={this.props.imageURL} size={40} />
           </div>
           <div className={styles.plpBox}>{this.props.text}</div>
           <div className={styles.buttonHolder}>
