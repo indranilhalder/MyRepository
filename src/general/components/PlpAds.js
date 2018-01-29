@@ -33,7 +33,7 @@ export default class PlpAds extends React.Component {
   }
 }
 PlpAds.propTypes = {
-  Text: PropTypes.string,
+  text: PropTypes.string,
   imageURL: PropTypes.string,
   onClick: PropTypes.func
 };
