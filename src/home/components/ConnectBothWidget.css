@@ -3,7 +3,7 @@
   height: auto;
   position: relative;
   float: left;
-  padding: 9px;
+  padding: 10px;
 }
 .title {
   width: 100%;
@@ -41,4 +41,10 @@
 .knowmore {
   width: 100%;
   height: auto;
+}
+
+@media only screen and (min-width: 1025px) {
+  .base {
+    width: 50%;
+  }
 }

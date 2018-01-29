@@ -3,8 +3,7 @@
   background-image: linear-gradient(292deg, #48dfe6, #4facfe);
   background-repeat: no-repeat;
   background-size: cover;
-
-  padding: 15px;
+  padding: 30px;
 }
 .iconHolder {
   width: 60px;
@@ -35,7 +34,8 @@
   height: auto;
   font-family: regular;
   float: left;
-  padding: 12px;
+  padding: 10px;
+  margin-bottom: 80px;
 }
 .iconBase {
   width: 100%;
@@ -79,5 +79,8 @@
 @media only screen and (max-width: 1024px) {
   .base {
     min-height: 100vh;
+  }
+  .header {
+    margin-bottom: 0px;
   }
 }
