@@ -14,7 +14,6 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CalculationService;
@@ -37,7 +36,6 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,7 +112,32 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	private PriceBreakupService priceBreakupService;
 
+        /**
+	 * The method sets Subtotal
+	 *
+	 * @param oModel
+	 */
+	private void setCartSubTotal(final CartModel cModel)
+	{
+		double subtotal = 0.0;
+		if (cModel != null)
+		{
+			final List<AbstractOrderEntryModel> entries = cModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final Long quantity = entry.getQuantity();
+				final Double basePrice = entry.getBasePrice();
 
+				if (quantity != null && basePrice != null)
+				{
+					final double entryTotal = basePrice.doubleValue() * quantity.doubleValue();
+					subtotal += entryTotal;
+				}
+			}
+			cModel.setSubtotal(Double.valueOf(subtotal));
+			modelService.save(cModel);
+		}
+	}
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
 			EtailNonBusinessExceptions
@@ -192,43 +215,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			}
 
 			//TISPRD-958
+		        //SDI-4707
+			setCartSubTotal(cartModel);
 
 			OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
 
 			//TISPRO-540
-			 boolean isValidOrder = checkOrder(orderModel);
-			 if(null != cartModel.getIsEGVCart() && cartModel.getIsEGVCart().booleanValue()){
-					isValidOrder=cartModel.getIsEGVCart().booleanValue();
-					orderModel.setIsEGVCart(cartModel.getIsEGVCart());
-					orderModel.setRecipientId(cartModel.getRecipientId());
-					orderModel.setRecipientMessage(cartModel.getRecipientMessage());
-					orderModel.setGiftFromId(cartModel.getGiftFromId());
-					orderModel.setFromFirstName(cartModel.getFromFirstName());
-					orderModel.setFromLastName(cartModel.getFromLastName());
-					orderModel.setFromPhoneNo(cartModel.getFromPhoneNo());
-					if(orderModel.getUser()!=null && CollectionUtils.isNotEmpty(orderModel.getUser().getAddresses())){
-						orderModel.setDeliveryAddress((AddressModel) orderModel.getUser().getAddresses().toArray()[0]);
-					}else{
-						try{
-						AddressModel addressModel=new AddressModel();
-						addressModel.setLine1("1stFloor");
-						addressModel.setLine2("EmpirePlaza2");
-						addressModel.setAddressLine3("LalBahadurShastriMarg");
-						addressModel.setFirstname("Tata");
-						addressModel.setLastname("UnistoreLtd");
-						addressModel.setPhone1("");
-						addressModel.setState("Maharashtra");
-						addressModel.setCity("Mumbai");
-						addressModel.setPostalcode("400083");
-						addressModel.setOwner(orderModel.getUser());
-						getModelService().save(addressModel);
-						orderModel.setDeliveryAddress(addressModel);
-						}catch(Exception excpetion){
-							LOG.error("Error Occure while address create for egv order");
-						}
-					}
-			 }
-					
+			final boolean isValidOrder = checkOrder(orderModel);
 
 			if (!isValidOrder)
 			{
@@ -294,21 +287,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					//getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 
 					//Changes for CAR-262 + INC_10922, Update order for Promotion & Coupon
-					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
-						LOG.info("Igonre Promotions for EGV Order");
-					}else {
-					        updateOrderForPromotion(cartModel, orderModel);
-					        updateOrderForCoupon(cartModel, orderModel);
-                                        }
+					updateOrderForPromotion(cartModel, orderModel);
+					updateOrderForCoupon(cartModel, orderModel);
 
 					final Double subTotal = orderModel.getSubtotal();
 					LOG.info("order subTotal is -- " + subTotal);
- boolean deliveryCostPromotionApplied = false;
-					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
-						LOG.info("Igonre Promotions for EGV Order");
-					}else {
-						  deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
-					}
+					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
 					Double totalPrice = Double.valueOf(0.0);
 
 
