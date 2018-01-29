@@ -12,23 +12,11 @@
 .overlay {
 	height: 100%;
 	width: 100%;
-	top: 7%;
+	top: 0;
 	bottom: 0;
 	position: absolute;
 	background-image: linear-gradient(to top, rgba(0, 0, 0, 75) 0, rgba(0, 0, 0, 0) 60%);
 	padding: 30px;
-}
-.travelMain {
-	position: absolute;
-	text-align: center;
-	width: 100%;
-	height: auto;
-	text-align: center;
-	left: 0;
-	right: 0;
-	top: 0px;
-	bottom: 0;
-	background-image: url(./img/backgroungt.jpg)no-repeat;
 }
 .travelHolder {
 	overflow: hidden;
@@ -42,6 +30,8 @@
 	margin: auto;
 	top: -20px;
 	bottom: -20px;
+	flexdirection: row;
+	alignitems: center;
 }
 .header {
 	width: 100%;
@@ -51,8 +41,7 @@
 	margin: auto;
 	font-size: 20px;
 	font-family: semibold;
-	margin-bottom: 65px;
-	margin-top: 21px;
+	padding-top: 52px;
 }
 .label {
 	width: 100%;
@@ -60,18 +49,22 @@
 	font-size: 12px;
 	text-align: center;
 	line-height: 12px;
-	padding: 7px 7px 7px 0px;
-	overflow: auto;
+	padding: 7px 15px 7px 15px;
+	position: absolute;
+	left: 0;
+	bottom: 80px;
 }
 .buttonBox {
 	height: auto;
 	color: #fff;
 	font-size: 12px;
 	line-height: 20px;
-	width: auto;
+	width: 40%;
 	margin: auto;
-	display: inline-block;
 	padding: 20px 0px 0 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 .button {
 	width: auto;
@@ -81,6 +74,9 @@
 	line-height: 20px;
 	font-family: semibold;
 	position: relative;
+	display: inline-block;
+	text-align: left;
+	top: 50px;
 }
 .button:after {
 	height: 1px;
