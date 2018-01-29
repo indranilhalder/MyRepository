@@ -484,14 +484,14 @@ var allSellers='${allsellers}';
 			</style>
 			<!-- end change for INC144314454 -->
 		</div>
-		<div class="wishAddSucess" style="display: none;">		<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+		<div class="wishAddSucess">		<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 		</div>
-		<div class="wishAddLogin" style="display: none;">		<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+		<div class="wishAddLogin">		<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>
-		<div class="wishAlreadyAdded" style="display: none;">		<!-- add style for TISCSS-166 -->
-			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		<div class="wishAlreadyAdded">		<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 		<div class="product-detail">
 			<ycommerce:testId
@@ -500,9 +500,9 @@ var allSellers='${allsellers}';
 				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
 				<c:choose>
-					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
+					<c:when test="${not empty pdpBrandURL}">
 						<h2 class="company">
-							<a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a>
+							<a href="${pdpBrandURL}">${product.brand.brandname}</a>
 						</h2>
 					</c:when>
 					<c:otherwise>

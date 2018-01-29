@@ -21,10 +21,11 @@
 <script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
 <script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
 <!--AMP HTML files require a canonical link pointing to the regular HTML. If no HTML version exists, it should point to itself.-->
-<link rel="canonical" href="/pwamp">
+<link rel="canonical" href="https://www.tatacliq.com">
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> -->
 <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#A9133d">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <!-- Latest compiled and minified CSS -->
@@ -112,7 +113,7 @@ body{font-family:'Montserrat', sans-serif; font-size:14px; background-color:#FFF
 .fa-navicon:before, .fa-reorder:before, .fa-bars:before {content: "\f0c9";}
 .fa-search:before {content: "\f002";}
 .fa-user:before {content: "\f007";}
-.fa-heart:before {content: "\f004";}
+.fa-heart:before {content: "\f08a";}
 .fa-mobile-phone:before, .fa-mobile:before {content: "\f10b";}
 .fa-angle-right:before {content: "\f105";}
 .fa-angle-down:before {content: "\f107";}
@@ -166,6 +167,8 @@ a{text-decoration:none;}
 .top-header > a:first-child {color: #a9143c;}
 .top-header > a:last-child {color: #fff; background-color: #000;}
 
+.amp-analytics-class {position:absolute;top:75%;}
+
 header{
 	position:sticky;
 	/*height:60px;*/
@@ -201,6 +204,25 @@ header{
   line-height: 30px;
   display: inline-block;
   margin-left: 10px;
+}
+
+.sidebar-divider-item span, .sidebar-myaccount {
+	width: 25px;
+    display: inline-block;
+    vertical-align: middle;
+    height: 26px;
+    filter: invert(100%);
+    margin-right: 5px;
+}
+
+.sidebar-myaccount {margin-left: -5px;}
+
+.sidebar-profile span, .sidebar-myaccount {
+	background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -352px -176px;
+ }
+ 
+.sidebar-download-app span {
+	background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -302px -175px;
 }
 
 .header-icon-2 a span {
@@ -299,6 +321,8 @@ header{
 
 .user-information > section > div > ul {margin: 0;}
 
+.user-information section[expanded] .sidebar-myaccount {filter: none;}
+
 .user-information > section > div > ul > li {
     padding-left: 20px;
     line-height: 40px;
@@ -336,7 +360,7 @@ header{
 .sidebar-divider-item{
     font-family: 'Montserrat';
     font-size: 14px;
-    padding-left: 20px;
+    padding-left: 15px;
     color: #3a3a3a;
     border-bottom: solid 1px rgba(0,0,0,0.1);
 	line-height:50px;
@@ -435,11 +459,12 @@ padding-top:0px;
 .left-accordion-menu li label i {float: right; margin-right: 15px;margin-top: 15px;}
 .l2-menu-section li label i {margin-top: 10px;}
 .left-accordion-menu input[type=radio], .left-accordion-menu input[type=checkbox] {display: none;}
-.left-accordion-menu input[type=radio]:checked + label + ul, .left-accordion-menu input[type=checkbox]:checked + label + ul
+.left-accordion-menu input[type=radio]:checked + label + ul, .left-accordion-menu input[type=checkbox]:checked + label + ul,
 .left-accordion-menu input[type=radio]:checked + label .fa-angle-right:before, .left-accordion-menu input[type=checkbox]:checked + label .fa-angle-right:before {content: "\f107";}
 .left-accordion-menu input[type=radio]:checked + label:nth-of-type(n) + ul, .left-accordion-menu input[type=checkbox]:checked + label:nth-of-type(n) + ul {display: block;}
 .left-accordion-menu > li > input[type=radio]:checked + label, .left-accordion-menu > li > input[type=checkbox]:checked + label {background-color: #a9133d; color: #fff;}
 .left-accordion-menu ul {display: none; margin: 0;}
+.left-accordion-menu .a2zTabContent ul {display: block;}
 /*Auto Collapse Menu CSS*/
 .department-menu {
 	width: 150px;
@@ -492,7 +517,9 @@ padding-top:0px;
 	float: left;
 }
 
-.header-search-btn {padding: 10px; background-color: #f8f8f8; border: 1px solid #ddd; border-left: none; cursor: pointer; height: 38px; float: left; width: 60px;}
+.header-search-btn {background-color: #f8f8f8; border: 1px solid #ddd; border-left: none; cursor: pointer; height: 38px; float: left; width: 60px;}
+
+.header-search-btn a i {color: #000; font-size: 20px;}
 
 .shop-by-department, .shop-by-brand {display: none; height: 500px; width: 100%; position: absolute; border-top: 1px solid #ddd; background: #fff; z-index: 1; left: 0; top: 60px;}
 
@@ -764,7 +791,7 @@ p {margin: 0;}
 .brandStudioImg a {height: inherit;}
 .brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
 .brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 10px 8px 0px; text-align: left;}
-.brandStudioDescHeading {font-size: 13px; font-weight: bold;}
+.brandStudioDescHeading {font-size: 13px; font-weight: bold; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
 .brandStudioDescInfo {font-size: 12px; color: #666666; white-space: pre-line; height: 75px;}
 .brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0;}
 
@@ -898,6 +925,7 @@ p {margin: 0;}
 
 .a2z-section {
   color: #3a3a3a;
+  background-color: #c5c4c4;
   font-weight: 600;
 }
 
@@ -921,7 +949,8 @@ p {margin: 0;}
 }
 
 .a2zTabContent {
-		padding-left: 10px;
+    padding-left: 10px;
+    padding-top: 20px;
     display: none;
     width: -webkit-fill-available;
     order: 1; /* must be greater than the order of the tab buttons to flex to the next line */
@@ -929,6 +958,8 @@ p {margin: 0;}
     max-height: 300px;
     overflow: auto;
 }
+
+.a2zTabContent a {color: #000; padding: 5px;}
 
 .a2zTabContent ul li {list-style-type: none; padding-left: 15px;}
 
@@ -1024,6 +1055,30 @@ amp-selector [option][selected] {
   padding-bottom: 5px;
 }
 
+.footer-top-content #footerLink {
+    border-top: 0;
+    padding: 30px 26px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+footer #footerLink div.column ul li {
+	display: inline-block;
+	padding: 7px 0;
+}
+
+footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a {color: #000;}
+
+footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
+
+footer #footerLink div.column ul {margin: 0;}
+
+footer #footerLink div.column ul li {
+    display: inline-block;
+    color: #878787;
+    padding: 7px 0;
+}
+
 .footer-top-content {clear: both;}
 .footer-top-child {padding: 0 24px 20px; float: left; background: #f9f9f9; margin: 0;line-height: normal;}
 .footer-top-content p:before {
@@ -1073,8 +1128,10 @@ amp-selector [option][selected] {
   border: 1px solid #ddd;
   padding: 10px;
   margin-top: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
+
+.footer-child-last > form {margin-bottom: 30px;}
 
 .footer-last-btn {padding: 10px; background-color: #444; border: 1px solid #444; color: white;}
 
@@ -1095,6 +1152,9 @@ amp-selector [option][selected] {
   color: #444;
   background: white;
 }
+
+.newsletter-success {color: green;}
+.newsletter-error {color: red;}
 
 .footer-child h4 span {color: #a9143c;}
 
@@ -1118,12 +1178,45 @@ amp-selector [option][selected] {
   .footer-child ul {margin-bottom: 15px;}
   .footer-copyright {padding: 0 25px; line-height: 48px; margin-bottom: 20px; font-size: 11px; letter-spacing: .6px;}
   .footer-child h4 i, .footer-child h4 i:before {font-size: 18px; line-height: 48px;}
-  .footer-child, .footer-child-last {
-    width: 100%; float: left;
+  .footer-child {width: 100%; float: left;}
+  .footer-child-last {
+    width: auto; float: left;
   }
   .footer-child-last {padding: 20px;}
 }
-
+/* start style definiton for TISPRDT-8283 */
+.MsoNormal {
+	margin-bottom: 0.0001pt; 
+	text-align: justify; 
+	line-height: normal; 
+	background-image: initial; 
+	background-position: initial; 
+	background-size: initial; 
+	background-repeat: initial; 
+	background-attachment: initial; 
+	background-origin: initial; 
+	background-clip: initial; 
+	vertical-align: baseline;
+}
+.MsoNormalSpan {
+	font-size:9pt;
+	font-family:Montserrat;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Times New Roman";
+	color:#222222;
+	border:none windowtext 1pt;
+	mso-border-alt:none windowtext 0cm;
+	padding:0cm;
+	mso-fareast-language:EN-IN;
+}
+.MsoNormalAnchor {
+	color: #000;
+	text-decoration: none;
+}
+.helloSpan {
+	color:#1155CC;
+}
+/* end style definiton for TISPRDT-8283 */
 </style>
 <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
 </head>

@@ -14,10 +14,11 @@
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.utility.host')"
 		var="host" />
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 	<c:set var="base" value="https://${host}" />
-	<!-- <amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker> -->
+	<amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker>
 	<div class="top-header">
-		<a href="/">Marketplace</a> <a href="${luxuryHost}">Luxury</a>
+		<a href="/">Marketplace</a> <a href="${luxuryHost}" target="_blank">Luxury</a>
 	</div>
 	<header>
 		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'>
@@ -188,23 +189,25 @@
 	        <input type="${leftMenuStyle}" name="l1-group" id="l1-brand" />
 	        <label for="l1-brand"><span>Brand</span><i class="fa fa-angle-right"></i></label>
         	<ul class="l1-menu-section">
+			<c:set var="brandNumId" value="1" scope="page" />
         		<c:forEach items="${shopByBrandDataList}" var="shopByBrands">
         			<c:choose>
-						<c:when test="${shopByBrands.masterBrandName eq 'A-Z Brands'}">
+						<c:when test="${shopByBrands.masterBrandName eq 'A-Z List'}">
 							<li>
 					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-AtoZ" />
-					            <label for="l2-brand-AtoZ"><span>A-Z List</span><i class="fa fa-angle-right"></i></label>
+					            <label for="l2-brand-AtoZ"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
 					            <ul class="l2-menu-section">
 					              <li>
 					              	<div class="a2z-section">
 									<amp-selector role="tablist" layout="container"
 										class="a2zTabContainer">
-									<c:forEach items="${groupedAlphabets}" var="entry">	
+									<%-- <c:forEach items="${groupedAlphabets}" var="entry">	
 									<div role="tab" class="a2zTabButton" selected option="${entry.key}">${entry.key}-${entry.value}</div>
-									</c:forEach>
-									<c:forEach items="${AToEBrands}" var="entry" varStatus="i">	
+									</c:forEach> --%>
 									<div role="tab" class="a2zTabButton" selected option="A-E">A-E</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${AToEBrands}" var="entry" varStatus="i">	
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -216,11 +219,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
+									</div>
+									<div role="tab" class="a2zTabButton" option="F-J">F-J</div>
+									<div role="tabpanel" class="a2zTabContent">
 									<c:forEach items="${FToJBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="F-J">F-J</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -232,11 +235,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
-									<c:forEach items="${KToOBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="K-O">K-O</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									</div>
+									<div role="tab" class="a2zTabButton" option="K-O">K-O</div>	
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${KToOBrands}" var="entry" varStatus="i">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -248,11 +251,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
-									<c:forEach items="${PToTBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="P-T">P-T</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									</div>
+									<div role="tab" class="a2zTabButton" option="P-T">P-T</div>
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${PToTBrands}" var="entry" varStatus="i">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -264,11 +267,11 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
-									<c:forEach items="${UToZBrands}" var="entry" varStatus="i">	
-									<div role="tab" class="a2zTabButton" selected option="U-Z">U-Z</div>
-									<div role="tabpanel" class="a2zTabContent" data="${i.index}">
+									</div>
+									<div role="tab" class="a2zTabButton" option="U-Z">U-Z</div>
+									<div role="tabpanel" class="a2zTabContent">
+									<c:forEach items="${UToZBrands}" var="entry" varStatus="i">
 										<div>
 											<ul class="a-z-ul">
 												<h3>${entry.key}</h3>
@@ -280,8 +283,8 @@
 												</c:forEach>
 											</ul>
 										</div>
-									</div>
 									</c:forEach>
+									</div>
 									</amp-selector>
 								</div>
 								
@@ -292,8 +295,8 @@
 						<c:otherwise>
 						
 							<li>
-					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-Electronics" />
-					            <label for="l2-brand-Electronics"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
+					            <input type="${leftMenuStyle}" name="l2-brand-group" id="l2-brand-item${brandNumId}" />
+					            <label for="l2-brand-item${brandNumId}"><span>${shopByBrands.masterBrandName}</span><i class="fa fa-angle-right"></i></label>
 					            <ul class="l2-menu-section">
 									<c:forEach items="${shopByBrands.subBrandList}"
 										var="subShopByBrand">
@@ -301,6 +304,7 @@
 									</c:forEach>
 								</ul>
 					          </li>
+						<c:set var="brandNumId" value="${brandNumId + 1}" scope="page"/>
 						</c:otherwise>
 					</c:choose>
         		</c:forEach>
@@ -323,7 +327,7 @@
 					<section>
 						<h4 class="l1-options">
 							<c:set var="userName" value="${fname}"/>
-							<a href="<c:url value="/my-account"/>" class="fa fa-user l1-my-account"> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
+							<a href="<c:url value="/my-account"/>" class="fa l1-my-account"><span class="sidebar-myaccount"></span> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
 						<i class="fa fa-angle-right"></i></h4>
 						<div>
 							<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
@@ -360,8 +364,8 @@
 			</sec:authorize>
 
 			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-					<p class="sidebar-divider-item">
-					<a href="<c:url value="/login"/>"><i class="fa fa-user"></i>Sign In/Sign Up</a>
+					<p class="sidebar-divider-item sidebar-profile">
+					<a href="<c:url value="/login"/>"><span></span>Sign In/Sign Up</a>
 					</p>
 			</sec:authorize>
 		</c:if>
@@ -372,8 +376,8 @@
 	<p class="sidebar-divider-item">
 		<a href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
 	</p>
-	<p class="sidebar-divider-item">
-		<a href="${request.contextPath}/apps"><i class="fa fa-mobile-phone"></i>Download App</a>
+	<p class="sidebar-divider-item sidebar-download-app">
+		<a href="${request.contextPath}/apps"><span></span>Download App</a>
 	</p>
 	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
 	</amp-sidebar>
@@ -461,6 +465,36 @@
 	</div>
 	</template> 
 	</amp-list>
+	
+	<div class="amp-tealium">
+		<c:set var="site_region" value="en"/>
+		<c:set var="user_type" value="${user_type}"/>
+		<c:set var="user_login_type" value="${userLoginType}"/>
+		<c:set var="user_id" value="${user_id}"/>
+		<c:set var="page_type" value="home"/>
+		<c:set var="page_name" value="homepage"/>
+		<c:set var="product_category" value="null"/>
+		<c:set var="page_subcategory_name" value="null"/>
+		<c:set var="page_subcategory_name_L3" value="null"/>
+		<c:set var="session_id" value="${sessionId}"/>
+		<c:set var="visitor_ip" value="${visitorIp}"/>
+		<c:set var="site_currency" value="INR"/>
+		<c:set var="site_section" value="home"/>
+		<c:set var="IA_company" value="${pageContext.request.serverName}"/>
+		<c:set var="fb_content_type" value="null"/>
+		<c:set var="product_sku_quick_view" value="null"/>
+		<c:set var="page_subcategory_L1" value="null"/>
+		<c:set var="page_subcategory_L2" value="null"/>
+		<c:set var="page_subcategory_L3" value="null"/>
+		<c:set var="product_mrp" value="null"/>
+		<c:set var="post_category" value="null"/>
+		<c:set var="post_title" value="null"/>
+		<c:set var="post_author" value="null"/>
+		
+		<amp-iframe height="1" width="1"
+		 src="${base}/iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
+		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
+	</div>
 
 	<!-- Brands You Love -->
 	<div id="brandsYouLoveMobileComp" class="">
@@ -499,7 +533,7 @@
 	</div>
 
 	<!-- What To Buy Now -->
-	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="340" layout="fixed-height"> 
+	<amp-list src="/pwamp/getProductsYouCare?version=Online" height="280" layout="fixed-height"> 
 	<template type="amp-mustache"> 
 	<div id="whatToBuyComp">
 		<div class="whatToBuyTopSection">
@@ -507,7 +541,7 @@
 		</div>
 		<div>
 			<div id="whatToBuyCompCarousel">
-				<amp-carousel height="340" layout="fixed-height" type="carousel">
+				<amp-carousel height="280" layout="fixed-height" type="carousel">
 				{{#categories}}
 				<div class="whatToBuyItem">
 					<div class="whatToBuyItemImg">
@@ -616,7 +650,7 @@
 			<div class="stayOne">
 				<div>
 					<p class="h2 stayQuedHeading">{{headerText}}</p>
-					<p>{{text}}</p>
+					<p>{{details.text}}</p>
 					<div class="stayQuedBottom">
 						<a href="{{details.bannerUrl}}"><button
 								class="stayQuedViewAllBtn">Read The Story</button></a>
@@ -632,36 +666,6 @@
 		</amp-carousel> 
 		</template> 
 		</amp-list>
-	</div>
-	
-	<div class="amp-tealium" style="position:absolute;top:75%;">
-		<c:set var="site_region" value="en"/>
-		<c:set var="user_type" value="${user_type}"/>
-		<c:set var="user_login_type" value="${userLoginType}"/>
-		<c:set var="user_id" value="${user_id}"/>
-		<c:set var="page_type" value="home"/>
-		<c:set var="page_name" value="homepage"/>
-		<c:set var="product_category" value="null"/>
-		<c:set var="page_subcategory_name" value="null"/>
-		<c:set var="page_subcategory_name_L3" value="null"/>
-		<c:set var="session_id" value="${sessionId}"/>
-		<c:set var="visitor_ip" value="${visitorIp}"/>
-		<c:set var="site_currency" value="INR"/>
-		<c:set var="site_section" value="home"/>
-		<c:set var="IA_company" value="${pageContext.request.serverName}"/>
-		<c:set var="fb_content_type" value="null"/>
-		<c:set var="product_sku_quick_view" value="null"/>
-		<c:set var="page_subcategory_L1" value="null"/>
-		<c:set var="page_subcategory_L2" value="null"/>
-		<c:set var="page_subcategory_L3" value="null"/>
-		<c:set var="product_mrp" value="null"/>
-		<c:set var="post_category" value="null"/>
-		<c:set var="post_title" value="null"/>
-		<c:set var="post_author" value="null"/>
-		
-		<amp-iframe height="1" width="1"
-		 src="${base}/iframeUtag_homepage.html?site_region=${site_region}&user_type=${user_type}&user_login_type=${user_login_type}&user_id=${user_id}&page_type=${page_type}&page_name=${page_name}&product_category=${product_category}&page_subcategory_name=${page_subcategory_name}&page_subcategory_name_L3=${page_subcategory_name_L3}&session_id=${session_id}&visitor_ip=${visitor_ip}&site_currency=${site_currency}&site_section=${site_section}&IA_company=${IA_company}&fb_content_type=${fb_content_type}&product_sku_quick_view=${product_sku_quick_view}&page_subcategory_L1=${page_subcategory_L1}&page_subcategory_L2=${page_subcategory_L2}&page_subcategory_L3=${page_subcategory_L3}&product_mrp=${product_mrp}&post_category=${post_category}&post_title=${post_title}&post_author=${post_author}" 
-		 sandbox="allow-scripts allow-same-origin"></amp-iframe>
 	</div>
 	
 	<footer:ampfooter />

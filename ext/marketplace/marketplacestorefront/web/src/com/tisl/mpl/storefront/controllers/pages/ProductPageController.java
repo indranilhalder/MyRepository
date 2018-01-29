@@ -83,7 +83,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -154,6 +153,7 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.msd.MSDWidgetFacade;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
@@ -162,6 +162,7 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MSDRequestdata;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
@@ -424,9 +425,29 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "msdWidgetFacade")
 	private MSDWidgetFacade msdWidgetFacade;
 
+	@Resource(name = "mplCmsFacade")
+	private MplCmsFacade mplCmsFacade;
+
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
 	//	private Map<String, String> jewelleryDescMapping;
+
+	/**
+	 * @return the mplCmsFacade
+	 */
+	public MplCmsFacade getMplCmsFacade()
+	{
+		return mplCmsFacade;
+	}
+
+	/**
+	 * @param mplCmsFacade
+	 *           the mplCmsFacade to set
+	 */
+	public void setMplCmsFacade(final MplCmsFacade mplCmsFacade)
+	{
+		this.mplCmsFacade = mplCmsFacade;
+	}
 
 	/**
 	 * @param buyBoxFacade
@@ -489,6 +510,7 @@ public class ProductPageController extends MidPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
+		getFooterContent("FooterSlot", model);
 		//final was written here
 		String returnStatement = null;
 
@@ -4740,18 +4762,21 @@ public class ProductPageController extends MidPageController
 
 	private void prepareBrandInfoData(final Model model, final ProductData productData)
 	{
-		if (null != productData.getBrand())
+		//UBI-605 || TPR-7679
+		if (CollectionUtils.isNotEmpty(productData.getCategories()))
 		{
-			if (productData.getBrand().getBrandCode() != null)
+			for (final CategoryData category : productData.getCategories())
 			{
-				//UBI-605
-				final ContentPageModel brandLandingPage = mplCmsPageService.getLandingPageForCategoryCode(productData.getBrand()
-						.getBrandCode());
-				if (brandLandingPage != null)
+				if (category.getCode().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
-					model.addAttribute("msiteBrandCode", getBrandCodeFromSuperCategories(productData.getBrand().getBrandCode()));
+					model.addAttribute("msiteBrandCode", category.getCode());
+					model.addAttribute("pdpBrandURL", category.getUrl());
 				}
 			}
+		}
+
+		if (null != productData.getBrand())
+		{
 			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
 					.getBrand().getBrandname().toLowerCase() : null);
 			/*
@@ -5303,6 +5328,45 @@ public class ProductPageController extends MidPageController
 
 
 	//CAR-327 ends here
+	/**
+	 *
+	 * @param slotId
+	 * @param model
+	 * @return
+	 */
+	public void getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
+	{
+		try
+		{
 
+			// For TPR-5733
+			final Map<Integer, Map<Integer, FooterLinkData>> mplFooterLinkRowList = mplCmsFacade.getFooterLinkData();
+			if (MapUtils.isNotEmpty(mplFooterLinkRowList))
+			{
+				model.addAttribute(ModelAttributetConstants.FOOTER_LINK_LIST, mplFooterLinkRowList);
+			}
+			else
+			{
+				LOG.debug("##########################   Returned empty list for footer link ####################################");
+			}
+
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+	}
 
 }

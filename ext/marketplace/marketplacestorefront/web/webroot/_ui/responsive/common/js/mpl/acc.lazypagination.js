@@ -982,7 +982,7 @@ function toggleNextPrevButton(){
         startPage: 1,
         visiblePages: 5,
         initiateStartPageClick: true,
-        href: false,
+        href: true,
         pageVariable: "{{page}}",
         totalPagesVariable: "{{total_pages}}",
         page: null,

@@ -11718,7 +11718,7 @@ height: 80%;
     text-align: left;
 	}
 	.Manufacturer.Temp02 h3, .Manufacturer.Temp02 ul.pdpFeatures li h4 {
-    font-size: 14px;
+    font-size: 14px !important;		/* add important for TISPRDT-8215 */
 	}
 	.Manufacturer.Temp02 h3::after {
     margin: 0;
@@ -12865,7 +12865,7 @@ li.download-app a:before, span.material-icons, header .content .right>ul>li.wish
 }
 
 /* HOME-210 start */
-.homefurnishing-overview:nth-child(2) {
+/*.homefurnishing-overview:nth-child(2) {
     float: right ! important;
 }
 .homefurnishing-overview:nth-child(3) {
@@ -12873,14 +12873,14 @@ li.download-app a:before, span.material-icons, header .content .right>ul>li.wish
 }
 .homefurnishing-overview:nth-child(4) {
     clear:both;
-}
+}*/
 @media (max-width: 767px){
-.homefurnishing-overview:nth-child(2) {
+/*.homefurnishing-overview:nth-child(2) {
     float: left ! important;
 }
 .homefurnishing-overview:nth-child(3) {
     float: left ! important;
-}
+}*/
 }
 
 /* HOME-210 End */
@@ -13154,4 +13154,23 @@ a.tab-emi.active{
 .Manufacturer.Temp03 h3 {
     font-size: 20px ! important;
     margin-bottom: 0;
+}
+/* start change of TISPRDT-8253 */
+div.other-sellers .add-to-wishlist-popover-table tbody tr td {
+	padding: 10px !important;
+    border-top: 1px solid #b9b9b9;
+    border-bottom: 1px solid #b9b9b9 !important;
+    display: table-cell !important;
+    width: 100% !important;
+    float: none !important;
+    font-size: 12px;
+}
+/* end change of TISPRDT-8253 */
+.brands-main h1, .cmsBrands h1, .cmsMultiBrands h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 30px 0 10px 0;
+    position: relative;
+    color: #000;
+    font-family: inherit;
 }

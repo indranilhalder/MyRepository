@@ -34,8 +34,8 @@
 						code="header.flyout.review" /></a></li> --%><!-- Closed as per SPRINT 13 requirement -->
 		<%-- <li id="lnMyInterest"><a href="<c:url value="/my-account/myInterest?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.recommendations" /></a></li> --%>	<!--  UF-249 link hide -->
-		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-					code="header.flyout.coupons" /></a></li>
+		<%-- <li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+					code="header.flyout.coupons" /></a></li> --%>
 	</ul>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('myAcc.voucher.display.flag')" var="isVoucherToBeDisplayed"/>
 

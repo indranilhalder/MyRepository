@@ -4,6 +4,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
+<style>
+.source{
+display: none;
+}
+</style>
 <div class="right-block">
 	<nav:pagination top="true" supportShowPaged="${isShowPageAllowed}"
 		supportShowAll="${isShowAllAllowed}"
@@ -66,27 +71,45 @@
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
 
 <span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
-
+ 
 </c:if>
+
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
-    <ul class="pagination-blocks pagination">
+<div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
+    <ul class="pagination-block source">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
+    	<c:choose>
+    		<c:when test="${loop.index eq 1}">
     		<c:choose>
     			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
     			<c:set var="splittedURL" value="${fn:split(requestScope['javax.servlet.forward.request_uri'] , '/' )}"></c:set>
-    			<li class="page-item block"><a class="page-link anchor" href="/${splittedURL[0]}/${splittedURL[1]}">${page}</a></li>
+    			<li class="pageNoLi"><a class="pageNo active" href="/${splittedURL[0]}/page-${page}">${page}</a></li>
     			</c:when>
     			<c:otherwise>
-    			<li class="page-item block"><a class="page-link anchor" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			<li class="pageNoLi"><a class="pageNo active" href="/${requestScope['javax.servlet.forward.request_uri']}page-${page}">${page}</a></li>
     			</c:otherwise>
     		</c:choose>
+    		
+    		</c:when>
+    		<c:otherwise>
+    		<c:choose>
+    			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
+    			<c:set var="splittedURL" value="${fn:split(requestScope['javax.servlet.forward.request_uri'] , '/' )}"></c:set>
+    			<li class="pageNoLi"><a class="pageNo" href="/${splittedURL[0]}/page-${page}">${page}</a></li>
+    			</c:when>
+    			<c:otherwise>
+    			<li class="pageNoLi"><a class="pageNo" href="/${requestScope['javax.servlet.forward.request_uri']}page-${page}">${page}</a></li>
+    			</c:otherwise>
+    		</c:choose>
+    		</c:otherwise>
+    	</c:choose>
         </c:forEach>
     </ul>
+    <div class="next-block"><a href="#next-page"><span>Next</span></a></div>
 </c:when>
 </c:choose>
-
-</div> --%>
+--%>
 
 <div class="bottom-pagination pagination-search">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">

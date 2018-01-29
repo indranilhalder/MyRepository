@@ -103,13 +103,13 @@ public class MplMediaDaoImpl implements MplMediaDao
 			if (galleryImages.size() != count)
 			{
 				galImgPK.append(mcList.getPk()); //Sonr Fix
-
+                                galImgPK.append(',');
 
 			}
 			else
 			{
 				galImgPK.append(mcList.getPk());
-				galImgPK.append(',');
+				
 			}
 			count = count + 1;
 		}

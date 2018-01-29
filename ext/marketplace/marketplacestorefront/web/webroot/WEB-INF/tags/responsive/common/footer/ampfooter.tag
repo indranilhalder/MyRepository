@@ -19,6 +19,27 @@
           <li><p>EASY RETURNS</p></li>
         </ul>
       </section>
+      <c:if test="${fn:length(footerLinkList) gt 0}">
+		<div id="footerLink">
+			<c:set var="rowcount" value="-1"></c:set>
+			<c:forEach items="${footerLinkList}" var="footerLinkRow">
+				<div class="column">
+					<ul>
+						<c:forEach items="${footerLinkRow.value}" var="footerlinkColumnObj">
+							<c:choose>
+								<c:when test="${footerlinkColumnObj.key eq 0}">
+									<li class="header"><a href="${footerlinkColumnObj.value.footerLinkURL}"><b>${footerlinkColumnObj.value.footerLinkName}</b></a></li>
+								</c:when>
+								<c:otherwise>
+									<li class="node"><a href="${footerlinkColumnObj.value.footerLinkURL}">${footerlinkColumnObj.value.footerLinkName}</a></li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</ul>
+				</div>
+			</c:forEach>
+		</div>
+	</c:if>
       <section class="footer-main-content">
         <section class="footer-child-last mobile-item">
             <p>#NEWSLETTER</p>
@@ -30,20 +51,15 @@
             <input class="footer-last-btn" type="submit" value="SUBSCRIBE" /></div>
             <div submit-success>
 			    <template type="amp-mustache">
-			      Thanks for signing up. We'll keep you updated with our newsletters.
+			      <span class="newsletter-success">Thanks for signing up. We'll keep you updated with our newsletters.</span>
 			    </template>
 			  </div>
-            </form>
-            
-            <!-- <p><input class="footer-last-input" placeholder="Your Email Id" on="input-debounced:AMP.setState({subscribeEmail: event.value, subscribeNewsletter: 'no-subscribe'})" />
-            <button class="footer-last-btn" on="tap:AMP.setState({subscribeNewsletter: 'subscribe'})">SUBSCRIBE</button></p>
-            <amp-list src="https://www.tatacliq.com/newsLetterSubscriptionEmail?email="
-		      [src]="subscribeNewsletter == 'subscribe' ? 'https://www.tatacliq.com/newsLetterSubscriptionEmail?email='+subscribeEmail : 'https://www.tatacliq.com/newsLetterSubscriptionEmail?email='" height="20" layout="fixed-height">
-				<template type="amp-mustache">
-					<span>{{response == 'success' ? 'Thanks for signing up. We will keep you updated with our newsletters.' : 'None'}}</span>
-				</template>
-		    </amp-list> -->
-		    
+			  <div submit-error>
+			    <template type="amp-mustache">
+			      <span class="newsletter-error">Subscription failed.</span>
+			    </template>
+			  </div>
+            </form> 
             <p>THE SOCIAL NETWORK</p>
             <p>
               <a href="https://plus.google.com/107413929814020009505"><i class="fa fa-google-plus"></i></a>

@@ -804,9 +804,9 @@ public class HomePagePwAmpController extends HomePageController
 					else
 					{
 						String headerText = EMPTY_STRING;
-						if (StringUtils.isNotEmpty(showcaseItem.getHeaderTextMobile()))
+						if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
 						{
-							headerText = showcaseItem.getHeaderTextMobile();
+							headerText = showcaseItem.getHeaderText();
 						}
 						//showCaseItemJson.put("headerText", headerText);
 						showCaseItemJson.put("headerText", headerText);

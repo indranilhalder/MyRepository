@@ -60,13 +60,13 @@
 	font-weight: bold;
 	margin: 5px 0;
 }
-
-/* start add of TISCSS-100 */
-.confirmation .right-block .block h2 {
-	font-size: 24px;
+@media (max-width: 650px){		/* add media for TISPRDT-8219 */
+	/* start add of TISCSS-100 */
+	.confirmation .right-block .block h2 {
+		font-size: 24px;
+	}
+	/* end add of TISCSS-100 */
 }
-/* end add of TISCSS-100 */
-
 .cart.wrapper .right-block.shipping .block h2, .cart.wrapper .right-block.billing .block h2
 	{
 	font-size: 16px;
@@ -4752,9 +4752,9 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 }
 
 @media ( max-width :790px) {
-	body.page-cartPage .callouts {
+	/* body.page-cartPage .callouts {
 		margin-top: -7px;
-	}
+	} */
 	.temp4-features li .contOvrlay .media-content p {
 		font-size: 12px;
 		letter-spacing: 0;
@@ -5218,7 +5218,7 @@ p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{
 		.confirmation .left-block .payments.tab-view .tabs .product-block li.header>ul li {
 		border: none;
 	}
-	.cart.wrapper .left-block .payments.tab-view, .confirmation .left-block .payments.tab-view
+	.confirmation .left-block .payments.tab-view	/* remove class for TISPRDT-8280 */
 		{
 		margin-top: 30px;
 	}
