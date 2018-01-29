@@ -257,8 +257,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 					{ //SellerInformationModel sellerInfoModel = null;
 						isFineJew = true;
-						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
-								.getSelectedUssid());
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(entry.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
 						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + entry.getSelectedUssid() + " is "
@@ -301,16 +301,16 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				}
 				model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 			}
-			
+
 			////SDI-2112 starts
- 			if (subOrderEntry.getConsignment().getStatus().getCode().equalsIgnoreCase(ConsignmentStatus.RETURN_INITIATED.getCode()))
- 			{
- 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
- 						ModelAttributetConstants.RETURN_ALREADY_INITIATED);
- 				return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
- 			}
- 			////SDI-2112 ends
-			
+			if (subOrderEntry.getConsignment().getStatus().getCode().equalsIgnoreCase(ConsignmentStatus.RETURN_INITIATED.getCode()))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.RETURN_ALREADY_INITIATED);
+				return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+			}
+			////SDI-2112 ends
+
 
 
 			//TPR-5954 || Category specific return reason || Start
@@ -419,8 +419,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			if (subOrderEntry.getDeliveryPointOfService() != null && subOrderEntry.getDeliveryPointOfService().getAddress() != null)
 			{
 				pincode = subOrderEntry.getDeliveryPointOfService().getAddress().getPostalCode();
-				returnableStores = pincodeServiceFacade.getAllReturnableStores(subOrderEntry.getDeliveryPointOfService().getAddress()
-						.getPostalCode(), sellerId);
+				returnableStores = pincodeServiceFacade
+						.getAllReturnableStores(subOrderEntry.getDeliveryPointOfService().getAddress().getPostalCode(), sellerId);
 			}
 			else
 			{
@@ -484,8 +484,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 				boolean returnLogisticsCheck = true;
 				String returnFulfillmentType = null;
-				final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-						subOrderDetails, pinCode);
+				final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
+						.checkReturnLogistics(subOrderDetails, pinCode);
 				if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 				{
 					//CustomerData customerData=customerFacade.getCurrentCustomer();
@@ -891,8 +891,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			LOG.debug("Final Path for ShipmentProofURL :" + path + File.separator + typeofReturn
 					+ mplReturnInfoForm.getTransactionId() + filename.getOriginalFilename());
 			//returnInfoRequestData.setShipmentProofURL(fileUploadLocation+File.separator+filename.getOriginalFilename());
-			returnInfoRequestData.setShipmentProofURL(path + File.separator + typeofReturn + mplReturnInfoForm.getTransactionId()
-					+ filename.getOriginalFilename());
+			returnInfoRequestData.setShipmentProofURL(
+					path + File.separator + typeofReturn + mplReturnInfoForm.getTransactionId() + filename.getOriginalFilename());
 			returnInfoRequestData.setLogisticsID(mplReturnInfoForm.getLpNameOther());
 			returnInfoRequestData.setReturnType(RequestMappingUrlConstants.RSS);
 
@@ -952,8 +952,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getOrderId());
 				finalCODSelfShipData
 						.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
-				finalCODSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails
-						.getCreated())));
+				finalCODSelfShipData
+						.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(subOrderDetails.getCreated())));
 				finalCODSelfShipData.setTransactionID(mplReturnInfoForm.getTransactionId());
 				finalCODSelfShipData.setTransactionType(RequestMappingUrlConstants.RETURN_TYPE);
 				//finalCODSelfShipData.setOrderRefNo(mplReturnInfoForm.getTransactionId());
@@ -1012,8 +1012,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_TICKET_UPDATE, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String updateCRMTicketInfo(final MplCRMTicketUpdateForm ticketUpdate, final Model model,
-			final HttpServletRequest request, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException,
-			Exception
+			final HttpServletRequest request, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
 	{
 
 		//to do implementation
@@ -1034,13 +1033,13 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
 			{
-				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_RESIDENTIAL))
+				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_RESIDENTIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_HOME);
 				}
-				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_COMMERCIAL))
+				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_COMMERCIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_WORK);
 				}
@@ -1068,8 +1067,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			final String orderCode = addressForm.getOrderCode();
 			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			boolean returnLogisticsCheck = true;
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-					subOrderDetails, addressForm.getPostcode());
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
+					.checkReturnLogistics(subOrderDetails, addressForm.getPostcode());
 
 			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 			{
@@ -1181,14 +1180,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			else
 			{
 				if (null != request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
-						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX).equalsIgnoreCase(
-								ModelAttributetConstants.TRUE))
+						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
+								.equalsIgnoreCase(ModelAttributetConstants.TRUE))
 				{
 					addressForm.setDefaultAddress(Boolean.TRUE);
 				}
 
-				newAddress.setDefaultAddress(addressForm.getDefaultAddress() != null
-						&& addressForm.getDefaultAddress().booleanValue());
+				newAddress
+						.setDefaultAddress(addressForm.getDefaultAddress() != null && addressForm.getDefaultAddress().booleanValue());
 			}
 			try
 			{
@@ -1222,21 +1221,21 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADD_RETURN_ADDRESS, method = RequestMethod.GET)
 	@ResponseBody
-	public AddressData addReturnAddress(final AccountAddressForm addressForm, final BindingResult bindingResult,
-			final Model model, final HttpServletRequest request) throws Exception
+	public AddressData addReturnAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
+			final HttpServletRequest request) throws Exception
 	{
 		final AddressData errorAddress = new AddressData();
 		try
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
 			{
-				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_RESIDENTIAL))
+				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_RESIDENTIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_HOME);
 				}
-				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_COMMERCIAL))
+				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_COMMERCIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_WORK);
 				}
@@ -1291,14 +1290,14 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			else
 			{
 				if (null != request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
-						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX).equalsIgnoreCase(
-								ModelAttributetConstants.TRUE))
+						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
+								.equalsIgnoreCase(ModelAttributetConstants.TRUE))
 				{
 					addressForm.setDefaultAddress(Boolean.TRUE);
 				}
 
-				newAddress.setDefaultAddress(addressForm.getDefaultAddress() != null
-						&& addressForm.getDefaultAddress().booleanValue());
+				newAddress
+						.setDefaultAddress(addressForm.getDefaultAddress() != null && addressForm.getDefaultAddress().booleanValue());
 			}
 			try
 			{
@@ -1399,16 +1398,16 @@ public class ReturnPageController extends AbstractMplSearchPageController
 								LOG.info("ReturnPageController:::::::InvoiceURL    " + fileDownloadLocation);
 								if (fileDownloadLocation == null)
 								{
-									fileDownloadLocation = configurationService.getConfiguration().getString(
-											MessageConstants.DEFAULT_INVOICE_URL);
+									fileDownloadLocation = configurationService.getConfiguration()
+											.getString(MessageConstants.DEFAULT_INVOICE_URL);
 									LOG.info("ReturnPageController::::::: Properties Url   " + fileDownloadLocation);
 								}
 							}
 							else
 							{
 								LOG.debug("Return c.getConsignment().getInvoice():::Null");
-								fileDownloadLocation = configurationService.getConfiguration().getString(
-										MessageConstants.DEFAULT_INVOICE_URL);
+								fileDownloadLocation = configurationService.getConfiguration()
+										.getString(MessageConstants.DEFAULT_INVOICE_URL);
 								LOG.info("ReturnPageController:::::::  Properties Url " + fileDownloadLocation);
 							}
 						}
@@ -1491,7 +1490,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	{
 
 		final CODSelfShipData selfShipData = new CODSelfShipData();
-		final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
+		final OrderModel orderModel = orderModelService.getOrder(orderCode);//for SDI-3630 partial fix
 		if (null != orderModel.getParentReference() && null != orderModel.getParentReference().getCode())
 		{
 			selfShipData.setOrderRefNo(orderModel.getParentReference().getCode());
