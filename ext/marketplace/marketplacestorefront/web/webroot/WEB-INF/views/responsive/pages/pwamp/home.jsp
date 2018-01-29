@@ -565,12 +565,12 @@
 				<h2 class="homeViewHeading">Stay Qued</h2>
 			</div>
 			<amp-list src="/pwamp/getStayQuedHomepage?version=Online"
-				height="240" layout="fixed-height"> 
+				height="280" layout="fixed-height"> 
 				<template type="amp-mustache"> 
 			<div class="stayQuedCenter">
 				<div class="stayTwo">
 					<div>
-						<amp-img class="responsive-img" width="auto" height="200"
+						<amp-img class="responsive-img" width="auto" height="220"
 							layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
 					</div>
 				</div>
@@ -632,17 +632,17 @@
 
 	<!-- Inspire Me -->
 	<div id="inspireMeMobileComp">
-		<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="240" layout="fixed-height"> 
+		<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="280" layout="fixed-height"> 
 		<template type="amp-mustache"> 
 		<div class="inspireMeMobileTopSection">
 			<h2 class="homeViewHeading">{{title}}</h2>
 		</div>
-			<amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
+			<amp-carousel height="280" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
 			{{#subComponents}}
 		<div class="inspireMeCenter">
 			<div class="stayTwo">
 				<div>
-					<amp-img class="responsive-img" width="auto" height="200"
+					<amp-img class="responsive-img" width="auto" height="220"
 						layout="flex-item" src="{{details.bannerImageUrl}}"
 						alt="{{bannerAltText}}"></amp-img>
 				</div>
