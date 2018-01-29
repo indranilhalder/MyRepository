@@ -202,6 +202,8 @@ public interface ControllerConstants
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
 				String ScheduledDeliveryDate = "pages/account/scheduledDeliveryDate";
 				String OTPPopup = "pages/account/otpPopup";
+				//New  Changes For Egv 
+				String GET_Statement_Page = "pages/account/accountStatement";
 			}
 
 
@@ -408,6 +410,7 @@ public interface ControllerConstants
 				public static final String ALL_OF_STOCK = "allOOStock";
 				public static final String BUYBOZFORSIZEGUIDEAJAX = "-buyboxDataForSizeGuide";
 
+				public static final String PRODUCT_CODE_GIFT_CART = "/**/giftCard-{productCode:.*}";
 
 				//for price breakup(TPR-3752)
 				public static final String PRICE_BREAKUP = "priceBreakup";

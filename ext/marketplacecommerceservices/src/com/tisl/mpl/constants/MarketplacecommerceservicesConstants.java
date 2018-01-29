@@ -201,6 +201,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEBIT = "Debit Card".intern();
 	public static final String CREDIT = "Credit Card".intern();
 	public static final String COD = "COD".intern();
+	public static final String CLIQ_CASH = "Cliq Cash".intern();
+	public static final String CLIQCASH = "CliqCash".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
@@ -1071,6 +1073,21 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2000 = "B2000";
 	public static final String B2001 = "B2001";
 	public static final String B2002 = "B2002";
+
+
+	// Codes For EGV Functionaity START
+	public static final String B5001 = "B5001";
+	public static final String B5002 = "B5002";
+	// Codes For EGV Functionaity END
+	
+	public static final String B5010 = "B5010";
+	public static final String B5011 = "B5011";
+	public static final String B5012 = "B5012";
+	public static final String B5013 = "B5013";
+	public static final String B5014 = "B5014";
+	public static final String B5015 = "B5015";
+	
+	
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
@@ -2338,6 +2355,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
+	
+	// EGV  changes Start
+
+		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
+		public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
+		public static final String QC_REFUND_TYPE_RETURN = "RETURN";
+		public static final String QC_REFUND_TYPE_REFUND = "REFUND";
+		
+		
+		public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
+		public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
+		public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
+		public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
+		// EGV Changes End
+		public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
+		
+		public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
+		
+		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
+		
+		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
+
+		public static final String PAYMENT_MODE_SPLIT = "split".trim();
+		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
+
 
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
 
@@ -2404,5 +2446,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AUTOMATIC = "AUTOMATIC";
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
+	
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Peek-a-boo {0}! One-time password Create Wallet{1}. Please feel free to call us at {2} in case of any queries.";
+
 }
