@@ -1069,9 +1069,9 @@ footer #footerLink div.column ul li {
 
 footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a {color: #000;}
 
-footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
+footer #footerLink div.column ul li a {color: #878787;}
 
-footer #footerLink div.column ul {margin: 0;}
+footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
 
 footer #footerLink div.column ul li {
     display: inline-block;
