@@ -1,0 +1,188 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$lang=en
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$picture=media(code, $contentCV)
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+$medias=medias(code, $contentCV);
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+$mediaResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
+;;HandBagsLinkNewArrivalsWomen;HandBags Link;#;HandBagsLinkNewArrivalsWomen;HandBagsLinkNewArrivalsWomen;;
+;;WalletsLinkNewArrivalsWomen;Wallets Link;#;WalletsLinkNewArrivalsWomen;WalletsLinkNewArrivalsWomen;;
+;;ClothingLinkNewArrivalsWomen;Clothing Link;#;ClothingLinkNewArrivalsWomen;ClothingLinkNewArrivalsWomen;;
+;;ShoesLinkNewArrivalsWomen;Shoes Link;#;ShoesLinkNewArrivalsWomen;ShoesLinkNewArrivalsWomen;;
+;;SpringSummer17LinkShoesLinkNewArrivalsWomen;SpringSummer17 Link;#;SpringSummer17LinkShoesLinkNewArrivalsWomen;SpringSummer17LinkShoesLinkNewArrivalsWomen;;
+;;ClothingLinkNewArrivalsMen;Clothing Link;#;ClothingLinkNewArrivalsMen;ClothingLinkNewArrivalsMen;;
+;;BagsLinkNewArrivalsMen;Bags Link;#;BagsLinkNewArrivalsMen;BagsLinkNewArrivalsMen;;
+;;WalletsLinkNewArrivalsMen;Wallets Link;#;WalletsLinkNewArrivalsMen;WalletsLinkNewArrivalsMen;;
+;;AccessoriesLinkNewArrivalsMen;Accessories Link;#;AccessoriesLinkNewArrivalsMen;AccessoriesLinkNewArrivalsMen;;
+;;ShoesLinkNewArrivalsMen;Shoes Link;#;ShoesLinkNewArrivalsMen;ShoesLinkNewArrivalsMen;;
+;;SpringSummer17LinkNewArrivalsMen;SpringSummer17 Link;#;SpringSummer17LinkNewArrivalsMen;SpringSummer17LinkNewArrivalsMen;;
+
+;;TopsLinkWomen;Tops Link;#;TopsLinkWomen;TopsLinkWomen;;
+;;Tops&T-shirtsLink;Tops&T-shirts Link;#;Tops&T-shirtsLink;Tops&T-shirtsLink;;
+;;JeansLink;Jeans Link;#;JeansLink;JeansLink;;
+;;DressesLink;Dresses Link;#;DressesLink;DressesLink;;
+;;SatchelsLink;Satchels Link;#;SatchelsLink;SatchelsLink;;
+;;ToteBagsLink;ToteBags Link;#;ToteBagsLink;ToteBagsLink;;
+;;Hobo&ShoulderBagsLink;Hobo&ShoulderBags Link;#;Hobo&ShoulderBagsLink;Hobo&ShoulderBagsLink;;
+;;CrossbodyBagsLink;CrossbodyBags Link;#;CrossbodyBagsLink;CrossbodyBagsLink;;
+;;WalletsLink;Wallets Link;#;WalletsLink;WalletsLink;;
+;;EveningBagsLink;EveningBags Link;#;EveningBagsLink;EveningBagsLink;;
+;;Cases&pouchesLink;Cases&pouches Link;#;Cases&pouchesLink;Cases&pouchesLink;;
+;;BackPacksLink;BackPacks Link;#;BackPacksLink;BackPacksLink;;
+;;VanityBagsLink;VanityBags Link;#;VanityBagsLink;VanityBagsLink;;
+;;FlatsLink;Flats Link;#;FlatsLink;FlatsLink;;
+;;Loafers&MoccasinsLink;Loafers&MoccasinsLink;#;Loafers&MoccasinsLink;Loafers&MoccasinsLink;;
+;;SneakersLink;Sneakers Link;#;SneakersLink;SneakersLink;;
+;;BeltsLink;Belts Link;#;BeltsLink;BeltsLink;;
+
+;;TopsLink;Tops Link;#;TopsLink;TopsLink;;
+;;Blazers&VestsLink;Blazers&Vests Link;#;Blazers&VestsLink;Blazers&VestsLink;;
+;;BottomsLink;Bottoms Link;#;BottomsLink;BottomsLink;;
+;;OuterwearLink;Outerwear Link;#;OuterwearLink;OuterwearLink;;
+;;ActivewearLink;ActivewearLink;#;ActivewearLink;ActivewearLink;;
+;;Socks&UnderwearLink;Socks&Underwear Link;#;Socks&UnderwearLink;Socks&UnderwearLink;;
+;;Sleep&LoungewearLink;Sleep&Loungewear Link;#;Sleep&LoungewearLink;Sleep&LoungewearLink;;
+;;SwimwearLink;Swimwear Link;#;SwimwearLink;SwimwearLink;;
+;;Bundles&SetsLink;Bundles&Sets Link;#;Bundles&SetsLink;Bundles&SetsLink;;
+;;BootsLink;Boots Link;#;BootsLink;BootsLink;;
+;;DressShoesLink;DressShoes Link;#;DressShoesLink;DressShoesLink;;
+;;Loafers&Slip-onsLink;Loafers&Slip-ons Link;#;Loafers&Slip-onsLink;Loafers&Slip-onsLink;;
+;;SandalsLink;Sandals Link;#;SandalsLink;SandalsLink;;
+;;SneakersLink;Sneakers Link;#;SneakersLink;SneakersLink;;
+;;GlovesLink;Gloves Link;#;GlovesLink;GlovesLink;;
+;;HatsLink;Hats Link;#;HatsLink;HatsLink;;
+;;OpticalLink;Optical Link;#;OpticalLink;OpticalLink;;
+;;SunglassesLink;Sunglasses Link;#;SunglassesLink;SunglassesLink;;
+;;Abercrombie&FitchLink;Abercrombie&Fitch Link;#;Abercrombie&FitchLink;Abercrombie&FitchLink;;
+;;ColeHaanLink;ColeHaan Link;#;ColeHaanLink;ColeHaanLink;;
+;;FrenchConnectionLink;FrenchConnection Link;#;FrenchConnectionLink;FrenchConnectionLink;;
+;;LacosteLink;Lacoste Link;#;LacosteLink;LacosteLink;;
+;;MichaelKorsLink;MichaelKors Link;#;MichaelKorsLink;MichaelKorsLink;;
+;;NewBalanceLink;NewBalance Link;#;NewBalanceLink;NewBalanceLink;;
+;;ReasonClothingLink;ReasonClothing Link;#;ReasonClothingLink;ReasonClothingLink;;
+;;MensGroomingCategoryLink;MensGroomingCategory;#;MensGroomingCategoryLink;;
+;;EditorsPicksCategoryLink;EditorsPicksCategoryLink;#;EditorsPicksCategoryLink;;
+;;BrandCategoryLink;Brand Category Link;/Brand;BrandCategoryLink;BrandCategoryLink;;;;Brand
+
+
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
+;;GlobalLuxeCategoryLink;GlobalLuxe Category Link;/GlobalLuxe;GlobalLuxeCategoryLink;GlobalLuxeCategoryLink;;;;GLOBAL LUXE
+;;IndieLuxeCategoryLink;IndieLuxe Category Link;/IndieLuxe;IndieLuxeCategoryLink;IndieLuxeCategoryLink;;;;INDIE LUXE
+;;GiftingCategoryLink;Gifting Category Link;/Gifting;GiftingCategoryLink;GiftingCategoryLink;;;;GIFTING
+
+
+
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
+;root;;root;;;;;root;
+;SiteRootNode;;SiteRootNode;;root;;;SiteRootNode;
+;LuxuryNavNode;;Luxury Site;;SiteRootNode;;HomepageNavLink;LuxuryNavNode;
+;GlobalLuxeNavNode;;Global Luxe Category;;LuxuryNavNode;;GlobalLuxeCategoryLink;GlobalLuxeNavNode;
+;IndieLuxeNavNode;;Indie Luxe Category;;LuxuryNavNode;;IndieLuxeCategoryLink;IndieLuxeNavNode;
+;GiftingNavNode;;Gifting Category;;LuxuryNavNode;;GiftingCategoryLink;GiftingNavNode;
+
+
+
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
+;NewArrivalsNavNodeGlobalLuxe;;New GlobalLuxe Arrivals Category;;GlobalLuxeNavNode;;NewArrivalsCategoryLink;NewArrivalsNavNodeGlobalLuxe;
+;WomenNavNodeGlobalLuxe;;Women GlobalLuxe Category;;GlobalLuxeNavNode;;WomenCategoryLink;WomenNavNodeGlobalLuxe;
+;MenNavNodeGlobalLuxe;;Men GlobalLuxe Category;;GlobalLuxeNavNode;;MenCategoryLink;MenNavNodeGlobalLuxe;
+;LifestyleNavNodeGlobalLuxe;;Lifestyle GlobalLuxe Category;;GlobalLuxeNavNode;;LifestyleCategoryLink;LifestyleNavNodeGlobalLuxe;
+;BrandNavNodeGlobalLuxe;;Brand GlobalLuxe Category;;GlobalLuxeNavNode;;BrandCategoryLink;BrandNavNodeGlobalLuxe;
+;OnSaleNavNodeGlobalLuxe;;OnSale GlobalLuxe Category;;GlobalLuxeNavNode;;OnSaleCategoryLink;OnSaleNavNodeGlobalLuxe;
+
+;NewArrivalsNavNodeIndieLuxe;;New Arrivals IndieLuxe Category;;IndieLuxeNavNode;;NewArrivalsCategoryLink;NewArrivalsNavNodeIndieLuxe;
+;WomenNavNodeIndieLuxe;;Women IndieLuxe Category;;IndieLuxeNavNode;;WomenCategoryLink;WomenNavNodeIndieLuxe;
+;MenNavNodeIndieLuxe;;Men IndieLuxe Category;;IndieLuxeNavNode;;MenCategoryLink;MenNavNodeIndieLuxe;
+;LifestyleNavNodeIndieLuxe;;Lifestyle IndieLuxe Category;;IndieLuxeNavNode;;LifestyleCategoryLink;LifestyleNavNodeIndieLuxe;
+;BrandNavNodeIndieLuxe;;Brand IndieLuxe Category;;IndieLuxeNavNode;;BrandCategoryLink;BrandNavNodeIndieLuxe;
+;OnSaleNavNodeIndieLuxe;;OnSale IndieLuxe Category;;IndieLuxeNavNode;;OnSaleCategoryLink;OnSaleNavNodeIndieLuxe;
+
+;NewArrivalsNavNodeGifting;;New Arrivals Gifting Category;;GiftingNavNode;;NewArrivalsCategoryLink;NewArrivalsNavNodeGifting;
+;WomenNavNodeGifting;;Women Gifting Category;;GiftingNavNode;;WomenCategoryLink;WomenNavNodeGifting;
+;MenNavNodeGifting;;Men Gifting Category;;GiftingNavNode;;MenCategoryLink;MenNavNodeGifting;
+;LifestyleNavNodeGifting;;Lifestyle Gifting Category;;GiftingNavNode;;LifestyleCategoryLink;LifestyleNavNodeGifting;
+;BrandNavNodeGifting;;Brand Gifting Category;;GiftingNavNode;;BrandCategoryLink;BrandNavNodeGifting;
+;OnSaleNavNodeGifting;;OnSale Gifting Category ;;GiftingNavNode;;OnSaleCategoryLink;OnSaleNavNodeGifting;
+
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;WomenNavNodeNewArrivalsGlobalLuxe;;Women Category;NewArrivalsNavNodeGlobalLuxe;HandBagsLinkNewArrivalsWomen,WalletsLinkNewArrivalsWomen,ClothingLinkNewArrivalsWomen,ShoesLinkNewArrivalsWomen,SpringSummer17LinkShoesLinkNewArrivalsWomen;WomenNavNodeNewArrivalsGlobalLuxe
+;MenNavNodeNewArrivalsGlobalLuxe;;Men Category;NewArrivalsNavNodeGlobalLuxe;ClothingLinkNewArrivalsMen,BagsLinkNewArrivalsMen,WalletsLinkNewArrivalsMen,AccessoriesLinkNewArrivalsMen,ShoesLinkNewArrivalsMen,SpringSummer17LinkNewArrivalsMen;MenNavNodeNewArrivalsGlobalLuxe
+;ClothingNavNodeWomenGlobalLuxe;;Clothing Category;WomenNavNodeGlobalLuxe;Tops&T-shirtsLink,JeansLink,DressesLink;ClothingNavNodeWomenGlobalLuxe
+;BagsNavNodeWomenGlobalLuxe;;Bags Category;WomenNavNodeGlobalLuxe;SatchelsLink,ToteBagsLink,Hobo&ShoulderBagsLink,CrossbodyBagsLink;WalletsLink,EveningBagsLink,Cases&pouchesLink,BackPacksLink,VanityBagsLink;BagsNavNodeWomenGlobalLuxe
+;ShoesNavNodeWomenGlobalLuxe;;Shoes Category;WomenNavNodeGlobalLuxe;FlatsLink,Loafers&MoccasinsLink,SneakersLink;ShoesNavNodeWomenGlobalLuxe
+;AccessoriesNavNodeWomenGlobalLuxe;;Accessories Category;WomenNavNodeGlobalLuxe;BeltsLink;AccessoriesNavNodeWomenGlobalLuxe
+;ClothingNavNodeGlobalLuxe;;Clothing Category;MenNavNodeGlobalLuxe;TopsLink,Blazers&VestsLink,BottomsLink,OuterwearLink,ActivewearLink,Socks&UnderwearLink,Sleep&LoungewearLink,SwimwearLink,Bundles&SetsLink;ClothingNavNodeGlobalLuxe
+;ShoesNavNodeGlobalLuxe;;Shoes Category;MenNavNodeGlobalLuxe;BootsLink,DressShoesLink,Loafers&Slip-onsLink,SandalsLink,SneakersLink;ShoesNavNodeGlobalLuxe
+;AccessoriesNavNodeGlobalLuxe;;Accessories Category;MenNavNodeGlobalLuxe;GlovesLink,HatsLink,OpticalLink,SunglassesLink;AccessoriesNavNodeGlobalLuxe
+;MensGroomingNavNodeGlobalLuxe;;MensGrooming Category;MenNavNodeGlobalLuxe;MensGroomingCategoryLink;MensGroomingNavNodeGlobalLuxe
+;EditorsPicksNavNodeGlobalLuxe;;EditorsPicks Category;MenNavNodeGlobalLuxe;EditorsPicksCategoryLink;EditorsPicksNavNodeGlobalLuxe
+;PopularBrandsNavNodeGlobalLuxe;;PopularBrands Category;MenNavNodeGlobalLuxe;Abercrombie&FitchLink,ColeHaanLink,FrenchConnectionLink,LacosteLink,MichaelKorsLink,NewBalanceLink,ReasonClothingLink;PopularBrandsNavNodeGlobalLuxe
+
+
+;WomenNavNodeNewArrivalsIndieLuxe;;Women Category;NewArrivalsNavNodeIndieLuxe;HandBagsLinkNewArrivalsWomen,WalletsLinkNewArrivalsWomen,ClothingLinkNewArrivalsWomen,ShoesLinkNewArrivalsWomen,SpringSummer17LinkShoesLinkNewArrivalsWomen;WomenNavNodeNewArrivalsIndieLuxe
+;MenNavNodeNewArrivalsIndieLuxe;;Men Category;NewArrivalsNavNodeIndieLuxe;ClothingLinkNewArrivalsMen,BagsLinkNewArrivalsMen,WalletsLinkNewArrivalsMen,AccessoriesLinkNewArrivalsMen,ShoesLinkNewArrivalsMen,SpringSummer17LinkNewArrivalsMen;MenNavNodeNewArrivalsIndieLuxe
+;ClothingNavNodeWomenIndieLuxe;;Clothing Category;WomenNavNodeIndieLuxe;Tops&T-shirtsLink,JeansLink,DressesLink;ClothingNavNodeWomenIndieLuxe
+;BagsNavNodeWomenIndieLuxe;;Bags Category;WomenNavNodeIndieLuxe;SatchelsLink,ToteBagsLink,Hobo&ShoulderBagsLink,CrossbodyBagsLink;EveningBagsLink,Cases&pouchesLink,BackPacksLink,VanityBagsLink;BagsNavNodeWomenIndieLuxe
+;ShoesNavNodeWomenIndieLuxe;;Shoes Category;WomenNavNodeIndieLuxe;FlatsLink,Loafers&MoccasinsLink,SneakersLink;ShoesNavNodeWomenIndieLuxe
+;AccessoriesNavNodeWomenIndieLuxe;;Accessories Category;WomenNavNodeIndieLuxe;BeltsLink;AccessoriesNavNodeWomenIndieLuxe
+;ClothingNavNodeIndieLuxe;;Clothing Category;MenNavNodeIndieLuxe;TopsLink,Blazers&VestsLink,BottomsLink,OuterwearLink,ActivewearLink,Socks&UnderwearLink,Sleep&LoungewearLink,SwimwearLink,Bundles&SetsLink;ClothingNavNodeIndieLuxe
+;ShoesNavNodeIndieLuxe;;Shoes Category;MenNavNodeIndieLuxe;BootsLink,DressShoesLink,Loafers&Slip-onsLink,SandalsLink,SneakersLink;ShoesNavNodeIndieLuxe
+;AccessoriesNavNodeIndieLuxe;;Accessories Category;MenNavNodeIndieLuxe;GlovesLink,HatsLink,OpticalLink,SunglassesLink;AccessoriesNavNodeIndieLuxe
+;MensGroomingNavNodeIndieLuxe;;MensGrooming Category;MenNavNodeIndieLuxe;MensGroomingCategoryLink;MensGroomingNavNodeIndieLuxe
+;EditorsPicksNavNodeIndieLuxe;;EditorsPicks Category;MenNavNodeIndieLuxe;EditorsPicksCategoryLink;EditorsPicksNavNodeIndieLuxe
+;PopularBrandsNavNodeIndieLuxe;;PopularBrands Category;MenNavNodeIndieLuxe;Abercrombie&FitchLink,ColeHaanLink,FrenchConnectionLink,LacosteLink,MichaelKorsLink,NewBalanceLink,ReasonClothingLink;PopularBrandsNavNodeIndieLuxe
+
+
+;WomenNavNodeNewArrivalsGifting;;Women Category;NewArrivalsNavNodeGifting;HandBagsLinkNewArrivalsWomen,WalletsLinkNewArrivalsWomen,ClothingLinkNewArrivalsWomen,ShoesLinkNewArrivalsWomen,SpringSummer17LinkShoesLinkNewArrivalsWomen;WomenNavNodeNewArrivalsGifting
+;MenNavNodeNewArrivalsGifting;;Men Category;NewArrivalsNavNodeGifting;ClothingLinkNewArrivalsMen,BagsLinkNewArrivalsMen,WalletsLinkNewArrivalsMen,AccessoriesLinkNewArrivalsMen,ShoesLinkNewArrivalsMen,SpringSummer17LinkNewArrivalsMen;MenNavNodeNewArrivalsGifting
+;ClothingNavNodeWomenGifting;;Clothing Category;WomenNavNodeGifting;Tops&T-shirtsLink,JeansLink,DressesLink;ClothingNavNodeWomenGifting
+;BagsNavNodeWomenGifting;;Bags Category;WomenNavNodeGifting;SatchelsLink,ToteBagsLink,Hobo&ShoulderBagsLink,CrossbodyBagsLink;Cases&pouchesLink,BackPacksLink,VanityBagsLink;BagsNavNodeWomenGifting
+;ShoesNavNodeWomenGifting;;Shoes Category;WomenNavNodeGifting;FlatsLink,Loafers&MoccasinsLink,SneakersLink;ShoesNavNodeWomenGifting
+;AccessoriesNavNodeWomenGifting;;Accessories Category;WomenNavNodeGifting;BeltsLink;AccessoriesNavNodeWomenGifting
+;ClothingNavNodeGifting;;Clothing Category;MenNavNodeGifting;TopsLink,Blazers&VestsLink,BottomsLink,OuterwearLink,ActivewearLink,Socks&UnderwearLink,Sleep&LoungewearLink,SwimwearLink,Bundles&SetsLink;ClothingNavNodeGifting
+;ShoesNavNodeGifting;;Shoes Category;MenNavNodeGifting;BootsLink,DressShoesLink,Loafers&Slip-onsLink,SandalsLink,SneakersLink;ShoesNavNodeGifting
+;AccessoriesNavNodeGifting;;Accessories Category;MenNavNodeGifting;GlovesLink,HatsLink,OpticalLink,SunglassesLink;AccessoriesNavNodeGifting
+;MensGroomingNavNodeGifting;;MensGrooming Category;MenNavNodeGifting;MensGroomingCategoryLink;MensGroomingNavNodeGifting
+;EditorsPicksNavNodeGifting;;EditorsPicks Category;MenNavNodeGifting;EditorsPicksCategoryLink;EditorsPicksNavNodeGifting
+;PopularBrandsNavNodeGifting;;PopularBrands Category;MenNavNodeGifting;Abercrombie&FitchLink,ColeHaanLink,FrenchConnectionLink,LacosteLink,MichaelKorsLink,NewBalanceLink,ReasonClothingLink;PopularBrandsNavNodeGifting
+
+
+
+
+INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
+;;GlobalLuxeBarComponent;Global Luxe;10;GlobalLuxeNavNode;GlobalLuxeCategoryLink;;AUTO;GlobalLuxeBarComponent
+;;IndieLuxeBarComponent;Indie Luxe;10;IndieLuxeNavNode;IndieLuxeCategoryLink;;AUTO;IndieLuxeBarComponent
+;;GiftingBarComponent;Gifting;10;GiftingNavNode;GiftingCategoryLink;;AUTO;GiftingBarComponent
+
+INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
+;;NavBarComponent;Luxury Navigation Bar Collection Component;GlobalLuxeBarComponent,IndieLuxeBarComponent,GiftingBarComponent
+
+REMOVE  CMSNavigationNode;uid[unique=true];$contentCV[unique=true];
+;NewArrivalsNavNode;
+;WomenNavNode;
+;MenNavNode;
+;LifestyleNavNode;
+;BeautyNavNode;
+;DesignersNavNode;
+;OnSaleNavNode;

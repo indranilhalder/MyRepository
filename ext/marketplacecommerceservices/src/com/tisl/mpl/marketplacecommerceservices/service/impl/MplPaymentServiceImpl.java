@@ -2662,7 +2662,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					newAuditModel.setPaymentAmount(cartModel.getTotalPrice());
 				}
-
+				//SDI-4494
+				else
+				{
+					OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(cartGuId);
+					if(null != orderModel)
+					{
+						newAuditModel.setPaymentAmount(orderModel.getTotalPrice());
+					}
+				}
 				getModelService().save(newAuditModel);
 				flag = true;
 			}
@@ -4623,6 +4631,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				if (cartModel != null && cartModel.getTotalPrice() != null)
 				{
 					newAuditModel.setPaymentAmount(cartModel.getTotalPrice());
+				}
+				//SDI-4494
+				else
+				{
+					OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(guid);
+					if(null != orderModel)
+					{
+						newAuditModel.setPaymentAmount(orderModel.getTotalPrice());
+					}
 				}
 
 				getModelService().save(newAuditModel);

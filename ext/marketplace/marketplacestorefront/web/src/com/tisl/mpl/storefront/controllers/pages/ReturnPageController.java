@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -763,7 +764,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 			catch (final Exception e)
 			{
-				LOG.error("Exception Occured during saving Customer BankDetails for COD order" + orderCode + e.getMessage());
+				LOG.error("Exception Occured during saving Customer BankDetails for COD order" + orderCode + " :: "
+						+ ExceptionUtils.getStackTrace(e));
 			}
 
 

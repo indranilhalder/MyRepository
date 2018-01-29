@@ -43,6 +43,8 @@ import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 
 public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 {
@@ -60,7 +62,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 
 	//private MplCodeMasterUtility mplCodeMaterUtility;
 
-
 	@SuppressWarnings("static-access")
 	@Override
 	public void populate(final OrderModel source, final Order target) throws ConversionException
@@ -72,6 +73,18 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		setFirstAndLastName(source, target);
 		target.setMiddleName(((CustomerModel) user).getMiddleName());
 		target.setCartID(source.getGuid());
+
+		if (source.getStore() != null && StringUtil.isNotEmpty(source.getStore().getUid()))
+		{
+			if (MarketplaceomsservicesConstants.LUXURY_PREFIX.equalsIgnoreCase(source.getStore().getUid()))
+			{
+				if (LOG.isInfoEnabled())
+				{
+					LOG.info("Luxury Store Indicator");
+				}
+				target.setStoreIndicator(source.getStore().getUid());
+			}
+		}
 
 		final AddressModel delAddress = source.getDeliveryAddress();
 
@@ -103,8 +116,8 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			LOG.info("CustomOmsOrderPopulator Channel name is null for order " + source.getCode());
 		}
 
-		target.setOrderType(MplCodeMasterUtility.getglobalCode(MarketplaceomsservicesConstants.ORDER_TYPE_NEW_CONSTANTS
-				.toUpperCase()));
+		target.setOrderType(
+				MplCodeMasterUtility.getglobalCode(MarketplaceomsservicesConstants.ORDER_TYPE_NEW_CONSTANTS.toUpperCase()));
 		target.setOrderId(source.getCode());
 		/*
 		 * target.setOrderType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(MarketplaceomsservicesConstants.
@@ -383,9 +396,11 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 				if (((ThirdPartyWalletInfoModel) paymentInfoModel).getProviderName().equalsIgnoreCase("PAYTM"))
 				{
 					return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_PAYTM);
-				}else{
+				}
+				else
+				{
 					return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_MRUPEE);
-				//changes for paytm integration--End
+					//changes for paytm integration--End
 				}
 			}
 

@@ -38,7 +38,7 @@
 										<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 										<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 										<input type="hidden" name="isFacet" value="true"/>
-										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''} data-colour="${facetValue.code}" value="${facetValue.code}" name="" id="${facetValue.code}"><label for="${facetValue.code}">${facetValue.name}</label>
+										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''} data-colour="${facetValue.code}" value="${facetValue.code}" name="" id="${facetData.name}-${facetValue.code}"><label for="${facetData.name}-${facetValue.code}">${facetValue.name}</label>
 										<c:if test="${facetData.code ne 'colour'}">
 											<span class="avail-count">${facetValue.count}</span>
 										</c:if>

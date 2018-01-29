@@ -17,6 +17,17 @@ import java.util.Iterator;
  */
 public class LuxurySampleDataImportService extends SampleDataImportService
 {
+
+	public static final String LUXURYHOMEPAGEURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryHomePage.impex";
+	public static final String LUXURYHOMEPAGEENURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryHomePage_en.impex";
+	public static final String LUXURYNAVIGATIONURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryNavigation.impex";
+	public static final String LUXURYNAVIGATIONENURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryNavigation_en.impex";
+	public static final String SEARCHRESULTSURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/searchResults.impex";
+	public static final String LUXURYCATEGORYLANDINGPAGEURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryCategoryLandingPage.impex";
+	public static final String LUXURYBRANDLANDINGURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryBrandLanding.impex";
+	public static final String LUXURYCARTPAGEURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryCartPage.impex";
+	public static final String LUXURYERRORPAGEURL = "/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryErrorPage.impex";
+
 	@Override
 	protected void importAllData(final AbstractSystemSetup systemSetup, final SystemSetupContext context,
 			final ImportData importData, final boolean syncCatalogs)
@@ -44,33 +55,23 @@ public class LuxurySampleDataImportService extends SampleDataImportService
 				systemSetup.logInfo(context, String.format("Begin importing content catalog data for [%s]", new Object[]
 				{ contentCatalogName }));
 				importContentCatalog(context.getExtensionName(), contentCatalogName);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryHomePage.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYHOMEPAGEURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryHomePage_en.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYHOMEPAGEENURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryNavigation.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYNAVIGATIONURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryNavigation_en.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYNAVIGATIONENURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/searchResults.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(SEARCHRESULTSURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(String
-						.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryCategoryLandingPage.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYCATEGORYLANDINGPAGEURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryBrandLanding.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYBRANDLANDINGURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryCartPage.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYCARTPAGEURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
-				getSetupImpexService().importImpexFile(
-						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryErrorPage.impex", new Object[]
+				getSetupImpexService().importImpexFile(String.format(LUXURYERRORPAGEURL, new Object[]
 				{ context.getExtensionName(), contentCatalogName }), false);
 			}
 		}
@@ -117,7 +118,7 @@ public class LuxurySampleDataImportService extends SampleDataImportService
 							String.format(
 									"Rerunning product catalog synchronization for [%s], failed. Please consult logs for more details.",
 									new Object[]
-					{ importData.getProductCatalogName() }));
+									{ importData.getProductCatalogName() }));
 				}
 			}
 		}
