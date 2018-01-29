@@ -6,30 +6,32 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="breadcrumb" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/nav/breadcrumb"%>
 <div class="container plp-wrapper">
-	<h4 class="categor-name text-center">
+	<h1 class="categor-name text-center fs24">
 		<c:choose>
 			<c:when test="${isCategoryPage && not empty searchPageData.results && searchPageData.pagination.totalNumberOfResults > 0}">
 				${dropDownText} (${searchPageData.pagination.totalNumberOfResults})
 			</c:when>
 			<c:when test="${not empty searchPageData.results && searchPageData.pagination.totalNumberOfResults > 0}">
-				<spring:theme code="search.page.searchText"/>
+				<%-- <spring:theme code="search.page.searchText"/>
 				<span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
-				<spring:theme code="search.page.searchTextItem"/>
+				<spring:theme code="search.page.searchTextItem"/> --%>
 				<c:choose>
 					<c:when test="${not empty param.text}">
-						<span class="searchString">"${param.text}"</span>
+						"<span class="searchString">${param.text}</span> in <span class="searchString">${searchCategoryName}</span>"
 					</c:when>
 					<c:when test="${not empty searchPageData.freeTextSearch}">
-						<span class="searchString">					
-					"<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
+						"<span class="searchString">					
+							<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>
+						</span>
+						in <span class="searchString">${searchCategoryName}</span>"
 					</c:when>
 					<c:otherwise>
-						<span class="searchString">"All"</span>
+						<span class="searchString">${searchCategoryName}</span>
 					</c:otherwise>
 				</c:choose>
 			</c:when>
 		</c:choose>
-	</h4>
+	</h1>
 	<div class="row">
 		 <div class="product-sort-wrapper mb-30 col-sm-12">
 		 	<div class="plp-sort-inner">

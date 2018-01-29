@@ -10,8 +10,9 @@
 
 <!-- <li class="transient-mini-bag"></li> -->
 				<li class="bag">
+				My bag
 				<a href="${cartUrl}" 
-					class="mini-cart-link myBag-sticky"
+					class="mini-cart-link myBag-sticky bag"
 					data-mini-cart-url="${rolloverPopupUrl}"
 					data-mini-cart-refresh-url="${refreshMiniCartUrl}"
 					data-mini-cart-name="<spring:theme code="text.cart"/>"

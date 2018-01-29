@@ -104,7 +104,7 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String COLORELECTRONICS = "colorelectronics"; //INC144316508
 	public static final String COLORELECTRONICSBLANK = ""; //INC144316508
 	public static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
-	public static final String LSH1 = "LSH1";
+	public static final String LSH1 = "LSH";
 	public static final String INR = "INR";
 
 	//Added for adhoc.impex

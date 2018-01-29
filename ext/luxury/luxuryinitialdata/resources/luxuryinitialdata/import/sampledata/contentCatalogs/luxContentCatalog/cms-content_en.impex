@@ -742,3 +742,51 @@ UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[la
 <p>Have a question? Please feel free to reach us at 1800 201 301 (available 24/7)</p>
 </div>"
 
+
+
+#Nps Email 
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+
+;;/images/theme/luxlogo.png;luxlogo.png;$siteResource/images/theme/luxlogo.png;;
+;;/images/theme/rank00.jpg;rank00.jpg;$siteResource/images/theme/rank00.jpg;;
+;;/images/theme/rank01.jpg;rank01.jpg;$siteResource/images/theme/rank01.jpg;;
+;;/images/theme/rank02.jpg;rank02.jpg;$siteResource/images/theme/rank02.jpg;;
+;;/images/theme/rank03.jpg;rank03.jpg;$siteResource/images/theme/rank03.jpg;;
+;;/images/theme/rank04.jpg;rank04.jpg;$siteResource/images/theme/rank04.jpg;;
+;;/images/theme/rank05.jpg;rank05.jpg;$siteResource/images/theme/rank05.jpg;;
+;;/images/theme/rank06.jpg;rank06.jpg;$siteResource/images/theme/rank06.jpg;;
+;;/images/theme/rank07.jpg;rank07.jpg;$siteResource/images/theme/rank07.jpg;;
+;;/images/theme/rank08.jpg;rank08.jpg;$siteResource/images/theme/rank08.jpg;;
+;;/images/theme/rank09.jpg;rank09.jpg;$siteResource/images/theme/rank09.jpg;;
+;;/images/theme/rank10.jpg;rank10.jpg;$siteResource/images/theme/rank10.jpg;;
+
+# CMS Image Components for Nps Emailer  
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;NpsLogoImage;/images/theme/luxlogo.png;
+;;EmailRankZeroImage;/images/theme/rank00.jpg;
+;;EmailRankOneImage;/images/theme/rank01.jpg;
+;;EmailRankTwoImage;/images/theme/rank02.jpg;
+;;EmailRankThreeImage;/images/theme/rank03.jpg;
+;;EmailRankFourImage;/images/theme/rank04.jpg;
+;;EmailRankFiveImage;/images/theme/rank05.jpg;
+;;EmailRankSixImage;/images/theme/rank06.jpg;
+;;EmailRankSevenImage;/images/theme/rank07.jpg;
+;;EmailRankEightImage;/images/theme/rank08.jpg;
+;;EmailRankNineImage;/images/theme/rank09.jpg;
+;;EmailRankTenImage;/images/theme/rank10.jpg;
+
+
+# Nps Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoConfSlot;NpsLogoImage
+;;EmailRankZeroNpsSlot;EmailRankZeroImage
+;;EmailRankOneNpsSlot;EmailRankOneImage
+;;EmailRankTwoNpsSlot;EmailRankTwoImage
+;;EmailRankThreeNpsSlot;EmailRankThreeImage
+;;EmailRankFourNpsSlot;EmailRankFourImage
+;;EmailRankFiveNpsSlot;EmailRankFiveImage
+;;EmailRankSixNpsSlot;EmailRankSixImage
+;;EmailRankSevenNpsSlot;EmailRankSevenImage
+;;EmailRankEightNpsSlot;EmailRankEightImage
+;;EmailRankNineNpsSlot;EmailRankNineImage
+;;EmailRankTenNpsSlot;EmailRankTenImage

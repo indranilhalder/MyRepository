@@ -21,7 +21,7 @@ import com.tisl.mpl.core.model.LuxEnhancedSearchBoxComponentModel;
 public interface LuxurystoreaddonControllerConstants
 {
 	String ADDON_PREFIX = "addon:/luxurystoreaddon";
-	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";;
+	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
 	public static final String LUXURYLOGINPAGE = "luxuryLoginPage";
 
 	// implement here controller constants used by this extension

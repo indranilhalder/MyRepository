@@ -35,7 +35,13 @@ ACC.autocomplete = {
 				}
 			},_renderItem : function (ul, item){
 			if (item.type == "autoSuggestion"){
+				if (document.getElementById("suggestionText")!=null) {
+					var renderHtml = "<a href='/search?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ></a>";
+				}
+				else{
 					var renderHtml = "<a href='/search?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
+				}
+					
 					return $("<li>")
 							.data("item.autocomplete", item)
 							.append(renderHtml)
@@ -59,8 +65,14 @@ ACC.autocomplete = {
 				if (item.type == "brands")
 				{		
 					var renderHtml = "<a href='" + ACC.config.contextPath + item.url + "' class='clearfix'>";
-					
+						
+					if (document.getElementById("suggestionText")!=null) {
+						renderHtml += "<span class=''>" + item.term +  " in " + item.value + "</span>" + "</a>";
+					}
+					else{
 						renderHtml += "<span class=''>" + "in " + item.value + "</span>" + "</a>";
+					}
+						
 					
 					//renderHtml += "<span class=''>" +"<strong>" + item.term + "</strong>" + " in " + item.value + "</span>" + "</a>";
 					return $("<li class='product-list'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
@@ -70,8 +82,14 @@ ACC.autocomplete = {
 					
 					var renderHtml = "<a href='" + ACC.config.contextPath + item.url + "' class='clearfix'>";
 					
+					if (document.getElementById("suggestionText")!=null) {
+						renderHtml += "<span class=''>" + item.term +" in " + item.value + "</span>" + "</a>";	
+										}
+					else{
+						renderHtml += "<span class=''>" + "in " + item.value + "</span>" + "</a>";					
+										}
 					
-						renderHtml += "<span class=''>" + "in " + item.value + "</span>" + "</a>";
+						
 					
 					//renderHtml += "<span class=''>" +"<strong>" + item.term + "</strong>" + " in " + item.value + "</span>" + "</a>";
 					return $("<li class='product-list' >").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
@@ -105,6 +123,10 @@ ACC.autocomplete = {
 				//var selectedCat = $("#searchCategory option:selected").val();
 				var selectedCat = $(".select-list .dropdown li.selected").attr('id');
 				var termCombi = term+":"+selectedCat;
+				if (document.getElementById("suggestionText")!=null) {
+					$('#displayCategory').text($('#selectedCategoryName').val());
+					$('#suggestionText').show();
+					}
 				//if (term in self.options.cache)
 				if (termCombi in self.options.cache)
 				{
@@ -187,7 +209,7 @@ ACC.autocomplete = {
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
-								var suggestedString="";
+								 suggestedString="";
 								
 								if(data.categories.length!=undefined && data.categories.length>0){
 									

@@ -2400,4 +2400,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TIMEOUT_FOR_OTP = "timeout.for.otp".intern();
 	public static final String PROFILE_UPDATE_SUCCESS = "Profile updated successfully";
 	public static final String PROFILE_UPDATE_FAIL = "Profile data is not updated";
+
+	//CAR-330
+	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	
+	//SDI-4494	
+	public static final String MANUAL = "MANUAL";
+	public static final String AUTOMATIC = "AUTOMATIC";
+	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
+	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
+	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
+
 }

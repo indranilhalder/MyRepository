@@ -1507,7 +1507,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
 	<bean id="mplCategorySourceForCategoryFacet" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,LSH1" />
+		<property name="rootCategory" value="MSH1,LSH" />
 		<!-- 'brands' is the root of the brands hierarchy -->
 	</bean>
 
@@ -1528,11 +1528,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- TPR-6336 -->
 	<bean id="mplCategorySource" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,LSH1" />
+		<property name="rootCategory" value="MSH1,LSH" />
 	</bean>
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
-		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH1" />
+		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH" />
 	</bean>
 
 
@@ -1971,10 +1971,20 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- TPR-1285 Dynamic Sitemap Stop -->
 
 	<!-- for promotion price row updater job -->
-	<bean id="promotionPriceUpdaterJob"
+	<bean id="promotionPriceUpdaterJob" 
 		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
 		autowire="byName">
 	</bean>
+	
+	
+	<!-- CAR-330 starts here -->
+	<!-- for entering replica data in CouponUserRestriction table for MyAccount Page -->
+	<bean id="voucherUserRestrictionUpdaterJob" parent="abstractJobPerformable"
+		class="com.tisl.mpl.core.promotion.job.VoucherUserRestrictionUpdaterJob"
+		autowire="byName">
+	</bean>
+	<!-- CAR-330 ends here -->
+	
 
 	<!-- mrupee changes -->
 	<bean id="mplThirdPartyWalletCronJob" parent="abstractJobPerformable"

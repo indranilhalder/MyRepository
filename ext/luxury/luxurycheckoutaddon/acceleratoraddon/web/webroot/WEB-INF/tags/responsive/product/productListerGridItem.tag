@@ -22,7 +22,7 @@
 <c:url value="${product.url}" var="productUrl" />
 <c:set value="${not empty product.potentialPromotions}"
 	var="hasPromotion" />
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 
 
 <li class="product-item">

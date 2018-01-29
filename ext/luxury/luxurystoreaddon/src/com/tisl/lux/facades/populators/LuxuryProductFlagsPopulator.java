@@ -58,6 +58,15 @@ public class LuxuryProductFlagsPopulator<SOURCE extends ProductModel, TARGET ext
 
 
 
+	/**
+	 *
+	 */
+	public LuxuryProductFlagsPopulator()
+	{
+		super();
+	}
+
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -85,14 +94,12 @@ public class LuxuryProductFlagsPopulator<SOURCE extends ProductModel, TARGET ext
 			if (seller != null)
 			{
 				//Find the oldest startDate of the seller
-				if (null == existDate && seller.getStartDate() != null)
+				if ((null == existDate && seller.getStartDate() != null)
+						|| (existDate != null && seller.getStartDate() != null && existDate.after(seller.getStartDate())))
 				{
 					existDate = seller.getStartDate();
 				}
-				else if (seller.getStartDate() != null && existDate.after(seller.getStartDate()))
-				{
-					existDate = seller.getStartDate();
-				}
+
 			}
 		}
 

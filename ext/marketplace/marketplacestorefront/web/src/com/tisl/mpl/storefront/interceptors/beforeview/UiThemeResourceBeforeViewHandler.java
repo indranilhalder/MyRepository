@@ -122,7 +122,12 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 				(urlEncodingAttributes != null) ? urlEncodingAttributes.toString() : "");
 
 		LOG.debug("Actual context path static ====> " + contextPath);
-		final String staticResourceHost = configurationService.getConfiguration().getString("marketplace.static.resource.host");
+		String staticResourceHost = configurationService.getConfiguration().getString("marketplace.static.resource.host");
+		if (siteName.equalsIgnoreCase("lux"))
+		{
+			staticResourceHost = configurationService.getConfiguration().getString("luxury.static.resource.host");
+		}
+
 		String siteRootUrl, addOnContextPath;
 		if (StringUtils.isNotEmpty(staticResourceHost))
 		{

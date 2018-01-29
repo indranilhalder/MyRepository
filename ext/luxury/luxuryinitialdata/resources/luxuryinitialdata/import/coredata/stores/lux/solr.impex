@@ -75,8 +75,8 @@ UPDATE BaseStore; uid[unique = true]; solrFacetSearchConfiguration(name)
 
 # Define price range set
 INSERT_UPDATE SolrValueRangeSet; name[unique = true]; qualifier; type
-; luxElectronicsPriceRangeINR ; INR-ELECTRONICS ; double
-; luxApparelPriceRangeINR     ; INR-APPAREL     ; double
+; luxElectronicsPriceRangeINR ; INR-LUXURY-ELECTRONICS ; double
+; luxApparelPriceRangeINR     ; INR-LUXURY-APPAREL     ; double
 ; luxFacetAvgRating           ;                 ; double
 ; luxDiscountRange            ; DISCOUNT        ; double
 
