@@ -373,13 +373,26 @@
 	<p class="sidebar-divider-item">
 		<a href="/my-account/wishList"><i class="fa fa-heart"></i>My Wishlists</a>
 	</p>
+	<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+		<c:set var="userLoggedIn" value="${false}"  />
+			<%-- <p class="sidebar-divider-item">
+				<a href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
+			</p> --%>
+	</sec:authorize> 
+	<c:if test="${userLoggedIn eq 'true'}">
+	<c:if test="${empty showOnlySiteLogo }">
 	<p class="sidebar-divider-item">
 		<a href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
 	</p>
+	</c:if>
+	</c:if>
 	<p class="sidebar-divider-item sidebar-download-app">
 		<a href="${request.contextPath}/apps"><span></span>Download App</a>
 	</p>
 	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
+	<p class="sidebar-divider-item">
+		<a href="${request.contextPath}/faq">Customer Service</a>
+	</p>
 	</amp-sidebar>
 
 	<button id="closeLeftMenu" on="tap:sidebar.close, closeLeftMenu.hide" class="close-menubar hidden" [class]="showCloseBtn ? 'close-menubar display-visible' : 'close-menubar hidden'">&times;</button>
