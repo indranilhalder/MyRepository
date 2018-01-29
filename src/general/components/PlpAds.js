@@ -17,7 +17,7 @@ export default class PlpAds extends React.Component {
           <div className={styles.icon}>
             <Icon image={this.props.Image} size={40} />
           </div>
-          <div className={styles.plpBox}>{this.props.Text}</div>
+          <div className={styles.plpBox}>{this.props.text}</div>
           <div className={styles.buttonHolder}>
             <Button
               type="hollow"
@@ -34,11 +34,10 @@ export default class PlpAds extends React.Component {
 }
 PlpAds.propTypes = {
   Text: PropTypes.string,
-  Image: PropTypes.string,
+  imageURL: PropTypes.string,
   onClick: PropTypes.func
 };
 PlpAds.defaultProps = {
-  Image: Image,
-  Text: "See the best sellers in Women Top Wear",
+  text: "See the best sellers in Women Top Wear",
   buttonText: "See now"
 };
