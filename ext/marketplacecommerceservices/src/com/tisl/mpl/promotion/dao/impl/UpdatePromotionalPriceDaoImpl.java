@@ -404,7 +404,14 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			params.put("product", product);
 			//params.putquery.addQueryParameter("categories", categories);
 			//query.addQueryParameter("promotionGroup", "mplPromoGrp");
-			params.put("promoCurrPriority", promoCurrent.getPriority());
+			if (null != promoCurrent.getPriority())
+			{
+				params.put("promoCurrPriority", promoCurrent.getPriority());
+			}
+			else
+			{
+				params.put("promoCurrPriority", Integer.valueOf(0));
+			}
 			params.put("qualifyingCount", "1");
 			params.put("sysdate", new Date());
 			params.put("true", Boolean.TRUE);
