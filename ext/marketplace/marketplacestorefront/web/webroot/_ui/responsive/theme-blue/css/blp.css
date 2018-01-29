@@ -3598,3 +3598,119 @@ body .account .right-account .order-history.order-details li.item .status .nav {
 	    display: inline-block !important;
 	}
 }
+/* start change of TISPRDT-8298*/
+.brands-main .nav li, .cmsBrands .nav li, .cmsMultiBrands .nav li {
+	padding: 20px 0;
+    color: lightgray;
+    position: relative;
+    float: left;
+    display: inline-block;
+    width: 25%;
+    letter-spacing: 6px;
+    cursor: pointer;
+    min-height: 0;
+}
+.brands-main .nav li, .cmsBrands .nav li, .cmsMultiBrands .nav li {
+	text-align: center;
+}
+.brands-main .nav li.active, .cmsBrands .nav li.active, .cmsMultiBrands .nav li.active {
+	color: #000;
+}
+.brands-main .nav-wrapper:after, .cmsBrands .nav-wrapper:after, .cmsMultiBrands .nav-wrapper:after {
+	content: "";
+    display: block;
+    background-color: lightgray;
+    height: 10px;
+    width: 100%;
+    bottom: 0;
+    position: absolute;		
+}
+.brands-main .nav li:after, .cmsBrands .nav li:after, .cmsMultiBrands .nav li:after {
+	content: "";
+    display: block;
+    background-color: lightgray;
+    height: 10px;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+.brands-main .nav li.active:after, .cmsBrands .nav li.active:after, .cmsMultiBrands .nav li.active:after {
+	background-color: #000;
+    z-index: 1;
+}
+@media (max-width: 790px){
+	.brands-left {
+		background-color: #fafafa;
+	    width: 100%;
+	    padding: 30px 10px;
+	    text-align: center;
+	}	
+	.brands-left h2 {
+		font-size: 32px;
+	    font-weight: 500;
+	    text-transform: none;
+	}
+	.brands-left .menu-select {
+		display: inline-block;
+	    margin-top: 20px;
+	    height: 50px;
+	    font-size: 20px;
+	    font-weight: 500;
+	    width: 100%;
+	}
+	.brands-left ul {
+		display: none;
+	}
+	.brands-main, .cmsBrands, .cmsMultiBrands {
+		width: 100%;
+	}
+	.brands-main h1, .cmsBrands h1, .cmsMultiBrands h1 {
+		font-size: 32px;
+    	margin: 40px 0 30px;
+	}
+	.brands-main h1, .brands-main p, .cmsBrands h1, .cmsBrands p, .cmsMultiBrands h1, .cmsMultiBrands p {
+		text-align: center;
+	}
+	.brands-main .nav-wrapper, .cmsBrands .nav-wrapper, .cmsMultiBrands .nav-wrapper {
+		margin-bottom: 20px;
+	    position: relative;
+	    width: 100%;
+	    display: block;
+	}
+	.brands-main .nav, .cmsBrands .nav, .cmsMultiBrands .nav {
+		border: 0;
+	    font-size: 24px;
+	    font-weight: 600;
+	    position: relative;
+	    padding: 0;
+	    display: flex;
+	    justify-content: space-between;
+	    margin-bottom: -10px;
+	}
+	.brands-main ul, .cmsBrands ul, .cmsMultiBrands ul {
+	    padding: 20px 0;
+	}
+	.brands-main .nav-wrapper, .cmsBrands .nav-wrapper, .cmsMultiBrands .nav-wrapper {
+	    display: block;
+	}
+	.columns-4, .columns-3, .columns-2, .columns-1 {
+		width: 100% !important;
+	    -webkit-columns: 2;
+	    -moz-columns: 2;
+	    columns: 2;
+	    padding-left: 110px !important;
+	}
+	.columns-4, .columns-3, .columns-2, .columns-1 {
+		min-height: auto !important;
+	}
+	.columns-4 .letter, .columns-3 .letter, .columns-2 .letter, .columns-1 .letter {
+		font-size: 48px !important;
+    	font-weight: 500;
+	}
+	.columns-4 .hello, .columns-3 .hello, .columns-2 .hello, .columns-1 .hello {
+		font-size: 18px;
+	    line-height: 28px;
+	    word-wrap: break-word;
+	}
+}
+/* end change of TISPRDT-8298*/
