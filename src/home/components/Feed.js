@@ -33,10 +33,8 @@ const typeComponentMapping = {
     <AutomatedBrandProductCarousel {...props} />
   ),
   flashSales: props => <FlashSale {...props} />,
-
   offersWidget: props => <OfferWidget {...props} />,
   connectBanner: props => <ConnectWidget {...props} />,
-
   themeProductWidget: props => <ThemeProductWidget {...props} />,
   multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
   followBaseWidget: props => <FollowBase {...props} />,
