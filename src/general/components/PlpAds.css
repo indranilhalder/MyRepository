@@ -3,8 +3,8 @@
 	height: auto;
 	padding: 25px 15px;
 	object-fit: contain;
-	background-image: linear-gradient(103deg, #ff878b, #c85be5);
 	background-image: url(./img/mask.svg)no-repeat;
+	background-image: linear-gradient(103deg, #ff878b, #c85be5);
 }
 .plpInnerBox {
 	width: 100%;
