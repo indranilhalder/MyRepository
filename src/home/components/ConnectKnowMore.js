@@ -3,11 +3,11 @@ import styles from "./ConnectKnowMore.css";
 export default class ConnectKnowMore extends React.Component {
   handleClick() {
     if (this.props.showConnectModal) {
-      this.props.showConnectModal(this.props);
+      this.props.showConnectModal(this.props.feedComponentData);
     }
   }
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div
         className={styles.button}
