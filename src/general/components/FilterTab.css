@@ -1,0 +1,48 @@
+.base {
+  width: 100%;
+  height: 50px;
+}
+.dataHolder {
+  width: 100%;
+  height: 100%;
+  background-color: #dedede;
+  border-bottom: 1px solid #d0d0d0;
+  position: relative;
+  line-height: 50px;
+  padding: 0px 60px 0px 15px;
+  display: inline-block;
+}
+
+.selected {
+  width: auto;
+  height: auto;
+  text-align: right;
+  position: absolute;
+  vertical-align: middle;
+  line-height: normal;
+  top: 50%;
+  color: #ff1744;
+  right: 25px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  text-align: center;
+  line-height: 50px;
+  padding: 0px 15px;
+}
+.selectedActive {
+  width: 100%;
+  background-color: white;
+  height: 100%;
+  position: relative;
+  line-height: 50px;
+  padding: 0px 60px 0px 15px;
+  display: inline-block;
+}
+.selectedText {
+  width: 100%;
+  display: inline-block;
+  line-height: normal;
+  font-size: 14px;
+  vertical-align: middle;
+}
