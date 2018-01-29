@@ -5,10 +5,10 @@ body {
 	font-size: 0.875rem;
 	overflow-x:hidden;
 	@include transition(padding-top 0.3s ease-in-out);
-	padding-top: 107px;
-	@include media-breakpoint-up(md) {
+	padding-top: 115px;
+	/*@include media-breakpoint-up(md) {
 		padding-top: 149px;
-	}
+	}*/
     @include media-breakpoint-down(sm) {
       padding-top: 60px;               
     } 
@@ -329,9 +329,10 @@ header{
 		.mini-bag{
 			position: absolute;
 			width: 500px;
-			left: -450px;
-			padding: 20px 10px 10px;
-			margin-top: -1px;
+			left: -360px;
+            padding: 0px 10px 10px;
+            margin-top: -8px;
+            
 			.my-bag-ul{
 				padding:10px;
 				border: 1px solid #e3e3e3;
