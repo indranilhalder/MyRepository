@@ -9,24 +9,22 @@ export default class SelectedFilter extends React.Component {
     }
   };
   render() {
-    let classActive = styles.dataHolder;
-    if (this.props.selected) {
+    let classActive = styles.base;
+    if (this.props.selected === true) {
       classActive = styles.selectedActive;
     }
-    if (this.props.type) {
+    if (this.props.type === "advance") {
       classActive = styles.selectedAdvance;
     }
     if (this.props.selected && this.props.type) {
       classActive = styles.selectedActive;
     }
     return (
-      <div className={styles.base}>
-        <div className={classActive} onClick={() => this.handleClick()}>
-          <div className={styles.selectedText}>{this.props.text}</div>
-          {this.props.value && (
-            <div className={styles.selected}>{this.props.value}</div>
-          )}
-        </div>
+      <div className={classActive} onClick={() => this.handleClick()}>
+        <div className={styles.selectedText}>{this.props.text}</div>
+        {this.props.value && (
+          <div className={styles.selected}>{this.props.value}</div>
+        )}
       </div>
     );
   }
@@ -35,6 +33,7 @@ export default class SelectedFilter extends React.Component {
 SelectedFilter.propTypes = {
   text: PropTypes.string,
   value: PropTypes.string,
+  type: PropTypes.oneOf(["advance"]),
   selected: PropTypes.bool,
   onClick: PropTypes.func
 };
