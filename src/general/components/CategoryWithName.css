@@ -1,0 +1,17 @@
+.circleWithText {
+  width: 100%;
+  height: auto;
+  float: left;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+.label {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+  color: #212121;
+  font-family: regular;
+  padding-top: 10px;
+}
