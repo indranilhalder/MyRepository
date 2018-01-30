@@ -3,8 +3,8 @@ import SearchableGrid from "./SearchableGrid";
 import ProductModule from "./ProductModule";
 import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
-import gridImage from "./img/4tiles.svg";
-import listImage from "./img/3w.svg";
+import gridImage from "./img/grid.svg";
+import listImage from "./img/list.svg";
 export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
@@ -19,12 +19,22 @@ export default class ProductGrid extends React.Component {
       this.setState({ view: "list" });
     }
   }
+  changeAddress() {
+    if (this.props.changeAddress) {
+      this.props.changeAddress();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.header}>
           <div className={styles.area}>{this.props.area}</div>
-          <div className={styles.areaChange}>Change</div>
+          <div
+            className={styles.areaChange}
+            onClick={() => this.changeAddress()}
+          >
+            Change
+          </div>
           <div className={styles.icon} onClick={() => this.switchView()}>
             {this.state.view === "list" && <Icon image={gridImage} size={20} />}
             {this.state.view === "grid" && <Icon image={listImage} size={20} />}

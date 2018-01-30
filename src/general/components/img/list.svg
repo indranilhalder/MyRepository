@@ -1,48 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
-<g id="Desktop_x2F_-PLP">
-	<g id="_x30_1-PLP" transform="translate(-1297.000000, -231.000000)">
-		<g id="Grid_x2F_List-View" transform="translate(1294.000000, 231.000000)">
-			<path id="Shape" d="M23.018,0H4.763C3.79,0,3,0.79,3,1.763v18.255c0,0.974,0.79,1.763,1.763,1.763h18.255
-				c0.974,0,1.763-0.789,1.763-1.763V1.763C24.781,0.79,23.992,0,23.018,0z M21.253,18.253H6.528V3.528h14.726V18.253L21.253,18.253
-				z M51.236,0H32.98c-0.971,0-1.764,0.79-1.764,1.763v18.255c0,0.974,0.793,1.763,1.764,1.763h18.256
-				c0.975,0,1.764-0.789,1.764-1.763V1.763C53,0.79,52.211,0,51.236,0z M49.474,18.253H34.746V3.528h14.728V18.253z M23.018,28.217
-				H4.763C3.79,28.217,3,29.01,3,29.98v18.256C3,49.211,3.79,50,4.763,50h18.255c0.974,0,1.763-0.789,1.763-1.764V29.98
-				C24.781,29.01,23.992,28.217,23.018,28.217z M21.253,46.474H6.528V31.746h14.726V46.474L21.253,46.474z M51.236,28.217H32.98
-				c-0.971,0-1.764,0.793-1.764,1.764v18.256c0,0.975,0.793,1.764,1.764,1.764h18.256C52.211,50,53,49.211,53,48.236V29.98
-				C53,29.01,52.211,28.217,51.236,28.217z M49.474,46.474H34.746V31.746h14.728V46.474z"/>
-		</g>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="18px" viewBox="0 0 21 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="07_Kurta&amp;Kutis_PLP_Grid_View_Screen" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-323.000000, -94.000000)">
+        <g id="Grid/List-View" transform="translate(285.000000, 94.000000)" fill="#8D8D8D" fill-rule="nonzero">
+            <g id="noun_77942" transform="translate(38.000000, 0.000000)">
+                <path d="M0.160714286,17.775 L6.91071429,17.775 L6.91071429,11.025 L0.160714286,11.025 L0.160714286,17.775 Z M1.51071429,12.375 L5.56071429,12.375 L5.56071429,16.425 L1.51071429,16.425 L1.51071429,12.375 Z M8.26071429,5.625 L20.4107143,5.625 L20.4107143,4.275 L8.26071429,4.275 L8.26071429,5.625 Z M0.160714286,6.975 L6.91071429,6.975 L6.91071429,0.225 L0.160714286,0.225 L0.160714286,6.975 Z M1.51071429,1.575 L5.56071429,1.575 L5.56071429,5.625 L1.51071429,5.625 L1.51071429,1.575 Z M8.26071429,9.675 L20.4107143,9.675 L20.4107143,8.325 L8.26071429,8.325 L8.26071429,9.675 Z M8.26071429,17.775 L20.4107143,17.775 L20.4107143,16.425 L8.26071429,16.425 L8.26071429,17.775 Z M8.26071429,13.725 L20.4107143,13.725 L20.4107143,12.375 L8.26071429,12.375 L8.26071429,13.725 Z M8.26071429,0.225 L8.26071429,1.575 L20.4107143,1.575 L20.4107143,0.225 L8.26071429,0.225 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
 </svg>
-  <ProductModule
-              search={["three", "two"]}
-              productImage="https://i.pinimg.com/564x/f6/d2/0d/f6d20d8e57e6a5d58639c0eb898e259c.jpg"
-              title="Three Two"
-              description="Lorem Ipsum Sit amet normalweise nicht so lang"
-              view={this.state.view}
-            />
-            <ProductModule
-              search={["three", "twooo"]}
-              productImage="https://i.pinimg.com/564x/f6/d2/0d/f6d20d8e57e6a5d58639c0eb898e259c.jpg"
-              title="Three Twooo"
-              description="Lorem Ipsum Sit amet normalweise nicht so lang"
-              view={this.state.view}
-            />
-            <ProductModule
-              search={["three"]}
-              productImage="https://i.pinimg.com/564x/f6/d2/0d/f6d20d8e57e6a5d58639c0eb898e259c.jpg"
-              title="Three"
-              description="Lorem Ipsum Sit amet normalweise nicht so lang"
-              view={this.state.view}
-            />
-            <ProductModule
-              search={["one"]}
-              productImage="https://i.pinimg.com/564x/f6/d2/0d/f6d20d8e57e6a5d58639c0eb898e259c.jpg"
-              title="One"
-              description="Lorem Ipsum Sit amet normalweise nicht so lang"
-              view={this.state.view}
-            />

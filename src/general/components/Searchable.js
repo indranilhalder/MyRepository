@@ -1,12 +1,6 @@
 import React from "react";
 export default function Seachable(Component, ownProps) {
   return class extends React.Component {
-    // constructor(props){
-    //     super(props);
-    //     this.state={
-
-    //     }
-    // }
     searchInArray = val => {
       let flag = false;
 
