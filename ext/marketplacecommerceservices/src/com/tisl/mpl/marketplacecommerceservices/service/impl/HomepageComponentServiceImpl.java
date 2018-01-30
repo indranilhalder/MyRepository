@@ -9,23 +9,20 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.restrictions.CMSTimeRestrictionModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.commerceservices.category.CommerceCategoryService;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.media.MediaModel;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.response.RangeFacet.Date;
+import org.hsqldb.lib.Collection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sap.security.core.server.csi.util.URLDecoder;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
@@ -39,6 +36,8 @@ import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplOfferImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.util.GenericUtilityMethods;
+
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 
 /**
@@ -570,6 +569,132 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 	@Override
 	public JSONObject getJsonBanner(final ContentSlotModel slot, final String compType)
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject allBannerJson = new JSONObject();
+		if (CollectionUtils.isNotEmpty(slot.getCmsComponents()))
+		{
+			components = slot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Component>>>>with id :::" + component.getUid());
+			if (component instanceof MplSequentialBannerComponentModel)
+			{
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (component.getVisible().booleanValue() && showOnTimeRestriction(component))
+				{
+					final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
+
+					final JSONArray bannerJsonArray = new JSONArray();
+
+					for (final BannerComponentModel banner : promoBanner.getBannersList())
+					{
+						final JSONObject bannerJson = new JSONObject();
+						if (banner instanceof MplBigPromoBannerComponentModel)
+						{
+							//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+							if (banner.getVisible().booleanValue() && showOnTimeRestriction(banner))
+							{
+								final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) banner;
+								if (bannerImage.getBannerImage() != null)
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage()
+											.getURL());
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
+											.getAltText());
+								}
+								else
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+								}
+								bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+								if (StringUtils.isNotEmpty(bannerImage.getMajorPromoText()))
+								{
+									bannerJson.put("promoText1", bannerImage.getMajorPromoText());
+								}
+								else
+								{
+									bannerJson.put("promoText1", "");
+								}
+								if (StringUtils.isNotEmpty(bannerImage.getMinorPromo1Text()))
+								{
+									bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
+								}
+								else
+								{
+									bannerJson.put("promoText2", "");
+								}
+								if (StringUtils.isNotEmpty(bannerImage.getMinorPromo2Text()))
+								{
+									bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
+								}
+								else
+								{
+									bannerJson.put("promoText3", "");
+								}
+
+								bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
+								bannerJsonArray.add(bannerJson);
+							}
+							else
+							{
+								LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
+							}
+						}
+
+						if (banner instanceof MplBigFourPromoBannerComponentModel)
+						{
+							//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+							if (banner.getVisible().booleanValue() && showOnTimeRestriction(banner))
+							{
+								final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) banner;
+								if (bannerImage.getBannerImage() != null)
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage()
+											.getURL());
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage()
+											.getAltText());
+								}
+								else
+								{
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+									bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+											MarketplacecommerceservicesConstants.EMPTYSPACE);
+								}
+								bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+								bannerJson.put("promoText1", bannerImage.getPromoText1());
+								bannerJson.put("promoText2", bannerImage.getPromoText2());
+								bannerJson.put("promoText3", bannerImage.getPromoText3());
+								bannerJson.put("promoText4", bannerImage.getPromoText4());
+								bannerJson.put("sequenceNumber", bannerImage.getSequenceNumber());
+								bannerJsonArray.add(bannerJson);
+							}
+							else
+							{
+								LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
+							}
+						}
+					}
+					allBannerJson.put("allBannerJsonObject", bannerJsonArray);
+				}
+				else
+				{
+					LOG.info(MarketplacecommerceservicesConstants.COMPONENTMESSAGE);
+				}
+			}
+		}
+		return allBannerJson;
+	}
+
+
+	@Override
+	public JSONObject getJsonBannerAmp(final ContentSlotModel slot, final String compType)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject allBannerJson = new JSONObject();
