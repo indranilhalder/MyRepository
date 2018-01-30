@@ -10,6 +10,7 @@
   position: relative;
   color: #212121;
   line-height: 50px;
+  transition: 300ms;
 }
 .contentSelected {
   composes: itemContent;
