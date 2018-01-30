@@ -1526,18 +1526,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		LOG.debug("Starting executing getPaytmOrderStatus....");
 		final PaymentService juspayService = new PaymentService();
-		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-		juspayService.withKey(
-				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+		juspayService.setBaseUrl(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService
+				.withKey(getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 				.withMerchantId(
 						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 		//creating OrderStatusRequest
 		final NetbankingRequest paytmRequest = new NetbankingRequest();
 		paytmRequest.setOrderId(juspayOrderId);
-		paytmRequest.setMerchantId(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.MARCHANTID));
+		paytmRequest.setMerchantId(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID));
 		paytmRequest.setPaymentMethodType(paymentMethodType);
 		paytmRequest.setPaymentMethod(paymentMethod);
 		paytmRequest.setRedirectAfterPayment(redirectAfterPayment);
@@ -2534,23 +2535,22 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE
 				 */
-//				if (null != cart.getIsEGVCart() && !cart.getIsEGVCart().booleanValue())
-//				{
-//
-//					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
-//					{
-//						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
-//						{
-//
-//							cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-//						}
-//					}
-//
-//
-//					/**
-//					 * QC CHANGE end
-//					 */
-//				}
+				if (null != cart.getIsEGVCart() && !cart.getIsEGVCart().booleanValue())
+				{
+
+					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+					{
+						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+						{
+
+							cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+						}
+					}
+
+					/**
+					 * QC CHANGE end
+					 */
+				}
 
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
 			}
@@ -2561,19 +2561,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				 * QC CHANGE
 				 */
 
-//				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
-//				{
-//					if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
-//					{
-//
-//						order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-//					}
-//				}
-//
-//
-//				/**
-//				 * QC CHANGE end
-//				 */
+				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
+				{
+					if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
+					{
+
+						order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+					}
+				}
+
+
+				/**
+				 * QC CHANGE end
+				 */
 
 
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, order.getGuid());
@@ -3033,27 +3033,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != abstractOrderModel)
 			{
-				
+
 				// EVG Changes Start
 				if (null != abstractOrderModel.getIsEGVCart() && abstractOrderModel.getIsEGVCart().booleanValue())
 				{
 
 					isEgvOrder = true;
 				}
-				
-				if(isEgvOrder) {
+
+				if (isEgvOrder)
+				{
 					if (CollectionUtils.isNotEmpty(paymentTypes))
 					{
 						//looping through the mode to get payment Types
 						for (final PaymentTypeModel mode : paymentTypes)
 						{
-							if(null != mode.getMode() ){
+							if (null != mode.getMode())
+							{
 								if (mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CREDIT_CARD.trim())
-										|| mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_DEBIT_CARD.trim())
-										|| mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING.trim())
-										|| mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANK.trim()))
+										|| mode.getMode().trim()
+												.equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_DEBIT_CARD.trim())
+										|| mode.getMode().trim()
+												.equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING.trim())
+										|| mode.getMode().trim()
+												.equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANK.trim()))
 								{
-									LOG.info("Adding payment Mode "+mode.getMode()+" For EGV Order");
+									LOG.info("Adding payment Mode " + mode.getMode() + " For EGV Order");
 									data.put(mode.getMode(), mode.getIsAvailable());
 								}
 								else
@@ -3061,7 +3066,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									LOG.debug("Ignoring to add " + mode.getMode() + " payment for EGV Order ");
 								}
 							}
-					
+
 						}
 					}
 					else
@@ -3070,7 +3075,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					}
 					return data;
 				}
-				
+
 				// EVG Changes End
 				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 				{

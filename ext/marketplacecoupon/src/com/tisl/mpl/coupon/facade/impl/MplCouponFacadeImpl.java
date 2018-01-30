@@ -1593,6 +1593,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			//Apply voucher for cartModel
 			if (null != cartModel)
 			{
+				if (cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					return checkFlag;
+				}
+
 				applicabilityFlag = mplCouponService.validateCartEligilityForCartCoupons(cartModel.getDiscounts());
 
 				if (applicabilityFlag)
@@ -1605,7 +1610,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					synchronized (cartModel)
 					{
 						//Checks if voucherCode is valid
-						validateVoucherCodeParameter(voucherCode);  // checks coupon code is blank/Empty 
+						validateVoucherCodeParameter(voucherCode); // checks coupon code is blank/Empty
 						if (!isVoucherCodeValid(voucherCode))
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
@@ -1676,7 +1681,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						else
 						{
 							LOG.debug("Step 7:::Voucher can be redeemed");
-							isVoucherRedeemable = getVoucherService().redeemVoucher(voucherCode, cartModel); // Setting Global Level Discounts 
+							isVoucherRedeemable = getVoucherService().redeemVoucher(voucherCode, cartModel); // Setting Global Level Discounts
 							if (!isVoucherRedeemable)
 							{
 								throw new VoucherOperationException(MarketplacecommerceservicesConstants.ERRORAPPLYVOUCHER + voucherCode);
@@ -1704,6 +1709,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			//Apply voucher for orderModel
 			else if (null != orderModel)
 			{
+				if (orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					return checkFlag;
+				}
+
 				applicabilityFlag = mplCouponService.validateCartEligilityForCartCoupons(orderModel.getDiscounts());
 				if (applicabilityFlag)
 				{
