@@ -10,20 +10,23 @@ export default class ModalRoot extends React.Component {
     super(props);
     this.el = document.createElement("div");
   }
+
   componentDidMount() {
     modalRoot.appendChild(this.el);
   }
+
   componentWillUnmount() {
     modalRoot.removeChild(this.el);
   }
+
   handleClose() {
     if (this.props.hideModal) {
       this.props.hideModal();
     }
   }
 
-  submitOtp(userDetails) {
-    this.props.otpVerification(userDetails);
+  submitOtp(otpDetails) {
+    this.props.otpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
     this.props.history.push("/home");
   }
@@ -38,8 +41,8 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
 
-  submitOtpForgotPassword(userDetails) {
-    this.props.forgotPasswordOtpVerification(userDetails);
+  submitOtpForgotPassword(otpDetails) {
+    this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
   render() {
@@ -47,19 +50,19 @@ export default class ModalRoot extends React.Component {
       RestorePassword: (
         <RestorePassword
           handleCancel={() => this.handleClose()}
-          handleRestoreClick={() => this.handleRestoreClick()}
+          handleRestoreClick={userId => this.handleRestoreClick(userId)}
         />
       ),
       SignUpOtpVerification: (
         <OtpVerification
           closeModal={() => this.handleClose()}
-          submitOtp={() => this.submitOtp()}
+          submitOtp={otpDetails => this.submitOtp(otpDetails)}
         />
       ),
       ForgotPasswordOtpVerification: (
         <OtpVerification
           closeModal={() => this.handleClose()}
-          submitOtp={() => this.submitOtpForgotPassword()}
+          submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
         />
       ),
       ConnectDetails: <ConnectDetails closeModal={() => this.handleClose()} />

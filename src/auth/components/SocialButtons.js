@@ -8,7 +8,48 @@ import desktopFacebookImage from "./img/facebook_desktop.svg";
 import googlePlus from "./img/googlePlus.svg";
 import desktopGooglePlus from "./img/googlePlus_desktop.svg";
 import PropTypes from "prop-types";
+import config from "../../lib/config";
 export default class SocialButtons extends Component {
+  componentDidMount() {
+    //load FaceBook Sdk
+    window.fbAsyncInit = function() {
+      window.FB.init({
+        appId: config.facebook,
+        cookie: true,
+        xfbml: true,
+        version: "v2.11"
+      });
+      window.FB.AppEvents.logPageView();
+    };
+
+    (function(d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, "script", "facebook-jssdk");
+
+    //Load Google Sdk
+    (function() {
+      var e = document.createElement("script");
+      e.type = "text/javascript";
+      e.async = true;
+      e.src = "https://apis.google.com/js/client:platform.js?onload=gPOnLoad";
+      var t = document.getElementsByTagName("script")[0];
+      t.parentNode.insertBefore(e, t);
+    })();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.status === "success") {
+      this.props.homeFeed();
+      this.props.history.push("/home");
+    }
+  }
+
   facebookLogin = () => {
     if (this.props.facebookLogin) {
       this.props.facebookLogin();

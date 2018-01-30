@@ -24,8 +24,8 @@ const mapDispatchToProps = dispatch => {
     hideModal: () => {
       dispatch(modalActions.hideModal());
     },
-    otpVerification: userDetails => {
-      dispatch(otpVerification(userDetails));
+    otpVerification: (otpDetails, userDetails) => {
+      dispatch(otpVerification(otpDetails, userDetails));
     },
     resetPassword: userDetails => {
       dispatch(resetPassword(userDetails));
@@ -33,8 +33,8 @@ const mapDispatchToProps = dispatch => {
     forgotPassword: userDetails => {
       dispatch(forgotPassword(userDetails));
     },
-    forgotPasswordOtpVerification: userDetails => {
-      dispatch(forgotPasswordOtpVerification(userDetails));
+    forgotPasswordOtpVerification: (otpDetails, userDetails) => {
+      dispatch(forgotPasswordOtpVerification(otpDetails, userDetails));
     }
   };
 };

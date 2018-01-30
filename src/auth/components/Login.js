@@ -18,14 +18,20 @@ class Login extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-  onSubmit = () => {
-    if (this.props.onSubmit) {
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.status === "success") {
       this.props.homeFeed();
       this.props.history.push("/home");
-      this.props.onSubmit({
-        email: this.state.emailValue,
-        password: this.state.passwordValue
-      });
+    }
+  }
+
+  onSubmit = () => {
+    if (this.props.onSubmit) {
+      let userDetails = {};
+      userDetails.username = this.state.emailValue;
+      userDetails.password = this.state.passwordValue;
+      this.props.customerAccessToken(userDetails);
     }
   };
 
