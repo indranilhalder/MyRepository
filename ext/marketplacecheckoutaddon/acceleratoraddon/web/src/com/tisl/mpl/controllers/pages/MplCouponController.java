@@ -255,6 +255,8 @@ public class MplCouponController
 				{
 					cartCouponCode = cartCouponObj.getSecond();
 					orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel); // Removing any Cart level Coupon Offer
+					orderModel.setCheckForBankVoucher("false");
+					modelService.save(orderModel);
 				}
 
 				//Apply the voucher
@@ -283,6 +285,8 @@ public class MplCouponController
 				if (StringUtils.isNotEmpty(cartCouponCode) && !orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 				{
 					data = reapplyCartCoupon(data, cartCouponCode, orderModel);
+					orderModel.setCheckForBankVoucher("true");
+					modelService.save(orderModel);
 				}
 
 			}
