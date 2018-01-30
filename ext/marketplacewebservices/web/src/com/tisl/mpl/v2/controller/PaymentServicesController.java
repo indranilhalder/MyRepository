@@ -6,11 +6,13 @@ package com.tisl.mpl.v2.controller;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -160,7 +162,8 @@ public class PaymentServicesController extends BaseController
 	@Autowired
 	private NotificationFacade notificationFacade;
 	
-
+   @Autowired
+   private PriceDataFactory priceDataFactory;
 	
 	
 
@@ -408,6 +411,7 @@ public class PaymentServicesController extends BaseController
 							promoPriceData.setPaybleAmount(cart.getTotalPrice());
 							promoPriceData.setCliqCashApplied(false);
 						}
+						setTotalPrice(promoPriceData,cart);
 					}
 					else
 					{
@@ -477,6 +481,8 @@ public class PaymentServicesController extends BaseController
 					promoPriceData.setPaybleAmount(orderModel.getTotalPrice());
 					promoPriceData.setCliqCashApplied(false);
 				}
+				setTotalPrice(promoPriceData,orderModel);
+
 			}
 
 		}
@@ -522,6 +528,83 @@ public class PaymentServicesController extends BaseController
 			}
 		}
 		return promoPriceData;
+	}
+
+	/**
+	 * @param promoPriceData
+	 * @param cart
+	 */
+	private void setTotalPrice(MplPromoPriceWsDTO promoPriceData, AbstractOrderModel cart)
+	{
+		final double payableWalletAmount = cart.getPayableWalletAmount().doubleValue();
+		double bankCouponDiscount = 0.0D;
+		double couponDiscount = 0.0D;
+		if (!cart.getDiscounts().isEmpty())
+		{
+			for (final DiscountModel discount : cart.getDiscounts())
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					bankCouponDiscount += discount.getValue().doubleValue();
+				}
+				else
+				{
+					couponDiscount += discount.getValue().doubleValue();
+				}
+			}
+		}
+
+		BigDecimal total = new BigDecimal(0.0D);
+		final double remainingWalletAmount = cart.getTotalWalletAmount().doubleValue() - payableWalletAmount;
+		if (null != cart.getSubtotal())
+		{
+			total = new BigDecimal(cart.getSubtotal().doubleValue());
+			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+					MarketplacecommerceservicesConstants.INR);
+			promoPriceData.setSubTotalPrice(subTotalPriceData);
+
+		}
+
+		if (null != cart.getDeliveryCost())
+		{
+			total = new BigDecimal(cart.getDeliveryCost().doubleValue());
+			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+					MarketplacecommerceservicesConstants.INR);
+			promoPriceData.setDeliveryCharges(deliveryChargesPriceData);
+		}
+		total = new BigDecimal(bankCouponDiscount);
+		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		promoPriceData.setOtherDiscount(otherDiscountPriceData);
+
+		total = new BigDecimal(couponDiscount);
+		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		promoPriceData.setCouponDiscount(couponPriceData);
+
+		if (payableWalletAmount > 0.0D)
+		{
+			promoPriceData.setCliqCashApplied(true);
+
+		}
+
+		total = new BigDecimal(payableWalletAmount);
+		final PriceData payableWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		promoPriceData.setCliqCashPaidAmount(payableWalletAmountPriceData);
+
+		total = new BigDecimal(remainingWalletAmount);
+		final PriceData remainingWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		promoPriceData.setCliqCashBalance(remainingWalletAmountPriceData);
+
+		if (null != cart.getTotalPrice())
+		{
+			total = new BigDecimal(cart.getTotalPrice().doubleValue() - payableWalletAmount);
+			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+					MarketplacecommerceservicesConstants.INR);
+			promoPriceData.setTotalPrice(cartTotalPriceData);
+		}
 	}
 
 	/**

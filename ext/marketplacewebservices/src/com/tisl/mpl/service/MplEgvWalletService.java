@@ -25,6 +25,7 @@ public interface MplEgvWalletService
 	public UserCliqCashWsDto getUserCliqCashDetails(CustomerModel currentCustomer);
 	ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel order,Double walletAmount);
 	public void useCliqCash(AbstractOrderModel order);
+	public boolean generateOtpForUpdateWallet(String  mobileNumber,CustomerModel customer);
 
 
 	

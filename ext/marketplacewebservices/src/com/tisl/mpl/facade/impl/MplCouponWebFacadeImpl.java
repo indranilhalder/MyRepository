@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.facade.impl;
 
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
@@ -64,6 +67,9 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 	@Autowired
 	private MplEgvWalletService mplEgvWalletService;
+	
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
 	 */
@@ -159,8 +165,17 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
 						//Price data new calculation for 2 decimal values
-						applycouponDto.setCouponDiscount(
-								String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					//	applycouponDto.setCouponDiscount(
+						//		String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+						if (null != data.getCouponDiscount())
+						{
+							BigDecimal couponDiscount = new BigDecimal(data.getCouponDiscount().getValue().doubleValue());
+
+							final PriceData couponDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, couponDiscount,
+									MarketplacecommerceservicesConstants.INR);
+							applycouponDto.setCouponDiscount(couponDiscountPriceData);
+
+						}
 
 					}
 
@@ -219,8 +234,14 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 				{
-					applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+					//applycouponDto.setCouponDiscount(data.getCouponDiscount().getValue().toPlainString());
+					BigDecimal couponDiscount = new BigDecimal(data.getCouponDiscount().getValue().doubleValue());
 
+						final PriceData couponDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, couponDiscount,
+								MarketplacecommerceservicesConstants.INR);
+						applycouponDto.setCouponDiscount(couponDiscountPriceData);
+
+					
 				}
 
 				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())

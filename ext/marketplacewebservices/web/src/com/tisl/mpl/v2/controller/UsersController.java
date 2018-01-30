@@ -11,7 +11,6 @@ import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoDatas;
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.ConsignmentData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -21,7 +20,6 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
@@ -59,10 +57,8 @@ import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.PK.PKException;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -95,7 +91,6 @@ import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -159,13 +154,13 @@ import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.data.RTSAndRSSReturnInfoRequestData;
 import com.tisl.mpl.data.ReturnInfoData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
@@ -191,12 +186,12 @@ import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.reviews.GigyaFacade;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
-import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
@@ -228,12 +223,10 @@ import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
-import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
-import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
-import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
@@ -517,6 +510,9 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
+	
+	@Autowired
+	private RegisterCustomerFacade registerCustomerFacade;
 
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
@@ -3834,7 +3830,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String lastName, @RequestParam(required = false) final String dateOfBirth,
 			final String dateOfAnniversary, @RequestParam(required = false) final String nickName,
 			@RequestParam(required = false) final String gender, @RequestParam(required = false) final String mobilenumber,
-			final String fields, final HttpServletRequest request) throws RequestParameterException, DuplicateUidException
+			@RequestParam(required = false) final String otp,final String fields, final HttpServletRequest request) throws RequestParameterException, DuplicateUidException
 	{
 
 		boolean duplicateEmail = false;
@@ -4001,7 +3997,29 @@ public class UsersController extends BaseCommerceController
 						{
 							if (mplCustomerProfileFacade.checkUniquenessOfEmail(customerToSave.getEmailId()))
 							{
-								mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+								CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+								if(!customer.getMobileNumber().equalsIgnoreCase(customerToSave.getMobileNumber()) )
+										{
+									OTPResponseData response = mplWalletFacade.validateOTP(customer.getUid(), otp);
+									if (response.getOTPValid().booleanValue())
+									{
+										if (registerCustomerFacade.checkUniquenessOfMobileForWallet(customerToSave.getMobileNumber()))
+										{
+
+											boolean isWalletUpdated = updateCustomerWallet(customerToSave,customer);
+											if (isWalletUpdated)
+											{
+												mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+											}
+										}else {
+											throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
+
+										}
+									}
+										}
+								
+							
 							}
 							else
 							{
@@ -4015,7 +4033,26 @@ public class UsersController extends BaseCommerceController
 					final String specificUrl = MarketplacecommerceservicesConstants.LINK_MY_ACCOUNT
 							+ MarketplacecommerceservicesConstants.LINK_UPDATE_PROFILE;
 					final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
-					mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+					CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+					if(!customer.getMobileNumber().equalsIgnoreCase(customerToSave.getMobileNumber())) {
+						OTPResponseData response = mplWalletFacade.validateOTP(customer.getUid(), otp);
+						if (response.getOTPValid().booleanValue())
+						{
+							if (registerCustomerFacade.checkUniquenessOfMobileForWallet(customerToSave.getMobileNumber()))
+							{
+								boolean isWalletUpdated = updateCustomerWallet(customerToSave,customer);
+								if (isWalletUpdated)
+								{
+									mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+								}
+							}else {
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
+
+							}
+						}
+					}
+				
 					mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, customerToSave.getDisplayUid(),
 							profileUpdateUrl);
 					if (StringUtils.isNotEmpty(customerToSave.getDateOfAnniversary()))
@@ -4121,6 +4158,29 @@ public class UsersController extends BaseCommerceController
 					return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param customerToSave 
+	 * 
+	 */
+	private boolean updateCustomerWallet(MplCustomerProfileData customerToSave,CustomerModel customer)
+	{
+
+		QCCustomerRegisterRequest registerCustomerRequest  = new QCCustomerRegisterRequest();
+		CustomerModel customerModel = new CustomerModel();
+		customerModel.setMobileNumber(customerToSave.getMobileNumber());
+		customerModel.setFirstName(customerToSave.getFirstName());
+		customerModel.setLastName(customerToSave.getLastName());
+		customerModel.setOriginalUid(customerToSave.getEmailId());
+		registerCustomerRequest.setExternalwalletid(customerToSave.getEmailId());
+		String walletId = customer.getCustomerWalletDetail().getWalletId();
+		CustomerWalletDetailResponse responce =mplWalletFacade.updateCustomerWallet(registerCustomerRequest, walletId, customerModel.getUid());
+		if(null != responce && null !=  responce.getResponseCode() && responce.getResponseCode().intValue() == 0) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 

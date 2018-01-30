@@ -5,9 +5,6 @@ package com.tisl.mpl.facades.wallet;
 
 import de.hybris.platform.core.model.user.CustomerModel;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
@@ -77,7 +74,7 @@ public interface MplWalletFacade
 	 * @return
 	 */
 	public CustomerWalletDetailResponse updateCustomerWallet(QCCustomerRegisterRequest registerCustomerRequest, String walletId,
-			String transactionId);
+			String customerId);
 
 
 }

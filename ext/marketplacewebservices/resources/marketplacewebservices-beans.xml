@@ -2323,6 +2323,13 @@
 		<property name="mobileNo" type="String" />
 		<property name="cliqCashApplied" type="boolean" />
 		<property name="paybleAmount" type="java.lang.Double" />
+		
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->
@@ -2445,15 +2452,24 @@
 
 
 	<bean class="com.tisl.mpl.wsdto.ApplyCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="couponDiscount" type="String" />
+		<!-- <property name="couponDiscount" type="String" /> -->
 		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
 		<property name="totalWithoutCoupon" type="java.lang.Double" />
 		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
 		<property name="totalCliqCash" type="java.lang.Double" />
-		<property name="cliqCashApplied" type="boolean" />
+		<!-- <property name="cliqCashApplied" type="boolean" /> -->
 		<property name="remaingPaybleAmount" type="java.lang.Double" />
+		
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.GigyaWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="sessionToken" type="String" />
@@ -2615,15 +2631,19 @@
 		<property name="totalWithoutCoupon" type="java.lang.Double" />
 		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
 		<property name="totalCliqCash" type="java.lang.Double" />
-		<property name="cliqCashApplied" type="boolean" />
-		<property name="remaingPaybleAmount" type="java.lang.Double" />
-		
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-
+<!-- 		<property name="cliqCashApplied" type="boolean" />
+ -->		<property name="remaingPaybleAmount" type="java.lang.Double" />
 		<property name="total" type="String" />
 		<property name="discount" type="String" />
+		
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 
 	<!-- TPR-816 -->
@@ -3619,10 +3639,19 @@
 		<property name="offerTermsConditions" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.ApplyCartCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="couponDiscount" type="String" />
-		<property name="discount" type="String" />
+<!-- 		<property name="couponDiscount" type="String" />
+ -->		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
+		
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	<!-- TPR-7486 end-->
 	<!-- Added for TPR-5954 || Start -->
@@ -3681,9 +3710,18 @@
 	 <bean class="com.tisl.mpl.wsdto.ApplyCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="totalAmount" type="String" />
 		<property name="discount" type="Double" />
-		<property name="cliqCashApplied" type="Double" />
-		<property name="paybleAmount" type="Double" />
+<!-- 		<property name="cliqCashApplied" type="Double" />
+ -->		<property name="paybleAmount" type="Double" />
 		<property name="isRemainingAmount" type="boolean" />	
+		
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	
 	

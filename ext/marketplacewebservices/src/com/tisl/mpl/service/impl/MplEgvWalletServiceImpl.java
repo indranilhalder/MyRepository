@@ -29,6 +29,7 @@ import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
@@ -64,6 +65,8 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
    @Autowired
    private MplCouponFacade mplCouponFacade;
    
+   @Autowired
+   private RegisterCustomerFacade registerCustomerFacade;
    
 
 	private static final Logger LOG = Logger.getLogger(MplEgvWalletServiceImpl.class);
@@ -74,7 +77,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	@Override
 	public QCCustomerRegisterResponse createWalletContainer(CustomerModel currentCustomer)
 	{
-		try {
+		
 			LOG.debug("Customer Is not Regitered with QC .. Registering with email " + currentCustomer.getOriginalUid());
 			final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 			final Customer custInfo = new Customer();
@@ -101,20 +104,20 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
 			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
 					.createWalletContainer(customerRegisterReq);
-			
-			final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-			custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-			custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-			custWalletDetail.setCustomer(currentCustomer);
-			custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-			modelService.save(custWalletDetail);
-			currentCustomer.setCustomerWalletDetail(custWalletDetail);
-			currentCustomer.setIsWalletActivated(Boolean.TRUE);
-			modelService.save(currentCustomer);
-			return customerRegisterResponse;
-		}catch(Exception e) {
-			LOG.error("Exception Occurred while Creating wallet "+e.getMessage());
-		}
+			if(null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode().intValue() == 0) {
+				final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+				custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
+				custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
+				custWalletDetail.setCustomer(currentCustomer);
+				custWalletDetail.setServiceProvider("Tata Unistore Ltd");
+				modelService.save(custWalletDetail);
+				currentCustomer.setCustomerWalletDetail(custWalletDetail);
+				currentCustomer.setIsWalletActivated(Boolean.TRUE);
+				modelService.save(currentCustomer);
+				return customerRegisterResponse;
+			}else if(null != customerRegisterResponse && null != customerRegisterResponse.getResponseMessage()){
+				throw new EtailBusinessExceptions(customerRegisterResponse.getResponseMessage());
+			}
 		return null;
 		
 	}
@@ -126,11 +129,11 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer, String otp)
 	{
 		EgvWalletCreateResponceWsDTO responce = new EgvWalletCreateResponceWsDTO();
-		try
-		{
+		/*try
+		{*/
 			if (null != otp && !otp.isEmpty())
 			{
-				OTPResponseData response = mplWalletFacade.validateOTP(currentCustomer.getOriginalUid(), otp);
+				OTPResponseData response = mplWalletFacade.validateOTP(currentCustomer.getUid(), otp);
 				if (response.getOTPValid().booleanValue())
 				{
 					final QCCustomerRegisterResponse customerRegisterResponse = createWalletContainer(currentCustomer);
@@ -144,8 +147,10 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						responce.setBalanceClearedAsOf(userCliqCashData.getBalanceClearedAsOf());
 						responce.setTotalCliqCashBalance(userCliqCashData.getTotalCliqCashBalance());
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					} else if ( null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode() ) {
+						throw new EtailBusinessExceptions(customerRegisterResponse.getResponseCode().toString());
 					}
-					else
+					else 
 					{
 						responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 					}
@@ -158,15 +163,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
 
 			}
-		}
-		catch (final Exception ex)
+		//}
+		/*catch (final Exception ex)
 		{
 			{
 				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 				responce.setError(ex.getMessage());
 				LOG.error("Exception occrred while saving mobile number for QC wallet " + ex.getMessage());
 			}
-		}
+		}*/
 		return responce;
 	}
 
@@ -229,37 +234,47 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	{
 		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
 		UserCliqCashWsDto responce = null;
-		try
+		if (null != currentCustomer)
 		{
-			if (null != currentCustomer)
+			if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
 			{
-				if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
+
+				customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+
+				if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode()
+						&& customerWalletDetailData.getResponseCode().intValue() == 0)
 				{
-					
-					customerWalletDetailData = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-					responce=getCustomerWalletAmount(customerWalletDetailData);
+					responce = getCustomerWalletAmount(customerWalletDetailData);
 					responce.setIsWalletCreated(true);
 					responce.setTotalCliqCashBalance(responce.getTotalCliqCashBalance());
 					responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
+
 				}
-				else
+				else if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode())
 				{
-					responce =new UserCliqCashWsDto();
+					throw new EtailBusinessExceptions(customerWalletDetailData.getResponseCode().toString());
+				}
+			}
+			else
+			{
+				try
+				{
+					responce = new UserCliqCashWsDto();
 					responce.setIsWalletCreated(false);
-					WalletCreateData walletCreateData =mplWalletFacade.getWalletCreateData();
-					if(null != walletCreateData) {
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					if (null != walletCreateData)
+					{
 						responce.setFirstName(walletCreateData.getQcVerifyFirstName());
 						responce.setLastName(walletCreateData.getQcVerifyLastName());
 						responce.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
 					}
 					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
+				catch (Exception e)
+				{
+					LOG.error("Exception occurred while gettig  cliqCash details");
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			LOG.error("Exception occurred while gettig  cliqCash details");
 		}
 		return responce;
 
@@ -275,23 +290,23 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		boolean isCartVoucherPresent =false;
 		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
 		try {
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			CustomerWalletDetailResponse responce=null;
+		//	final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		//	CustomerWalletDetailResponse responce=null;
 			
 			// We can get The Wallet Balance From QC .. If only Customer registered with QC 
 			
 			if(null == walletAmount) {
-				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-				{
+//				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+//						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+//				{
 					// Getting The Customer Cliq Cash Balance From QC
-					responce = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
-					if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet()
-							&& null != responce.getWallet().getBalance())
-					{
-						walletAmount = responce.getWallet().getBalance();
-					}
-				}
+				//	responce = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
+//					if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet()
+//							&& null != responce.getWallet().getBalance())
+//					{
+						walletAmount = cart.getTotalWalletAmount();
+					//}
+			//	}
 			}
 			
 			
@@ -333,9 +348,11 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					
 					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setIsRemainingAmount(false);
-					applyCliqCashWsDto.setCliqCashApplied(totalAmt);
+					//applyCliqCashWsDto.setCliqCashApplied(totalAmt);
 					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
 					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+					
+					getTotalPrice(applyCliqCashWsDto,cart);
 					applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					
 				}
@@ -347,7 +364,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					applyCliqCashWsDto.setIsRemainingAmount(true);
 					if (walletAmount.doubleValue() > 0.0D)
 					{
-						applyCliqCashWsDto.setCliqCashApplied(walletAmount);
+				//		applyCliqCashWsDto.setCliqCashApplied(walletAmount);
 					}
 					applyCliqCashWsDto.setIsRemainingAmount(true);
 					
@@ -379,7 +396,8 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 							mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
 						}
 					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-					
+					getTotalPrice(applyCliqCashWsDto,cart);
+
 					applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 
@@ -396,6 +414,83 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	}
 
 	
+	/**
+	 * @param applyCliqCashWsDto
+	 * @param cart
+	 */
+	public void getTotalPrice(ApplyCliqCashWsDto applyCliqCashWsDto, AbstractOrderModel cartModel)
+	{
+		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
+		double bankCouponDiscount = 0.0D;
+		double couponDiscount = 0.0D;
+		if (!cartModel.getDiscounts().isEmpty())
+		{
+			for (final DiscountModel discount : cartModel.getDiscounts())
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					bankCouponDiscount += discount.getValue().doubleValue();
+				}
+				else
+				{
+					couponDiscount += discount.getValue().doubleValue();
+				}
+			}
+		}
+
+		BigDecimal total = new BigDecimal(0.0D);
+		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
+		if (null != cartModel.getSubtotal())
+		{
+			total = new BigDecimal(cartModel.getSubtotal().doubleValue());
+			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+					MarketplacecommerceservicesConstants.INR);
+			applyCliqCashWsDto.setSubTotalPrice(subTotalPriceData);
+
+		}
+
+		if (null != cartModel.getDeliveryCost())
+		{
+			total = new BigDecimal(cartModel.getDeliveryCost().doubleValue());
+			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+					MarketplacecommerceservicesConstants.INR);
+			applyCliqCashWsDto.setDeliveryCharges(deliveryChargesPriceData);
+		}
+		total = new BigDecimal(bankCouponDiscount);
+		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		applyCliqCashWsDto.setOtherDiscount(otherDiscountPriceData);
+
+		total = new BigDecimal(couponDiscount);
+		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		applyCliqCashWsDto.setCouponDiscount(couponPriceData);
+
+		if (payableWalletAmount > 0.0D)
+		{
+			applyCliqCashWsDto.setCliqCashApplied(true);
+
+		}
+
+		total = new BigDecimal(payableWalletAmount);
+		final PriceData payableWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		applyCliqCashWsDto.setCliqCashPaidAmount(payableWalletAmountPriceData);
+
+		total = new BigDecimal(remainingWalletAmount);
+		final PriceData remainingWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+				MarketplacecommerceservicesConstants.INR);
+		applyCliqCashWsDto.setCliqCashBalance(remainingWalletAmountPriceData);
+
+		if (null != cartModel.getTotalPrice())
+		{
+			total = new BigDecimal(cartModel.getTotalPrice().doubleValue() - payableWalletAmount);
+			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
+					MarketplacecommerceservicesConstants.INR);
+			applyCliqCashWsDto.setTotalPrice(cartTotalPriceData);
+		}
+	}
+
 	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
 	{
 		boolean flag = false;
@@ -435,10 +530,14 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				if (cartTotal > totalWalletAmount)
 				{
 					payableWalletAmount = totalWalletAmount;
+					order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
 				}
 				else if (cartTotal < totalWalletAmount)
 				{
 					payableWalletAmount = cartTotal;
+					order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
+				}else {
+					order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				}
 				order.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
 				modelService.save(order);
@@ -453,6 +552,32 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		}
 
 	}
-	
 
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.service.MplEgvWalletService#generateOtpForUpdateWallet(java.lang.String)
+	 */
+	@Override
+	public boolean generateOtpForUpdateWallet(String mobileNumber,CustomerModel customer)
+	{
+		if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
+		{
+			if (null != customer.getQcVerifyMobileNo() && !customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(mobileNumber.trim()))
+			{
+				if (registerCustomerFacade.checkUniquenessOfMobileForWallet(mobileNumber))
+				{
+					mplWalletFacade.generateOTP(customer, mobileNumber);
+					return true;
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
+				}
+			}else {
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5017);
+			}
+		}else {
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5018);
+
+		}
+	}
 }
