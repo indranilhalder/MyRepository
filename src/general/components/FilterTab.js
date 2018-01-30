@@ -13,6 +13,12 @@ export default class SelectedFilter extends React.Component {
     if (this.props.selected) {
       classActive = styles.selectedActive;
     }
+    if (this.props.type) {
+      classActive = styles.selectedAdvance;
+    }
+    if (this.props.selected && this.props.type) {
+      classActive = styles.selectedActive;
+    }
     return (
       <div className={styles.base}>
         <div className={classActive} onClick={() => this.handleClick()}>
