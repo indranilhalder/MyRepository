@@ -15,6 +15,7 @@
 		expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.utility.host')"
 		var="host" />
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
+	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('myAcc.voucher.display.flag')" var="isVoucherToBeDisplayed"/>
 	<c:set var="base" value="https://${host}" />
 	<amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker>
 	<div class="top-header">
@@ -373,13 +374,26 @@
 	<p class="sidebar-divider-item">
 		<a href="/my-account/wishList"><i class="fa fa-heart"></i>My Wishlists</a>
 	</p>
+	<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+		<c:set var="userLoggedIn" value="${false}"  />
+			<%-- <p class="sidebar-divider-item">
+				<a href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
+			</p> --%>
+	</sec:authorize> 
+	<c:if test="${userLoggedIn eq 'true'}">
+	<c:if test="${empty showOnlySiteLogo }">
 	<p class="sidebar-divider-item">
 		<a href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
 	</p>
+	</c:if>
+	</c:if>
 	<p class="sidebar-divider-item sidebar-download-app">
 		<a href="${request.contextPath}/apps"><span></span>Download App</a>
 	</p>
 	<p class="sidebar-divider-item" role="popup" tabindex="0" on="tap:AMP.setState({pinCodeVisible: true, submitPincode: false})">Enter Your Pincode</p>
+	<p class="sidebar-divider-item">
+		<a href="${request.contextPath}/faq">Customer Service</a>
+	</p>
 	</amp-sidebar>
 
 	<button id="closeLeftMenu" on="tap:sidebar.close, closeLeftMenu.hide" class="close-menubar hidden" [class]="showCloseBtn ? 'close-menubar display-visible' : 'close-menubar hidden'">&times;</button>
@@ -565,22 +579,21 @@
 				<h2 class="homeViewHeading">Stay Qued</h2>
 			</div>
 			<amp-list src="/pwamp/getStayQuedHomepage?version=Online"
-				height="240" layout="fixed-height"> 
+				height="280" layout="fixed-height"> 
 				<template type="amp-mustache"> 
 			<div class="stayQuedCenter">
 				<div class="stayTwo">
 					<div>
-						<amp-img class="responsive-img" width="auto" height="200"
+						<amp-img class="responsive-img" width="auto" height="220"
 							layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
 					</div>
 				</div>
 				<div class="stayOne">
 					<div>
 						<p class="h2 stayQuedHeading">{{promoText1}}</p>
-						<p>{{promoText2}}</p>
 						<div class="stayQuedBottom">
 							<a href="{{bannerUrlLink}}"><button
-									class="stayQuedViewAllBtn">Read The Story</button></a>
+									class="stayQuedViewAllBtn">{{promoText2}}</button></a>
 						</div>
 					</div>
 				</div>
@@ -632,17 +645,17 @@
 
 	<!-- Inspire Me -->
 	<div id="inspireMeMobileComp">
-		<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="240" layout="fixed-height"> 
+		<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="280" layout="fixed-height"> 
 		<template type="amp-mustache"> 
 		<div class="inspireMeMobileTopSection">
 			<h2 class="homeViewHeading">{{title}}</h2>
 		</div>
-			<amp-carousel height="240" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
+			<amp-carousel height="280" layout="fixed-height" type="slides" controls autoplay loop delay="8000"> 
 			{{#subComponents}}
 		<div class="inspireMeCenter">
 			<div class="stayTwo">
 				<div>
-					<amp-img class="responsive-img" width="auto" height="200"
+					<amp-img class="responsive-img" width="auto" height="220"
 						layout="flex-item" src="{{details.bannerImageUrl}}"
 						alt="{{bannerAltText}}"></amp-img>
 				</div>

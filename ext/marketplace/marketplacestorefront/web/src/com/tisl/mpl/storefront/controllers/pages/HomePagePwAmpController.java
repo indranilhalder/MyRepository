@@ -469,7 +469,7 @@ public class HomePagePwAmpController extends HomePageController
 					version);
 
 			//return getJsonBanner(homepageSection5ASlot, "stayQued");
-			getStayQuedHomepageJson = homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
+			getStayQuedHomepageJson = homepageComponentService.getJsonBannerAmp(homepageSection5ASlot, "stayQued");
 		}
 
 		catch (final EtailBusinessExceptions e)

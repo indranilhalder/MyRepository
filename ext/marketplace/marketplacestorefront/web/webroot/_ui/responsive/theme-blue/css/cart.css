@@ -3399,7 +3399,7 @@ body.page-cartPage .express-checkout, body.page-cartPage .continue-shopping.desk
 
 body.page-cartPage .MyBag-top-section .MyBag-buttons ul.checkout-types.onlyCheckoutButton
 	{
-	width: auto;
+	/* width: auto; */		/* commented for TISPRDT-8290 */
 }
 
 body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types.onlyCheckoutButton a.checkoutButton
@@ -5734,7 +5734,7 @@ li.item>ul li:last-child {
 	}
 	body.page-cartPage .MyBag-top-section .MyBag-buttons ul.checkout-types.onlyCheckoutButton
 		{
-		width: 18.809%;
+		/* width: 18.809%; */	/* commented for TISPRDT-8290 */
 	}
 	body.page-cartPage .continue-shopping.desk-view-shopping.onlyCheckoutLink
 		{

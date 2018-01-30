@@ -6151,7 +6151,7 @@ p.savings.pdp-savings span{
 	height: 15px;
 	line-height: 15px;
 	position: absolute;
-	right: -13px;
+	right: -20px;	/* modify for TISPRDT-8311 */
 	text-align: center;
 	top: -2px;
 	width: 15px;
@@ -13174,3 +13174,10 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td {
     color: #000;
     font-family: inherit;
 }
+/* start change of TISPRDT-8311 */
+.sellerMonogramming {
+	line-height: 1.5;
+    letter-spacing: .6px;
+    margin-top: 12px;
+}
+/* end change of TISPRDT-8311 */

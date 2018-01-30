@@ -175,6 +175,7 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
+
 	//SONR FIX
 	//	//TPR-6740
 	//	@Resource(name = "mplProductFacade")
@@ -182,6 +183,7 @@ public class HomePageController extends AbstractPageController
 	//
 	//	@Resource(name = "uiExperienceService")
 	//	private UiExperienceService uiExperienceService;
+
 
 	@Resource(name = "ampDeviceDetectionFacade")
 	private DeviceDetectionFacade ampDeviceDetectionFacade;
@@ -403,9 +405,10 @@ public class HomePageController extends AbstractPageController
 		//					MarketplacecommerceservicesConstants.E0000));
 		//		}
 
-
+		final String siteId = getSiteConfigService().getProperty("luxury.site.id");
 		ampDeviceDetectionFacade.initializeRequest(request);
-		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
+		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser()
+				&& !(getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
 		{
 			//UF-484
 			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
@@ -1697,9 +1700,11 @@ public class HomePageController extends AbstractPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
-	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId,
+	public String saveNewsletterSubscriptionEmail(
+			@RequestParam(value = "email") String emailId,
 			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) final String gender,
-			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury, final HttpServletResponse response)
+			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury,
+			final HttpServletResponse response)
 	{
 		final String ampAnalyticsHost = configurationService.getConfiguration().getString("amp.analytics.source.origin",
 				"*.tatacliq.com");

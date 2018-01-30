@@ -325,13 +325,12 @@ header{
 
 .user-information > section > div > ul > li {
     padding-left: 20px;
-    line-height: 40px;
-    background-color: #d6d6d6;
+    line-height: 50px;
     border-bottom: 1px solid #e6e6e6;
     list-style-type: none;
 }
 
-.user-information > section > div > ul > li a {line-height: 40px;}
+.user-information > section > div > ul > li a {line-height: 50px;}
 
 .sidebar-menu h4{
 	background:none;
@@ -1067,11 +1066,15 @@ footer #footerLink div.column ul li {
 	padding: 7px 0;
 }
 
+footer #footerLink div.column ul li:first-child:after {content: ':'; font-weight: bold;}
+
+footer #footerLink div.column ul li:after {content: '/'; padding: 0 2px;}
+
 footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a {color: #000;}
 
-footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
+footer #footerLink div.column ul li a {color: #878787;}
 
-footer #footerLink div.column ul {margin: 0;}
+footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
 
 footer #footerLink div.column ul li {
     display: inline-block;
