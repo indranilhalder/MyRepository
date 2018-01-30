@@ -18,9 +18,18 @@
 				<li class="subtotal">
 					<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 					<span class="amt">
+					<c:choose>
+					<c:when test="${cartData.subTotal.value > 0}">
 					<ycommerce:testId code="Order_Totals_Subtotal">
 						<format:luxPrice priceData="${cartData.subTotal}"/>
 					</ycommerce:testId>
+					</c:when>
+					<c:otherwise>
+					<ycommerce:testId code="Order_Totals_Subtotal">
+						<format:luxPrice priceData="${cartTotalMrp}"/>
+					</ycommerce:testId>
+					</c:otherwise>
+					</c:choose>
 					</span>
 				</li>
 				<c:if test="${totalDiscount.value > 0}">
