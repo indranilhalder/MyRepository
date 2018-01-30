@@ -7,6 +7,8 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 
+import java.util.List;
+
 import org.json.simple.JSONObject;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
