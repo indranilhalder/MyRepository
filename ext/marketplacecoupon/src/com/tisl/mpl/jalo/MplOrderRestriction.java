@@ -2,10 +2,12 @@ package com.tisl.mpl.jalo;
 
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 
 import java.util.List;
@@ -58,9 +60,15 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 				}
 			}
 
+			boolean cliqCashValidation = true;
+			if (anOrder.getAttribute("splitModeInfo").equals("Split") && anOrder.getAttribute("checkForBankVoucher").equals("true"))
+			{
+				cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder);
+			}
+
 			// Coupon Evaluation
 
-			if (isPositiveAsPrimitive())
+			if (isPositiveAsPrimitive() && cliqCashValidation)
 			{
 				return (currentTotal >= minimumTotal);
 			}
@@ -77,17 +85,16 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 
 	}
 
-	private void checkCliqCashValue()
+	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder)
+			throws JaloInvalidParameterException, JaloSecurityException
 	{
 
-		//CliqCash Remove check
-		//			if (anOrder.getAttribute("splitModeInfo").equals("Split"))
-		//			{
-		//				if (anOrder.getAttribute("totalWalletAmount") != null)
-		//				{
-		//					currentTotal -= Double.parseDouble(anOrder.getAttribute("totalWalletAmount").toString());
-		//				}
-		//			}
+		final Double totalPayableAmount = (Double) anOrder.getAttribute("payableNonWalletAmount");
 
+		if (totalPayableAmount.doubleValue() > minimumTotal)
+		{
+			return true;
+		}
+		return false;
 	}
 }

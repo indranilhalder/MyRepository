@@ -6735,7 +6735,10 @@ function useWalletForPaymentAjax(){
 		},
 		
 		complete : function(data){
-		
+
+			if(value.checked && data.responseJSON.isCartVoucherPresent){
+				ACC.singlePageCheckout.chooseOfferAjaxCall($(".offer_container input[type='radio']:checked").val(),$(".offer_container input[type='radio']:checked").attr("id"));
+			}
 			if(value.checked && data.responseJSON.disableJsMode && data.responseJSON.isCartVoucherPresent){
 
 				ACC.singlePageCheckout.releasePromoVoucher(data.responseJSON.cartCouponCode);

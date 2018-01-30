@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,6 +63,8 @@ public class MplCouponController
 	//Added for TPR-4461 starts here
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
+	@Autowired
+	private ModelService modelService;
 
 	//Added for TPR-4461 ends here
 
@@ -116,6 +120,9 @@ public class MplCouponController
 				{
 					cartCouponCode = cartCouponObj.getSecond();
 					cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel); // Removing any Cart level Coupon Offer
+					cartModel.setCheckForBankVoucher("false");
+					modelService.save(cartModel);
+
 				}
 
 				//Apply the voucher
@@ -146,6 +153,8 @@ public class MplCouponController
 				if (StringUtils.isNotEmpty(cartCouponCode) && !cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 				{
 					data = reapplyCartCoupon(data, cartCouponCode, cartModel);
+					cartModel.setCheckForBankVoucher("true");
+					modelService.save(cartModel);
 				}
 			}
 			catch (final VoucherOperationException e)
@@ -818,6 +827,8 @@ public class MplCouponController
 					cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel);
 					if (StringUtils.isNotEmpty(couponCode))
 					{
+						cartModel.setCheckForBankVoucher("true");
+						modelService.save(cartModel);
 						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, cartModel, null);
 						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
 						data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
@@ -842,6 +853,8 @@ public class MplCouponController
 
 					if (StringUtils.isNotEmpty(couponCode))
 					{
+						orderModel.setCheckForBankVoucher("true");
+						modelService.save(orderModel);
 						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, null, orderModel);
 						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
 						data = getMplCouponFacade().populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
@@ -893,6 +906,8 @@ public class MplCouponController
 
 				if (isCartVoucherRemoved)
 				{
+					cartModel.setCheckForBankVoucher("false");
+					modelService.save(cartModel);
 					data = getMplCouponFacade().populateCartVoucherData(null, cartModel, false, false, couponCode);
 				}
 			}
@@ -904,6 +919,8 @@ public class MplCouponController
 
 				if (isCartVoucherRemoved)
 				{
+					orderModel.setCheckForBankVoucher("false");
+					modelService.save(orderModel);
 					data = getMplCouponFacade().populateCartVoucherData(orderModel, null, false, false, couponCode);
 				}
 			}

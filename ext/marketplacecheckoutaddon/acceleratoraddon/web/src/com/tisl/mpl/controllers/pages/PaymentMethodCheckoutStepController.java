@@ -291,6 +291,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
 
+
 	//PMD
 	//@Autowired
 	//private VoucherFacade voucherFacade;
@@ -7453,7 +7454,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final JSONObject jsonObject = new JSONObject();
 		jsonObject.put("disableJsMode", false);
 		jsonObject.put("apportionMode", "Juspay");
-		final CartModel cart = getCartService().getSessionCart();
+		CartModel cart = getCartService().getSessionCart();
 		final DecimalFormat df = new DecimalFormat("#.##");
 		String cartCouponCode = StringUtils.EMPTY;
 		Boolean isCartVoucherPresent = Boolean.FALSE;
@@ -7506,13 +7507,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("totalCartAmt", totalCartAmt);
 						jsonObject.put("cartCouponCode", cartCouponCode);
 						jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
-						//jsonObject.put("juspayAmt", 0);
+						cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 						getModelService().save(cart);
 						getModelService().refresh(cart);
 						return jsonObject;
 					}
 					else
 					{
+						if (isCartVoucherPresent.booleanValue())
+						{
+							cart.setCheckForBankVoucher("true");
+							cart = (CartModel) mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart level Coupon Offer
+						}
+						else
+						{
+							cart.setCheckForBankVoucher("false");
+						}
 						double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 						juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
 						getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
@@ -7527,6 +7537,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						cart.setSplitModeInfo("Split");
 						//cart.setTotalPrice(Double.valueOf(juspayTotalAmt));
 						jsonObject.put("apportionMode", "Split");
+						cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt));
 						getModelService().save(cart);
 						getModelService().refresh(cart);
 						return jsonObject;
@@ -7552,6 +7563,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				cart.setSplitModeInfo("Juspay");
 				jsonObject.put("apportionMode", "Juspay");
 				getSessionService().setAttribute("WalletTotal", "" + 0);
+				cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 
 				getModelService().save(cart);
 				getModelService().refresh(cart);

@@ -3198,6 +3198,16 @@
 							<modifiers read="true" write="true" search="true" optional="true" />
 							<defaultvalue>false</defaultvalue>
 						</attribute>
+						 <attribute qualifier="checkForBankVoucher" type="java.lang.String">
+							<modifiers optional="true" read="true" write="true" />
+							<defaultvalue>"false"</defaultvalue>
+							<persistence type="property" />
+					    </attribute>
+					    <attribute qualifier="payableNonWalletAmount" type="java.lang.Double">
+							<modifiers optional="true" read="true" write="true" />
+							<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+							<persistence type="property" />
+					    </attribute>
 				</attributes>
 				<indexes>
 					<index name="IDX_CART_SEARCH_ONLOAD">
