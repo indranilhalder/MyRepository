@@ -405,7 +405,7 @@ public class HomePageController extends AbstractPageController
 
 
 		ampDeviceDetectionFacade.initializeRequest(request);
-		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser())
+		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser() && (request.getRequestURL().indexOf("lux")) == -1)
 		{
 			//UF-484
 			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
