@@ -591,10 +591,9 @@
 				<div class="stayOne">
 					<div>
 						<p class="h2 stayQuedHeading">{{promoText1}}</p>
-						<p>{{promoText2}}</p>
 						<div class="stayQuedBottom">
 							<a href="{{bannerUrlLink}}"><button
-									class="stayQuedViewAllBtn">Read The Story</button></a>
+									class="stayQuedViewAllBtn">{{promoText2}}</button></a>
 						</div>
 					</div>
 				</div>
