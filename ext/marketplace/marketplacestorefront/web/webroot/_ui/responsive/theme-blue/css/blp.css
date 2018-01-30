@@ -3638,6 +3638,11 @@ body .account .right-account .order-history.order-details li.item .status .nav {
 	background-color: #000;
     z-index: 1;
 }
+/* start change for TISPRDT-8319 */
+.brands-main .nav-wrapper, .cmsBrands .nav-wrapper, .cmsMultiBrands .nav-wrapper {
+	display: none;
+}
+/* end change for TISPRDT-8319 */
 @media (max-width: 790px){
 	.brands-left {
 		background-color: #fafafa;
