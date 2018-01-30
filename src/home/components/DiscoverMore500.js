@@ -5,16 +5,21 @@ import PropTypes from "prop-types";
 import styles from "./DiscoverMore500.css";
 export default class DiscoverMore500 extends React.Component {
   render() {
+    const data = this.props.feedComponentData.data;
+
     return (
       <div className={styles.base}>
-        <div className={styles.header}>{this.props.headingText}</div>
-        <Grid elementWidthMobile={33.33}>
-          {this.props.data &&
-            this.props.data.map((datum, i) => {
+        <div className={styles.header}>
+          {this.props.feedComponentData.title}
+        </div>
+        <Grid elementWidthMobile={33.33} offset={20}>
+          {data &&
+            data.data &&
+            data.data.map((datum, i) => {
               return (
                 <CategoryWithName
-                  image={datum.image}
-                  label={datum.label}
+                  image={datum.imageURL}
+                  label={datum.title}
                   key={i}
                 />
               );
@@ -25,14 +30,15 @@ export default class DiscoverMore500 extends React.Component {
   }
 }
 DiscoverMore500.propTypes = {
-  headingText: PropTypes.string,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      image: PropTypes.string,
-      label: PropTypes.string
+  feedComponentData: PropTypes.shape({
+    title: PropTypes.string,
+    data: PropTypes.shape({
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          imageURL: PropTypes.string,
+          title: PropTypes.string
+        })
+      )
     })
-  )
-};
-DiscoverMore500.defaultProps = {
-  headingText: "Discover more from Tata Cliq"
+  })
 };
