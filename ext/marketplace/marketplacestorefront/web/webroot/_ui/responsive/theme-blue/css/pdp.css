@@ -6151,7 +6151,7 @@ p.savings.pdp-savings span{
 	height: 15px;
 	line-height: 15px;
 	position: absolute;
-	right: -13px;
+	right: -20px;	/* modify for TISPRDT-8311 */
 	text-align: center;
 	top: -2px;
 	width: 15px;
