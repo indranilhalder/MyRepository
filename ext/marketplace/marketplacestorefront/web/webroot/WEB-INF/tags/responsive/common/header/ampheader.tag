@@ -1066,6 +1066,10 @@ footer #footerLink div.column ul li {
 	padding: 7px 0;
 }
 
+footer #footerLink div.column ul li:first-child:after {content: ':'; font-weight: bold;}
+
+footer #footerLink div.column ul li:after {content: '/'; padding: 0 2px;}
+
 footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a {color: #000;}
 
 footer #footerLink div.column ul li a {color: #878787;}
