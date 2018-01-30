@@ -325,13 +325,12 @@ header{
 
 .user-information > section > div > ul > li {
     padding-left: 20px;
-    line-height: 40px;
-    background-color: #d6d6d6;
+    line-height: 50px;
     border-bottom: 1px solid #e6e6e6;
     list-style-type: none;
 }
 
-.user-information > section > div > ul > li a {line-height: 40px;}
+.user-information > section > div > ul > li a {line-height: 50px;}
 
 .sidebar-menu h4{
 	background:none;
