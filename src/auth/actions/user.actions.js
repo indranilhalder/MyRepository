@@ -86,6 +86,8 @@ const SCOPE = "https://www.googleapis.com/auth/plus.login email";
 const PLATFORM_NUMBER = "2";
 const CLIENT_ID = "gauravj@dewsolutions.in";
 const CUSTOMER_PROFILE_PATH = "v2/mpl/users";
+const FACEBOOK_PLATFORM = "facebook";
+const GOOGLE_PLUS_PLATFORM = "googleplus";
 
 export function loginUserRequest() {
   return {
@@ -123,7 +125,7 @@ export function loginUser(userLoginDetails) {
         }&password=${userLoginDetails.password}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(loginUserSuccess(resultJson));
@@ -167,7 +169,7 @@ export function signUpUser(userObj) {
         }&platformNumber=${PLATFORM_NUMBER}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(showModal(SIGN_UP_OTP_VERIFICATION, userObj));
@@ -212,7 +214,7 @@ export function otpVerification(otpDetails, userDetails) {
         }&password=${userDetails.password}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       dispatch(hideModal());
@@ -255,13 +257,12 @@ export function forgotPassword(userDetails) {
         }&platformNumber=2&isPwa=true&username=${userDetails}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
       dispatch(showModal(FORGOT_PASSWORD_OTP_VERIFICATION, userDetails));
       dispatch(forgotPasswordSuccess(resultJson));
-      console.log(resultJson);
     } catch (e) {
       dispatch(forgotPasswordFailure(e.message));
     }
@@ -301,14 +302,13 @@ export function forgotPasswordOtpVerification(otpDetails, userDetails) {
         }&platformNumber=2&otp=${otpDetails}&isPwa=true&username=${userDetails}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      console.log(resultJson);
+
       dispatch(forgotPasswordOtpVerificationSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(forgotPasswordOtpVerificationFailure(e.message));
     }
   };
@@ -340,7 +340,7 @@ export function resetPassword(userDetails) {
     try {
       const result = await api.post(RESET_PASSWORD, userDetails);
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
@@ -381,7 +381,7 @@ export function getGlobalAccessToken() {
         `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
@@ -408,7 +408,7 @@ export function refreshTokenSuccess(customerAccessTokenDetails) {
 
 export function refreshTokenFailure(error) {
   return {
-    type: REFRESH_TOKEN_SUCCESS,
+    type: REFRESH_TOKEN_FAILURE,
     status: ERROR,
     error
   };
@@ -425,7 +425,7 @@ export function refreshToken() {
         }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
@@ -470,7 +470,7 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
@@ -503,15 +503,26 @@ export function facebookLogin() {
       dispatch(faceBookLoginRequest());
       window.FB.login(
         function(resp) {
-          dispatch(
-            generateCustomerLevelAccessToken(
-              resp.authResponse.accessToken,
-              "facebook"
-            )
-          );
+          if (resp.authResponse) {
+            window.FB.api(
+              "/me",
+              { locale: "en_US", fields: "name, email" },
+              function(response) {
+                dispatch(
+                  socialMediaRegistration(
+                    response.email,
+                    resp.authResponse.accessToken,
+                    FACEBOOK_PLATFORM
+                  )
+                );
+              }
+            );
+          } else {
+            console.log("User cancelled login or did not fully authorize.");
+          }
         },
         {
-          scope: "public_profile,email"
+          scope: "email,user_likes"
         }
       );
     } catch (e) {
@@ -541,13 +552,20 @@ export function googlePlusLogin() {
       dispatch(googlePlusLoginRequest());
       window.gapi.auth.signIn({
         callback: function(authResponse) {
-          console.log(authResponse);
-          dispatch(
-            generateCustomerLevelAccessToken(
-              authResponse.access_token,
-              "google"
-            )
-          );
+          window.gapi.client.load("plus", "v1", function() {
+            var request = window.gapi.client.plus.people.get({
+              userId: "me"
+            });
+            request.execute(function(resp) {
+              dispatch(
+                socialMediaRegistration(
+                  resp.emails[0].value,
+                  authResponse.access_token,
+                  GOOGLE_PLUS_PLATFORM
+                )
+              );
+            });
+          });
         },
         clientid: config.google,
         cookiepolicy: COOKIE_POLICY,
@@ -575,23 +593,27 @@ export function generateCustomerLevelAccessTokenFailure(error) {
   };
 }
 
-export function generateCustomerLevelAccessToken(accessToken, platForm) {
+export function generateCustomerLevelAccessTokenForSocialMedia(
+  userName,
+  accessToken,
+  platForm
+) {
+  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
       const result = await api.post(
-        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=9886973967&access_token=${accessToken}&isSocialMedia=Y&socialMediaPlatform=${platForm}`
+        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&access_token=${
+          JSON.parse(globalCookie).access_token
+        }&isSocialMedia=Y&socialMediaPlatform=${platForm}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
       dispatch(customerAccessTokenSuccess(resultJson));
-      dispatch(socialMediaLogin(9886973967, platForm));
-      console.log(resultJson);
     } catch (e) {
-      console.log(e.message);
       dispatch(customerAccessTokenFailure(e.message));
     }
   };
@@ -604,14 +626,6 @@ export function socialMediaRegistrationRequest() {
   };
 }
 
-export function socialMediaRegistrationSuccess(user) {
-  return {
-    type: SOCIAL_MEDIA_REGISTRATION_SUCCESS,
-    status: SUCCESS,
-    user
-  };
-}
-
 export function socialMediaRegistrationFailure(error) {
   return {
     type: SOCIAL_MEDIA_REGISTRATION_FAILURE,
@@ -620,24 +634,37 @@ export function socialMediaRegistrationFailure(error) {
   };
 }
 
-export function socialMediaRegistration(userDetails, platform) {
+export function socialMediaRegistration(userName, accessToken, platForm) {
+  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
   let customerCookie = Cookie.getCookie("sessionObjectCustomer");
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaRegistrationRequest());
     try {
       const result = await api.post(
         `${SOCIAL_MEDIA_REGISTRATION_PATH}?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&emailId=${
-          userDetails.username
-        }&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
+          JSON.parse(globalCookie).access_token
+        }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+      dispatch(
+        generateCustomerLevelAccessTokenForSocialMedia(
+          userName,
+          accessToken,
+          platForm
+        )
+      );
+      if (resultJson.status === "Failure") {
+        if (
+          resultJson.error ===
+          "Email Id already exists, please try with another email Id!"
+        ) {
+          if (customerCookie) {
+            dispatch(socialMediaLogin(userName, platForm));
+          }
+        } else {
+          throw new Error(`${resultJson.message}`);
+        }
       }
-      // TODO: dispatch a modal here
-      dispatch(socialMediaRegistrationSuccess(resultJson));
     } catch (e) {
       dispatch(socialMediaRegistrationFailure(e.message));
     }
@@ -667,21 +694,22 @@ export function socialMediaLoginFailure(error) {
   };
 }
 
-export function socialMediaLogin(userDetails, platform) {
+export function socialMediaLogin(userName, platform) {
   let customerCookie = Cookie.getCookie("sessionObjectCustomer");
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
       const result = await api.post(
-        `${SOCIAL_MEDIA_LOGIN_PATH}/${userDetails}/loginSocialUser?access_token=${
+        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${
           JSON.parse(customerCookie).access_token
-        }&emailId=${userDetails}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
+        }&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
+
       dispatch(socialMediaLoginSuccess(resultJson));
     } catch (e) {
       dispatch(socialMediaLoginFailure(e.message));
@@ -723,7 +751,7 @@ export function getCustomerProfile() {
         }&isPwa=true`
       );
       const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
+      if (resultJson.status === "Failure") {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here

@@ -43,13 +43,6 @@ export default class SocialButtons extends Component {
     })();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.user.status === "success") {
-      this.props.homeFeed();
-      this.props.history.push("/home");
-    }
-  }
-
   facebookLogin = () => {
     if (this.props.facebookLogin) {
       this.props.facebookLogin();
