@@ -13,7 +13,7 @@ export default class ProductImageHeader extends React.Component {
       <div className={className}>
         <div className={styles.content}>
           <Image image={this.props.image} />
-          <MediaQuery query="(max-device-width:1023px)">
+          <MediaQuery query="(max-device-width:1024px)">
             {this.props.logo && (
               <div className={styles.logo}>{this.props.logo}</div>
             )}
@@ -27,7 +27,7 @@ export default class ProductImageHeader extends React.Component {
             )}
             {this.props.description && (
               <div className={styles.description}>
-                <MediaQuery query="(min-device-width:1024px)">
+                <MediaQuery query="(min-device-width:1025px)">
                   {this.props.logo && (
                     <div className={styles.logo}>{this.props.logo}</div>
                   )}
