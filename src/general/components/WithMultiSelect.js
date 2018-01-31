@@ -8,7 +8,6 @@ export default function withMultiSelect(Component, ownProps) {
       };
     }
     selectItem(val) {
-      console.log("here");
       let selected = this.state.selected;
       if (selected.includes(val)) {
         selected = selected.filter(label => val !== label);
@@ -31,7 +30,7 @@ export default function withMultiSelect(Component, ownProps) {
     }
     render() {
       const children = this.props.children;
-      console.log(this.props);
+
       const childrenWithProps = React.Children.map(children, (child, i) => {
         return React.cloneElement(child, {
           selected: this.state.selected.includes(child.props.value),
