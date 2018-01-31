@@ -32,11 +32,7 @@ export default class ProductModule extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.imageHolder} onClick={this.onClick}>
-          <ProductImage
-            connectButton={true}
-            image={this.props.productImage}
-            onConnectClick={this.props.onConnectClick}
-          />
+          <ProductImage image={this.props.productImage} />
           {this.props.onConnect && (
             <ConnectButton onClick={this.handleConnect} />
           )}
