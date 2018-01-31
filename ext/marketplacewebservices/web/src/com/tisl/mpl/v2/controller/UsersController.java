@@ -10097,19 +10097,23 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/customerRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplRegistrationResultWsDto registerUser(@RequestParam final String loginId,
-			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+	public MplRegistrationResultWsDto registerUser(@RequestParam final String username,
+			@RequestParam(required = false) final String emailId, @RequestParam(required = false) final String platformNumber)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 
 	{
-		LOG.debug("****************** User Registration mobile web service ***********" + loginId);
+		LOG.debug("User Registration mobile web service :::::::::::::" + username);
 		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
+		String emailIdLwCase = null;
 		try
 		{
-			final String emailIdLwCase = loginId.toLowerCase();
+			if (StringUtils.isNotEmpty(emailId))
+			{
+				emailIdLwCase = emailId.toLowerCase();
+			}
 			LOG.debug("The platform number is " + platformNumber);
 			int platformDecider;
-			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			if (StringUtils.isNotEmpty(platformNumber))
 			{
 				platformDecider = Integer.parseInt(platformNumber);
 			}
@@ -10118,7 +10122,7 @@ public class UsersController extends BaseCommerceController
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 			}
 			LOG.debug("The platform number is " + platformDecider);
-			userResult = mobileUserService.registerAppUser(emailIdLwCase, platformDecider);
+			userResult = mobileUserService.registerAppUser(username, platformDecider, emailIdLwCase);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -11164,27 +11168,27 @@ public class UsersController extends BaseCommerceController
 
 	@Secured(
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/registrationOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/registrationOTPVerification", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserLoginResultWsDto registrationOTPVerification(@RequestParam final String username,
 			@RequestParam final String password, @RequestParam(required = true) final String otp,
-			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
-
+			@RequestParam(required = false) final String platformNumber, @RequestParam(required = false) final String emailId,
+			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 	{
-		LOG.debug("****************** User Registration mobile web service ***********" + username);
+		LOG.debug("User Registration mobile web service ***********" + username);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
 		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
 		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
 		try
 		{
-			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.REG);
-			if (validOtpFlag)
+			final boolean validOtpFlag = mobileUserService.validateOtp(username, otp, OTPTypeEnum.REG);
+			if (true) //if (validOtpFlag)
 			{
-				final String emailIdLwCase = username.toLowerCase();
+				final String emailIdLwCase = emailId.toLowerCase();
 				LOG.debug("The platform number is " + platformNumber);
 				int platformDecider;
-				if (StringUtils.isNotEmpty(platformNumber))//IQA
+				if (StringUtils.isNotEmpty(platformNumber))
 				{
 					platformDecider = Integer.parseInt(platformNumber);
 				}
@@ -11193,7 +11197,7 @@ public class UsersController extends BaseCommerceController
 					platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 				}
 				LOG.debug("The platform number is " + platformDecider);
-				userResult = mobileUserService.registerNewMplUserWithMobile(emailIdLwCase, password, true, platformDecider);
+				userResult = mobileUserService.registerNewMplUserWithMobile(username, password, true, platformDecider, emailIdLwCase);
 				//final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 				userLoginResultWsDto.setStatus(userResult.getStatus());
 				userLoginResultWsDto.setCustomerId(userResult.getCustomerId());
@@ -11287,7 +11291,7 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-					final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(userId, otp, OTPTypeEnum.REG);
+					final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG);
 					if (validOtpFlag)
 					{
 						customerModel.setOtpVerified(Boolean.TRUE);
