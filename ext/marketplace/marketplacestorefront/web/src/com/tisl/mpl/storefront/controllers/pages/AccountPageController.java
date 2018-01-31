@@ -3320,6 +3320,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplCustomerProfileForm.setEmailId(customerData.getDisplayUid());
 			model.addAttribute(ModelAttributetConstants.MPL_CUSTOMER_PROFILE_FORM, mplCustomerProfileForm);
 
+			//EGV Wallet Create
+		   walletActivateCheck(model);
 
 			// update password
 			final UpdatePasswordForm updatePasswordForm = new UpdatePasswordForm();
@@ -3424,6 +3426,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
 			//TPR-6013
+			//EGV Wallet Create
+		   walletActivateCheck(model);
 			if (null != mplCustomerProfileForm && null != mplCustomerProfileForm.getDateOfBrithPicker()
 					&& mplCustomerProfileForm.getDateOfBrithPicker().contains(ModelAttributetConstants.DASH))
 			{
@@ -8564,9 +8568,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.QC_MOBILE_VALIDATION, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
-	public String qcMobileValidation(@RequestParam(value = "mobileNo") final String mobileNo)
+	public String qcMobileValidation(@RequestParam(value = "mobileNo") final String mobileNo,
+		   @RequestParam(value = "firstName") final String firstName, @RequestParam(value = "lastName") final String lastName)
 	{
-		return mplWalletFacade.qcValidationMobileNo(mobileNo);
+		return mplWalletFacade.qcValidationMobileNo(mobileNo, firstName, lastName);
 	}
 
 	@RequestMapping(value = RequestMappingUrlConstants.QC_OTP_VALIDATION, method = RequestMethod.POST)
@@ -8592,4 +8597,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return "OTPERROR";
 		}
 	}
+	//EGV WALLET ACTIVE CHECK
+	private void walletActivateCheck(final Model model)
+	 {
+	  final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+	  if (customer.getIsWalletActivated() != null)
+	  {
+	   model.addAttribute("isWalletActivated", Boolean.TRUE);
+	  }
+	  else
+	  {
+	   model.addAttribute("isWalletActivated", Boolean.FALSE);
+	  }
+	 }
 }

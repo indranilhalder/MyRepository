@@ -551,12 +551,21 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 	
 	@Override
-	public String qcValidationMobileNo(String mobileNo){
+	public String qcValidationMobileNo(String mobileNo, String firstName, String lastName){
 		CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		if(currentCustomer.getIsWalletActivated()!=null && currentCustomer.getIsWalletActivated().booleanValue()){
-			if(!StringUtils.isNotBlank(mobileNo)){
-				return "MOBILEERROR";
-			}
+			if (!StringUtils.isNotBlank(mobileNo))
+		   {
+		    return "MOBILEERROR";
+		   }
+		   if (!StringUtils.isNotBlank(firstName))
+		   {
+		    return "FIRSTNAMEERROR";
+		   }
+		   if (!StringUtils.isNotBlank(lastName))
+		   {
+		    return "LASTNAMEERROR";
+		   }
 		 boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(mobileNo);
 	
 		 if(isUsed){

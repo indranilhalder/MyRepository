@@ -798,14 +798,18 @@ function createWalletOTP(){
 	    	  $(".mobileNumberError").show();
 	          $(".mobileNumberError").text("Enter correct mobile number");
 	  	}
-     else{
+     else{ 		
  	count++;
+ 	var staticHost = $('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 	if(count <= 4){
 	 $.ajax({
 			type : "POST",
 			url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
 			data :"mobileNumber="+mobileNo,
 			success : function(response) {
+				$("#no-click,.loaderDiv").remove();
 				if(response =='isUsed'){
 					$(".mobileNumberError").show();
 					$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
@@ -835,13 +839,17 @@ function submitWalletData(){
 	var data = $("#walletForm").serialize();
 	$(".mobileNumberError").hide();
 	$(".wcOTPError").hide();
+	var staticHost = $('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+	
 	 $.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
 			data :data,
 			contentType: "text/application/html",
 			success : function(response) {
-				
+				$("#no-click,.loaderDiv").remove();
 			   if(response =="isUsed"){
 					$(".mobileNumberError").text("This mobile number is alredy used. Please enter other mobile number for this account");
 					$(".mobileNumberError").show();

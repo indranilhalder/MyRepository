@@ -24,7 +24,8 @@
 .otp-button {
     border: 1px solid #a9143c;
     display: inline;
-    color: #a9143c;
+    background-color: #a9143c;
+    color: #fff;
     font-size: 12px;
     font-weight: 400;
     height: 36px;

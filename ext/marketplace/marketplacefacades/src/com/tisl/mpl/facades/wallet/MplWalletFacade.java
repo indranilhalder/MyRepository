@@ -77,12 +77,19 @@ public interface MplWalletFacade
 	public CustomerWalletDetailResponse updateCustomerWallet(QCCustomerRegisterRequest registerCustomerRequest, String walletId,
 			String customerId);
 	
-   public String qcValidationMobileNo(String mobileNo);
+   public String qcValidationMobileNo(String mobileNo, String firstName, String lastName);
 	
 	public boolean customerWalletUpdate(MplCustomerProfileData mplCustomerProfileData);
 	
 	public CustomerWalletDetailResponse editWalletInformtion(CustomerModel currentCustomer, String qcFirstName, String qcLastName,
 			String qcMobileNo);
+
+	/**
+	 * @param mobileNo
+	 * @param firstName
+	 * @param lastName
+	 * @return
+	 */
 
 
 }
