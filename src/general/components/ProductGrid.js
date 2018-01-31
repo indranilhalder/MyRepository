@@ -1,5 +1,5 @@
 import React from "react";
-import SearchableGrid from "./SearchableGrid";
+import Grid from "./Grid";
 import ProductModule from "./ProductModule";
 import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
@@ -41,7 +41,7 @@ export default class ProductGrid extends React.Component {
           </div>
         </div>
         <div className={styles.content}>
-          <SearchableGrid
+          <Grid
             search={this.props.search}
             offset={20}
             elementWidthMobile={this.state.view === "list" ? 100 : 50}
@@ -59,7 +59,7 @@ export default class ProductGrid extends React.Component {
                   />
                 );
               })}
-          </SearchableGrid>
+          </Grid>
         </div>
       </div>
     );
