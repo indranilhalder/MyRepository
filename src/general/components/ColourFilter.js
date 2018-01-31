@@ -16,6 +16,7 @@ export default class ColourFilter extends React.Component {
                 key={i}
                 backgroundColor={datum.colour}
                 selected={this.props.selected}
+                onSelect={this.props.onSelect}
               />
             );
           })}
