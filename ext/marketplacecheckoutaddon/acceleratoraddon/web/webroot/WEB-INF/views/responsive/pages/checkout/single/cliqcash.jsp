@@ -455,7 +455,7 @@
 					}
 					else {
 						closepop();
-						window.reload();
+						location.reload();
 					} 
 					
 				}
