@@ -90,23 +90,24 @@
 					</table>
 				</div>
 				
-				<%-- <c:choose>
-				<c:when test="${isCustomerWalletActive}"> --%>
+		<c:choose>
+				<c:when test="${isCustomerWalletActive}"> 
 						<div class="cliqCashContainerRight">
 					     <a class="cliqCashBtns" href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
 				     	</a>
 				     </div>
-				<%-- </c:when>
+			 </c:when>
 				<c:otherwise>
 				<div class="cliqCashContainerRight">
-					     <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
+					     <%-- <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
-				     	</a>
-				     </div>
-				
+				     	</a> --%>
+				     	<span class="addNewCard" onclick="createWallet();"><a href="#">
+				     	<spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
+			    </div>
 				</c:otherwise>
-				</c:choose> --%>
+		</c:choose>
 		
 			</div>
 		</div>

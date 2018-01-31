@@ -278,7 +278,25 @@ public class WalletController extends AbstractPageController
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 				}*/
 			}
-			model.addAttribute("isCustomerWalletActive", currentCustomer.getIsWalletActivated().booleanValue());
+			boolean checkUserWalletStatus = true;
+			if (currentCustomer.getIsWalletActivated() != null)
+			{
+				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+				{
+					checkUserWalletStatus=true;
+				}
+				else
+				{
+			   	checkUserWalletStatus=false;
+				}
+			}
+			else
+			{
+				checkUserWalletStatus=false;
+			}
+
+			model.addAttribute("isCustomerWalletActive", checkUserWalletStatus);
+			
 		}
 		catch (final Exception ex)
 		{
