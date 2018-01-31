@@ -14,9 +14,17 @@
 }
 .overlay {
   composes: video;
-  background: rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: 300ms;
+}
+.overlay:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.4);
 }
 .overlayHidden {
   composes: overlay;
