@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import styles from "./DiscoverMore500.css";
 export default class DiscoverMore500 extends React.Component {
   render() {
-    const data = this.props.feedComponentData.data;
+    const componentData = this.props.feedComponentData.data;
 
     return (
       <div className={styles.base}>
@@ -13,9 +13,9 @@ export default class DiscoverMore500 extends React.Component {
           {this.props.feedComponentData.title}
         </div>
         <Grid elementWidthMobile={33.33} offset={20}>
-          {data &&
-            data.data &&
-            data.data.map((datum, i) => {
+          {componentData &&
+            componentData.data &&
+            componentData.data.map((datum, i) => {
               return (
                 <CategoryWithName
                   image={datum.imageURL}
