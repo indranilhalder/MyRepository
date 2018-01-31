@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./IconicFilter.css";
 import CenterAdd from "./CenterAdd";
 import Carousel from "./Carousel";
+import PropTypes from "prop-types";
 
 export default class IconicFilter extends React.Component {
   render() {
@@ -27,3 +28,12 @@ export default class IconicFilter extends React.Component {
     );
   }
 }
+
+IconicFilter.propTypes = {
+  title: PropTypes.string,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string
+    })
+  )
+};
