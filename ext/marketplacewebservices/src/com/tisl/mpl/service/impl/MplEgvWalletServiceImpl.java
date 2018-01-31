@@ -290,26 +290,10 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		boolean isCartVoucherPresent =false;
 		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
 		try {
-		//	final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		//	CustomerWalletDetailResponse responce=null;
-			
-			// We can get The Wallet Balance From QC .. If only Customer registered with QC 
-			
-			if(null == walletAmount) {
-//				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-//						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-//				{
-					// Getting The Customer Cliq Cash Balance From QC
-				//	responce = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
-//					if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet()
-//							&& null != responce.getWallet().getBalance())
-//					{
-						walletAmount = cart.getTotalWalletAmount();
-					//}
-			//	}
+		if(null == walletAmount) {
+				walletAmount = cart.getTotalWalletAmount();
+				
 			}
-			
-			
 			final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
 
 			 isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
@@ -322,7 +306,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			if (null != walletAmount &&  walletAmount.doubleValue() > 0.0D)
 			{
 				LOG.debug("Bucket Balance =" + walletAmount);
-				final Double totalAmt = cart.getTotalPrice();
+				 Double totalAmt = cart.getTotalPrice();
 
 				 // If  Customer is Having Enough money in Cliq Cash Then  pay Using Cliq Cash   
 				 // Otherwise He needs to Pay the Remaining Amount using Other Payment Methods( Net Banking ,Debit Cart ... ) 
@@ -333,20 +317,13 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
 					cart.setPayableWalletAmount(totalAmt);
 					cart.setTotalWalletAmount(walletAmount);
+					cart.setPayableNonWalletAmount(Double.valueOf(0.0D));
 					//cart.setTotalPrice(value);
 					modelService.save(cart);
 					modelService.refresh(cart);
 
 					 commerceCartService.recalculateCart((CartModel)cart);
-//					
-//					if (isCartVoucherPresent)
-//					{
-//						cartCouponCode = cartCouponObj.getSecond();
-//						mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
-//					}
-//					
-					
-					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+					 applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setIsRemainingAmount(false);
 					//applyCliqCashWsDto.setCliqCashApplied(totalAmt);
 					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
@@ -360,27 +337,27 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				//  else if Customer Is Not having Enough Money In Cliq Cash , Then Saving SplitModeInfo as SPLIT_MODE 
 				else
 				{
-					
 					applyCliqCashWsDto.setIsRemainingAmount(true);
-					if (walletAmount.doubleValue() > 0.0D)
-					{
-				//		applyCliqCashWsDto.setCliqCashApplied(walletAmount);
-					}
-					applyCliqCashWsDto.setIsRemainingAmount(true);
-					
-					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-					cart.setPayableWalletAmount(walletAmount);
-					cart.setTotalWalletAmount(walletAmount);
-					modelService.save(cart);
-					modelService.refresh(cart);
-					
 					if (isCartVoucherPresent)
 						{
 							cartCouponCode = cartCouponObj.getSecond();
+							cart.setCheckForBankVoucher("true");
+							modelService.save(cart);
 							mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
+							cart.setCheckForBankVoucher("false");
+							
 						}
+							cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
+							cart.setPayableWalletAmount(walletAmount);
+							cart.setTotalWalletAmount(walletAmount);
+							totalAmt = cart.getTotalPrice();
+							double payableJuspayAmount = totalAmt.doubleValue() - walletAmount.doubleValue();
+							cart.setPayableNonWalletAmount(Double.valueOf(payableJuspayAmount));
+							modelService.save(cart);
+						
 					double juspayTotalAmt = 0.0D;
-					if (null != totalAmt && totalAmt.doubleValue() > 0.0D && walletAmount.doubleValue() > 0.0D)
+					
+					if (totalAmt.doubleValue() > 0.0D && walletAmount.doubleValue() > 0.0D)
 					{
 						juspayTotalAmt = totalAmt.doubleValue() - walletAmount.doubleValue();
 					}
@@ -390,11 +367,6 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					}
 					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
-					if (isCartVoucherPresent)
-						{
-							cartCouponCode = cartCouponObj.getSecond();
-							mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
-						}
 					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 					getTotalPrice(applyCliqCashWsDto,cart);
 
@@ -532,13 +504,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					payableWalletAmount = totalWalletAmount;
 					order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
 				}
-				else if (cartTotal < totalWalletAmount)
+				else if (cartTotal <= totalWalletAmount)
 				{
 					payableWalletAmount = cartTotal;
 					order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
 				}else {
 					order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				}
+				double payableJuspayAmount = cartTotal - payableWalletAmount;
+				order.setPayableNonWalletAmount(Double.valueOf(payableJuspayAmount));
 				order.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
 				modelService.save(order);
 			}

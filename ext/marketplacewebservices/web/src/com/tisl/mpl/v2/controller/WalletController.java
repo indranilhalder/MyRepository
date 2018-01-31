@@ -454,10 +454,7 @@ public class WalletController
 					removeCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 				}
 				removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
-				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-				cart.setPayableWalletAmount(Double.valueOf(0.0D));
-				modelService.save(cart);
-				modelService.refresh(cart);
+				
 				
 				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
 
@@ -470,8 +467,16 @@ public class WalletController
 				 if (isCartVoucherPresent)
 					{
 						cartCouponCode = cartCouponObj.getSecond();
+						cart.setCheckForBankVoucher("true");
+						modelService.save(cart);
 						mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null);
+						cart.setCheckForBankVoucher("false");
 					}
+				  cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					cart.setPayableNonWalletAmount(cart.getTotalPrice());
+					cart.setPayableWalletAmount(Double.valueOf(0.0D));
+					modelService.save(cart);
+					modelService.refresh(cart);
 					getTotalPrice(removeCliqCashWsDto, cart);
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
@@ -485,11 +490,6 @@ public class WalletController
 					{
 						removeCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
 					}
-					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-					modelService.save(orderModel);
-					modelService.refresh(orderModel);
-					
 					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(order.getDiscounts());
 
 					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
@@ -501,8 +501,16 @@ public class WalletController
 					 if (isCartVoucherPresent)
 						{
 							cartCouponCode = cartCouponObj.getSecond();
+							orderModel.setCheckForBankVoucher("true");
+							modelService.save(orderModel);
 							mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
+							orderModel.setCheckForBankVoucher("false");
 						}
+				   	 orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+						orderModel.setPayableNonWalletAmount(orderModel.getTotalPrice());
+						orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+						modelService.save(orderModel);
+						modelService.refresh(orderModel);
 					getTotalPrice(removeCliqCashWsDto, orderModel);
 					removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
@@ -1020,7 +1028,7 @@ public class WalletController
 		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 		@RequestMapping(value = MarketplacewebservicesConstants.CHECK_WALLET_MOBILE_NUMBER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 		@ResponseBody
-		public ErrorDTO checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request ,@RequestParam boolean isUpdateProfile)
+		public ErrorDTO checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request ,@RequestParam(required=false) boolean isUpdateProfile)
 				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 {
@@ -1033,6 +1041,11 @@ public class WalletController
 
 				if(isUpdateProfile) 
 				{
+					if (null == request.getMobileNumber() || ( StringUtils.length(request.getMobileNumber()) != MarketplacecommerceservicesConstants.MOBLENGTH
+							&& !request.getMobileNumber().matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+					}
 					boolean isOtpGenerated =	mplEgvWalletService.generateOtpForUpdateWallet(request.getMobileNumber(),customer);
 					if(isOtpGenerated) 
 					{
@@ -1121,10 +1134,15 @@ private ErrorDTO validateRequest(ErrorDTO responce,EgvWalletCreateRequestWsDTO r
 	}
 	else if (null == request.getMobileNumber() || request.getMobileNumber().isEmpty())
 	{
+		
 		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5013));
 		responce.setErrorCode(MarketplacecommerceservicesConstants.B5013);
 		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 
+	}else if (StringUtils.length(request.getMobileNumber()) != MarketplacecommerceservicesConstants.MOBLENGTH
+			&& !request.getMobileNumber().matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+	{
+		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
 	}
 	return responce;
 	

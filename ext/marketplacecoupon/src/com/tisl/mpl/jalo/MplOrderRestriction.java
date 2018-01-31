@@ -61,7 +61,17 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			}
 
 			boolean cliqCashValidation = true;
-			if (anOrder.getAttribute("splitModeInfo").equals("Split") && anOrder.getAttribute("checkForBankVoucher").equals("true"))
+			String splitModeInfo = null; 
+			boolean checkForBankVoucher = false;
+			if(null != anOrder.getAttribute("splitModeInfo")) 
+			{
+				splitModeInfo =(String) anOrder.getAttribute("splitModeInfo");
+			}
+			if(null != anOrder.getAttribute("checkForBankVoucher")) 
+			{
+				checkForBankVoucher=Boolean.valueOf((String)anOrder.getAttribute("checkForBankVoucher")).booleanValue();
+			}
+			if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") && checkForBankVoucher)
 			{
 				cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder);
 			}
@@ -89,9 +99,11 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			throws JaloInvalidParameterException, JaloSecurityException
 	{
 
+		LOG.debug("Inside Order Retriction checkCliqCashValue");
 		final Double totalPayableAmount = (Double) anOrder.getAttribute("payableNonWalletAmount");
-
-		if (totalPayableAmount.doubleValue() > minimumTotal)
+       LOG.debug("Payable Juspay Amount "+totalPayableAmount);
+       LOG.debug("minimumTotal  "+minimumTotal);
+		if (totalPayableAmount.doubleValue() >= minimumTotal)
 		{
 			return true;
 		}

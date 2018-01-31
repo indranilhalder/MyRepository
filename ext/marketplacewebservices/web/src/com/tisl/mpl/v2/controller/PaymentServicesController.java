@@ -1744,6 +1744,7 @@ public class PaymentServicesController extends BaseController
 					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 					paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					cart.setPayableNonWalletAmount(Double.valueOf(cart.getTotalPrice().doubleValue()));
 					cart.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(cart);
 					modelService.refresh(cart);
@@ -1763,6 +1764,7 @@ public class PaymentServicesController extends BaseController
 				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
                                 paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					orderModel.setPayableNonWalletAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()));
 					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(orderModel);
 					modelService.refresh(orderModel);

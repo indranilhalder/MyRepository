@@ -3464,53 +3464,6 @@ public class CartsController extends BaseCommerceController
 				getTotalPrice(applycouponDto, cartModel);
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
-
-				/*try
-				{
-						final double totalAmount = cartModel.getTotalPrice().doubleValue();
-					double payableWalletAmount = 0.0D;
-					if (null != cartModel.getPayableWalletAmount() && cartModel.getPayableWalletAmount().doubleValue() > 0.0D)
-					{
-						payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
-					}
-					if (totalAmount <= payableWalletAmount)
-					{
-						cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						cartModel.setPayableWalletAmount(Double.valueOf(totalAmount));
-						getModelService().save(cartModel);
-						getModelService().refresh(cartModel);
-						applycouponDto.setCliqCashApplied(true);
-						applycouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(totalAmount));
-						applycouponDto.setRemaingPaybleAmount(Double.valueOf(0.0D));
-					}
-					else
-					{
-						if (payableWalletAmount > 0.0D)
-						{
-							cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-							cartModel.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
-							applycouponDto.setCliqCashApplied(true);
-							applycouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(payableWalletAmount));
-							applycouponDto.setRemaingPaybleAmount(Double.valueOf(cartModel.getTotalPrice().doubleValue()
-									- payableWalletAmount));
-						}
-						else
-						{
-							cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-							cartModel.setPayableWalletAmount(Double.valueOf(0.0D));
-							applycouponDto.setCliqCashApplied(false);
-							applycouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(0.0D));
-							applycouponDto.setRemaingPaybleAmount(Double.valueOf(cartModel.getTotalPrice().doubleValue()));
-						}
-						getModelService().save(cartModel);
-						getModelService().refresh(cartModel);
-					}
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception occurred while setting splitPaymentMode" + e.getMessage());
-				}*/
-
 				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
 				//}
 			}
@@ -3521,58 +3474,12 @@ public class CartsController extends BaseCommerceController
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				final Double totalWithoutCoupon = orderModel.getTotalPrice();
-
 				getTotalPrice(applycouponDto, orderModel);
 
 				if (null != totalWithoutCoupon)
 				{
 					applycouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
 				}
-		/*		try
-				{
-					final double totalAmount = orderModel.getTotalPrice().doubleValue();
-					double payableWalletAmount = 0.0D;
-					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
-					{
-						payableWalletAmount = orderModel.getPayableWalletAmount().doubleValue();
-					}
-					if (totalAmount <= payableWalletAmount)
-					{
-						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						orderModel.setPayableWalletAmount(Double.valueOf(totalAmount));
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-						applycouponDto.setCliqCashApplied(true);
-						applycouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(totalAmount));
-						applycouponDto.setRemaingPaybleAmount(Double.valueOf(0.0D));
-					}
-					else
-					{
-						if (payableWalletAmount > 0.0D)
-						{
-							orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-							orderModel.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
-							applycouponDto.setCliqCashApplied(true);
-							applycouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(payableWalletAmount));
-							applycouponDto.setRemaingPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()
-									- payableWalletAmount));
-						}
-						else
-						{
-							orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-							orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-							applycouponDto.setCliqCashApplied(false);
-							applycouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(0.0D));
-							applycouponDto.setRemaingPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()));
-						}
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-					}
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception occurred while setting splitPaymentMode" + e.getMessage());
-				}*/
 				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(orderModel));
 
 			}
@@ -3749,8 +3656,12 @@ public class CartsController extends BaseCommerceController
 						return applycouponDto;
 					}
 					cartModel.setChannel(SalesApplication.MOBILE);
+					cartModel.setCheckForBankVoucher("true");
+					//modelService.save(cartModel);
 					getModelService().save(cartModel);
 					applycouponDto = mplCouponWebFacade.applyCartVoucher(couponCode, cartModel, null, paymentMode);
+					cartModel.setCheckForBankVoucher("false");
+					modelService.save(cartModel);
 					getTotalPrice(applycouponDto, cartModel);
 					applycouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -3769,7 +3680,11 @@ public class CartsController extends BaseCommerceController
 					applycouponDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 					return applycouponDto;
 				}
+				orderModel.setCheckForBankVoucher("true");
+				modelService.save(orderModel);
 				applycouponDto = mplCouponWebFacade.applyCartVoucher(couponCode, null, orderModel, paymentMode);
+				orderModel.setCheckForBankVoucher("false");
+				modelService.save(orderModel);
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				
@@ -3921,7 +3836,6 @@ public class CartsController extends BaseCommerceController
 		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
 		CartModel cartModel = null;
 		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-		double walletAmount = 0.0D;
 		double discountAmount = 0.0D;
 		try
 		{
@@ -3952,62 +3866,13 @@ public class CartsController extends BaseCommerceController
 
 				cartModel.setChannel(SalesApplication.MOBILE);
 				getModelService().save(cartModel);
-				if (null != cartModel.getTotalWalletAmount() && cartModel.getTotalWalletAmount().doubleValue() > 0.0D)
-				{
-					walletAmount = cartModel.getTotalWalletAmount().doubleValue();
-				}
 				if (null != cartModel.getTotalDiscounts() && cartModel.getTotalDiscounts().doubleValue() > 0.0D)
 				{
 					discountAmount = cartModel.getTotalDiscounts().doubleValue();
 				}
 
 				releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, cartModel, null, paymentMode);
-			/*	try
-				{
-					final double totalAmount = cartModel.getTotalPrice().doubleValue();
-					//	double payableWalletAmount = 0.0D;
-					//						if (walletAmount > 0.0D)
-					//						{
-					//							payableWalletAmountIncludingDiscount = cartModel.getPayableWalletAmount().doubleValue()+discountAmount;
-					//						}
-					if (totalAmount <= walletAmount)
-					{
-						cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						cartModel.setPayableWalletAmount(Double.valueOf(totalAmount));
-						getModelService().save(cartModel);
-						getModelService().refresh(cartModel);
-						releaseCouponDto.setCliqCashApplied(true);
-						releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(totalAmount));
-						releaseCouponDto.setRemaingPaybleAmount(Double.valueOf(0.0D));
-					}
-					else
-					{
-						if (walletAmount > 0.0D)
-						{
-							cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-							cartModel.setPayableWalletAmount(Double.valueOf(walletAmount));
-							releaseCouponDto.setCliqCashApplied(true);
-							releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(walletAmount));
-							releaseCouponDto.setRemaingPaybleAmount(Double.valueOf(cartModel.getTotalPrice().doubleValue()
-									- walletAmount));
-						}
-						else
-						{
-							cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-							cartModel.setPayableWalletAmount(Double.valueOf(0.0D));
-							releaseCouponDto.setCliqCashApplied(false);
-							releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(0.0D));
-							releaseCouponDto.setRemaingPaybleAmount(Double.valueOf(cartModel.getTotalPrice().doubleValue()));
-						}
-						getModelService().save(cartModel);
-						getModelService().refresh(cartModel);
-					}
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception occurred while setting splitPaymentMode" + e.getMessage());
-				}*/
-				
+
 				getTotalPrice(releaseCouponDto, cartModel);
 				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
@@ -4017,10 +3882,6 @@ public class CartsController extends BaseCommerceController
 			else
 			{
 				LOG.debug(" Releasing coupon For Order Guid " + cartGuid);
-				if (null != orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount().doubleValue() > 0.0D)
-				{
-					walletAmount = orderModel.getTotalWalletAmount().doubleValue();
-				}
 				if (null != orderModel.getTotalDiscounts() && orderModel.getTotalDiscounts().doubleValue() > 0.0D)
 				{
 					discountAmount = orderModel.getTotalDiscounts().doubleValue();
@@ -4032,51 +3893,6 @@ public class CartsController extends BaseCommerceController
 				{
 					releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
 				}
-				/*try
-				{
-					final double totalAmount = orderModel.getTotalPrice().doubleValue();
-					//	double payableWalletAmount = 0.0D;
-					//						if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
-					//						{
-					//							payableWalletAmount = orderModel.getPayableWalletAmount().doubleValue();
-					//						}
-					if (totalAmount <= walletAmount)
-					{
-						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						orderModel.setPayableWalletAmount(Double.valueOf(totalAmount));
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-						releaseCouponDto.setCliqCashApplied(true);
-						releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(totalAmount));
-						releaseCouponDto.setRemaingPaybleAmount(Double.valueOf(0.0D));
-					}
-					else
-					{
-						if (walletAmount > 0.0D)
-						{
-							orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-							orderModel.setPayableWalletAmount(Double.valueOf(walletAmount));
-							releaseCouponDto.setCliqCashApplied(true);
-							releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(walletAmount));
-							releaseCouponDto.setRemaingPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()
-									- walletAmount));
-						}
-						else
-						{
-							orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-							orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-							releaseCouponDto.setCliqCashApplied(false);
-							releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(0.0D));
-							releaseCouponDto.setRemaingPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()));
-						}
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-					}
-				}
-				catch (final Exception e)
-				{
-					LOG.error("Exception occurred while setting splitPaymentMode" + e.getMessage());
-				}*/
 				getTotalPrice(releaseCouponDto, orderModel);
 				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));

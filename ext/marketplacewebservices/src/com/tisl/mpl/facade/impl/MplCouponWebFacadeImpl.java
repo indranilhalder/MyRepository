@@ -17,6 +17,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -70,6 +71,9 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+	
+	@Autowired
+	private ModelService modelService;
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
 	 */
@@ -355,8 +359,12 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					cartModel = (CartModel) mplCouponFacade.removeLastCartCoupon(cartModel);
 					if (StringUtils.isNotEmpty(couponCode))
 					{
+						cartModel.setCheckForBankVoucher("true");
+						modelService.save(cartModel);
 						couponRedStatus = mplCouponFacade.applyCartVoucher(couponCode, cartModel, null);
 						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+						cartModel.setCheckForBankVoucher("false");
+						modelService.save(cartModel);
 						//data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
 					}
 
@@ -399,8 +407,12 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				orderModel = (OrderModel) mplCouponFacade.removeLastCartCoupon(orderModel);
 				if (StringUtils.isNotEmpty(couponCode))
 				{
+					orderModel.setCheckForBankVoucher("true");
+					modelService.save(orderModel);
 					couponRedStatus = mplCouponFacade.applyCartVoucher(couponCode, null, orderModel);
 					LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+					orderModel.setCheckForBankVoucher("false");
+					modelService.save(orderModel);
 					//data = getMplCouponFacade().populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
 				}
 
@@ -555,7 +567,11 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				{
 					try
 					{
+						cartModel.setCheckForBankVoucher("true");
+						modelService.save(cartModel);
 						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cartModel, null);
+						cartModel.setCheckForBankVoucher("false");
+						modelService.save(cartModel);
 						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(null, cartModel, applyStatus, true,
 								couponCode);
 
@@ -621,7 +637,11 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				{
 					try
 					{
+						orderModel.setCheckForBankVoucher("true");
+						modelService.save(orderModel);
 						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
+						orderModel.setCheckForBankVoucher("false");
+						modelService.save(orderModel);
 						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus, true,
 								couponCode);
 
@@ -741,7 +761,11 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		final VoucherDiscountData dataPojo = data;
 		try
 		{
+			cartModel.setCheckForBankVoucher("true");
+			modelService.save(cartModel);
 			final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cartModel, null);
+			cartModel.setCheckForBankVoucher("false");
+			modelService.save(cartModel);
 			final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(null, cartModel, applyStatus, true,
 					cartCouponCode);
 
@@ -775,7 +799,11 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		final VoucherDiscountData dataPojo = data;
 		try
 		{
+			oModel.setCheckForBankVoucher("true");
+			modelService.save(oModel);
 			final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, oModel);
+			oModel.setCheckForBankVoucher("false");
+			modelService.save(oModel);
 			final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(oModel, null, applyStatus, true,
 					cartCouponCode);
 
