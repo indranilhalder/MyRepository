@@ -5,18 +5,20 @@ import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";
+const LIST = "list";
+const GRID = "grid";
 export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: "list"
+      view: LIST
     };
   }
   switchView() {
-    if (this.state.view === "list") {
-      this.setState({ view: "grid" });
+    if (this.state.view === LIST) {
+      this.setState({ view: GRID });
     } else {
-      this.setState({ view: "list" });
+      this.setState({ view: LIST });
     }
   }
   changeAddress() {
@@ -36,15 +38,15 @@ export default class ProductGrid extends React.Component {
             Change
           </div>
           <div className={styles.icon} onClick={() => this.switchView()}>
-            {this.state.view === "list" && <Icon image={gridImage} size={20} />}
-            {this.state.view === "grid" && <Icon image={listImage} size={20} />}
+            {this.state.view === LIST && <Icon image={gridImage} size={20} />}
+            {this.state.view === GRID && <Icon image={listImage} size={20} />}
           </div>
         </div>
         <div className={styles.content}>
           <Grid
             search={this.props.search}
             offset={20}
-            elementWidthMobile={this.state.view === "list" ? 100 : 50}
+            elementWidthMobile={this.state.view === LIST ? 100 : 50}
           >
             {this.props.data &&
               this.props.data.map((datum, i) => {
