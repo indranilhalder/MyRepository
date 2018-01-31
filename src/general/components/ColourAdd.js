@@ -23,7 +23,6 @@ export default class ColourAdd extends React.Component {
     );
   }
 }
-
 ColourAdd.propTypes = {
   colour: PropTypes.string,
   selected: PropTypes.bool

@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./ColourfulFilter.css";
-import ColourfulAdd from "./ColourfullAdd";
+import styles from "./ColourFilter.css";
+import ColourAdd from "./ColourAdd";
 import Carousel from "./Carousel";
 import PropTypes from "prop-types";
 
@@ -12,7 +12,7 @@ export default class ColourFilter extends React.Component {
         <Carousel elementWidthMobile={18}>
           {data.map((datum, i) => {
             return (
-              <ColourfulAdd
+              <ColourAdd
                 key={i}
                 backgroundColor={datum.colour}
                 selected={this.props.selected}
@@ -24,7 +24,6 @@ export default class ColourFilter extends React.Component {
     );
   }
 }
-
 ColourFilter.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
