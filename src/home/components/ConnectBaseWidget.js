@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ConnectBaseWidget.css";
-import ConnectBothWidget from "./ConnectBothWidget";
+import ConnectDescription from "./ConnectDescription";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 export default class ConnectBaseWidget extends React.Component {
@@ -29,7 +29,7 @@ export default class ConnectBaseWidget extends React.Component {
         {data.items &&
           data.items.map((datum, i) => {
             return (
-              <ConnectBothWidget
+              <ConnectDescription
                 key={i}
                 title={datum.title}
                 description={datum.description}

@@ -13,7 +13,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     showConnectModal: data => {
-      console.log(data);
       dispatch(showModal(CONNECT_DETAILS, data));
     }
   };

@@ -38,10 +38,6 @@
   margin: auto;
   width: 100%;
 }
-.knowmore {
-  width: 100%;
-  height: auto;
-}
 
 @media only screen and (min-width: 1025px) {
   .base {
