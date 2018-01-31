@@ -3,7 +3,6 @@ import styles from "./ProductImage.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import ConnectButton from "./ConnectButton.js";
-import { Icon, CircleButton } from "xelpmoc-core";
 export default class ProductImage extends React.Component {
   render() {
     return (
