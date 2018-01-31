@@ -9,7 +9,6 @@ export default class FilterSelect extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     let contentClass = styles.itemContent;
     let countStyle = styles.count;
     if (this.props.selected) {
@@ -34,16 +33,3 @@ export default class FilterSelect extends React.Component {
     );
   }
 }
-
-// export default class FilterSelect extends React.Component {
-//   render() {
-//     return (
-//       <div className={styles.base}>
-//         {this.props.data &&
-//           this.props.data.map(datum => {
-//             return <FilterSelectItem label={datum.label} count={datum.count} />;
-//           })}
-//       </div>
-//     );
-//   }
-// }
