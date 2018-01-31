@@ -74,6 +74,7 @@ import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -208,6 +209,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.BankModel;
@@ -225,6 +227,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
@@ -527,6 +530,10 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private HttpServletRequest request;
+
+	private OTPGenericService otpGenericService;
+	@Resource
+	private SendSMSFacade sendSMSFacade;
 
 	/**
 	 * TPR-1372
@@ -11247,10 +11254,11 @@ public class UsersController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "{emailId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "{userId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserLoginResultWsDto customerLogin(@PathVariable final String emailId, @RequestParam final String password)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public UserLoginResultWsDto customerLogin(@PathVariable final String userId, @RequestParam final String password,
+			@RequestParam(required = false) final String otp) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -11262,13 +11270,37 @@ public class UsersController extends BaseCommerceController
 		{
 			//CAR Project performance issue fixed
 
+			//TO DO REGEX MATCH
+			customerModel = mplPaymentWebFacade.getCustomer(userId);
+			if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
+			{
+				//
+				if (StringUtils.isEmpty(otp))
+				{
+					final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.REG.getCode(), userId);
+					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), userId);
+					userResult.setStatus("OTP VERIFICATION REQUIRED");
+					userResult.setErrorCode("NU0002");
+					return userResult;
+				}
+				else
+				{
+					final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(userId, otp, OTPTypeEnum.REG);
+					if (validOtpFlag)
+					{
+						customerModel.setOtpVerified(Boolean.TRUE);
+						modelService.save(customerModel);
+					}
 
-			//customerModel = mplPaymentWebFacade.getCustomer(emailId);
+				}
+			}
 
-			LOG.debug("****************** User Login mobile web service ***********" + emailId);
+			LOG.debug("****************** User Login mobile web service ***********" + userId);
 			//Login user with username and password
 			//	isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
-			result = mobileUserService.loginUser(emailId, password);
+			result = mobileUserService.loginUser(userId, password);
 			if (result.getStatus().equalsIgnoreCase("Success"))
 			{
 				customerModel = (CustomerModel) userService.getCurrentUser();
@@ -11285,11 +11317,18 @@ public class UsersController extends BaseCommerceController
 				customerInfo.setMobileNumber(customerModel.getMobileNumber());
 				customerInfo.setEmailId(customerModel.getOriginalUid());
 				userResult.setCustomerInfo(customerInfo);
+				userResult.setCustomerId(result.getCustomerId());
+				userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
 			}
 			userResult.setStatus(result.getStatus());
-			userResult.setCustomerId(result.getCustomerId());
-			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
+
 			//Return result
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			userResult.setError("Duplicate User Id Found, Please login with email ID");
+			userResult.setErrorCode("NU0001");
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
