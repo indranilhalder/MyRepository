@@ -7519,12 +7519,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						if (isCartVoucherPresent.booleanValue())
 						{
-							cart.setCheckForBankVoucher("true");
-							cart = (CartModel) mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart level Coupon Offer
+							//cart.setCheckForBankVoucher("true");
+						//	cart = (CartModel) mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart level Coupon Offer
 						}
 						else
 						{
-							cart.setCheckForBankVoucher("false");
+						//	cart.setCheckForBankVoucher("false");
 						}
 						double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 						juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
