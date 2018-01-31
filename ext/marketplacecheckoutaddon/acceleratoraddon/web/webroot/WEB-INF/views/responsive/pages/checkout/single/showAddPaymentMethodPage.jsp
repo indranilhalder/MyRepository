@@ -1,3 +1,4 @@
+
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
@@ -11,6 +12,45 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+
+<style>
+.createWalletModel {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.createWalletModel-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 35%;
+}
+
+@media(max-width: 480px) {
+	.createWalletModel-content {
+		width: 90%;
+	}
+}
+
+#closePop {
+	float: right;
+}
+#createWalletData {
+	display: inline-block;
+	width: 100%;
+}
+</style>
 
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
@@ -276,7 +316,7 @@
 													code="text.cliq.cash.payment.addcard.label" /></a></span>
 									</c:when>
 									<c:otherwise>
-										<span class="addNewCard" style="display: none;"><a
+										<span class="addNewCard" onclick="createWallet();"><a
 											href="#"><spring:theme
 													code="text.cliq.cash.payment.addcard.label" /></a></span>
 									</c:otherwise>
@@ -1886,6 +1926,13 @@
 			<single-Checkout:showCheckoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		</div>
 		<input type="hidden" name="juspayBaseUrl" id="juspayBaseUrl" value="${juspayBaseUrl}"/><!-- TPR-7448 -->
+	</div>	
+		<div class="createWalletModel" id="createWalletPopup">
+		<div class="createWalletModel-content">
+			<button type="button" onclick="closepop()" id="closePop"><span class="glyphicon glyphicon-remove-circle"></span></button>
+			<span id="createWalletPopup" class="close">&times;</span>
+			<div id="createWalletData"></div>
+		</div>
 	</div>		
 
 <style>
@@ -1984,3 +2031,139 @@
 		 $('ul.accepted-cards li').removeClass('active-card');
 	 });
 	</script>
+		<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+var createWalletModel = document.getElementById('createWalletPopup');
+var createWalletData = document.getElementById('createWalletData');
+var createWalletPopup = document.getElementById('createWalletPopup');
+function createWallet() {
+		$.ajax({
+			type : "GET",
+			url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
+			contentType : "html/text",
+			success : function(response){
+				createWalletData.innerHTML=response;
+				createWalletModel.style.display = "block";   
+					  },	
+					failure : function(data) {
+					}
+				});  
+	
+}
+
+function closepop(){
+	createWalletModel.style.display = "none";
+}
+
+var count=0;
+function createWalletOTP(){
+	    $(".mobileNumberError").hide();
+	    $(".otpLastNameError").hide();
+	    $(".otpFirstNameError").hide();
+	    var mobileNo=$("#otpPhonenumber").val();
+	    var firstName = $("#otpFirstName").val();
+		var lastName = $("#otpLastName").val();
+		
+     var isString = isNaN(mobileNo);
+
+ 	//First Name Validation
+ 	if(firstName == null || firstName.trim() == '' ){
+ 			$(".otpFirstNameError").show();
+ 			$(".otpFirstNameError").text("First name cannot be blank.");
+ 			formValid = false;
+ 	}else {
+ 		$(".otpFirstNameError").hide();
+ 	}
+ 	
+ 	//Last Name Validation
+     if(lastName == null || lastName.trim() == '' ){
+ 			$(".otpLastNameError").show();
+ 			$(".otpLastNameError").text("Last name cannot be blank.");
+ 			formValid = false;
+ 	}else {
+ 		$(".otpLastNameError").hide();
+ 	} 
+     if(isString==true || mobileNo.trim()==''){
+			$(".mobileNumberError").show();
+			$(".mobileNumberError").text("Enter only Numbers");
+	  	}
+     else if(!/^[0-9]+$/.test(mobileNo))
+        {
+	  		  $(".mobileNumberError").show();
+	          $(".mobileNumberError").text("Enter only Numbers");
+      }
+     else if(mobileNo.length > 0 && mobileNo.length < 9 ){
+	    	  $(".mobileNumberError").show();
+	          $(".mobileNumberError").text("Enter correct mobile number");
+	  	}
+     else{
+ 	count++;
+	if(count <= 4){
+	 $.ajax({
+			type : "POST",
+			url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
+			data :"mobileNumber="+mobileNo,
+			success : function(response) {
+				if(response =='isUsed'){
+					$(".mobileNumberError").show();
+					$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
+					$('#otp-submit-section').hide();
+				}else{
+				$(".wcOTPError").show();
+				$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
+				$('#otp-submit-section').show();
+				}
+			}
+		}); 
+	 
+	}else{
+		$(".otpError").show();
+		$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
+	}
+	  	}
+} 
+
+function submitWalletData(){
+	var data = $("#walletForm").serialize();
+	$(".mobileNumberError").hide();
+	$(".wcOTPError").hide();
+	 $.ajax({
+			type : "GET",
+			url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
+			data :data,
+			contentType: "text/application/html",
+			success : function(response) {
+				
+			   if(response =="isUsed"){
+					$(".mobileNumberError").text("This mobile number is alredy used. Please enter other mobile number for this account");
+					$(".mobileNumberError").show();
+				}
+				else if(response=='OTPERROR'){
+					$(".wcOTPError").text("OTP verification failed. Please try again");
+					$(".wcOTPError").show();
+				}
+				else if(response=='qcDown'){
+					$(".wcOTPError").text("Unable to verify mobile number due to server error. Please try after sometime");
+					$(".wcOTPError").show();
+				}
+				else {
+					closepop();
+					showAddEGV();
+                    //$('#egvDetailsform').submit();
+				} 
+				
+			}
+		}); 
+}
+
+function editOtpField(fieldId) {
+	var value = document.getElementById(fieldId);
+	value.disabled = false;
+	value.focus();
+}
+</script>

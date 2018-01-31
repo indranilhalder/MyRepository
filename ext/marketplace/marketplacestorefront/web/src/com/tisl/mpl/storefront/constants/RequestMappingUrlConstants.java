@@ -195,5 +195,9 @@ public final class RequestMappingUrlConstants
 
 	//TPR-5954
 	public static final String IMG_UPLOAD_PATH = "img.fileupload.path";
+	
+	public static final String QC_MOBILE_VALIDATION = "/qcMobileValidation";
+	public static final String QC_OTP_VALIDATION = "/qcOTPValidation";
+
 
 }

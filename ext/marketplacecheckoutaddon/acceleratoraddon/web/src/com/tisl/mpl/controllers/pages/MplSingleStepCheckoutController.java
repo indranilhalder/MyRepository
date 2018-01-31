@@ -496,10 +496,25 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
-				if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+				/*if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
 						&& !currentCustomer.getIsWalletActivated().booleanValue() && null != currentCustomer.getCustomerWalletDetail())
 				{
 					checkUserWalletStatus = false;
+				}*/
+				if (currentCustomer.getIsWalletActivated() != null)
+				{
+					if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+					{
+						checkUserWalletStatus=true;
+					}
+					else
+					{
+						checkUserWalletStatus=false;
+					}
+				}
+				else
+				{
+					checkUserWalletStatus=false;
 				}
 
 				model.addAttribute("isCustomerWalletActive", checkUserWalletStatus);

@@ -36,7 +36,7 @@
 				<span class="amt"> <format:price priceData="${order.couponDiscount}"/></span>
 			</li>
 		</c:if>
-		
+		<c:if test="${orderData.isEGVOrder ne true}">
 		<li class="shippingthanks">
 			<%-- <spring:theme code="text.account.order.delivery" text="Delivery"/> --%>
 			<span><spring:theme code="text.account.order.delivery1" text="Scheduled Delivery and Shipping Charges"/></span> <!--  TISSUATS-919 -->
@@ -49,6 +49,7 @@
 			<span class="amt"><format:price priceData="${order.convenienceChargeForCOD}" displayFreeForZero="true"/></span>
 			</c:if>
 		</li>
+		</c:if>
 		<!-- TISBOX-1417 Displaying COD related Information-->
 		<li id="total"> 
 			<spring:theme code="text.account.order.total" text="Total"/>

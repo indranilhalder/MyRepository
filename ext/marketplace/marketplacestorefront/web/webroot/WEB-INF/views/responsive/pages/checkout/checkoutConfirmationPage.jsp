@@ -129,7 +129,14 @@
 					<spring:theme code="checkout.orderConfirmation.checkOrderStatus" />
 				</p> --%>
 				<p>
-				<spring:theme code="checkout.orderConfirmation.track" />&nbsp;<a href="/my-account/orders"><spring:theme code="checkout.orderConfirmation.myAccountLink" /></a>
+				<c:choose>
+                  <c:when test = "${orderData.isEGVOrder eq true}">
+                      <spring:theme code="checkout.orderConfirmation.track.egv" />&nbsp;<a href="/my-account/orders"><spring:theme code="checkout.orderConfirmation.myAccountLink" /></a>
+                  </c:when>
+                  <c:otherwise>
+                  	  <spring:theme code="checkout.orderConfirmation.track" />&nbsp;<a href="/my-account/orders"><spring:theme code="checkout.orderConfirmation.myAccountLink" /></a>
+                 </c:otherwise>
+                 </c:choose>
 				</p>
 				<%-- <p><multi:pickupGroups2 orderData="${orderData}"/></p> --%>
 				<%--                 <p><spring:theme code="text.account.order.orderNumber" text="Order number is {0}" arguments="${orderData.code}"/></p>
@@ -177,7 +184,9 @@
 			
 			<div class="orderBoxes clearfix addressThankyou">
                  	<c:set var="sellerOrder"  value="${orderData}" />
-					<order:deliveryAddressItem order="${sellerOrder}" />					
+                    <c:if test="${orderData.isEGVOrder ne true}">
+					<order:deliveryAddressItem order="${sellerOrder}" />
+					</c:if>					
 					<%-- 	<p>"${totalCount}" ITEMS SHIPPING TO THE ADDRESS</p> --%>
 					<%-- 	<order:deliveryMethodItem order="${orderData}"/> --%>
 
@@ -188,7 +197,9 @@
 				<li id="header2"><spring:theme code="text.productDetails" text="Product Information"/></li>
 				<%-- <li id="header4"><spring:theme code="text.quantity" text="Quantity"/></li>
 				<li id="header5"><spring:theme code="text.itemPrice" text="Item Price"/></li> --%>
+			    <c:if test="${orderData.isEGVOrder ne true}">
 				<li class="shipping"><spring:theme code="text.deliveryMethod" text="Shipping Method:"/></li>
+				</c:if>
 				<li id="header6" class="price"><spring:theme code="text.total" text="Price"/></li>
 			</ul>
 		</li>

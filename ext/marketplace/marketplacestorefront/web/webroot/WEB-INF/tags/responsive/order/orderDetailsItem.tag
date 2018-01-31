@@ -215,6 +215,7 @@
 
 			</li>
 			<li class="shipping">
+			<c:if test="${orderData.isEGVOrder ne true}">
 				<ul class="${entry.mplDeliveryMode.name}">
 					 <!-- UF-306 starts -->
 					 <%-- <li class="deliver-type">${entry.mplDeliveryMode.name}</li> --%>
@@ -278,6 +279,7 @@
                   </c:choose>
 					<%-- <li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li> --%>
 				</ul>
+			</c:if>
 			</li>
 			<%-- <td headers="header5">
 						<ycommerce:testId code="orderDetails_productItemPrice_label"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></ycommerce:testId>

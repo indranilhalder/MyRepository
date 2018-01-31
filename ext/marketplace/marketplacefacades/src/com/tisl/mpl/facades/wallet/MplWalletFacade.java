@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
+import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
@@ -75,6 +76,13 @@ public interface MplWalletFacade
 	 */
 	public CustomerWalletDetailResponse updateCustomerWallet(QCCustomerRegisterRequest registerCustomerRequest, String walletId,
 			String customerId);
+	
+   public String qcValidationMobileNo(String mobileNo);
+	
+	public boolean customerWalletUpdate(MplCustomerProfileData mplCustomerProfileData);
+	
+	public CustomerWalletDetailResponse editWalletInformtion(CustomerModel currentCustomer, String qcFirstName, String qcLastName,
+			String qcMobileNo);
 
 
 }

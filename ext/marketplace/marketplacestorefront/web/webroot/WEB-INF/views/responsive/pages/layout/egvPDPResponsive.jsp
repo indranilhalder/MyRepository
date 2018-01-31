@@ -16,6 +16,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style>
+.egv-otp-container .input-group {border: 1px solid #a9143c; border-radius: 4px;}
+.egv-otp-container .giftCard_input {background-color: #fff; height: 35px !important;}
 .createWalletModel {
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
@@ -30,17 +32,29 @@
 	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
+.giftAmountBtns {
+	z-index: 1 !important;
+}
+
 /* Modal Content */
 .createWalletModel-content {
 	background-color: #fefefe;
 	margin: auto;
 	padding: 20px;
 	border: 1px solid #888;
-	width: 50%;
+	width: 35%;
+}
+
+@media(max-width: 480px) {
+	.createWalletModel-content {
+		width: 90%;
+	}
 }
 
 #closePop {
 	float: right;
+	padding: 0;
+	
 }
 #createWalletData {
 	display: inline-block;
@@ -338,7 +352,7 @@
 					</div>
 				</div>
 				<form:form method="POST" id="egvDetailsform"
-					onsubmit="return validateForm();"
+					onsubmit="return validateEgvForm();"
 					action="${request.contextPath}/checkout/multi/payment-method/giftCartPayment"
 					commandName="egvDetailsform">
 					<div class="clearfix">
@@ -456,7 +470,7 @@
 							&nbsp; <input type="text" class="qtyField" disabled value="1" />
 							<c:choose>
 								<c:when test="${isOTPValidtion ne true}">
-									<div class="priAccution">
+									<div class="walletCreate">
 										<button type="button" onclick="createWallet()"
 											class="giftBuyBtn pull-right">
 											<spring:theme code="egv.product.msg.buyNow" />
@@ -489,8 +503,7 @@
 	<br />&nbsp;
 <div class="createWalletModel" id="createWalletPopup">
 		<div class="createWalletModel-content">
-			<button type="button" onclick="closepop()" id="closePop"><span class="glyphicon glyphicon-remove-circle"></span></button>
-			<span id="createWalletPopup" class="close">&times;</span>
+		<span class="glyphicon glyphicon-remove-circle" onclick="closepop()" id="closePop"></span>
 			<div id="createWalletData"></div>
 
 		</div>
@@ -515,7 +528,7 @@ $("#giftCardFromLastNameError").hide();
 $("#giftCardEmailError").hide();
 $("#giftCardPhoneNoError").hide();
 var formValid = true;
-function validateForm() {
+function validateEgvForm() {
 	formValid = true;
 	var fname = $(".giftCard_fromName").val();
 	/* var firstName = $(".giftCard_fromFirstName").val();
@@ -716,14 +729,14 @@ var createWalletModel = document.getElementById('createWalletPopup');
 var createWalletData = document.getElementById('createWalletData');
 var createWalletPopup = document.getElementById('createWalletPopup');
 function createWallet() {
-	if(validateForm()) {
+	if(validateEgvForm()) {
 		$.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
 			contentType : "html/text",
 			success : function(response){
 				createWalletData.innerHTML=response;
-				createWalletModel.style.display = "block";   
+				createWalletModel.style.display = "block"; 
 					  },	
 					failure : function(data) {
 					}
@@ -812,6 +825,11 @@ function createWalletOTP(){
 	  	}
 } 
 
+function editOtpField(fieldId) {
+	var value = document.getElementById(fieldId);
+	value.disabled = false;
+	value.focus();
+}
 
 function submitWalletData(){
 	var data = $("#walletForm").serialize();

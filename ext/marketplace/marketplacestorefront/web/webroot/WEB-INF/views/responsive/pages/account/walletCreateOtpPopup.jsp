@@ -9,12 +9,22 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
+<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="formElement"
+	tagdir="/WEB-INF/tags/responsive/formElement"%>
+
 
 <style>
 .otp-button {
-    background-color: #a9143c;
+    border: 1px solid #a9143c;
     display: inline;
-    color: white;
+    color: #a9143c;
     font-size: 12px;
     font-weight: 400;
     height: 36px;
@@ -23,52 +33,102 @@
 .otp-error-text {
 	text-align: left;
 }
+
+.otp-edit-button {
+	background-color: #a9143c;
+	color: white;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
     
 #otp-submit-section {display: none;}
 </style>
+
+<%-- <c:choose><:when test="${walletForm.qcVerifyFirstName not empty}"><c:set var="qcFnameDisable" value="disabled"></c:set></:when>
+									<:otherwise><c:set var="qcFnameDisable" value=""></c:set></:otherwise></c:choose>
+<c:choose><:when test="${walletForm.qcVerifyLastName not empty}"><c:set var="qcLnameDisable" value="disabled"></c:set></:when>
+									<:otherwise><c:set var="qcLnameDisable" value=""></c:set></:otherwise></c:choose>
+<c:choose><:when test="${walletForm.qcVerifyLastName not empty}"><c:set var="qcMobileDisable" value="disabled"></c:set></:when>
+									<:otherwise><c:set var="qcMobileDisable" value=""></c:set></:otherwise></c:choose> --%>
+
 		<form:form method="POST" id="walletForm"
 			action="${request.contextPath}/wallet/validateWalletOTP"
 			commandName="walletForm">
-			<div class="row text-center">
+			<c:choose>
+				<c:when test="${empty walletForm.qcVerifyFirstName && '' eq walletForm.qcVerifyFirstName}"><c:set var="qcFnDisableStatus" value="false"></c:set></c:when>
+				<c:otherwise><c:set var="qcFnDisableStatus" value="true"></c:set></c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${empty walletForm.qcVerifyLastName && '' eq walletForm.qcVerifyLastName}"><c:set var="qcLnDisableStatus" value="false"></c:set></c:when>
+				<c:otherwise><c:set var="qcLnDisableStatus" value="true"></c:set></c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${empty walletForm.qcVerifyMobileNo && '' eq walletForm.qcVerifyMobileNo}"><c:set var="qcMobileDisableStatus" value="false"></c:set></c:when>
+				<c:otherwise><c:set var="qcLnDisableStatus" value="true"></c:set></c:otherwise>
+			</c:choose>
+			<%-- <c:if test="${not empty walletForm.qcVerifyFirstName}">
+			<c:set var="qcFnameDisable" value="disabled">
+			</c:if> --%>
+			<%-- <c:if test="${not empty walletForm.qcVerifyLastName}">
+			<c:set var="qcLnameDisable" value="disabled">
+			</c:if>
+			<c:if test="${not empty walletForm.qcVerifyMobileNo}">
+			<c:set var="qcMobileNoDisable" value="disabled">
+			</c:if> --%>
+			<div class="row text-center egv-otp-container">
+				<div>
+					<span class="h4"><strong>Please enter below information to verify your mobile number.</strong></span>
+				</div>
+			<hr />
 				<div class="col-md-12">
 					<div class="clearfix">
 						<div class="row">
-								<div class="clearfix col-sm-3 text-right">
-									<label for="otpFirstName"><spring:theme
-										code="text.order.returns.firstname" /></label>
+								<div class="clearfix col-sm-3 text-left">
+									<label for="otpFirstName">Name*</label>
 								</div>
 								<div class="clearfix col-sm-9">
-									<form:input path="qcVerifyFirstName" class="giftCard_input" id="otpFirstName"
+									<div class="input-group">
+										<form:input path="qcVerifyFirstName" class="giftCard_input" id="otpFirstName" disabled="${qcFnDisableStatus}"
 									value="${walletForm.qcVerifyFirstName}" placeholder="Enter First Name"
 									maxlength="140" />
+									<div class="input-group-btn">
+										<span class="otp-button otp-edit-button" id="editQcFirstName" onclick="editOtpField('otpFirstName')"><span class="glyphicon glyphicon-edit"></span></span>
+									</div></div>
                                    <div class="otp-error-text error_text otpFirstNameError"></div>
 									
 								</div>
 						</div>
 						<br />
 						<div class="row">
-								<div class="clearfix col-sm-3 text-right">
-									<label for="otpLastName"><spring:theme
-										code="text.order.returns.lastname" /></label>
+								<div class="clearfix col-sm-3 text-left">
+									<label for="otpLastName">Surname*</label>
 								</div>
 								<div class="clearfix col-sm-9">
-									<form:input path="qcVerifyLastName" id="otpLastName" class="giftCard_input"
-									value="${walletForm.qcVerifyLastName}" placeholder="Enter Last Name"
+									<div class="input-group">
+										<form:input path="qcVerifyLastName" id="otpLastName" class="giftCard_input" disabled="${qcLnDisableStatus}"
+									value="${walletForm.qcVerifyLastName}" placeholder="Enter Last Name" 
 									maxlength="140" />
+									<div class="input-group-btn">
+										<span class="otp-button otp-edit-button" id="editQcLastName" onclick="editOtpField('otpLastName')"><span class="glyphicon glyphicon-edit"></span></span>
+									</div></div>
 									<div class="otp-error-text error_text otpLastNameError"></div>
 								</div>
 								
 						</div>
 						<br />
 						<div class="row">
-								<div class="clearfix col-sm-3 text-right">
-									<label for="otpPhonenumber"><spring:theme
-								code="text.order.returns.phonenumber" /></label>
+								<div class="clearfix col-sm-3 text-left">
+									<label for="otpPhonenumber">Mobile No*</label>
 								</div>
 								<div class="clearfix col-sm-9">
-									<form:input path="qcVerifyMobileNo"  maxlength="10" class="giftCard_input" onkeypress="return isNumber(event)" id="otpPhonenumber"
-									value="${walletForm.qcVerifyMobileNo}" placeholder="Enter Mobile Number" />
-								<div class="error_text otp-error-text mobileNumberError"></div>
+									<div class="input-group">
+										<form:input path="qcVerifyMobileNo" class="giftCard_input" id="otpPhonenumber" disabled="${qcMobileDisableStatus}"
+									value="${walletForm.qcVerifyMobileNo}" placeholder="Mobile Number"
+									maxlength="10" />
+									<div class="input-group-btn">
+										<span class="otp-button otp-edit-button" id="editQcMobileNo" onclick="editOtpField('otpPhonenumber')"><span class="glyphicon glyphicon-edit"></span></span>
+									</div></div>
+									<div class="error_text otp-error-text mobileNumberError"></div>
 								</div>
 						</div>
 					</div>
@@ -139,3 +199,4 @@
 			</div>  --%>
 
 		</form:form>
+		

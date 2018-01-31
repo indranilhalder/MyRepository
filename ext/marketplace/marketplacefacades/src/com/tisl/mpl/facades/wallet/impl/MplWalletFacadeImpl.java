@@ -44,6 +44,10 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
+import com.tisl.mpl.pojo.request.Customer;
+
 
 
 /**
@@ -77,6 +81,9 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
+	
+	@Autowired
+	RegisterCustomerFacade registerCustomerFacade;
 	
 	/**
 	 * @return the mplPaymentService
@@ -457,4 +464,118 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 	}
 	
+	@Override
+	public CustomerWalletDetailResponse editWalletInformtion(CustomerModel currentCustomer, String qcFirstName, String qcLastName,
+			String qcMobileNo)
+	{
+		final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+		final Customer custInfo = new Customer();
+		custInfo.setEmail(currentCustomer.getOriginalUid());
+		custInfo.setEmployeeID(currentCustomer.getUid());
+		custInfo.setCorporateName("Tata Unistore Ltd");
+		if (null != qcFirstName)
+		{
+			custInfo.setFirstname(qcFirstName);
+		}
+		if (null != qcLastName)
+		{
+			custInfo.setLastName(qcLastName);
+		}
+		if (null != qcMobileNo)
+		{
+			custInfo.setPhoneNumber(qcMobileNo);
+		}
+
+		customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
+		customerRegisterReq.setCustomer(custInfo);
+		customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
+		
+		final CustomerWalletDetailResponse customerRegisterResponse =updateCustomerWallet(customerRegisterReq, currentCustomer.getCustomerWalletDetail().getWalletId(), currentCustomer.getUid());
+		return customerRegisterResponse;
+	}
+	
+	
+	@Override
+	public boolean customerWalletUpdate(MplCustomerProfileData mplCustomerProfileData){
+		CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		if(currentCustomer.getIsWalletActivated()!=null && currentCustomer.getIsWalletActivated().booleanValue()){
+			boolean isChanged=false;
+			String qcFirstName=null;
+			String qcLastName=null;
+			String qcMobileNo=null;
+			if(StringUtils.isNotBlank(currentCustomer.getQcVerifyFirstName()) && !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getFirstName()) &&  StringUtils.isNotBlank(mplCustomerProfileData.getFirstName())){
+				qcFirstName=mplCustomerProfileData.getFirstName();
+						isChanged=true;
+				}else{
+					qcFirstName=currentCustomer.getQcVerifyFirstName();
+				}
+			if(StringUtils.isNotBlank(currentCustomer.getQcVerifyLastName()) && !currentCustomer.getQcVerifyLastName().equalsIgnoreCase(mplCustomerProfileData.getLastName()) &&  StringUtils.isNotBlank(mplCustomerProfileData.getLastName())){
+				qcLastName=mplCustomerProfileData.getLastName();
+						isChanged=true;
+				}else{
+					qcLastName=currentCustomer.getQcVerifyFirstName();
+				}
+			
+			if(StringUtils.isNotBlank(currentCustomer.getQcVerifyMobileNo()) && !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getMobileNumber()) &&  StringUtils.isNotBlank(mplCustomerProfileData.getMobileNumber())){
+				qcMobileNo=mplCustomerProfileData.getMobileNumber();
+						isChanged=true;
+				} else if(StringUtils.isEmpty(currentCustomer.getQcVerifyMobileNo()) && StringUtils.isNotBlank(mplCustomerProfileData.getMobileNumber())){
+					qcMobileNo=mplCustomerProfileData.getMobileNumber();
+					isChanged=true;
+				}else{
+					qcMobileNo=currentCustomer.getQcVerifyMobileNo();
+				}
+			
+			
+			if(isChanged){
+				final CustomerWalletDetailResponse customerRegisterResponse = editWalletInformtion(currentCustomer, qcFirstName,
+						qcLastName, qcMobileNo);
+				if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
+				{
+					currentCustomer.setIsqcOtpVerify(Boolean.valueOf(true));
+					currentCustomer.setQcVerifyFirstName(qcFirstName);
+					currentCustomer.setQcVerifyLastName(qcLastName);
+					currentCustomer.setQcVerifyMobileNo(qcMobileNo);
+					currentCustomer.setFirstName(qcFirstName);
+					currentCustomer.setLastName(qcLastName);
+					currentCustomer.setMobileNumber(qcMobileNo);
+					modelService.save(currentCustomer);
+					return true;
+				}else{
+					return false;
+				}
+			}
+			}
+		return true;
+	}
+
+	
+	@Override
+	public String qcValidationMobileNo(String mobileNo){
+		CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		if(currentCustomer.getIsWalletActivated()!=null && currentCustomer.getIsWalletActivated().booleanValue()){
+			if(!StringUtils.isNotBlank(mobileNo)){
+				return "MOBILEERROR";
+			}
+		 boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(mobileNo);
+	
+		 if(isUsed){
+			 if(!mobileNo.equalsIgnoreCase(currentCustomer.getMobileNumber())){
+				     generateOTP(currentCustomer, mobileNo);
+					return "OTPCREATED";
+			 }else{
+				 return "success";
+			 }
+			
+		 }else{
+			 if(mobileNo.equalsIgnoreCase(currentCustomer.getMobileNumber())) {
+				 return "success";
+			 } else {
+				 return "USED";
+			 }
+		 }
+		}
+		return "success";
+
+	}
 }

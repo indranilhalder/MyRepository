@@ -69,7 +69,6 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
@@ -210,6 +209,7 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.facades.product.data.YearData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
@@ -478,6 +478,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	MplDeliveryAddressComparator mplDeliveryAddressComparator;
+	
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
 
 	protected PasswordValidator getPasswordValidator()
 	{
@@ -3542,10 +3545,21 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 					else
 					{
+						//Added code for Customer Wallet info Update
+						final boolean isUpdated = mplWalletFacade.customerWalletUpdate(mplCustomerProfileData);
+						if (!isUpdated)
+						{
+							//QC is down without update error message
+							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
+									MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
+						}
+						else
+						{
 						mplCustomerProfileFacade.updateCustomerProfile(mplCustomerProfileData);
 						mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, currentEmail, profileUpdateUrl);
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 								MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
+						}
 					}
 					setHeaderNameInSession(mplCustomerProfileData, session);
 				}
@@ -8545,5 +8559,37 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.error("Error While Getting amount"+excepton.getMessage());
 		}
 		return null;
+	}
+	
+	@RequestMapping(value = RequestMappingUrlConstants.QC_MOBILE_VALIDATION, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public String qcMobileValidation(@RequestParam(value = "mobileNo") final String mobileNo)
+	{
+		return mplWalletFacade.qcValidationMobileNo(mobileNo);
+	}
+
+	@RequestMapping(value = RequestMappingUrlConstants.QC_OTP_VALIDATION, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public String qcOTPValidation(@RequestParam(value = "OTPNumber") final String OTPNumber)
+	{
+		if (StringUtils.isNotBlank(OTPNumber))
+		{
+			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+			final OTPResponseData otpResponseData = mplWalletFacade.validateOTP(customerModel.getUid(), OTPNumber);
+			if (otpResponseData.getOTPValid().booleanValue())
+			{
+				return "SUCCESS";
+			}
+			else
+			{
+				return "OTPERROR";
+			}
+		}
+		else
+		{
+			return "OTPERROR";
+		}
 	}
 }

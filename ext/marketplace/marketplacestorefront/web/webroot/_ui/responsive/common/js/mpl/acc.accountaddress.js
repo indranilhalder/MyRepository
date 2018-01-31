@@ -832,6 +832,7 @@ function validateEmailInvite(email) {
 
 // Update Profile *********************************************
 function validateForm() {
+	var validateFlag = false;
 	$("#errdoaDay,#errdobDay").empty();
 	// var regexCharSpace = /^[a-zA-Z ]*$/;
 	var regexCharSpace = /^[a-zA-Z]+$/;
@@ -1050,6 +1051,15 @@ function validateForm() {
 		$('html, body').animate({
 	        scrollTop: $(".breadcrumbs").offset().top
 	    }, 1000);
+	}
+	//Mobile Verification Check
+	if(!validateFlag) {
+		if(proceed){
+			proceed = false;
+			verifyMobileOtp(proceed);
+		}
+	} else {
+		proceed = true;
 	}
 	return proceed;
 }
@@ -1481,3 +1491,99 @@ $('body.template-pages-account-accountOrderHistoryPage .account .right-account .
     $(".track-order-modal").modal();
 });
 //TPR-6013 track order modal end
+
+//Mobile Verification Method
+var mobileVerifyOtpPopup = document.getElementById('mobileVerificationOtpPopup');
+function verifyMobileOtp(proceed) {
+	var mobileNo=$("#profileMobileNumber").val();
+		$.ajax({
+			type : "POST",
+			data :"mobileNo="+mobileNo,
+			url : ACC.config.encodedContextPath+ "/my-account/qcMobileValidation",
+			success : function(response){
+				if(response=="OTPCREATED") {
+					mobileVerifyOtpPopup.style.display = "block"; 
+				} else if (response == "MOBILEERROR") {
+					$("#errMob").css({
+						"display" : "block",
+						"padding-top" : "10px"
+					});
+					document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number cannot be empty as your CLiQ cash wallet is enabled.</font>";
+				} else if (response == "USED") {
+					$("#errMob").css({
+						"display" : "block",
+						"padding-top" : "10px"
+					});
+					document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number is already used for CLiQ cash wallet. Please try another number.</font>";
+				} else {
+					validateFlag = true;
+					$('#update_personal_details').submit();
+				}
+				
+					  },	
+					failure : function(data) {
+					},
+					
+					complete : function () {
+						return proceed;
+					}
+				}); 
+}
+
+function submitNumberOtp() {
+	alert(validateFlag);
+	var OTPNumber = $('#profile_number_otp_verify').val();
+	$.ajax({
+		type : "POST",
+		data : "OTPNumber="+OTPNumber,
+		url : ACC.config.encodedContextPath+ "/my-account/qcOTPValidation",
+		success : function (response) {
+			if(response=="OTPERROR") {
+				$('#profile_otp_error').text('Invalid OTP. Please try again.');
+			} else if (response=="SUCCESS") {
+				validateFlag = true;
+				$('#update_personal_details').submit();
+			}
+		},
+		failure: function (data) {
+			
+		},
+		complete : function () {
+			
+		}
+	});
+}
+
+
+
+var otpAttempts=0;
+function resendQCOTP() {
+	otpAttempts++;
+	if(otpAttempts <= 5){
+	var mobileNo=$("#profileMobileNumber").val();
+	$.ajax({
+		type : "POST",
+		data : "mobileNo="+mobileNo,
+		url : ACC.config.encodedContextPath+ "/my-account/qcMobileValidation",
+		success : function (response) {
+			if(response==true){
+				$("#profile_otp_error").show();
+				$("#profile_otp_error").text("Resend OTP limit remaining "+(5-otpAttempts));
+				
+			}else{
+				$("#profile_otp_error").show();
+				$("#profile_otp_error").text("OTP sending fail try again ");
+			}
+		},
+		failure: function (data) {
+			
+		},
+		complete : function () {
+			
+		}
+	});
+	}else{
+		$("#profile_otp_error").show();
+		$("#profile_otp_error").text("OTP limt exceeded 5 times, pleae try again");
+	}
+}

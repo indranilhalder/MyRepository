@@ -377,6 +377,7 @@ public class WalletController extends AbstractPageController
 				return REDIRECT_PREFIX + "/login";
 			}
 
+			
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 			if (!currentCustomer.getOriginalUid().equalsIgnoreCase(walletCustomer.getOriginalUid()))
 			{
@@ -384,7 +385,12 @@ public class WalletController extends AbstractPageController
 						"mpl.gift.card.add.error.message.anotheruser");
 				return REDIRECT_PREFIX + "/login";
 			}
-
+			
+			if (currentCustomer.getIsWalletActivated() == null || !currentCustomer.getIsWalletActivated().booleanValue())
+			{
+				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+			}
+			
 			final String cardNumber = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
 					.getCardNumber();
 			final String cardPin = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
@@ -465,14 +471,10 @@ public class WalletController extends AbstractPageController
 				final boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(walletForm.getQcVerifyMobileNo());
 				if (!isUsed)
 				{
-
 					return "isUsed";
 				}
-				//Checking Mobile  number duplicate
-				registerCustomerFacade.registerWalletMobileNumber(walletForm.getQcVerifyFirstName(), walletForm.getQcVerifyLastName(),
+				return getNewCustomerWallet(currentCustomer, walletForm.getQcVerifyFirstName(), walletForm.getQcVerifyLastName(),
 						walletForm.getQcVerifyMobileNo());
-
-				return getNewCustomerWallet(currentCustomer, walletForm.getQcVerifyMobileNo());
 			}
 			else
 			{
@@ -484,7 +486,6 @@ public class WalletController extends AbstractPageController
 			return "OTPERROR";
 		}
 	}
-
 	/**
 	 * @param walletForm
 	 * @param walletCreateData
@@ -499,47 +500,75 @@ public class WalletController extends AbstractPageController
 
 
 
-	/**
-	 * @param currentCustomer
-	 */
-	public String getNewCustomerWallet(final CustomerModel currentCustomer, final String mobileNumber)
+	public String getNewCustomerWallet(final CustomerModel currentCustomer, final String firstName, final String lastName,
+			final String mobileNumber)
 	{
-		final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-		final Customer custInfo = new Customer();
-		custInfo.setEmail(currentCustomer.getOriginalUid());
-		custInfo.setEmployeeID(currentCustomer.getUid());
-		custInfo.setCorporateName("Tata Unistore Ltd");
-
-		if (null != currentCustomer.getFirstName())
+		if (currentCustomer.getIsWalletActivated() != null && currentCustomer.getIsWalletActivated().booleanValue())
 		{
-			custInfo.setFirstname(currentCustomer.getFirstName());
+			final CustomerWalletDetailResponse customerUpdateResponse = mplWalletFacade.editWalletInformtion(currentCustomer,
+					firstName, lastName, mobileNumber);
+			if (null != customerUpdateResponse.getResponseCode() && customerUpdateResponse.getResponseCode() == Integer.valueOf(0))
+			{
+				currentCustomer.setIsqcOtpVerify(Boolean.valueOf(true));
+				currentCustomer.setQcVerifyFirstName(firstName);
+				currentCustomer.setQcVerifyLastName(lastName);
+				currentCustomer.setQcVerifyMobileNo(mobileNumber);
+				currentCustomer.setFirstName(firstName);
+				currentCustomer.setLastName(lastName);
+				currentCustomer.setMobileNumber(mobileNumber);
+				modelService.save(currentCustomer);
+				return "success";
+			}
+			else
+			{
+				return "qcDown";
+			}
 		}
-		if (null != currentCustomer.getLastName())
+		else
 		{
-			custInfo.setLastName(currentCustomer.getLastName());
-		}
-		if (null != mobileNumber)
-		{
-			custInfo.setPhoneNumber(mobileNumber);
-		}
 
-		customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
-		customerRegisterReq.setCustomer(custInfo);
-		customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
-		final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
-		if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
-		{
-			final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-			custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-			custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-			custWalletDetail.setCustomer(currentCustomer);
-			custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-			modelService.save(custWalletDetail);
-			currentCustomer.setCustomerWalletDetail(custWalletDetail);
-			currentCustomer.setIsWalletActivated(true);
-			modelService.save(currentCustomer);
+			final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+			final Customer custInfo = new Customer();
+			custInfo.setEmail(currentCustomer.getOriginalUid());
+			custInfo.setEmployeeID(currentCustomer.getUid());
+			custInfo.setCorporateName("Tata Unistore Ltd");
+			if (null != firstName)
+			{
+				custInfo.setFirstname(firstName);
+			}
+			if (null != lastName)
+			{
+				custInfo.setLastName(lastName);
+			}
+			if (null != mobileNumber)
+			{
+				custInfo.setPhoneNumber(mobileNumber);
+			}
 
-			return "success";
+			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
+			customerRegisterReq.setCustomer(custInfo);
+			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
+			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
+			if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
+			{
+				final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+				custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
+				custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
+				custWalletDetail.setCustomer(currentCustomer);
+				custWalletDetail.setServiceProvider("Tata Unistore Ltd");
+				modelService.save(custWalletDetail);
+				currentCustomer.setCustomerWalletDetail(custWalletDetail);
+				currentCustomer.setIsWalletActivated(true);
+				currentCustomer.setQcVerifyFirstName(firstName);
+				currentCustomer.setQcVerifyLastName(lastName);
+				currentCustomer.setIsqcOtpVerify(true);
+				currentCustomer.setQcVerifyMobileNo(mobileNumber);
+				currentCustomer.setFirstName(firstName);
+				currentCustomer.setLastName(lastName);
+				currentCustomer.setMobileNumber(mobileNumber);
+				modelService.save(currentCustomer);
+				return "success";
+			}
 		}
 		return "qcDown";
 	}

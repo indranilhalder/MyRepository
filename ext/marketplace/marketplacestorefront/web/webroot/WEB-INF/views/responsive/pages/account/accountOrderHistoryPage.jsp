@@ -29,7 +29,11 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 
-
+<style>
+#closePop {
+	float: right;
+}
+</style>
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
@@ -603,7 +607,7 @@
 															<c:forEach items="${egvStatusMap}" var="entryforEgv">
 																
 																	<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
-																	<div class="status orderRedeemedStatusInfo"><span>REDEEMED</span></div><br />
+																	<div class="status orderRedeemedStatusInfo"><span>VALIDATED</span></div><br />
 																	<div class="statusDate">
 																              <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Redeemed:" /></span>&nbsp;
 																              <c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
@@ -1144,6 +1148,7 @@
 	</div>
 	<div class="modal fade track-order-modal" id="track-order-modal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
+	  <button type="button" onclick="closepop()" id="closePop">Click</button>
 		<div class="overlay" data-dismiss="modal"></div>
 		<div class="content"></div>
 	</div>
@@ -1213,12 +1218,7 @@ $(".get_order_statement").click(function() {
 		   });
 });
 
-window.onclick = function(event) {
-    if (event.target == showStatementModel) {
-     showStatementModel.style.display = "none";
-    }
-}
-showStatementPopup.onclick = function() {
-showStatementModel.style.display = "none";
+function closepop(){
+	createWalletModel.style.display = "none";
 }
 </script>
