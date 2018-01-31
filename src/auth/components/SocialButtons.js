@@ -23,7 +23,7 @@ export default class SocialButtons extends Component {
   render() {
     return (
       <div>
-        <MediaQuery query="(min-device-width: 1024px)">
+        <MediaQuery query="(min-device-width: 1025px)">
           <div className={styles.textHolder}>
             <p className={styles.title}>{this.props.titleText}</p>
           </div>
@@ -47,7 +47,7 @@ export default class SocialButtons extends Component {
             </div>
           </div>
         </MediaQuery>
-        <MediaQuery query="(max-device-width: 1023px)">
+        <MediaQuery query="(max-device-width: 1024px)">
           <div className={styles.textHolder}>
             <p className={styles.title}>{this.props.titleText}</p>
           </div>
