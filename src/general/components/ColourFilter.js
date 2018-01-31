@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ColourFilter.css";
-import ColourAdd from "./ColourAdd";
+import ColourAdd from "./ColourSelect";
 import Carousel from "./Carousel";
 import PropTypes from "prop-types";
 
