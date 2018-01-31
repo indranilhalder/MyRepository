@@ -3555,7 +3555,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							//QC is down without update error message
 							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
-									MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
+									MessageConstants.TEXT_ACCOUNT_PROFILE_QC_SERVER_ERROR, null);
 						}
 						else
 						{
@@ -3563,9 +3563,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 						mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, currentEmail, profileUpdateUrl);
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 								MessageConstants.TEXT_ACCOUNT_PROFILE_CONFIRMATION_UPDATED, null);
+						setHeaderNameInSession(mplCustomerProfileData, session);
 						}
 					}
-					setHeaderNameInSession(mplCustomerProfileData, session);
 				}
 				catch (final DuplicateUidException e)
 				{
