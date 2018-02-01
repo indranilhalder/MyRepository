@@ -163,7 +163,7 @@
 		</div>		
 	</div>
 	</div>
-	<nav class="main-nav" id="main-nav">				   
+	<nav class="main-nav" id="main-nav" style="z-index: 0;">				   
 					
 						<cms:pageSlot position="NavigationBar" var="feature">
 							<cms:component component="${feature}" />
