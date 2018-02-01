@@ -18,7 +18,7 @@ export default class ColourAdd extends React.Component {
         <div className={styles.content}>
           <div
             className={styles.color}
-            style={{ background: this.props.backgroundColor }}
+            style={{ background: this.props.colour }}
           />
           <div className={styles.ovalImage}>
             <div className={classActive} onClick={() => this.handleClick()} />

@@ -14,7 +14,7 @@ export default class ColourFilter extends React.Component {
             return (
               <ColourAdd
                 key={i}
-                backgroundColor={datum.colour}
+                colour={datum.colour}
                 selected={this.props.selected}
                 onSelect={this.props.onSelect}
               />
@@ -29,7 +29,7 @@ ColourFilter.propTypes = {
   onSelect: PropTypes.func,
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      backgroundColor: PropTypes.string,
+      colour: PropTypes.string,
       selected: PropTypes.bool
     })
   )
