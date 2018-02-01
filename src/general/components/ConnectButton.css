@@ -3,11 +3,3 @@
   top: 0px;
   right: 0;
 }
-@media only screen and (max-width: 1024px) {
-  .connectButtonHolder {
-    top: initial;
-    right: initial;
-    bottom: 0px;
-    left: 0;
-  }
-}
