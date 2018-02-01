@@ -1536,62 +1536,6 @@ public class HomePagePwAmpController extends HomePageController
 
 	/**
 	 *
-	 * @param session
-	 * @return Map<String, Map<String, Object>>
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/setheaderamp", method = RequestMethod.GET)
-	public Map<String, Map<String, Object>> setHeaderDataAmp(final HttpSession session)
-	{
-
-		final Map<String, Object> header = new HashMap<String, Object>();
-
-		//customer name in the header
-		if (!userFacade.isAnonymousUser())
-		{
-			header.put("loggedInStatus", true);
-			final Object sessionDisplayName = session.getAttribute(userFirstName);
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-
-			if (sessionDisplayName == null)
-			{
-
-				String firstName = currentCustomer.getName();
-				if (StringUtils.isNotEmpty(firstName))
-				{
-					if (StringUtils.contains(firstName, '@'))
-					{
-						firstName = StringUtils.EMPTY;
-					}
-					else if (StringUtils.length(firstName) > 25)
-					{
-						firstName = StringUtils.substring(firstName, 0, 25);
-					}
-				}
-				else
-				{
-					firstName = StringUtils.EMPTY;
-				}
-				header.put(userFirstName, firstName);
-				session.setAttribute(userFirstName, firstName);
-			}
-			else
-			{
-				header.put(userFirstName, sessionDisplayName);
-			}
-		}
-		else
-		{
-			header.put("loggedInStatus", false);
-			header.put(userFirstName, null);
-		}
-		final Map<String, Map<String, Object>> items = new HashMap<String, Map<String, Object>>();
-		items.put("items", header);
-		return items;
-	}
-
-	/**
-	 *
 	 * @param resultData
 	 *
 	 */
