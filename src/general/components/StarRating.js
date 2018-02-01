@@ -27,7 +27,7 @@ export default class StarRating extends React.Component {
       <div className={styles.base}>
         <div className={styles.starHolder}>{starSpans}</div>
         {this.props.children && (
-          <div className={styles.ratingNumber}>{this.props.children}</div>
+          <div className={styles.content}>{this.props.children}</div>
         )}
       </div>
     );
