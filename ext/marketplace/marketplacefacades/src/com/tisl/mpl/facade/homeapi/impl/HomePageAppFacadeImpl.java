@@ -35,16 +35,10 @@ import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
-import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
-import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselJSONDTO;
-import com.tisl.mpl.wsdto.BannersCarouselDTO;
-import com.tisl.mpl.wsdto.BannersCarouselJSONDTO;
 import com.tisl.mpl.wsdto.HomeProductsDTO;
+import com.tisl.mpl.wsdto.HomepageComponenetJSONDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
-import com.tisl.mpl.wsdto.ThemeOffersDTO;
-import com.tisl.mpl.wsdto.ThemeOffersJSONDTO;
-import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
-import com.tisl.mpl.wsdto.VideoProductJSONDTO;
+import com.tisl.mpl.wsdto.HomepageComponetsDTO;
 
 
 /**
@@ -139,94 +133,30 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		this.productConverter = productConverter;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.facade.homeapi.HomePageAppFacade#getThemeOffersComponentDTO(com.tisl.mpl.wsdto.ThemeOffersRequestDTO,
-	 * com.tisl.mpl.wsdto.ThemeOffersJSONDTO)
-	 */
+
 	@Override
-	public ThemeOffersDTO getThemeOffersComponentDTO(final HomepageComponentRequestDTO themeOffersRequestDTO)
+	public HomepageComponetsDTO gethomepageComponentsDTO(final HomepageComponentRequestDTO homepageComponentRequestDTO)
 			throws EtailNonBusinessExceptions
 	{
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
-		final ThemeOffersDTO finalThemeOffersDTO = new ThemeOffersDTO();
-		ThemeOffersJSONDTO themeOffersJSONDTO = null;
-		String themeOffersJSONString = MarketplaceFacadesConstants.EMPTY;
+		final HomepageComponetsDTO finalHomepageComponetsDTO = new HomepageComponetsDTO();
+		HomepageComponenetJSONDTO homepageComponenetJSONDTO = null;
+		String homepageComponenetJSONString = MarketplaceFacadesConstants.EMPTY;
+
 		try
 		{
 			List<String> productCodes = new ArrayList<String>();
 			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
-			if (StringUtils.isNotEmpty(themeOffersRequestDTO.getContent()))
+			if (StringUtils.isNotEmpty(homepageComponentRequestDTO.getContent()))
 			{
-				themeOffersJSONString = themeOffersRequestDTO.getContent();
+				homepageComponenetJSONString = homepageComponentRequestDTO.getContent();
 			}
-
-			if (StringUtils.isNotEmpty(themeOffersJSONString))
+			homepageComponenetJSONDTO = mapper.readValue(homepageComponenetJSONString, HomepageComponenetJSONDTO.class);
+			if (CollectionUtils.isNotEmpty(homepageComponenetJSONDTO.getItemIds()))
 			{
-				themeOffersJSONDTO = mapper.readValue(themeOffersJSONString, ThemeOffersJSONDTO.class);
-			}
-
-			productCodes = themeOffersJSONDTO.getItemIds();
-
-			if (CollectionUtils.isNotEmpty(productCodes))
-			{
-				final String commaSepartedProductCodes = StringUtils.join(productCodes, ",");
-				buyBoxModelList = buyBoxService.buyboxPrice(commaSepartedProductCodes);
-			}
-
-			if (CollectionUtils.isNotEmpty(buyBoxModelList))
-			{
-				finalProductsDTO = this.compareDataWithBuyBox(productCodes, buyBoxModelList);
-
-			}
-			finalThemeOffersDTO.setOffers(themeOffersJSONDTO.getItems());
-			finalThemeOffersDTO.setItems(finalProductsDTO);
-		}
-		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-		{
-			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
-			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.H9001);
-		}
-
-		return finalThemeOffersDTO;
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getBannerProductCarouselDTO(com.tisl.mpl.facade.homeapi.
-	 * HomepageComponentRequestDTO, java.lang.String)
-	 */
-	@Override
-	public BannersCarouselDTO getBannerProductCarouselDTO(final HomepageComponentRequestDTO bannerCarouselRequestDTO)
-			throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
-		final BannersCarouselDTO finalBannersCarouselDTO = new BannersCarouselDTO();
-		BannersCarouselJSONDTO bannersCarouselJSONDTO = null;
-		String bannerProductcarouselJsonString = MarketplaceFacadesConstants.EMPTY;
-		try
-		{
-			List<String> productCodes = new ArrayList<String>();
-			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
-			if (StringUtils.isNotEmpty(bannerCarouselRequestDTO.getContent()))
-			{
-				bannerProductcarouselJsonString = bannerCarouselRequestDTO.getContent();
-			}
-
-			bannersCarouselJSONDTO = mapper.readValue(bannerProductcarouselJsonString, BannersCarouselJSONDTO.class);
-
-			if (CollectionUtils.isNotEmpty(bannersCarouselJSONDTO.getItemIds()))
-			{
-				productCodes = bannersCarouselJSONDTO.getItemIds();
+				productCodes = homepageComponenetJSONDTO.getItemIds();
 			}
 
 			if (CollectionUtils.isNotEmpty(productCodes))
@@ -240,132 +170,16 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 				finalProductsDTO = this.compareDataWithBuyBox(productCodes, buyBoxModelList);
 
 			}
-			finalBannersCarouselDTO.setTitle(bannersCarouselJSONDTO.getTitle());
-			finalBannersCarouselDTO.setDescription(bannersCarouselJSONDTO.getDescription());
-			finalBannersCarouselDTO.setImageURL(bannersCarouselJSONDTO.getImageURL());
-			finalBannersCarouselDTO.setItems(finalProductsDTO);
+			finalHomepageComponetsDTO.setItems(finalProductsDTO);
 		}
+
 		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
 			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.H9001);
 		}
-
-		return finalBannersCarouselDTO;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getVideoProductCarouselDTO(com.tisl.mpl.facade.homeapi.
-	 * HomepageComponentRequestDTO, java.lang.String)
-	 */
-	@Override
-	public VideoProductCaraouselDTO getVideoProductCarouselDTO(final HomepageComponentRequestDTO videoProductCaraouselRequestDTO)
-			throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
-		final VideoProductCaraouselDTO finalVideoProductCaraouselDTO = new VideoProductCaraouselDTO();
-		VideoProductJSONDTO videoProductJSONDTO = null;
-		String videoProductcarouselJsonString = MarketplaceFacadesConstants.EMPTY;
-		try
-		{
-			List<String> productCodes = new ArrayList<String>();
-			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
-			if (StringUtils.isNotEmpty(videoProductCaraouselRequestDTO.getContent()))
-			{
-				videoProductcarouselJsonString = videoProductCaraouselRequestDTO.getContent();
-			}
-			videoProductJSONDTO = mapper.readValue(videoProductcarouselJsonString, VideoProductJSONDTO.class);
-			if (CollectionUtils.isNotEmpty(videoProductJSONDTO.getItemIds()))
-			{
-				productCodes = videoProductJSONDTO.getItemIds();
-			}
-
-			if (CollectionUtils.isNotEmpty(productCodes))
-			{
-				final String commaSepartedProductCodes = StringUtils.join(productCodes, ",");
-				buyBoxModelList = buyBoxService.buyboxPrice(commaSepartedProductCodes);
-			}
-
-			if (CollectionUtils.isNotEmpty(buyBoxModelList))
-			{
-				finalProductsDTO = this.compareDataWithBuyBox(productCodes, buyBoxModelList);
-
-			}
-			finalVideoProductCaraouselDTO.setTitle(videoProductJSONDTO.getTitle());
-			finalVideoProductCaraouselDTO.setDescription(videoProductJSONDTO.getDescription());
-			finalVideoProductCaraouselDTO.setImageURL(videoProductJSONDTO.getImageURL());
-			finalVideoProductCaraouselDTO.setVideoURL(videoProductJSONDTO.getVideoURL());
-			finalVideoProductCaraouselDTO.setItems(finalProductsDTO);
-		}
-		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-		{
-			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
-			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.H9001);
-		}
-
-		return finalVideoProductCaraouselDTO;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.homeapi.HomePageAppFacade#getautomatedBrandCarouselDTO(com.tisl.mpl.facade.homeapi.
-	 * HomepageComponentRequestDTO, java.lang.String)
-	 */
-	@Override
-	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselDTO(final HomepageComponentRequestDTO automatedBrandRequestDTO)
-			throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
-		final AutomatedBrandProductCarouselDTO finalAutomatedBrandProductCarouselDTO = new AutomatedBrandProductCarouselDTO();
-		AutomatedBrandProductCarouselJSONDTO automatedBrandProductCarouselJSONDTO = null;
-		String automatedBrandCaraouselJsonString = MarketplaceFacadesConstants.EMPTY;
-		try
-		{
-			List<String> productCodes = new ArrayList<String>();
-			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
-			if (StringUtils.isNotEmpty(automatedBrandRequestDTO.getContent()))
-			{
-				automatedBrandCaraouselJsonString = automatedBrandRequestDTO.getContent();
-			}
-			automatedBrandProductCarouselJSONDTO = mapper.readValue(automatedBrandCaraouselJsonString,
-					AutomatedBrandProductCarouselJSONDTO.class);
-			if (CollectionUtils.isNotEmpty(automatedBrandProductCarouselJSONDTO.getItemIds()))
-			{
-				productCodes = automatedBrandProductCarouselJSONDTO.getItemIds();
-			}
-
-			if (CollectionUtils.isNotEmpty(productCodes))
-			{
-				final String commaSepartedProductCodes = StringUtils.join(productCodes, ",");
-				buyBoxModelList = buyBoxService.buyboxPrice(commaSepartedProductCodes);
-			}
-
-			if (CollectionUtils.isNotEmpty(buyBoxModelList))
-			{
-				finalProductsDTO = this.compareDataWithBuyBox(productCodes, buyBoxModelList);
-
-			}
-			finalAutomatedBrandProductCarouselDTO.setBrandLogo(automatedBrandProductCarouselJSONDTO.getBrandLogo());
-			finalAutomatedBrandProductCarouselDTO.setDescription(automatedBrandProductCarouselJSONDTO.getDescription());
-			finalAutomatedBrandProductCarouselDTO.setImageURL(automatedBrandProductCarouselJSONDTO.getImageURL());
-			finalAutomatedBrandProductCarouselDTO.setItems(finalProductsDTO);
-		}
-		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-		{
-			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
-			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.H9001);
-		}
-
-		return finalAutomatedBrandProductCarouselDTO;
+		return finalHomepageComponetsDTO;
+		//
 	}
 
 
