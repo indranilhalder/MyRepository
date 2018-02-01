@@ -8601,7 +8601,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private void walletActivateCheck(final Model model)
 	 {
 	  final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-	  if (customer.getIsWalletActivated() != null)
+	  if (customer.getIsWalletActivated() != null && customer.getIsWalletActivated().booleanValue())
 	  {
 	   model.addAttribute("isWalletActivated", Boolean.TRUE);
 	  }
