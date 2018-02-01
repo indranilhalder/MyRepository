@@ -18,9 +18,6 @@ export default class ProductVideo extends React.Component {
     }
     return (
       <div className={styles.base}>
-        <div className={styles.video}>
-          <Image image={this.props.image} color="transparent" />
-        </div>
         <div className={styles.video} style={{ backgroundColor: "#212121" }}>
           <Video url={this.props.url} playing={this.state.playing} />
         </div>
@@ -30,6 +27,9 @@ export default class ProductVideo extends React.Component {
             this.setState({ playing: !this.state.playing });
           }}
         >
+          <div className={styles.video}>
+            <Image image={this.props.image} color="transparent" />
+          </div>
           <div className={styles.logoHolder}>
             <div className={styles.logo}>
               <Logo image={this.props.logo} />

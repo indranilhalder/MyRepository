@@ -5,8 +5,8 @@ configure({ adapter: new Adapter() });
 
 window.matchMedia = query => {
   const queryMap = {
-    "(min-device-width: 1024px)": () => window.innerWidth >= 1024,
-    "(max-device-width:1023px)": () => window.innerWidth < 1024
+    "(min-device-width: 1025px)": () => window.innerWidth >= 1025,
+    "(max-device-width:1024px)": () => window.innerWidth <= 1024
   };
 
   const queryValue = queryMap[query];
