@@ -21,9 +21,7 @@ export default class ColourAdd extends React.Component {
             style={{ background: this.props.backgroundColor }}
           />
           <div className={styles.ovalImage}>
-            <div className={classActive} onClick={() => this.handleClick()}>
-              {this.props.colour}
-            </div>
+            <div className={classActive} onClick={() => this.handleClick()} />
           </div>
         </div>
       </div>
@@ -31,6 +29,7 @@ export default class ColourAdd extends React.Component {
   }
 }
 ColourAdd.propTypes = {
+  onClick: PropTypes.func,
   colour: PropTypes.string,
   selected: PropTypes.bool
 };

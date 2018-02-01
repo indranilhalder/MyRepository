@@ -26,6 +26,7 @@ export default class ColourFilter extends React.Component {
   }
 }
 ColourFilter.propTypes = {
+  onSelect: PropTypes.func,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       backgroundColor: PropTypes.string,
