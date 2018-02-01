@@ -15,6 +15,7 @@ import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
 import FlashSale from "./FlashSale";
 import OfferWidget from "./OfferWidget.js";
+import DiscoverMore500 from "./DiscoverMore500.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
@@ -42,6 +43,7 @@ const typeComponentMapping = {
   bannerSeparator: props => <BannerSeparator {...props} />,
   productCapsules: props => <ProductCapsules {...props} />,
   discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
+  discoverMoreWidget: props => <DiscoverMore500 {...props} />,
   followedWidget: props => <FollowingBrands {...props} />
 };
 
