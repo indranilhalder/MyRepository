@@ -51,6 +51,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -140,6 +141,7 @@ public class SearchPageController extends AbstractSearchPageController
 	private static final String DROPDOWN_MICROSITE_CATEGORY = "category-";
 	//private static final String DROPDOWN_SELLER = "seller-"; Avoid unused private fields such as 'DROPDOWN_SELLER'.
 
+	private static final String LUX_SEARCH_CATEGORIES = "lux.search.categories";
 
 	private static final String NEW_EXCLUSIVE_BREADCRUMB = "Discover New & Exclusive";
 	private static final String LAST_LINK_CLASS = "active";
@@ -232,7 +234,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 *
+	 * 
 	 * @param searchText
 	 * @param dropDownText
 	 * @param request
@@ -328,21 +330,21 @@ public class SearchPageController extends AbstractSearchPageController
 
 					if (!allSearchFlag)
 					{
-						if (dropDownValue.startsWith(DROPDOWN_CATEGORY) || dropDownValue.startsWith(DROPDOWN_BRAND))
+
+						final String searchCategories = Config.getParameter(LUX_SEARCH_CATEGORIES);
+						final String[] searchCategoryArray = searchCategories.split(",");
+						if (dropDownValue.startsWith(DROPDOWN_CATEGORY) || dropDownValue.startsWith(DROPDOWN_BRAND)
+								|| StringUtils.startsWithAny(dropDownValue, searchCategoryArray))
 						{
 							searchPageData = searchFacade.searchCategorySearch(dropDownValue, searchState, pageableData);
 							whichSearch = dropDownValue;
 						}
-						else
+						if (!commonUtils.isLuxurySite())
 						{
-							searchPageData = searchFacade.dropDownSearch(searchState, dropDownValue, MarketplaceCoreConstants.SELLER_ID,
-									pageableData);
-							whichSearch = dropDownValue;
-						}
-
-						if (searchPageData != null && searchPageData.getPagination().getTotalNumberOfResults() == 0)
-						{
-							allSearchFlag = true;
+							if (searchPageData != null && searchPageData.getPagination().getTotalNumberOfResults() == 0)
+							{
+								allSearchFlag = true;
+							}
 						}
 					}
 
@@ -398,7 +400,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 			}
 			//PR-23 start
-			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			if (searchPageData.getPagination().getTotalNumberOfResults() == 0 && !commonUtils.isLuxurySite())
 			{
 				if (StringUtils.isNotEmpty(searchPageData.getFreeTextSearch()))
 				{
@@ -491,6 +493,11 @@ public class SearchPageController extends AbstractSearchPageController
 			setUpMetaData(model, metaKeywords, metaDescription);
 
 			model.addAttribute("dropDownText", dropDownText);
+			if (commonUtils.isLuxurySite())
+			{
+				final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
+				model.addAttribute("searchCategoryName", categoryForCode.getName());
+			}
 			model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
 			model.addAttribute("autoselectSearchDropDown", Boolean.FALSE);
 			model.addAttribute("isConceirge", "false");
@@ -582,6 +589,7 @@ public class SearchPageController extends AbstractSearchPageController
 	{ REFINE_FACET_SEARCH_URL_PATTERN_1, REFINE_FACET_SEARCH_URL_PATTERN_2 })
 	public String refineFacetSearch(@RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
+			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String categorySearch,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
@@ -589,7 +597,7 @@ public class SearchPageController extends AbstractSearchPageController
 			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
 
-		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model, categorySearch);
 		//CKD:TPR-250 :Start
 		if (null != searchQuery && searchQuery.contains("sellerId:"))
 		{
@@ -615,7 +623,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -631,6 +639,7 @@ public class SearchPageController extends AbstractSearchPageController
 	public String refineSearch(@RequestParam("q") final String searchQuery,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SEARCH_CATEGORY, required = false) final String categorySearch,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -639,7 +648,7 @@ public class SearchPageController extends AbstractSearchPageController
 	{
 		//UF-15,16
 		pageSize = PAGE_SIZE;
-		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model, categorySearch);
 		if (null != lazyInterface && lazyInterface.equals("Y"))
 		{
 			model.addAttribute("lazyInterface", Boolean.TRUE);
@@ -680,8 +689,8 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param model
 	 */
 	private void populateRefineSearchResult(final String searchQuery, int page, final ShowMode showMode, final String sortCode,
-			final String searchText, final Integer pageSize, final HttpServletRequest request, final Model model)
-			throws CMSItemNotFoundException
+			final String searchText, final Integer pageSize, final HttpServletRequest request, final Model model,
+			final String selectedCategory) throws CMSItemNotFoundException
 	{
 		final String uri = request.getRequestURI();
 		final String pageTitle = "";
@@ -712,13 +721,14 @@ public class SearchPageController extends AbstractSearchPageController
 		// Get page facets to include in facet field exclude tag
 		final String pageFacets = request.getParameter("pageFacetData");
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-				searchQuery, page, showMode, sortCode, count, pageFacets);
+				searchQuery, page, showMode, sortCode, count, pageFacets, selectedCategory);
 		model.addAttribute("currentQuery", searchPageData.getCurrentQuery().getQuery().getValue());
 		searchPageData = updatePageData(searchPageData, null, searchQuery);
 		/* Storing the user preferred search results count - END */
 		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
 		String searchCode = searchCategory;
-		if (searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY))
+
+		if (!commonUtils.isLuxurySite() && (searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY)))
 		{
 			if (searchCategory.substring(0, 5).equals(searchCategory))
 			{
@@ -732,6 +742,11 @@ public class SearchPageController extends AbstractSearchPageController
 
 		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
 		model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
+		if (commonUtils.isLuxurySite() && searchCategory != null)
+		{
+			final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
+			model.addAttribute("searchCategoryName", categoryForCode.getName());
+		}
 		model.addAttribute(ModelAttributetConstants.IS_CONCEIRGE, "false");
 		if (searchPageData != null)
 		{
@@ -832,7 +847,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -841,7 +856,7 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @return ProductSearchPageData
 	 */
 	protected ProductSearchPageData<SearchStateData, ProductData> performSearch(final String searchQuery, final int page,
-			final ShowMode showMode, final String sortCode, final int pageSize, final String pageFacets)
+			final ShowMode showMode, final String sortCode, final int pageSize, final String pageFacets, final String searchCategory)
 	{
 		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 		pageableData.setPageFacets(pageFacets);
@@ -851,12 +866,21 @@ public class SearchPageController extends AbstractSearchPageController
 		searchQueryData.setValue(searchQuery);
 		searchState.setQuery(searchQueryData);
 		String sellerId = null;
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = new ProductCategorySearchPageData();
 		if (searchQuery != null && searchQuery.indexOf("sellerId:") > 1)
 		{
 			sellerId = searchQuery.substring(searchQuery.indexOf("sellerId:") + 9, searchQuery.indexOf("sellerId:") + 15);
 		}
-		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-				.textSearch(searchState, pageableData);
+
+		if (commonUtils.isLuxurySite())
+		{
+			searchPageData = productSearchFacade.categorySearch(searchCategory, searchState, pageableData);
+		}
+		else
+		{
+			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+					.textSearch(searchState, pageableData);
+		}
 
 		//PR-23 start
 		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
@@ -884,7 +908,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -900,7 +924,7 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "sort", required = false) final String sortCode) throws CMSItemNotFoundException
 	{
 		final ProductSearchPageData<SearchStateData, ProductData> searchPageData = performSearch(searchQuery, page, showMode,
-				sortCode, getSearchPageSize(), null);
+				sortCode, getSearchPageSize(), null, null);
 		final SearchResultsData<ProductData> searchResultsData = new SearchResultsData<>();
 		searchResultsData.setResults(searchPageData.getResults());
 		searchResultsData.setPagination(searchPageData.getPagination());
@@ -910,7 +934,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 	/**
 	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS UPLOADED BY BUSINESS AS PROMOTED PRODUCTS
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -934,7 +958,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 	/**
 	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS UPLOADED BY BUSINESS AS PROMOTED PRODUCTS BY AJAX CALL
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -1094,7 +1118,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -1126,7 +1150,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param componentUid
 	 * @param term
 	 * @param category
@@ -1216,7 +1240,10 @@ public class SearchPageController extends AbstractSearchPageController
 				else
 				//if (!allSearchFlag)
 				{
-					if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
+					final String searchCategories = Config.getParameter(LUX_SEARCH_CATEGORIES);
+					final String[] searchCategoryArray = searchCategories.split(",");
+					if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND)
+							|| StringUtils.startsWithAny(category, searchCategoryArray))
 					{
 						searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
 					}
@@ -1257,7 +1284,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param age
 	 * @param genderOrTitle
 	 * @param typeOfProduct
@@ -1366,7 +1393,7 @@ public class SearchPageController extends AbstractSearchPageController
 		if (searchQuery != null)
 		{
 			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-					searchQuery, page, showMode, sortCode, getSearchPageSize(), null);
+					searchQuery, page, showMode, sortCode, getSearchPageSize(), null, null);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
 			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
 			{
@@ -1421,7 +1448,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 *
+	 * 
 	 * @param list
 	 * @param maxElements
 	 * @return List
@@ -1437,7 +1464,7 @@ public class SearchPageController extends AbstractSearchPageController
 	 */
 
 	/**
-	 *
+	 * 
 	 * @param searchText
 	 * @param model
 	 */
@@ -1463,9 +1490,9 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param resultData
-	 *
+	 * 
 	 */
 	private void cleanSearchResults(final List<ProductData> resultData)
 	{
@@ -1647,12 +1674,13 @@ public class SearchPageController extends AbstractSearchPageController
 
 	/**
 	 * This is the GET method which fetches the bank last modified wishlist in PLP
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = "/getLastModifiedWishlistByPcode", method = RequestMethod.GET)
-	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("pcode") final String pcode)
+	public @ResponseBody
+	boolean getLastModifiedWishlist(@RequestParam("pcode") final String pcode)
 	{
 		boolean existPcode = false;
 

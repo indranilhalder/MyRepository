@@ -6,7 +6,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
 <c:url value="/page-0" var="queryUrl"/>
-<c:url value="/search/?q=${searchPageData.freeTextSearch}" var="resetQueryUrlSearch"/>
+<c:url value="/search/?text=${searchPageData.freeTextSearch}&searchCategory=${searchCategory}" var="resetQueryUrlSearch"/>
 <div class="filter-box">
 	<div class="filter-choosed">
 		<h5 class="mb-20">Filtered by <span>${searchPageData.pagination.totalNumberOfResults} items found</span></h5>
@@ -14,7 +14,7 @@
 	<ul class="">
 		<c:forEach items="${searchPageData.breadcrumbs}" var="breadcrumb" varStatus="linkIndex">
 			<c:set var="patternToReplace" value="/page-{pageNo}"/>
-			<li class="remove-filter" data-facetCode="${breadcrumb.facetValueCode}" data-removeUrl="${fn:replace(breadcrumb.removeQuery.url,patternToReplace,queryUrl)}">
+			<li class="remove-filter" data-facetCode="${breadcrumb.facetValueCode}" data-removeUrl="${fn:replace(breadcrumb.removeQuery.url,patternToReplace,queryUrl)}<c:if test="${not empty searchPageData.freeTextSearch}">&searchCategory=${searchCategory}</c:if>">
 				<span class="filter-heading">${breadcrumb.facetName} : </span>
 				<span class="filter-name">${breadcrumb.facetValueName}</span>
 			</li>

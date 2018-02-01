@@ -38,4 +38,25 @@ public class CommonUtilsImpl implements CommonUtils
 		}
 		return isLuxury;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.lux.facade.CommonUtils#isMplSite()
+	 */
+	@Override
+	public boolean isMplSite()
+	{
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
+
+		boolean isMpl = false;
+
+		if (MarketplaceFacadesConstants.MplPrefix.equals(site))
+		{
+			isMpl = true;
+		}
+		return isMpl;
+
+	}
 }

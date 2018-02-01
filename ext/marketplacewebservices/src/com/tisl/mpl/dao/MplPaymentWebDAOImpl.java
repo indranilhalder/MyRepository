@@ -6,6 +6,7 @@ package com.tisl.mpl.dao;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -336,6 +337,11 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 				customer = customerList.get(0);
 				return customer;
 			}
+			if (customerList.size() > 1)
+			{
+				throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + customerList.size()
+						+ " users with the unique uid '" + userId + "'");
+			}
 			else
 			{
 				return null;
@@ -358,7 +364,7 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.dao.MplPaymentWebDAO#orderPromotions()
 	 */
 	@Override

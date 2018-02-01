@@ -37,7 +37,7 @@
 
 
                 <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Bad news: the payment for your order has been declined for some reason. We're not sure what went wrong. 
-				Click here to place the order again.<br>
+				<a href="https://luxury.tatacliq.com">Click here to place the order again.</a><br>
                 <br>
                 </font></td>
 

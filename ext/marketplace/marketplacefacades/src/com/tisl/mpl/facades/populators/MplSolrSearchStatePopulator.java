@@ -29,9 +29,12 @@ import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import reactor.util.CollectionUtils;
+
+import com.tisl.lux.facade.CommonUtils;
 
 
 /**
@@ -45,6 +48,10 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 	/**
 	 *
 	 */
+
+	@Autowired
+	private CommonUtils commonUtils;
+
 	private static final String PAGE_PAGE_NO_Q = "/page-{pageNo}?q=";
 	private String searchPath;
 	private UrlResolver<CategoryData> categoryDataUrlResolver;
@@ -97,7 +104,14 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 			if (CollectionUtils.isEmpty(source.getFilterTerms()) && source.getSort().equals("relevance"))
 			{
-				target.setUrl(getCategoryUrl(source) + "/page-{pageNo}");
+				if (commonUtils.isLuxurySite() && source.getFreeTextSearch() != null)
+				{
+					target.setUrl("/search" + buildUrlQueryString(source, target));
+				}
+				else
+				{
+					target.setUrl(getCategoryUrl(source) + "/page-{pageNo}");
+				}
 			}
 			else
 			{
@@ -205,7 +219,14 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 	protected void populateCategorySearchUrl(final SolrSearchQueryData source, final SearchStateData target)
 	{
-		target.setUrl(getCategoryUrl(source) + buildUrlQueryString(source, target));
+		if (commonUtils.isLuxurySite() && source.getFreeTextSearch() != null)
+		{
+			target.setUrl("/search" + buildUrlQueryString(source, target));
+		}
+		else
+		{
+			target.setUrl(getCategoryUrl(source) + buildUrlQueryString(source, target));
+		}
 	}
 
 	protected void populateFreeTextSearchUrl(final SolrSearchQueryData source, final SearchStateData target)

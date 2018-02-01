@@ -126,7 +126,7 @@ var buyboxskuId='';
 		<div class="accordion-title emi-header" id="emiStickerId" style="display: none;">	
 			 <h4>EMI Options</h4><i class="accordion-icon"></i>
 			</div>					
-			<div class="accordion-content full-box">
+			<div class="accordion-content full-box" style="display: none;">
 				
                 <div class="table">
                 	<input id="prodPrice" type="hidden" />

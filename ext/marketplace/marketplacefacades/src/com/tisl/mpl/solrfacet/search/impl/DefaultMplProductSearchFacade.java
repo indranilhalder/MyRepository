@@ -23,9 +23,11 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -36,7 +38,7 @@ import com.tisl.mpl.solrfacet.search.service.MplProductSearchService;
 
 /**
  * @author 314180
- *
+ * 
  */
 public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends DefaultSolrProductSearchFacade implements
 		MplProductSearchFacade
@@ -53,6 +55,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	/**
 	 *
 	 */
+	@Autowired
+	private CommonUtils commonUtils;
 
 	/**
 	 *
@@ -82,7 +86,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param pageableData
 	 * @return ProductSearchPageData
@@ -156,7 +160,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param code
 	 * @param type
@@ -199,7 +203,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 * @return ProductCategorySearchPageData
 	 * @description The method is used for searching for a reason/event against a particular categoryCode. Method takes
 	 *              age,categoryCode,event,searchstate,pageabledata as parameters
-	 *
+	 * 
 	 */
 	@Override
 	public ProductCategorySearchPageData conceirgeSearch(final String age, final String categoryCode, final String reasonOrEvent,
@@ -227,7 +231,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param categoryCode
 	 * @param age
@@ -344,7 +348,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param code
 	 * @param type
@@ -403,7 +407,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param code
 	 * @param type
@@ -637,7 +641,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param code
 	 * @param type
@@ -682,7 +686,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param code
 	 * @param type
@@ -745,7 +749,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 
 		//INC144317341 starts
-		if (categoryCode != null && !categoryCode.startsWith(MarketplacecommerceservicesConstants.LSH))
+		if ((!commonUtils.isLuxurySite() && categoryCode != null && !categoryCode
+				.startsWith(MarketplacecommerceservicesConstants.LSH)))
 		{
 			final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
 			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
@@ -760,6 +765,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			solrSearchQueryTermData.setValue(categoryCode);
 			filterTerms.add(solrSearchQueryTermData);
 			searchQueryData.setFilterTerms(filterTerms);
+		}
+		if (commonUtils.isLuxurySite() && categoryCode != null)
+		{
+			final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
+			if (StringUtils.isNotBlank(searchQueryData.getFreeTextSearch()))
+			{
+				final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
+				solrSearchQueryTermData.setValue(categoryCode);
+				filterTerms.add(solrSearchQueryTermData);
+				searchQueryData.setFilterTerms(filterTerms);
+			}
+			searchQueryData.setCategoryCode(categoryCode);
 		}
 		//INC144317341 ends
 		populateSolrSearchQueryData(searchState, searchQueryData);
@@ -819,6 +837,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermDataCategory));
 
 		}
+
+
 		//TISPRD-3816 ends
 		searchQueryData.setSns(searchState.isSns());
 		populateSolrSearchQueryData(searchState, searchQueryData);
@@ -929,7 +949,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/**
 	 * check for online and exclusibve products
-	 *
+	 * 
 	 * @param string
 	 * @param searchState
 	 * @param pageableData
@@ -956,9 +976,9 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/**
 	 * check for online and exclusibve products
-	 *
+	 * 
 	 * @param searchState
-	 *
+	 * 
 	 * @return SolrSearchQueryData
 	 */
 	protected SolrSearchQueryData mplOnlineAndNewProductFind(final SearchStateData searchState)
@@ -1030,7 +1050,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/**
 	 * chcek whether a department hierarchy is selected or not
-	 *
+	 * 
 	 * @param filterTerms
 	 * @return isOnlyDeptFacet
 	 */
@@ -1060,7 +1080,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/**
 	 * search from microsite
-	 *
+	 * 
 	 * @param searchState
 	 * @param sellerId
 	 * @param type
@@ -1088,7 +1108,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchState
 	 * @param sellerId
 	 * @return

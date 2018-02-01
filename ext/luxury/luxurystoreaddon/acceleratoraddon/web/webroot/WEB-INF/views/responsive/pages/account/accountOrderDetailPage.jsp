@@ -2175,7 +2175,7 @@
 												</c:if>
 												--%>
 											</ul>
-											<ul class="progtrckr tabs">
+											<ul class="progtrckr">
 												
 												<!-------------------------------- Approval Block --------------------------------------->
 												<c:set var="displayMsgVar" value="" />

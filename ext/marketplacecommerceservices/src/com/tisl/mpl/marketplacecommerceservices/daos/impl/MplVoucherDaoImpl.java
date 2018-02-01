@@ -10,9 +10,13 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+import de.hybris.platform.voucher.model.CouponUserRestrictionModel;
+import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -351,6 +355,44 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 
 
+	/* CAR-330 starts here */
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchUserRestrictionDetails(java.util.Date)
+	 */
+	@Override
+	public List<UserRestrictionModel> fetchUserRestrictionDetails(final Date mplConfigDate)
+	{
+		List<UserRestrictionModel> userRestriction = new ArrayList<UserRestrictionModel>();
+		final String queryString = "select {pk} from {UserRestriction AS pr} WHERE {pr.modifiedtime} >= ?earlierDate";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("earlierDate", mplConfigDate);
+		LOG.debug("The queryString is " + queryString);
+		userRestriction = getFlexibleSearchService().<UserRestrictionModel> search(query).getResult();
+		return userRestriction;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchExistingVoucherData(de.hybris.platform.voucher
+	 * .model.VoucherModel)
+	 */
+	@Override
+	public List<CouponUserRestrictionModel> fetchExistingVoucherData(final VoucherModel voucher)
+	{
+		List<CouponUserRestrictionModel> couponUserRestrs = new ArrayList<CouponUserRestrictionModel>();
+		final String queryStr = "SELECT {pk} FROM {CouponUserRestriction} where {voucher} = ?voucher";
+		LOG.debug("The queryStr is " + queryStr);
+		final FlexibleSearchQuery userRestrQuery = new FlexibleSearchQuery(queryStr);
+		userRestrQuery.addQueryParameter("voucher", voucher);
+		couponUserRestrs = getFlexibleSearchService().<CouponUserRestrictionModel> search(userRestrQuery).getResult();
+		return couponUserRestrs;
+	}
+
+	/* CAR-330 ends here */
 
 }

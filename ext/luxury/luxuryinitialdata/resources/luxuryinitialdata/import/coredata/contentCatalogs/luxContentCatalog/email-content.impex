@@ -1750,3 +1750,71 @@ INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemp
 INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
 ;lux_Email_Payment_Timeout_Body;$emailPackageName.OrderNotificationEmailContext
 ;lux_Email_Payment_Timeout_Subject;$emailPackageName.OrderNotificationEmailContext
+
+
+###NPS Email Templates
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;NpsEmailTemplate;$jarResourceCms/structure-view/structure_npsEmailTemplate.vm
+
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;NpsEmailTemplate;Nps Email Template;true;npsEmail;lux_Email_Nps_Emailer_Subject;lux_Email_Nps_Emailer_Body;EmailPage
+
+
+##Nps Emailer content slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailRankZeroNpsSlot;Default Email Rank Zero Slot;true
+;;EmailRankOneNpsSlot;Default Email Rank One Slot;true
+;;EmailRankTwoNpsSlot;Default Email Rank Two Slot;true
+;;EmailRankThreeNpsSlot;Default Email Rank Three Slot;true
+;;EmailRankFourNpsSlot;Default Email Rank Four Slot;true
+;;EmailRankFiveNpsSlot;Default Email Rank Five Slot;true
+;;EmailRankSixNpsSlot;Default Email Rank Six Slot;true
+;;EmailRankSevenNpsSlot;Default Email Rank Seven Slot;true
+;;EmailRankEightNpsSlot;Default Email Rank Eight Slot;true
+;;EmailRankNineNpsSlot;Default Email Rank Nine Slot;true
+;;EmailRankTenNpsSlot;Default Email Rank Ten Slot;true
+
+
+###########Nps Email
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NpsEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Rank0;;$wideContent;
+;Rank1;;$wideContent;
+;Rank2;;$wideContent;
+;Rank3;;$wideContent;
+;Rank4;;$wideContent;
+;Rank5;;$wideContent;
+;Rank6;;$wideContent;
+;Rank7;;$wideContent;
+;Rank8;;$wideContent;
+;Rank9;;$wideContent;
+;Rank10;;$wideContent;
+
+##Nps Emailer for ContentSlotForTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='NpsEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-NpsEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-NpsEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-NpsEmail;BottomContent;;EmailBottomConfSlot;true
+;;Rank0-NpsEmail;Rank0;;EmailRankZeroNpsSlot;true
+;;Rank1-NpsEmail;Rank1;;EmailRankOneNpsSlot;true
+;;Rank2-NpsEmail;Rank2;;EmailRankTwoNpsSlot;true
+;;Rank3-NpsEmail;Rank3;;EmailRankThreeNpsSlot;true
+;;Rank4-NpsEmail;Rank4;;EmailRankFourNpsSlot;true
+;;Rank5-NpsEmail;Rank5;;EmailRankFiveNpsSlot;true
+;;Rank6-NpsEmail;Rank6;;EmailRankSixNpsSlot;true
+;;Rank7-NpsEmail;Rank7;;EmailRankSevenNpsSlot;true
+;;Rank8-NpsEmail;Rank8;;EmailRankEightNpsSlot;true
+;;Rank9-NpsEmail;Rank9;;EmailRankNineNpsSlot;true
+;;Rank10-NpsEmail;Rank10;;EmailRankTenNpsSlot;true
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Email_Nps_Emailer_Body;$emailPackageName.NPSEmailContext
+;lux_Email_Nps_Emailer_Subject;$emailPackageName.NPSEmailContext
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;NpsEmail;Nps Email;NpsEmailTemplate;true;

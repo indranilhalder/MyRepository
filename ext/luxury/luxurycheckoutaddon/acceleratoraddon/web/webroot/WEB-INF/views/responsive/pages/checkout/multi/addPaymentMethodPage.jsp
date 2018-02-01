@@ -520,7 +520,7 @@
 							                           		</div>
 							                           		<div class="half col-md-6">
 							                           		    <label><spring:theme code="text.pincode"/></label>
-								                           		<input type="text" id="pincode" maxlength="10" onchange="validatePin()"  class="form-control"><span class="error-message" id="pinError"></span>
+								                           		<input type="text" id="pincode" maxlength="06" onchange="validatePin()"  class="form-control"><span class="error-message" id="pinError"></span>
 							                           			
 							                           		</div>
 						                           		</div>
@@ -1068,7 +1068,7 @@
 							                           	<div class="row">
 							                           		<div class="full col-md-6 mt-20">
 								                           		<label><spring:theme code="text.pincode"/></label>
-								                           		<input type="text" id="pincodeEmi" maxlength="10" onchange="validatePin()" class="form-control"><span class="error-message" id="pinErrorEmi"></span>
+								                           		<input type="text" id="pincodeEmi" maxlength="06" onchange="validatePin()" class="form-control"><span class="error-message" id="pinErrorEmi"></span>
 							                           		</div>
 							                           	</div>
 						                           		

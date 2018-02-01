@@ -36,7 +36,14 @@
 				<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
 				<input type="hidden" name="text" id="text" value="${searchPageData.freeTextSearch}"/>
 				<input type="hidden" name="site" id="siteId" value="lux"/>
-				<input type="hidden" name="searchCategory" id="searchCategoryTree"/>				
+				<c:choose>
+					<c:when test="${not empty searchCategory}">
+						<input type="hidden" name="searchCategory" id="searchCategoryTree" value="${searchCategory}"/>
+					</c:when>		
+					<c:otherwise>
+						<input type="hidden" name="searchCategory" id="searchCategoryTree"/>
+					</c:otherwise>
+				</c:choose>				
 <!-- 				<div id="searchPageDeptHierTree"></div> -->
 			</form>
 		</c:otherwise>

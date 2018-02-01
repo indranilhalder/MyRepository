@@ -36,7 +36,7 @@
 				<form:select id="${idKey}" path="${path}" value="${skipBlankMessageKey}" cssClass="${selectCSSClass}" tabindex="${tabindex}">
 				   <c:if test="${skipBlank == false}">
 						<option value="" disabled="disabled" ${empty selectedValue ? 'selected="selected"' : ''}>
-							Select
+							Select <span>&nbsp;${path}</span>
 						</option>
 					</c:if>
 					

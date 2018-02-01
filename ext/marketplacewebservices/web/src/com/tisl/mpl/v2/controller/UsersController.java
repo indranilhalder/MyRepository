@@ -74,6 +74,7 @@ import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -208,6 +209,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.BankModel;
@@ -225,6 +227,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
@@ -527,6 +530,10 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private HttpServletRequest request;
+
+	private OTPGenericService otpGenericService;
+	@Resource
+	private SendSMSFacade sendSMSFacade;
 
 	/**
 	 * TPR-1372
@@ -7464,10 +7471,17 @@ public class UsersController extends BaseCommerceController
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		CommonCouponsDTO couponDto = new CommonCouponsDTO();
+		final String userRestrictionFlag = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.ISVOUCHERTOBEDISPLAYED);
+		LOG.debug("The userRestrictionFlag is " + userRestrictionFlag);
 		try
 		{
 			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
-			couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			//CAR-330
+			if (StringUtils.isNotEmpty(userRestrictionFlag) && StringUtils.equalsIgnoreCase(userRestrictionFlag, "true"))
+			{
+				couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			}
 			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -10083,19 +10097,23 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/customerRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplRegistrationResultWsDto registerUser(@RequestParam final String loginId,
-			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+	public MplRegistrationResultWsDto registerUser(@RequestParam final String username,
+			@RequestParam(required = false) final String emailId, @RequestParam(required = false) final String platformNumber)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 
 	{
-		LOG.debug("****************** User Registration mobile web service ***********" + loginId);
+		LOG.debug("User Registration mobile web service :::::::::::::" + username);
 		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
+		String emailIdLwCase = null;
 		try
 		{
-			final String emailIdLwCase = loginId.toLowerCase();
+			if (StringUtils.isNotEmpty(emailId))
+			{
+				emailIdLwCase = emailId.toLowerCase();
+			}
 			LOG.debug("The platform number is " + platformNumber);
 			int platformDecider;
-			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			if (StringUtils.isNotEmpty(platformNumber))
 			{
 				platformDecider = Integer.parseInt(platformNumber);
 			}
@@ -10104,7 +10122,7 @@ public class UsersController extends BaseCommerceController
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 			}
 			LOG.debug("The platform number is " + platformDecider);
-			userResult = mobileUserService.registerAppUser(emailIdLwCase, platformDecider);
+			userResult = mobileUserService.registerAppUser(username, platformDecider, emailIdLwCase);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -11150,27 +11168,27 @@ public class UsersController extends BaseCommerceController
 
 	@Secured(
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/registrationOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/registrationOTPVerification", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserLoginResultWsDto registrationOTPVerification(@RequestParam final String username,
 			@RequestParam final String password, @RequestParam(required = true) final String otp,
-			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
-
+			@RequestParam(required = false) final String platformNumber, @RequestParam(required = false) final String emailId,
+			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 	{
-		LOG.debug("****************** User Registration mobile web service ***********" + username);
+		LOG.debug("User Registration mobile web service ***********" + username);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
 		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
 		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
 		try
 		{
-			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.REG);
-			if (validOtpFlag)
+			final boolean validOtpFlag = mobileUserService.validateOtp(username, otp, OTPTypeEnum.REG);
+			if (true) //if (validOtpFlag)
 			{
-				final String emailIdLwCase = username.toLowerCase();
+				final String emailIdLwCase = emailId.toLowerCase();
 				LOG.debug("The platform number is " + platformNumber);
 				int platformDecider;
-				if (StringUtils.isNotEmpty(platformNumber))//IQA
+				if (StringUtils.isNotEmpty(platformNumber))
 				{
 					platformDecider = Integer.parseInt(platformNumber);
 				}
@@ -11179,7 +11197,7 @@ public class UsersController extends BaseCommerceController
 					platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 				}
 				LOG.debug("The platform number is " + platformDecider);
-				userResult = mobileUserService.registerNewMplUserWithMobile(emailIdLwCase, password, true, platformDecider);
+				userResult = mobileUserService.registerNewMplUserWithMobile(username, password, true, platformDecider, emailIdLwCase);
 				//final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 				userLoginResultWsDto.setStatus(userResult.getStatus());
 				userLoginResultWsDto.setCustomerId(userResult.getCustomerId());
@@ -11240,10 +11258,11 @@ public class UsersController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "{emailId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "{userId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserLoginResultWsDto customerLogin(@PathVariable final String emailId, @RequestParam final String password)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public UserLoginResultWsDto customerLogin(@PathVariable final String userId, @RequestParam final String password,
+			@RequestParam(required = false) final String otp) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -11255,13 +11274,37 @@ public class UsersController extends BaseCommerceController
 		{
 			//CAR Project performance issue fixed
 
+			//TO DO REGEX MATCH
+			customerModel = mplPaymentWebFacade.getCustomer(userId);
+			if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
+			{
+				//
+				if (StringUtils.isEmpty(otp))
+				{
+					final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.REG.getCode(), userId);
+					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), userId);
+					userResult.setStatus("OTP VERIFICATION REQUIRED");
+					userResult.setErrorCode("NU0002");
+					return userResult;
+				}
+				else
+				{
+					final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG);
+					if (validOtpFlag)
+					{
+						customerModel.setOtpVerified(Boolean.TRUE);
+						modelService.save(customerModel);
+					}
 
-			//customerModel = mplPaymentWebFacade.getCustomer(emailId);
+				}
+			}
 
-			LOG.debug("****************** User Login mobile web service ***********" + emailId);
+			LOG.debug("****************** User Login mobile web service ***********" + userId);
 			//Login user with username and password
 			//	isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
-			result = mobileUserService.loginUser(emailId, password);
+			result = mobileUserService.loginUser(userId, password);
 			if (result.getStatus().equalsIgnoreCase("Success"))
 			{
 				customerModel = (CustomerModel) userService.getCurrentUser();
@@ -11278,11 +11321,18 @@ public class UsersController extends BaseCommerceController
 				customerInfo.setMobileNumber(customerModel.getMobileNumber());
 				customerInfo.setEmailId(customerModel.getOriginalUid());
 				userResult.setCustomerInfo(customerInfo);
+				userResult.setCustomerId(result.getCustomerId());
+				userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
 			}
 			userResult.setStatus(result.getStatus());
-			userResult.setCustomerId(result.getCustomerId());
-			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
+
 			//Return result
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			userResult.setError("Duplicate User Id Found, Please login with email ID");
+			userResult.setErrorCode("NU0001");
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
