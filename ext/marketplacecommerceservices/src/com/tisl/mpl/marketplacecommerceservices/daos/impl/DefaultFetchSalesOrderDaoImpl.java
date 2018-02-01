@@ -70,6 +70,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	private static final String TYPE_CLASS = "} = ?type";
 
 	private static final String TYPE = "type";
+	private static final String QUERY = "********** specified data query";
 
 	/**
 	 * @return the pARENT
@@ -200,7 +201,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		query.addQueryParameter(EARLIER_DATE.intern(), startTime);
 		query.addQueryParameter(PRESENT_DATE.intern(), endTime);
 		query.addQueryParameter(TYPE, PARENT);
-		LOG.debug("********** specified data query" + query);
+		LOG.debug(QUERY + query);
 		return flexibleSearchService.<OrderModel> search(query).getResult();
 
 	}
@@ -268,7 +269,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 
 		final FlexibleSearchQuery queryString1 = new FlexibleSearchQuery(query1);
-		LOG.debug("********** specified data query" + queryString1);
+		LOG.debug(QUERY + queryString1);
 
 
 		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query1, params);
@@ -370,7 +371,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -550,8 +551,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
 			/*
 			 * } else
-			 *
-			 *
+			 * 
+			 * 
 			 * {
 			 */
 			for (final List<Object> obj : result.getResult())
@@ -649,7 +650,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		params.put(PRESENT_DATE.intern(), presentDate);
 		params.put(TYPE, SUB);
 		final FlexibleSearchQuery queryString = new FlexibleSearchQuery(query);
-		LOG.debug("********** specified data query" + queryString);
+		LOG.debug(QUERY + queryString);
 		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query, params);// removing toString SONAR Analysis
 		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		if (searchRes != null && searchRes.getCount() > 0)
@@ -673,7 +674,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * TPR-7415 (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOmsSubmissionPendingOrderList(java.util.Date,
 	 * java.util.Date)
 	 */
@@ -709,7 +710,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		query.setResultClassList(Arrays.asList(OrderModel.class, AbstractOrderEntryModel.class, String.class));
 		if (LOG.isDebugEnabled())
 		{
-			LOG.debug("********** specified data query" + query);
+			LOG.debug(QUERY + query);
 		}
 		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
 		return result;
@@ -718,7 +719,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * TPR-7415 (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getOmsSubmissionPendingOrderList()
 	 */
 	@Override

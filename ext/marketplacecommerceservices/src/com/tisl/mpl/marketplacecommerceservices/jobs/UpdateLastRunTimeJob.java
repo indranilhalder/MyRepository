@@ -53,7 +53,7 @@ public class UpdateLastRunTimeJob extends AbstractJobPerformable<CronJobModel>
 	{
 
 		final String passedCronJobCode = cronJobModel.getCode();
-		final String cronJobCode = passedCronJobCode.substring(0, passedCronJobCode.lastIndexOf("-"));
+		final String cronJobCode = passedCronJobCode.substring(0, passedCronJobCode.lastIndexOf('-'));
 
 		final CronJobModel updateIndexCronJobModel = cronJobService.getCronJob(cronJobCode);
 

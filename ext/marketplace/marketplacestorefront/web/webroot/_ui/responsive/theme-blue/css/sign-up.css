@@ -1,0 +1,1335 @@
+.sign-in.wrapper::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.sign-in.wrapper .sign-in.tab-view {
+    width: 100%;
+    display: inline-block;
+    float: left;
+}
+nav {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+}
+.sign-in.tab-view .tabs {
+    border: 1px solid #dfd1d5;
+    margin-top: 0;
+    float: left;
+    width: 100%;
+    position: relative;
+}
+.sign-in.tab-view .nav {
+    width: 100%;
+    float: left;
+    display: block;
+}
+.sign-in.tab-view .nav li.active {
+    background: #fff;
+    color: #a9143c;
+    -webkit-transition: background .3s;
+    -moz-transition: background .3s;
+    transition: background .3s;
+    position: relative;
+}
+.sign-in.tab-view .nav li {
+    padding: 10px;
+    text-align: center;
+    width: 50%;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #dfd1d5;
+    -webkit-transition: background .3s;
+    -moz-transition: background .3s;
+    transition: background .3s;
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+.sign-in.tab-view .tabs>li .left p {
+    padding: 5px 0 22px 2px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-bottom: 0;
+}
+.sign-in.tab-view .tabs>li .left p.sign-in-welcomeMessage {
+    color: #a9143c;
+}
+.sign-in.tab-view .tabs>li.active {
+    display: inline-block;
+}
+.sign-in.tab-view .tabs>li .left form input {
+    color: #555;
+    font-size: 12px;
+    height: 35px;
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 0 10px;
+    letter-spacing: 1px;
+}
+.or-rounded {
+    display: inline-block;
+    top: 158px;
+    float: left;
+    border: 1px solid #eaeaeb;
+    padding: 7px 9px 10px;
+    position: absolute;
+    left: 44.4%;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 1px;
+    background: #fff;
+    letter-spacing: 1px;
+}
+.vrt-line {
+    margin-top: 55px;
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.container:before, .container:after {
+    /* content: " ";
+    display: table; */		/* commented for TISCSS-55 */
+}
+
+.sign-in.tab-view .tabs>li .left form input {
+    color: #555;
+    font-size: 12px;
+    height: 35px;
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 0 10px;
+    letter-spacing: 1px;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox input[type="checkbox"]:checked+label:before {
+    content: "";
+    font-size: 20px;
+    background: rgba(0,0,0,0) url(../images/sprite.svg) no-repeat scroll -251px -1px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+.sign-in.tab-view .tabs>li {
+    width: 100%;
+    padding: 20px 20px 20px 20px;
+    padding-bottom: 0;
+    display: none;
+}
+.sign-in.tab-view .tabs>li .left p {
+    padding: 5px 0 22px 2px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-bottom: 0;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label:before {
+    height: 25px !important;
+    margin: 0;
+    width: 25px !important;
+    position: relative;
+    float: left;
+    border: 1px solid #fff !important;
+    box-shadow: 0 0 0 1px #666;
+    padding-left: 2px;
+    padding-top: 2px;
+    margin-right: 10px;
+    margin-bottom: 1px;
+    -webkit-transition: none;
+    -moz-transition: none;
+    transition: none;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label, .sign-in.tab-view .tabs>li .left form div#checkBox label a {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline;
+    line-height: 16.5px;
+    text-decoration: none;
+    padding: 0;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    color: #7a7a7a;
+    float: left;
+    width: 70%;
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 1px;
+}
+.sign-in.tab-view .tabs>li .left form a.js-password-forgotten {
+    text-decoration: underline;
+}
+.sign-in.tab-view .tabs>li .left form a {
+    padding: 0;
+    display: block;
+    color: #a9143c;
+    font-size: 12px;
+}
+.sign-in.tab-view .tabs>li .left form button {
+    width: 150px;
+    height: 35px;
+    line-height: 35px;
+    padding: 0;
+    border: 0;
+    background-color: #a9143c;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    margin-bottom: 19px;
+}
+.sign-in.tab-view .tabs>li .left form button:hover {
+    background-color: #fff;
+    border: 1px solid #a9143c;
+    color: #a9143c;
+}
+.cart.wrapper.checkout-payment .blocks .error-message, #captchaError {
+    font-size: 11px;
+    text-transform: none;
+    font-weight: normal;
+    letter-spacing: .6px;
+}
+#captchaError {
+    margin-top: 10px;
+}
+/* .sign-in.tab-view .tabs>li .left form .forgotten-password_register {
+    display: none;
+} */
+.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password,.page-login .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
+      padding: 20px 0 10px 0;
+      text-align: center;
+      }
+      .sign-in.tab-view .tabs > li .left form .forgotten-password,.sign-in.tab-view .tabs > li .left form .forgotten-password_register{
+      text-align: center;
+      padding:10px 0;
+      font-size:11px;
+      }
+      .sign-in.tab-view .tabs > li .left form a#newToTata {
+        display: inline;
+	    width: 100%;
+	    text-align: center;
+	    text-transform: none;
+	    padding: 0;
+	    font-size: 11px;
+	    font-weight: 500;
+	    letter-spacing: 0px;
+	    text-decoration: none;
+	    color: #A9143C; }
+	    .sign-in.tab-view .nav li:after {
+    position: absolute;
+    content: '';
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #fff;
+    z-index: 1;
+    opacity: 0;
+    -webkit-transition: opacity .3s;
+    -moz-transition: opacity .3s;
+    transition: opacity .3s;
+}
+.sign-in.tab-view .nav li.active:after {
+    opacity: 1;
+    -webkit-transition: opacity .3s;
+    -moz-transition: opacity .3s;
+    transition: opacity .3s;
+}
+.else-sec {
+    display: none;
+}
+#password_login_minchar, #password_minchar {
+    display: none;
+}
+.sign-in.tab-view .tabs>li form .help-block {
+    margin-top: -7px;
+    margin-bottom: 5px;
+}
+.form-group #password_login_bar {
+    overflow: hidden;
+    margin-bottom: -10px;
+    margin-top: 5px;
+}
+.progress {
+    background-image: none !important;
+    background-repeat: none !important;
+}
+.progress-bar[aria-valuenow="0"] {
+    color: #777;
+    min-width: 30px;
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+}
+.progress-bar {
+    float: left;
+    width: 0;
+    font-size: 12px;
+    line-height: 20px;
+    color: #fff;
+    text-align: center;
+    background-color: #f44;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+    -webkit-transition: width .6s ease;
+    -o-transition: width .6s ease;
+    transition: width .6s ease;
+}
+.progress-bar {
+    background-image: none !important;
+}
+.sign-in.tab-view .tabs>li .left form label.accept-cond {
+    clear: left;
+    display: block;
+    font-size: 12px;
+    color: #7a7a7a;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs>li .left form a.spec-notes {
+    color: #a7183e;
+    display: inline-block;
+    width: auto;
+    font-size: 12px;
+}
+.clearfix {
+    zoom: 1;
+}
+.sign-in.tab-view .tabs::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.vr-line {
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.alert.alert-danger.alert-dismissable {
+    padding: 0;
+    margin-bottom: 17px !important;
+}
+.alert-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #ff1c47;
+}
+.sign-in.tab-view .tabs>li#sign_up_content .social-connect {
+    display: none;
+}
+
+
+
+@media only screen and (max-width: 1450px){
+.sign-in.wrapper {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+}
+@media (min-width: 981px){
+.sign-in.tab-view .tabs>li .left form a {
+    text-align: left;
+}
+.sign-in.tab-view .tabs>li .left form a.js-password-forgotten {
+    text-decoration: underline;
+    text-transform: capitalize;
+    font-size: 12px;
+    letter-spacing: 0;
+    font-weight: normal;
+}
+.sign-in.tab-view .tabs>li .left form a {
+    width: 100%;
+}
+.sign-in.tab-view .tabs>li .left form a {
+    text-align: left;
+}
+.sign-in.wrapper .sign-in.tab-view {
+    width: 100%;
+    margin-bottom: 140px;
+}
+.sign-in.tab-view {
+    margin: 0;
+}
+.sign-in.tab-view .nav {
+    display: none;
+}
+.sign-in.tab-view .tabs>li .left {
+    width: 100%;
+}
+.sign-in.tab-view .tabs>li#sign_in_content {
+    padding-right: 116px;
+    width: 45.8%;
+}
+.sign-in.tab-view .tabs>li {
+    float: left;
+    padding: 0;
+    margin-top: 25px;
+}
+.sign-in.tab-view .form-group {
+    margin-top: -12px;
+}
+.control-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.sign-in.tab-view .tabs>li.or {
+    width: 1px;
+    min-height: 280px;
+    display: inline-block;
+    float: left;
+    margin-top: 36px;
+    padding: 0;
+}
+.sign-in.tab-view .tabs>li#sign_up_content {
+    padding-left: 113px;
+    width: 47.6%;
+}
+.sign-in.tab-view{
+	margin:0px;}
+.sign-in.tab-view .nav{
+	display:none;
+}
+.sign-in.tab-view .tabs{
+	border:none;
+}
+.sign-in.wrapper .sign-in.tab-view {
+    width: 100%;
+        margin-bottom: 140px;
+}
+.sign-in.tab-view .tabs > li{
+	float:left;
+	padding:0px;
+	margin-top: 25px;
+}
+.sign-in.tab-view .tabs > li .left{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li#sign_in_content{
+	padding-right: 116px;
+		width:45.8%;
+}
+.sign-in.tab-view .tabs > li#sign_up_content{
+	padding-left: 113px;
+    width: 47.6%;
+}
+.sign-in.tab-view .tabs > li.or{
+	    width: 1px;
+    min-height: 280px;
+    display: inline-block;
+    float: left;
+        margin-top: 36px;
+}
+
+      .sign-in.tab-view .tabs > li .left form a{
+      text-align: left;}
+
+    .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+        text-decoration: underline;
+    text-transform: capitalize;
+    font-size: 12px;
+    letter-spacing: 0px;
+    font-weight:normal;}
+    .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+        position: absolute;
+    bottom: -130px;
+    left: -8%;
+    right: 0;}
+        .sign-in.tab-view .tabs > li .login-section .social-connect,.checkout-shipping .social-connect {
+          width: 100%;
+          float: none;
+          margin:0px auto;
+      }
+      .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
+      display:none;} 
+      .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
+      display:block;} 
+}
+@media (min-width: 791px){
+.sign-in.tab-view .tabs>li .left form button {
+   /*  width: 100%; */
+    display: inline-block;
+}
+.sign-in.tab-view .tabs>li .left #checkBox {
+    width: 115%;
+}
+.sign-in.tab-view .tabs>li .left form label {
+    letter-spacing: 1.2px;
+}
+.sign-in.tab-view .nav li {
+    font-size: 20px;
+}
+.sign-in.tab-view .tabs>li .left {
+   /*  width: 50%; */
+    float: left;
+}
+.sign-in.tab-view .tabs>li .left p {
+    line-height: 1;
+    margin-bottom: 0;
+}
+.sign-in.tab-view .tabs>li .left form input {
+    width: 100%;
+    /* height: 30px; */
+    line-height: 30px;
+}
+.sign-in.tab-view .tabs>li .left form input {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+}
+
+/*Login Start*/
+body.page-checkout-login header,  body.page-multiStepCheckoutSummaryPage header {
+	margin-bottom:0px
+}
+/* .top.checkout-top .content {
+    margin-top: 10px;
+} */
+.sign-in.wrapper{
+	margin-left: 24px;
+    margin-right: 24px;
+    padding:0px;
+        width: auto;
+}
+@media only screen and (max-width: 1450px){
+.sign-in.wrapper {
+    margin: 0 auto;
+    max-width: 1200px;
+}}
+@media only screen and (max-width: 1250px){
+.sign-in.wrapper  {
+    padding: 0 24px;
+    max-width: inherit;
+}}
+@media only screen and (max-width: 1250px){
+.sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    transform: scale(0.7);
+}}
+.sign-in.tab-view .form-group{
+	    margin-top: -12px;}
+.sign-in.tab-view .tabs > li .left form input {
+color: #555;
+    font-size: 12px;
+    height: 35px;
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 0 10px;
+    letter-spacing: 1px;
+}
+.sign-in.tab-view .tabs > li .left p{
+	       padding: 5px 0 22px 2px;
+	           font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin-bottom:0px;
+}
+.sign-in.tab-view .tabs > li .left p.sign-in-welcomeMessage{
+    color: #a9143c;
+}
+.sign-in.tab-view .tabs > li .left form a{
+	padding:0px;
+	display: block;
+      color: #A9143C;
+      font-size:12px;
+}
+ .sign-in.tab-view .tabs > li .left form button {
+          width: 150px;
+    height: 35px;
+    line-height: 35px;
+    padding: 0;
+    border: none;
+    background-color: #A9143C;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    margin-bottom: 19px; }
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
+      text-align:left;
+          font-size: 12px;
+    padding: 0px 0px 21px;
+}
+        .sign-in.tab-view .tabs > li .left form a#newToTata{
+    font-size: 12px;
+   border-bottom: 1px solid #a7183e;
+     font-weight: 500;  }
+    .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+    padding-top:28px;}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label{
+    color: #7a7a7a;
+    float: left;
+    width: 70%;
+    line-height: 20px;
+        font-size: 12px;
+        margin-left: 1px;
+}
+        .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    height: 25px !important;
+    margin: 0;
+    width: 25px !important;
+    position: relative;
+    float: left;
+    border: 1px solid #fff !important;
+    box-shadow: 0 0 0 1px #666;
+    padding-left: 2px;
+    padding-top: 2px;
+    margin-right: 10px;
+        margin-bottom: 1px;
+            -webkit-transition: none;
+    -moz-transition:none;
+    transition: none;
+    }
+    .sign-in.tab-view .tabs > li .left form div#checkBox input[type="checkbox"]:checked + label:before{
+        content: "";
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0) url("../images/Sprite-combined.png") no-repeat scroll -251px -1px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;}
+    .sign-in.tab-view .tabs > li .left form#extRegisterForm button{
+       margin: 10px 0; }
+   .sign-in.tab-view .tabs > li .left form label.accept-cond {
+    clear: left;
+    display: block;
+    font-size: 12px;
+    color: #7a7a7a;
+    letter-spacing: 0;
+}
+.sign-in.tab-view .tabs > li .left form a.spec-notes {
+    color: #a7183e;
+    display: inline-block;
+    width:auto;
+    font-size:12px;
+}
+          .sign-in.tab-view .tabs > li .left form button:hover {		
+        background-color: #fff;
+    border: 1px solid #a9143c;
+    color: #a9143c;	
+}
+.vr-line {
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.or-rounded {
+    display: inline-block;
+    top: 158px;
+    float: left;
+    border: 1px solid #eaeaeb;
+    padding: 7px 9px 10px;
+    position: absolute;
+    left: 44.4%;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 1px;
+    background: #ffffff;
+    letter-spacing: 1px;
+}
+.vrt-line {
+    margin-top: 55px;
+    background: #eaeaeb;
+    width: 1px;
+    height: 110px;
+    display: inline-block;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+        padding-bottom: 19px;
+        
+}
+.else-sec{
+display:none;	
+}
+/* .sign-in.tab-view .nav{
+	width:50.6%;
+} */
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:none;}
+	.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
+	border-bottom:none;
+	padding-bottom:0px;}
+	      .sign-in.tab-view .tabs > li .left form .forgotten-password{
+      display:block;} 
+      .sign-in.tab-view .tabs > li .left form a.js-password-forgotten:hover{
+    color: #000;}
+    .sign-in.tab-view .tabs > li form .help-block{
+       margin-top: -7px;
+    margin-bottom: 5px; }
+     .secure.secureTransaction:before, .secure.secureTransaction.secMobile:before {
+      content:'';
+        background: url("../images/checkout.png") no-repeat right 0;
+    margin: 0;
+    text-indent: -9999px;
+    position: absolute;
+       height: 22px;
+    right: 24px;
+    top: -9px;
+    width: 16px;
+    left: -22px; }
+.secure.secureTransaction.secMobile{
+	display:none;
+}
+.sign-in.tab-view .nav li:hover{
+	text-decoration:underline;
+}
+@media (min-width: 981px){
+	.sign-in.tab-view{
+	margin:0px;}
+.sign-in.tab-view .nav{
+	display:none;
+}
+.sign-in.tab-view .tabs{
+	border:none;
+}
+.sign-in.wrapper .sign-in.tab-view {
+    width: 100%;
+        margin-bottom: 140px;
+}
+.sign-in.tab-view .tabs > li{
+	float:left;
+	padding:0px;
+	margin-top: 25px;
+}
+.sign-in.tab-view .tabs > li .left{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li#sign_in_content{
+	padding-right: 116px;
+		width:45.8%;
+}
+.sign-in.tab-view .tabs > li#sign_up_content{
+	padding-left: 113px;
+    width: 47.6%;
+}
+.sign-in.tab-view .tabs > li.or{
+	    width: 1px;
+    min-height: 280px;
+    display: inline-block;
+    float: left;
+        margin-top: 36px;
+}
+
+      .sign-in.tab-view .tabs > li .left form a{
+      text-align: left;}
+
+    .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+        text-decoration: underline;
+    text-transform: capitalize;
+    font-size: 12px;
+    letter-spacing: 0px;
+    font-weight:normal;}
+    .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+        position: absolute;
+    bottom: -130px;
+    left: -8%;
+    right: 0;}
+        .sign-in.tab-view .tabs > li .login-section .social-connect,.checkout-shipping .social-connect {
+          width: 100%;
+          float: none;
+          margin:0px auto;
+      }
+      .sign-in.tab-view .tabs > li .left form .forgotten-password_register{
+      display:none;} 
+      .sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout{
+      display:block;} 
+/*       .sign-in.tab-view .tabs > li#sign_in_content form {
+    border-bottom: 1px solid #eaeaeb;
+} */
+
+}
+@media (max-width: 980px){
+	.sign-in.tab-view .tabs > li .left{
+	    width: 100%;}
+.sign-in.tab-view .tabs{
+    margin-bottom: 25px;
+}
+.sign-in.tab-view .tabs > li{
+	padding: 35px 12px 0;
+    width: 100%;
+    margin-top: 0;
+}
+
+.sign-in.tab-view .tabs{
+	border: 1px solid #cccccc;
+}
+.sign-in.tab-view .nav li{
+	    width: 25.3%;
+    padding: 18px 15px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #b2b2b2;
+    color:#fff;
+    letter-spacing: 1px;
+        border: 1px solid #cccccc;
+            margin-right: -3px;
+}
+ .sign-in.tab-view .tabs > li .left form {
+    width: 52%;
+    float: left;
+    padding: 0 38px 0px 10px;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
+    border-bottom: 0 none;
+    padding-bottom: 30px;
+}
+
+.else-sec {
+	display:block;
+    width: 5%;
+    float: left;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+}
+.else-brdrbtm,.else-brdrtp {
+    height: 95px;
+    width: 1px;
+    background: #eaeaeb;
+    float: left;
+    margin: 0 20px;
+}
+.else-brdrtp {
+    margin-bottom: 10px;
+}
+ .else-brdrbtm {
+    margin-top: 10px;
+}
+.else {
+    float: left;
+    border: 1px solid #e4e4e4;
+    padding: 7px 9px 10px;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 3px;
+    text-align: center;
+}
+.accept-cond {
+    margin-bottom: 22px;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+        padding-top: 30px;
+            padding-left: 0px;
+}
+.sign-in.tab-view .tabs > li .left form button {
+    margin-bottom: 17px;
+}
+.sign-in.tab-view .tabs > li .left form#extRegisterForm button {
+   margin-bottom: 10px;
+}
+.sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+	padding-top:0px;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox{
+	overflow:hidden;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    margin-left: 2px;
+    margin-top: 0;
+}
+.sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:block;
+	padding-top:30px;
+}
+.sign-in.tab-view {
+    margin-top: 24px;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 86%;
+}
+}
+@media (max-width: 790px){
+.marketplace-checkout {
+    margin: 24px auto;
+}
+body.page-checkout-login header > .content, body.page-multiStepCheckoutSummaryPage header .content{
+	padding:0px !important
+}
+body.page-checkout-login header > .content .bottom .search, body.page-multiStepCheckoutSummaryPage header > .content .bottom .search{
+margin-top:0px;	
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 100%;
+    float: none;
+    display: inline-block;
+}
+}
+@media (max-width: 767px){
+	.sign-in.wrapper {
+   margin:0;
+   width:100%;
+   padding:0px;
+}
+	.sign-in.tab-view .tabs{
+    border: 0 none;
+}
+.sign-in.tab-view .nav{
+	width:100%;
+}
+.sign-in.tab-view .tabs > li .left p{
+	display:none;
+}
+.sign-in.tab-view .tabs > li .left form{
+	    padding-top: 5px;
+}
+.sign-in.tab-view .tabs > li .left form {
+    width: 100%;
+    padding:0px;
+	padding-top: 5px;
+}
+.sign-in.tab-view .tabs > li .left form input {
+    font-size: 10px;
+    letter-spacing: 0;
+        color: #555;
+    height: 46px;
+}
+.sign-in.tab-view .tabs > li .left form a.js-password-forgotten {
+    float: right;
+    letter-spacing: 0;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size:12px;
+}
+.else-sec {
+    position: static;
+    width: 100%;
+    margin: 0 0 20px;
+}
+
+.else-brdrbtm,.else-brdrtp {
+    width: 44%;
+    height: 1px;
+    margin: 14px 0;
+}
+.else {
+    display: block;
+    padding: 7px;
+        font-size: 10px;
+}
+.else-brdrbtm {
+    margin-left: 10px;
+}
+.else-brdrtp {
+    margin-right: 10px;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password_login{
+	overflow:hidden;
+}
+.sign-in.tab-view .tabs > li .left form button{
+	margin: 0;
+	width: 100%;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password{
+	width: 100%;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.sign-in.tab-view .tabs > li .left form a#newToTata{
+	width:auto;
+	font-size:10px;
+	float:none;
+	 font-weight: bold;
+
+	}
+	.sign-in.tab-view .tabs > li .left form#extRegisterForm {
+    padding-top: 5px;
+}
+.sign-in.tab-view .tabs > li .left form .forgotten-password.forgotten-password_checkout {
+    padding-top: 0px;
+    font-weight:normal;
+}
+.sign-in.tab-view .nav li{
+    font-size: 13px;
+        width: 50%;
+}
+.sign-in.tab-view .tabs > li {
+    padding: 35px 12px;
+}
+.sign-in.tab-view .tabs > li .left form div#checkBox label{
+	width:90%;
+}
+.sign-in.tab-view {
+    margin-top: 0px;
+}
+.secure.secureTransaction{
+	display:none;
+}
+.secure.secureTransaction.secMobile{
+	display:block;
+}
+.secure.secureTransaction.secMobile:before{
+	top:-22px;
+}
+.marketplace-checkout img.image, .marketplace-checkout .simple-banner-component img {
+		height: 53px;
+	}
+	.marketplace-checkout {
+    margin: 0px auto;
+}
+
+/* .top.checkout-top .content{
+	margin-bottom:0px;
+	    margin-top: 10px;
+} */
+}
+.global-alerts button.close {
+    top: 6px !important;
+}
+.global-alerts button.close {
+    float: left;
+    opacity: 1;
+    left: 0;
+    margin-right: 10px;
+}
+@media (max-width: 650px){
+.secure.secureTransaction.secMobile:before{
+	top:-16px;
+}
+}
+
+.sign-in.tab-view .tabs input::-webkit-input-placeholder {
+	color: #a5a5a5;
+}
+
+.sign-in.tab-view .tabs input::-moz-placeholder {
+	color: #a5a5a5;
+}
+
+.sign-in.tab-view .tabs input:-moz-placeholder {
+	color: #a5a5a5;
+}
+
+.sign-in.tab-view .tabs input:-ms-input-placeholder {
+	color: #a5a5a5;
+}
+.sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+	text-decoration:underline;
+}
+@media (max-width: 520px){
+.sign-in.tab-view .nav li {
+    font-size: 12px;
+}
+.else-brdrbtm, .else-brdrtp {
+    width: 41%;
+}
+.sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 100%;
+}
+}
+@media(min-width:768px) and (max-width:790px){
+	.secureTransaction {
+    top: 42px;
+}
+} 
+
+@media ( min-width : 768px) {
+	/* .sign-in.wrapper {
+		margin-top: 0 !important;
+		padding: 0;
+	} */
+	.sign-in.tab-view .tabs>li .register-section .social-connect {
+		width: 40%;
+		float: right;
+		padding-top: 96px;
+	}
+	.sign-in.tab-view .tabs>li .login-section .social-connect {
+		width: 40%;
+		float: right;
+		padding-top: 80px;
+	}
+}
+
+/*Login End*/
+
+
+
+/* TISCSXII-2224 start */
+body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_login_bar .progress-bar{
+	margin-bottom: 10px;
+	} 
+/* TISCSXII-2224 end */
+/*TPR-6399 start*/
+#login-modal .content{
+	min-width: 320px;
+}
+#login-modal .sign-in.wrapper{
+	padding: 0;
+    max-width: 100%;
+}
+#login-modal .sign-in.tab-view .tabs > li .left{
+	    width: 100%;}
+#login-modal .sign-in.tab-view .tabs{
+    margin-bottom: 0;
+}
+#login-modal .sign-in.tab-view .tabs > li{
+	padding: 35px 12px 0;
+    width: 100%;
+    margin-top: 0;
+}
+
+#login-modal .sign-in.tab-view .tabs{
+	border: 1px solid #cccccc;
+}
+#login-modal .sign-in.tab-view .nav li {
+	width: 50%;
+	padding: 18px 15px;
+	text-align: center;
+	font-size: 12px;
+	text-transform: uppercase;
+	background-color: #b2b2b2;
+	color: #fff;
+	letter-spacing: 1px;
+	border: 1px solid #cccccc;
+	margin-right: 0;
+	float: left;
+	}
+#login-modal .sign-in.tab-view .tabs > li .left form {
+    width: 52%;
+    float: left;
+    padding: 0 38px 0px 10px;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form .forgotten-password{
+    border-bottom: 0 none;
+    padding-bottom: 30px;
+}
+
+#login-modal .else-sec {
+	display:block;
+    width: 5%;
+    float: left;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+}
+#login-modal .else-brdrbtm,#login-modal .else-brdrtp {
+    height: 95px;
+    width: 1px;
+    background: #eaeaeb;
+    float: left;
+    margin: 0 20px;
+}
+#login-modal .else-brdrtp {
+    margin-bottom: 10px;
+}
+ #login-modal .else-brdrbtm {
+    margin-top: 10px;
+}
+#login-modal .else {
+    float: left;
+    border: 1px solid #e4e4e4;
+    padding: 7px 9px 10px;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 3px;
+    text-align: center;
+}
+#login-modal  .accept-cond {
+    margin-bottom: 22px;
+    text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form#extRegisterForm {
+    padding-top: 0;
+    padding-left: 0px;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form button {
+    margin-bottom: 17px;
+}
+#login-modal  .sign-in.tab-view .tabs > li .left form#extRegisterForm button {
+   margin-bottom: 10px;
+}
+#login-modal .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+	padding-top:0px;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form div#checkBox{
+	overflow:hidden;
+	text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    margin-left: 2px;
+    margin-top: 2px;
+}
+#login-modal .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:block;
+	padding-top:30px;
+}
+#login-modal .sign-in.tab-view {
+    margin: 0;
+    padding: 10px;
+}
+#login-modal .sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 86%;
+}
+#login-modal .sign-in.tab-view .nav li.active {
+    background: #fff;
+    color: #a9143c;
+    -webkit-transition: background .3s;
+    -moz-transition: background .3s;
+    transition: background .3s;
+    position: relative;
+}
+#login-modal .sign-in.tab-view .nav {
+    width: 100%;
+    float: left;
+    display: block;
+    text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs>li{
+	display: none;
+}
+#login-modal .sign-in.tab-view .tabs>li.active {
+    display: inline-block;
+}
+#login-modal .sign-in.tab-view .tabs>li#sign_in_content .social-connect {
+    position: static;
+    width: 40%;
+    float: right;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form  .button_fwd_wrapper{
+	text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs>li .left form .forgotten-password_register {
+    display: block;
+}
+#login-modal .sign-in.tab-view .tabs>li .left p, #login-modal .sign-in.tab-view .form-actions.clearfix,
+#login-modal .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+	text-align: left;
+}
+#login-modal .content .close {
+    float: right;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc ! important;
+    margin-top: -8px!important;
+    margin-right: -8px!important;
+}
+/* Forgot password popup */
+#forgotPasswordSuccessPopup .content {
+    width: 35%;
+    padding: 40px;
+}
+#forgotPasswordSuccessPopup .content h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+#forgotPasswordSuccessPopup .content div.forgotPasswordSuccessPopup-desc {
+    line-height: normal;
+    text-align: justify;
+}
+@media (min-width: 768px)
+{
+.sign-in.wrapper {
+    margin-top: 26px !important;
+}
+}
+/* TPR-6399 end */
+/* Update Password */
+.account-navigation {
+    margin-bottom: 10px;
+}
+.updatePassword-wrapper {
+    border: 1px solid #dfd1d5;
+    width: 90%;		/* change for TISPRDT-8237 */
+    margin: 0 auto;
+}
+.updatePassword {
+    padding: 10px;
+    text-align: left;
+}
+.updatePassword h1, body .account .right-account .updatePassword h1 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    margin: 0 0 10px 0;
+}
+.updatePassword p {
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.updatePassword .form-group {
+    overflow: hidden;
+}
+.updatePasswordForm label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.updatePasswordForm input[type="password"] {
+    border: 1px solid#dfd1d5;
+    height: 30px;
+    line-height: 26px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+.updatePassword input, body .account .right-account .updatePassword form input {
+    width: 80% !important;
+    border: 1px solid #dfd1d5 !important;
+}
+.help-block {
+    margin-top: 10px;
+}
+.help-block#updatePwd-pwd_minchar, .help-block#profile-newPassword_minchar {
+    display: none;
+}
+.updatePassword .help-block {
+    font-size: 10px;
+    font-weight: 500;
+    padding-bottom: 2px;
+}
+.updatePassword div#updatePwd-pwd_bar, .updatePassword div#profile-newPassword_bar {
+    margin-top: 5px;
+}
+.form_field-input #updatePwd-checkPwd {
+    border: 1px solid #ccc;
+    width: 50%;
+    height: 30px;
+    margin-bottom: 40px;
+}
+.updatePassword #frmUpdatePassword .blue {
+    margin-top: -30px;
+    cursor: pointer;
+    background-color: #a9143c;
+    border: 0;
+    height: 30px;
+    line-height: 24px;
+    font-size: 10px !important;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    -webkit-appearance: none;
+    min-width: 200px;
+    color: #fff;
+}
+
+.forgot-password-container .actions a{
+	border: 0 !important;
+}
+@media (max-width: 767px){
+	.sign-in.tab-view .tabs>li {
+	    padding: 35px 12px ! important;
+	}
+}	
+/* start for TISPRDT-8238 */
+.has-error .help-block {
+	padding-bottom: 18px !important;
+}
+/* end for TISPRDT-8238 */

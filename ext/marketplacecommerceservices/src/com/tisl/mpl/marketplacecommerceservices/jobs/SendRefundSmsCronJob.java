@@ -59,7 +59,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				//SDI-2578 || Changes start
 				final int batch = configurationService.getConfiguration().getInt("bulksms.perbatch.sms"); //50
 				final int dbPerformBatch = configurationService.getConfiguration().getInt("bulksms.perbatch.dbperformance", 300);
-				final StringBuilder queryString = new StringBuilder();
+				final StringBuilder queryString = new StringBuilder(1000);
 				int superCheckLoop = 0;
 
 				final int totCount = refundSmsDao.eligibleSmsCount(); //300
@@ -155,10 +155,10 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 							{
 								for (final BulkSmsPerBatch obj : result1)
 								{
-									deleteDynamicQuery.append("'");
+									deleteDynamicQuery.append('\''); //Sonr Fix
 									deleteDynamicQuery.append(obj.getTxnId());
-									deleteDynamicQuery.append("'");
-									deleteDynamicQuery.append(",");
+									deleteDynamicQuery.append('\''); //Sonr Fix
+									deleteDynamicQuery.append(','); //Sonr Fix
 								}
 							}
 						}
