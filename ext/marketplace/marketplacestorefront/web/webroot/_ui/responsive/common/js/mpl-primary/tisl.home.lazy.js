@@ -810,7 +810,7 @@ function getNewAndExclusiveAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
-                    autoWidth: carouselAutoWidthAttr,
+                    autoWidth: carouselAutoWidthAttr,		
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,

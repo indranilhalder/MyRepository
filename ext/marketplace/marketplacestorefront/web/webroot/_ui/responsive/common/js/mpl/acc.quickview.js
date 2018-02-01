@@ -902,9 +902,11 @@ function openPop_quick(ussidfromSeller) {
 	
 	// if(loggedIn == 'false') {
 	if (!headerLoggedinStatus) {
+		$("div.wishAddLoginQv>span").css("display","block");		/*add for TISCSS-166*/
 		$("div.wishAddLoginQv").addClass("active");
 		setTimeout(function() {
-			$("div.wishAddLoginQv").removeClass("active")
+			$("div.wishAddLoginQv").removeClass("active");
+			$("div.wishAddLoginQv>span").css("display","none");	/*add for TISCSS-166*/
 		}, 3000);
 	} else {
 		var isInWishlist = getLastModifiedWishlistQuick(ussidValue);
@@ -927,11 +929,12 @@ function openPop_quick(ussidfromSeller) {
 								// var msg=$('#wishlistSuccess').text();
 								// $('#addedMessage').show();
 								// $('#addedMessage').html(msg);
+								$("div.wishAddSucessQv>span").css("display","block");	/*add for TISCSS-166*/
 								$("div.wishAddSucessQv").addClass("active");
 								$('.wishlist-icon-qv').addClass("added");
 								setTimeout(function() {
-									$("div.wishAddSucessQv").removeClass(
-											"active")
+									$("div.wishAddSucessQv").removeClass("active");
+									$("div.wishAddSucessQv>span").css("display","none");	/*add for TISCSS-166*/
 								}, 3000);
 								$("#add_to_wishlist_quick").attr("disabled",
 										true);
@@ -1061,11 +1064,12 @@ function removeFromWishlistInQuickView(wishlistName, productCode, ussid,
 											+ err.message);
 						}
 					}
-
+					$(".wishRemoveSucessQV>span").css("display","block");	/*add for TISCSS-166*/
 					$(".wishRemoveSucessQV").addClass("active");
 					$('.wishlist-icon-qv').removeClass("added");
 					setTimeout(function() {
-						$(".wishRemoveSucessQV").removeClass("active")
+						$(".wishRemoveSucessQV").removeClass("active");
+						$(".wishRemoveSucessQV>span").css("display","none");		/*add for TISCSS-166*/
 					}, 3000)
 					$("#add_to_wishlist_quick").attr("disabled", false);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist_quick')
