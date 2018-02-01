@@ -30,7 +30,6 @@ export default class ProductModule extends React.Component {
     }
     return (
       <div className={styles.base}>
-        {/* {this.props.view === "grid" && ( */}
         <div
           className={
             this.props.view === "grid"
