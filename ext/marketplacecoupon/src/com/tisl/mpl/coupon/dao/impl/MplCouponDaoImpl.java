@@ -57,6 +57,8 @@ public class MplCouponDaoImpl implements MplCouponDao
 	@Autowired
 	private ConfigurationService configurationService;
 
+	private static final String QUERY_STRING = "queryString: ";
+
 	/**
 	 * @return the configurationService
 	 */
@@ -88,7 +90,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 		try
 		{
 			final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
-			LOG.debug("queryString: " + queryString);
+			LOG.debug(QUERY_STRING + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			return getFlexibleSearchService().<VoucherModel> search(query).getResult();
 		}
@@ -150,7 +152,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
-			LOG.debug("queryString: " + CLOSED_VOUCHER);
+			LOG.debug(QUERY_STRING + CLOSED_VOUCHER);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
@@ -189,7 +191,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 		{
 
 			final String queryString = MarketplacecouponConstants.ALLOFFERVOUCHERQUERY;
-			LOG.debug("queryString: " + queryString);
+			LOG.debug(QUERY_STRING + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			return getFlexibleSearchService().<MplCartOfferVoucherModel> search(query).getResult();
 
@@ -218,7 +220,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 
 			final String queryString = MarketplacecouponConstants.ALLOFFERVOUCHERQUERYTOTAL;
-			LOG.debug("queryString: " + queryString);
+			LOG.debug(QUERY_STRING + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.setResultClassList(Arrays.asList(Long.class, Double.class));
@@ -283,7 +285,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 					.append("ORDER BY {vi.creationtime} DESC");
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
-			LOG.debug("queryString: " + VOUCHER_HISTORY_QUERY);
+			LOG.debug(QUERY_STRING + VOUCHER_HISTORY_QUERY);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, VOUCHER_HISTORY_QUERY) });
 

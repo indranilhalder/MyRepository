@@ -275,7 +275,7 @@
 														data-target="#delete-card_${debitCard.value.cardToken}_${debitStatus.index}"
 														data-mylist="<spring:theme code="text.help" />"
 														data-dismiss="modal">
-														<spring:theme code="text.remove" text="Delete Address" />
+														<spring:theme code="text.remove" text="Delete Card" /> <!-- change text for SDI-3038 -->
 													</a>
 												</li>
 	

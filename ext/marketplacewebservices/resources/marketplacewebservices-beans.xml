@@ -193,6 +193,11 @@
 		<property name="shopbybrand"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.BrandHierarchyData>" />
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyDataAmp">
+		<property name="modifiedTime" type="String" />
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BrandHierarchyData>" />
+	</bean>
 	<bean class="com.tisl.mpl.wsdto.BrandHierarchyData">
 
 		<property name="menu_brand_name" type="String" />
@@ -210,7 +215,12 @@
 		<property name="sub_brand_logo" type="String" />
 
 	</bean>
+	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyWsDTOAmp" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="modifiedTime" type="String" />
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BrandHierarchyWsDTO>" />
 
+	</bean>
 	<bean class="com.tisl.mpl.wsdto.BrandListHierarchyWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="modifiedTime" type="String" />
 		<property name="shopbybrand"
@@ -240,6 +250,11 @@
 		<property name="shopbydepartment"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentHierarchyData>" />
 	</bean>
+		<bean class="com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp">
+		<property name="modifiedTime" type="String" />
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentHierarchyData>" />
+	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentHierarchyData">
 
 		<property name="super_category_id" type="String" />
@@ -250,7 +265,8 @@
 		<property name="deepLinkType" type="String" />
 		<property name="deepLinkId" type="String" />
 		<property name="deepLinkVal" type="String" />
-		<!-- TISQAUAT-613 -->
+		<!-- TISQAUAT-613 --> 
+		<property name="url" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSubHierarchyData">
 		<property name="sub_category_name" type="String" />
@@ -262,6 +278,7 @@
 		<property name="deepLinkId" type="String" />
 		<property name="deepLinkVal" type="String" />
 		<!-- TISQAUAT-613 -->
+		<property name="url" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData">
 
@@ -271,8 +288,8 @@
 		<property name="deepLinkType" type="String" />
 		<property name="deepLinkId" type="String" />
 		<property name="deepLinkVal" type="String" />
-		<!-- TISQAUAT-613 -->
-
+		<!-- TISQAUAT-613 --> 
+		<property name="url" type="String" />
 
 	</bean>
 

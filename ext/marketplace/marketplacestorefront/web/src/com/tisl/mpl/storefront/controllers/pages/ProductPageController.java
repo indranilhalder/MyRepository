@@ -67,7 +67,6 @@ import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -77,7 +76,6 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
-import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -85,9 +83,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.SocketAddress;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -158,6 +153,7 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.msd.MSDWidgetFacade;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
@@ -166,10 +162,9 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
-import com.tisl.mpl.facades.MplSlaveMasterFacade;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MSDRequestdata;
-import com.tisl.mpl.facades.data.MSDResponsedata;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -185,7 +180,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
@@ -204,7 +198,6 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
-import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -314,6 +307,9 @@ public class ProductPageController extends MidPageController
 
 	private static final String MPH = "MPH".intern();
 
+	private static final String ERROR = "Error>>";
+	private static final String SEPERATOR_X = " X ";
+
 	//TPR-6405
 	private static final String SAMSUNG = "Samsung";
 	@SuppressWarnings("unused")
@@ -357,8 +353,7 @@ public class ProductPageController extends MidPageController
 	private BuyBoxFacade buyBoxFacade;
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
+
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
@@ -406,11 +401,8 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
-	@Resource(name = "mplSlaveMasterFacade")
-	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
-	@Resource(name = "pointOfServiceConverter")
-	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
+
 
 	@Autowired
 	private CommonUtils commonUtils;
@@ -433,9 +425,29 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "msdWidgetFacade")
 	private MSDWidgetFacade msdWidgetFacade;
 
+	@Resource(name = "mplCmsFacade")
+	private MplCmsFacade mplCmsFacade;
+
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
 	//	private Map<String, String> jewelleryDescMapping;
+
+	/**
+	 * @return the mplCmsFacade
+	 */
+	public MplCmsFacade getMplCmsFacade()
+	{
+		return mplCmsFacade;
+	}
+
+	/**
+	 * @param mplCmsFacade
+	 *           the mplCmsFacade to set
+	 */
+	public void setMplCmsFacade(final MplCmsFacade mplCmsFacade)
+	{
+		this.mplCmsFacade = mplCmsFacade;
+	}
 
 	/**
 	 * @param buyBoxFacade
@@ -498,6 +510,7 @@ public class ProductPageController extends MidPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
+		getFooterContent("FooterSlot", model);
 		//final was written here
 		String returnStatement = null;
 
@@ -694,7 +707,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + ERROR + exception);
 		}
 
 
@@ -719,7 +732,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + ERROR + exception);
 		}
 	}
 
@@ -753,7 +766,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + "Error>>"
+			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + ERROR
 					+ exception);
 		}
 
@@ -768,14 +781,14 @@ public class ProductPageController extends MidPageController
 		BufferedReader bufferedReader = null;
 		try
 		{
-			final String proxyPort = configService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.RATING_PROXY_PORT);
-			final String proxySet = configService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-			final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
-			final int proxyPortInt = Integer.parseInt(proxyPort);
-			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			//final String proxyPort = configService.getConfiguration().getString(
+			//	MarketplacecclientservicesConstants.RATING_PROXY_PORT);
+			//final String proxySet = configService.getConfiguration().getString(
+			//	MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
+			//final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
+			//final int proxyPortInt = Integer.parseInt(proxyPort);
+			//final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			//	final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 			final String domain = request.getRequestURL().toString();
 
 			//URL Object
@@ -2203,6 +2216,7 @@ public class ProductPageController extends MidPageController
 				}
 			}
 			LOG.debug("===========After Samsung block=================");
+
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
@@ -2780,7 +2794,7 @@ public class ProductPageController extends MidPageController
 							{
 								if (islengthAvailable && iswidthAvailable && isheightAvailable)
 								{
-									prodDimensionValue = length + " X " + width + " X " + height;
+									prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -2788,7 +2802,7 @@ public class ProductPageController extends MidPageController
 								}
 								else if (islengthAvailable && iswidthAvailable)
 								{
-									prodDimensionValue = length + " X " + width;
+									prodDimensionValue = length + SEPERATOR_X + width;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -2826,7 +2840,7 @@ public class ProductPageController extends MidPageController
 								{
 									if (islengthAvailable && iswidthAvailable && isheightAvailable)
 									{
-										prodDimensionValue = length + " X " + width + " X " + height;
+										prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 												+ prodDimensionValue);
@@ -2834,7 +2848,7 @@ public class ProductPageController extends MidPageController
 									}
 									else if (islengthAvailable && iswidthAvailable)
 									{
-										prodDimensionValue = length + " X " + width;
+										prodDimensionValue = length + SEPERATOR_X + width;
 										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 												+ prodDimensionValue);
@@ -4856,6 +4870,19 @@ public class ProductPageController extends MidPageController
 
 	private void prepareBrandInfoData(final Model model, final ProductData productData)
 	{
+		//UBI-605 || TPR-7679
+		if (CollectionUtils.isNotEmpty(productData.getCategories()))
+		{
+			for (final CategoryData category : productData.getCategories())
+			{
+				if (category.getCode().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+				{
+					model.addAttribute("msiteBrandCode", category.getCode());
+					model.addAttribute("pdpBrandURL", category.getUrl());
+				}
+			}
+		}
+
 		if (null != productData.getBrand())
 		{
 			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
@@ -4864,7 +4891,7 @@ public class ProductPageController extends MidPageController
 			 * model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ?
 			 * productData .getBrand().getBrandCode().toLowerCase() : null);
 			 */
-			model.addAttribute("msiteBrandCode", getBrandCodeFromSuperCategories(productData.getBrand().getBrandCode()));
+
 
 			if (null != productData.getBrand().getBrandDescription())
 			{
@@ -5343,7 +5370,6 @@ public class ProductPageController extends MidPageController
 				final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
 				final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
 				final String num_results = configurationService.getConfiguration().getString("num_results.key");
-				final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
 				if (request.getParameterMap().containsKey("productCode"))
 				{
 					productCode = request.getParameter("productCode").toString();
@@ -5367,7 +5393,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error during populating MSD >> for Home Furnishing >>" + "Error>>" + e);
+			LOG.error("Error during populating MSD >> for Home Furnishing >>" + ERROR + e);
 		}
 		return MSDJObject;
 	}
@@ -5410,6 +5436,45 @@ public class ProductPageController extends MidPageController
 
 
 	//CAR-327 ends here
+	/**
+	 *
+	 * @param slotId
+	 * @param model
+	 * @return
+	 */
+	public void getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
+	{
+		try
+		{
 
+			// For TPR-5733
+			final Map<Integer, Map<Integer, FooterLinkData>> mplFooterLinkRowList = mplCmsFacade.getFooterLinkData();
+			if (MapUtils.isNotEmpty(mplFooterLinkRowList))
+			{
+				model.addAttribute(ModelAttributetConstants.FOOTER_LINK_LIST, mplFooterLinkRowList);
+			}
+			else
+			{
+				LOG.debug("##########################   Returned empty list for footer link ####################################");
+			}
+
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+	}
 
 }

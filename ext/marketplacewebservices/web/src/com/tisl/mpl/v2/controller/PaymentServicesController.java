@@ -123,6 +123,8 @@ public class PaymentServicesController extends BaseController
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
+	private static final String MPLCARTVOUCHER = "mplcartvoucher";
+	private static final String PROMOVOUCHER = "promovoucher";
 
 	@Resource(name = "userService")
 	private UserService userService;
@@ -759,11 +761,11 @@ public class PaymentServicesController extends BaseController
 											}
 											if (mplCartVoucher)
 											{ //MplCartOfferVoucherModel
-												voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+												voucherMap.put(MPLCARTVOUCHER, Boolean.valueOf(willApply));
 											}
 											else
 											{ //PromotionVoucherModel
-												voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+												voucherMap.put(PROMOVOUCHER, Boolean.valueOf(willApply));
 											}
 
 											//if (willApply == false)
@@ -784,14 +786,14 @@ public class PaymentServicesController extends BaseController
 							for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
 							{
 
-								if (voucherentry.getKey().equals("mplcartvoucher"))
+								if (voucherentry.getKey().equals(MPLCARTVOUCHER))
 								{
 									if (!voucherentry.getValue().booleanValue())
 									{
 										checkcartVoucher1 = false;
 									}
 								}
-								if (voucherentry.getKey().equals("promovoucher"))
+								if (voucherentry.getKey().equals(PROMOVOUCHER))
 								{
 									if (!voucherentry.getValue().booleanValue())
 									{
@@ -989,11 +991,11 @@ public class PaymentServicesController extends BaseController
 
 										if (mplCartVoucher)
 										{ //MplCartOfferVoucherModel
-											voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+											voucherMap.put(MPLCARTVOUCHER, Boolean.valueOf(willApply));
 										}
 										else
 										{ //PromotionVoucherModel
-											voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+											voucherMap.put(PROMOVOUCHER, Boolean.valueOf(willApply));
 										}
 
 										//if (willApply == false)//SonarFix
@@ -1009,14 +1011,14 @@ public class PaymentServicesController extends BaseController
 						for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
 						{
 
-							if (voucherentry.getKey().equals("mplcartvoucher"))
+							if (voucherentry.getKey().equals(MPLCARTVOUCHER))
 							{
 								if (!voucherentry.getValue().booleanValue())
 								{
 									checkcartVoucher1 = false;
 								}
 							}
-							if (voucherentry.getKey().equals("promovoucher"))
+							if (voucherentry.getKey().equals(PROMOVOUCHER))
 							{
 								if (!voucherentry.getValue().booleanValue())
 								{

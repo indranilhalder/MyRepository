@@ -1843,6 +1843,13 @@
 		$(this).parents("#card").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
+		/* start add for SDI-2885 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for SDI-2885 */
 	});
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1866,6 +1873,13 @@
 		$(this).parents("#cardDebit").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
+		/* start add for SDI-2885 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for SDI-2885 */
 	});
 	</script>
 	<script>

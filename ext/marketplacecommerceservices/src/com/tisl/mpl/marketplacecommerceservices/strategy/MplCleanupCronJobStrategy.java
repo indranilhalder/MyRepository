@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.strategy;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -40,7 +43,7 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 	private Set<CronJobResult> result;
 	private Set<CronJobStatus> status;
 	private Set<String> excludedCronJobCodes;
-	private String expiryDays;
+	//private String expiryDays;
 
 
 	//dynamic job properties
@@ -48,7 +51,8 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 	private String cronJobType = CronJobModel._TYPECODE;
 	private static final String ADD_QUERY_STATEMENT = "AND {";
 
-
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	@Override
 	public FlexibleSearchQuery createFetchQuery(final CronJobModel cjm)
@@ -56,7 +60,7 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 		LOG.error("**Inside Cron Job Strategy**");
 		try
 		{
-			daysOld = Integer.parseInt(this.expiryDays);
+			daysOld = Integer.parseInt(configurationService.getConfiguration().getString("cronjob.dayOld.count"));
 		}
 		catch (final Exception exceptn)
 		{
@@ -192,19 +196,19 @@ public class MplCleanupCronJobStrategy implements MaintenanceCleanupStrategy<Cro
 	/**
 	 * @return the expiryDays
 	 */
-	public String getExpiryDays()
-	{
-		return expiryDays;
-	}
+	//public String getExpiryDays()
+	//{
+	//	return expiryDays;
+	//}
 
 	/**
 	 * @param expiryDays
 	 *           the expiryDays to set
 	 */
-	public void setExpiryDays(final String expiryDays)
-	{
-		this.expiryDays = expiryDays;
-	}
+	//public void setExpiryDays(final String expiryDays)
+	//{
+	//this.expiryDays = expiryDays;
+	//}
 
 
 }

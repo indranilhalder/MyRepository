@@ -22,7 +22,7 @@ public class MplConsignmentStatusMappingStrategy implements OmsHybrisEnumMapping
 	@Override
 	public ConsignmentStatus getHybrisEnumFromDto(final ShipmentDTO shipment)
 	{
-		if (Boolean.valueOf(shipment.getPickupInStore()).booleanValue() && (getPickupOverrideStatusMapping() != null)
+		if (Boolean.parseBoolean(shipment.getPickupInStore()) && (getPickupOverrideStatusMapping() != null)
 				&& (getPickupOverrideStatusMapping().containsKey(shipment.getOlqsStatus())))
 		{
 			return (getPickupOverrideStatusMapping().get(shipment.getOlqsStatus()));
@@ -54,7 +54,7 @@ public class MplConsignmentStatusMappingStrategy implements OmsHybrisEnumMapping
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.integration.oms.mapping.OmsHybrisEnumMappingStrategy#getHybrisEnumFromDto(com.hybris.commons
 	 * .dto.Dto)

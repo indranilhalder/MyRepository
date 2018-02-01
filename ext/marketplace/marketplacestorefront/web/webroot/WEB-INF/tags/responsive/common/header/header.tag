@@ -26,18 +26,18 @@
 	<c:set var="hideLogo" value="true"></c:set>
 </c:if>
 
-			<div class="wishAddLoginPlp">
-			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+			<div class="wishAddLoginPlp">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 			</div>
-			<div class="wishAddSucessPlp">
-			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+			<div class="wishAddSucessPlp">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 			</div>
-			<div class="wishAlreadyAddedPlp">
-			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+			<div class="wishAlreadyAddedPlp">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 			</div>
 			
-			<div class="wishRemoveSucessPlp">
-			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+			<div class="wishRemoveSucessPlp">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 			</div>
 	
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>

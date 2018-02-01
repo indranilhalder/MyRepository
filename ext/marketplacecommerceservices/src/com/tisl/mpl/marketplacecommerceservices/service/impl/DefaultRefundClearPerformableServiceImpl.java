@@ -70,9 +70,11 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 	private ModelService modelService;
 
-	final Double refundClearTATFinal = new Double(10);
+	final static Double refundClearTATFinal = new Double(10);
 
-	final Double refundStartTime = new Double(120);
+	final static Double refundStartTime = new Double(120);
+
+	private static final String SUCCESS = "SUCCESS";
 
 	@Override
 	public void processRefundOrders()
@@ -416,18 +418,18 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				}
 
 
-				if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS") && cancelledForRisk)
+				if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS) && cancelledForRisk)
 				{
 					updateOrderStatusCancelledForRisk(order);
 				}
 				else if (refundReason.equalsIgnoreCase(JuspayRefundType.CANCELLED.toString())
-						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 				{
 					updateStatus(ConsignmentStatus.ORDER_CANCELLED, consignment, order);
 					updateOrderStatusCancelled(rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
 				}
 				else if (refundReason.equalsIgnoreCase(JuspayRefundType.RETURN.toString())
-						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+						&& StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), SUCCESS))
 				{
 					updateStatus(ConsignmentStatus.RETURN_COMPLETED, consignment, order);
 					updateOrderStatusReturn(rtmModel.getRefundedOrderEntry(), paymentTransactionModel);
@@ -707,3 +709,4 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	}
 
 }
+

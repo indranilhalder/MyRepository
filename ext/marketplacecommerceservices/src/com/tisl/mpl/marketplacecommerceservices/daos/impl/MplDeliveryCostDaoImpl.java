@@ -33,6 +33,9 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 	private FlexibleSearchService flexibleSearchService;
 
 	private static final Logger LOG = Logger.getLogger(MplDeliveryCostDaoImpl.class);
+	private static final String FROM = " FROM {";
+	private static final String DELIVERY_CODE = "deliveryCode";
+	private static final String JOIN = " JOIN ";
 
 	@Override
 	public MplZoneDeliveryModeValueModel getDeliveryCost(final String deliveryCode, final String currencyIsoCode,
@@ -47,12 +50,12 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 
 			final StringBuilder deliveryCodeQuery = new StringBuilder(20);
 			deliveryCodeQuery.append("SELECT DISTINCT {del:").append(DeliveryModeModel.PK).append("} ");
-			deliveryCodeQuery.append(" FROM {").append(DeliveryModeModel._TYPECODE).append(" AS del ");
+			deliveryCodeQuery.append(FROM).append(DeliveryModeModel._TYPECODE).append(" AS del ");
 			deliveryCodeQuery.append("} WHERE upper({del:").append(DeliveryModeModel.CODE).append("}) = ?deliveryCode");
 
 
 			final Map<String, Object> params1 = new HashMap<String, Object>(2);
-			params1.put("deliveryCode", deliveryCode.toUpperCase());
+			params1.put(DELIVERY_CODE, deliveryCode.toUpperCase());
 
 			final SearchResult<DeliveryModeModel> searchRes = getFlexibleSearchService().search(deliveryCodeQuery.toString(),
 					params1);
@@ -68,11 +71,11 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 			{
 				final StringBuilder mplDeliveryModelQuery = new StringBuilder(40);
 				mplDeliveryModelQuery.append("SELECT DISTINCT {val:").append(MplZoneDeliveryModeValueModel.PK).append("} ");
-				mplDeliveryModelQuery.append(" FROM {").append(MplZoneDeliveryModeValueModel._TYPECODE).append(" AS val ");
-				mplDeliveryModelQuery.append(" JOIN ").append(DeliveryModeModel._TYPECODE).append(" AS dm ON {val:")
+				mplDeliveryModelQuery.append(FROM).append(MplZoneDeliveryModeValueModel._TYPECODE).append(" AS val ");
+				mplDeliveryModelQuery.append(JOIN).append(DeliveryModeModel._TYPECODE).append(" AS dm ON {val:")
 						.append(MplZoneDeliveryModeValueModel.DELIVERYMODE);
 				mplDeliveryModelQuery.append(" }={dm:").append(DeliveryModeModel.PK).append("} ");
-				mplDeliveryModelQuery.append(" JOIN ").append(CurrencyModel._TYPECODE).append("  AS CUR  ON {val:")
+				mplDeliveryModelQuery.append(JOIN).append(CurrencyModel._TYPECODE).append("  AS CUR  ON {val:")
 						.append(MplZoneDeliveryModeValueModel.CURRENCY);
 				mplDeliveryModelQuery.append("}={CUR:").append(CurrencyModel.PK).append("} ");
 				mplDeliveryModelQuery.append("} WHERE {val:").append(MplZoneDeliveryModeValueModel.DELIVERYMODE)
@@ -82,7 +85,7 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 						.append("} = ?sellerArticleSku");
 
 				final Map<String, Object> params = new HashMap<String, Object>(2);
-				params.put("deliveryCode", deliveryPk.toString());
+				params.put(DELIVERY_CODE, deliveryPk.toString());
 				params.put("currencyIsoCode", currencyIsoCode.toUpperCase());
 				params.put("sellerArticleSku", sellerArticleSku);
 
@@ -115,12 +118,12 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 
 			final StringBuilder deliveryCodeQuery = new StringBuilder(20);
 			deliveryCodeQuery.append("SELECT DISTINCT {del:").append(DeliveryModeModel.PK).append("} ");
-			deliveryCodeQuery.append(" FROM {").append(DeliveryModeModel._TYPECODE).append(" AS del ");
+			deliveryCodeQuery.append(FROM).append(DeliveryModeModel._TYPECODE).append(" AS del ");
 			deliveryCodeQuery.append("} WHERE upper({del:").append(DeliveryModeModel.CODE).append("}) = ?deliveryCode");
 
 
 			final Map<String, Object> params1 = new HashMap<String, Object>(2);
-			params1.put("deliveryCode", deliveryCode.toUpperCase());
+			params1.put(DELIVERY_CODE, deliveryCode.toUpperCase());
 
 			final SearchResult<DeliveryModeModel> searchRes = getFlexibleSearchService().search(deliveryCodeQuery.toString(),
 					params1);
@@ -136,11 +139,11 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 			{
 				final StringBuilder mplDeliveryModelQuery = new StringBuilder(40);
 				mplDeliveryModelQuery.append("SELECT DISTINCT {val:").append(MplZoneDeliveryModeValueModel.PK).append("} ");
-				mplDeliveryModelQuery.append(" FROM {").append(MplZoneDeliveryModeValueModel._TYPECODE).append(" AS val ");
-				mplDeliveryModelQuery.append(" JOIN ").append(DeliveryModeModel._TYPECODE).append(" AS dm ON {val:")
+				mplDeliveryModelQuery.append(FROM).append(MplZoneDeliveryModeValueModel._TYPECODE).append(" AS val ");
+				mplDeliveryModelQuery.append(JOIN).append(DeliveryModeModel._TYPECODE).append(" AS dm ON {val:")
 						.append(MplZoneDeliveryModeValueModel.DELIVERYMODE);
 				mplDeliveryModelQuery.append(" }={dm:").append(DeliveryModeModel.PK).append("} ");
-				mplDeliveryModelQuery.append(" JOIN ").append(CurrencyModel._TYPECODE).append("  AS CUR  ON {val:")
+				mplDeliveryModelQuery.append(JOIN).append(CurrencyModel._TYPECODE).append("  AS CUR  ON {val:")
 						.append(MplZoneDeliveryModeValueModel.CURRENCY);
 				mplDeliveryModelQuery.append("}={CUR:").append(CurrencyModel.PK).append("} ");
 				mplDeliveryModelQuery.append("} WHERE {val:").append(MplZoneDeliveryModeValueModel.DELIVERYMODE)
@@ -151,7 +154,7 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 
 
 				final Map<String, Object> params = new HashMap<String, Object>(2);
-				params.put("deliveryCode", deliveryPk.toString());
+				params.put(DELIVERY_CODE, deliveryPk.toString());
 				params.put("currencyIsoCode", currencyIsoCode.toUpperCase());
 				params.put("sellerArticleSku", sellerArticleSku);
 
@@ -190,7 +193,7 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao#getDeliveryModesAndCost(java.lang.String)
 	 */
 	@Override
@@ -202,9 +205,9 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 
 		final StringBuilder mplDeliveryModequery = new StringBuilder(150);
 		mplDeliveryModequery.append("SELECT DISTINCT {val:" + MplZoneDeliveryModeValueModel.PK + "} ");
-		mplDeliveryModequery.append(" FROM {" + MplZoneDeliveryModeValueModel._TYPECODE + " AS val ");
-		mplDeliveryModequery.append(" JOIN " + CurrencyModel._TYPECODE + "  AS CUR  ON {val:"
-				+ MplZoneDeliveryModeValueModel.CURRENCY + "}={CUR:" + CurrencyModel.PK + "} ");
+		mplDeliveryModequery.append(FROM + MplZoneDeliveryModeValueModel._TYPECODE + " AS val ");
+		mplDeliveryModequery.append(JOIN + CurrencyModel._TYPECODE + "  AS CUR  ON {val:" + MplZoneDeliveryModeValueModel.CURRENCY
+				+ "}={CUR:" + CurrencyModel.PK + "} ");
 
 		mplDeliveryModequery.append("} WHERE {val:" + MplZoneDeliveryModeValueModel.SELLERARTICLESKU + "} = ?sellerArticleSku");
 		mplDeliveryModequery.append(" AND upper({CUR:" + CurrencyModel.ISOCODE + "}) = ?currencyIsoCode ");
