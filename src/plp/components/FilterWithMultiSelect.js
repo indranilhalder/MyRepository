@@ -1,5 +1,5 @@
-import WithMultiSelect from "../../general/components/WithMultiSelect.js";
+import withMultiSelect from "../../higerOrderComponents/withMultiSelect.js";
 
 import FilterSection from "./FilterSection";
-const FilterWithMultiSelect = WithMultiSelect(FilterSection);
+const FilterWithMultiSelect = withMultiSelect(FilterSection);
 export default FilterWithMultiSelect;
