@@ -21,9 +21,11 @@ export default class SelectedFilter extends React.Component {
     }
     return (
       <div className={classActive} onClick={() => this.handleClick()}>
-        <div className={styles.selectedText}>{this.props.text}</div>
-        {this.props.value && (
-          <div className={styles.selected}>{this.props.value}</div>
+        <div className={styles.selectedText}>{this.props.name}</div>
+        {this.props.selectedFilterCount && (
+          <div className={styles.selected}>
+            {this.props.selectedFilterCount}
+          </div>
         )}
       </div>
     );
@@ -31,8 +33,8 @@ export default class SelectedFilter extends React.Component {
 }
 
 SelectedFilter.propTypes = {
-  text: PropTypes.string,
-  value: PropTypes.string,
+  name: PropTypes.string,
+  selectedFilterCount: PropTypes.string,
   type: PropTypes.oneOf(["advance"]),
   selected: PropTypes.bool,
   onClick: PropTypes.func

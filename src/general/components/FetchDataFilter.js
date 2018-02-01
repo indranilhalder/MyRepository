@@ -1,5 +1,5 @@
 import React from "react";
-import FetchFilter from "./FetchFilter";
+import SelectedFilter from "./FilterTab";
 import styles from "./FetchDataFilter";
 import PropTypes from "prop-types";
 
@@ -10,11 +10,13 @@ export default class FetchDataFilter extends React.Component {
       <div className={styles.base}>
         {data.map((datum, i) => {
           return (
-            <FetchFilter
+            <SelectedFilter
               key={i}
               name={datum.name}
               selectedFilterCount={datum.selectedFilterCount}
               onClick={this.props.onClick}
+              selected={true}
+              type="advance"
             />
           );
         })}
