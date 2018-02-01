@@ -27,8 +27,8 @@
   background-color: #ffffff;
 }
 .selectedText {
-  width: 100%;
   display: inline-block;
+  width: 100%;
   line-height: normal;
   font-size: 14px;
   vertical-align: middle;
