@@ -1,0 +1,418 @@
+body .account .right-account .info fieldset form#mplCustomerProfileForm {
+    border-top: 1px solid #eeeeee;
+}
+body .account .right-account form div.half, body .account .right-account form div.full, body .account .right-account form div.quarter, body .account .right-account form div.select {
+    margin-top: 27px;
+}
+body .account .right-account form .half:nth-of-type(odd), body .account .right-account form .half.account-profileEmail, .birthday {
+    padding-right: 8px;
+}
+body .account .right-account form .half.quarter.titleName {
+    width: 7%;
+}
+body .account .right-account form .half.quarter.titleName, body .account .right-account form div.half.quarter, body .account .right-account form .quarter.lastNaming, body .account .right-account form .quarter.phone.quarter {
+    margin-bottom: 15px;
+}
+.titleName label.control-label {
+    width: 130px;
+}
+body .account .right-account form label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    margin-bottom: 1px;
+    line-height: 1;
+    letter-spacing: 0.6px;
+}
+.skip, .skiptocontent, .skiptonavigation {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls {
+    position: relative;
+}
+.controls {
+    padding-left: 0 !important;
+}
+
+body .account .right-account form .quarter input, body .account .right-account form .quarter select {
+    height: 42px;
+    border: 1px solid #bbbbbb;
+}
+body .account .right-account form .half.quarter.titleName select {
+    width: 100%;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls > select {
+    background-image: none;
+}
+body .account .right-account form .half, body .account .right-account form .full, body .account .right-account form .select {
+    margin: 10px 0;
+    float: left;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls:after {
+    right: 10px;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls:after {
+    content: "";
+    height: 6px;
+    width: 6px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    position: absolute;
+    right: 6px;
+    top: 16px;
+    transform: rotate(45deg);
+}
+.lastNameHideVisibility, .firstNameHideVisibility {
+    visibility: hidden;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls:after {
+    right: 10px;
+}
+.form-control {
+    display: block;
+    font-size: 12px;
+    color: #555555;
+    background-color: #ffffff;
+    border-radius: 0;
+}
+body .account .right-account form .half.quarter {
+    width: 18%;
+}
+body .account .right-account form .half input {
+    width: 100%;
+    border-width: 1px;
+    padding-left: 10px;
+    font-size: 12px;
+}
+body .account .right-account form .quarter.lastNaming, body .account .right-account form .full.phone input {
+    margin-left: -1px;
+}
+body .account .right-account form .quarter.lastNaming {
+    padding-right: 0;
+}
+body .account .right-account form .half.quarter.account-profileEmail {
+    width: 20%;
+}
+.account-profileEmail {
+    clear: both;
+}
+body .account .right-account form .half.quarter.account-profileEmail.quarter, body .account .right-account form .quarter.phone.quarter {
+    margin-top: 40px;
+}
+body .account .right-account form .quarter.phone {
+    width: 50%;
+    margin-right: 25%;
+}
+body .account .right-account form .full:nth-of-type(odd) {
+    padding-right: 10px;
+}
+body .account .right-account form .select.calender {
+    width: 20%;
+    margin-bottom: 30px;
+}
+body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>select {
+    padding-right: 0;
+    padding-left: 10px;
+}
+body .account .right-account .info fieldset form .quarter.phone .mobile_greyed > select {
+    background-color: #eee;
+}
+body .account .right-account form .full.phone select {
+    width: 30%;
+    width: 50px;
+    float: left;
+    background-image: none;
+    font-weight: 600;
+    color: #000;
+    opacity: 0.7;
+}
+body .account .right-account form .full.phone input {
+    float: left;
+    width: 36%;
+}
+body .account .right-account form div.select.calender.quarter.birthday, body .account .right-account form div.select.calender.quarter.anniversaryday {
+    margin-top: 40px;
+    margin-bottom: 55px;
+}
+body .account .right-account form .select.calender.birthday {
+    clear: both;
+}
+.anniversaryday label {
+    width: 500px;
+}
+body .account .right-account form .select.calender.anniversaryday {
+    width: 23%;
+}
+body .account .right-account .info, body .account .right-account .password, body .account .right-account .nickname, body .account .right-account .picture {
+    border: 1px solid #DFD1D5;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+body .account .right-account .password, body .account .right-account .signOut {
+    padding-top: 24px;
+}
+body .account .right-account .password {
+    margin-bottom: 30px;
+}
+body .account .right-account .password, body .account .right-account .signOut {
+    border: none;
+    padding: 0;
+    padding-top: 25px;
+    border-top: 1px solid #eeeeee;
+}
+body .account .right-account .info {
+    border: none;
+    padding: 0;
+    margin-bottom: 55px;
+}
+body .account .right-account>div>h2 {
+    margin-bottom: 10px;
+    /* font-size: 24px; */
+    font-weight: 500;
+    letter-spacing: .5px;
+    font-size: 28px;
+    line-height: 1.29;
+}
+body .account .right-account .password h2, body .account .right-account .signOut h2 {
+    font-size: 16px;
+    margin-bottom: 2px;
+    line-height: 16px;
+    height: auto;
+}
+body .account .right-account .password p, body .account .right-account .signOut p {
+    line-height: 16px;
+    color: #cccccc;
+    display: inline-block;
+}
+body .account .right-account .info p, body .account .right-account .password p, body .account .right-account .nickname p, body .account .right-account .picture p {
+    font-size: 12px;
+    font-weight: 500;
+}
+body .account .right-account button.blue {
+    background-color: #A9143C;
+    width: auto;
+}
+style.css:70035
+body .account .right-account .blue {
+    height: 42px;
+    line-height: 40px;
+    font-size: 12px;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    min-width: 200px;
+    font-weight: 500;
+    clear: both;
+    color: #fff;
+    text-align: center;
+}
+body .account .right-account button.blue {
+    background-color: #A9143C;
+    width: auto;
+}
+body .account .right-account .password .blue.changePass, body .account .right-account .password .blue.crossPass, body .account .right-account .signOut .blue.changePass {
+    float: right;
+    background-color: #000;
+    margin-top: -18px;
+    min-width: 216px;
+}
+body .account .right-account .password .blue.changePass {
+    margin-top: -17px;
+}
+body .account .right-account .password, body .account .right-account .signOut {
+    padding-top: 24px;
+}
+body .account .right-account .password {
+    margin-bottom: 30px;
+}
+body .account .right-account .password .blue.crossPass {
+    background-color: transparent;
+    color: #000;
+    display: none;
+    min-width: auto;
+    padding: 0;
+}
+body .account .right-account .password #frmUpdatePassword {
+    display: none;
+}
+body .account .right-account .password .blue.changePassResponsive {
+    display: none;
+}
+body .account .right-account form .full.span.password-input.quarter {
+    width: 20%;
+    margin-right: 70%;
+    padding-right: 0;
+}
+body .account .right-account .password .blue.crossPass:before {
+    content: "\00d7";
+    color: #000;
+    font-size: 26px;
+    font-weight: bold;
+    -webkit-transition: font-weight 0.15s;
+    -moz-transition: font-weight 0.15s;
+    transition: font-weight 0.15s;
+    position: relative;
+    top: -14px;
+}
+body .account .right-account form .quarter.half.password-input.quarter.newPasswordSet, body .account .right-account form .quarter.half.password-input.quarter.confirmPassword {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+body .account .right-account form .quarter.half.password-input {
+    width: 21%;
+}
+body .account .right-account .password form .half:nth-of-type(even) {
+    padding-right: 10px;
+}
+.help-block {
+    margin-top: 10px;
+    font-size: 12px;
+}
+body .account .right-account .signOut {
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eeeeee;
+}
+body .account .right-account .info .myprofile + h2 {
+    margin-bottom: 0;
+}
+body .account .right-account .password form .half:nth-of-type(odd) {
+    padding-right: 0;
+}
+
+@media (max-width: 650px){
+body .account .right-account form label {
+    font-size: 12px ! important;
+}
+}
+
+@media (max-width: 790px){
+body .account .right-account .info fieldset, body .account .right-account .password fieldset {
+    min-width: auto;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName {
+    width: 20%;
+}
+body .account .right-account form .half.quarter.titleName, body .account .right-account form div.half.quarter, body .account .right-account form .quarter.lastNaming {
+    margin-top: 36px;
+}
+body .account .right-account .info fieldset form .quarter {
+    width: 40%;
+}
+body .account .right-account .info fieldset form .half.quarter.account-profileEmail, body .account .right-account .info fieldset form .quarter.phone, body .account .right-account .info fieldset form .select.calender, body .account .right-account .password form#frmUpdatePassword .password-input.quarter {
+    width: 50%;
+}
+body .account .right-account .info fieldset form .quarter.phone {
+    margin-right: 0;
+    padding-right: 0;
+}
+body .account .right-account .info fieldset form .quarter input#profileMobileNumber {
+    width: calc(100% - 50px);
+}
+body .account .right-account .responsiveProfile.password .blue.changePassResponsive {
+    display: block;
+}
+body .account .right-account .responsiveProfile.password .blue.changePassResponsive, body .account .right-account .responsiveProfile.signOut .blue.changePass {
+    color: #a5173c;
+}
+body .account .right-account .responsiveProfile.password .blue.changePassResponsive {
+    min-width: auto;
+    width: auto;
+    background: transparent;
+    transition: 0s;
+    margin-top: -17px;
+    float: right;
+    height: 42px;
+    line-height: 40px;
+    font-size: 12px;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    clear: both;
+    text-align: center;
+}
+body .account .right-account .signOut.responsiveProfile p {
+    width: 46%;
+}
+body .account .right-account .responsiveProfile.password .blue.changePassResponsive, body .account .right-account .responsiveProfile.signOut .blue.changePass {
+    color: #a5173c;
+}
+body .account .right-account .responsiveProfile.password .blue.changePass, body .account .right-account .responsiveProfile.password .blue.crossPass, body .account .right-account .responsiveProfile.signOut .blue.changePass {
+    min-width: auto;
+    width: auto;
+    background: transparent;
+    color: #88102C;
+    transition: 0s;
+}
+body .account .right-account .responsiveProfile.password .blue.changePass {
+    display: none;
+}
+body #account-invite .right-account>div.invites>h2 {
+	margin-top: 16px;	/* add for TISPRDT-8255 */
+}
+}
+
+/* alert error */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 0;
+}
+.close {
+    border-radius: 50%;
+    border: 1px solid #ccc !important;
+    width: 30px;
+    height: 30px;
+    margin-top: -10px !important;
+    margin-right: -14px !important;
+    position: absolute;
+    right: 17px;
+    top: -6px;
+}
+.global-alerts {
+    font-family: "Montserrat";
+    font-size: 14px;
+    opacity: 1;
+}
+.alert-info {
+    border-color: #60A119;
+    color: #60A119;
+    background-color: rgba(96, 161, 25, 0.1);
+}
+
+.alert-dismissable, .alert-dismissible {
+    padding-right: 35px;
+}
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
+    margin-right: 10px !important;
+}
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
+    position: relative;
+    border: 0px !important;
+    top: 6px !important;
+    right: -21px;
+    color: transparent;
+    background-image: url(../images/Clear.png);
+    height: 24px;
+    width: 24px;
+    float: left;
+    opacity: 1;
+    left: 0px;
+    margin-right: 10px;
+    display: block;
+}
+@media (max-width: 370px)
+{
+body .account .right-account select {
+    padding-left: 5px;
+}
+}

@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -486,4 +488,63 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		final List<MplFooterLinkModel> footerLinks = flexibleSearchService.<MplFooterLinkModel> search(query).getResult();
 		return footerLinks;
 	}
+
+	/*
+	 * Fetches all AmpServiceworker models
+	 *
+	 * @param void
+	 *
+	 * @return List<AmpServiceworkerModel>
+	 */
+	@Override
+	public List<AmpServiceworkerModel> getAllAmpServiceworkers()
+	{
+		final String queryStr = MarketplacecommerceservicesConstants.AMP_SERVICEWORKER_QUERY;
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStr);
+		final List<AmpServiceworkerModel> serviceworkerModels = flexibleSearchService.<AmpServiceworkerModel> search(query)
+				.getResult();
+		return serviceworkerModels;
+	}
+
+	/*
+	 * Fetches all AmpServiceworker models
+	 *
+	 * @param void
+	 *
+	 * @return List<AmpServiceworkerModel>
+	 */
+	@Override
+	public List<AmpMenifestModel> getAllAmpMenifestJsons()
+	{
+		final String queryStr = MarketplacecommerceservicesConstants.AMP_MENIFEST_JSON_QUERY;
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStr);
+		final List<AmpMenifestModel> menifestJsonModels = flexibleSearchService.<AmpMenifestModel> search(query).getResult();
+		return menifestJsonModels;
+	}
+
+	/*
+	 * UBI-605 (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getLandingPageForCategoryCode(java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getLandingPageForCategoryCode(final String categoryCode)
+	{
+		final String queryString = MarketplacecommerceservicesConstants.LANDING_PAGE_BY_CATEGORY_CODE_QUERY;
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		query.addQueryParameter("categoryCode", categoryCode);
+		query.addQueryParameter("catalogVersion", ONLINE_CATALOG_VERSION);
+
+		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
+
+		if (CollectionUtils.isNotEmpty(contentPages))
+		{
+			return contentPages.get(0);
+		}
+
+		return null;
+	}
+
+
 }
