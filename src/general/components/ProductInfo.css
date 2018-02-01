@@ -13,11 +13,16 @@
   color: #181818;
   font-size: 12px;
   font-family: regular;
-  line-height: 25px;
+  line-height: 20px;
 }
 .date {
   font-family: semibold;
 }
 .offerText {
   composes: bestDeliveryInfo;
+  line-height: 25px;
+}
+.textWrapper {
+  composes: base;
+  padding-bottom: 5px;
 }
