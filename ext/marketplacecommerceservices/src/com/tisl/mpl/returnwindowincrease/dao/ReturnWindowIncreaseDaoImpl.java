@@ -56,11 +56,13 @@ public class ReturnWindowIncreaseDaoImpl implements ReturnWindowIncreaseDao
 			LOG.error(MarketplacecommerceservicesConstants.ConsignmentListFailure, e);
 
 		}
-
-		finally
+		catch (final Exception e)
 		{
-			return c;
+			LOG.error(MarketplacecommerceservicesConstants.ConsignmentListFailure, e);
 		}
+
+		return c;
+
 
 
 	}

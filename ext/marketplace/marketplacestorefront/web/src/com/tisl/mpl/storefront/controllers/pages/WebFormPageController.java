@@ -14,9 +14,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
-import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.StoreBreadcrumbBuilder;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -67,15 +65,15 @@ public class WebFormPageController extends AbstractMplSearchPageController
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
-
-	@Resource(name = "storeBreadcrumbBuilder")
-	private StoreBreadcrumbBuilder storeBreadcrumbBuilder;
+	//SONR FIX
+	//	@Resource(name = "storeBreadcrumbBuilder")
+	//	private StoreBreadcrumbBuilder storeBreadcrumbBuilder;
 
 	@Resource(name = "mplWebFormFacade")
 	private MplWebFormFacade mplWebFormFacade;
 
-	@Resource(name = "customerFacade")
-	private CustomerFacade customerFacade;
+	//	@Resource(name = "customerFacade")
+	//	private CustomerFacade customerFacade;
 
 	private static final String WEB_FORM = "faq";
 

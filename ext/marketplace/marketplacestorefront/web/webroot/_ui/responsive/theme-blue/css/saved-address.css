@@ -1,0 +1,304 @@
+body .account .right-account .info.card-list h2 {
+    margin-bottom: 0;
+    padding: 10px;
+    border: 2px solid #f0f4f5;
+    height: auto;
+}
+body .account .right-account .info.card-list h2 span {
+    margin: 10px 0 5px;
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0;
+}
+body .account .right-account ul.saved-cards {
+    width: 100%;
+}
+body .account .right-account ul.saved-cards>li {
+    margin-bottom: 5px;
+}
+body .account .right-account ul.saved-cards>li .number, body .account .right-account ul.saved-cards>li .address {
+    background: #edf2f5;
+}
+body .account .right-account ul.saved-cards>li .details>ul, body .account .right-account ul.saved-cards>li .number, body .account .right-account ul.saved-cards>li .address {
+    position: relative;
+    padding: 20px 10px;
+}
+body .account .right-account ul.saved-cards>li::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .right-account ul.saved-cards>li.mpl-addressBook h2 {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    letter-spacing: normal;
+}
+body .account .right-account ul.saved-cards>li address {
+    line-height: 1.5;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+body .account .right-account ul.saved-cards>li .actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-align: right;
+}
+.actions {
+    font-size: 12px;
+}
+body .account .right-account ul.saved-cards>li .actions a:first-child {
+    display: inline-block;
+    margin-bottom: 4px;
+}
+body .account .right-account ul.saved-cards>li .actions a {
+    line-height: 1.5;
+    margin-right: 5px;
+}
+body .account .right-account ul.saved-cards>li a {
+    text-decoration: underline;
+    font-size: 12px;
+}
+body .account .right-account ul.saved-cards>li a.edit {
+    display: block;
+    margin-left: 4px;
+}
+body .account .right-account form.new-card, body .account .right-account div.new-address {
+    border: 1px solid #dfd1d5;
+    padding: 10px;
+    text-align: left;
+}
+body .account .right-account .new-address h2.account-only {
+    font-size: 20px;
+}
+.product-block, .cardForm ul {
+    margin-left: 0;
+}
+body .account .right-account .new-address .addresses.new-form input {
+    margin-bottom: 10px;
+}
+body .account .right-account form.new-card input[type="radio"]+label, body .account .right-account div.new-address input[type="radio"]+label {
+    padding-left: 0;
+    padding-right: 40px;
+    line-height: 20px;
+    display: inline-block;
+    position: relative;
+    margin-bottom: 15px;
+}
+body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before {
+    padding: 0;
+    margin-right: 30px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+body .account .right-account .new-address .addresses.new-form input {
+    margin-bottom: 10px;
+}
+body .account .right-account>div>h2 {
+    margin-bottom: 0;
+}
+body .account .right-account form.new-card input[type="radio"]+label.residential:after, body .account .right-account div.new-address input[type="radio"]+label.residential:after {
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f015";
+}
+body .account .right-account form.new-card input[type="radio"]+label:after, body .account .right-account div.new-address input[type="radio"]+label:after {
+    font-size: 15px;
+    position: absolute;
+    left: 15px;
+    top: 0;
+}
+body .account .right-account form.new-card input[type="radio"]+label.commercial:after, body .account .right-account div.new-address input[type="radio"]+label.commercial:after {
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f1ad";
+}
+body .account .right-account form.new-card fieldset:first-of-type, body .account .right-account div.new-address fieldset:first-of-type {
+    margin-bottom: 15px;
+}
+body .account .right-account form.new-card .half.no-display, body .account .right-account div.new-address .half.no-display {
+    float: left;
+    width: 24.5%;
+}
+body .account .right-account form div.half, body .account .right-account form div.full, body .account .right-account form div.quarter, body .account .right-account form div.select {
+    margin-top: 27px;
+}
+body .account .right-account form .half {
+    width: 49.8%;
+    float: left;
+}
+body .account .right-account form textarea {
+    border-color: #dfd1d5;
+    height: 100px;
+    width: 100%;
+    font-size: 14px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+body .account .right-account form.new-card .half.no-display, body .account .right-account div.new-address .half.no-display {
+    float: left;
+    width: 24.5%;
+}
+body .account .right-account form.new-card .half.account-only select, body .account .right-account form.new-card .half.no-display select, body .account .right-account div.new-address .half.account-only select, body .account .right-account div.new-address .half.no-display select {
+    width: 100%;
+    font-size: 14px;
+}
+body .account .right-account form.new-card .half, body .account .right-account div.new-address .half {
+    float: none;
+    padding: 0;
+}
+body .account .right-account form.new-card .half.no-display.country, body .account .right-account div.new-address .half.no-display.country, body .account .right-account div.new-address .half.no-display.last-name {
+    margin-left: 1%;
+}
+body .account .right-account form.new-card .half.phone select, body .account .right-account div.new-address .half.phone select {
+    width: 60px;
+    float: left;
+    background-image: none;
+    font-weight: 600;
+}
+body .account .right-account form.new-card .half.phone input, body .account .right-account div.new-address .half.phone input {
+    width: -webkit-calc(100% - 60px);
+    width: calc(100% - 60px);
+    float: left;
+}
+#editaddress .addresses .item #addressForm .phone select {
+    color: #000;
+    font-weight: bold;
+    padding: 0 5px;
+}
+body .account .new-address form div#checkBox {
+    margin-bottom: 30px;
+    color: #a9a9a9;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 10px;
+}
+body .account .right-account .new-address .addresses.new-form input {
+    margin-bottom: 10px;
+}
+body .account .right-account form input, body .account .right-account form select {
+    letter-spacing: .6px;
+}
+body .account .new-address form div#checkBox label {
+    cursor: pointer;
+    display: inline-block;
+}
+input[type="radio"]+label:before, input[type="checkbox"]+label:before {
+    border: 2px solid #fff;
+}
+input[type="radio"]+label:before, input[type="checkbox"]+label:before {
+    border: 1px solid #fff;
+    box-shadow: 0 0 0 2px #b9b9b9;
+}
+input[type="radio"]+label:before, input[type="checkbox"]+label:before {
+    border: 2px solid #fff;
+}
+.formaddress .checkout-indent #new-address-option-1+label, #new-address-option-2+label {
+    width: 49%;
+    font-weight: normal;
+    color: #a9a9a9;
+}
+body .account .right-account ul.saved-cards>li a.make-default {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+body .account .right-account ul.saved-cards>li a.delete, body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
+    position: relative;
+    float: right;
+    top: 0;
+    right: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    margin-bottom: 5px;
+}
+
+body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
+    color: #a9143c;
+}
+body .account .right-account .mpl-addressPopup.modal .closeColorBox {
+    margin-top: 10px;
+    background-color: #ffb810;
+    opacity: .7;
+    color: #000;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+}
+body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton {
+    margin-top: 10px;
+    background-color: #a9143c;
+    color: #fff;
+    text-transform: uppercase;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+}
+body .account .right-account ul.saved-cards>li a.make-default {
+    position: absolute !important;
+    top: 20px !important;
+    right: 10px !important;
+}
+@media (max-width: 650px){
+#stateListDropDown {
+    margin-top: 10px;
+}
+ul.product-block.addresses.new-form label.commercial {
+    float: right;
+}
+body .account .right-account div.new-address input[type="radio"]+label {
+    padding-right: 0;
+}
+body .account .right-account form.new-card .half:nth-of-type(odd), body .account .right-account div.new-address .half:nth-of-type(odd) {
+    margin-right: 4%;
+}
+body .account .right-account form.new-card .half.no-display, body .account .right-account div.new-address .half.no-display {
+    width: 48%;
+}
+body .account .right-account form.new-card .half.no-display.country, body .account .right-account div.new-address .half.no-display.country, body .account .right-account div.new-address .half.no-display.last-name {
+    margin-left: 0;
+}
+body .account .right-account form.new-card .half, body .account .right-account div.new-address .half {
+    float: left;
+    width: 100%;
+}
+body .account .right-account form.new-card .half:nth-of-type(odd), body .account .right-account div.new-address .half:nth-of-type(odd) {
+    margin-right: 4%;
+    background-color: white;
+}
+#countryListBox {
+    margin-top: 10px;
+    margin-right: 0;
+    float: right;
+}
+body .account .right-account ul.saved-cards>li a.make-default {
+    top: 5px ! important;
+}
+}
+@media (max-width: 790px){
+body .account .right-account ul.saved-cards>li .actions {
+    bottom: 2px;
+}
+.edit {
+    float: right;
+}
+body .account .right-account ul.saved-cards>li a {
+    line-height: 1.5;
+    margin-right: 12px;
+}
+}
+@media (min-width: 791px){
+body.page-address-book #new-address-option-1+label, body.page-address-book #new-address-option-2+label {
+    width: auto;
+}
+}

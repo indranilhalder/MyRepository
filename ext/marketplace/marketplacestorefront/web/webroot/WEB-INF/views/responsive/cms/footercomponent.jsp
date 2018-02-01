@@ -6,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+ 
 <div class="footer-text">
 	<%-- ${footerText} --%>
 	<c:choose>
@@ -18,6 +19,7 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
+
 </div>
 <div class="banner">
 	<span>${notice}</span>
