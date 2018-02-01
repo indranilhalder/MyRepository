@@ -22,7 +22,6 @@ import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
 import org.apache.solr.client.solrj.response.RangeFacet.Date;
-import java.util.Date;
 
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
@@ -2226,7 +2225,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
 	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type and {b:VersionID} is null"//SDI-2553
-	.intern();
+			.intern();
 	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
 			.intern();
 
@@ -2402,19 +2401,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
+	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
+
 	//UBI-605
 	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
-	
-	//SDI-4494	
+
+	//SDI-4494
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOMATIC = "AUTOMATIC";
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
 }
-
-	//CAR-330
-	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
-	public static final String LUX_IMPORT_CATALOG_ID = "luxProductCatalog";
-	public static final String LUX_IMPORT_CONTENT_CATALOG_ID = "luxContentCatalog";
-	public static final String LUX_IMPORT_CONTENT_CATALOG_VERSION = "Online";
