@@ -1086,13 +1086,10 @@ public class WalletController
 	}catch (final EtailBusinessExceptions e)
 	{
 		ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		if (null != e.getErrorMessage())
-		{
-			responce.setError(e.getErrorMessage());
-		}
 		if (null != e.getErrorCode())
 		{
 			responce.setErrorCode(e.getErrorCode());
+			responce.setError(Localization.getLocalizedString(e.getErrorCode()));
 		}
 		responce.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 	}
@@ -1178,12 +1175,9 @@ private ErrorDTO validateRequest(ErrorDTO responce,EgvWalletCreateRequestWsDTO r
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			if (null != e.getErrorMessage())
-			{
-				responce.setError(e.getErrorMessage());
-			}
 			if (null != e.getErrorCode())
 			{
+				responce.setError(Localization.getLocalizedString(e.getErrorCode()));
 				responce.setErrorCode(e.getErrorCode());
 			}
 			responce.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);

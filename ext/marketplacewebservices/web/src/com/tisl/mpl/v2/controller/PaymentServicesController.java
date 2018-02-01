@@ -1816,7 +1816,8 @@ public class PaymentServicesController extends BaseController
 						if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
 								&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
 						{
-
+							paymentModesData.setIsWalletCreated(true);
+							
 							CustomerWalletDetailResponse responce = mplWalletFacade
 									.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
 							if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())
@@ -1845,6 +1846,9 @@ public class PaymentServicesController extends BaseController
 								paymentModesData.setCliqCash(cliqCash);
 							}
 						}else {
+							paymentModesData.setFirstName(customer.getQcVerifyFirstName());
+							paymentModesData.setLastName(customer.getQcVerifyLastName());
+							paymentModesData.setMobileNumber(customer.getMobileNumber());
 							final BigDecimal walletAmount = new BigDecimal(0.0D);
 							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
 									MarketplacecommerceservicesConstants.INR);
