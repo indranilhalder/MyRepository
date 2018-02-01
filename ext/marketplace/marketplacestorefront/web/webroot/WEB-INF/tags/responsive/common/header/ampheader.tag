@@ -217,6 +217,14 @@ header{
 
 .sidebar-myaccount {margin-left: -5px;}
 
+.show-user-header i {float: right; margin-right: 15px; margin-top: 15px;}
+
+.user-menu-section ul {margin: 0 10px;}
+
+.user-menu-section ul li:first-child {border: none;}
+
+.user-menu-section ul li a {color: #3a3a3a; font-size: 14px; font-weight: 400; line-height: 50px;}
+
 .sidebar-profile span, .sidebar-myaccount {
 	background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -352px -176px;
  }
@@ -323,7 +331,7 @@ header{
 
 .user-information section[expanded] .sidebar-myaccount {filter: none;}
 
-.user-information > section > div > ul > li {
+.user-information > section > div > ul > li, .user-menu-section ul li {
     padding-left: 20px;
     line-height: 50px;
     border-bottom: 1px solid #e6e6e6;
