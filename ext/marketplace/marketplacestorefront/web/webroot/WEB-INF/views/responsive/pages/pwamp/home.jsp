@@ -11,6 +11,8 @@
 <html amp>
 <header:ampheader />
 <body on="tap:AMP.setState({visible: false})" role="menu" tabindex="0">
+	<amp-state id="user" credentials="include"
+    src="/pwamp/setheaderamp?timestamp=TIMESTAMP"></amp-state>
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.utility.host')"
 		var="host" />
@@ -136,7 +138,7 @@
 			</section>
 		</section>
 		<p class="header-icon-2 mobile-item">
-			<a href="/cart"><span class="responsive-bag">0</span></a>
+			<a href="/cart"><span class="responsive-bag" [text]="user.items[0].cartcount">0</span></a>
 		</p>
 		<p class="header-icon-3 mobile-item">
 			<i tabindex="1" role="main"
@@ -321,8 +323,6 @@
 							code="text.backToMobileStore" />
 				</a></li>
 			</c:if>
-<amp-state id="user" credentials="include"
-    src="/pwamp/setheaderamp?timestamp=TIMESTAMP"></amp-state>
 					<section class="hidden" [class]="user.items[0].loggedInStatus ? 'display-visible' : 'hidden'">
 						<p class="sidebar-divider-item show-user-header" role="profile" tabindex="1" on="tap:AMP.setState({showAccountInfo : !showAccountInfo})">
 									<c:set var="userName" value="${fname}"/>
