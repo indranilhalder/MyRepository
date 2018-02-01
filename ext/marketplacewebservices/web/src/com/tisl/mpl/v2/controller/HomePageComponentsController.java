@@ -19,11 +19,8 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
-import com.tisl.mpl.wsdto.BannersCarouselDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
-import com.tisl.mpl.wsdto.ThemeOffersDTO;
-import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
+import com.tisl.mpl.wsdto.HomepageComponetsDTO;
 
 
 /**
@@ -38,144 +35,46 @@ public class HomePageComponentsController
 	@Resource(name = "homePageAppFacade")
 	private HomePageAppFacade homePageAppFacade;
 
-	@RequestMapping(value = "/themeOfferComponent", method = RequestMethod.POST, consumes = "application/json")
+
+	@RequestMapping(value = "/getHomepageComponetsData", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public ThemeOffersDTO getThemeOffersComponent(@RequestParam final String mcvid, @RequestParam final String lat,
-			@RequestParam final String lng, @RequestParam final String pincode, @RequestParam final String channel,
-			@RequestParam final String isPwa, @RequestBody final HomepageComponentRequestDTO themeOffersRequestDTO)
+	public HomepageComponetsDTO getHomepageComponetsData(@RequestParam(required = false) final String mcvid,
+			@RequestParam(required = false) final String lat, @RequestParam(required = false) final String lng,
+			@RequestParam(required = false) final String pincode, @RequestParam(required = false) final String channel,
+			@RequestParam(required = false) final String isPwa,
+			@RequestBody final HomepageComponentRequestDTO homepageComponentRequestDTO)
 	{
 
-		ThemeOffersDTO themeOffersDTO = new ThemeOffersDTO();
-
+		HomepageComponetsDTO homepageComponetsDTO = new HomepageComponetsDTO();
 		try
 		{
-			themeOffersDTO = homePageAppFacade.getThemeOffersComponentDTO(themeOffersRequestDTO);
-			//here we have to decide whether we are going to use  datamapper  or not
-
+			homepageComponetsDTO = homePageAppFacade.gethomepageComponentsDTO(homepageComponentRequestDTO);
 		}
+		//System.out.println("Theme offers dto" + homepageComponetsDTO);
+
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error("Error in home page components controller" + e.getMessage());
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
-				themeOffersDTO.setError(e.getErrorMessage());
+				homepageComponetsDTO.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				themeOffersDTO.setErrorCode(e.getErrorCode());
+				homepageComponetsDTO.setErrorCode(e.getErrorCode());
 			}
-			themeOffersDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
+			homepageComponetsDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Error in home page components controller" + e.getMessage());
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			themeOffersDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
-			themeOffersDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
-			themeOffersDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
+			homepageComponetsDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
+			homepageComponetsDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
+			homepageComponetsDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
-		return themeOffersDTO;
+
+		return homepageComponetsDTO;
 	}
-
-	//bannercomponent
-	@RequestMapping(value = "/bannerProductCarouselComponent", method = RequestMethod.POST, consumes = "application/json")
-	@ResponseBody
-	public BannersCarouselDTO getbannerProductCarouselComponent(@RequestParam final String mcvid, @RequestParam final String lat,
-			@RequestParam final String lng, @RequestParam final String pincode, @RequestParam final String channel,
-			@RequestParam final String isPwa, @RequestBody final HomepageComponentRequestDTO bannerCarouselRequestDTO)
-	{
-
-		BannersCarouselDTO bannerProductCarouselDTO = new BannersCarouselDTO();
-		try
-		{
-			bannerProductCarouselDTO = homePageAppFacade.getBannerProductCarouselDTO(bannerCarouselRequestDTO);
-		}
-		//System.out.println("Theme offers dto" + bannerProductCarouselDTO);
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("Error in home page components controller" + e.getMessage());
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			if (null != e.getErrorMessage())
-			{
-				bannerProductCarouselDTO.setError(e.getErrorMessage());
-			}
-			if (null != e.getErrorCode())
-			{
-				bannerProductCarouselDTO.setErrorCode(e.getErrorCode());
-			}
-			bannerProductCarouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Error in home page components controller" + e.getMessage());
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			bannerProductCarouselDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
-			bannerProductCarouselDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
-			bannerProductCarouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
-		}
-
-		return bannerProductCarouselDTO;
-	}
-
-	//videoProductCarousel
-	@RequestMapping(value = "/videoProductCarouselComponent", method = RequestMethod.POST, consumes = "application/json")
-	@ResponseBody
-	public VideoProductCaraouselDTO getvideoProductCarouselComponent(@RequestParam final String mcvid,
-			@RequestParam final String lat, @RequestParam final String lng, @RequestParam final String pincode,
-			@RequestParam final String channel, @RequestParam final String isPwa,
-			@RequestBody final HomepageComponentRequestDTO videoProductCaraouselRequestDTO)
-	{
-
-		VideoProductCaraouselDTO videoProductCaraouselDTO = new VideoProductCaraouselDTO();
-		try
-		{
-			videoProductCaraouselDTO = homePageAppFacade.getVideoProductCarouselDTO(videoProductCaraouselRequestDTO);
-		}
-		//	System.out.println("Theme offers dto" + videoProductCaraouselDTO);
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("Error in home page components controller" + e.getMessage());
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			if (null != e.getErrorMessage())
-			{
-				videoProductCaraouselDTO.setError(e.getErrorMessage());
-			}
-			if (null != e.getErrorCode())
-			{
-				videoProductCaraouselDTO.setErrorCode(e.getErrorCode());
-			}
-			videoProductCaraouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Error in home page components controller" + e.getMessage());
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			videoProductCaraouselDTO.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
-			videoProductCaraouselDTO.setErrorCode(MarketplacewebservicesConstants.H9002);
-			videoProductCaraouselDTO.setStatus(MarketplacewebservicesConstants.FAILURE);
-		}
-
-		return videoProductCaraouselDTO;
-	}
-
-
-	//automatedBrandproductCarousel
-
-	@RequestMapping(value = "/automatedBrandCarouselComponent", method = RequestMethod.POST, consumes = "application/json")
-	@ResponseBody
-	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselComponent(@RequestParam final String mcvid,
-			@RequestParam final String lat, @RequestParam final String lng, @RequestParam final String pincode,
-			@RequestParam final String channel, @RequestParam final String isPwa,
-			@RequestBody final HomepageComponentRequestDTO automatedBrandRequestDTO)
-	{
-
-		AutomatedBrandProductCarouselDTO automatedBrandCaraouselDTO = new AutomatedBrandProductCarouselDTO();
-
-		automatedBrandCaraouselDTO = homePageAppFacade.getautomatedBrandCarouselDTO(automatedBrandRequestDTO);
-		System.out.println("Theme offers dto" + automatedBrandCaraouselDTO);
-
-		return automatedBrandCaraouselDTO;
-	}
-
 }

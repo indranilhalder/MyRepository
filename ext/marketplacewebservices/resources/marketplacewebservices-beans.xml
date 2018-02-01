@@ -3620,88 +3620,46 @@
 		<property name="appURL" type="String" />
 		<property name="imageURL" type="String" />
 		<property name="prdId" type="String" />
+		<property name="videoURL" type="String" />
 		</bean>
-	<bean class="com.tisl.mpl.wsdto.ThemeOffersDTO">
-		<property name="offers" type="java.util.List&lt;com.tisl.mpl.wsdto.OffersDTO>" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
-		<property name="errorMessage" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-		<property name="status" type="String" />		
-	</bean>	
+	
 	<bean class="com.tisl.mpl.wsdto.HomepageComponentRequestDTO">	
 		<property name="thirdPartyId" type="String" />
 		<property name="edgeHost" type="String" />
 		<property name="content" type="String" />	
 	</bean>	
 	
-	<bean class="com.tisl.mpl.wsdto.ThemeOffersJSONDTO">
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.OffersDTO>" />
-		<property name="itemIds" type="java.util.List&lt;String>" />			
-	</bean>	
-	
-		<bean class="com.tisl.mpl.wsdto.BannersCarouselDTO">
-		<property name="title" type="String" />
-		<property name="description" type="String" />
-		<property name="imageURL" type="String" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
-		<property name="errorMessage" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-		<property name="status" type="String" />		
-	</bean>	
-	<bean class="com.tisl.mpl.wsdto.BannersCarouselJSONDTO">
-		<property name="title" type="String" />
-		<property name="description" type="String" />
-		<property name="imageURL" type="String" />
-		<!-- <property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" /> -->
-		<property name="itemIds" type="java.util.List&lt;String>" />
-		</bean>
-
-	<bean class="com.tisl.mpl.wsdto.VideoProductCaraouselDTO">
-		<property name="title" type="String" />
-		<property name="description" type="String" />
-		<property name="imageURL" type="String" />
-		<property name="videoURL" type="String" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
-		<property name="errorMessage" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-		<property name="status" type="String" />		
-	</bean>	
-	
-	<bean class="com.tisl.mpl.wsdto.VideoProductJSONDTO">
-		<property name="title" type="String" />
-		<property name="description" type="String" />
-		<property name="imageURL" type="String" />
-		<property name="videoURL" type="String" />
-		<!-- <property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" /> -->
-		<property name="itemIds" type="java.util.List&lt;String>" />		
-	</bean>
-	
-	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO">
-		<property name="brandLogo" type="String" />
-		<property name="description" type="String" />
-		<property name="imageURL" type="String" />
-		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
-		<property name="errorMessage" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-		<property name="status" type="String" />		
-	</bean>
-	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProductCarouselJSONDTO">
-		<property name="brandLogo" type="String" />
-		<property name="description" type="String" />
-		<property name="imageURL" type="String" />
-		<!-- <property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" /> -->
-		<property name="itemIds" type="java.util.List&lt;String>" />
-		</bean>
-		
 	<bean class="com.tisl.mpl.wsdto.ComponentRequestDTO">
 		<property name="widgetPlatform" type="String" />
 		<property name="mbox" type="String" />
 		<property name="mboxParameters" type="String" />				
 	</bean>
+	
+	
+	
+	<bean class="com.tisl.mpl.wsdto.HomepageComponetsDTO">
+		<property name="title" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="videoURL" type="String" />
+		<property name="brandLogo" type="String" />
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.HomeProductsDTO>" />
+		<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />		
+	</bean>	
+	
+	<bean class="com.tisl.mpl.wsdto.HomepageComponenetJSONDTO">
+		<property name="brandLogo" type="String" />
+		<property name="description" type="String" />
+		<property name="imageURL" type="String" />
+		<property name="videoURL" type="String" />
+		<property name="title" type="String" />
+		<property name="itemIds" type="java.util.List&lt;String>" />
+		</bean>
+	
+	
 	<!--  Added for NU-35 end-->
 	
 </beans>
