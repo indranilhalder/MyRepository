@@ -17004,6 +17004,9 @@ TATA.CommonFunctions = {
         });
     },
     signUpValidate: function() {
+    	jQuery.validator.addMethod("lettersonly", function(value, element) {
+	  		  return this.optional(element) || /^[a-zA-Z ]+$/i.test(value);
+	  	}, "Letters only please");
         $("#extRegisterForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
@@ -17013,11 +17016,13 @@ TATA.CommonFunctions = {
             rules: {
                 firstName: {
                     required: !0,
-                    maxlength: 100
+                    maxlength: 100,
+                    lettersonly: true
                 },
                 lastName: {
                     required: !0,
-                    maxlength: 30
+                    maxlength: 30,
+                    lettersonly: true
                 },
                 mobileNumber: {
                     minlength: 10,
@@ -17040,7 +17045,13 @@ TATA.CommonFunctions = {
                 }
             },
             messages: {
-                mobileNumber: {
+            	firstName: {
+             	   lettersonly: "Please enter alphabets only"
+             	},
+             	lastName: {
+             	   lettersonly: "Please enter alphabets only"
+             	},
+            	mobileNumber: {
                     minlength: "Mobile number should contain 10 digit number only.",
                     maxlength: "Mobile number should contain 10 digit number only."
                 }
@@ -19254,4 +19265,12 @@ $("#popUpExpAddress").on("hidden.bs.modal", function() {
     "none" === $("#unserviceablepincode").css("display") && $(".unservicePins").hide();
 }), $(".card_exp_month, .card_exp_year").on("change", function() {
     $(this).css("color", "#000");
+});
+
+$(document).on('keypress','#extRegisterForm input[type=text]:eq(0),#extRegisterForm input[type=text]:eq(1)',function(evt) {
+    var e = window.event || evt; // for trans-browser compatibility
+    var charCode = e.which || e.keyCode;
+	if (charCode >= 48 && charCode <= 57){
+		return false;
+	}
 });
