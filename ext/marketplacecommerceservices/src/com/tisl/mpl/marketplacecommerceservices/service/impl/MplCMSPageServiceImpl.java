@@ -21,10 +21,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -290,4 +293,57 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return mplCmsPageDao.getHomePagePreference(gender, category);
 	}
 
+	/**
+	 * @return List<AmpServiceworkerModel>
+	 */
+	public AmpServiceworkerModel getAmpServiceworkers()
+	{
+		final List<AmpServiceworkerModel> serviceworkerModelList = mplCmsPageDao.getAllAmpServiceworkers();
+		if (CollectionUtils.isNotEmpty(serviceworkerModelList))
+		{
+			return serviceworkerModelList.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * @return List<AmpServiceworkerModel>
+	 */
+	public AmpMenifestModel getAmpMenifestJsons()
+	{
+		final List<AmpMenifestModel> ampMenifestModelList = mplCmsPageDao.getAllAmpMenifestJsons();
+		if (CollectionUtils.isNotEmpty(ampMenifestModelList))
+		{
+			return ampMenifestModelList.get(0);
+		}
+		return null;
+	}
+
+	/*
+	 * UBI-605 (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategoryCode(java.lang.String)
+	 */
+	@Override
+	public ContentPageModel getLandingPageForCategoryCode(final String categoryCode)
+	{
+		ContentPageModel landingPage = null;
+		try
+		{
+			landingPage = mplCmsPageDao.getLandingPageForCategoryCode(categoryCode);
+		}
+		catch (final NullPointerException ex)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			LOG.error("Could not find a landing page for the given category " + categoryCode);
+		}
+		catch (final Exception ex)
+		{
+			LOG.info(MarketplacecommerceservicesConstants.EXCEPTION_IS + ex);
+			LOG.error("Could not find a landing page for the given category " + categoryCode);
+		}
+
+		return landingPage;
+	}
 }

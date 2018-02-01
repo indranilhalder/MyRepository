@@ -33,6 +33,14 @@ public interface MplCmsPageService extends CMSPageService
 {
 	ContentPageModel getLandingPageForCategory(CategoryModel category) throws CMSItemNotFoundException;
 
+	/**
+	 * UBI-605
+	 * 
+	 * @param categoryCode
+	 * @return ContentPageModel
+	 */
+	ContentPageModel getLandingPageForCategoryCode(String categoryCode);
+
 	ContentPageModel getLandingPageForSeller(final SellerMasterModel sellerMaster) throws CMSItemNotFoundException;
 
 	ContentPageModel getCategoryLandingPageForMobile(CategoryModel category, CMSChannel cms) throws CMSItemNotFoundException;

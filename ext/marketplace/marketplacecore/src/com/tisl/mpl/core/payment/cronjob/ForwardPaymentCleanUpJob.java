@@ -13,12 +13,16 @@ import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.FPCRefundEntryModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.marketplacecommerceservices.service.ForwardPaymentCleanUpService;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -74,11 +78,12 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 		LOG.debug("Order data start time: " + startTime.getTime());
 		LOG.debug("Order data end time: " + endTime.getTime());
 
-		final List<OrderModel> orderModelList = forwardPaymentCleanUpService.fetchSpecificOrders(startTime.getTime(),
-				endTime.getTime());
-		LOG.debug("No of orders fetched : " + orderModelList.size());
 
-		cleanUpOrders(orderModelList);
+		createdRefundEntries(startTime.getTime(), endTime.getTime());
+
+		initiateRefundProcess(startTime.getTime());
+
+
 
 		if (null != mplConfig)
 		{
@@ -93,13 +98,117 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 
-	private void cleanUpOrders(final List<OrderModel> orderModelList)
+	private void createdRefundEntries(final Date startTime, final Date endTime)
 	{
-		for (final OrderModel orderModel : orderModelList)
+		final List<OrderModel> multiPayOrderList = forwardPaymentCleanUpService.fetchOrdersWithMultiplePayments(startTime, endTime);
+		if (CollectionUtils.isNotEmpty(multiPayOrderList))
 		{
-			forwardPaymentCleanUpService.cleanUpMultiplePayments(orderModel);
+			for (final OrderModel orderModel : multiPayOrderList)
+			{
+				try
+				{
+					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing refund for order: " + orderModel.getCode());
+					LOG.error(e.getMessage(), e);
+				}
+			}
+		}
+		final List<OrderModel> failedOrderList = forwardPaymentCleanUpService.fetchPaymentFailedOrders(startTime, endTime);
+		if (CollectionUtils.isNotEmpty(failedOrderList))
+		{
+			for (final OrderModel orderModel : failedOrderList)
+			{
+				try
+				{
+					forwardPaymentCleanUpService.createRefundEntryForFailedOrders(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing refund for order: " + orderModel.getCode());
+					LOG.error(e.getMessage(), e);
+				}
+			}
+		}
+		final Calendar rmsStartTime = Calendar.getInstance();
+		rmsStartTime.setTime(startTime);
+		final int rmsTAT = configurationService.getConfiguration().getInt(MarketplacecommerceservicesConstants.FPC_RMS_TAT, 360);
+		rmsStartTime.add(Calendar.MINUTE, -rmsTAT);
+		final List<OrderModel> rmsFailedOrderList = forwardPaymentCleanUpService.fetchRmsFailedOrders(rmsStartTime.getTime(),
+				endTime);
+		if (CollectionUtils.isNotEmpty(rmsFailedOrderList))
+		{
+			for (final OrderModel orderModel : rmsFailedOrderList)
+			{
+				try
+				{
+					forwardPaymentCleanUpService.createRefundEntryForRmsFailedOrders(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing refund for order: " + orderModel.getCode());
+					LOG.error(e.getMessage(), e);
+				}
+			}
+		}
+		final List<MplPaymentAuditModel> auditList = forwardPaymentCleanUpService.fetchAuditsWithoutOrder(startTime, endTime);
+		if (CollectionUtils.isNotEmpty(auditList))
+		{
+			for (final MplPaymentAuditModel auditModel : auditList)
+			{
+				try
+				{
+					forwardPaymentCleanUpService.createRefundEntryForAuditsWithoutOrder(auditModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing refund for audit: " + auditModel.getAuditId());
+					LOG.error(e.getMessage(), e);
+				}
+			}
 		}
 
 	}
 
+	@SuppressWarnings("boxing")
+	private void initiateRefundProcess(final Date startTime)
+	{
+		final Boolean tatEnabled = configurationService.getConfiguration().getBoolean(
+				MarketplacecommerceservicesConstants.FPC_TAT_ENABLED, Boolean.TRUE);
+		final int tatDuration = configurationService.getConfiguration().getInt(
+				MarketplacecommerceservicesConstants.FPC_TAT_DURATION, 0);
+		final Calendar expireTime = Calendar.getInstance();
+		expireTime.setTime(startTime);
+		expireTime.add(Calendar.MINUTE, (0 - tatDuration));
+		final List<FPCRefundEntryModel> refundList = forwardPaymentCleanUpService
+				.fetchSpecificRefundEntries(MarketplacecommerceservicesConstants.ZERO);
+		for (final FPCRefundEntryModel refundEntry : refundList)
+		{
+			try
+			{
+				if (tatEnabled)
+				{
+					if (refundEntry.getCreationtime().before(expireTime.getTime()))
+					{
+						forwardPaymentCleanUpService.expireRefundEntry(refundEntry);
+					}
+					else
+					{
+						forwardPaymentCleanUpService.processRefund(refundEntry);
+					}
+				}
+				else
+				{
+					forwardPaymentCleanUpService.processRefund(refundEntry);
+				}
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception while processing the refund for audit : " + refundEntry.getAuditId());
+				LOG.error(e.getMessage(), e);
+			}
+		}
+	}
 }

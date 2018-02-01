@@ -932,7 +932,29 @@
 			<value code="Automatic"></value>
 			<value code="Manual"></value>		
 		</enumtype>
-		
+		<!-- SDI-4494 -->
+		<enumtype code="FPCRefundStatus" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="CREATED"></value>
+			<value code="PENDING"></value>
+			<value code="REFUND_INITIATED"></value>
+			<value code="REFUND_IN_PROGRESS"></value>
+			<value code="REFUND_SUCCESSFUL"></value>
+			<value code="NOT_APPLICABLE"></value>
+		</enumtype>
+		<enumtype code="FPCRefundType" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="PAYMENT_FAILED"></value>
+			<value code="PAYMENT_TIMEOUT"></value>
+			<value code="ORDER_NOT_GENERATED"></value>
+			<value code="DUPLICATE_PAYMENT"></value>
+			<value code="RMS_VERIFICATION_FAILED"></value>
+		</enumtype>
+		<enumtype code="FPCRefundMethod" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="AUTOMATIC"></value>
+			<value code="MANUAL"></value>		
+		</enumtype>
 		<enumtype code="aplusSite" autocreate="true" generate="true"
 			dynamic="true">
 			<value code="mpl" />
@@ -2354,7 +2376,7 @@
 				</attributes>
 				<!-- Index Addition 08/01/2017 Start -->
 				<indexes>
-					<index name="IDX_PRICEROWS_SITE" unique="true">
+					<index name="IDX_PRICEROWS_SITE" unique="false">
 						<key attribute="sellerArticleSKU" />
 						<key attribute="siteId" />
 						<key attribute="itemtype" />
@@ -3895,7 +3917,7 @@
 				</attributes>
 				<!-- Index Addition 08/01/2017 Start -->
 				<indexes>
-					<index name="IDX_ADR_CELL" unique="true">
+					<index name="IDX_ADR_CELL" unique="false">
 						<key attribute="cellphone" />
 					</index>
 				</indexes>
@@ -4704,6 +4726,27 @@
 						</persistence>
 						<description>This attribute represents footer text to be displayed in the footer</description>
 					</attribute>
+					<attribute qualifier="footerTextMobile" type="localized:java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>This attribute represents mobile footer text to be displayed in the footer</description>
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- TPR-6410 starts -->
@@ -5424,6 +5467,13 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
 					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="headerTextMobile"
+ 						autocreate="true" generate="true">
+ 						<description>This attribute is for storing the header text</description>
+ 						<modifiers read="true" write="true" search="true" />
+ 						<persistence type='property' />
+ 					</attribute>
 
 					<attribute type="Media" qualifier="logo" autocreate="true"
 						generate="true">
@@ -5471,6 +5521,28 @@
 
 						</persistence>
 					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="text_mobile"
+ 						autocreate="true" generate="true">
+ 						<persistence type="property">
+ 							<columntype database="oracle">
+ 								<value>CLOB</value>
+ 							</columntype>
+ 							<columntype database="mysql">
+ 								<value>text</value>
+ 							</columntype>
+ 							<columntype database="sqlserver">
+ 								<value>nvarchar(max)</value>
+ 							</columntype>
+ 							<columntype database="hsqldb">
+ 								<value>LONGVARCHAR</value>
+ 							</columntype>
+ 							<columntype>
+ 								<value>varchar</value>
+ 							</columntype>
+ 
+ 						</persistence>
+ 					</attribute>
 
 					<attribute type="java.lang.Boolean" qualifier="showByDefault"
 						autocreate="true" generate="true">
@@ -5509,7 +5581,27 @@
 						</persistence>
 					</attribute>
 
+					<attribute type="java.lang.String" qualifier="bannerTextMobile"
+						autocreate="true" generate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
 
+						</persistence>
+					</attribute>
 
 					<attribute type="java.lang.String" qualifier="bannerUrl"
 						autocreate="true" generate="true">
@@ -13674,6 +13766,107 @@
 			</itemtype>
 		</typegroup>
 		<!-- END TPR-5733 -->
+		
+		<typegroup name="AMP"> 
+			<itemtype code="AmpServiceworker" autocreate="true" generate="true">
+				<description>Adds new serviceworker details</description>
+				<deployment table="MplAmpServiceworker" typecode="21201" />
+				<attributes>
+				
+					<attribute qualifier="code" type="java.lang.String">
+						<modifiers optional="false" unique="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the cache code</description>
+					</attribute>
+					
+					<attribute qualifier="cacheName" type="java.lang.String">
+						<modifiers optional="false" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the cache name</description>
+					</attribute>
+					
+					<attribute qualifier="cacheVersion" type="java.lang.String">
+						<modifiers optional="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the cache version</description>
+					</attribute>
+					
+					<attribute qualifier="filesToCache" type="java.lang.String">
+						<modifiers optional="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the files to cache</description>
+					</attribute>
+					
+					<attribute qualifier="cachingStrategy" type="java.lang.String">
+						<modifiers optional="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the caching strategy</description>
+					</attribute>
+					
+					<attribute qualifier="serviceworkerJs" type="java.lang.String">
+						<modifiers optional="false" write="true" read="true"/>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Attribute contains the serviceworker</description>
+					</attribute>
+				</attributes>
+				
+			</itemtype>
+			
+			<itemtype code="AmpMenifest" autocreate="true" generate="true">
+				<description>Adds new serviceworker details</description>
+				<deployment table="MplAmpMenifest" typecode="21202" />
+				<attributes>
+				
+					<attribute qualifier="code" type="java.lang.String">
+						<modifiers optional="false" unique="true" write="true" read="true"/>
+						<persistence type="property" />
+						<description>Attribute contains the menifest code</description>
+					</attribute>
+					
+					<attribute qualifier="menifestJson" type="java.lang.String">
+						<modifiers optional="false" write="true" read="true"/>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Attribute contains the menifest JSON</description>
+					</attribute>
+
+				</attributes>
+				
+			</itemtype>
+		</typegroup>
+
+		
 		<typegroup name="SellerMonograming">
 			<itemtype code="MplSellerMonograming" autocreate="true" generate="true">
 				<deployment table="MplSellerMonograming" typecode="25678" />
@@ -14146,6 +14339,67 @@
 					<modifiers unique="false" optional="false" search="true"/>
 				</attribute>
 			</attributes>
+		</itemtype>
+	</typegroup>	
+	
+	<!-- SDI-4494 -->
+	<typegroup name="FPCRefundGroup">
+		<itemtype code="FPCRefundEntry" autocreate="true" generate="true">
+			<deployment table="fpcrefundentries" typecode="27390" />
+			<attributes>
+				<attribute autocreate="true" qualifier="auditId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="audit" type="MplPaymentAudit"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="parentAuditId" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="cartGUID" type="java.lang.String"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="order" type="Order"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="refundStatus" type="FPCRefundStatus"
+					generate="true"> 
+					<persistence type="property" />
+					<defaultvalue>em().getEnumerationValue("FPCRefundStatus","CREATED")</defaultvalue>					
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="refundType" type="FPCRefundType"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="refundMethod" type="FPCRefundMethod"
+					generate="true"> 
+					<persistence type="property" />
+					<modifiers unique="false" optional="true" search="true"/>
+				</attribute>
+				<attribute autocreate="true" qualifier="isExpired" type="java.lang.Boolean"
+					generate="true"> 
+					<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+					<persistence type="property" />
+					<modifiers unique="false" optional="false" search="true"/>
+				</attribute>
+			</attributes>
+			<indexes>
+				<index name="FPCAUDITID_IDX" unique="true">
+					<key attribute="auditId" />
+				</index>
+			</indexes>
 		</itemtype>
 	</typegroup>		
   </itemtypes>

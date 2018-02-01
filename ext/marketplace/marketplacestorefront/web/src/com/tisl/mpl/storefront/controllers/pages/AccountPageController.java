@@ -316,7 +316,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
 
 	private static final String FINEJEWELLERY = "FineJewellery";
-
+	private static final String MPH = "MPH";
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
@@ -1974,17 +1974,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 					outer: for (final CategoryModel category : superCategories)
 					{
-						if (category.getCode().startsWith("MPH"))
+						if (category.getCode().startsWith(MPH))
 						{
 							superCategories = category.getSupercategories();
 							for (final CategoryModel category1 : superCategories)
 							{
-								if (category1.getCode().startsWith("MPH"))
+								if (category1.getCode().startsWith(MPH))
 								{
 									superCategories = category1.getSupercategories();
 									for (final CategoryModel category2 : superCategories)
 									{
-										if (category2.getCode().startsWith("MPH"))
+										if (category2.getCode().startsWith(MPH))
 										{
 											L2Cat = category2.getCode();
 											break outer;
@@ -8106,7 +8106,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)

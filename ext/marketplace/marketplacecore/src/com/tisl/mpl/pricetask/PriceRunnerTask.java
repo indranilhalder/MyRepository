@@ -11,7 +11,7 @@
  *
  *
  */
-package com.tisl.mpl.priceTask;
+package com.tisl.mpl.pricetask;
 
 import de.hybris.platform.acceleratorservices.dataimport.batch.BatchHeader;
 import de.hybris.platform.acceleratorservices.dataimport.batch.task.AbstractImpexRunnerTask;

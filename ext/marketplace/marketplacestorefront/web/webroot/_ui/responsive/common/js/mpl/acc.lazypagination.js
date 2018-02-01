@@ -292,7 +292,7 @@ function sortCustomSku(this_data,drop_down){
 	var item = $(this_data).attr('data-name');
 	$('.sort').removeAttr('style');
 	if(!drop_down){
-		$(this_data).css('color', 'red');
+		$(this_data).css('color', '#a9143c');
 	}
 	var url = '';
 	var browserPathName = window.location.pathname;
@@ -752,6 +752,14 @@ function toggleNextPrevButton(){
 }
 
 
+/*!
+ * jQuery pagination plugin v1.4.1
+ * http://esimakin.github.io/twbs-pagination/
+ *
+ * Copyright 2014-2016, Eugene Simakin
+ * Released under Apache 2.0 license
+ * http://apache.org/licenses/LICENSE-2.0.html
+ */
 (function(e, d, a, f) {
     var b = e.fn.twbsPagination;
     var c = function(i, g) {
@@ -974,7 +982,7 @@ function toggleNextPrevButton(){
         startPage: 1,
         visiblePages: 5,
         initiateStartPageClick: true,
-        href: false,
+        href: true,
         pageVariable: "{{page}}",
         totalPagesVariable: "{{total_pages}}",
         page: null,
@@ -1001,8 +1009,8 @@ function toggleNextPrevButton(){
     };
     e.fn.twbsPagination.version = "1.4"
 })(window.jQuery, window, document);
-
 $('.pagination-blocks').twbsPagination(settings);
+
 
 /*$(window).on("resize",function(){
 if($(window).width() <= 410){

@@ -33,7 +33,10 @@
 	<p class="h4">
 		<ycommerce:testId code="luxury_header_Register_link">
 			<a data-target-id="sign-in" class="header-login-target-link register_link" href="/luxurylogin/signin"> 
-				<span><spring:theme code="luxury.header.flyout.signin.member"/></span>
+				<!-- start change of TISPRDT-8209 -->
+				<%-- <span><spring:theme code="luxury.header.flyout.signin.member"/></span> --%>
+				<spring:theme code="luxury.header.flyout.signin.member"/>
+				<!-- end change of TISPRDT-8209 -->
 				<spring:theme code="luxury.header.link.signin" />
 			</a>
 		</ycommerce:testId>
