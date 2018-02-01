@@ -1,0 +1,23 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.customerReview {
+  color: #797979;
+  font-size: 12px;
+  font-family: regular;
+}
+.deliveryDate {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 12px;
+  font-family: regular;
+  line-height: 25px;
+}
+.date {
+  font-family: semibold;
+}
+.offer {
+  composes: deliveryDate;
+}
