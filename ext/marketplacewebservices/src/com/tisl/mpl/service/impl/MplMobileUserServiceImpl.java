@@ -268,18 +268,29 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@SuppressWarnings("javadoc")
 	@Override
-	public MplRegistrationResultWsDto registerAppUser(final String mobileNumber, final int platformNumber)
+	public MplRegistrationResultWsDto registerAppUser(final String mobileNumber, final int platformNumber, final String emailId)
 	{
 		final MplRegistrationResultWsDto result = new MplRegistrationResultWsDto();
 		boolean successFlag = false;
 		try
 		{
-			//result = mplUserHelper.validateRegistrationData(login, null);//to-do validate email & mobile number
-			LOG.debug("************** User details validated mobile web service ************" + mobileNumber);
+			LOG.debug("User details validated mobile web service :::::::::::" + mobileNumber);
 			final ExtRegisterData registration = new ExtRegisterData();
-			registration.setLogin(mobileNumber);
-			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
+			if (StringUtils.isNotEmpty(emailId))
 			{
+				registration.setUid(emailId);
+			}
+			registration.setLogin(mobileNumber);
+			if (registerCustomerFacade.checkMobileNumberUnique(registration))
+			{
+				if (StringUtils.isNotEmpty(emailId))
+				{
+					if (!registerCustomerFacade.checkEmailIdUnique(registration))
+					{
+						successFlag = false;
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU002);
+					}
+				}
 				final String otp = otpGenericService.generateOTPForRegister(mobileNumber, OTPTypeEnum.REG.getCode(), mobileNumber);
 				try
 				{
@@ -298,6 +309,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + mobileNumber);
+
 			}
 			else
 			{
@@ -320,11 +332,15 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Catch and throw exception as it is when obtained from commerce
 			throw e;
 		}
+		//New
+		catch (final AmbiguousIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.NU000);
+		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-
 		if (successFlag)
 		{
 			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -581,11 +597,9 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		CustomerModel custModel = null;
 		try
 		{
-			if (null != emailId && !emailId.isEmpty() && null != extUserService.getUserForUid(StringUtils.lowerCase(emailId)))
+			if (StringUtils.isNotEmpty(emailId))
 			{
-
 				custModel = extUserService.getUserForUid(StringUtils.lowerCase(emailId));
-				//return custModel;
 			}
 		}
 		catch (final AmbiguousIdentifierException e)
@@ -931,7 +945,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1032,7 +1046,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1127,10 +1141,16 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	}
 
 	@Override
-	public boolean validateOtpForRegistration(final String mobileNumber, final String otp, final OTPTypeEnum enumType)
+	public boolean validateOtp(final String mobileNumber, final String otp, final OTPTypeEnum enumType)
 	{
-		final OTPResponseData otpResponse = otpGenericService.validateLatestOTP(mobileNumber, mobileNumber, otp, enumType, Long
-				.parseLong(getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP)));
+		final OTPResponseData otpResponse = otpGenericService
+				.validateLatestOTP(
+						mobileNumber,
+						mobileNumber,
+						otp,
+						enumType,
+						Long.parseLong(getConfigurationService().getConfiguration().getString(
+								MarketplacecommerceservicesConstants.OTP_TIME)));
 		if (null != otpResponse && null != otpResponse.getInvalidErrorMessage()
 				&& otpResponse.getInvalidErrorMessage().equalsIgnoreCase("VALID"))
 		{
@@ -1155,7 +1175,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	@SuppressWarnings("javadoc")
 	@Override
 	public MplUserResultWsDto registerNewMplUserWithMobile(final String login, final String password,
-			final boolean tataTreatsEnable, final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+			final boolean tataTreatsEnable, final int platformNumber, final String emailId) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions
 	{
 		final MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -1166,6 +1187,11 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
 			registration.setPassword(password);
+			registration.setMobilenumber(login);
+			if (StringUtils.isNotEmpty(emailId))
+			{
+				registration.setEmailId(emailId);
+			}
 			if (tataTreatsEnable)
 			{
 				registration.setCheckTataRewards(true);
@@ -1183,7 +1209,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		}
 		catch (final EtailBusinessExceptions businessException)
 		{
-			throw businessException;
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
 		}
 		catch (final DuplicateUidException e)
 		{

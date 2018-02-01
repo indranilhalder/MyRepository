@@ -359,6 +359,7 @@
 		<property name="gigyaSessionsForMob" type="com.tisl.mpl.wsdto.GigyaWsDTO" />
 		<property name="gender" type="String" />
 		<property name="mobilenumber" type="String" />
+		<property name="emailId" type="String" />
 		
 	</bean>
 

@@ -37,17 +37,18 @@ public interface MplMobileUserService
 	/**
 	 * @param emailIdLwCase
 	 * @param platformDecider
-	 * @return
+	 * @return registration deatils
 	 */
 	//NU-30
-	public MplRegistrationResultWsDto registerAppUser(String emailIdLwCase, int platformDecider);
+	public MplRegistrationResultWsDto registerAppUser(String emailIdLwCase, int platformDecider, String emailId);
 
 	//NU-30
-	public boolean validateOtpForRegistration(final String mobileNumber, final String otp, final OTPTypeEnum enumType);
+	public boolean validateOtp(final String mobileNumber, final String otp, final OTPTypeEnum enumType);
 
 	//NU-30
 	public MplUserResultWsDto registerNewMplUserWithMobile(final String login, final String password,
-			final boolean tataTreatsEnable, final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+			final boolean tataTreatsEnable, final int platformNumber, final String emailId) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions;
 
 	//NU-31
 	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber);
