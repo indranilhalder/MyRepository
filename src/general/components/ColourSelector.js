@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ColourSelector.css";
-import ColourAdd from "./ColourSelector";
+import ColourAdd from "./ColourSelect";
 import Carousel from "./Carousel";
 import PropTypes from "prop-types";
 export default class ColourSelector extends React.Component {
