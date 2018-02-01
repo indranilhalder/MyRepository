@@ -3301,8 +3301,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3340,7 +3340,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					productModel = pr.getProduct();
 					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
 					{
-						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							maximum_configured_quantiy = siteConfigService.getInt(
+									MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+						}
+						//SDI-4069 ends
 						if (StringUtils.isNotEmpty(pr.getExchangeId()))
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9305);
