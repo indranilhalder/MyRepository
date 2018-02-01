@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./FilterSelect.css";
 
@@ -33,3 +34,10 @@ export default class FilterSelect extends React.Component {
     );
   }
 }
+
+FilterSelect.propTypes = {
+  selected: PropTypes.bool,
+  icon: PropTypes.element,
+  label: PropTypes.string,
+  count: PropTypes.string
+};
