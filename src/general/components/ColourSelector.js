@@ -1,10 +1,9 @@
 import React from "react";
-import styles from "./ColourFilter.css";
+import styles from "./ColourSelector.css";
 import ColourAdd from "./ColourSelect";
 import Carousel from "./Carousel";
 import PropTypes from "prop-types";
-
-export default class ColourFilter extends React.Component {
+export default class ColourSelector extends React.Component {
   render() {
     let data = this.props.data;
     return (
@@ -25,7 +24,7 @@ export default class ColourFilter extends React.Component {
     );
   }
 }
-ColourFilter.propTypes = {
+ColourSelector.propTypes = {
   onSelect: PropTypes.func,
   data: PropTypes.arrayOf(
     PropTypes.shape({
