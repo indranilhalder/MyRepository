@@ -862,9 +862,12 @@ function submitWalletData(){
 					$(".wcOTPError").text("Unable to verify mobile number due to server error. Please try after sometime");
 					$(".wcOTPError").show();
 				}
-				else {
+				else if(response == 'success'){
                     $('#egvDetailsform').submit();
-				} 
+				}else{
+					$(".wcOTPError").text(response);
+					$(".wcOTPError").show();
+				}
 				
 			}
 		}); 

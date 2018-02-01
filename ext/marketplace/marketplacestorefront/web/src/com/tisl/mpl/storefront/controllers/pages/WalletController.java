@@ -54,6 +54,7 @@ import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
@@ -86,8 +87,7 @@ public class WalletController extends AbstractPageController
 	private ModelService modelService;
 	@Resource(name = "simpleBreadcrumbBuilder")
 	private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;
-	@Resource(name = "configurationService")
-	private ConfigurationService configurationService;
+	
 	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
 	private SessionService sessionService;
 
@@ -100,6 +100,8 @@ public class WalletController extends AbstractPageController
 	private ExtendedUserService extendedUserService;
 	@Autowired
 	RegisterCustomerFacade registerCustomerFacade;
+	@Autowired
+	private ConfigurationService configurationService;
 
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
@@ -525,7 +527,7 @@ public class WalletController extends AbstractPageController
 		{
 			final CustomerWalletDetailResponse customerUpdateResponse = mplWalletFacade.editWalletInformtion(currentCustomer,
 					firstName, lastName, mobileNumber);
-			if (null != customerUpdateResponse.getResponseCode() && customerUpdateResponse.getResponseCode() == Integer.valueOf(0))
+			if (customerUpdateResponse !=null && null != customerUpdateResponse.getResponseCode() && customerUpdateResponse.getResponseCode() == Integer.valueOf(0))
 			{
 				currentCustomer.setIsqcOtpVerify(Boolean.valueOf(true));
 				currentCustomer.setQcVerifyFirstName(firstName);
@@ -538,8 +540,20 @@ public class WalletController extends AbstractPageController
 				return "success";
 			}
 			else
-			{
-				return "qcDown";
+			{ 
+				if(customerUpdateResponse == null){
+					return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+				}else{
+					if(customerUpdateResponse.getResponseCode() == null){
+						return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+					}else{
+						String errorCode=customerUpdateResponse.getResponseCode().toString();
+						String errormsg = configurationService.getConfiguration()
+								.getString(errorCode).trim();
+						return "qcDown"+"|"+errormsg;
+					}
+				}
+				
 			}
 		}
 		else
@@ -567,7 +581,7 @@ public class WalletController extends AbstractPageController
 			customerRegisterReq.setCustomer(custInfo);
 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
 			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
-			if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
+			if (customerRegisterResponse !=null && null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
 			{
 				final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
 				custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
@@ -586,9 +600,21 @@ public class WalletController extends AbstractPageController
 				currentCustomer.setMobileNumber(mobileNumber);
 				modelService.save(currentCustomer);
 				return "success";
+			}else{
+				if(customerRegisterResponse == null){
+					return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+				}else{
+					if(customerRegisterResponse.getResponseCode() == null){
+						return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+					}else{
+						String errorCode=customerRegisterResponse.getResponseCode().toString();
+						String errormssg = configurationService.getConfiguration()
+								.getString(errorCode).trim();
+						return "qcDown"+"|"+errormssg;
+					}
+				}
 			}
 		}
-		return "qcDown";
 	}
 
 }
