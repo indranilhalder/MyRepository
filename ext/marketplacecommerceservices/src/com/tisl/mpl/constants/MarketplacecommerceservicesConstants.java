@@ -21,13 +21,12 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
-import org.apache.solr.client.solrj.response.RangeFacet.Date;
+import java.util.Date;
 
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -1300,6 +1299,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
 	public static final String ORDERTHRESHOLD = "order".intern();
 	//public static final String ORDER = "order".intern();
+	public static final String WH_ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -2403,11 +2403,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
 	//UBI-605
 	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
-	
-	//SDI-4494	
+		
+	//SDI-4494
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOMATIC = "AUTOMATIC";
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
+	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
+	
+
+	//Report for bulk cancellation
+	/*
+	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
+	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
+	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
+	 */
 }

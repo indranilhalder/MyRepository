@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -190,14 +191,19 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			final String refundStatus = checkRefundStatus(orderStatusResponse, refundTransactionMap.keySet());
 			if (null == refundStatus)
 			{
-				if (!isManuallyRefunded(orderStatusResponse))
+				if (!checkManualRefund(orderStatusResponse))
 				{
 					makeRefundUpdateStatus(refund, order, consignment, refundTransactionMap, orderEntry);
+				}
+				else
+				{
+					LOG.error("Manual refund present fot the juspay order. Refund retry cancelled for transaction :"
+							+ consignment.getCode());
 				}
 			}
 			else if (refundStatus.equals(MarketplacecommerceservicesConstants.SUCCESS))
 			{
-				updateStatusOnly(refund, order, consignment, refundTransactionMap);
+				updateStatusOnly(refund, order, consignment, refundTransactionMap, orderEntry);
 			}
 			else if (refundStatus.equals(MarketplacecommerceservicesConstants.PENDING))
 			{
@@ -211,7 +217,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 
 	private void updateStatusOnly(final Refund refund, final OrderModel order, final ConsignmentModel consignment,
-			final Map<String, RefundTransactionMappingModel> refundTransactionMap)
+			final Map<String, RefundTransactionMappingModel> refundTransactionMap, final AbstractOrderEntryModel orderEntry)
 	{
 		RefundTransactionMappingModel refundTransactionModel = new RefundTransactionMappingModel();
 
@@ -261,19 +267,30 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 					}
 				}
 			}
+			final String uniqueSuccessRequestId = getSuccessUniqueRequestId(refund.getUniqueRequestId(), orderEntry.getOrderLineId());
 
 			try
 			{
 				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order,
 						MarketplacecommerceservicesConstants.SUCCESS, refundTransactionModel.getRefundAmount(), paymentTransactionType,
-						MarketplacecommerceservicesConstants.SUCCESS, refund.getUniqueRequestId());
+						MarketplacecommerceservicesConstants.SUCCESS, uniqueSuccessRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
 			}
 			catch (final Exception e)
 			{
-				LOG.error("paymentTransactionModel creation failed from updateStatusOnly for order:" + order.getCode(), e);
+				LOG.error("paymentTransactionModel creation failed from updateStatusOnly for order:" + order.getCode() + " "
+						+ e.getMessage());
 			}
 
+			try
+			{
+				orderEntry.setJuspayRequestId(uniqueSuccessRequestId);
+				modelService.save(orderEntry);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Error while saving orderentry:" + order.getCode(), e);
+			}
 
 			if (riskFlag)
 			{
@@ -532,12 +549,14 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			final List<Refund> refundResponseList = orderStatusResponse.getRefunds();
 			for (final Refund refundResponse : refundResponseList)
 			{
-				refund = refundResponse;
 				if (null != refundResponse.getStatus() && null != refundResponse.getUniqueRequestId()
-						&& uniqRequestIDList.contains(refundResponse.getUniqueRequestId())
-						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+						&& uniqRequestIDList.contains(refundResponse.getUniqueRequestId()))
 				{
-					return refundResponse;
+					refund = refundResponse;
+					if (refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+					{
+						return refundResponse;
+					}
 				}
 
 			}
@@ -558,21 +577,51 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		modelService.save(historyEntry);
 	}
 
-	private boolean isManuallyRefunded(final GetOrderStatusResponse orderStatusResponse)
+	private boolean checkManualRefund(final GetOrderStatusResponse orderStatusResponse)
 	{
-		if (null != orderStatusResponse && CollectionUtils.isNotEmpty(orderStatusResponse.getRefunds()))
+		try
 		{
-			for (final Refund refund : orderStatusResponse.getRefunds())
+			final boolean isEnabled = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.MANUAL_REFUND_CHECK_ENABLED, false);
+			if (!isEnabled)
 			{
-				if (null != refund.getStatus()
-						&& null != refund.getUniqueRequestId()
-						&& refund.getUniqueRequestId().contains("rf")
-						&& (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) || refund.getStatus()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING)))
+				return false;
+			}
+			else if (null != orderStatusResponse && CollectionUtils.isNotEmpty(orderStatusResponse.getRefunds()))
+			{
+				final List<String> juspayRefundIds = new ArrayList<String>();
+				for (final Refund refund : orderStatusResponse.getRefunds())
 				{
-					return true;
+					if (StringUtils.isNotEmpty(refund.getStatus())
+							&& (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) || refund.getStatus()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING)))
+					{
+						juspayRefundIds.add(refund.getUniqueRequestId());
+					}
+				}
+				if (CollectionUtils.isEmpty(juspayRefundIds))
+				{
+					return false;
+				}
+				else
+				{
+					final List<String> rtmRefundIds = refundClearPerformableDao.fetchRtmRequestIds(juspayRefundIds);
+					if (CollectionUtils.isEmpty(rtmRefundIds))
+					{
+						for (final String juspayRefundId : juspayRefundIds)
+						{
+							if (!rtmRefundIds.contains(juspayRefundId))
+							{
+								return true;
+							}
+						}
+					}
 				}
 			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("error while checking for manualrefund " + e.getMessage());
 		}
 		return false;
 	}
@@ -644,4 +693,20 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		return isCOD;
 	}
 
+	private String getSuccessUniqueRequestId(final String uniqueRequestId, final String transactionId)
+	{
+		String requestId = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (StringUtils.isNotEmpty(uniqueRequestId) && StringUtils.isNotEmpty(transactionId))
+		{
+			requestId = uniqueRequestId + MarketplacecommerceservicesConstants.UNDER_SCORE + transactionId;
+		}
+		else
+		{
+			requestId = UUID.randomUUID().toString();
+		}
+		return requestId;
+	}
+
 }
+

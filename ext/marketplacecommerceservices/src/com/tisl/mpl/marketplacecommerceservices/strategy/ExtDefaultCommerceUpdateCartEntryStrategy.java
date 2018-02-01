@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.strategy;
 
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceUpdateCartEntryStrategy;
@@ -62,6 +63,10 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 	{
 		this.commerceStockService = commerceStockService;
 	}
+
+	//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+	@Resource
+	private SiteConfigService siteConfigService;
 
 	/*
 	 * @DESC Update Quantity For Cart
@@ -180,7 +185,17 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 		if (!isMaxOrderQuantitySet(maxOrderQuantity))
 		{
 			//maxOrderQuantity = new Integer(maxOrderQuantityConstant); Critical Sonar fixes
-			maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+			//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+			if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				maxOrderQuantity = Integer.valueOf(siteConfigService.getInt(
+						MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0));
+			}
+			//SDI-4069 ends
+			else
+			{
+				maxOrderQuantity = Integer.valueOf(maxOrderQuantityConstant);
+			}
 		}
 		final long newTotalQuantityAfterProductMaxOrder = Math.min(newTotalQuantityAfterStockLimit, maxOrderQuantity.longValue());
 		return (newTotalQuantityAfterProductMaxOrder - cartLevel);

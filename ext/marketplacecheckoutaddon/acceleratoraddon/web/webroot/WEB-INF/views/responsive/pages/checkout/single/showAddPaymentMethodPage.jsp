@@ -1429,20 +1429,36 @@
 							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="lastNameErrorEmi"></span>
 						                           		</div>
+						                           		<!-- added for SDI 3691 starts -->
+ 													<div class="full">
+ 															<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+ 															<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
+ 															<textarea class="full-address" id="address1Emi" maxlength="120" onKeyUp="return taCount(this,'myCounter1')" required="required"></textarea>
+ 															Remaining characters :
+ 																<span id='myCounte1r'></span>
+																<span class="error-message" id="address1ErrorEmi"></span>
+ 													</div>
+ 														<!-- added for SDI 3691 ends -->
+ 														<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline1"/></label>
 							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
 							                           		<span class="error-message" id="address1ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline2"/></label>
 							                           		<input type="text" id="address2Emi" maxlength="40">
 							                           		<span class="error-message" id="address2ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.landmark"/> </label>
 							                           		<input type="text" id="address3Emi" maxlength="40">
 							                           		<span class="error-message" id="address3ErrorEmi"></span>
+						                           		</div>
 						                           		</div>
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.city"/></label>

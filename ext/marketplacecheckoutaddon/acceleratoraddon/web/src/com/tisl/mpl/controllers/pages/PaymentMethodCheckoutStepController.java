@@ -2761,12 +2761,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//adding cards to model
 				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedCreditCards);
 			}
-			//TISRLUAT-03 starts
-			else if (MapUtils.isNotEmpty(savedDebitCards))
-			{
-				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedDebitCards);
-			}
-			//TISRLUAT-03 end
+			//commented for SDI-4785--starts
+			//			//TISRLUAT-03 starts
+			//			else if (MapUtils.isNotEmpty(savedDebitCards))
+			//			{
+			//				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedDebitCards);
+			//			}
+			//			//TISRLUAT-03 end
+			//commented for SDI-4785--ends
 			{
 				LOG.info("No Saved credit cards found !!");
 			}

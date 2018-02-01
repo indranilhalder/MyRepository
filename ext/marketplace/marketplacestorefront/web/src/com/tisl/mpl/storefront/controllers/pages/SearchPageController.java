@@ -1098,7 +1098,7 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param searchPageSize
 	 */
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> performSearchForOnlineProducts(
-			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
+			String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
 	{
 
 		final PageableData pageableData = createPageableData(page, searchPageSize, sortCode, ShowMode.Page);
@@ -1107,6 +1107,12 @@ public class SearchPageController extends AbstractSearchPageController
 
 		if (StringUtils.isNotEmpty(searchQuery))
 		{
+			//SDI-4192 fix starts
+			if (searchQuery.startsWith(":category:"))
+			{
+				searchQuery = searchQuery.replace(":category:", "::category:");
+			}
+			//SDI-4192 fix ends
 			searchQueryData.setValue(searchQuery);
 		}
 

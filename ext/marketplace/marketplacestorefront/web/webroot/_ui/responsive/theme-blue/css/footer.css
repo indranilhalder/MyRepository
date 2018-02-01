@@ -1406,7 +1406,7 @@ footer #footerLink div.column ul li:last-child:after {
 		line-height: 24px;
 	}
 	footer>div>ul>li.active ul {
-		padding-bottom: 20px;
+		/* padding-bottom: 20px; */		/* commented for SDI-4687 */
 	}
 	footer>div>ul>li.active ul li {
 		height: 24px;
