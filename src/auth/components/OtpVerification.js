@@ -35,7 +35,7 @@ export default class OtpVerification extends React.Component {
   render() {
     return (
       <AuthPopUp>
-        <MediaQuery query="(min-device-width: 1024px)">
+        <MediaQuery query="(min-device-width: 1025px)">
           <div className={styles.header}>One last step</div>
           <div className={styles.content}>
             Please enter your OTP sent to {this.props.mobileNumber}.<span
@@ -76,7 +76,7 @@ export default class OtpVerification extends React.Component {
             </div>
           </div>
         </MediaQuery>
-        <MediaQuery query="(max-device-width: 1023px)">
+        <MediaQuery query="(max-device-width: 1024px)">
           <React.Fragment>
             <div className={ownStyles.iconHolder}>
               <Icon image={lockIcon} size={50} />
