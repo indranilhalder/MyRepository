@@ -8,9 +8,6 @@ class ProductListing extends Component {
 
   renderProduct() {
     if (this.props.product) {
-      console.log(this.props.product.facetdata);
-      console.log(this.props.product.searchresult);
-      console.log(this.props.product.sorts);
     }
   }
 
