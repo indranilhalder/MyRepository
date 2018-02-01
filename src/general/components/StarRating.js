@@ -7,7 +7,7 @@ import { Icon } from "xelpmoc-core";
 export default class StarRating extends React.Component {
   render() {
     const starSpans = [];
-    const rating = this.props.dynamicRating;
+    const rating = this.props.averageRating;
     for (let i = 1; i <= 5; i++) {
       if (i <= rating) {
         starSpans.push(
@@ -34,5 +34,5 @@ export default class StarRating extends React.Component {
   }
 }
 StarRating.propTypes = {
-  dynamicRating: PropTypes.number
+  averageRating: PropTypes.number
 };

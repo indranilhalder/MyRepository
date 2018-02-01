@@ -2,12 +2,12 @@
   width: 100%;
   height: auto;
 }
-.customerReview {
+.totalNoOfReviews {
   color: #797979;
   font-size: 12px;
   font-family: regular;
 }
-.deliveryDate {
+.bestDeliveryInfo {
   width: 100%;
   height: auto;
   color: #181818;
@@ -18,6 +18,6 @@
 .date {
   font-family: semibold;
 }
-.offer {
-  composes: deliveryDate;
+.offerText {
+  composes: bestDeliveryInfo;
 }

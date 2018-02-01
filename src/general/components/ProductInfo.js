@@ -6,23 +6,20 @@ export default class ProductInfo extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        {this.props.date && (
-          <div className={styles.deliveryDate}>
+        {this.props.bestDeliveryInfo && (
+          <div className={styles.bestDeliveryInfo}>
             Get it by&nbsp;<span className={styles.date}>
-              {this.props.date}
+              {this.props.bestDeliveryInfo}
             </span>
           </div>
         )}
-        {this.props.offer && (
-          <div className={styles.offer}>
-            <span>{`${this.props.offer}%`}</span>&nbsp;offer from&nbsp;
-            <span>{`Rs. ${this.props.price}`}</span>
-          </div>
+        {this.props.offerText && (
+          <div className={styles.offerText}>{this.props.offerText}</div>
         )}
-        {this.props.dynamicRating && (
-          <StarRating dynamicRating={this.props.dynamicRating}>
-            <div className={styles.customerReview}>{`(${
-              this.props.review
+        {this.props.averageRating && (
+          <StarRating averageRating={this.props.averageRating}>
+            <div className={styles.totalNoOfReviews}>{`(${
+              this.props.totalNoOfReviews
             })`}</div>
           </StarRating>
         )}
@@ -31,9 +28,8 @@ export default class ProductInfo extends React.Component {
   }
 }
 ProductInfo.propTypes = {
-  date: PropTypes.string,
-  offer: PropTypes.string,
-  price: PropTypes.string,
-  dynamicRating: PropTypes.number,
-  review: PropTypes.string
+  bestDeliveryInfo: PropTypes.string,
+  offerText: PropTypes.string,
+  averageRating: PropTypes.number,
+  totalNoOfReviews: PropTypes.string
 };
