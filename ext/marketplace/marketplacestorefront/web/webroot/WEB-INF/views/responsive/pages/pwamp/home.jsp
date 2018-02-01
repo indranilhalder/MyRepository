@@ -626,9 +626,10 @@
 							<div class="newInDesc">
 								<p class="newInDescName">{{productTitle}}</p>
 								{{#productPrice}}
-								<p class="newInDescPrice">
-									{{dispPrice}}<span class="price-right">{{strikePrice}}</span>
-								</p>
+								<p class="newInDescPrice">{{dispPrice}}
+								  <span class="price-right display-visible"
+								    [class]="'{{dispPrice}}' == '{{strikePrice}}' ? 'hidden' : 'price-right display-visible'">
+								  {{strikePrice}}</span></p>
 								{{/productPrice}}
 							</div>
 						</div></a> {{/newAndExclusiveProducts}} </amp-carousel> 
