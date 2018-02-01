@@ -378,6 +378,7 @@
 						<arg line="--js ${luxstorefront.js.dir}/dropdown-menu.js" />
 						<arg line="--js ${luxstorefront.js.dir}/display-price.js" />
 						<arg line="--js ${luxstorefront.js.dir}/mobile-menu.js" />
+						<arg line="--js ${luxstorefront.js.dir}/luxury-promopay.js" />
 						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<echo message="Minifying JS for Luxury is completed..." />
