@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Sort.css";
-import SortByBase from "./SortTab.js";
+import SortTab from "./SortTab.js";
 export default class Sort extends React.Component {
   render() {
     let data = this.props.data;
@@ -9,7 +9,7 @@ export default class Sort extends React.Component {
         {this.props.data.length > 0 &&
           data.map((datum, i) => {
             return (
-              <SortByBase
+              <SortTab
                 label={datum.label}
                 value={datum.value}
                 key={i}
