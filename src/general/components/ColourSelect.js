@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./ColourSelect.css";
 import PropTypes from "prop-types";
-
 export default class ColourAdd extends React.Component {
   handleClick = () => {
     if (this.props.onSelect) {
