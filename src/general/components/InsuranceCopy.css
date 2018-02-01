@@ -1,0 +1,65 @@
+.base {
+	width: 100%;
+	height: auto;
+	margin: 20px 0;
+	overflow: hidden;
+}
+.header {
+	width: 100%;
+	height: auto;
+	position: relative;
+	padding: 0 60px 0 25px;
+	margin-bottom: 20px;
+	font-family: semibold;
+	font-size: 14px;
+	background-color: #ffffff;
+	line-height: 26px;
+}
+.textHolder {
+	width: 100%;
+	height: auto;
+	position: relative;
+	padding: 0 60px 0 25px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	background-color: #ffffff;
+}
+
+.insuranceHolder {
+	width: 100%;
+	height: auto;
+	position: relative;
+}
+.knowMore {
+	float: left;
+	width: 100%;
+	color: #ff1744;
+	margin-bottom: 2px;
+	text-align: center;
+	padding: 11px 24px 0px 63px;
+	cursor: pointer;
+}
+.button {
+	width: 70px;
+	height: auto;
+	font-size: 14px;
+	position: relative;
+	padding-bottom: 5px;
+	user-select: none;
+}
+.button:after {
+	content: '';
+	position: absolute;
+	height: 1px;
+	width: 100%;
+	background-color: #ff1744;
+	left: 0;
+	bottom: 0;
+}
+.ulClass {
+	padding-left: 39px;
+}
+.liClass {
+	padding-left: 10px;
+	line-height: 24px;
+}
