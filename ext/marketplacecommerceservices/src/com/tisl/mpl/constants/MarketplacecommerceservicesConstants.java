@@ -21,8 +21,6 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
-import org.apache.solr.client.solrj.response.RangeFacet.Date;
-
 import java.util.Date;
 
 import com.tisl.mpl.core.model.FreebieDetailModel;
@@ -1301,6 +1299,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
 	public static final String ORDERTHRESHOLD = "order".intern();
 	//public static final String ORDER = "order".intern();
+	public static final String WH_ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
