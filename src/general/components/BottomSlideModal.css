@@ -1,0 +1,22 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateY(100%);
+  animation: slideInUp 300ms forwards;
+}
+
+.content {
+  width: 100%;
+  height: auto;
+}
+@keyframes slideInUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}

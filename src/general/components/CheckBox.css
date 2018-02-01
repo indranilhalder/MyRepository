@@ -1,0 +1,35 @@
+.base {
+  width: 18px;
+  height: 18px;
+  position: relative;
+}
+.base:after,
+.base:before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: 300ms;
+}
+.base:after {
+  background: url(./img/checkbox-untick.svg)no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.base:before {
+  background: url(./img/checkbox-tick.svg)no-repeat;
+  background-size: contain;
+  background-position: center;
+  opacity: 0;
+}
+.selected {
+  composes: base;
+}
+.selected:after {
+  opacity: 0;
+}
+.selected:before {
+  opacity: 1;
+}
