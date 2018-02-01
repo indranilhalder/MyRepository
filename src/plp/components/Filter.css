@@ -1,0 +1,12 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.options {
+  width: 50%;
+  display: inline-block;
+  vertical-align: top;
+}
+.tabs {
+  composes: options;
+}

@@ -1,16 +1,17 @@
 import React from "react";
-import SelectedFilter from "./FilterTab";
-import styles from "./FetchDataFilter";
+import FilterTab from "./FilterTab";
+import styles from "./FilterCategories.css";
 import PropTypes from "prop-types";
 
-export default class FetchDataFilter extends React.Component {
+export default class FilterCategories extends React.Component {
   render() {
-    let data = this.props.facetdata;
+    console.log(this.props.data);
+    let data = this.props.data;
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {
           return (
-            <SelectedFilter
+            <FilterTab
               key={i}
               name={datum.name}
               selectedFilterCount={datum.selectedFilterCount}
@@ -25,7 +26,7 @@ export default class FetchDataFilter extends React.Component {
   }
 }
 
-FetchDataFilter.propTypes = {
+FilterCategories.propTypes = {
   selectedFilterCount: PropTypes.string,
   name: PropTypes.string,
   onClick: PropTypes.func
