@@ -27,10 +27,7 @@ export default class InsuranceCopy extends React.Component {
             </ul>
           </div>
           <div className={styles.knowMore}>
-            <div
-              className={styles.button}
-              onClick={() => this.handleClick(console.log("click"))}
-            >
+            <div className={styles.button} onClick={() => this.handleClick()}>
               {this.props.knowMore}
             </div>
           </div>
@@ -45,6 +42,3 @@ InsuranceCopy.propTypes = {
   knowMore: propTypes.string,
   onClick: propTypes.func
 };
-// InsuranceCopy.defaultProps = {
-//   text: 'OneAssist Accidental & Liquid Damage Protection Plan for Mobile & Tablets from Rs 8001 to Rs 12000'
-// }
