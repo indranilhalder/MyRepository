@@ -212,7 +212,7 @@ export function productListingFailure(error) {
     error
   };
 }
-export function productSearch(userDetails) {
+export function productListing(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(productListingRequest());
     try {
@@ -223,7 +223,6 @@ export function productSearch(userDetails) {
       }
       // TODO: dispatch a modal here
       dispatch(productListingSuccess(resultJson));
-      console.log(resultJson);
     } catch (e) {
       dispatch(productListingFailure(e.message));
     }

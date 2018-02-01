@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { productSearch } from "../actions/home.actions";
+import { productListing } from "../actions/home.actions";
 import ProductListing from "../components/ProductListing";
 import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
   return {
-    productSearch: () => {
-      dispatch(productSearch());
+    productListing: () => {
+      dispatch(productListing());
     }
   };
 };
