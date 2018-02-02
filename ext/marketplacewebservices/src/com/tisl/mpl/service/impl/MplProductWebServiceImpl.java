@@ -3161,6 +3161,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					egvProductData.setLastName(customer.getQcVerifyLastName());
 					egvProductData.setMobileNumber(customer.getQcVerifyMobileNo());
 				}
+				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+				{
+					egvProductData.setIsWalletOtpVerified(true);
+				}
 			}
 			
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))

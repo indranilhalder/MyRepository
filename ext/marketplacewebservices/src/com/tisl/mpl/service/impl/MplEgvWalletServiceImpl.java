@@ -133,27 +133,57 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		{*/
 			if (null != otp && !otp.isEmpty())
 			{
+				boolean customerWalletCreated = false;
+
+				if(null !=currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
+				{
+					customerWalletCreated =true;
+				}
 				OTPResponseData response = mplWalletFacade.validateOTP(currentCustomer.getUid(), otp);
+				
 				if (response.getOTPValid().booleanValue())
 				{
-					final QCCustomerRegisterResponse customerRegisterResponse = createWalletContainer(currentCustomer);
-					if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
-							&& customerRegisterResponse.getResponseCode().intValue() == 0)
-					{
-						CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
+				  if(customerWalletCreated) {
+					  CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 								.getCustomerWalletDetail().getWalletId());
 						UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
 						responce.setIsWalletCreated(true);
+						if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
+						{
+							responce.setIsWalletOtpVerified(true);
+						}
 						responce.setBalanceClearedAsOf(userCliqCashData.getBalanceClearedAsOf());
 						responce.setTotalCliqCashBalance(userCliqCashData.getTotalCliqCashBalance());
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					} else if ( null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode() ) {
-						throw new EtailBusinessExceptions(customerRegisterResponse.getResponseCode().toString());
-					}
-					else 
-					{
-						responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-					}
+						currentCustomer.setIsqcOtpVerify(Boolean.TRUE);
+						modelService.save(currentCustomer);
+						responce.setIsWalletOtpVerified(true);
+				  }else {
+					  
+						final QCCustomerRegisterResponse customerRegisterResponse = createWalletContainer(currentCustomer);
+						if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
+								&& customerRegisterResponse.getResponseCode().intValue() == 0)
+						{
+							CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
+									.getCustomerWalletDetail().getWalletId());
+							UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
+							responce.setIsWalletCreated(true);
+							responce.setIsWalletOtpVerified(true);
+
+							responce.setBalanceClearedAsOf(userCliqCashData.getBalanceClearedAsOf());
+							responce.setTotalCliqCashBalance(userCliqCashData.getTotalCliqCashBalance());
+							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							currentCustomer.setIsqcOtpVerify(Boolean.TRUE);
+							modelService.save(currentCustomer);
+						} else if ( null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode() ) {
+							throw new EtailBusinessExceptions(customerRegisterResponse.getResponseCode().toString());
+						}
+						else 
+						{
+							responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+						}
+				  }
+				
 				}
 				else
 				{
@@ -253,6 +283,10 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				else if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode())
 				{
 					throw new EtailBusinessExceptions(customerWalletDetailData.getResponseCode().toString());
+				}
+				if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
+				{
+					responce.setIsWalletOtpVerified(true);
 				}
 			}
 			else

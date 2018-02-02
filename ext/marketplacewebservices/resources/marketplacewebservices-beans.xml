@@ -1238,6 +1238,8 @@
 		<property name="lastName" type="String" />
 		<property name="mobileNumber" type="String" />
 		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />	
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -3677,7 +3679,8 @@
 		<property name="firstName" type="String" />
 		<property name="lastName" type="String" />
 		<property name="mobileNumber" type="String" />
-		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletCreated" type="boolean" />
+		<property name="isWalletOtpVerified" type="boolean" />	
 	</bean>	
 	
 	
@@ -3757,7 +3760,8 @@
 		<property name="firstName" type="String" />
 		<property name="lastName" type="String" />
 		<property name="mobileNumber" type="String" />
-		<property name="isWalletCreated" type="boolean" />	               
+		<property name="isWalletCreated" type="boolean" />	   
+		<property name="isWalletOtpVerified" type="boolean" />            
 	</bean> 
 
      
@@ -3802,6 +3806,7 @@
 		<property name="lastName" type="String" />
 		<property name="mobileNumber" type="String" />
 		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO">		
@@ -3814,6 +3819,7 @@
 		<property name="balanceClearedAsOf" type="String" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
 		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />
 	</bean>
 	
 

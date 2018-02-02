@@ -1829,7 +1829,10 @@ public class PaymentServicesController extends BaseController
 								&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
 						{
 							paymentModesData.setIsWalletCreated(true);
-							
+							if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+							{
+								paymentModesData.setIsWalletOtpVerified(true);
+							}
 							CustomerWalletDetailResponse responce = mplWalletFacade
 									.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
 							if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())

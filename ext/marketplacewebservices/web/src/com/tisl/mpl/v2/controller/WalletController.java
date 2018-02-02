@@ -675,6 +675,10 @@ public class WalletController
 			{
 				redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
 				redeemCliqVoucherWsDTO.setIsWalletCreated(false);
+				if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
+				{
+					redeemCliqVoucherWsDTO.setIsWalletOtpVerified(true);
+				}
 				WalletCreateData walletCreateData =mplWalletFacade.getWalletCreateData();
 				if(null != walletCreateData) {
 					redeemCliqVoucherWsDTO.setFirstName(walletCreateData.getQcVerifyFirstName());
@@ -1053,30 +1057,64 @@ public class WalletController
 						return responce;
 					}
 				}else {
-					validateRequest(responce,request);
+					validateRequest(request);
 				}
-				
-				
-				if(null != customer && (null == customer.getIsWalletActivated() || !customer.getIsWalletActivated().booleanValue() ) ) {
-					if( null == customer.getQcVerifyMobileNo() || 
-							(!customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(request.getMobileNumber().trim())))
+				if(null != customer) {
+					boolean isWalletCreated = false ; 
+					boolean isWalletOtpVerified = false ;
+					boolean isMobileNumberChanged = true;
+					boolean isNameChanged = true;
+					
+					if((null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ) )
 					{
-						if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
-						{
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+						isWalletCreated = true;
+					}
+					if( null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
+					{
+						isWalletOtpVerified = true;
+					}
+					if( null != customer.getQcVerifyMobileNo() && 
+								(customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(request.getMobileNumber().trim())))
+					{
+						isMobileNumberChanged = false;
+					}
+					
+					if( ( null != customer.getQcVerifyFirstName() && 
+							(customer.getQcVerifyFirstName().trim().equalsIgnoreCase(request.getFirstName())) )|| 
+							(  null != customer.getQcVerifyLastName() && 
+							(customer.getQcVerifyLastName().trim().equalsIgnoreCase(request.getLastName())) ))
+				{
+						isNameChanged = false;
+				}
+					
+					if( !isWalletCreated || !isWalletOtpVerified ) {
+						
+						if(isMobileNumberChanged) {
+							if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
+							{
+								registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+								mplWalletFacade.generateOTP(customer,request.getMobileNumber());
+								//Set success flag
+								responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							}
+							else
+							{
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
+							}
+						}else {
+							if(isNameChanged){
+								registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+							}
 							mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 							//Set success flag
 							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						}
-						else
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
-						}
+								
 					}else {
-						mplWalletFacade.generateOTP(customer,request.getMobileNumber());
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5016);
+
 					}
-				}else {
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5016);
+					
 				}
 			}else
 			{
@@ -1108,42 +1146,31 @@ public class WalletController
 /**
  * @param request
  */
-private ErrorDTO validateRequest(ErrorDTO responce,EgvWalletCreateRequestWsDTO request)
-{
-	if(null == request) {
-		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5015));
-		responce.setErrorCode(MarketplacecommerceservicesConstants.B5015);
-		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-	}
-	else if (null == request.getFirstName() || request.getFirstName().isEmpty())
+private void validateRequest(EgvWalletCreateRequestWsDTO request)
 	{
-		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5011));
-		responce.setErrorCode(MarketplacecommerceservicesConstants.B5011);
-		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+		if (null == request)
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5015);
+		}
+		else if (null == request.getFirstName() || request.getFirstName().isEmpty())
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5011);
+		}
+		else if (null == request.getLastName() || request.getLastName().isEmpty())
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5012);
+		}
+		else if (null == request.getMobileNumber() || request.getMobileNumber().isEmpty())
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5013);
 
+		}
+		else if (StringUtils.length(request.getMobileNumber()) != MarketplacecommerceservicesConstants.MOBLENGTH
+				&& !request.getMobileNumber().matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+		}
 	}
-	else if (null == request.getLastName() || request.getLastName().isEmpty())
-	{
-		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5012));
-		responce.setErrorCode(MarketplacecommerceservicesConstants.B5012);
-		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-
-	}
-	else if (null == request.getMobileNumber() || request.getMobileNumber().isEmpty())
-	{
-		
-		responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5013));
-		responce.setErrorCode(MarketplacecommerceservicesConstants.B5013);
-		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-
-	}else if (StringUtils.length(request.getMobileNumber()) != MarketplacecommerceservicesConstants.MOBLENGTH
-			&& !request.getMobileNumber().matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
-	{
-		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
-	}
-	return responce;
-	
-}
 
 
 @Secured(
