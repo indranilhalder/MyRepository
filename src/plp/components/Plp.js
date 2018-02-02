@@ -1,6 +1,7 @@
 import React from "react";
 import Filter from "./Filter";
 import ProductGrid from "./ProductGrid";
+import PlpMobileFooter from "./PlpMobileFooter";
 import styles from "./Plp.css";
 export default class Plp extends React.Component {
   render() {
@@ -483,6 +484,9 @@ export default class Plp extends React.Component {
         </div>
         <div className={styles.filter}>
           <Filter />
+        </div>
+        <div className={styles.footer}>
+          <PlpMobileFooter />
         </div>
       </div>
     );

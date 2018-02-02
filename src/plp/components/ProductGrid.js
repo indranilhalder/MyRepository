@@ -10,6 +10,12 @@ import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";
 const LIST = "list";
 const GRID = "grid";
+const typeComponentMapping = {
+  product: props => <ProductModule {...props} />,
+  plpAd: props => <PlpAds {...props} />,
+  iconicFilter: props => <IconicFilter {...props} />
+};
+
 export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +23,7 @@ export default class ProductGrid extends React.Component {
       view: LIST
     };
   }
+
   switchView() {
     if (this.state.view === LIST) {
       this.setState({ view: GRID });
@@ -30,6 +37,14 @@ export default class ProductGrid extends React.Component {
     }
   }
   renderComponent = data => {
+    // console.log(typeComponentMapping[data.type]);
+    // return (
+    //   typeComponentMapping[data.type] && (
+    //     <div>
+    //       {typeComponentMapping[data.type] && typeComponentMapping[data.type]}
+    //     </div>
+    //   )
+    // );
     if (data.type === "product") {
       return (
         <ProductModule

@@ -34,11 +34,5 @@ export default class InformationHeader extends React.Component {
 }
 InformationHeader.propTypes = {
   text: propTypes.string,
-  iconImageURL: propTypes.string,
   count: propTypes.number
-};
-InformationHeader.defaultProps = {
-  text: "Sort by",
-  iconImageURL: iconImageURL,
-  count: 49
 };
