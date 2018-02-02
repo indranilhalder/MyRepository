@@ -207,12 +207,24 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
      		      response = addAmountToQCWallet(currentCustomer,walletObj);
      		  if(null != response && response.getResponseCode()== 0){
      			  commentMsg =SUCCESS_MSG;
+     			currentCustomer.setFirstName(walletObj.getCustomerFirstName());
+				currentCustomer.setLastName(walletObj.getCustomerLastName());
+				currentCustomer.setIsWalletActivated(Boolean.TRUE);
+				currentCustomer.setQcVerifyFirstName(walletObj.getCustomerFirstName());
+				currentCustomer.setQcVerifyLastName(walletObj.getCustomerLastName());
+				modelService.save(currentCustomer);
      		  }else{
      			  commentMsg = qcErrorMasseges(response.getResponseCode());
      			}
      	  }else if(null != currentCustomer.getCustomerWalletDetail() && null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()==false){
      		  try{
      		     response = addAmountToQCWallet(currentCustomer,walletObj);
+     		   currentCustomer.setFirstName(walletObj.getCustomerFirstName());
+				currentCustomer.setLastName(walletObj.getCustomerLastName());
+				currentCustomer.setIsWalletActivated(Boolean.TRUE);
+				currentCustomer.setQcVerifyFirstName(walletObj.getCustomerFirstName());
+				currentCustomer.setQcVerifyLastName(walletObj.getCustomerLastName());
+				modelService.save(currentCustomer);
       		  if(null != response && response.getResponseCode()== 0){
       			  commentMsg =SUCCESS_MSG;
       		  }else{

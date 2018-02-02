@@ -2262,14 +2262,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									qcCreditRequest.setNotes("Cancel for " + decimalFormat.format(qcCliqCashAmt));
 									response = mplWalletFacade.qcCredit(walletId, qcCreditRequest);
 									walletCardApportionDetailModelList.add(getQcWalletCardResponse(response, cardApportionDetail));
-
+									LOG.debug("Quck Cilver giving response code " + response.getResponseCode() + " Order Id :"
+											+ subOrderModel.getParentReference().getCode());
 								}
 							}
 						}
 					}
-
-					LOG.debug("Quck Cilver giving response code " + response.getResponseCode() + " Order Id :"
-							+ subOrderModel.getParentReference().getCode());
+					
 				}
 				catch (final Exception e)
 				{

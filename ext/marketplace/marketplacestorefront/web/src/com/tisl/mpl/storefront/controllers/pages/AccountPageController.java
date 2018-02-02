@@ -1099,6 +1099,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						&& null != orderModel.getPaymentTransactions().get(0)
 						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions().get(0).getEntries())
 						&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
+						&& null != orderModel.getModeOfOrderPayment()
 						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
 				{
 					paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
