@@ -10,11 +10,11 @@ export function productListingRequest() {
     status: REQUESTING
   };
 }
-export function productListingSuccess(productListings) {
+export function productListingSuccess(products) {
   return {
     type: PRODUCT_LISTING_SUCCESS,
     status: SUCCESS,
-    productListings
+    products
   };
 }
 

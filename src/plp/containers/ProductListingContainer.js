@@ -13,8 +13,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    loading: state.productListing.loading,
-    product: state.productListing.product
+    loading: state.products.loading,
+    products: state.products.products
   };
 };
 

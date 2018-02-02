@@ -11,13 +11,13 @@ import * as api from "../src/lib/apiRequest";
 import modal from "../src/general/modal.reducers";
 import home from "../src/home/reducers/home.reducer";
 import registerServiceWorker from "./registerServiceWorker";
-import productListing from "./plp/reducers/plp.reducer";
+import products from "./plp/reducers/plp.reducer";
 
 const rootReducer = combineReducers({
   user,
   modal,
   home,
-  productListing
+  products
 });
 
 let store = createStore(
