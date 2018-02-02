@@ -1,0 +1,35 @@
+.base {
+  width: 100%;
+  height: 50px;
+  background-color: #212121;
+}
+.holder {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.buttonHolder {
+  width: auto;
+  position: absolute;
+  display: inline-block;
+}
+.iconHolder {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.textBox {
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  line-height: 50px;
+  font-family: semibold;
+  text-align: center;
+}
+.span {
+  margin-left: 5px;
+}
