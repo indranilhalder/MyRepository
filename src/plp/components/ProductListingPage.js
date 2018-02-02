@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 
-class ProductListing extends Component {
+class ProductListingPage extends Component {
   componentWillMount() {
-    this.props.productListing();
-  }
-
-  renderProduct() {
-    if (this.props.product) {
-    }
+    this.props.getProducts();
   }
 
   renderLoader() {
@@ -23,8 +18,8 @@ class ProductListing extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
-    return <div>{this.renderProduct()}</div>;
+    return <div />;
   }
 }
 
-export default ProductListing;
+export default ProductListingPage;

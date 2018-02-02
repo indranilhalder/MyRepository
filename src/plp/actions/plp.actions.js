@@ -10,11 +10,11 @@ export function productListingRequest() {
     status: REQUESTING
   };
 }
-export function productListingSuccess(product) {
+export function productListingSuccess(productListings) {
   return {
     type: PRODUCT_LISTING_SUCCESS,
     status: SUCCESS,
-    product
+    productListings
   };
 }
 
@@ -25,7 +25,7 @@ export function productListingFailure(error) {
     error
   };
 }
-export function productListing(userDetails) {
+export function getProducts() {
   return async (dispatch, getState, { api }) => {
     dispatch(productListingRequest());
     try {
@@ -36,7 +36,6 @@ export function productListing(userDetails) {
       }
       // TODO: dispatch a modal here
       dispatch(productListingSuccess(resultJson));
-      console.log(resultJson);
     } catch (e) {
       dispatch(productListingFailure(e.message));
     }

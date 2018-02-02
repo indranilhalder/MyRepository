@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { productListing } from "../actions/plp.actions";
-import ProductListing from "../components/ProductListing";
+import { getProducts } from "../actions/plp.actions";
+import ProductListingPage from "../components/ProductListingPage";
 import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
   return {
-    productListing: () => {
-      dispatch(productListing());
+    getProducts: () => {
+      dispatch(getProducts());
     }
   };
 };
@@ -19,7 +19,7 @@ const mapStateToProps = state => {
 };
 
 const ProductListingContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProductListing)
+  connect(mapStateToProps, mapDispatchToProps)(ProductListingPage)
 );
 
 export default ProductListingContainer;
