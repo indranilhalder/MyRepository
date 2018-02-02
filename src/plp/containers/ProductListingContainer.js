@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { productListing } from "../actions/home.actions";
+import { productListing } from "../actions/plp.actions";
 import ProductListing from "../components/ProductListing";
 import { withRouter } from "react-router-dom";
 
@@ -13,8 +13,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    loading: state.home.loading,
-    product: state.home.product
+    loading: state.productListing.loading,
+    product: state.productListing.product
   };
 };
 

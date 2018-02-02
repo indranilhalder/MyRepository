@@ -14,10 +14,7 @@ export const MULTI_SELECT_SUBMIT_FAILURE = "MULTI_SELECT_SUBMIT_FAILURE";
 export const HOME_FEED_PATH = "homepage";
 export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
 export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
-export const PRODUCT_LISTING_REQUEST = "PRODUCT_LISTING_REQUEST";
-export const PRODUCT_LISTING_SUCCESS = "PRODUCT_LISTING_SUCCESS";
-export const PRODUCT_LISTING_FAILURE = "PRODUCT_LISTING_FAILURE";
-export const PRODUCT_SEARCH_PATH = "serpsearch";
+
 export function multiSelectSubmitRequest(positionInFeed) {
   return {
     type: MULTI_SELECT_SUBMIT_REQUEST,
@@ -187,44 +184,6 @@ export function getComponentData(positionInFeed, fetchURL) {
       dispatch(componentDataSuccess(resultJson, positionInFeed));
     } catch (e) {
       dispatch(componentDataFailure(positionInFeed, e.message));
-    }
-  };
-}
-
-export function productListingRequest() {
-  return {
-    type: PRODUCT_LISTING_REQUEST,
-    status: REQUESTING
-  };
-}
-export function productListingSuccess(product) {
-  return {
-    type: PRODUCT_LISTING_SUCCESS,
-    status: SUCCESS,
-    product
-  };
-}
-
-export function productListingFailure(error) {
-  return {
-    type: PRODUCT_LISTING_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function productListing(userDetails) {
-  return async (dispatch, getState, { api }) => {
-    dispatch(productListingRequest());
-    try {
-      const result = await api.get(PRODUCT_SEARCH_PATH);
-      const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
-      }
-      // TODO: dispatch a modal here
-      dispatch(productListingSuccess(resultJson));
-    } catch (e) {
-      dispatch(productListingFailure(e.message));
     }
   };
 }

@@ -96,26 +96,6 @@ const home = (
         homeFeed: homeFeedData
       });
 
-    case homeActions.PRODUCT_LISTING_REQUEST:
-      return Object.assign({}, state, {
-        status: action.status,
-        loading: true
-      });
-
-    case homeActions.PRODUCT_LISTING_SUCCESS:
-      return Object.assign({}, state, {
-        status: action.status,
-        product: action.product,
-        loading: false
-      });
-
-    case homeActions.PRODUCT_LISTING_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        loading: false
-      });
-
     default:
       return state;
   }
