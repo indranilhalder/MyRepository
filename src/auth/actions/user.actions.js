@@ -1,5 +1,9 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import {
+  GLOBAL_ACCESS_TOKEN,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants";
+import {
   showModal,
   SIGN_UP_OTP_VERIFICATION,
   hideModal,
@@ -120,7 +124,7 @@ export function loginUserFailure(error) {
 }
 
 export function loginUser(userLoginDetails) {
-  let customerCookie = Cookie.getCookie("sessionObjectCustomer");
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
@@ -163,7 +167,7 @@ export function signUpUserFailure(error) {
 }
 
 export function signUpUser(userObj) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
 
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
@@ -209,7 +213,7 @@ export function otpVerificationFailure(error) {
   };
 }
 export function otpVerification(otpDetails, userDetails) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(otpVerificationRequest());
     try {
@@ -254,7 +258,7 @@ export function forgotPasswordFailure(error) {
   };
 }
 export function forgotPassword(userDetails) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(forgotPasswordRequest());
     try {
@@ -299,7 +303,7 @@ export function forgotPasswordOtpVerificationFailure(error) {
 }
 
 export function forgotPasswordOtpVerification(otpDetails, userDetails) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(forgotPasswordOtpVerificationRequest());
     try {
@@ -422,7 +426,7 @@ export function refreshTokenFailure(error) {
 }
 
 export function refreshToken() {
-  let customerCookie = Cookie.getCookie("sessionObjectCustomer");
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(refreshTokenRequest());
     try {
@@ -465,7 +469,7 @@ export function customerAccessTokenFailure(error) {
   };
 }
 export function customerAccessToken(userDetails) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
@@ -605,7 +609,7 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
   accessToken,
   platForm
 ) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
@@ -642,8 +646,8 @@ export function socialMediaRegistrationFailure(error) {
 }
 
 export function socialMediaRegistration(userName, accessToken, platForm) {
-  let globalCookie = Cookie.getCookie("sessionObjectGlobal");
-  let customerCookie = Cookie.getCookie("sessionObjectCustomer");
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaRegistrationRequest());
     try {
@@ -702,7 +706,7 @@ export function socialMediaLoginFailure(error) {
 }
 
 export function socialMediaLogin(userName, platform) {
-  let customerCookie = Cookie.getCookie("sessionObjectCustomer");
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
@@ -748,7 +752,7 @@ export function getCustomerProfileFailure(error) {
 }
 
 export function getCustomerProfile() {
-  let customerCookie = Cookie.getCookie("sessionObjectCustomer");
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getCustomerProfileRequest());
     try {

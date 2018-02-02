@@ -1,6 +1,10 @@
 import * as userActions from "../actions/user.actions";
 import * as Cookies from "../../lib/Cookie";
-
+import {
+  GLOBAL_ACCESS_TOKEN,
+  CUSTOMER_ACCESS_TOKEN,
+  REFRESH_TOKEN
+} from "../../lib/constants";
 const user = (
   state = {
     user: null,
@@ -137,7 +141,7 @@ const user = (
 
     case userActions.GLOBAL_ACCESS_TOKEN_SUCCESS:
       Cookies.createCookie(
-        "globalAccessToken",
+        GLOBAL_ACCESS_TOKEN,
         JSON.stringify(action.globalAccessTokenDetails),
         action.globalAccessTokenDetails.expires_in
       );
@@ -162,12 +166,12 @@ const user = (
 
     case userActions.CUSTOMER_ACCESS_TOKEN_SUCCESS:
       Cookies.createCookie(
-        "customerAccessToken",
+        CUSTOMER_ACCESS_TOKEN,
         JSON.stringify(action.customerAccessTokenDetails),
         action.customerAccessTokenDetails.expires_in
       );
       localStorage.setItem(
-        "refresh_token",
+        REFRESH_TOKEN,
         action.customerAccessTokenDetails.refresh_token
       );
 
@@ -268,12 +272,12 @@ const user = (
 
     case userActions.REFRESH_TOKEN_SUCCESS:
       Cookies.createCookie(
-        "customerAccessToken",
+        CUSTOMER_ACCESS_TOKEN,
         JSON.stringify(action.customerAccessTokenDetails),
         action.customerAccessTokenDetails.expires_in
       );
       localStorage.setItem(
-        "refresh_token",
+        REFRESH_TOKEN,
         action.customerAccessTokenDetails.refresh_token
       );
 
