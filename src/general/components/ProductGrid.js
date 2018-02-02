@@ -11,7 +11,7 @@ export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: LIST
+      view: GRID
     };
   }
   switchView() {
