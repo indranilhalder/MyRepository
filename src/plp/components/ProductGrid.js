@@ -46,7 +46,7 @@ export default class ProductGrid extends React.Component {
         />
       );
     } else if (data.type === "plpAd") {
-      return <PlpAds />;
+      return <PlpAds imageURL={data.imageURL} />;
     } else if (data.type === "iconicFilter") {
       return <IconicFilter data={data.filterValue} title={data.filterTitle} />;
     } else {

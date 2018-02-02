@@ -16,7 +16,6 @@ export default class Grid extends React.Component {
           {this.props.children &&
             this.props.children.map((child, i) => {
               if (child !== null) {
-                console.log(child.props);
                 return (
                   <React.Fragment key={i}>
                     <MediaQuery query="(min-device-width: 1025px)">
