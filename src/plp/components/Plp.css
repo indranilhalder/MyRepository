@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   position: relative;
-  padding-bottom: 70px;
+  padding: 70px 0;
   background: #ececec;
 }
 .filter {
@@ -15,6 +15,17 @@
   transform: translateX(-100%);
   background: #fff;
   z-index: 15;
+  transition: 300ms;
+}
+.pageHeader {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+.filterOpen {
+  composes: filter;
+  transform: translateX(0);
 }
 .main {
   width: 100%;

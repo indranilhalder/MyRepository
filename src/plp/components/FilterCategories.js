@@ -35,7 +35,7 @@ export default class FilterCategories extends React.Component {
 }
 
 FilterCategories.propTypes = {
-  selectedFilterCount: PropTypes.string,
+  selectedFilterCount: PropTypes.number,
   name: PropTypes.string,
   onClick: PropTypes.func
 };
