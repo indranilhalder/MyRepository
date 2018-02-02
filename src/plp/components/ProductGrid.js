@@ -106,12 +106,3 @@ export default class ProductGrid extends React.Component {
 ProductGrid.defaultProps = {
   area: "Delhi - 560345"
 };
-// <ProductModule
-//   search={datum.search}
-//   productImage={datum.productImage}
-//   title={datum.title}
-//   description={datum.description}
-//   view={this.state.view}
-//   key={i}
-//   gridWidthMobile={100 ? i % 2 === 0 : false}
-// />
