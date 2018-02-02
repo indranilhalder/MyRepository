@@ -8,8 +8,7 @@ const home = (
     homeFeed: [],
     status: null,
     error: null,
-    loading: false,
-    product: null
+    loading: false
   },
   action
 ) => {
