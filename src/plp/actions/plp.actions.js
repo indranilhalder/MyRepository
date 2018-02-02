@@ -4,21 +4,21 @@ export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
 export const PRODUCT_LISTINGS_PATH = "serpsearch";
 const FAILURE = "FAILURE";
-export function productListingsRequest() {
+export function getProductListingsRequest() {
   return {
     type: PRODUCT_LISTINGS_REQUEST,
     status: REQUESTING
   };
 }
-export function productListingsSuccess(products) {
+export function getProductListingsSuccess(productListings) {
   return {
     type: PRODUCT_LISTINGS_SUCCESS,
     status: SUCCESS,
-    products
+    productListings
   };
 }
 
-export function productListingsFailure(error) {
+export function getProductListingsFailure(error) {
   return {
     type: PRODUCT_LISTINGS_FAILURE,
     status: ERROR,
@@ -27,7 +27,7 @@ export function productListingsFailure(error) {
 }
 export function getProducts() {
   return async (dispatch, getState, { api }) => {
-    dispatch(productListingsRequest());
+    dispatch(getProductListingsRequest());
     try {
       const result = await api.get(PRODUCT_LISTINGS_PATH);
       const resultJson = await result.json();
@@ -35,9 +35,9 @@ export function getProducts() {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(productListingsSuccess(resultJson));
+      dispatch(getProductListingsSuccess(resultJson));
     } catch (e) {
-      dispatch(productListingsFailure(e.message));
+      dispatch(getProductListingsFailure(e.message));
     }
   };
 }

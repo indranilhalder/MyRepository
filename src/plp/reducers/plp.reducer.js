@@ -1,10 +1,10 @@
 import * as plpActions from "../actions/plp.actions";
-const products = (
+const productListings = (
   state = {
     status: null,
     error: null,
     loading: false,
-    products: null
+    productListings: null
   },
   action
 ) => {
@@ -18,7 +18,7 @@ const products = (
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        products: action.products,
+        productListings: action.productListings,
         loading: false
       });
 
@@ -34,4 +34,4 @@ const products = (
   }
 };
 
-export default products;
+export default productListings;
