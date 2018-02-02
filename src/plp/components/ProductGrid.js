@@ -1,6 +1,9 @@
 import React from "react";
 import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
+import IconicFilter from "./IconicFilter";
+import PlpAds from "./PlpAds";
+import PlpComponent from "./PlpComponent";
 import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
@@ -11,7 +14,7 @@ export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: GRID
+      view: LIST
     };
   }
   switchView() {
@@ -26,6 +29,30 @@ export default class ProductGrid extends React.Component {
       this.props.changeAddress();
     }
   }
+  renderComponent = data => {
+    if (data.type === "product") {
+      return (
+        <ProductModule
+          productImage={data.imageURL}
+          title={data.productname}
+          price={data.price.mrpPrice.formattedValue}
+          discountPrice={data.price.sellingPrice.formattedValue}
+          description={data.description}
+          bestDeliveryInfo={data.bestDeliveryInfo}
+          offerText={data.offerText}
+          averageRating={data.averageRating}
+          totalNoOfReviews={data.totalNoOfReviews}
+          view={this.state.view}
+        />
+      );
+    } else if (data.type === "plpAd") {
+      return <PlpAds />;
+    } else if (data.type === "iconicFilter") {
+      return <IconicFilter data={data.filterValue} title={data.filterTitle} />;
+    } else {
+      return null;
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -45,22 +72,29 @@ export default class ProductGrid extends React.Component {
         <div className={styles.content}>
           <Grid
             search={this.props.search}
-            offset={20}
+            offset={0}
             elementWidthMobile={this.state.view === LIST ? 100 : 50}
           >
             {this.props.data &&
               this.props.data.map((datum, i) => {
-                return (
-                  <ProductModule
-                    search={datum.search}
-                    productImage={datum.productImage}
-                    title={datum.title}
-                    description={datum.description}
-                    view={this.state.view}
-                    key={i}
-                    gridWidthMobile={100 ? i % 2 === 0 : false}
-                  />
-                );
+                if (this.renderComponent(datum) !== null) {
+                  let widthMobile = false;
+                  if (datum.type === "plpAd" || datum.type === "iconicFilter") {
+                    widthMobile = 100;
+                  }
+                  return (
+                    <PlpComponent
+                      key={i}
+                      gridWidthMobile={widthMobile}
+                      view={this.state.view}
+                      type={datum.type}
+                    >
+                      {this.renderComponent(datum)}
+                    </PlpComponent>
+                  );
+                } else {
+                  return null;
+                }
               })}
           </Grid>
         </div>
@@ -72,3 +106,12 @@ export default class ProductGrid extends React.Component {
 ProductGrid.defaultProps = {
   area: "Delhi - 560345"
 };
+// <ProductModule
+//   search={datum.search}
+//   productImage={datum.productImage}
+//   title={datum.title}
+//   description={datum.description}
+//   view={this.state.view}
+//   key={i}
+//   gridWidthMobile={100 ? i % 2 === 0 : false}
+// />

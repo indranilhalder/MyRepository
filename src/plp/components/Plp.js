@@ -478,11 +478,11 @@ export default class Plp extends React.Component {
     ];
     return (
       <div className={styles.base}>
+        <div className={styles.main}>
+          <ProductGrid data={searchresult} />
+        </div>
         <div className={styles.filter}>
           <Filter />
-        </div>
-        <div className={styles.main}>
-          <ProductGrid data={data} />
         </div>
       </div>
     );

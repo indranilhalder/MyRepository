@@ -15,37 +15,43 @@ export default class Grid extends React.Component {
         >
           {this.props.children &&
             this.props.children.map((child, i) => {
-              console.log(child.props);
-              return (
-                <React.Fragment key={i}>
-                  <MediaQuery query="(min-device-width: 1025px)">
-                    <div
-                      className={styles.element}
-                      style={{
-                        width: child.props.gridWidthDesktop
-                          ? `${child.props.gridWidthDesktop}%`
-                          : `${this.props.elementWidthDesktop}%`,
-                        padding: `${this.props.offset / 2}px`
-                      }}
-                    >
-                      {child}
-                    </div>
-                  </MediaQuery>
-                  <MediaQuery query="(max-device-width: 1024px)">
-                    <div
-                      className={styles.element}
-                      style={{
-                        width: child.props.gridWidthMobile
-                          ? `${child.props.gridWidthMobile}%`
-                          : `${this.props.elementWidthMobile}%`,
-                        padding: `${this.props.offset / 2}px`
-                      }}
-                    >
-                      {child}
-                    </div>
-                  </MediaQuery>
-                </React.Fragment>
-              );
+              if (child !== null) {
+                console.log(child.props);
+                return (
+                  <React.Fragment key={i}>
+                    <MediaQuery query="(min-device-width: 1025px)">
+                      <div
+                        className={styles.element}
+                        style={{
+                          width: child.props
+                            ? child.props.gridWidthDesktop
+                              ? `${child.props.gridWidthDesktop}%`
+                              : `${this.props.elementWidthDesktop}%`
+                            : `${this.props.elementWidthDesktop}%`,
+                          padding: `${this.props.offset / 2}px`
+                        }}
+                      >
+                        {child}
+                      </div>
+                    </MediaQuery>
+                    <MediaQuery query="(max-device-width: 1024px)">
+                      <div
+                        className={styles.element}
+                        style={{
+                          width: child.props
+                            ? child.props.gridWidthMobile
+                              ? `${child.props.gridWidthMobile}%`
+                              : `${this.props.elementWidthMobile}%`
+                            : `${this.props.elementWidthMobile}%`,
+                          padding: `${this.props.offset / 2}px`
+                        }}
+                      >
+                        {child}
+                      </div>
+                    </MediaQuery>
+                  </React.Fragment>
+                );
+              }
             })}
         </div>
       </div>
