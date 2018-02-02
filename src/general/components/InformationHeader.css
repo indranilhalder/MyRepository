@@ -8,19 +8,10 @@
   height: auto;
   position: relative;
 }
-
 .buttonHolder {
   width: auto;
   position: absolute;
   display: inline-block;
-}
-.iconHolder {
-  width: 25px;
-  height: 25px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto;
 }
 .textBox {
   height: auto;

@@ -1,10 +1,8 @@
 import React from "react";
 import styles from "./InformationHeader.css";
-// import { Button } from "xelpmoc-core";
 import { CircleButton, Icon } from "xelpmoc-core";
 import propTypes from "prop-types";
 import iconImageURL from "./img/makefg.png";
-
 export default class InformationHeader extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -19,7 +17,7 @@ export default class InformationHeader extends React.Component {
             <CircleButton
               color={"rgba(0,0,0,0)"}
               size={50}
-              onClick={() => this.handleClick(console.log("check count"))}
+              onClick={() => this.handleClick()}
               icon={<Icon image={iconImageURL} size={22} />}
             />
           </div>
