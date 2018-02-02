@@ -11,7 +11,6 @@ export default class FilterCategories extends React.Component {
   }
   render() {
     let data = this.props.data;
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {
