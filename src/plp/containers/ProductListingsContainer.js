@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { getProducts } from "../actions/plp.actions";
-import ProductListingPage from "../components/ProductListingPage";
+import ProductListingsPage from "../components/ProductListingsPage";
 import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
@@ -18,8 +18,8 @@ const mapStateToProps = state => {
   };
 };
 
-const ProductListingContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProductListingPage)
+const ProductListingsContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProductListingsPage)
 );
 
-export default ProductListingContainer;
+export default ProductListingsContainer;

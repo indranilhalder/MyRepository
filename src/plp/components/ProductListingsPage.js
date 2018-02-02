@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 
-class ProductListingPage extends Component {
+class ProductListingsPage extends Component {
   componentWillMount() {
     this.props.getProducts();
   }
@@ -22,4 +22,4 @@ class ProductListingPage extends Component {
   }
 }
 
-export default ProductListingPage;
+export default ProductListingsPage;

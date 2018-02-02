@@ -9,20 +9,20 @@ const products = (
   action
 ) => {
   switch (action.type) {
-    case plpActions.PRODUCT_LISTING_REQUEST:
+    case plpActions.PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true
       });
 
-    case plpActions.PRODUCT_LISTING_SUCCESS:
+    case plpActions.PRODUCT_LISTINGS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         products: action.products,
         loading: false
       });
 
-    case plpActions.PRODUCT_LISTING_FAILURE:
+    case plpActions.PRODUCT_LISTINGS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
