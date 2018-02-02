@@ -1769,6 +1769,18 @@ public class PaymentServicesController extends BaseController
 					modelService.save(orderModel);
 					modelService.refresh(orderModel);
 			}
+			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+
+			final String juspayMerchantId = !getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
+			paymentModesData.setMerchantID(juspayMerchantId);
+			paymentModesData.setMerchantKey(juspayMerchantKey);
+			
 			/* Added for cliq Cash Functionality start */
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 			try
