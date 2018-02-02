@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { getProducts } from "../actions/plp.actions";
+import { getProductListings } from "../actions/plp.actions";
 import ProductListingsPage from "../components/ProductListingsPage";
 import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProducts: () => {
-      dispatch(getProducts());
+    getProductListings: () => {
+      dispatch(getProductListings());
     }
   };
 };

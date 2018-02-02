@@ -3,7 +3,7 @@ import MDSpinner from "react-md-spinner";
 
 class ProductListingsPage extends Component {
   componentWillMount() {
-    this.props.getProducts();
+    this.props.getProductListings();
   }
 
   renderLoader() {

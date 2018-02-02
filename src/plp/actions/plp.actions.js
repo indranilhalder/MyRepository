@@ -25,7 +25,7 @@ export function getProductListingsFailure(error) {
     error
   };
 }
-export function getProducts() {
+export function getProductListings() {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest());
     try {
