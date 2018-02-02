@@ -1,9 +1,9 @@
 export function createCookie(name, value, days) {
-  var expires;
+  let expires;
   if (days) {
-    var date = new Date();
+    let date = new Date();
     date.setSeconds(date.getSeconds() + days);
-    expires = "; expires=" + date;
+    expires = `; expires=${date}`;
   } else {
     expires = "";
   }
@@ -11,6 +11,6 @@ export function createCookie(name, value, days) {
 }
 
 export function getCookie(c_name) {
-  let match = document.cookie.match(new RegExp(c_name + "=([^;]+)"));
+  let match = document.cookie.match(new RegExp(c_name + `=([^;]+)`));
   if (match) return match[1];
 }

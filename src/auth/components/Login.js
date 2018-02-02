@@ -6,6 +6,7 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
+import { SUCCESS } from "../../lib/constants";
 
 // Forgot password --> shows a modal
 // Don't have an account --> sign up --> a route change.
@@ -20,7 +21,7 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user.status === "success") {
+    if (this.props.user.status === SUCCESS) {
       this.props.homeFeed();
       this.props.history.push("/home");
     }

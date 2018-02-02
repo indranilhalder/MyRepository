@@ -137,7 +137,7 @@ const user = (
 
     case userActions.GLOBAL_ACCESS_TOKEN_SUCCESS:
       Cookies.createCookie(
-        "sessionObjectGlobal",
+        "globalAccessToken",
         JSON.stringify(action.globalAccessTokenDetails),
         action.globalAccessTokenDetails.expires_in
       );
@@ -162,7 +162,7 @@ const user = (
 
     case userActions.CUSTOMER_ACCESS_TOKEN_SUCCESS:
       Cookies.createCookie(
-        "sessionObjectCustomer",
+        "customerAccessToken",
         JSON.stringify(action.customerAccessTokenDetails),
         action.customerAccessTokenDetails.expires_in
       );
@@ -268,7 +268,7 @@ const user = (
 
     case userActions.REFRESH_TOKEN_SUCCESS:
       Cookies.createCookie(
-        "sessionObjectCustomer",
+        "customerAccessToken",
         JSON.stringify(action.customerAccessTokenDetails),
         action.customerAccessTokenDetails.expires_in
       );

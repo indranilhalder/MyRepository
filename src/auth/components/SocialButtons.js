@@ -9,36 +9,43 @@ import googlePlus from "./img/googlePlus.svg";
 import desktopGooglePlus from "./img/googlePlus_desktop.svg";
 import PropTypes from "prop-types";
 import config from "../../lib/config";
+const FACEBOOK_VERSION = "v2.11";
+const FACEBOOK_SDK = "https://connect.facebook.net/en_US/sdk.js";
+const GOOGLE_PLUS_SDK =
+  "https://apis.google.com/js/client:platform.js?onload=gPOnLoad";
+const SCRIPT = "script";
+const FACEBOOK_JSDK = "facebook-jssdk";
+const TYPE = "text/javascript";
 export default class SocialButtons extends Component {
   componentDidMount() {
     //load FaceBook Sdk
-    window.fbAsyncInit = function() {
+    window.fbAsyncInit = () => {
       window.FB.init({
         appId: config.facebook,
         cookie: true,
         xfbml: true,
-        version: "v2.11"
+        version: FACEBOOK_VERSION
       });
       window.FB.AppEvents.logPageView();
     };
 
-    (function(d, s, id) {
+    ((d, s, id) => {
       var js,
         fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s);
       js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      js.src = FACEBOOK_SDK;
       fjs.parentNode.insertBefore(js, fjs);
-    })(document, "script", "facebook-jssdk");
+    })(document, SCRIPT, FACEBOOK_JSDK);
 
     //Load Google Sdk
-    (function() {
-      var e = document.createElement("script");
-      e.type = "text/javascript";
+    (() => {
+      var e = document.createElement(SCRIPT);
+      e.type = TYPE;
       e.async = true;
-      e.src = "https://apis.google.com/js/client:platform.js?onload=gPOnLoad";
-      var t = document.getElementsByTagName("script")[0];
+      e.src = GOOGLE_PLUS_SDK;
+      var t = document.getElementsByTagName(SCRIPT)[0];
       t.parentNode.insertBefore(e, t);
     })();
   }
