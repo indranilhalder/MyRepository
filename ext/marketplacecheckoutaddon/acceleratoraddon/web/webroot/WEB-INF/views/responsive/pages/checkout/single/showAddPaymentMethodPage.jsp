@@ -2163,14 +2163,13 @@ function submitWalletData(){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
 				}
-				else if(response=='qcDown'){
-					$(".wcOTPError").text("Unable to verify mobile number due to server error. Please try after sometime");
-					$(".wcOTPError").show();
-				}
-				else {
+				else if(response=='success'){
 					closepop();
 					showAddEGV();
-                    //$('#egvDetailsform').submit();
+				}
+				else {
+					$(".wcOTPError").text(response);
+					$(".wcOTPError").show();
 				} 
 				
 			}

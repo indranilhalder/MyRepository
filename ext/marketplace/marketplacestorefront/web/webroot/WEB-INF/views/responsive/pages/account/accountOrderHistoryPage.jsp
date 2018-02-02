@@ -1155,6 +1155,7 @@
 	
 	<div class="showStatementModel" id="showStatementPopup">
 	    <div class="showStatementModel-content">
+	    	<span class="accountPopupClose close">&times;</span> 
 		     <div id="showStatementData">
 		      </div>
 	    </div>
@@ -1218,7 +1219,7 @@ $(".get_order_statement").click(function() {
 		   });
 });
 
-function closepop(){
-	createWalletModel.style.display = "none";
-}
+$(".accountPopupClose").on('click', function () {
+	showStatementModel.style.display = "none";
+});
 </script>

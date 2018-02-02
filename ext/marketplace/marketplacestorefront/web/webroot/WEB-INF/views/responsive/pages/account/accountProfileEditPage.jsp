@@ -18,6 +18,11 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <style>
+
+.close{
+	float: right;
+}
+
 .mobileVerificationModal {
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
@@ -116,6 +121,8 @@
 						<form:form id="update_personal_details" action="update-parsonal-detail" method="post"
 							commandName="mplCustomerProfileForm"
 							name="mplCustomerProfileForm" onSubmit="return validateForm();">
+							
+							<input type="hidden" id="egvWalletActivvated" value="${isWalletActivated}" />
 							<input type="hidden" name="isLux" value="${param.isLux}" />
 
 							<div class="half quarter titleName">
@@ -309,6 +316,7 @@
 				</div>
 				
 				<div class="mobileVerificationModal" id="mobileVerificationOtpPopup">
+				 <span class="accountPopupClose close">&times;</span> 
 					<div class="mobileOtp-content">
 						<div>
 							<span class="glyphicon glyphicon-remove-circle close-profile-otp-popup" onclick="closepop()"></span>
@@ -323,18 +331,18 @@
 									<span id="profile_otp_error"></span>
 								</div>
 								<div class="col-sm-3">
-									<button type="button" onclick="submitNumberOtp()"
-										class="otp-button otp-button-profile">
-										VERIFY
-										</button>
+									<button type="button" onclick="resendQCOTP()"
+									class="otp-button otp-button-profile">
+									RESEND
+									</button>
 								</div>
 							</div>
 							<br />
 							<hr />
 							<div class="clearfix otp-resend-section">
-									<button type="button" onclick="resendQCOTP()"
+								<button type="button" onclick="submitNumberOtp()"
 									class="otp-button otp-button-profile">
-									RESEND
+									VERIFY
 									</button>
 							</div>
 						</div>
@@ -382,6 +390,10 @@
 		        return false;
 		    return true;
 		}
+		
+		$(".accountPopupClose").on('click', function () {
+			mobileVerificationModal.style.display = "none";
+		});
 	</script>
 </template:page>
 

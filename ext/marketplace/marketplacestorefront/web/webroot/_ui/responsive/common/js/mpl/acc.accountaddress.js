@@ -1617,13 +1617,15 @@ var otpAttempts=0;
 function resendQCOTP() {
 	otpAttempts++;
 	if(otpAttempts <= 5){
-	var mobileNo=$("#profileMobileNumber").val();
+		var mobileNo=$("#profileMobileNumber").val();
+		var firstName=$("#profilefirstName").val();
+		var lastName=$("#profilelastName").val();
 	var staticHost = $('#staticHost').val();
 	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 	$.ajax({
 		type : "POST",
-		data : "mobileNo="+mobileNo,
+		data : "mobileNo="+mobileNo+ "&firstName=" + firstName+ "&lastName="+lastName,
 		url : ACC.config.encodedContextPath+ "/my-account/qcMobileValidation",
 		success : function (response) {
 			$("#no-click,.loaderDiv").remove();

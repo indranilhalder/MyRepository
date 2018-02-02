@@ -4,7 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <div>
-	<!-- <span class="accountPopupClose close">&times;</span> -->
 	<c:set var="cancelAndRetun" value="false" />
 	<div class="orderStatementOrderId">
 		<span>Order ID: ${orderDetail.code}</span>

@@ -53,7 +53,8 @@
 </style>
 <template:page pageTitle="${pageTitle}">
 
-
+<input type="hidden" id="isEmailRequest" value="${isEmailRequest}" />
+<input type="hidden" id="emailOrderCode" value="${orderCode}" />
 	<div class="cliqCashContainer">
 		<div class="cliqCashContainerHead">
 			<p class="cliqCashInnerTop">
@@ -449,13 +450,19 @@
 						$(".wcOTPError").text("OTP verification failed. Please try again");
 						$(".wcOTPError").show();
 					}
-					else if(response=='qcDown'){
-						$(".wcOTPError").text("Unable to verify mobile number. Please try after sometime");
-						$(".wcOTPError").show();
-					}
-					else {
+					else if(response=='success'){
+						var isEmailRequest = $('#isEmailRequest').val();	
+						if(isEmailRequest=='true'){
+							var emailOrderCode = $('#emailOrderCode').val();
+							$(location).attr('href',ACC.config.encodedContextPath+"/wallet/redimWalletFromEmail/?orderCode="+emailOrderCode);
+						}else{
 						closepop();
 						location.reload();
+						}
+					}
+					else {
+						$(".wcOTPError").text(response);
+						$(".wcOTPError").show();
 					} 
 					
 				}

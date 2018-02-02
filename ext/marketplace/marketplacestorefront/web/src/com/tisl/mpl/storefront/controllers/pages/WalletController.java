@@ -17,6 +17,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.util.localization.Localization;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.QCServiceCallException;
@@ -100,7 +102,7 @@ public class WalletController extends AbstractPageController
 	private ExtendedUserService extendedUserService;
 	@Autowired
 	RegisterCustomerFacade registerCustomerFacade;
-	@Autowired
+	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
 
@@ -180,7 +182,9 @@ public class WalletController extends AbstractPageController
 	@SuppressWarnings("boxing")
 	@RequestMapping(value = "/getcliqcashPage", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String getCliqCash(final Model model, @SuppressWarnings("unused") final RedirectAttributes redirectAttributes)
+	public String getCliqCash(final Model model, @SuppressWarnings("unused") final RedirectAttributes redirectAttributes,
+			@RequestParam(value = "isEmailRequest", required = false, defaultValue = "false") final boolean isEmailRequest,
+			@RequestParam(value = "orderCode", required = false, defaultValue ="") final String orderCode)
 			throws CMSItemNotFoundException, QCServiceCallException
 	{
 		double balanceAmount = 0;
@@ -296,7 +300,13 @@ public class WalletController extends AbstractPageController
 			{
 				checkUserWalletStatus=false;
 			}
-
+			if(!checkUserWalletStatus){
+				if(isEmailRequest){
+					model.addAttribute("orderCode", orderCode);
+				}
+				
+			}
+			model.addAttribute("isEmailRequest", isEmailRequest);
 			model.addAttribute("isCustomerWalletActive", checkUserWalletStatus);
 			
 		}
@@ -406,9 +416,27 @@ public class WalletController extends AbstractPageController
 				return REDIRECT_PREFIX + "/login";
 			}
 			
-			if (currentCustomer.getIsWalletActivated() == null || !currentCustomer.getIsWalletActivated().booleanValue())
+			boolean isEmailRequest=false;
+			if (currentCustomer.getIsWalletActivated() != null)
 			{
-				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+				{
+					isEmailRequest=false;
+				}
+				else
+				{
+					isEmailRequest=true;
+				}
+			}
+			else
+			{
+				isEmailRequest=true;
+			}
+			
+			if (isEmailRequest)
+			{
+				
+				return REDIRECT_PREFIX + "/wallet/getcliqcashPage"+ "/?isEmailRequest=" +true+ "&orderCode="+orderCode;
 			}
 			
 			final String cardNumber = orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0)
@@ -523,6 +551,7 @@ public class WalletController extends AbstractPageController
 	public String getNewCustomerWallet(final CustomerModel currentCustomer, final String firstName, final String lastName,
 			final String mobileNumber)
 	{
+		String errorMssg=null ;
 		if (currentCustomer.getIsWalletActivated() != null && currentCustomer.getIsWalletActivated().booleanValue())
 		{
 			final CustomerWalletDetailResponse customerUpdateResponse = mplWalletFacade.editWalletInformtion(currentCustomer,
@@ -542,15 +571,13 @@ public class WalletController extends AbstractPageController
 			else
 			{ 
 				if(customerUpdateResponse == null){
-					return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+					return "Unable to verify mobile number due to server error. Please try after sometime";
 				}else{
 					if(customerUpdateResponse.getResponseCode() == null){
-						return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+						return "Unable to verify mobile number due to server error. Please try after sometime";
 					}else{
-						String errorCode=customerUpdateResponse.getResponseCode().toString();
-						String errormsg = configurationService.getConfiguration()
-								.getString(errorCode).trim();
-						return "qcDown"+"|"+errormsg;
+						 errorMssg =Localization.getLocalizedString(customerUpdateResponse.getResponseCode().toString());
+						return errorMssg;
 					}
 				}
 				
@@ -602,20 +629,40 @@ public class WalletController extends AbstractPageController
 				return "success";
 			}else{
 				if(customerRegisterResponse == null){
-					return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+					return "Unable to verify mobile number due to server error. Please try after sometime";
 				}else{
 					if(customerRegisterResponse.getResponseCode() == null){
-						return "qcDown|Unable to verify mobile number due to server error. Please try after sometime";
+						return "Unable to verify mobile number due to server error. Please try after sometime";
 					}else{
-						String errorCode=customerRegisterResponse.getResponseCode().toString();
-						String errormssg = configurationService.getConfiguration()
-								.getString(errorCode).trim();
-						return "qcDown"+"|"+errormssg;
+						 errorMssg =Localization.getLocalizedString(customerRegisterResponse.getResponseCode().toString()); 
+						if(StringUtils.isBlank(errorMssg)){
+							errorMssg="Unable to verify mobile number due to server error. Please try after sometime";
+						}
+						return errorMssg;
 					}
 				}
 			}
 		}
 	}
+	
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
 
 }
 
