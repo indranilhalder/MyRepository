@@ -1,6 +1,6 @@
 import React from "react";
-import Grid from "./Grid";
-import ProductModule from "./ProductModule";
+import Grid from "../../general/components/Grid";
+import ProductModule from "../../general/components/ProductModule";
 import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
@@ -58,6 +58,7 @@ export default class ProductGrid extends React.Component {
                     description={datum.description}
                     view={this.state.view}
                     key={i}
+                    gridWidthMobile={100 ? i % 2 === 0 : false}
                   />
                 );
               })}

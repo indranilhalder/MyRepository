@@ -2,11 +2,13 @@
   width: 100%;
   height: auto;
 }
-.options {
-  width: 50%;
+.tabs {
+  width: 35%;
   display: inline-block;
   vertical-align: top;
 }
-.tabs {
-  composes: options;
+.options {
+  composes: tabs;
+  width: 65%;
+  padding: 0 15px;
 }
