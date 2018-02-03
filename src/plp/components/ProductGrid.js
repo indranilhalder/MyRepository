@@ -10,7 +10,9 @@ import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";
 const LIST = "list";
 const GRID = "grid";
-
+const PRODUCT = "product";
+const PLPAD = "plpAd";
+const ICONICFILTER = "iconicFilter";
 export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
@@ -79,9 +81,13 @@ export default class ProductGrid extends React.Component {
           >
             {this.props.data &&
               this.props.data.map((datum, i) => {
-                if (this.renderComponent(datum) !== null) {
+                if (
+                  datum.type === PRODUCT ||
+                  datum.type === PLPAD ||
+                  datum.type === ICONICFILTER
+                ) {
                   let widthMobile = false;
-                  if (datum.type === "plpAd" || datum.type === "iconicFilter") {
+                  if (datum.type === PLPAD || datum.type === ICONICFILTER) {
                     widthMobile = 100;
                   }
                   return (
