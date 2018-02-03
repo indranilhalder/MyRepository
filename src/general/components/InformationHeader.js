@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./InformationHeader.css";
 import { CircleButton, Icon } from "xelpmoc-core";
-import propTypes from "prop-types";
+import PropTypes from "prop-types";
 import iconImageURL from "./img/arrowBack.svg";
 export default class InformationHeader extends React.Component {
   handleClick() {
@@ -33,6 +33,6 @@ export default class InformationHeader extends React.Component {
   }
 }
 InformationHeader.propTypes = {
-  text: propTypes.string,
-  count: propTypes.number
+  text: PropTypes.string,
+  count: PropTypes.number
 };
