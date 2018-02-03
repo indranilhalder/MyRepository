@@ -217,6 +217,14 @@ header{
 
 .sidebar-myaccount {margin-left: -5px;}
 
+.show-user-header i {float: right; margin-right: 15px; margin-top: 15px;}
+
+.user-menu-section ul {margin: 0 10px;}
+
+.user-menu-section ul li:first-child {border: none;}
+
+.user-menu-section ul li a {color: #3a3a3a; font-size: 14px; font-weight: 400; line-height: 50px;}
+
 .sidebar-profile span, .sidebar-myaccount {
 	background: url('https://static.tatacliq.com/_ui/responsive/theme-blue/images/Sprite-combined.png') no-repeat scroll -352px -176px;
  }
@@ -323,7 +331,7 @@ header{
 
 .user-information section[expanded] .sidebar-myaccount {filter: none;}
 
-.user-information > section > div > ul > li {
+.user-information > section > div > ul > li, .user-menu-section ul li {
     padding-left: 20px;
     line-height: 50px;
     border-bottom: 1px solid #e6e6e6;
@@ -607,6 +615,8 @@ span.letter-spacing {color: #666; line-height: 15px; font-size: 11px;}
 	margin-left: -20px;
 }
 
+.logo-container a {display: inline;}
+
 /*Autocomplete*/
 .suggest {width: 31%; margin-left: 152px; position: absolute; top: 48px;z-index: 1;}
 
@@ -846,8 +856,7 @@ p {margin: 0;}
 
 .newInDesc {padding: 0 5px;}
 .newInDescName {padding: 5px 0; text-overflow: ellipsis; overflow: hidden;}
-.newInDescPrice {text-decoration: line-through;}
-.price-right {text-decoration: none; float: right;}
+.price-right {text-decoration: line-through; float: right; font-size: 12px;}
 
 @media(max-width: 480px) {
 	#newInComp {padding: 5px 0px 15px; width:100%;}
@@ -894,7 +903,7 @@ p {margin: 0;}
 .hotNowDesc {padding: 0 5px;}
 .hotNowDescName, .hotNowDescTitle {padding: 2px 0; text-overflow: ellipsis; overflow: hidden; font-size: 12px;}
 .hotNowDescPrice {text-decoration: line-through; font-size: 12px;}
-.price-right {text-decoration: none; float: right;}
+.price-right {text-decoration: line-through; float: right; font-size: 12px;}
 
 @media(max-width: 480px) {
 	#hotNowComp {padding: 5px 0px 15px; width:100%;}
@@ -1061,20 +1070,30 @@ amp-selector [option][selected] {
     margin-right: 0;
 }
 
+footer #footerLink {border-bottom: 1px solid #eee;}
+
 footer #footerLink div.column ul li {
 	display: inline-block;
 	padding: 7px 0;
+}
+
+footer #footerLink a {
+   display: inline-block; font-size: 12px;
 }
 
 footer #footerLink div.column ul li:first-child:after {content: ':'; font-weight: bold;}
 
 footer #footerLink div.column ul li:after {content: '/'; padding: 0 2px;}
 
+footer #footerLink div.column ul li:last-child:after {content: '';}
+
 footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a {color: #000;}
 
 footer #footerLink div.column ul li a {color: #878787;}
 
 footer #footerLink div.column ul li:first-child {padding-top: 10px; text-transform: capitalize;}
+
+footer #footerLink ul {margin-right: 20px;}
 
 footer #footerLink div.column ul li {
     display: inline-block;
