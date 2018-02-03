@@ -14,7 +14,7 @@ export default class Plp extends React.Component {
   toggleFilter = () => {
     this.setState({ filterVisible: !this.state.filterVisible });
   };
-  handleBack = () => {
+  handleBackClick = () => {
     if (this.props.onBack) {
       this.props.onBack();
     }
@@ -23,7 +23,10 @@ export default class Plp extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>
-          <InformationHeader onClick={this.handleBack} text="Product listing" />
+          <InformationHeader
+            onClick={this.handleBackClick}
+            text="Product listing"
+          />
         </div>
         <div className={styles.main}>
           <ProductGrid data={this.props.searchresult} />

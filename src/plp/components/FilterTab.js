@@ -13,7 +13,7 @@ export default class SelectedFilter extends React.Component {
     if (this.props.type === "advance") {
       classActive = styles.selectedAdvance;
     }
-    if (this.props.selected === true) {
+    if (this.props.selected) {
       classActive = styles.selectedActive;
     }
 
