@@ -22,13 +22,13 @@ export default class PlpMobileFooter extends React.Component {
           </div>
         </div>
         <div className={styles.buttonHolder}>
-          <div className={styles.button}>
-            <div
-              className={styles.sort}
-              onClick={() => {
-                this.onSort();
-              }}
-            />Sort
+          <div
+            className={styles.button}
+            onClick={() => {
+              this.onSort();
+            }}
+          >
+            <div className={styles.sort} />Sort
           </div>
         </div>
       </div>

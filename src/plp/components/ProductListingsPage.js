@@ -22,6 +22,7 @@ class ProductListingsPage extends Component {
         <Plp
           searchresult={this.props.productListings.searchresult}
           facetData={this.props.productListings.facetdata}
+          showSort={this.props.showSort}
         />
       );
     } else {

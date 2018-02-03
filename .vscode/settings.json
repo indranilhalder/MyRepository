@@ -1,0 +1,25 @@
+{
+  "git.ignoreLimitWarning": true,
+  "eslint.enable": true,
+  "flow.useNPMPackagedFlow": true,
+  "javascript.format.enable": false,
+  "javascript.validate.enable": false,
+  "eslint.autoFixOnSave": true,
+  "workbench.colorTheme": "Abyss",
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.formatOnSave": true,
+  "editor.lineHeight": 20,
+  "editor.tabSize": 2,
+  "editor.rulers": [80, 100],
+  "files.trimTrailingWhitespace": true,
+  "window.zoomLevel": 0,
+  "files.eol": "\n",
+  "extension-manager.extensions": [
+    "dbaeumer.vscode-eslint",
+    "flowtype.flow-for-vscode",
+    "pywhere.guides",
+    "eg2.vscode-npm-script",
+    "esbenp.prettier-vscode",
+    "shinnn.stylelint"
+  ]
+}
