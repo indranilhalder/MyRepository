@@ -2,6 +2,7 @@ import React from "react";
 import FilterWithMultiSelect from "./FilterWithMultiSelect";
 import FilterSelect from "./FilterSelect";
 import FilterCategories from "./FilterCategories";
+import PropTypes from "prop-types";
 import styles from "./Filter.css";
 
 export default class Filter extends React.Component {
@@ -25,6 +26,7 @@ export default class Filter extends React.Component {
     }
   };
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.tabs}>
@@ -35,27 +37,22 @@ export default class Filter extends React.Component {
           />
         </div>
         <div className={styles.options}>
-          {this.props.filterData.map((datum, i) => {
-            if (this.state.pageNumber === i) {
-              return (
-                <FilterWithMultiSelect>
-                  {datum.values &&
-                    datum.values.map((value, i) => {
-                      return (
-                        <FilterSelect
-                          label={value.name}
-                          value={value.value}
-                          count={value.count}
-                          key={i}
-                        />
-                      );
-                    })}
-                </FilterWithMultiSelect>
-              );
-            } else {
-              return null;
-            }
-          })}
+          <FilterWithMultiSelect>
+            {this.props.filterData[this.state.pageNumber].values &&
+              this.props.filterData[this.state.pageNumber].values.map(
+                (value, i) => {
+                  return (
+                    <FilterSelect
+                      label={value.name}
+                      value={value.value}
+                      count={value.count}
+                      selected={value.selected}
+                      key={i}
+                    />
+                  );
+                }
+              )}
+          </FilterWithMultiSelect>
         </div>
         <div className={styles.footer}>
           <div className={styles.buttonHolder}>
@@ -73,3 +70,15 @@ export default class Filter extends React.Component {
     );
   }
 }
+Filter.propTypes = {
+  filterData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      value: PropTypes.string,
+      count: PropTypes.number,
+      selected: PropTypes.bool
+    })
+  ),
+  onClear: PropTypes.func,
+  onApply: PropTypes.func
+};
