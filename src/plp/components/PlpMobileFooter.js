@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./PlpMobileFooter.css";
 export default class PlpMobileFooter extends React.Component {
   onFilter = () => {
@@ -34,3 +35,8 @@ export default class PlpMobileFooter extends React.Component {
     );
   }
 }
+
+PlpMobileFooter.PropTypes = {
+  onFilter: PropTypes.func,
+  onSort: PropTypes.func
+};
