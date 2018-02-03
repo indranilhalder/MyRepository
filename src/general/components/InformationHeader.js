@@ -34,5 +34,6 @@ export default class InformationHeader extends React.Component {
 }
 InformationHeader.propTypes = {
   text: PropTypes.string,
-  count: PropTypes.number
+  count: PropTypes.number,
+  onClick: PropTypes.func
 };
