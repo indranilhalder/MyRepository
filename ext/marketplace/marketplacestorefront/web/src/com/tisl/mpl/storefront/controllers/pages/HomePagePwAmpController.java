@@ -80,6 +80,11 @@ import com.tisl.mpl.storefront.web.data.MplAutocompleteAmpData;
 import com.tisl.mpl.storefront.web.data.MplAutocompleteResultData;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.commercefacades.user.UserFacade;
+import de.hybris.platform.servicelayer.user.UserService;
 
 
 /**
@@ -123,6 +128,15 @@ public class HomePagePwAmpController extends HomePageController
 	private ProductSearchFacade<ProductData> productSearchFacade;
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
+	
+	@Resource(name = "userFacade")
+	private UserFacade userFacade;
+
+	@Resource(name = "userService")
+	private UserService userService;
+
+	@Resource(name = "cartFacade")
+	private CartFacade cartFacade;
 
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
@@ -1532,6 +1546,71 @@ public class HomePagePwAmpController extends HomePageController
 		listAmp.add(resultData);
 		ampResultData.setItems(listAmp);
 		return ampResultData;
+	}
+	/**
+	 *
+	 * @param session
+	 * @return Map<String, Map<String, Object>>
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/setheaderamp", method = RequestMethod.GET)
+	public Map<String, ArrayList<Map<String, Object>>> setHeaderDataAmp(final HttpSession session,
+			final HttpServletResponse response)
+	{
+		final String ampAnalyticsHost = configurationService.getConfiguration().getString("amp.analytics.source.origin",
+				"*.tatacliq.com");
+		response.setHeader("AMP-Access-Control-Allow-Source-Origin", ampAnalyticsHost);
+		response.setHeader("Cache-Control", "max-age=0");
+
+		final Map<String, Object> header = new HashMap<String, Object>();
+		final CartData cartData = cartFacade.getMiniCart();
+		final ArrayList<Map<String, Object>> inner = new ArrayList<Map<String, Object>>();
+
+		header.put("cartcount", String.valueOf(cartData.getTotalItems()));
+
+		//customer name in the header
+		if (!userFacade.isAnonymousUser())
+		{
+			header.put("loggedInStatus", true);
+			final Object sessionDisplayName = session.getAttribute(userFirstName);
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+			if (sessionDisplayName == null)
+			{
+
+				String firstName = currentCustomer.getName();
+				if (StringUtils.isNotEmpty(firstName))
+				{
+					if (StringUtils.contains(firstName, '@'))
+					{
+						firstName = StringUtils.EMPTY;
+					}
+					else if (StringUtils.length(firstName) > 25)
+					{
+						firstName = StringUtils.substring(firstName, 0, 25);
+					}
+				}
+				else
+				{
+					firstName = StringUtils.EMPTY;
+				}
+				header.put(userFirstName, firstName);
+				session.setAttribute(userFirstName, firstName);
+			}
+			else
+			{
+				header.put(userFirstName, sessionDisplayName);
+			}
+		}
+		else
+		{
+			header.put("loggedInStatus", false);
+			header.put(userFirstName, null);
+		}
+		inner.add(header);
+		final Map<String, ArrayList<Map<String, Object>>> items = new HashMap<String, ArrayList<Map<String, Object>>>();
+		items.put("items", inner);
+		return items;
 	}
 
 	/**
