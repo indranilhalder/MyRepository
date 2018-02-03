@@ -34,7 +34,7 @@ export default class ProductGrid extends React.Component {
     }
   }
   renderComponent = data => {
-    if (data.type === "product") {
+    if (data.type === PRODUCT) {
       return (
         <ProductModule
           productImage={data.imageURL}
@@ -49,9 +49,9 @@ export default class ProductGrid extends React.Component {
           view={this.state.view}
         />
       );
-    } else if (data.type === "plpAd") {
+    } else if (data.type === PLPAD) {
       return <PlpAds imageURL={data.imageURL} />;
-    } else if (data.type === "iconicFilter") {
+    } else if (data.type === ICONICFILTER) {
       return <IconicFilter data={data.filterValue} title={data.filterTitle} />;
     } else {
       return null;
