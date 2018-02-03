@@ -14,6 +14,16 @@ export default class Filter extends React.Component {
   switchPage = val => {
     this.setState({ pageNumber: val });
   };
+  onClear = () => {
+    if (this.props.onClear) {
+      this.props.onClear();
+    }
+  };
+  onApply = () => {
+    if (this.props.onApply) {
+      this.props.onApply();
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -46,6 +56,18 @@ export default class Filter extends React.Component {
               return null;
             }
           })}
+        </div>
+        <div className={styles.footer}>
+          <div className={styles.buttonHolder}>
+            <div className={styles.button} onClick={this.onClear}>
+              Clear
+            </div>
+          </div>
+          <div className={styles.buttonHolder}>
+            <div className={styles.redButton} onClick={this.onApply}>
+              Apply
+            </div>
+          </div>
         </div>
       </div>
     );
