@@ -11,8 +11,8 @@ import listImage from "./img/list.svg";
 const LIST = "list";
 const GRID = "grid";
 const PRODUCT = "product";
-const PLPAD = "plpAd";
-const ICONICFILTER = "iconicFilter";
+export const PLPAD = "plpAd";
+export const ICONICFILTER = "iconicFilter";
 export default class ProductGrid extends React.Component {
   constructor(props) {
     super(props);
