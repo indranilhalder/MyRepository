@@ -22,11 +22,11 @@ export default class Grid extends React.Component {
                       <div
                         className={styles.element}
                         style={{
-                          width: child.props
-                            ? child.props.gridWidthDesktop
+                          width:
+                            child.props && child.props.gridWidthDesktop
                               ? `${child.props.gridWidthDesktop}%`
-                              : `${this.props.elementWidthDesktop}%`
-                            : `${this.props.elementWidthDesktop}%`,
+                              : `${this.props.elementWidthDesktop}%`,
+
                           padding: `${this.props.offset / 2}px`
                         }}
                       >
@@ -37,11 +37,10 @@ export default class Grid extends React.Component {
                       <div
                         className={styles.element}
                         style={{
-                          width: child.props
-                            ? child.props.gridWidthMobile
+                          width:
+                            child.props && child.props.gridWidthMobile
                               ? `${child.props.gridWidthMobile}%`
-                              : `${this.props.elementWidthMobile}%`
-                            : `${this.props.elementWidthMobile}%`,
+                              : `${this.props.elementWidthMobile}%`,
                           padding: `${this.props.offset / 2}px`
                         }}
                       >

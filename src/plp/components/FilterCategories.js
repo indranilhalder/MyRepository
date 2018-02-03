@@ -14,17 +14,13 @@ export default class FilterCategories extends React.Component {
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {
-          let selected = false;
-          if (this.props.pageNumber === i) {
-            selected = true;
-          }
           return (
             <FilterTab
               key={i}
               name={datum.name}
               selectedFilterCount={datum.selectedFilterCount}
               onClick={val => this.handleClick(i)}
-              selected={selected}
+              selected={this.props.pageNumber === i}
               type={datum.isGlobalFilter ? "global" : "advance"}
             />
           );
