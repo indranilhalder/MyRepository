@@ -20,10 +20,6 @@ export default class Plp extends React.Component {
     }
   };
   render() {
-    let filterClass = styles.filter;
-    if (this.state.filterVisible) {
-      filterClass = styles.filterOpen;
-    }
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>
@@ -32,7 +28,11 @@ export default class Plp extends React.Component {
         <div className={styles.main}>
           <ProductGrid data={this.props.searchresult} />
         </div>
-        <div className={filterClass}>
+        <div
+          className={
+            this.state.filterVisible ? styles.filterOpen : styles.filter
+          }
+        >
           <InformationHeader onClick={this.toggleFilter} text="Refine by" />
           <Filter facetData={this.props.facetData} />
         </div>
