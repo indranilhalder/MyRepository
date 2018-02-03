@@ -1,6 +1,8 @@
 import React from "react";
-import styles from "./Sort.css";
 import SortTab from "./SortTab.js";
+import PropTypes from "prop-types";
+import styles from "./Sort.css";
+
 export default class Sort extends React.Component {
   onClick(val) {
     if (this.props.onClick) {
@@ -29,3 +31,8 @@ export default class Sort extends React.Component {
     );
   }
 }
+
+Sort.PropTypes = {
+  sortList: PropTypes.shape({ name: PropTypes.string, code: PropTypes.string }),
+  onClick: PropTypes.func
+};

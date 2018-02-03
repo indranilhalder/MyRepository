@@ -18,7 +18,14 @@ class ProductListingsPage extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
-    return <div />;
+    return (
+      <div
+        style={{ width: 200, height: 200, background: "#666" }}
+        onClick={() => {
+          this.props.showSort();
+        }}
+      />
+    );
   }
 }
 
