@@ -10,11 +10,14 @@ export default class Sort extends React.Component {
       this.props.onClick(val);
     }
   }
+  handleCloseClick = () => {
+    this.props.onCloseSort();
+  };
   render() {
     let data = this.props.sortList;
     return (
       <div className={styles.base}>
-        <InformationHeader text="Sort" />
+        <InformationHeader text="Sort" onClick={this.handleCloseClick} />
         {this.props.sortList &&
           this.props.sortList.length > 0 &&
           data.map((datum, i) => {

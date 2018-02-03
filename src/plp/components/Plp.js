@@ -19,6 +19,11 @@ export default class Plp extends React.Component {
       this.props.onBack();
     }
   };
+  onSortClick = () => {
+    if (this.props.showSort) {
+      this.props.showSort();
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -40,7 +45,10 @@ export default class Plp extends React.Component {
           <Filter filterData={this.props.facetData} />
         </div>
         <div className={styles.footer}>
-          <PlpMobileFooter onFilter={this.toggleFilter} />
+          <PlpMobileFooter
+            onFilter={this.toggleFilter}
+            onSort={this.onSortClick}
+          />
         </div>
       </div>
     );
