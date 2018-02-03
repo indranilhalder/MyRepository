@@ -6,6 +6,7 @@ import iconImageURL from "./img/arrowBack.svg";
 export default class InformationHeader extends React.Component {
   handleClick() {
     if (this.props.onClick) {
+      this.props.onClick();
     }
   }
   render() {
