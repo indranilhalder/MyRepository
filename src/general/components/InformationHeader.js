@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./InformationHeader.css";
 import { CircleButton, Icon } from "xelpmoc-core";
-import propTypes from "prop-types";
-import iconImageURL from "./img/makefg.png";
+import PropTypes from "prop-types";
+import iconImageURL from "./img/arrowBack.svg";
 export default class InformationHeader extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -33,12 +33,7 @@ export default class InformationHeader extends React.Component {
   }
 }
 InformationHeader.propTypes = {
-  text: propTypes.string,
-  iconImageURL: propTypes.string,
-  count: propTypes.number
-};
-InformationHeader.defaultProps = {
-  text: "Sort by",
-  iconImageURL: iconImageURL,
-  count: 49
+  text: PropTypes.string,
+  count: PropTypes.number,
+  onClick: PropTypes.func
 };

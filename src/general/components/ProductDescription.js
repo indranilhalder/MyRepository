@@ -39,7 +39,7 @@ export default class ProductDescription extends Component {
               <CircleButton
                 size={20}
                 color={"transparent"}
-                icon={<Icon image={this.props.icon} />}
+                icon={<Icon image={this.props.icon} size={15} />}
                 onClick={() => this.handleClick()}
               />
             </div>
