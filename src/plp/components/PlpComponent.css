@@ -1,0 +1,8 @@
+.base {
+  width: 100%;
+  padding: 10px;
+}
+.banner {
+  composes: base;
+  padding: 10px 0;
+}
