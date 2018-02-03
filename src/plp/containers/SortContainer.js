@@ -13,13 +13,12 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    loading: state.productListings.loading,
     sortList: state.productListings.productListings.sorts
   };
 };
 
-const ProductListingsContainer = withRouter(
+const SortContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(Sort)
 );
 
-export default ProductListingsContainer;
+export default SortContainer;
