@@ -29,13 +29,13 @@ export default class Filter extends React.Component {
       <div className={styles.base}>
         <div className={styles.tabs}>
           <FilterCategories
-            data={this.props.facetData}
+            data={this.props.filterData}
             pageNumber={this.state.pageNumber}
             onClick={val => this.switchPage(val)}
           />
         </div>
         <div className={styles.options}>
-          {this.props.facetData.map((datum, i) => {
+          {this.props.filterData.map((datum, i) => {
             if (this.state.pageNumber === i) {
               return (
                 <FilterWithMultiSelect>

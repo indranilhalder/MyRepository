@@ -37,7 +37,7 @@ export default class Plp extends React.Component {
           }
         >
           <InformationHeader onClick={this.toggleFilter} text="Refine by" />
-          <Filter facetData={this.props.facetData} />
+          <Filter filterData={this.props.facetData} />
         </div>
         <div className={styles.footer}>
           <PlpMobileFooter onFilter={this.toggleFilter} />
