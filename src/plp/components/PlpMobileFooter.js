@@ -36,7 +36,7 @@ export default class PlpMobileFooter extends React.Component {
   }
 }
 
-PlpMobileFooter.PropTypes = {
+PlpMobileFooter.propTypes = {
   onFilter: PropTypes.func,
   onSort: PropTypes.func
 };
