@@ -29,16 +29,17 @@ export default class Filter extends React.Component {
             if (this.state.pageNumber === i) {
               return (
                 <FilterWithMultiSelect>
-                  {datum.values.map((value, i) => {
-                    return (
-                      <FilterSelect
-                        label={value.name}
-                        value={value.value}
-                        count={value.count}
-                        key={i}
-                      />
-                    );
-                  })}
+                  {datum.values &&
+                    datum.values.map((value, i) => {
+                      return (
+                        <FilterSelect
+                          label={value.name}
+                          value={value.value}
+                          count={value.count}
+                          key={i}
+                        />
+                      );
+                    })}
                 </FilterWithMultiSelect>
               );
             } else {
