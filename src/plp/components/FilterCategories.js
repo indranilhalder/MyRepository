@@ -2,7 +2,8 @@ import React from "react";
 import FilterTab from "./FilterTab";
 import styles from "./FilterCategories.css";
 import PropTypes from "prop-types";
-
+const GLOBAL = "global";
+const ADVANCE = "advance";
 export default class FilterCategories extends React.Component {
   handleClick(val) {
     if (this.props.onClick) {
@@ -21,7 +22,7 @@ export default class FilterCategories extends React.Component {
               selectedFilterCount={datum.selectedFilterCount}
               onClick={val => this.handleClick(i)}
               selected={this.props.pageNumber === i}
-              type={datum.isGlobalFilter ? "global" : "advance"}
+              type={datum.isGlobalFilter ? GLOBAL : ADVANCE}
             />
           );
         })}
