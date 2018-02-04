@@ -1164,4 +1164,8 @@ function hideRspShowRss(){
 		$(".selectReturnMethod.self input[name='returnMethod']").prop( "checked", true );
 	}
 }
-
+//TISUAT-6304
+$('#returnForm').submit(function() {
+	$("#saveBlockData").prop('disabled', true);
+	return true;  
+});
