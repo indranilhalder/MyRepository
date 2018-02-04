@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-
-
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
@@ -22,13 +20,10 @@ import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.AutocompleteSuggestionData;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
-import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,12 +132,6 @@ public class HomePagePwAmpController extends HomePageController
 
 	@Resource(name = "cartFacade")
 	private CartFacade cartFacade;
-
-	@Resource(name = "userFacade")
-	private UserFacade userFacade;
-
-	@Resource(name = "userService")
-	private UserService userService;
 
 	private static final List<ProductOption> PRODUCT_OPTIONS2 = Arrays.asList(ProductOption.HOMEPAGEPRODUCTS);
 	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
