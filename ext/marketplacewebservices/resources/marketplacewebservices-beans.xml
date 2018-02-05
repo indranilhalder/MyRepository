@@ -1995,6 +1995,9 @@
 			type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.search.facetdata.FacetValueWsDTO>" />
 		<property name="values"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
+		<!--  Added for NU-38 start-->	
+		<property name="selectedFilterCount" type="int" />
+		<!--  Added for NU-38 end-->
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.FacetValueDataWsDTO">
@@ -2058,6 +2061,11 @@
 		<property name="discountPercent" type="String" />
 		<!-- cumulativeStockLevel -->
 		<property name="cumulativeStockLevel" type="Boolean" />
+		<!--  Added for NU-38 start-->
+		<property name="price" type="com.tisl.mpl.wsdto.PriceWsData"/>
+		<property name="newProduct" type="Boolean" />
+		<property name="onlineExclusive" type="Boolean" />
+		<!--  Added for NU-38 end-->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.VariantOptionsWsDto">
 		<property name="code" type="String" />
@@ -3703,5 +3711,18 @@
 		<property name="mboxParameters" type="String" />				
 	</bean>
 	<!--  Added for NU-35 end-->
+	<!--  Added for NU-38 start-->
+	<bean class="com.tisl.mpl.wsdto.PriceWsData">
+		<property name="isRange" type="Boolean" />
+		<property name="sellingPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="mrpPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="maxPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="minPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />			
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.search.facetdata.FacetData&lt;STATE>">
+	   <property name="selectedFilterCount" type="int"/>
+	</bean>
+	<!--  Added for NU-38 end-->
 	
 </beans>

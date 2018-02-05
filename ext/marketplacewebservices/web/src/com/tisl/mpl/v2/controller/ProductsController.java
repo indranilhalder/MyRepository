@@ -46,6 +46,7 @@ import de.hybris.platform.commercewebservicescommons.dto.product.StockWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.product.SuggestionListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.queues.ProductExpressUpdateElementListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.search.facetdata.ProductSearchPageWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderStockSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.StockSystemException;
@@ -1638,4 +1639,130 @@ public class ProductsController extends BaseController
 	{
 		this.i18nService = i18nService;
 	}
+
+	//NU-38 start
+	@RequestMapping(value = "/searchProducts", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ProductSearchPageWsDto searchProducts(@RequestParam(required = false) final String searchText,
+			@RequestParam(required = false) final int page, @RequestParam(required = false) final int pageSize,
+			@RequestParam(required = false) final String sortCode, @RequestParam(required = false) final boolean isFilter,
+			@RequestParam(required = false) final boolean isPwa, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
+		try
+		{
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
+			final SearchStateData searchState = new SearchStateData();
+			final SearchQueryData searchQueryData = new SearchQueryData();
+			searchQueryData.setValue(searchText);
+			searchState.setQuery(searchQueryData);
+			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+					.textSearch(searchState, pageableData);
+			//PR-23 start
+			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			{
+				if (StringUtils.isNotEmpty(searchText))
+				{
+					final String[] elements = searchText.trim().split(BACKSLASH_S);
+
+					if (elements.length >= 2)
+					{
+						searchState.setNextSearch(true);
+
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+								.textSearch(searchState, pageableData);
+
+					}
+				}
+			}
+			//PR-23 end
+			if (null != searchPageData.getSpellingSuggestion()
+					&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+			{
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+				final SearchStateData searchStateAll = new SearchStateData();
+				final SearchQueryData searchQueryDataAll = new SearchQueryData();
+				searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
+				searchStateAll.setQuery(searchQueryDataAll);
+
+				searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade.textSearch(
+						searchStateAll, pageableData);
+			}
+
+			if (isFilter)
+			{
+				searchSuggestUtilityMethods.setFilterWsData(productSearchPage, searchPageData);
+			}
+			else
+			{
+				searchSuggestUtilityMethods.setSearchPageWsData(productSearchPage, searchPageData);
+			}
+			final ProductSearchPageWsDto sortingvalues = dataMapper.map(searchPageData, ProductSearchPageWsDto.class, fields);
+			if (null != sortingvalues)
+			{
+				if (null != sortingvalues.getPagination())
+				{
+					final PaginationWsDTO pagination = sortingvalues.getPagination();
+
+					final PaginationWsDTO paginationWsDTO = new PaginationWsDTO();
+
+					paginationWsDTO.setCurrentPage(pagination.getCurrentPage());
+					paginationWsDTO.setPageSize(pagination.getPageSize());
+					paginationWsDTO.setTotalPages(pagination.getTotalPages());
+					paginationWsDTO.setTotalResults(pagination.getTotalResults());
+
+					productSearchPage.setPagination(paginationWsDTO);
+
+				}
+				if (null != sortingvalues.getSorts())
+				{
+					productSearchPage.setSorts(sortingvalues.getSorts());
+				}
+				if (null != sortingvalues.getCurrentQuery())
+				{
+					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
+				}
+
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return productSearchPage;
+	}
+	//NU-38 end
 }

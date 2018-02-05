@@ -21,6 +21,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.FacetDataWsDTO;
 import com.tisl.mpl.wsdto.FacetValueDataWsDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
+import com.tisl.mpl.wsdto.PriceWsData;
 import com.tisl.mpl.wsdto.ProductSNSWsData;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.SellerItemDetailWsDto;
@@ -1854,4 +1856,508 @@ public class SearchSuggestUtilityMethods
 
 		return departmentHierarchy;
 	}
+
+	//	added for NU-38 start
+	public ProductSearchPageWsDto setFilterWsData(final ProductSearchPageWsDto productSearchPage,
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
+	{
+		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
+		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
+		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
+		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
+		{
+			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
+			{
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
+						&& !facate.getCode().equalsIgnoreCase("snsCategory")
+						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
+						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+
+				{
+					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
+					facetValueWsDTOList = new ArrayList<>();
+
+					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isMultiSelect())));
+					if (StringUtils.isNotEmpty(facate.getName()))
+					{
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
+					}
+
+					//	facetWsDTO.setPriority(Integer.valueOf((facate.getPriority())));
+					facetWsDTO.setKey(facate.getCode());
+					if (facate.isMultiSelect())
+					{
+						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
+					}
+					Boolean visible = Boolean.FALSE;
+					//Generic filter condition
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
+					{
+						if (facate.isGenericFilter())
+						{
+							visible = Boolean.TRUE;
+						}
+						else
+						{
+							visible = Boolean.FALSE;
+						}
+					}
+					else
+					{
+						visible = Boolean.valueOf((facate.isVisible()));
+					}
+
+					if (CollectionUtils.isNotEmpty(facate.getValues()))
+					{
+
+						for (final FacetValueData<SearchStateData> values : facate.getValues())
+						{
+							final FacetValueDataWsDTO facetValueWsDTO = new FacetValueDataWsDTO();
+
+							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+
+							if (StringUtils.isNotEmpty(values.getName()))
+							{
+								facetValueWsDTO.setName(values.getName());
+							}
+							facetValueWsDTO.setSelected(Boolean.valueOf((values.isSelected())));
+
+							if (StringUtils.isNotEmpty(values.getCode()))
+							{
+								facetValueWsDTO.setValue(values.getCode());
+							}
+
+							//If facet name is "Include out of stock"  value will be false
+							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
+									.equalsIgnoreCase("false")))
+							{
+								facetValueWsDTOList.add(facetValueWsDTO);
+							}
+
+						}
+					}
+					facetWsDTO.setValues(facetValueWsDTOList);
+					//Fix to send only facets with visible true
+					if (visible.booleanValue())
+					{
+						searchfacetDTOList.add(facetWsDTO);
+					}
+
+				}
+				else if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
+						&& facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
+				{
+					if (null != searchPageData.getDepartmentHierarchyData()
+							&& CollectionUtils.isNotEmpty(searchPageData.getDepartmentHierarchyData().getHierarchyList()))
+					{
+						categoryHierarchy = getDepartmentHierarchy(searchPageData.getDepartmentHierarchyData().getHierarchyList(),
+								facate.getValues());
+					}
+					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isMultiSelect())));
+					if (StringUtils.isNotEmpty(facate.getName()))
+					{
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
+					}
+					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
+					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
+					categoryHierarchy.setKey(facate.getCode());
+					//Generic filter condition
+					if (StringUtils.isNotEmpty(searchPageData.getDeptType())
+							&& searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
+					{
+
+						if (facate.isGenericFilter())
+						{
+							categoryHierarchy.setVisible(Boolean.TRUE);
+						}
+						else
+						{
+							categoryHierarchy.setVisible(Boolean.FALSE);
+						}
+					}
+					else
+					{
+						categoryHierarchy.setVisible(Boolean.valueOf((facate.isVisible())));
+					}
+					productSearchPage.setFacetdatacategory(categoryHierarchy);
+				}
+			}
+			productSearchPage.setFacetdata(searchfacetDTOList);
+
+		}
+		else
+		{
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+		}
+		return productSearchPage;
+	}
+
+
+	public ProductSearchPageWsDto setSearchPageWsData(final ProductSearchPageWsDto productSearchPage,
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
+	{
+		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
+		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
+		if (null != searchPageData.getResults())
+		{
+
+			// serp product results comes here
+			final List<SellingItemDetailWsDto> searchProductDTOList = getProductWsResults(searchPageData);
+			if (searchProductDTOList != null)
+			{
+				productSearchPage.setSearchresult(searchProductDTOList);
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+			}
+
+		}
+		else
+		{
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+		}
+
+		if (null != searchPageData.getFacets())
+		{
+			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
+			{
+				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
+						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
+						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase("allPromotions")
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+				{
+					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
+
+					facetWsDTO.setMultiSelect(Boolean.valueOf((facate.isMultiSelect())));
+					if (null != facate.getName())
+					{
+						facetWsDTO.setName(StringUtils.capitalize(facate.getName()));
+					}
+
+					facetWsDTO.setKey(facate.getCode());
+					if (facate.isMultiSelect())
+					{
+						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
+					}
+					Boolean visible = Boolean.FALSE;
+					//Generic filter condition
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
+					{
+						if (facate.isGenericFilter())
+						{
+							visible = Boolean.TRUE;
+						}
+						else
+						{
+							visible = Boolean.FALSE;
+						}
+					}
+					else
+					{
+						visible = Boolean.valueOf((facate.isVisible()));
+					}
+
+					final List<FacetValueDataWsDTO> facetValueWsDTOList = new ArrayList<>();
+
+					if (null != facate.getValues())
+					{
+						//final String currentFacet = "";
+						for (final FacetValueData<SearchStateData> values : facate.getValues())
+						{
+							final FacetValueDataWsDTO facetValueWsDTO = new FacetValueDataWsDTO();
+
+							if (null != values.getName())
+							{
+								facetValueWsDTO.setName(values.getName());
+							}
+							facetValueWsDTO.setSelected(Boolean.valueOf((values.isSelected())));
+
+							if (StringUtils.isNotEmpty(values.getCode()))
+							{
+								facetValueWsDTO.setValue(values.getCode());
+							}
+
+							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+							// To skip Include out of stock
+							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							{
+								facetValueWsDTOList.add(facetValueWsDTO);
+							}
+
+						}
+					}
+					facetWsDTO.setValues(facetValueWsDTOList);
+					//Fix to send only facets with visible true
+					if (visible.booleanValue())
+					{
+						searchfacetDTOList.add(facetWsDTO);
+					}
+					//searchfacetDTOList.add(facetWsDTO);
+				}
+				else if (facate.isVisible() && facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY))
+				{
+					if (null != searchPageData.getDepartmentHierarchyData()
+							&& CollectionUtils.isNotEmpty(searchPageData.getDepartmentHierarchyData().getHierarchyList()))
+					{
+						categoryHierarchy = getDepartmentHierarchy(searchPageData.getDepartmentHierarchyData().getHierarchyList(),
+								facate.getValues());
+					}
+					categoryHierarchy.setMultiSelect(Boolean.valueOf((facate.isMultiSelect())));
+					if (null != facate.getName())
+					{
+						categoryHierarchy.setName(StringUtils.capitalize(facate.getName()));
+					}
+					categoryHierarchy.setCategory(Boolean.valueOf((facate.isCategory())));
+					categoryHierarchy.setPriority(Integer.valueOf((facate.getPriority())));
+					categoryHierarchy.setKey(facate.getCode());
+
+					//Generic filter condition
+					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
+					{
+
+						if (facate.isGenericFilter())
+						{
+							categoryHierarchy.setVisible(Boolean.TRUE);
+						}
+						else
+						{
+							categoryHierarchy.setVisible(Boolean.FALSE);
+						}
+					}
+					else
+					{
+						categoryHierarchy.setVisible(Boolean.valueOf((facate.isVisible())));
+					}
+					productSearchPage.setFacetdatacategory(categoryHierarchy);
+				}
+			}
+			productSearchPage.setFacetdata(searchfacetDTOList);
+		}
+		else
+		{
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
+		}
+
+		return productSearchPage;
+	}
+
+	private List<SellingItemDetailWsDto> getProductWsResults(
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData)
+	{
+
+		final List<SellingItemDetailWsDto> searchProductDTOList = new ArrayList<>();
+
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
+
+		double savingsAmt = 0.0;
+		double calculatedPerSavings = 0.0;
+		String floorValue = "";
+
+		for (final ProductData productData : searchPageData.getResults())
+		{
+			final PriceWsData priceWsData = new PriceWsData();
+			Boolean isRange = Boolean.FALSE;
+			final SellingItemDetailWsDto sellingItemDetail = new SellingItemDetailWsDto();
+
+			if (null != productData && null != productData.getCode())
+			{
+				if (null != productData.getUssID())
+				{
+					sellingItemDetail.setUssid(productData.getUssID());
+				}
+
+
+				final ImageData img = getPrimaryImageForProductAndFormat(productData, "product");
+				final Map<String, String> formats = new HashMap<String, String>();
+				final GalleryImageData galleryImageDataNew = new GalleryImageData();
+				final List<GalleryImageData> galleryImageList = new ArrayList<GalleryImageData>();
+				if (null != img)
+				{
+					if (null != img.getFormat() && !img.getFormat().isEmpty() && null != img.getUrl() && !img.getUrl().isEmpty())
+					{
+						formats.put(img.getFormat(), img.getUrl());
+					}
+					galleryImageDataNew.setGalleryImages(formats);
+
+					if (null != img.getMediaType() && StringUtils.isNotEmpty(img.getMediaType().getCode()))
+					{
+						galleryImageDataNew.setMediaType(img.getMediaType().getCode());
+					}
+					else
+					{
+						galleryImageDataNew.setMediaType(MarketplacecommerceservicesConstants.IMAGE_MEDIA_TYPE);
+					}
+				}
+				galleryImageList.add(galleryImageDataNew);
+				sellingItemDetail.setGalleryImagesList(galleryImageList);
+
+				if (null != productData.getName())
+				{
+					sellingItemDetail.setProductname(productData.getName());
+				}
+				if (null != productData.getDescription())
+				{
+					sellingItemDetail.setProductdescription(productData.getDescription());
+				}
+				if (null != productData.getCode())
+				{
+					sellingItemDetail.setProductId(productData.getCode());
+				}
+				if (null != productData.getAvailableForPickup())
+				{
+					sellingItemDetail.setAvailableForPickup(productData.getAvailableForPickup());
+				}
+
+				if (null != productData.getProductCategoryType())
+				{
+					sellingItemDetail.setProductCategoryType(productData.getProductCategoryType());
+				}
+
+				if (null != productData.getImmediateCategory())
+				{
+					sellingItemDetail.setCompareProductType(productData.getImmediateCategory());
+				}
+				sellingItemDetail.setDetails(productData.getDescription());
+				if (null != productData.getMobileBrandName())
+				{
+					sellingItemDetail.setBrandname(productData.getMobileBrandName());
+				}
+
+				final ImageData imgData = getPrimaryImageForProductAndFormat(productData, "searchPage");
+				if (imgData != null && imgData.getUrl() != null)
+				{
+					sellingItemDetail.setImageURL(imgData.getUrl());
+				}
+
+
+				if (null != productData.getDescription())
+				{
+					sellingItemDetail.setDetails(productData.getDescription());
+				}
+
+				if (null != productData.getProductMRP())
+				{
+					final PriceData priceData = getFormatPrice(productData.getProductMRP());
+
+					priceWsData.setMrpPrice(priceData);
+				}
+				// Below codes are commented for channel specific promotion
+				if (specialMobileFlag && null != productData.getMobileprice())
+				{
+					final PriceData priceData = getFormatPrice(productData.getMobileprice());
+					priceWsData.setSellingPrice(priceData);
+					//SDI-3930
+					savingsAmt = productData.getProductMRP().getDoubleValue().doubleValue()
+							- productData.getMobileprice().getDoubleValue().doubleValue();
+					calculatedPerSavings = (savingsAmt / productData.getProductMRP().getDoubleValue().doubleValue()) * 100;
+					floorValue = String.valueOf(Math.floor((calculatedPerSavings * 100.0) / 100.0));
+				}
+				else if (!specialMobileFlag && null != productData.getPrice()) //backward compatible
+				{
+					final PriceData priceData = getFormatPrice(productData.getPrice());
+					priceWsData.setSellingPrice(priceData);
+					//SDI-3930
+					savingsAmt = productData.getProductMRP().getDoubleValue().doubleValue()
+							- productData.getPrice().getDoubleValue().doubleValue();
+					calculatedPerSavings = (savingsAmt / productData.getProductMRP().getDoubleValue().doubleValue()) * 100;
+					floorValue = String.valueOf(Math.floor((calculatedPerSavings * 100.0) / 100.0));
+				}
+
+				//SDI-3930
+				if (StringUtils.isNotEmpty(floorValue) && calculatedPerSavings >= 1.0)
+				{
+					sellingItemDetail.setDiscountPercent(floorValue);
+				}
+				else if (null != productData.getSavingsOnProduct() && null != productData.getSavingsOnProduct().getValue())
+				{
+					sellingItemDetail.setDiscountPercent(String.valueOf(productData.getSavingsOnProduct().getValue().intValue()));
+				}
+
+				//added for jewellery mobile web services:maxSellingPrice & minSellingPrice
+				if (null != productData.getProductCategoryType()
+						&& MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getProductCategoryType()))
+				{
+					isRange = Boolean.TRUE;
+					PriceData pDataMax = new PriceData();
+					PriceData pDataMin = new PriceData();
+					final List<BuyBoxModel> buyModList = buyBoxDao.getVariantListForPriceRange(productData.getCode());
+					if (CollectionUtils.isNotEmpty(buyModList))
+					{
+						final List<BuyBoxModel> modifiableBuyBox = new ArrayList<BuyBoxModel>(buyModList);
+						modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+
+						if (CollectionUtils.isNotEmpty(modifiableBuyBox))
+						{
+							pDataMin = productDetailsHelper.formPriceData(modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice());
+							pDataMax = productDetailsHelper.formPriceData(modifiableBuyBox.get(0).getPrice());
+						}
+					}
+					PriceData priceData = null;
+					if (null != pDataMin && null != pDataMax)
+					{
+						priceData = getFormatPrice(pDataMax);
+						priceWsData.setMaxPrice(priceData);
+
+						priceData = getFormatPrice(pDataMin);
+						priceWsData.setMinPrice(priceData);
+					}
+				}
+				priceWsData.setIsRange(isRange);
+				sellingItemDetail.setPrice(priceWsData);
+				//				if (null != productData.getInStockFlag())
+				//				{
+				//					sellingItemDetail.setInStockFlag(productData.getInStockFlag());
+				//				}
+
+				//CumulativeStock
+				sellingItemDetail.setCumulativeStockLevel(Boolean.valueOf(productData.isStockValue()));
+				if (null == productData.getIsOfferExisting())
+				{
+					sellingItemDetail.setIsOfferExisting(Boolean.FALSE);
+				}
+				else
+				{
+					sellingItemDetail.setIsOfferExisting(productData.getIsOfferExisting());
+				}
+
+				sellingItemDetail.setNewProduct(productData.getIsProductNew());
+				sellingItemDetail.setOnlineExclusive(productData.getIsOnlineExclusive());
+
+				searchProductDTOList.add(sellingItemDetail);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		return searchProductDTOList;
+
+	}
+
+	/**
+	 * @param productMRP
+	 * @return
+	 */
+	private PriceData getFormatPrice(final PriceData productMRP)
+	{
+		// YTODO Auto-generated method stub
+		final PriceData priceData = new PriceData();
+		priceData.setCurrencyIso(productMRP.getCurrencyIso());
+		priceData.setCurrencySymbol(productMRP.getFormattedValue().substring(0, 1));
+		priceData.setDoubleValue(productMRP.getDoubleValue());
+		priceData.setFormattedValue(productMRP.getFormattedValue().substring(1));
+		return priceData;
+	}
+
 }
