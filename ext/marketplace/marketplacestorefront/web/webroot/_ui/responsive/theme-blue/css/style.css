@@ -78700,6 +78700,8 @@ span#offer_section_responsive_error_msg {
 	.addGiftVoucherSub {padding: 0;} */
 	.giftVoucherNo, .giftVoucherPin {
 	  width: 100%;
+	  font-size: 12px;
+	  color: #000;
 	  height: 37px !important;
 	  border-radius: 4px;
 	  border: none !important;
