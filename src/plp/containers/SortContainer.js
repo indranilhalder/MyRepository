@@ -7,6 +7,10 @@ const mapDispatchToProps = dispatch => {
   return {
     onCloseSort: () => {
       dispatch(hideModal());
+    },
+    onClick: val => {
+      console.log(val);
+      dispatch(hideModal());
     }
   };
 };
