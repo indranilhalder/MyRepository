@@ -3,11 +3,10 @@ import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
 import { transformData } from "./utils.js";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class BannerProductCarousal extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push(PRODUCT_LISTINGS);
   }
   render() {
     const feedComponentData = this.props.feedComponentData.data;
