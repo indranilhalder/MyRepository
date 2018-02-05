@@ -20,6 +20,8 @@ import com.tisl.mpl.model.MplConfigurationModel;
 public interface ForwardPaymentCleanUpService
 {
 	List<OrderModel> fetchOrdersWithMultiplePayments(final Date startTime, final Date endTime);
+	List<OrderModel> fetchCliqCashOrdersWithMultiplePayments(final Date startTime, final Date endTime);
+
 
 	List<OrderModel> fetchPaymentFailedOrders(final Date startTime, final Date endTime);
 

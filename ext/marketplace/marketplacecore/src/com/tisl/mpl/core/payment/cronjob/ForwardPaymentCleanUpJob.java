@@ -24,6 +24,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.FPCRefundEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.marketplacecommerceservices.service.ForwardPaymentCleanUpService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplQcPaymentFailService;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -42,6 +43,9 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 
 	@Autowired
 	ModelService modelService;
+	
+	@Autowired
+	private MplQcPaymentFailService mplQcPaymentFailService;
 
 	private final static Logger LOG = Logger.getLogger(ForwardPaymentCleanUpJob.class.getName());
 
@@ -79,8 +83,8 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 		LOG.debug("Order data end time: " + endTime.getTime());
 
 
-		createdRefundEntries(startTime.getTime(), endTime.getTime());
 
+		createdRefundEntries(startTime.getTime(), endTime.getTime());
 		initiateRefundProcess(startTime.getTime());
 
 
@@ -116,6 +120,23 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 				}
 			}
 		}
+		final List<OrderModel> multiPayCliqCashOrderList = forwardPaymentCleanUpService.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
+		if (CollectionUtils.isNotEmpty(multiPayCliqCashOrderList))
+		{
+			for (final OrderModel orderModel : multiPayCliqCashOrderList)
+			{
+				try
+				{
+					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing refund for order: " + orderModel.getCode());
+					LOG.error(e.getMessage(), e);
+				}
+			}
+		}
+		
 		final List<OrderModel> failedOrderList = forwardPaymentCleanUpService.fetchPaymentFailedOrders(startTime, endTime);
 		if (CollectionUtils.isNotEmpty(failedOrderList))
 		{
@@ -129,6 +150,11 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 				{
 					LOG.error("Error while processing refund for order: " + orderModel.getCode());
 					LOG.error(e.getMessage(), e);
+				}
+				final String splitInfoMode = orderModel.getSplitModeInfo();
+				if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+				{
+					mplQcPaymentFailService.processQcRefund(orderModel);
 				}
 			}
 		}
@@ -150,6 +176,12 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 				{
 					LOG.error("Error while processing refund for order: " + orderModel.getCode());
 					LOG.error(e.getMessage(), e);
+				}
+				
+				final String splitInfoMode = orderModel.getSplitModeInfo();
+				if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+				{
+					mplQcPaymentFailService.processQcRefund(orderModel);
 				}
 			}
 		}

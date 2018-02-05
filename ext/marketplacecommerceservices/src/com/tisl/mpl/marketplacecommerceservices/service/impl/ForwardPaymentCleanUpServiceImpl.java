@@ -122,11 +122,12 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 						break;
 					}
 					for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
-					{
+				 	{
 						if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
 								.equals(paymentTransactionEntry.getType()))
 								&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
-										.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
+										.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())) &&  (null != paymentTransactionEntry.getType() 
+										&& !paymentTransactionEntry.getType().equals(PaymentTransactionType.QC_CAPTURE)) )
 						{
 							firstAuditId = paymentTransactionEntry.getRequestToken();
 							break;
@@ -757,6 +758,13 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 			}
 		}
 		return paymentTransactionModel;
+	}
+
+	@Override
+	public List<OrderModel> fetchCliqCashOrdersWithMultiplePayments(Date startTime, Date endTime)
+	{
+		return forwardPaymentCleanUpDao.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
+
 	}
 
 }

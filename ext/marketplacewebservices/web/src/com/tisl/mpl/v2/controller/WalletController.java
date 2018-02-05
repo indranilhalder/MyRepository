@@ -21,7 +21,6 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.address.AddressVerificationDecision;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
-import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.error.ErrorWsDTO;
@@ -132,6 +131,7 @@ import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
+import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
 import com.tisl.mpl.wsdto.ErrorDTO;
@@ -1032,11 +1032,11 @@ public class WalletController
 		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 		@RequestMapping(value = MarketplacewebservicesConstants.CHECK_WALLET_MOBILE_NUMBER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 		@ResponseBody
-		public ErrorDTO checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request ,@RequestParam(required=false) boolean isUpdateProfile)
+		public EgvCheckMobileNumberWsDto checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request ,@RequestParam(required=false) boolean isUpdateProfile)
 				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 {
-	ErrorDTO responce = new ErrorDTO();
+	EgvCheckMobileNumberWsDto responce = new EgvCheckMobileNumberWsDto();
 	try
 	{
 			if (null != request)
@@ -1054,6 +1054,7 @@ public class WalletController
 					if(isOtpGenerated) 
 					{
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
 						return responce;
 					}
 				}else {
@@ -1096,6 +1097,8 @@ public class WalletController
 								mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 								//Set success flag
 								responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+								responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
+
 							}
 							else
 							{
@@ -1108,6 +1111,7 @@ public class WalletController
 							mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 							//Set success flag
 							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
 						}
 								
 					}else {

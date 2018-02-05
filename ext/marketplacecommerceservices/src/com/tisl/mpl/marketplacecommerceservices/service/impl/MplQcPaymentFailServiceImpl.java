@@ -205,10 +205,21 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 			{
 				data.setAmount(String.valueOf(refundAmount));
 			}
-			if (null != customer && null != customer.getOriginalUid())
-			{
-				data.setCustomerEmailId(customer.getOriginalUid());
+			if(null != customer ) {
+				if (null != customer.getOriginalUid())
+				{
+					data.setCustomerEmailId(customer.getOriginalUid());
+				}
+				if (null != customer.getQcVerifyFirstName())
+				{
+					data.setFirstName(customer.getQcVerifyFirstName());
+				}
+				if (null != customer.getQcVerifyLastName())
+				{
+					data.setLastName(customer.getQcVerifyLastName());
+				}
 			}
+			
 			if (refundAmount > 0.0D)
 			{
 				data.setAmount(String.valueOf(refundAmount));
@@ -299,7 +310,10 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 
 			for (final CilqCashWalletPojo data : binDataList)
 			{
-				fileWriter.append(data.getCustomerName());
+				fileWriter.append(data.getFirstName());
+				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
+				
+				fileWriter.append(data.getLastName());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
 				fileWriter.append(data.getCustomerEmailId());
@@ -477,7 +491,9 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 	/**
 	 * @param orderModel
 	 */
-	private void processQcRefund(OrderModel orderModel)
+	
+	@Override
+	public void processQcRefund(OrderModel orderModel)
 	{
 		double totalQcRefundAmount = 0.0D;
 		if(null != orderModel.getChildOrders()) {

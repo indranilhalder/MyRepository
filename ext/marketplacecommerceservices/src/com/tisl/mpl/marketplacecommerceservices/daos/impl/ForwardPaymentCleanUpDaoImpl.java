@@ -198,4 +198,28 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 		return CollectionUtils.isNotEmpty(result) ? result.get(0) : null;
 	}
 
+	@Override
+	public List<OrderModel> fetchCliqCashOrdersWithMultiplePayments(Date startTime, Date endTime)
+	{
+		final StringBuilder queryString = new StringBuilder(500);
+		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
+		queryString.append(" FROM {" + OrderModel._TYPECODE + " AS ord},");
+		queryString.append(" {" + MplPaymentAuditModel._TYPECODE + " AS mpa}");
+		queryString.append(" WHERE {ord:" + OrderModel.GUID + "} = {mpa:" + MplPaymentAuditModel.CARTGUID + "}");
+		queryString.append(" AND {ord:" + OrderModel.STATUS + "} = ?orderStatus");
+		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
+		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
+		queryString.append(" AND {ord:" + OrderModel.SPLITMODEINFO + "}  = ?cliqCash");
+		queryString.append(" GROUP BY {ord:" + OrderModel.PK + "}");
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("startTime", startTime);
+		query.addQueryParameter("endTime", endTime);
+		query.addQueryParameter("orderType", MarketplacecommerceservicesConstants.PARENTORDER);
+		query.addQueryParameter("orderStatus", OrderStatus.PAYMENT_SUCCESSFUL);
+		query.addQueryParameter("cliqCash", MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH);
+
+		return flexibleSearchService.<OrderModel> search(query).getResult();
+	}
+
 }

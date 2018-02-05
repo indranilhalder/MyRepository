@@ -19,6 +19,8 @@ public class CilqCashWalletPojo
       private String cardExpiry;
       private String batchNumber;
       private String comments;
+      private String firstName;
+      private String lastName;
 		/**
 		 * @return the customerName
 		 */
@@ -158,6 +160,22 @@ public class CilqCashWalletPojo
 		public void setComments(String comments)
 		{
 			this.comments = comments;
+		}
+		public String getFirstName()
+		{
+			return firstName;
+		}
+		public void setFirstName(String firstName)
+		{
+			this.firstName = firstName;
+		}
+		public String getLastName()
+		{
+			return lastName;
+		}
+		public void setLastName(String lastName)
+		{
+			this.lastName = lastName;
 		}
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
