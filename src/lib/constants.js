@@ -13,3 +13,5 @@ export const MULTI_SELECT_DESCRIPTION_COPY =
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
 export const REFRESH_TOKEN = "refresh_token";
+export const PRODUCT_LISTINGS = "/productListings";
+
