@@ -19,38 +19,6 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<style>
-.createWalletModel {
-	display: none; /* Hidden by default */
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	padding-top: 100px; /* Location of the box */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0, 0, 0); /* Fallback color */
-	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.createWalletModel-content {
-	background-color: #fefefe;
-	margin: auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 50%;
-}
-
-#closePop {
-	float: right;
-}
-#createWalletData {
-	display: inline-block;
-	width: 100%;
-}
-</style>
 <template:page pageTitle="${pageTitle}">
 
 <input type="hidden" id="isEmailRequest" value="${isEmailRequest}" />
@@ -355,6 +323,8 @@
 		    var mobileNo=$("#otpPhonenumber").val();
 		    var firstName = $("#otpFirstName").val();
 			var lastName = $("#otpLastName").val();
+			var isFirstName = false;
+			var isLastName = false;
 			
 	     var isString = isNaN(mobileNo);
 
@@ -362,18 +332,20 @@
 	 	if(firstName == null || firstName.trim() == '' ){
 	 			$(".otpFirstNameError").show();
 	 			$(".otpFirstNameError").text("First name cannot be blank.");
-	 			formValid = false;
+	 			isFirstName = false;
 	 	}else {
 	 		$(".otpFirstNameError").hide();
+	 		isFirstName = true;
 	 	}
 	 	
 	 	//Last Name Validation
 	     if(lastName == null || lastName.trim() == '' ){
 	 			$(".otpLastNameError").show();
 	 			$(".otpLastNameError").text("Last name cannot be blank.");
-	 			formValid = false;
+	 			isLastName = false;
 	 	}else {
 	 		$(".otpLastNameError").hide();
+	 		isLastName = true;
 	 	} 
 	     if(isString==true || mobileNo.trim()==''){
 				$(".mobileNumberError").show();
@@ -389,34 +361,38 @@
 		          $(".mobileNumberError").text("Enter correct mobile number");
 		  	}
 	     else{
-	 	count++;
-	 	var staticHost = $('#staticHost').val();
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-		
-		if(count <= 4){
-		 $.ajax({
-				type : "POST",
-				url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
-				data :"mobileNumber="+mobileNo,
-				success : function(response) {
-					$("#no-click,.loaderDiv").remove();
-					if(response =='isUsed'){
-						$(".mobileNumberError").show();
-						$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
-						$('#otp-submit-section').hide();
-					}else{
-					$(".wcOTPError").show();
-					$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
-					$('#otp-submit-section').show();
-					}
-				}
-			}); 
-		 
-		}else{
-			$(".otpError").show();
-			$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
-		}
+	    	 
+	    	 if(isFirstName && isLastName) {
+	    		 count++;
+	    		 	var staticHost = $('#staticHost').val();
+	    			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	    			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+	    			
+	    			if(count <= 4){
+	    			 $.ajax({
+	    					type : "POST",
+	    					url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
+	    					data :"mobileNumber="+mobileNo,
+	    					success : function(response) {
+	    						$("#no-click,.loaderDiv").remove();
+	    						if(response =='isUsed'){
+	    							$(".mobileNumberError").show();
+	    							$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
+	    							$('#otp-submit-section').hide();
+	    						}else{
+	    						$(".wcOTPError").show();
+	    						$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
+	    						$('#otp-submit-section').show();
+	    						}
+	    					}
+	    				}); 
+	    			 
+	    			}else{
+	    				$(".otpError").show();
+	    				$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
+	    			}
+	    	 }
+	    	 
 		  	}
 	} 
 

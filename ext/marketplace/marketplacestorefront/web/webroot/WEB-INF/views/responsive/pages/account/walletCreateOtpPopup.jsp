@@ -20,31 +20,6 @@
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 
 
-<style>
-.otp-button {
-    border: 1px solid #a9143c;
-    display: inline;
-    background-color: #a9143c;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 400;
-    height: 36px;
-    padding: 10px 20px;}
-    
-.otp-error-text {
-	text-align: left;
-}
-
-.otp-edit-button {
-	background-color: #a9143c;
-	color: white;
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
-}
-    
-#otp-submit-section {display: none;}
-</style>
-
 <%-- <c:choose><:when test="${walletForm.qcVerifyFirstName not empty}"><c:set var="qcFnameDisable" value="disabled"></c:set></:when>
 									<:otherwise><c:set var="qcFnameDisable" value=""></c:set></:otherwise></c:choose>
 <c:choose><:when test="${walletForm.qcVerifyLastName not empty}"><c:set var="qcLnameDisable" value="disabled"></c:set></:when>

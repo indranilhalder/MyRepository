@@ -15,52 +15,7 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<style>
-.egv-otp-container .input-group {border: 1px solid #a9143c; border-radius: 4px;}
-.egv-otp-container .giftCard_input {background-color: #fff; height: 35px !important;}
-.createWalletModel {
-	display: none; /* Hidden by default */
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	padding-top: 100px; /* Location of the box */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0, 0, 0); /* Fallback color */
-	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
 
-.giftAmountBtns {
-	z-index: 1 !important;
-}
-
-/* Modal Content */
-.createWalletModel-content {
-	background-color: #fefefe;
-	margin: auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 35%;
-}
-
-@media(max-width: 480px) {
-	.createWalletModel-content {
-		width: 90%;
-	}
-}
-
-#closePop {
-	float: right;
-	padding: 0;
-	
-}
-#createWalletData {
-	display: inline-block;
-	width: 100%;
-}
-</style>
 <template:page pageTitle="${pageTitle}">
 	<div>
 		<br />
@@ -765,6 +720,8 @@ function createWalletOTP(){
 	    var mobileNo=$("#otpPhonenumber").val();
 	    var firstName = $("#otpFirstName").val();
 		var lastName = $("#otpLastName").val();
+		var isFirstName = false;
+		var isLastName = false;
 		
      var isString = isNaN(mobileNo);
 
@@ -772,22 +729,24 @@ function createWalletOTP(){
  	if(firstName == null || firstName.trim() == '' ){
  			$(".otpFirstNameError").show();
  			$(".otpFirstNameError").text("First name cannot be blank.");
- 			formValid = false;
+ 			isFirstName = false;
  	}else {
  		$(".otpFirstNameError").hide();
+ 		isFirstName = true;
  	}
  	
  	//Last Name Validation
      if(lastName == null || lastName.trim() == '' ){
  			$(".otpLastNameError").show();
  			$(".otpLastNameError").text("Last name cannot be blank.");
- 			formValid = false;
+ 			isLastName = false;
  	}else {
  		$(".otpLastNameError").hide();
+ 		isLastName = true;
  	} 
      if(isString==true || mobileNo.trim()==''){
 			$(".mobileNumberError").show();
-			$(".mobileNumberError").text("Enter only Numbers");
+			$(".mobileNumberError").text("Enter only numbers");
 	  	}
      else if(!/^[0-9]+$/.test(mobileNo))
         {
@@ -798,34 +757,37 @@ function createWalletOTP(){
 	    	  $(".mobileNumberError").show();
 	          $(".mobileNumberError").text("Enter correct mobile number");
 	  	}
-     else{ 		
- 	count++;
- 	var staticHost = $('#staticHost').val();
-	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-	if(count <= 4){
-	 $.ajax({
-			type : "POST",
-			url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
-			data :"mobileNumber="+mobileNo,
-			success : function(response) {
-				$("#no-click,.loaderDiv").remove();
-				if(response =='isUsed'){
-					$(".mobileNumberError").show();
-					$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
-					$('#otp-submit-section').hide();
-				}else{
-				$(".wcOTPError").show();
-				$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
-				$('#otp-submit-section').show();
-				}
-			}
-		}); 
-	 
-	}else{
-		$(".otpError").show();
-		$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
-	}
+     else{
+    	 
+   	 if(isFirstName && isLastName) {
+   		count++;
+   	 	var staticHost = $('#staticHost').val();
+   		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+   		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+   		if(count <= 4){
+   		 $.ajax({
+   				type : "POST",
+   				url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
+   				data :"mobileNumber="+mobileNo,
+   				success : function(response) {
+   					$("#no-click,.loaderDiv").remove();
+   					if(response =='isUsed'){
+   						$(".mobileNumberError").show();
+   						$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
+   						$('#otp-submit-section').hide();
+   					}else{
+   					$(".wcOTPError").show();
+   					$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
+   					$('#otp-submit-section').show();
+   					}
+   				}
+   			}); 
+   		 
+   		}else{
+   			$(".otpError").show();
+   			$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
+   		}
+   	 }
 	  	}
 } 
 

@@ -79137,3 +79137,76 @@ span#offer_section_responsive_error_msg {
 }
 .juspayConnErrorSection {top: 0 !important;}
 /*Account Page CSS*/	
+
+/*Wallet OTP Popup CSS - Start*/
+.egv-otp-container .input-group {border: 1px solid #a9143c; border-radius: 4px;}
+.egv-otp-container .giftCard_input {background-color: #fff; height: 35px !important;}
+.createWalletModel {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.giftAmountBtns {
+	z-index: 1 !important;
+}
+
+/* Modal Content */
+.createWalletModel-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 35%;
+}
+
+@media(max-width: 480px) {
+	.createWalletModel-content {
+		width: 90%;
+	}
+}
+
+#closePop {
+	float: right;
+	padding: 0;
+	
+}
+#createWalletData {
+	display: inline-block;
+	width: 100%;
+}
+
+/*POPUP*/
+.otp-button {
+    border: 1px solid #a9143c;
+    display: inline;
+    background-color: #a9143c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    height: 36px;
+    line-height: normal;
+    padding: 10px 20px;}
+    
+.otp-error-text {
+	text-align: left;
+}
+
+.otp-edit-button {
+	background-color: #a9143c;
+	color: white;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+    
+#otp-submit-section {display: none;}
+
+/*Wallet OTP Popup CSS - End*/
