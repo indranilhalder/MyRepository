@@ -3,7 +3,7 @@ import BrandImage from "../../general/components/BrandImage";
 import Carousel from "../../general/components/Carousel";
 import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
-
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class FollowingBrands extends React.Component {
   newFollow = () => {
     if (this.props.onFollow) {
@@ -12,7 +12,7 @@ export default class FollowingBrands extends React.Component {
   };
 
   handleClick() {
-    this.props.history.push("/productListings");
+    this.props.history.push(PRODUCT_LISTINGS);
   }
 
   render() {

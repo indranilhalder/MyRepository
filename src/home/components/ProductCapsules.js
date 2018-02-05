@@ -3,9 +3,10 @@ import Carousel from "../../general/components/Carousel";
 import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle";
 import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class ProductCapsules extends React.Component {
   handleClick() {
-    this.props.history.push("/productListings");
+    this.props.history.push(PRODUCT_LISTINGS);
   }
 
   render() {

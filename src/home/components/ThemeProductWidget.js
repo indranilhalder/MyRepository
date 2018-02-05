@@ -4,9 +4,10 @@ import ThemeProduct from "../../general/components/ThemeProduct";
 import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import styles from "./ThemeProductWidget.css";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class ThemeProductWidget extends React.Component {
   handleClick() {
-    this.props.history.push("/productListings");
+    this.props.history.push(PRODUCT_LISTINGS);
   }
   render() {
     const data = this.props.feedComponentData.data;

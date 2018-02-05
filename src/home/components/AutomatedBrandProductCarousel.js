@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
 import Logo from "../../general/components/Logo";
 import { transformData } from "./utils.js";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class AutomatedBrandProductCarousel extends React.Component {
   handleClick() {
-    this.props.history.push("/productListings");
+    this.props.history.push(PRODUCT_LISTINGS);
   }
   render() {
     const componentData = this.props.feedComponentData.data;

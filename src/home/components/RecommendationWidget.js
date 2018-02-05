@@ -2,10 +2,10 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import { transformData } from "./utils.js";
-
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class RecommendationWidget extends React.Component {
   handleClick() {
-    this.props.history.push("/productListings");
+    this.props.history.push(PRODUCT_LISTINGS);
   }
 
   render() {
