@@ -28,7 +28,7 @@ export default class PlpMobileFooter extends React.Component {
               this.onSort();
             }}
           >
-            <div className={styles.sort}>Sort </div>
+            <div className={styles.sort} /> Sort
           </div>
         </div>
       </div>

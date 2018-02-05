@@ -38,12 +38,11 @@ export default class Filter extends React.Component {
   handleSelect(val, index) {
     let selected = this.state.selected;
     selected[index] = val;
-
     this.setState({ selected });
   }
 
   render() {
-    const fitlerDatum = this.props.filterData[this.state.pageNumber];
+    const filterDatum = this.props.filterData[this.state.pageNumber];
     return (
       <div className={styles.base}>
         <div className={styles.tabs}>
@@ -65,8 +64,8 @@ export default class Filter extends React.Component {
               this.handleSelect(val, this.state.pageNumber);
             }}
           >
-            {fitlerDatum.values &&
-              fitlerDatum.values.map((value, i) => {
+            {filterDatum.values &&
+              filterDatum.values.map((value, i) => {
                 return (
                   <FilterSelect
                     label={value.name}
