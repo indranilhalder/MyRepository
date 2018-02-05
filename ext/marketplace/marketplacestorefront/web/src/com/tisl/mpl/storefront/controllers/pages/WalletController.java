@@ -543,6 +543,12 @@ public class WalletController extends AbstractPageController
 		walletForm.setQcVerifyFirstName(walletCreateData.getQcVerifyFirstName());
 		walletForm.setQcVerifyLastName(walletCreateData.getQcVerifyLastName());
 		walletForm.setQcVerifyMobileNo(walletCreateData.getQcVerifyMobileNo());
+		if (StringUtils.isBlank(walletForm.getQcVerifyFirstName()))
+			walletForm.setFirstNameFlag(true);
+		if (StringUtils.isBlank(walletForm.getQcVerifyLastName()))
+			walletForm.setLastNameFlag(true);
+		if (StringUtils.isBlank(walletForm.getQcVerifyMobileNo()))
+			walletForm.setMobileNoFlag(true);
 	}
 
 
