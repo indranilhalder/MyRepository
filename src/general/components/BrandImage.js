@@ -2,10 +2,11 @@ import React from "react";
 import styles from "./BrandImage.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class BrandImage extends React.Component {
   handleClick() {
     if (this.props.onClick) {
-      this.props.history.push("/productListings");
+      this.props.history.push(PRODUCT_LISTINGS);
     }
   }
   render() {
