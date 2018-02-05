@@ -7,14 +7,21 @@ export default class ReviewPage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.reviewHolder}>
-          <div className={styles.borderHolder}>
-            <div className={styles.starHolder}>
-              <StarRating />
-            </div>
-            <div className={styles.heading}>{this.props.heading}</div>
-            <div className={styles.text}>{this.props.text}</div>
-            <div className={styles.dateTimeBox}>{this.props.label}</div>
+          <div className={styles.starHolder}>
+            <StarRating />
           </div>
+
+          {this.props.heading && (
+            <div className={styles.heading}>{this.props.heading}</div>
+          )}
+
+          {this.props.text && (
+            <div className={styles.text}>{this.props.text}</div>
+          )}
+
+          {this.props.label && (
+            <div className={styles.dateTimeBox}>{this.props.label}</div>
+          )}
         </div>
       </div>
     );
