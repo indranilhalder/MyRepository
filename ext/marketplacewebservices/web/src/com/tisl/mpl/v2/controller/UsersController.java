@@ -92,6 +92,8 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -185,6 +187,7 @@ import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.reviews.GigyaFacade;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
@@ -193,6 +196,7 @@ import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
+import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
@@ -488,6 +492,9 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
 
+
+	@Resource
+	private RegisterCustomerFacade registerCustomerFacade;
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -530,7 +537,7 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private HttpServletRequest request;
-
+	@Autowired
 	private OTPGenericService otpGenericService;
 	@Resource
 	private SendSMSFacade sendSMSFacade;
@@ -11275,7 +11282,8 @@ public class UsersController extends BaseCommerceController
 			//CAR Project performance issue fixed
 
 			//TO DO REGEX MATCH
-			customerModel = mplPaymentWebFacade.getCustomer(userId);
+			customerModel = extUserService.getUserForUid(userId);
+
 			if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
 			{
 				//
@@ -11587,14 +11595,16 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String lastName, @RequestParam(required = false) final String dateOfBirth,
 			final String dateOfAnniversary, @RequestParam(required = false) final String nickName,
 			@RequestParam(required = false) final String gender, @RequestParam(required = false) final String mobilenumber,
-			@RequestParam(required = true) final boolean isPwa, @RequestParam(required = true) final boolean ProfileDataRequired,
-			final String fields, final HttpServletRequest request) throws RequestParameterException, DuplicateUidException
+			@RequestParam(required = false) final String otp, @RequestParam(required = true) final boolean isPwa,
+			@RequestParam(required = true) final boolean ProfileDataRequired, final String fields, final HttpServletRequest request)
+			throws RequestParameterException, DuplicateUidException
 	{
 
 		boolean duplicateEmail = false;
 		final UpdateCustomerDetailDto updateCustomerDetailDto = new UpdateCustomerDetailDto();
 		final UpdateCustomerDetailDto withoutCustomerInfo = new UpdateCustomerDetailDto();
 		final UpdateCustomerDetailDto updateCustomerDetailError = new UpdateCustomerDetailDto();
+		final ExtRegisterData registration = new ExtRegisterData();
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
 		if (null == customerData)
 		{
@@ -11645,16 +11655,45 @@ public class UsersController extends BaseCommerceController
 					{
 						customerToSave.setNickName(null);
 					}
-					if (StringUtils.isNotEmpty(mobilenumber))
+					if (StringUtils.isNotEmpty(mobilenumber)
+							&& (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH && mobilenumber
+									.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
 					{
-						if (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH
-								&& mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+						registration.setLogin(mobilenumber);
+						if (registerCustomerFacade.checkMobileNumberUnique(registration))
 						{
-							customerToSave.setMobileNumber(mobilenumber);
-						}
-						else
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+							String otpassword;
+							try
+							{
+								if (StringUtils.isEmpty(otp))
+								{
+									otpassword = otpGenericService.generateOTPForRegister(mobilenumber, OTPTypeEnum.REG.getCode(),
+											mobilenumber);
+									sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+											MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+													MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), mobilenumber);
+								}
+								else
+								{
+									if (mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG))
+									{
+										customerToSave.setMobileNumber(mobilenumber);
+									}
+									else
+									{
+										updateCustomerDetailError.setStatus("Unable to set Mobile Number");
+										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+									}
+								}
+							}
+							catch (InvalidKeyException | NoSuchAlgorithmException e)
+							{
+								// YTODO Auto-generated catch block
+								e.printStackTrace();
+								updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+								updateCustomerDetailDto.setMessage(MarketplacecommerceservicesConstants.PROFILE_UPDATE_FAIL);
+								return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+							}
 						}
 					}
 					else
@@ -11799,37 +11838,6 @@ public class UsersController extends BaseCommerceController
 					{
 						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
 					}
-					//					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
-					//					final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
-					//							MarketplacewebservicesConstants.USE_GIGYA);
-					//					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
-					//					{
-					//						final String gigyaMethod = configurationService.getConfiguration().getString(
-					//								MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
-					//						String fnameGigya = null;
-					//						String lnameGigya = null;
-					//
-					//						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getFirstName()))
-					//						{
-					//							fnameGigya = updateCustomerDetailDto.getFirstName().trim();
-					//						}
-					//						else
-					//						{
-					//
-					//							fnameGigya = MarketplacewebservicesConstants.EMPTY;
-					//						}
-					//						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getLastName()))
-					//						{
-					//							lnameGigya = updateCustomerDetailDto.getLastName().trim();
-					//						}
-					//						else
-					//						{
-					//							lnameGigya = MarketplacewebservicesConstants.EMPTY;
-					//						}
-					//
-					//						gigyaFacade.notifyGigya(updateCustomerDetailDto.getEmailId(), null, fnameGigya, lnameGigya,
-					//								updateCustomerDetailDto.getEmailId().trim(), gigyaMethod);
-					//					}
 				}
 				catch (final DuplicateUidException e)
 				{
