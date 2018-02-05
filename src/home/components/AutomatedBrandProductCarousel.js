@@ -6,9 +6,7 @@ import Logo from "../../general/components/Logo";
 import { transformData } from "./utils.js";
 export default class AutomatedBrandProductCarousel extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push("/productListings");
   }
   render() {
     const componentData = this.props.feedComponentData.data;

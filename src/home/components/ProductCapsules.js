@@ -4,6 +4,10 @@ import ProductCapsuleCircle from "../../general/components/ProductCapsuleCircle"
 import PropTypes from "prop-types";
 import styles from "./ProductCapsules.css";
 export default class ProductCapsules extends React.Component {
+  handleClick() {
+    this.props.history.push("/productListings");
+  }
+
   render() {
     const productCapsulesData = this.props.feedComponentData;
     const numberOfProducts = productCapsulesData.data.items
@@ -17,7 +21,7 @@ export default class ProductCapsules extends React.Component {
           header={this.props.feedComponentData.title}
           subheader={subHeader}
           buttonText="See all"
-          seeAll={this.props.feedComponentData.btnText}
+          seeAll={() => this.handleClick()}
           elementWidthMobile={30}
           withFooter={false}
         >

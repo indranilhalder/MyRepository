@@ -5,10 +5,9 @@ import { transformData } from "./utils.js";
 
 export default class RecommendationWidget extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push("/productListings");
   }
+
   render() {
     let feedComponentData = this.props.feedComponentData;
     let carouselData;

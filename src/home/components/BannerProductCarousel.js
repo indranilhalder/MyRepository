@@ -5,9 +5,7 @@ import ProductImageHeader from "../../general/components/ProductImageHeader";
 import { transformData } from "./utils.js";
 export default class BannerProductCarousal extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push("/productListings");
   }
   render() {
     const feedComponentData = this.props.feedComponentData.data;

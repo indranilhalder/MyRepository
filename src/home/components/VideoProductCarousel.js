@@ -4,9 +4,7 @@ import ProductVideo from "../../general/components/ProductVideo";
 import { transformData } from "./utils.js";
 export default class VideoProductCarousel extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push("/productListings");
   }
   render() {
     const feedComponentData = this.props.feedComponentData.data;

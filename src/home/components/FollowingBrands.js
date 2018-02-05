@@ -10,11 +10,20 @@ export default class FollowingBrands extends React.Component {
       this.props.onFollow();
     }
   };
+
+  handleClick() {
+    this.props.history.push("/productListings");
+  }
+
   render() {
     const followWidgetData = this.props.feedComponentData.data;
     return (
       <div className={styles.base}>
-        <Carousel header={this.props.feedComponentData.title}>
+        <Carousel
+          header={this.props.feedComponentData.title}
+          buttonText="See All"
+          seeAll={() => this.handleClick()}
+        >
           {followWidgetData.items &&
             followWidgetData.items.map((datum, i) => {
               return (
@@ -23,7 +32,7 @@ export default class FollowingBrands extends React.Component {
                   image={datum.imageURL}
                   value={datum.type}
                   fit={datum.type}
-                  onClick={datum.onClick}
+                  onClick={() => this.handleClick()}
                 />
               );
             })}

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 export default class BrandImage extends React.Component {
   handleClick() {
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.history.push("/productListings");
     }
   }
   render() {
