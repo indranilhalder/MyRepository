@@ -3846,7 +3846,15 @@
 						<defaultvalue>false</defaultvalue>
 						<persistence type="property" />
 					</attribute>
-
+					<!-- NU18 -->
+					
+					<attribute qualifier="otpVerified"
+						autocreate="true" type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
 					<attribute qualifier="isLuxuryCustomer" autocreate="true"
 						type="java.lang.Boolean" generate="true">
 						<description>To check if customer is luxury </description>
@@ -3862,10 +3870,6 @@
 				</attributes>
 				<indexes>
 					<index name="ORIGINALUID_IDX" unique="true">
-						<key attribute="originalUid" />
-					</index>
-					<index name="MOBILENO_IDX" unique="true">
-						<key attribute="mobileNumber" />
 						<key attribute="originalUid" />
 					</index>
 				</indexes>

@@ -74,6 +74,7 @@ import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -91,6 +92,8 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -184,6 +187,7 @@ import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.account.reviews.GigyaFacade;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
@@ -192,6 +196,7 @@ import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
+import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
@@ -208,6 +213,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.model.BankModel;
@@ -225,6 +231,7 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
+import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
@@ -485,6 +492,9 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
 
+
+	@Resource
+	private RegisterCustomerFacade registerCustomerFacade;
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -527,6 +537,10 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private OTPGenericService otpGenericService;
+	@Resource
+	private SendSMSFacade sendSMSFacade;
 
 	/**
 	 * TPR-1372
@@ -10090,19 +10104,23 @@ public class UsersController extends BaseCommerceController
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/customerRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplRegistrationResultWsDto registerUser(@RequestParam final String loginId,
-			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+	public MplRegistrationResultWsDto registerUser(@RequestParam final String username,
+			@RequestParam(required = false) final String emailId, @RequestParam(required = false) final String platformNumber)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 
 	{
-		LOG.debug("****************** User Registration mobile web service ***********" + loginId);
+		LOG.debug("User Registration mobile web service :::::::::::::" + username);
 		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
+		String emailIdLwCase = null;
 		try
 		{
-			final String emailIdLwCase = loginId.toLowerCase();
+			if (StringUtils.isNotEmpty(emailId))
+			{
+				emailIdLwCase = emailId.toLowerCase();
+			}
 			LOG.debug("The platform number is " + platformNumber);
 			int platformDecider;
-			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			if (StringUtils.isNotEmpty(platformNumber))
 			{
 				platformDecider = Integer.parseInt(platformNumber);
 			}
@@ -10111,7 +10129,7 @@ public class UsersController extends BaseCommerceController
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 			}
 			LOG.debug("The platform number is " + platformDecider);
-			userResult = mobileUserService.registerAppUser(emailIdLwCase, platformDecider);
+			userResult = mobileUserService.registerAppUser(username, platformDecider, emailIdLwCase);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -11157,27 +11175,27 @@ public class UsersController extends BaseCommerceController
 
 	@Secured(
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/registrationOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/registrationOTPVerification", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserLoginResultWsDto registrationOTPVerification(@RequestParam final String username,
 			@RequestParam final String password, @RequestParam(required = true) final String otp,
-			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
-
+			@RequestParam(required = false) final String platformNumber, @RequestParam(required = false) final String emailId,
+			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 	{
-		LOG.debug("****************** User Registration mobile web service ***********" + username);
+		LOG.debug("User Registration mobile web service ***********" + username);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
 		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
 		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
 		try
 		{
-			final boolean validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.REG);
-			if (validOtpFlag)
+			final boolean validOtpFlag = mobileUserService.validateOtp(username, otp, OTPTypeEnum.REG);
+			if (true) //if (validOtpFlag)
 			{
-				final String emailIdLwCase = username.toLowerCase();
+				final String emailIdLwCase = emailId.toLowerCase();
 				LOG.debug("The platform number is " + platformNumber);
 				int platformDecider;
-				if (StringUtils.isNotEmpty(platformNumber))//IQA
+				if (StringUtils.isNotEmpty(platformNumber))
 				{
 					platformDecider = Integer.parseInt(platformNumber);
 				}
@@ -11186,7 +11204,7 @@ public class UsersController extends BaseCommerceController
 					platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 				}
 				LOG.debug("The platform number is " + platformDecider);
-				userResult = mobileUserService.registerNewMplUserWithMobile(emailIdLwCase, password, true, platformDecider);
+				userResult = mobileUserService.registerNewMplUserWithMobile(username, password, true, platformDecider, emailIdLwCase);
 				//final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 				userLoginResultWsDto.setStatus(userResult.getStatus());
 				userLoginResultWsDto.setCustomerId(userResult.getCustomerId());
@@ -11247,10 +11265,11 @@ public class UsersController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "{emailId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "{userId}/customerLogin", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserLoginResultWsDto customerLogin(@PathVariable final String emailId, @RequestParam final String password)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public UserLoginResultWsDto customerLogin(@PathVariable final String userId, @RequestParam final String password,
+			@RequestParam(required = false) final String otp) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -11262,13 +11281,38 @@ public class UsersController extends BaseCommerceController
 		{
 			//CAR Project performance issue fixed
 
+			//TO DO REGEX MATCH
+			customerModel = extUserService.getUserForUid(userId);
 
-			//customerModel = mplPaymentWebFacade.getCustomer(emailId);
+			if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
+			{
+				//
+				if (StringUtils.isEmpty(otp))
+				{
+					final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.REG.getCode(), userId);
+					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), userId);
+					userResult.setStatus("OTP VERIFICATION REQUIRED");
+					userResult.setErrorCode("NU0002");
+					return userResult;
+				}
+				else
+				{
+					final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG);
+					if (validOtpFlag)
+					{
+						customerModel.setOtpVerified(Boolean.TRUE);
+						modelService.save(customerModel);
+					}
 
-			LOG.debug("****************** User Login mobile web service ***********" + emailId);
+				}
+			}
+
+			LOG.debug("****************** User Login mobile web service ***********" + userId);
 			//Login user with username and password
 			//	isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
-			result = mobileUserService.loginUser(emailId, password);
+			result = mobileUserService.loginUser(userId, password);
 			if (result.getStatus().equalsIgnoreCase("Success"))
 			{
 				customerModel = (CustomerModel) userService.getCurrentUser();
@@ -11285,11 +11329,18 @@ public class UsersController extends BaseCommerceController
 				customerInfo.setMobileNumber(customerModel.getMobileNumber());
 				customerInfo.setEmailId(customerModel.getOriginalUid());
 				userResult.setCustomerInfo(customerInfo);
+				userResult.setCustomerId(result.getCustomerId());
+				userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
 			}
 			userResult.setStatus(result.getStatus());
-			userResult.setCustomerId(result.getCustomerId());
-			userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
+
 			//Return result
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			userResult.setError("Duplicate User Id Found, Please login with email ID");
+			userResult.setErrorCode("NU0001");
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -11544,14 +11595,16 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String lastName, @RequestParam(required = false) final String dateOfBirth,
 			final String dateOfAnniversary, @RequestParam(required = false) final String nickName,
 			@RequestParam(required = false) final String gender, @RequestParam(required = false) final String mobilenumber,
-			@RequestParam(required = true) final boolean isPwa, @RequestParam(required = true) final boolean ProfileDataRequired,
-			final String fields, final HttpServletRequest request) throws RequestParameterException, DuplicateUidException
+			@RequestParam(required = false) final String otp, @RequestParam(required = true) final boolean isPwa,
+			@RequestParam(required = true) final boolean ProfileDataRequired, final String fields, final HttpServletRequest request)
+			throws RequestParameterException, DuplicateUidException
 	{
 
 		boolean duplicateEmail = false;
 		final UpdateCustomerDetailDto updateCustomerDetailDto = new UpdateCustomerDetailDto();
 		final UpdateCustomerDetailDto withoutCustomerInfo = new UpdateCustomerDetailDto();
 		final UpdateCustomerDetailDto updateCustomerDetailError = new UpdateCustomerDetailDto();
+		final ExtRegisterData registration = new ExtRegisterData();
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
 		if (null == customerData)
 		{
@@ -11602,16 +11655,45 @@ public class UsersController extends BaseCommerceController
 					{
 						customerToSave.setNickName(null);
 					}
-					if (StringUtils.isNotEmpty(mobilenumber))
+					if (StringUtils.isNotEmpty(mobilenumber)
+							&& (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH && mobilenumber
+									.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
 					{
-						if (StringUtils.length(mobilenumber) == MarketplacecommerceservicesConstants.MOBLENGTH
-								&& mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+						registration.setLogin(mobilenumber);
+						if (registerCustomerFacade.checkMobileNumberUnique(registration))
 						{
-							customerToSave.setMobileNumber(mobilenumber);
-						}
-						else
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+							String otpassword;
+							try
+							{
+								if (StringUtils.isEmpty(otp))
+								{
+									otpassword = otpGenericService.generateOTPForRegister(mobilenumber, OTPTypeEnum.REG.getCode(),
+											mobilenumber);
+									sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+											MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+													MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), mobilenumber);
+								}
+								else
+								{
+									if (mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG))
+									{
+										customerToSave.setMobileNumber(mobilenumber);
+									}
+									else
+									{
+										updateCustomerDetailError.setStatus("Unable to set Mobile Number");
+										throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
+									}
+								}
+							}
+							catch (InvalidKeyException | NoSuchAlgorithmException e)
+							{
+								// YTODO Auto-generated catch block
+								e.printStackTrace();
+								updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+								updateCustomerDetailDto.setMessage(MarketplacecommerceservicesConstants.PROFILE_UPDATE_FAIL);
+								return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+							}
 						}
 					}
 					else
@@ -11756,37 +11838,6 @@ public class UsersController extends BaseCommerceController
 					{
 						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
 					}
-					//					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
-					//					final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
-					//							MarketplacewebservicesConstants.USE_GIGYA);
-					//					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
-					//					{
-					//						final String gigyaMethod = configurationService.getConfiguration().getString(
-					//								MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
-					//						String fnameGigya = null;
-					//						String lnameGigya = null;
-					//
-					//						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getFirstName()))
-					//						{
-					//							fnameGigya = updateCustomerDetailDto.getFirstName().trim();
-					//						}
-					//						else
-					//						{
-					//
-					//							fnameGigya = MarketplacewebservicesConstants.EMPTY;
-					//						}
-					//						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getLastName()))
-					//						{
-					//							lnameGigya = updateCustomerDetailDto.getLastName().trim();
-					//						}
-					//						else
-					//						{
-					//							lnameGigya = MarketplacewebservicesConstants.EMPTY;
-					//						}
-					//
-					//						gigyaFacade.notifyGigya(updateCustomerDetailDto.getEmailId(), null, fnameGigya, lnameGigya,
-					//								updateCustomerDetailDto.getEmailId().trim(), gigyaMethod);
-					//					}
 				}
 				catch (final DuplicateUidException e)
 				{

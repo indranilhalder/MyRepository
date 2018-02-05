@@ -247,7 +247,7 @@ public class ForgottenPasswordsController extends BaseController
 		boolean validOtpFlag = false;
 		try
 		{
-			validOtpFlag = mobileUserService.validateOtpForRegistration(username, otp, OTPTypeEnum.FORGOT_PASSWORD);
+			validOtpFlag = mobileUserService.validateOtp(username, otp, OTPTypeEnum.FORGOT_PASSWORD);
 			if (validOtpFlag)
 			{
 				resultWsDto.setMessage("OTP verified. Please reset your password");

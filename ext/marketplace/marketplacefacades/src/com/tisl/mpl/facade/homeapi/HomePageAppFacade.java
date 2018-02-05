@@ -3,11 +3,8 @@
  */
 package com.tisl.mpl.facade.homeapi;
 
-import com.tisl.mpl.wsdto.AutomatedBrandProductCarouselDTO;
-import com.tisl.mpl.wsdto.BannersCarouselDTO;
 import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
-import com.tisl.mpl.wsdto.ThemeOffersDTO;
-import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
+import com.tisl.mpl.wsdto.HomepageComponetsDTO;
 
 
 /**
@@ -17,25 +14,12 @@ import com.tisl.mpl.wsdto.VideoProductCaraouselDTO;
 public interface HomePageAppFacade
 {
 
-	public ThemeOffersDTO getThemeOffersComponentDTO(HomepageComponentRequestDTO themeOffersRequestDTO);
 
 	/**
-	 * @param bannerCarouselRequestDTO
+	 * @param homepageComponentRequestDTO
 	 * @return
 	 */
-	public BannersCarouselDTO getBannerProductCarouselDTO(HomepageComponentRequestDTO bannerCarouselRequestDTO);
-
-	/**
-	 * @param videoProductCaraouselRequestDTO
-	 * @return
-	 */
-	public VideoProductCaraouselDTO getVideoProductCarouselDTO(HomepageComponentRequestDTO videoProductCaraouselRequestDTO);
-
-	/**
-	 * @param automatedBrandRequestDTO
-	 * @return
-	 */
-	public AutomatedBrandProductCarouselDTO getautomatedBrandCarouselDTO(HomepageComponentRequestDTO automatedBrandRequestDTO);
+	public HomepageComponetsDTO gethomepageComponentsDTO(HomepageComponentRequestDTO homepageComponentRequestDTO);
 
 
 }

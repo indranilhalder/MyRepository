@@ -376,7 +376,10 @@
 	<bean id="extendedUserDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ExtendedUserDaoImpl"
 		scope="tenant" />
-
+		
+	<!-- Change for social access token validation -->
+	<bean id="socialLoginValidationService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SocialLoginValidationServiceImpl"/>
 
 
 	<bean id="extendedCustomerEmailResolutionService"

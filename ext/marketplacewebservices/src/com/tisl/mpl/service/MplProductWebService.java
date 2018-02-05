@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.wsdto.GalleryImageData;
+import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 
@@ -33,4 +34,12 @@ public interface MplProductWebService
 	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
 			CMSItemNotFoundException;
 
+	//added for pdp new ui start
+	/**
+	 * @param productCode
+	 * @param baseUrl
+	 * @param channel
+	 * @return
+	 */
+	public MplNewProductDetailMobileWsData getProductdetails(String productCode, String baseUrl, String channel);
 }

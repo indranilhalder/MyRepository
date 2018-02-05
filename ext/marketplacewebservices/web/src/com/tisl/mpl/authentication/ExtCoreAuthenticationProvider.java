@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.httpclient.auth.AuthChallengeException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.SocialLoginValidationService;
+
 
 
 //Mobile Registration
@@ -78,6 +81,9 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 	@Autowired
 	private ExtendedUserService extUserService;
 
+	@Autowired
+	SocialLoginValidationService socialLoginValidationService;
+
 	/*
 	 * To authenticate users
 	 *
@@ -93,6 +99,9 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			boolean isSocialMedia = false;
 			String isSocialMediaInput = null;
 
+			final String test = null;
+			String testingParamValue = null;
+
 			if (null != authentication.getDetails())
 			{
 				final HashMap<String, String> authDetails = (HashMap<String, String>) authentication.getDetails();
@@ -100,9 +109,14 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 				{
 					for (final Map.Entry<String, String> entry : authDetails.entrySet())
 					{
+
 						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("isSocialMedia") && null != entry.getValue())
 						{
 							isSocialMediaInput = entry.getValue();
+						}
+						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("testing_param") && null != entry.getValue())
+						{
+							testingParamValue = entry.getValue();
 						}
 					}
 				}
@@ -111,7 +125,24 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			if (null != isSocialMediaInput && isSocialMediaInput.equalsIgnoreCase("Y"))
 			{
 				isSocialMedia = true;
+				System.out.println("===================================================" + testingParamValue);
+				try
+				{
+					//code for social access token validation
+					if (testingParamValue.equalsIgnoreCase("Y"))
+					{
+						System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>" + socialLoginValidationService.test());
+						throw new AuthChallengeException();
+					}
+				}
+				catch (final AuthChallengeException authChallengeException)
+				{
+					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
+					throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+							"Social token validation failed"), authChallengeException);
+				}
 			}
+
 
 			UserDetails userDetails = null;
 
@@ -121,16 +152,15 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			}
 			catch (final UsernameNotFoundException notFound)
 			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-"+userName);
-				throw new BadCredentialsException(
-						messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Email id does not exist"), notFound);
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
+				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+						"Email id does not exist"), notFound);
 			}
 			catch (final DataIntegrityViolationException dataIntegrity)
 			{
-				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-"+userName);
-				throw new BadCredentialsException(
-						messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Email id does not exist"),
-						dataIntegrity);
+				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + "Authentication failed for User-" + userName);
+				throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+						"Email id does not exist"), dataIntegrity);
 			}
 			getPreAuthenticationChecks().check(userDetails);
 			final UserModel userModel = extUserService.getUserForUIDAccessToken(StringUtils.lowerCase(userName));
@@ -166,23 +196,23 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 				{
 					if (!user.checkPassword((String) credential))
 					{
-						throw new BadCredentialsException(
-								messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Bad credentials"));
+						throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+								"Bad credentials"));
 					}
 				}
 				else if (credential instanceof LoginToken)
 				{
 					if (!user.checkPassword((LoginToken) credential))
 					{
-						throw new BadCredentialsException(
-								messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Bad credentials"));
+						throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+								"Bad credentials"));
 					}
 				}
 
 				else
 				{
-					throw new BadCredentialsException(
-							messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED, "Bad credentials"));
+					throw new BadCredentialsException(messages.getMessage(MarketplacewebservicesConstants.COREAUTH_BADCRED,
+							"Bad credentials"));
 				}
 				//Social Media Registration check Mobile web service ends
 			}
@@ -302,8 +332,8 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			{
 				LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS
 						+ messages.getMessage("CoreAuthenticationProvider.credentialsExpired", "User credentials have expired"));
-				throw new CredentialsExpiredException(
-						messages.getMessage("CoreAuthenticationProvider.credentialsExpired", "User credentials have expired"), user);
+				throw new CredentialsExpiredException(messages.getMessage("CoreAuthenticationProvider.credentialsExpired",
+						"User credentials have expired"), user);
 			}
 		}
 	}

@@ -25,8 +25,8 @@ public interface RegisterCustomerFacade
 	 * @param data
 	 * @return
 	 */
-	ExtRegisterData registerSocial(ExtRegisterData registerData, final boolean isMobile, final int platformNumber) throws UnknownIdentifierException,
-			IllegalArgumentException; //SDI-639
+	ExtRegisterData registerSocial(ExtRegisterData registerData, final boolean isMobile, final int platformNumber)
+			throws UnknownIdentifierException, IllegalArgumentException; //SDI-639
 
 	void forgottenPassword(final String uid);
 
@@ -41,6 +41,12 @@ public interface RegisterCustomerFacade
 	 * @param data
 	 * @return
 	 */
-	boolean checkUniquenessOfEmail(ExtRegisterData data);
+	public boolean checkUniquenessOfEmail(ExtRegisterData data);
+
+	//NU-30
+	public boolean checkMobileNumberUnique(ExtRegisterData data);
+
+	//NU-30
+	public boolean checkEmailIdUnique(ExtRegisterData data);
 
 }

@@ -61,13 +61,13 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 		}
 		else
 		{
-			if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
-			{
-				parameters.put(CustomerModel.MOBILENUMBER, uid);
-			}
-			else if (uid.contains("@"))
+			if (uid.contains("@"))
 			{
 				parameters.put(CustomerModel.ORIGINALUID, uid);
+			}
+			else if (uid.length() == 10 && (uid.startsWith("9") || uid.startsWith("8") || uid.startsWith("7")))
+			{
+				parameters.put(CustomerModel.MOBILENUMBER, uid);
 			}
 
 		}

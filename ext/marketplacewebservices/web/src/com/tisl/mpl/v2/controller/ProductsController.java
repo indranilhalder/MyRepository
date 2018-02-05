@@ -120,6 +120,7 @@ import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
+import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
@@ -1605,6 +1606,101 @@ public class ProductsController extends BaseController
 		}
 		return productDTOList;
 	}
+
+
+
+	@RequestMapping(value = "/{productCode}", params = "isPwa", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
+	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	@ResponseBody
+	public MplNewProductDetailMobileWsData getProduct(@PathVariable String productCode,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,
+			@RequestParam(required = false) final String channel) throws MalformedURLException
+	{
+		MplNewProductDetailMobileWsData product = new MplNewProductDetailMobileWsData();
+
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+		}
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("getProductByCode: code=" + sanitize(productCode) + " | options=" + PRODUCT_OPTIONS);
+		}
+
+		try
+		{
+			URL requestUrl = null;
+			if (null != request && null != request.getRequestURL())
+			{
+				requestUrl = new URL(request.getRequestURL().toString());
+			}
+			String portString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+			String baseUrl = MarketplacecommerceservicesConstants.EMPTYSPACE;
+			if (null != requestUrl)
+			{
+				if (0 != requestUrl.getPort())
+				{
+					portString = requestUrl.getPort() == -1 ? MarketplacecommerceservicesConstants.EMPTYSPACE
+							: MarketplacecommerceservicesConstants.COLON + requestUrl.getPort();
+				}
+				if (null != requestUrl.getHost() && null != requestUrl.getProtocol())
+				{
+					baseUrl = requestUrl.getProtocol() + MarketplacecommerceservicesConstants.COLON_SLASH + requestUrl.getHost()
+							+ portString + MarketplacecommerceservicesConstants.EMPTYSPACE;
+					//+ MarketplacewebservicesConstants.FORGOTPASSWORD_URL;
+				}
+			}
+
+			product = mplProductWebService.getProductdetails(productCode, baseUrl, channel);
+			final ProductAPlusWsData aPlusProductData = mplProductWebService.getAPluscontentForProductCode(productCode);
+			if (null != aPlusProductData)
+			{
+				product.setAPlusContent(aPlusProductData);
+			}
+			product.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG.toUpperCase());
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				product.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
+			}
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			if (null != e.getErrorMessage())
+			{
+				product.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				product.setErrorCode(e.getErrorCode());
+			}
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			product.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			product.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			product.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+
+		return product;
+	}
+
+
 
 	/**
 	 * @return the messageSource

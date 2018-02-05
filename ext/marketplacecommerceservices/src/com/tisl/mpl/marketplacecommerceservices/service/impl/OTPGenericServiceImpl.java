@@ -613,7 +613,6 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	{
 		OTPModel otpModel = null;
 		final OTPResponseData otpResponse = new OTPResponseData();
-
 		if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
 		{
 			otpModel = otpDao.fetchLatestOTP(userIdOrEmail, mobileNo, OTPType);
@@ -625,7 +624,6 @@ public class OTPGenericServiceImpl implements OTPGenericService
 			otpResponse.setInvalidErrorMessage(VALID);
 			return otpResponse;
 		}
-
 		if (null != otpModel)
 		{
 			if (otpModel.getOTPNumber().equals(enteredOTPNumber))
