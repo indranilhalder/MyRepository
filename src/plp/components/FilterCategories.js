@@ -16,7 +16,7 @@ export default class FilterCategories extends React.Component {
       <div className={styles.base}>
         {data.map((datum, i) => {
           let accumulator = 0;
-          if (datum.values) {
+          if (this.props.selected[i]) {
             this.props.selected[i].forEach(val => {
               if (val !== null) {
                 accumulator++;
