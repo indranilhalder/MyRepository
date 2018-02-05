@@ -13,8 +13,6 @@ export default class FilterCategories extends React.Component {
   render() {
     let data = this.props.data;
     let filterCount = [];
-    console.log("SELECTED");
-    console.log(this.props.selected);
     if (this.props.selected) {
       filterCount = this.props.selected.map(val => {
         let summer = 0;
@@ -23,7 +21,6 @@ export default class FilterCategories extends React.Component {
             summer++;
           }
         });
-
         return summer;
       });
     }
