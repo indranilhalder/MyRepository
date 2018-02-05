@@ -42,15 +42,6 @@
 				<c:when test="${walletForm.mobileNoFlag}"><c:set var="qcMobileDisableStatus" value="false"></c:set></c:when>
 				<c:otherwise><c:set var="qcMobileDisableStatus" value="true"></c:set></c:otherwise>
 			</c:choose>
-			<%-- <c:if test="${not empty walletForm.qcVerifyFirstName}">
-			<c:set var="qcFnameDisable" value="disabled">
-			</c:if> --%>
-			<%-- <c:if test="${not empty walletForm.qcVerifyLastName}">
-			<c:set var="qcLnameDisable" value="disabled">
-			</c:if>
-			<c:if test="${not empty walletForm.qcVerifyMobileNo}">
-			<c:set var="qcMobileNoDisable" value="disabled">
-			</c:if> --%>
 			<div class="row text-center egv-otp-container">
 				<div>
 					<span class="h4"><strong>Please enter below information to verify your mobile number.</strong></span>
