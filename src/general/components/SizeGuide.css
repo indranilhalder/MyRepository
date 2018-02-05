@@ -1,0 +1,43 @@
+.base {
+  width: 100%;
+  height: 178px;
+  background-color: #f8f8f8;
+}
+.holder {
+  width: 100%;
+  height: 50px;
+  position: relative;
+}
+
+.textBox {
+  height: auto;
+  color: #212121;
+  font-size: 14px;
+  line-height: 50px;
+  font-family: semibold;
+  text-align: center;
+}
+.sizeBox {
+  width: 100%;
+  height: auto;
+  color: #212121;
+  font-size: 14px;
+  line-height: 30px;
+  font-family: semibold;
+  text-align: left;
+  padding-left: 15px;
+}
+.sizeText {
+  width: 70%;
+  height: auto;
+  float: left;
+  font-size: 14px;
+  font-family: regular;
+}
+.sizeNumber {
+  width: 30%;
+  height: auto;
+  float: right;
+  font-size: 14px;
+  font-family: regular;
+}
