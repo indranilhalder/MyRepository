@@ -43,6 +43,7 @@ export default class Filter extends React.Component {
   }
 
   render() {
+    const fitlerDatum = this.props.filterData[this.state.pageNumber];
     return (
       <div className={styles.base}>
         <div className={styles.tabs}>
@@ -54,35 +55,28 @@ export default class Filter extends React.Component {
           />
         </div>
         <div className={styles.options}>
-          {this.props.filterData.map((val, i) => {
-            if (this.state.pageNumber === i) {
-              return (
-                <FilterWithMultiSelect
-                  selected={
-                    this.state.selected[i] ? this.state.selected[i] : [null]
-                  }
-                  key={i}
-                  onSelect={val => {
-                    this.handleSelect(val, i);
-                  }}
-                >
-                  {val.values &&
-                    val.values.map((value, i) => {
-                      return (
-                        <FilterSelect
-                          label={value.name}
-                          value={value.value}
-                          count={value.count}
-                          key={i}
-                        />
-                      );
-                    })}
-                </FilterWithMultiSelect>
-              );
-            } else {
-              return null;
+          <FilterWithMultiSelect
+            selected={
+              this.state.selected[this.state.pageNumber]
+                ? this.state.selected[this.state.pageNumber]
+                : [null]
             }
-          })}
+            onSelect={val => {
+              this.handleSelect(val, this.state.pageNumber);
+            }}
+          >
+            {fitlerDatum.values &&
+              fitlerDatum.values.map((value, i) => {
+                return (
+                  <FilterSelect
+                    label={value.name}
+                    value={value.value}
+                    count={value.count}
+                    key={i}
+                  />
+                );
+              })}
+          </FilterWithMultiSelect>
         </div>
         <div className={styles.footer}>
           <div className={styles.buttonHolder}>
