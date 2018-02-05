@@ -11,7 +11,8 @@ const user = (
     status: null,
     error: null,
     loading: false,
-    message: null
+    message: null,
+    isLoggedIn: false
   },
   action
 ) => {
@@ -26,13 +27,15 @@ const user = (
       return Object.assign({}, state, {
         status: action.status,
         user: action.user,
-        loading: false
+        loading: false,
+        isLoggedIn: true
       });
     case userActions.LOGIN_USER_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        loading: false,
+        isLoggedIn: false
       });
 
     case userActions.SIGN_UP_USER_REQUEST:
@@ -63,14 +66,16 @@ const user = (
       return Object.assign({}, state, {
         status: action.status,
         user: action.user,
-        loading: false
+        loading: false,
+        isLoggedIn: true
       });
 
     case userActions.OTP_VERIFICATION_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        loading: false,
+        isLoggedIn: false
       });
 
     case userActions.FORGOT_PASSWORD_REQUEST:

@@ -21,8 +21,7 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user.status === SUCCESS) {
-      this.props.homeFeed();
+    if (this.props.user.isLoggedIn === true) {
       this.props.history.push("/home");
     }
   }

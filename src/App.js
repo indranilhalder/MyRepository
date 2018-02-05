@@ -34,6 +34,10 @@ const auth = {
 
 class App extends Component {
   componentWillMount() {
+    this.getAccessToken();
+  }
+
+  getAccessToken = () => {
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
@@ -46,14 +50,6 @@ class App extends Component {
     if (customerCookie) {
       auth.isAuthenticated = true;
     }
-  }
-
-  getAuthToken = () => {
-    let customerCookie = Cookie.getCookie("sessionObjectCustomer");
-    if (customerCookie) {
-      return true;
-    }
-    return false;
   };
 
   render() {
