@@ -492,6 +492,7 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
 
+
 	@Resource
 	private RegisterCustomerFacade registerCustomerFacade;
 	//Sonar Fix
@@ -536,7 +537,7 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private HttpServletRequest request;
-
+	@Autowired
 	private OTPGenericService otpGenericService;
 	@Resource
 	private SendSMSFacade sendSMSFacade;
@@ -11281,7 +11282,8 @@ public class UsersController extends BaseCommerceController
 			//CAR Project performance issue fixed
 
 			//TO DO REGEX MATCH
-			customerModel = mplPaymentWebFacade.getCustomer(userId);
+			customerModel = extUserService.getUserForUid(userId);
+
 			if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
 			{
 				//
