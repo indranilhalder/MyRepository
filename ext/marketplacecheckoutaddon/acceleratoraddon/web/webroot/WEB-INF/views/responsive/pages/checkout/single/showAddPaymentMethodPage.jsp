@@ -228,14 +228,14 @@
 							<div class="giftCheckoutInnerCols1">
 								<label for="cashOtherThanGiftCard"><p>
 										<spring:theme code="text.cliq.cash.payment.cash.label" />
-									</p>&#8377; <span id="qcCashId"><strong>0</strong></span></label>
+									</p>&#8377;<span id="qcCashId"><strong>0</strong></span></label>
 							</div>
 						</div>
 						<div class="giftCheckoutSectionSize col-xs-3">
 							<div class="giftCheckoutInnerCols2">
 								<label for="giftCardAmt"><p>
 										<spring:theme code="text.cliq.cash.payment.card.label" />
-									</p>&#8377; <span id="qcGiftCardId"><strong>0</strong></span></label>
+									</p>&#8377;<span id="qcGiftCardId"><strong>0</strong></span></label>
 							</div>
 						</div>
 						<div class="giftCheckoutSectionSize col-xs-3">

@@ -78447,7 +78447,7 @@ span#offer_section_responsive_error_msg {
 	
 	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
 	.cliqTotalBalance p {padding: 2px;}
-	.cliqTotalBalanceLabel {font-size: 10px;}
+	.cliqTotalBalanceLabel {font-size: 12px;}
 	.giftCheckoutContainer input[type="checkbox"] {display: block;}
 	
 	.giftCheckoutInnerCols4 input[type="checkbox"]+label:before {display: none;}

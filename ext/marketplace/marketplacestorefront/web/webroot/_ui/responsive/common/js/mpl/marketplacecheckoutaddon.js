@@ -7067,8 +7067,8 @@ function WalletDetailAjax(){
 		type : "GET",
 		cache : false,
 		success : function(data) {
-
-			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
+			alert(data.totalWalletAmt);
+			$(".cliqTotalBalanceLabel").html("&#8377;"+data.totalWalletAmt);
 			$("#qcCashId").html(data.totalCash);
 			$("#qcGiftCardId").html(data.totalEgvBalance);
 			$("#qcPointsId").html(data.walletPoint);
