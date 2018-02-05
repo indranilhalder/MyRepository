@@ -6697,7 +6697,7 @@ function useWalletForPaymentAjax(){
 					$('#convChargeFieldId').before(divText);
 					
 					document.getElementById('totalWithConvField').innerHTML ="";
-					document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
+					document.getElementById('totalWithConvField').innerHTML =  "&#8377;"+data.juspayAmt;
 					
 					if(!value.checked){
 						$("#addCliqCashId").text("");
@@ -6710,7 +6710,7 @@ function useWalletForPaymentAjax(){
 				
 				$(".cliqCashInfoSection").remove();
 				document.getElementById('totalWithConvField').innerHTML ="";
-				document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
+				document.getElementById('totalWithConvField').innerHTML =  "&#8377;"+data.juspayAmt;
 				
 				$("#unUseGiftBtnText").hide();
 				$("#useGiftBtnText").show();
