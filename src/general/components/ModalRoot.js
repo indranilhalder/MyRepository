@@ -10,6 +10,14 @@ export default class ModalRoot extends React.Component {
     super(props);
     this.el = document.createElement("div");
   }
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.user.isLoggedIn === true &&
+      nextProps.user.nextProps.error !== ""
+    ) {
+      this.props.history.push("/home");
+    }
+  }
 
   componentDidMount() {
     modalRoot.appendChild(this.el);

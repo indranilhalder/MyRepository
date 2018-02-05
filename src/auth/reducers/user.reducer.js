@@ -59,7 +59,8 @@ const user = (
     case userActions.OTP_VERIFICATION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        isLoggedIn: false
       });
 
     case userActions.OTP_VERIFICATION_SUCCESS:
@@ -253,21 +254,24 @@ const user = (
     case userActions.SOCIAL_MEDIA_LOGIN_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        isLoggedIn: false
       });
 
     case userActions.SOCIAL_MEDIA_LOGIN_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         loading: false,
-        user: action.user
+        user: action.user,
+        isLoggedIn: true
       });
 
     case userActions.SOCIAL_MEDIA_LOGIN_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         loading: false,
-        error: action.error
+        error: action.error,
+        isLoggedIn: false
       });
 
     case userActions.REFRESH_TOKEN_REQUEST:

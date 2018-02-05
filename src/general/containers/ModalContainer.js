@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     modalType: state.modal.modalType,
     ownProps: state.modal.ownProps,
-    modalStatus: state.modal.modalDisplayed
+    modalStatus: state.modal.modalDisplayed,
+    user: state.user
   };
 };
 
