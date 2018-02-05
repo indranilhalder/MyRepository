@@ -2453,6 +2453,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
-	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Peek-a-boo {0}! One-time password Create Wallet{1}. Please feel free to call us at {2} in case of any queries.";
+	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "One-time password for activating your CLiQ Cash wallet is {1}. Please do not share with anyone. Feel free to call us at {2} in case of any queries.";
 
 }
