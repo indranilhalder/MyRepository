@@ -30,21 +30,19 @@ export default class Filter extends React.Component {
     }
     this.setState({ selected: [[null]] });
   };
-  onApply = () => {
+  onApply(val) {
     if (this.props.onApply) {
-      this.props.onApply();
+      this.props.onApply(val);
     }
-  };
+  }
   handleSelect(val, index) {
     let selected = this.state.selected;
     selected[index] = val;
 
     this.setState({ selected });
-    console.log(val);
-    console.log(index);
   }
+
   render() {
-    console.log(this.state.selected);
     return (
       <div className={styles.base}>
         <div className={styles.tabs}>
@@ -60,7 +58,9 @@ export default class Filter extends React.Component {
             if (this.state.pageNumber === i) {
               return (
                 <FilterWithMultiSelect
-                  selected={this.state.selected[i]}
+                  selected={
+                    this.state.selected[i] ? this.state.selected[i] : [null]
+                  }
                   key={i}
                   onSelect={val => {
                     this.handleSelect(val, i);
@@ -91,7 +91,10 @@ export default class Filter extends React.Component {
             </div>
           </div>
           <div className={styles.buttonHolder}>
-            <div className={styles.redButton} onClick={this.onApply}>
+            <div
+              className={styles.redButton}
+              onClick={() => this.onApply(this.state.selected)}
+            >
               Apply
             </div>
           </div>

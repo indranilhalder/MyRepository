@@ -28,6 +28,11 @@ export default function withMultiSelect(Component, ownProps) {
         this.props.onApply(this.state.selected);
       }
     }
+    componentWillReceiveProps(props) {
+      if (props.selected !== this.props.selected) {
+        this.setState({ selected: props.selected });
+      }
+    }
     render() {
       const children = this.props.children;
       const childrenWithProps = React.Children.map(children, (child, i) => {

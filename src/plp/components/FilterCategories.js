@@ -15,11 +15,19 @@ export default class FilterCategories extends React.Component {
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {
+          let accumulator = 0;
+          if (datum.values) {
+            this.props.selected[i].forEach(val => {
+              if (val !== null) {
+                accumulator++;
+              }
+            });
+          }
           return (
             <FilterTab
               key={i}
               name={datum.name}
-              selectedFilterCount={datum.selectedFilterCount}
+              selectedFilterCount={accumulator}
               onClick={val => this.handleClick(i)}
               selected={this.props.pageNumber === i}
               type={datum.isGlobalFilter ? GLOBAL : ADVANCE}
