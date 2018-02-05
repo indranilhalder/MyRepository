@@ -83,7 +83,7 @@ class Login extends Component {
           />
 
           <div className={styles.forgotButton}>
-            <MediaQuery query="(min-device-width: 1024px)">
+            <MediaQuery query="(min-device-width: 1025px)">
               <Button
                 backgroundColor={"transparent"}
                 label={"Forgot Password?"}
@@ -97,7 +97,7 @@ class Login extends Component {
               />
             </MediaQuery>
 
-            <MediaQuery query="(max-device-width:1023px)">
+            <MediaQuery query="(max-device-width:1024px)">
               <div className={styles.forgotButtonPosition}>
                 <Button
                   height={25}

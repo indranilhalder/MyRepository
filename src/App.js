@@ -4,6 +4,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
+
 import * as Cookie from "./lib/Cookie";
 import {
   GLOBAL_ACCESS_TOKEN,
@@ -31,6 +32,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const auth = {
   isAuthenticated: false
 };
+import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
 
 class App extends Component {
   componentWillMount() {
@@ -66,6 +68,8 @@ class App extends Component {
             path="/"
             render={routeProps => <Auth {...routeProps} {...this.props} />}
           />
+          <Route path="/productListings" component={ProductListingsContainer} />
+
         </Switch>
         <ModalContainer />
       </div>

@@ -80,7 +80,7 @@ class SignUp extends Component {
         </div>
         <div className={styles.buttonSignup}>
           <div className={styles.buttonHolder}>
-            <MediaQuery query="(min-device-width: 1024px)">
+            <MediaQuery query="(min-device-width: 1025px)">
               <Button
                 label={"Sign Up"}
                 width={200}
@@ -97,7 +97,7 @@ class SignUp extends Component {
                 }}
               />
             </MediaQuery>
-            <MediaQuery query="(max-device-width:1023px)">
+            <MediaQuery query="(max-device-width:1024px)">
               <Button
                 backgroundColor={"#FF1744"}
                 label={"Sign Up"}

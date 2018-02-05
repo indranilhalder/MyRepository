@@ -30,30 +30,32 @@ export default class SingleQuestion extends React.Component {
     }
 
     return (
-      <Carousel
-        headerComponent={
-          <div className={styles.header}>
-            {this.props.feedComponentData.data.title}
-          </div>
-        }
-        elementWidthDesktop={20}
-        elementWidthMobile={30}
-      >
-        {singleQuestionData &&
-          singleQuestionData.map((datum, i) => {
-            return (
-              <SingleSelect
-                key={i}
-                text={datum.title}
-                value={datum.optionId}
-                image={datum.imageURL}
-                onClick={val => {
-                  this.handleClick(val);
-                }}
-              />
-            );
-          })}
-      </Carousel>
+      <div className={styles.base}>
+        <Carousel
+          headerComponent={
+            <div className={styles.header}>
+              {this.props.feedComponentData.data.title}
+            </div>
+          }
+          elementWidthDesktop={20}
+          elementWidthMobile={30}
+        >
+          {singleQuestionData &&
+            singleQuestionData.map((datum, i) => {
+              return (
+                <SingleSelect
+                  key={i}
+                  text={datum.title}
+                  value={datum.optionId}
+                  image={datum.imageURL}
+                  onClick={val => {
+                    this.handleClick(val);
+                  }}
+                />
+              );
+            })}
+        </Carousel>
+      </div>
     );
   }
 }

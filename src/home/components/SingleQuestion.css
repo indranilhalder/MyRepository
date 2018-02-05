@@ -1,3 +1,9 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px 0px 25px 0px;
+  background-color: #ffffff;
+}
 .header {
   width: 100%;
   font-size: 14px;
