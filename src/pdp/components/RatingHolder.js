@@ -4,16 +4,16 @@ import HorizontalRating from "./HorizontalRating.js";
 import PropTypes from "prop-types";
 export default class RatingHolder extends React.Component {
   render() {
-    let calculateWidth = this.props.rattingData
+    let calculateWidth = this.props.ratingData
       .map(function(item) {
         return item.score;
       })
       .reduce(function(a, b) {
         return a + b;
-      }, 0);
+      });
     return (
       <div className={styles.base}>
-        {this.props.rattingData.map((data, i) => {
+        {this.props.ratingData.map((data, i) => {
           return (
             <HorizontalRating
               score={data.score}
