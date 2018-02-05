@@ -6742,6 +6742,10 @@ function useWalletForPaymentAjax(){
 
 				ACC.singlePageCheckout.releasePromoVoucher(data.responseJSON.cartCouponCode);
 		  }
+			if(!value.checked && !data.responseJSON.disableJsMode){
+				$("#juspayconnErrorDiv").css("display","none");
+				$("#offer_section_responsive_error_msgDiv").css("display","none");
+			}
 		}
 	});
 }

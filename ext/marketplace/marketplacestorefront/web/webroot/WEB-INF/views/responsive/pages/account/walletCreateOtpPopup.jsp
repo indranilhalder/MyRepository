@@ -55,7 +55,7 @@
 								</div>
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
-										<form:input path="qcVerifyFirstName" class="giftCard_input" id="otpFirstName" disabled="${qcFnDisableStatus}"
+										<form:input path="qcVerifyFirstName" class="giftCard_input" id="otpFirstName" readonly="${qcFnDisableStatus}"
 									value="${walletForm.qcVerifyFirstName}" placeholder="Enter First Name"
 									maxlength="140" />
 									<div class="input-group-btn">
@@ -72,7 +72,7 @@
 								</div>
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
-										<form:input path="qcVerifyLastName" id="otpLastName" class="giftCard_input" disabled="${qcLnDisableStatus}"
+										<form:input path="qcVerifyLastName" id="otpLastName" class="giftCard_input" readonly="${qcLnDisableStatus}"
 									value="${walletForm.qcVerifyLastName}" placeholder="Enter Last Name" 
 									maxlength="140" />
 									<div class="input-group-btn">
@@ -89,7 +89,7 @@
 								</div>
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
-										<form:input path="qcVerifyMobileNo" class="giftCard_input" id="otpPhonenumber" disabled="${qcMobileDisableStatus}"
+										<form:input path="qcVerifyMobileNo" class="giftCard_input" id="otpPhonenumber" readonly="${qcMobileDisableStatus}"
 									value="${walletForm.qcVerifyMobileNo}" placeholder="Mobile Number"
 									maxlength="10" />
 									<div class="input-group-btn">

@@ -793,7 +793,7 @@ function createWalletOTP(){
 
 function editOtpField(fieldId) {
 	var value = document.getElementById(fieldId);
-	value.disabled = false;
+	value.readOnly = false;
 	value.focus();
 }
 

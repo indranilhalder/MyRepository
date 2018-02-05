@@ -3538,12 +3538,16 @@ ACC.singlePageCheckout = {
 	}
 		else {
 			if(ACC.singlePageCheckout.getIsResponsive()){
-			$("#offer_section_responsive_error_msg").html("!Oops, Bank Promotion cant apply with CliqCash Only as Payment mode.");
-			$("#offer_section_responsive_error_msgDiv").css("display","block");
-		} else {
-			$("#juspayErrorMsg").html("!Oops, Bank Promotion cant apply with CliqCash Only as Payment mode.");
-			$("#juspayconnErrorDiv").css("display","block");
-		}
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+	 			$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
+				$("#offer_section_responsive_error_msg").html("!Oops, Bank Promotion cant apply with CliqCash Only as Payment mode.");
+				$("#offer_section_responsive_error_msgDiv").css("display","block");
+			} else {
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+	 			$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
+				$("#juspayErrorMsg").html("!Oops, Bank Promotion cant apply with CliqCash Only as Payment mode.");
+				$("#juspayconnErrorDiv").css("display","block");
+			}
 		}
 		
 	},
