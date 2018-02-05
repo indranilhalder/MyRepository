@@ -4,9 +4,11 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.brand;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.core.PK;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 
@@ -37,5 +39,6 @@ public interface BrandDao
 
 	public List<PriorityBrandsModel> priorityBrands(final String categoryCode);
 
-
+	//added for pdp new ui start
+	public BrandModel brandInfoPwa(final PK pk);
 }
