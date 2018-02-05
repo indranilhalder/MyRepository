@@ -5,12 +5,10 @@ import Button from "../../general/components/Button";
 import Carousel from "../../general/components/Carousel";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
-
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class OfferWidget extends React.Component {
   handleClick = () => {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
+    this.props.history.push(PRODUCT_LISTINGS);
   };
   render() {
     const data = this.props.feedComponentData.data.items
