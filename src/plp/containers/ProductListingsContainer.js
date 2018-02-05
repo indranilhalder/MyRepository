@@ -1,5 +1,8 @@
 import { connect } from "react-redux";
-import { getProductListings } from "../actions/plp.actions";
+import {
+  getProductListings,
+  getFilteredProductListings
+} from "../actions/plp.actions";
 import { showModal, SORT } from "../../general/modal.actions";
 import ProductListingsPage from "../components/ProductListingsPage";
 import { withRouter } from "react-router-dom";
@@ -11,6 +14,9 @@ const mapDispatchToProps = dispatch => {
     },
     showSort: () => {
       dispatch(showModal(SORT));
+    },
+    onApply: val => {
+      dispatch(getFilteredProductListings(val));
     }
   };
 };

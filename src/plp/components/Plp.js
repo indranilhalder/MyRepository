@@ -14,6 +14,12 @@ export default class Plp extends React.Component {
   toggleFilter = () => {
     this.setState({ filterVisible: !this.state.filterVisible });
   };
+  onApply = val => {
+    this.toggleFilter();
+    if (this.props.onApply) {
+      this.props.onApply(val);
+    }
+  };
   handleBackClick = () => {
     if (this.props.onBack) {
       this.props.onBack();
@@ -42,7 +48,7 @@ export default class Plp extends React.Component {
           }
         >
           <InformationHeader onClick={this.toggleFilter} text="Refine by" />
-          <Filter filterData={this.props.facetData} />
+          <Filter filterData={this.props.facetData} onApply={this.onApply} />
         </div>
         <div className={styles.footer}>
           <PlpMobileFooter
