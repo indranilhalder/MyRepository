@@ -32,7 +32,7 @@ export default class SelectedFilter extends React.Component {
 
 SelectedFilter.propTypes = {
   name: PropTypes.string,
-  selectedFilterCount: PropTypes.string,
+  selectedFilterCount: PropTypes.number,
   type: PropTypes.oneOf(["advance", "global"]),
   selected: PropTypes.bool,
   onClick: PropTypes.func

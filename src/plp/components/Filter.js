@@ -9,7 +9,16 @@ export default class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageNumber: 0
+      pageNumber: 0,
+      selected: this.props.filterData.map(val => {
+        return val.values.map(v => {
+          if (v.selected) {
+            return v.value;
+          } else {
+            return null;
+          }
+        });
+      })
     };
   }
   switchPage = val => {
@@ -19,18 +28,29 @@ export default class Filter extends React.Component {
     if (this.props.onClear) {
       this.props.onClear();
     }
+    this.setState({ selected: [[null]] });
   };
   onApply = () => {
     if (this.props.onApply) {
       this.props.onApply();
     }
   };
+  handleSelect(val, index) {
+    let selected = this.state.selected;
+    selected[index] = val;
+
+    this.setState({ selected });
+    console.log(val);
+    console.log(index);
+  }
   render() {
+    console.log(this.state.selected);
     return (
       <div className={styles.base}>
         <div className={styles.tabs}>
           <FilterCategories
             data={this.props.filterData}
+            selected={this.state.selected}
             pageNumber={this.state.pageNumber}
             onClick={val => this.switchPage(val)}
           />
@@ -40,14 +60,11 @@ export default class Filter extends React.Component {
             if (this.state.pageNumber === i) {
               return (
                 <FilterWithMultiSelect
-                  selected={val.values.map(val => {
-                    if (val.selected) {
-                      return val.value;
-                    } else {
-                      return null;
-                    }
-                  })}
+                  selected={this.state.selected[i]}
                   key={i}
+                  onSelect={val => {
+                    this.handleSelect(val, i);
+                  }}
                 >
                   {val.values &&
                     val.values.map((value, i) => {
