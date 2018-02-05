@@ -2,12 +2,6 @@ import React from "react";
 import styles from "./SizeGuide.css";
 import propTypes from "prop-types";
 export default class SizeGuide extends React.Component {
-  handleClick(val) {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
-  }
-
   render() {
     const data = this.props.data;
     console.log(data);
