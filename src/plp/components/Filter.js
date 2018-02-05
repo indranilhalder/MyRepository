@@ -36,22 +36,36 @@ export default class Filter extends React.Component {
           />
         </div>
         <div className={styles.options}>
-          <FilterWithMultiSelect>
-            {this.props.filterData[this.state.pageNumber].values &&
-              this.props.filterData[this.state.pageNumber].values.map(
-                (value, i) => {
-                  return (
-                    <FilterSelect
-                      label={value.name}
-                      value={value.value}
-                      count={value.count}
-                      selected={value.selected}
-                      key={i}
-                    />
-                  );
-                }
-              )}
-          </FilterWithMultiSelect>
+          {this.props.filterData.map((val, i) => {
+            if (this.state.pageNumber === i) {
+              return (
+                <FilterWithMultiSelect
+                  selected={val.values.map(val => {
+                    if (val.selected) {
+                      return val.value;
+                    } else {
+                      return null;
+                    }
+                  })}
+                  key={i}
+                >
+                  {val.values &&
+                    val.values.map((value, i) => {
+                      return (
+                        <FilterSelect
+                          label={value.name}
+                          value={value.value}
+                          count={value.count}
+                          key={i}
+                        />
+                      );
+                    })}
+                </FilterWithMultiSelect>
+              );
+            } else {
+              return null;
+            }
+          })}
         </div>
         <div className={styles.footer}>
           <div className={styles.buttonHolder}>

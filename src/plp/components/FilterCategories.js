@@ -34,7 +34,7 @@ export default class FilterCategories extends React.Component {
 FilterCategories.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string,
-    selectedFilterCount: PropTypes.number,
+    selectedFilterCount: PropTypes.string,
     isGlobalFilter: PropTypes.bool
   }),
   pageNumber: PropTypes.number,
