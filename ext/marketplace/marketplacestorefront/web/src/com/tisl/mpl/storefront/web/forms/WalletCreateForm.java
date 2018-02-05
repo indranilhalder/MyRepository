@@ -9,6 +9,9 @@ package com.tisl.mpl.storefront.web.forms;
  */
 public class WalletCreateForm
 {
+	private boolean firstNameFlag;
+	private boolean lastNameFlag;
+	private boolean mobileNoFlag;
 	private String qcVerifyFirstName;
 	private String qcVerifyLastName;
 	private String qcVerifyMobileNo;
@@ -69,5 +72,47 @@ public class WalletCreateForm
 	public void setOtpNumber(String otpNumber)
 	{
 		this.otpNumber = otpNumber;
+	}
+	/**
+	 * @return the firstNameFlag
+	 */
+	public boolean isFirstNameFlag()
+	{
+		return firstNameFlag;
+	}
+	/**
+	 * @param firstNameFlag the firstNameFlag to set
+	 */
+	public void setFirstNameFlag(boolean firstNameFlag)
+	{
+		this.firstNameFlag = firstNameFlag;
+	}
+	/**
+	 * @return the lastNameFlag
+	 */
+	public boolean isLastNameFlag()
+	{
+		return lastNameFlag;
+	}
+	/**
+	 * @param lastNameFlag the lastNameFlag to set
+	 */
+	public void setLastNameFlag(boolean lastNameFlag)
+	{
+		this.lastNameFlag = lastNameFlag;
+	}
+	/**
+	 * @return the mobileNoFlag
+	 */
+	public boolean isMobileNoFlag()
+	{
+		return mobileNoFlag;
+	}
+	/**
+	 * @param mobileNoFlag the mobileNoFlag to set
+	 */
+	public void setMobileNoFlag(boolean mobileNoFlag)
+	{
+		this.mobileNoFlag = mobileNoFlag;
 	}
 }

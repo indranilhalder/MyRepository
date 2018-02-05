@@ -31,16 +31,16 @@
 			action="${request.contextPath}/wallet/validateWalletOTP"
 			commandName="walletForm">
 			<c:choose>
-				<c:when test="${empty walletForm.qcVerifyFirstName && '' eq walletForm.qcVerifyFirstName}"><c:set var="qcFnDisableStatus" value="false"></c:set></c:when>
+				<c:when test="${walletForm.firstNameFlag}"><c:set var="qcFnDisableStatus" value="false"></c:set></c:when>
 				<c:otherwise><c:set var="qcFnDisableStatus" value="true"></c:set></c:otherwise>
 			</c:choose>
 			<c:choose>
-				<c:when test="${empty walletForm.qcVerifyLastName && '' eq walletForm.qcVerifyLastName}"><c:set var="qcLnDisableStatus" value="false"></c:set></c:when>
+				<c:when test="${walletForm.lastNameFlag}"><c:set var="qcLnDisableStatus" value="false"></c:set></c:when>
 				<c:otherwise><c:set var="qcLnDisableStatus" value="true"></c:set></c:otherwise>
 			</c:choose>
 			<c:choose>
-				<c:when test="${empty walletForm.qcVerifyMobileNo && '' eq walletForm.qcVerifyMobileNo}"><c:set var="qcMobileDisableStatus" value="false"></c:set></c:when>
-				<c:otherwise><c:set var="qcLnDisableStatus" value="true"></c:set></c:otherwise>
+				<c:when test="${walletForm.mobileNoFlag}"><c:set var="qcMobileDisableStatus" value="false"></c:set></c:when>
+				<c:otherwise><c:set var="qcMobileDisableStatus" value="true"></c:set></c:otherwise>
 			</c:choose>
 			<%-- <c:if test="${not empty walletForm.qcVerifyFirstName}">
 			<c:set var="qcFnameDisable" value="disabled">
