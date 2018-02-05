@@ -6,8 +6,9 @@
 }
 .holder {
   width: 100%;
-  height: 50px;
+  height: auto;
   position: relative;
+  float: left;
 }
 
 .textBox {
@@ -17,6 +18,7 @@
   line-height: 50px;
   font-family: semibold;
   text-align: center;
+  float: left;
 }
 .sizeBox {
   width: 100%;
