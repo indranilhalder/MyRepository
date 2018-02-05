@@ -129,8 +129,6 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer, String otp)
 	{
 		EgvWalletCreateResponceWsDTO responce = new EgvWalletCreateResponceWsDTO();
-		/*try
-		{*/
 			if (null != otp && !otp.isEmpty())
 			{
 				boolean customerWalletCreated = false;
@@ -187,21 +185,20 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				}
 				else
 				{
+					if(null != response.getInvalidErrorMessage()) {
+						
+						if(response.getInvalidErrorMessage().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTPEXPIRY)) {
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9217);
+						}else if(response.getInvalidErrorMessage().equalsIgnoreCase(MarketplacecommerceservicesConstants.INVALID_WALLET_OTP)) {
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
+						}
+					}
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
 				}
 			}else {
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
 
 			}
-		//}
-		/*catch (final Exception ex)
-		{
-			{
-				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-				responce.setError(ex.getMessage());
-				LOG.error("Exception occrred while saving mobile number for QC wallet " + ex.getMessage());
-			}
-		}*/
 		return responce;
 	}
 

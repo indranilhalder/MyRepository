@@ -3822,6 +3822,10 @@
 		<property name="isWalletOtpVerified" type="boolean" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO" >		
+		<property name="otpExpiryTime " type="String" />
+	</bean>
+	
 
 	<!-- Added  For Buying Of EGV Functionality End  -->
 	

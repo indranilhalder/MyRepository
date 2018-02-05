@@ -3,22 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.payment.AdapterException;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
-import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
-import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -57,9 +41,26 @@ import com.tisl.mpl.marketplacecommerceservices.service.JuspayWebHookService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplQcPaymentFailService;
 import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
+
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.payment.AdapterException;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 
 
@@ -115,6 +116,9 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+	
+	@Autowired
+	private MplQcPaymentFailService mplQcPaymentFailService;
 
 	private static final String REFUND = "REFUND_SUCCESSFUL";
 	private static final String REFUND_FAIL = "REFUND_UNSUCCESSFUL";
@@ -1163,7 +1167,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						//Logic changed for TPR-629
 						//isParentOrder = checkParentOrderExists(guid);
 						//if (isParentOrder)
-						//final OrderModel orderModel = getParentOrder(guid);
+						final OrderModel orderModel = getParentOrder(guid);
 						final String orderStatus = getOdrStatus(guid);
 
 						if (null == orderStatus)//if (null == orderModel)
@@ -1178,6 +1182,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									//calling refund service where there will be cart only for NB
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											oModel.getOrderStatus().getPaymentMethodType());
+									final String splitInfoMode = orderModel.getSplitModeInfo();
+									if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+									{
+										mplQcPaymentFailService.processQcRefund(orderModel);
+									}
 								}
 								//TISPRO-675
 								else if (StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiBank())
@@ -1186,12 +1195,22 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									//calling refund service where there will be cart only for EMI
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											MarketplacecommerceservicesConstants.EMI);
+									final String splitInfoMode = orderModel.getSplitModeInfo();
+									if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+									{
+										mplQcPaymentFailService.processQcRefund(orderModel);
+									}
 								}
 								else
 								{
 									//calling refund service where there will be cart only for CARD
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											oModel.getOrderStatus().getCardResponse().getCardType());
+									final String splitInfoMode = orderModel.getSplitModeInfo();
+									if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+									{
+										mplQcPaymentFailService.processQcRefund(orderModel);
+									}
 								}
 							}
 							catch (final Exception e)
@@ -1262,6 +1281,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								}
 							}
 
+							final String splitInfoMode = orderModel.getSplitModeInfo();
+							if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+							{
+								mplQcPaymentFailService.processQcRefund(orderModel);
+							}
 							updateWebHookExpired(oModel);
 
 						}
@@ -1890,12 +1914,9 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @return boolean
 	 */
 	//commented for SONAR FIX
-	/*
-	 * private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions { return
-	 * getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
-	 *
-	 * }
-	 */
+	 private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions { return
+			 getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
+	 }
 	/**
 	 * To check whether there is a parent order status exists for the guid against which Payment took place
 	 *

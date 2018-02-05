@@ -3,23 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.orderprocessing.model.OrderProcessModel;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.processengine.BusinessProcessService;
-import de.hybris.platform.processengine.enums.ProcessState;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -43,8 +26,26 @@ import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplQcPaymentFailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
+
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.processengine.BusinessProcessService;
+import de.hybris.platform.processengine.enums.ProcessState;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 
 /**
@@ -77,6 +78,9 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 	private MplJusPayRefundService mplJusPayRefundService;
 	@Autowired
 	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
+	
+	@Autowired
+	private MplQcPaymentFailService mplQcPaymentFailService;
 
 	//	@Autowired
 	//	private MplCommerceCartService mplCommerceCartService;
@@ -428,6 +432,12 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 			else
 			{
 				orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
+			}
+			
+			final String splitInfoMode = orderModel.getSplitModeInfo();
+			if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
+			{
+				mplQcPaymentFailService.processQcRefund(orderModel);
 			}
 
 		}
