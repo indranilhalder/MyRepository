@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Input2 from "./Input2.js";
 import { CircleButton, Icon } from "xelpmoc-core";
-import LocationIcon from "./img/GPS.svg";
 import SearchIcon from "./img/Search.svg";
 export default class SearchBox extends React.Component {
   render() {

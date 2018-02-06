@@ -5,14 +5,12 @@
 }
 .inputBox {
   width: 100%;
+  height: 100%;
   border: none;
   padding: 0 10px;
 }
 .inputBox:focus {
   outline: none;
-}
-.hollow input {
-  height: 100%;
 }
 @media screen and (min-width: 1025px) {
   .base {
@@ -35,7 +33,6 @@
   .hollow {
     composes: base;
     color: #fff;
-    height: 40px;
     border-bottom-color: #fff;
   }
   .hollow input::placeholder {
@@ -60,11 +57,7 @@
   background-color: #fff;
   border: 1px solid #d2d2d2;
   position: relative;
-  height: 35px;
   border-radius: 2px;
-}
-.box input {
-  height: 100%;
 }
 .box input::placeholder {
   color: #8d8d8d;
@@ -81,5 +74,4 @@
 }
 .box .base {
   border: 0px;
-  height: 35px;
 }
