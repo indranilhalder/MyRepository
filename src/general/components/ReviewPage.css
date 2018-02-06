@@ -1,0 +1,39 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: relative;
+  border-top: 2px solid #d2d2d2;
+  padding: 20px 0px;
+}
+.starHolder {
+  width: auto;
+  height: auto;
+  display: inline-block;
+}
+.heading {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 14px;
+  line-height: 35px;
+  font-family: semibold;
+  margin: auto;
+}
+.text {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: initial;
+  margin: auto;
+}
+.dateTimeBox {
+  width: 100%;
+  height: auto;
+  color: #8d8d8d;
+  font-size: 14px;
+  line-height: 35px;
+  white-space: initial;
+  margin: auto;
+}
