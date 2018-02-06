@@ -6,7 +6,7 @@ import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as user from "../mocks/user.mock";
 import * as Cookie from "../../lib/Cookie";
 const SIGN_UP_PATH =
-  "v2/mpl/users/customerRegistration?access_token=undefined&isPwa=true&loginId=undefined&password=123456&platformNumber=2";
+  "v2/mpl/users/customerRegistration?access_token=undefined&isPwa=true&username=undefined&password=123456&platformNumber=2";
 const LOGIN_PATH =
   "v2/mpl/users/test@xelpmoc.in/customerLogin?access_token=undefined&password=123456&isPwa=true";
 const OTP_VERIFICATION_PATH =
@@ -67,7 +67,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postRealData: postMock
     };
 
     middleWares = [
@@ -102,7 +102,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postRealData: postMock
     };
 
     middleWares = [
@@ -141,7 +141,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postRealData: postMock
     };
 
     middleWares = [
@@ -185,7 +185,7 @@ it("SIGN_UP_FAILURE", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    post: postMock
+    postRealData: postMock
   };
 
   middleWares = [
@@ -225,7 +225,7 @@ it("OTP_VERIFICATION", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    post: postMock
+    postRealData: postMock
   };
 
   middleWares = [
@@ -270,7 +270,7 @@ it("OTP_VERIFICATION_FAILURE", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    post: postMock
+    postRealData: postMock
   };
 
   middleWares = [
