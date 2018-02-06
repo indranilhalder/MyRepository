@@ -39,7 +39,7 @@
     border-bottom-color: #fff;
   }
   .hollow input::placeholder {
-    color: #000;
+    color: #fff;
     opacity: 0.5;
   }
 }
