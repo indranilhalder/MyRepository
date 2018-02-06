@@ -2,9 +2,10 @@ import React from "react";
 import AddressCarousel from "./AddressCarousel";
 import BottomSlideModal from "../../general/components/BottomSlideModal";
 import PinCodeUpdate from "./PinCodeUpdate";
+import PropTypes from "prop-types";
 import styles from "./AddressModal.css";
 
-export default class Address extends React.Component {
+export default class AddressModal extends React.Component {
   render() {
     return (
       <BottomSlideModal>
@@ -18,3 +19,10 @@ export default class Address extends React.Component {
     );
   }
 }
+AddressModal.propTypes = {
+  data: PropTypes.shape({
+    heading: PropTypes.string,
+    address: PropTypes.string,
+    value: PropTypes.string
+  })
+};

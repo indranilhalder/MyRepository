@@ -16,16 +16,18 @@ export default class AddressCarousel extends React.Component {
           elementWidthDesktop={20}
           elementWidthMobile={48}
         >
-          {data.map((datum, i) => {
-            return (
-              <Address
-                key={i}
-                heading={datum.heading}
-                address={datum.address}
-                value={datum.value}
-              />
-            );
-          })}
+          {data &&
+            data.length > 1 &&
+            data.map((datum, i) => {
+              return (
+                <Address
+                  key={i}
+                  heading={datum.heading}
+                  address={datum.address}
+                  value={datum.value}
+                />
+              );
+            })}
         </CarouselWithSelect>
       </div>
     );
@@ -35,7 +37,7 @@ AddressCarousel.propTypes = {
   text: PropTypes.string,
   data: PropTypes.shape({
     heading: PropTypes.string,
-    addres: PropTypes.string,
+    address: PropTypes.string,
     value: PropTypes.string
   })
 };
