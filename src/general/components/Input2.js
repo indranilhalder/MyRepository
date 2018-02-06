@@ -22,10 +22,13 @@ export default class Input2 extends React.Component {
     this.setState({ focused: false });
   }
   handleChange(event) {
-    if (this.props.onChange) {
-      this.props.onChange(event.target.value);
-    }
-    this.setState({ value: event.target.value });
+    this.setState({ value: event.target.value }, () => {
+      if (this.props.onChange) {
+        this.props.onChange(this.state.value);
+      } else {
+        this.setState({ value: event.target.value });
+      }
+    });
   }
   render() {
     return (
