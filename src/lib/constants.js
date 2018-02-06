@@ -18,3 +18,4 @@ export const PRODUCT_LISTINGS = "/productListings";
 export const HOME_ROUTER = "/home";
 export const PRODUCT_DESCRIPTION_ROUTER = "/productDescription";
 export const MAIN_ROUTER = "/";
+

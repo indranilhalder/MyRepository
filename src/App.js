@@ -65,9 +65,11 @@ class App extends Component {
     return (
       <div className={className}>
         <Switch>
+
           <Route path={PRODUCT_LISTINGS} component={ProductListingsContainer} />
           <Route path={HOME_ROUTER} component={HomeContainer} />
           <Route path={MAIN_ROUTER} component={Auth} />
+
           <Route
             path={PRODUCT_DESCRIPTION_ROUTER}
             component={ProductDescriptionContainer}
