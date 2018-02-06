@@ -2,10 +2,17 @@ import React from "react";
 import styles from "./TextArea.css";
 import PropTypes from "prop-types";
 export default class TextArea extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.value ? props.value : ""
+    };
+  }
   handleChange(event) {
     if (this.props.onChange) {
       this.props.onChange(event.target.value);
     }
+    this.setState({ value: event.target.value });
   }
   render() {
     return (
@@ -13,7 +20,7 @@ export default class TextArea extends React.Component {
         <textarea
           className={styles.textAreaBox}
           placeholder="Address*"
-          value={this.props.value}
+          value={this.props.value ? this.props.value : this.state.value}
           onChange={event => {
             this.handleChange(event);
           }}
@@ -29,5 +36,6 @@ TextArea.propTypes = {
   value: PropTypes.string
 };
 TextArea.defaultProps = {
-  height: 100
+  height: 100,
+  value: ""
 };
