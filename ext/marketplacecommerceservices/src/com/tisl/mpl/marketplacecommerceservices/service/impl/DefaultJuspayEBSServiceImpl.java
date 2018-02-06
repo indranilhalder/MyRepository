@@ -343,6 +343,23 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 		boolean errorFlag = true;
 		try
 		{
+			//Direct call of Refund for RMS failed... INC144318239
+			OrderStatus orderStatus = oModel.getStatus();
+			if (null != orderStatus && orderStatus.equals(OrderStatus.RMS_VERIFICATION_FAILED))
+			{
+				callRMSVerficationFailed(oModel);
+			}
+			//Direct call of Refund for RMS failed... INC144318239--ends
+		}
+		catch(Exception e)
+		{
+			LOG.error("Error while initiating the refund for RMS failed order : " + oModel.getCode());
+			errorFlag = true;
+			LOG.error(e.getMessage(),e);
+		}
+		try
+		{
+			
 			final Collection<OrderProcessModel> ops = oModel.getOrderProcess();
 			for (final OrderProcessModel op : ops)
 			{
@@ -350,14 +367,6 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 				final String processDefinitionName = store.getSubmitOrderProcessCode();
 				LOG.debug(" order state ====> " + op.getState() + "=====and process name=====>" + processDefinitionName);
 
-				//Direct call of Refund for RMS failed... INC144318239
-				if (null != op.getOrder().getStatus()
-						&& op.getOrder().getStatus().toString()
-								.equalsIgnoreCase(MarketplacecommerceservicesConstants.RMS_VERIFICATION_FAILED))
-				{
-					callRMSVerficationFailed(oModel);
-				}
-				//Direct call of Refund for RMS failed... INC144318239--ends
 
 				if (StringUtils.isNotEmpty(op.getProcessDefinitionName())
 						&& op.getProcessDefinitionName().equalsIgnoreCase(processDefinitionName)

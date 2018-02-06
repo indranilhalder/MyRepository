@@ -15,6 +15,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -468,7 +469,15 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 								final OrderModel order = refundEntry.getOrder();
 								if (null != order)
 								{
-									orderStatusSpecifier.setOrderStatus(order, OrderStatus.ORDER_CANCELLED);
+									final Refund refund = getSuccessRefund(orderStatusResponse);
+									String uniqueRefundId = null;
+									Double refundAmount = null;
+									if (null != refund)
+									{
+										uniqueRefundId = refund.getUniqueRequestId();
+										refundAmount = refund.getAmount();
+									}
+									updateStatusRms(order, OrderStatus.ORDER_CANCELLED, uniqueRefundId, refundAmount);
 								}
 								refundEntry.setRefundStatus(FPCRefundStatus.REFUND_SUCCESSFUL);
 								final String refundMethod = checkRefundMethod(orderStatusResponse);
@@ -646,7 +655,7 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 				if (null != refundResponse.getStatus()
 						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
-					if (StringUtils.isNotEmpty(refundResponse.getUniqueRequestId()))
+					if (StringUtils.equals(refundResponse.getUniqueRequestId(),orderStatusResponse.getOrderId()))
 					{
 						return MarketplacecommerceservicesConstants.AUTOMATIC;
 					}
@@ -688,7 +697,16 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 				final String status = paymentTransactionModel.getStatus();
 				if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
 				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
+					Double refundAmount = null;
+					try
+					{
+						refundAmount = new Double(paymentTransactionModel.getPlannedAmount().doubleValue());
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e.getMessage());
+					}
+					updateStatusRms(orderModel, OrderStatus.ORDER_CANCELLED, paymentTransactionModel.getCode(), refundAmount);
 				}
 			}
 
@@ -757,6 +775,75 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 			}
 		}
 		return paymentTransactionModel;
+	}
+
+	private void updateStatusRms(final OrderModel order, final OrderStatus orderStatus, final String uniqueRefundId,
+			final Double refundAmount)
+	{
+		orderStatusSpecifier.setOrderStatus(order, orderStatus);
+		if (orderStatus.equals(OrderStatus.ORDER_CANCELLED))
+		{
+			final List<OrderModel> childOrders = order.getChildOrders();
+			if (CollectionUtils.isNotEmpty(childOrders))
+			{
+				for (final OrderModel childOrder : childOrders)
+
+				{
+					for (final AbstractOrderEntryModel orderEntry : childOrder.getEntries())
+					{
+						final String successUniqueRequestId = getSuccessUniqueRequestId(uniqueRefundId, orderEntry.getOrderLineId());
+						orderEntry.setJuspayRequestId(successUniqueRequestId);
+						modelService.save(orderEntry);
+						try
+						{
+							PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
+							paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(childOrder,
+									MarketplacecommerceservicesConstants.SUCCESS, refundAmount, PaymentTransactionType.CANCEL,
+									MarketplacecommerceservicesConstants.SUCCESS, successUniqueRequestId);
+							mplJusPayRefundService.attachPaymentTransactionModel(childOrder, paymentTransactionModel);
+						}
+						catch (final Exception e)
+						{
+							LOG.error(e.getMessage());
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	private String getSuccessUniqueRequestId(final String uniqueRequestId, final String transactionId)
+	{
+		String requestId = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (StringUtils.isNotEmpty(uniqueRequestId) && StringUtils.isNotEmpty(transactionId))
+		{
+			requestId = uniqueRequestId + MarketplacecommerceservicesConstants.UNDER_SCORE + transactionId;
+		}
+		else
+		{
+			requestId = UUID.randomUUID().toString();
+		}
+		return requestId;
+	}
+
+	private Refund getSuccessRefund(final GetOrderStatusResponse orderStatusResponse)
+	{
+
+		if (null != orderStatusResponse && CollectionUtils.isNotEmpty(orderStatusResponse.getRefunds()))
+		{
+			final List<Refund> refundResponseList = orderStatusResponse.getRefunds();
+			for (final Refund refundResponse : refundResponseList)
+			{
+				if (null != refundResponse.getStatus()
+						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					return refundResponse;
+				}
+			}
+		}
+		return null;
 	}
 
 }
