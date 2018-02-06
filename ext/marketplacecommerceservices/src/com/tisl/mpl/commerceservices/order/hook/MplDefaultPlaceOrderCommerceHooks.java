@@ -2789,7 +2789,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//final BuyBoxModel buyBoxInfo = getBuyBoxService().getpriceForUssid(abstractOrderEntryModel.getSelectedUSSID());
 		for (int qty = 0; qty < quantity; qty++)
 		{
-
+       LOG.debug("Step :-1 "+qty);
 			OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder, abstractOrderEntryModel.getProduct(), 1,
 					abstractOrderEntryModel.getUnit(), -1, false);
 
@@ -2803,6 +2803,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
 				||(clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
 		{
+			 LOG.debug("Step :-2 "+clonedSubOrder.getSplitModeInfo() );
 			splitQty = abstractOrderEntryModel.getQuantity().intValue();
 
 			System.out.println(abstractOrderEntryModel.getQuantity().intValue() + " -&&&&&&& Product Code- "
@@ -2813,7 +2814,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
 			}
 			System.out.println("*********** Hook Apportion Logic ---- Qty " + quantity + " & Spliit Qty" + splitQty);
-
+			LOG.debug("Step :-3 "+splitQty);
 		}
 
 		/**
@@ -2822,7 +2823,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
-
+			LOG.debug("Step :-4 "+sellerID);
 			if (abstractOrderEntryModel.getSellerInfo() != null)
 			{
 				orderEntryModel.setSellerInfo(abstractOrderEntryModel.getSellerInfo());
@@ -2835,6 +2836,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
 					&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
 			{
+				LOG.debug("Step :-5 "+sequenceGeneratorApplicable);
 				final String orderLineIdSequence = getMplCommerceCartService().generateOrderLineId();
 
 				//Transaction ID have to strict with 15 digits, using the middle 3 zeros
@@ -2870,6 +2872,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					orderEntryModel.setOrderLineId(sellerID.concat(middleDigits).concat(Integer.toString(num)));
 					orderEntryModel.setTransactionID(sellerID.concat(middleDigits).concat(Integer.toString(num)));
 				}
+				LOG.debug("Step :-6 "+orderEntryModel.toString());
 			}
 			orderEntryModel.setExchangeId(abstractOrderEntryModel.getExchangeId());
 
@@ -2904,7 +2907,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							abstractOrderEntryModel.getPromoProductCostCentreThreePercentage());
 				}
 				LOG.debug("Succesfully inserted the promoProductDetails");
-
+				LOG.debug("Step :-7 "+abstractOrderEntryModel.toString());
 				//TPR-7408 ends here
 			}
 			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getCartPromoCode()))
@@ -2926,7 +2929,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					orderEntryModel
 							.setPromoCartCostCentreThreePercentage(abstractOrderEntryModel.getPromoCartCostCentreThreePercentage());
 				}
-
+				LOG.debug("Step :-8 "+orderEntryModel);
 				LOG.debug("Succesfully inserted the cartProductDetails");
 				//TPR-7408 ends here
 			}
@@ -2970,7 +2973,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				{
 					orderEntryModel.setCouponCostCentreThreePercentage(abstractOrderEntryModel.getCouponCostCentreThreePercentage());
 				}
-
+				LOG.debug("Step :-9 Entry value is set");
 				LOG.debug("Succesfully inserted the cartCouponDetails");
 				//TPR-7408 ends here
 			}
@@ -2990,6 +2993,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final double netAmountAfterAllDisc = Double.parseDouble(
 					df.format(price - cartApportionValue - productApportionvalue - couponApportionValue - cartcouponApportionValue));
 			LOG.debug("setCurrDelCharge" + deliveryCharge);
+			LOG.debug("Step :-10 "+deliveryCharge);
 			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
 			orderEntryModel.setCartCouponValue(Double.valueOf(cartcouponApportionValue));
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));
@@ -3053,15 +3057,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
 			}
 
-			//Added for tpr-3782
-			if (null != abstractOrderEntryModel.getProduct() && MarketplacecommerceservicesConstants.FINEJEWELLERY
-					.equalsIgnoreCase(orderEntryModel.getProduct().getProductCategoryType()))
-			{
-				priceBreakupService.createPricebreakupOrder(orderEntryModel, abstractOrderEntryModel);
-
-			}
-
-			//ended for tpr-3782
+			
 			// Start Order line  Code for OrderLine
 			if (abstractOrderEntryModel.getEdScheduledDate() != null)
 			{
@@ -3126,17 +3122,30 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			 * WALLET CHANGES
 			 */
 
-
+			LOG.debug("Step :-11 Try to set Wallet apportion ");
 			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
 					|| (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
 			{
 				setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
 				//setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
 			}
+			LOG.debug("Step :-17 ");
 
 			/**
 			 * WALLET CHANGES END
 			 */
+			
+			//Added for tpr-3782
+			if (null != abstractOrderEntryModel.getProduct() && MarketplacecommerceservicesConstants.FINEJEWELLERY
+					.equalsIgnoreCase(orderEntryModel.getProduct().getProductCategoryType()))
+			{
+				LOG.debug("Step :-18 ");
+				priceBreakupService.createPricebreakupOrder(orderEntryModel, abstractOrderEntryModel);
+				LOG.debug("Step :-23 ");
+
+			}
+
+			//ended for tpr-3782
 		}
 	}
 
@@ -3784,13 +3793,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	public void setPaymentModeApporsionValue(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderEntryModel orderEntryModel, final OrderModel clonedSubOrder)
 	{
-
+		LOG.debug("Step :-12 Try to set Wallet apportion ");
 		final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
 				.create(WalletApportionPaymentInfoModel.class);
 
 		if (null != orderEntryModel.getIsBOGOapplied() && orderEntryModel.getIsBOGOapplied().booleanValue()
 				|| null != orderEntryModel.getGiveAway() && orderEntryModel.getGiveAway().booleanValue())
 		{
+			LOG.debug("Step :-13 Try to set Wallet apportion ");
 
 			System.out.println(" **************** Hook BOGO PRODUCT FOUND " + orderEntryModel.getIsBOGOapplied().booleanValue()
 					+ " free bi product -" + (null != orderEntryModel.getFreeCount() ? orderEntryModel.getFreeCount().intValue() : 0));
@@ -3819,6 +3829,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 		else
 		{
+			LOG.debug("Step :-14 Try to set Wallet apportion ");
 
 			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
 
@@ -3928,6 +3939,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
 			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
 		}
+		LOG.debug("Step :-15 Try to set Wallet apportion ");
+		modelService.saveAll(walletApportionPaymentInfo,orderEntryModel);
+		LOG.debug("Step :-16  Try to set Wallet apportion Saved Successfully");
 	}
 
 
