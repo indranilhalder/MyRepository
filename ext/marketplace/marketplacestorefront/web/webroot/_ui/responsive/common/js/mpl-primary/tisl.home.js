@@ -329,7 +329,7 @@ wishlistHover = setTimeout(function(){
         //data: "&productCount=" + $(this).attr("data-count"),
         data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
         success: function(html) {
-        	alert("ready");
+        	/*alert("ready");*/
             $("div.wishlist-info").html(html);
             var wlCode = [];
 			$(".wlCode").each(function(){
