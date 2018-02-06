@@ -5229,6 +5229,12 @@ function populateAddress(){
 		 	{
 			 $("#myCounter").html((120));
 		 	}
+			//added for SDI 3691 starts 
+			if(($("#address1Emi").val())=="")
+		 	{
+			 $("#myCounter1").html((120));
+		 	}
+			//added for SDI 3691 ends
 		}
 }
 
@@ -6323,7 +6329,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 radioSelected.each(function() {
 	        if (this.checked === true) {
 	        	var delCost=$(this).val();
-	        	totalDeliveryCharge +=  parseFloat(delCost);
+	        	totalDeliveryCharge +=  parseFloat(delCost) || 0;	/*changed for SDI-1665*/
 	           }
 	    });
 	 

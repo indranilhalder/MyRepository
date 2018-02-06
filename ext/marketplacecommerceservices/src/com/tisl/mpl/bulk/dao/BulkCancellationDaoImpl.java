@@ -55,4 +55,15 @@ public class BulkCancellationDaoImpl implements BulkCancellationDao
 		}
 	}
 
+	/*
+	 * @Override public List<BulkCancellationProcessModel> getOrderCancelData() { try { final FlexibleSearchQuery query =
+	 * new FlexibleSearchQuery( MarketplacecommerceservicesConstants.DATA_FOR_BULK_CANCELLATION_PROCESS);
+	 * 
+	 * return flexibleSearchService.<BulkCancellationProcessModel> search(query).getResult();
+	 * 
+	 * } catch (final Exception e) { throw new EtailNonBusinessExceptions(e); }
+	 * 
+	 * }
+	 */
+
 }

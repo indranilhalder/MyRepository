@@ -210,8 +210,8 @@ public class PaymentServicesController extends BaseController
 
 					//INC144316663
 
-					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (cart
-							.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
+					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue())
+							&& (cart.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
 
 					final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
 
@@ -245,12 +245,25 @@ public class PaymentServicesController extends BaseController
 			else
 			{
 				final boolean mplCustomerIsBlackListed = getMplPaymentFacade().isBlackListed(ip, orderModel);
-				//To check if the customer is a black listed customer
-				if (!mplCustomerIsBlackListed)
+				//SDI-5095
+				final boolean isCodLimitFailed = ((orderModel.getTotalPrice().longValue() <= codUpperLimit.longValue())
+						&& (orderModel.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
+
+				//SDI-5095
+				final boolean isCodEligible = (isCodLimitFailed || !orderModel.getIsCODEligible().booleanValue()) ? false : true;
+				//To check if the customer is a black listed customer and cod upper/lower limit checking
+				//SDI-5095
+				if (!mplCustomerIsBlackListed && isCodEligible)
 				{
 					//Getting COD details
 					codCheck = getMplPaymentWebFacade().getCODDetails(orderModel, customer.getUid());
 					//codCheck.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				//SDI-5095
+				else if (!isCodEligible && !mplCustomerIsBlackListed) //COD LIMIT CHECKING
+				{
+					//Message to display COD not eligible
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202);
 				}
 				else
 				{
@@ -335,14 +348,13 @@ public class PaymentServicesController extends BaseController
 				//TISPT-29
 				if (null != cart)
 				{
-					if (StringUtils.isNotEmpty(paymentMode)
-							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
-									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD) || paymentMode
-										.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
+					if (StringUtils.isNotEmpty(paymentMode) && (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
+							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)
+							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
 					{
 						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
@@ -380,14 +392,13 @@ public class PaymentServicesController extends BaseController
 					getMplPaymentFacade().setBankForSavedCard(bankName);
 				}
 
-				if (StringUtils.isNotEmpty(paymentMode)
-						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
-								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD) || paymentMode
-									.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
+				if (StringUtils.isNotEmpty(paymentMode) && (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
+						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)
+						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
 
 				{
 					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
@@ -685,8 +696,8 @@ public class PaymentServicesController extends BaseController
 					{
 
 						//TPR-4461 COUPON FOR COD WHEN ORDER MODEL IS NULL STARTS HERE
-						final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
-								.getAppliedVouchers(cart));
+						final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+								getVoucherService().getAppliedVouchers(cart));
 
 						if (CollectionUtils.isNotEmpty(voucherList))
 						{
@@ -805,7 +816,7 @@ public class PaymentServicesController extends BaseController
 							}
 							else if (!checkPromovoucher2)
 							{ //only coupon
-							  //return "coupon";
+								  //return "coupon";
 								updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
 								failFlag = true;
 								failErrorCode = MarketplacecommerceservicesConstants.B9078;
@@ -913,8 +924,8 @@ public class PaymentServicesController extends BaseController
 
 
 					//TPR-4461 COUPON FOR COD WHEN ORDER MODEL IS NOT NULL STARTS HERE
-					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
-							orderModel));
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+							getVoucherService().getAppliedVouchers(orderModel));
 
 					if (CollectionUtils.isNotEmpty(voucherList))
 					{
@@ -1029,7 +1040,7 @@ public class PaymentServicesController extends BaseController
 						}
 						else if (!checkPromovoucher2)
 						{ //only coupon
-						  //return "coupon";
+							  //return "coupon";
 							updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
 							failFlag = true;
 							failErrorCode = MarketplacecommerceservicesConstants.B9078;
@@ -1057,10 +1068,9 @@ public class PaymentServicesController extends BaseController
 						/*
 						 * if (!failFlag && !mplCartFacade .isInventoryReservedMobile(
 						 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode))
-						 * {
-						 * //getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID
-						 * ,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag = true; failErrorCode =
-						 * MarketplacecommerceservicesConstants.B9047; }
+						 * { //getSessionService().setAttribute(MarketplacecclientservicesConstants.
+						 * OMS_INVENTORY_RESV_SESSION_ID ,"TRUE"); //getMplCartFacade().recalculate(cart); failFlag = true;
+						 * failErrorCode = MarketplacecommerceservicesConstants.B9047; }
 						 */
 
 						if (!failFlag && !getMplCheckoutFacade().isCouponValid(orderModel))
@@ -1402,8 +1412,8 @@ public class PaymentServicesController extends BaseController
 				{
 					//CAR-111
 					//cartData = getMplExtendedCartConverter().convert(cart);
-					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-							MarketplacewebservicesConstants.MPLSTORE, cart);
+					final Map<String, Boolean> paymentMode = getMplPaymentFacade()
+							.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
 					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
@@ -1418,21 +1428,22 @@ public class PaymentServicesController extends BaseController
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
-				final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-						MarketplacewebservicesConstants.MPLSTORE, orderModel);
+				final Map<String, Boolean> paymentMode = getMplPaymentFacade()
+						.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 			}
 			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
-					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty()
+							? getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
+							: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
 
 			final String juspayMerchantId = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty()
+							? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+							: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
 			paymentModesData.setMerchantID(juspayMerchantId);
 			paymentModesData.setMerchantKey(juspayMerchantKey);
 		}

@@ -333,15 +333,15 @@ if(pathname =='/checkout/multi/delivery-method/select'){
 }
 </script>
 
-<div class="wishAddSucessQV">	<!-- add style for TISCSS-166 -->
-	<span style="display: none;"><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+<div id="wishAddQV" class="wishAddSucessQV">
+	<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 </div>
-<div class="wishRemoveSucessQV">		<!-- add style for TISCSS-166 -->
-	<span style="display: none;"><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+<div id="wishRemoveQV" class="wishRemoveSucessQV">
+	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 </div>
-<div class="wishAddLoginQV">		<!-- add style for TISCSS-166 -->
-	<span style="display: none;"><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+<div id="wishLoginQV" class="wishAddLoginQV">
+	<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 </div>
-<div class="wishAlreadyAddedQV">		<!-- add style for TISCSS-166 -->
-	<span style="display: none;"><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+<div id="wishAddedQV" class="wishAlreadyAddedQV">
+	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 </div>

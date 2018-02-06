@@ -50,5 +50,9 @@ public class BulkCancellationServiceImpl implements BulkCancellationService
 		return getBulkCancellationDao().fetchJobDetails(code);
 	}
 
+	/*
+	 * @Override public List<BulkCancellationProcessModel> getOrderCancelData() { return
+	 * getBulkCancellationDao().getOrderCancelData(); }
+	 */
 
 }
