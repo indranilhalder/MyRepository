@@ -67,7 +67,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      postRealData: postMock
+      post: postMock
     };
 
     middleWares = [
@@ -102,7 +102,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      postRealData: postMock
+      post: postMock
     };
 
     middleWares = [
@@ -141,7 +141,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      postRealData: postMock
+      post: postMock
     };
 
     middleWares = [
@@ -185,7 +185,7 @@ it("SIGN_UP_FAILURE", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    postRealData: postMock
+    post: postMock
   };
 
   middleWares = [
@@ -225,7 +225,7 @@ it("OTP_VERIFICATION", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    postRealData: postMock
+    post: postMock
   };
 
   middleWares = [
@@ -270,7 +270,7 @@ it("OTP_VERIFICATION_FAILURE", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    postRealData: postMock
+    post: postMock
   };
 
   middleWares = [
