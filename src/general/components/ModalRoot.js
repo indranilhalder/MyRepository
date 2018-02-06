@@ -79,7 +79,7 @@ export default class ModalRoot extends React.Component {
       Address: <AddressModal />
     };
 
-    let SelectedModal = MODAL_COMPONENTS["Address"];
+    let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
 
     const Modal = this.props.modalStatus ? (
       <ModalPanel
