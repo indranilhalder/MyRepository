@@ -8,7 +8,7 @@ export default class HorizontalRating extends React.Component {
         <div className={styles.pointNumber}>{this.props.score}</div>
         <div className={styles.indexNumberWithIcon}>
           <div className={styles.ratingIcon} />
-          {this.props.numberOfRatings}
+          {this.props.ratingsNumber}
         </div>
         <div className={styles.defaultBar}>
           <div
@@ -22,6 +22,6 @@ export default class HorizontalRating extends React.Component {
 }
 HorizontalRating.propTypes = {
   score: PropTypes.number,
-  numberOfRatings: PropTypes.string,
+  ratingsNumber: PropTypes.string,
   width: PropTypes.number
 };

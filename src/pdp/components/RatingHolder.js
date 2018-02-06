@@ -8,8 +8,8 @@ export default class RatingHolder extends React.Component {
       .map(function(item) {
         return item.score;
       })
-      .reduce(function(a, b) {
-        return a + b;
+      .reduce(function(accumulator, currentValue) {
+        return accumulator + currentValue;
       });
     return (
       <div className={styles.base}>
@@ -17,7 +17,7 @@ export default class RatingHolder extends React.Component {
           return (
             <HorizontalRating
               score={data.score}
-              numberOfRatings={data.numberOfRatings}
+              ratingsNumber={data.ratingsNumber}
               width={data.score / calculateWidth * 100}
             />
           );
@@ -30,7 +30,7 @@ RatingHolder.propTypes = {
   rattingData: PropTypes.arrayOf(
     PropTypes.shape({
       score: PropTypes.score,
-      numberOfRatings: PropTypes.string
+      ratingsNumber: PropTypes.string
     })
   )
 };
