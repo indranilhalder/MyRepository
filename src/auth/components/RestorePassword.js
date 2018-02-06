@@ -6,6 +6,13 @@ import Input from "../../general/components/Input";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
 export default class RestorePassword extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userId: ""
+    };
+  }
+
   handleCancelClick() {
     if (this.props.handleCancel) {
       this.props.handleCancel();
@@ -14,7 +21,7 @@ export default class RestorePassword extends React.Component {
 
   handleRestoreClick() {
     if (this.props.handleRestoreClick) {
-      this.props.handleRestoreClick();
+      this.props.handleRestoreClick(this.state.userId);
     }
   }
   render() {
@@ -25,7 +32,11 @@ export default class RestorePassword extends React.Component {
           Please enter your Email or phone number to restore the password
         </div>
         <div className={styles.input}>
-          <Input hollow={true} placeholder="Enter email or password" />
+          <Input
+            hollow={true}
+            placeholder="Enter email or password"
+            onChange={val => this.setState({ userId: val })}
+          />
         </div>
         <div className={styles.button}>
           <div className={ownStyles.submit}>

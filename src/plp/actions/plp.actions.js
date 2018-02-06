@@ -29,7 +29,7 @@ export function getProductListings() {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest());
     try {
-      const result = await api.get(PRODUCT_LISTINGS_PATH);
+      const result = await api.getMock(PRODUCT_LISTINGS_PATH);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

@@ -29,7 +29,8 @@ it("should return initial state", () => {
     status: null,
     error: null,
     message: null,
-    loading: false
+    loading: false,
+    isLoggedIn: false
   });
 });
 
@@ -58,7 +59,8 @@ it("should call  OTP_VERIFICATION_REQUEST", () => {
     status: REQUESTING,
     user: null,
     error: null,
-    loading: true
+    loading: true,
+    isLoggedIn: false
   });
 });
 
@@ -70,7 +72,8 @@ it("Should call LOGIN_USER_FAILURE", () => {
     status: ERROR,
     error: "Login Failed",
     user: null,
-    loading: false
+    loading: false,
+    isLoggedIn: false
   });
 });
 
@@ -92,7 +95,8 @@ it("Should call OTP_VERIFICATION_FAILURE", () => {
     status: ERROR,
     error: "Otp Failed",
     user: null,
-    loading: false
+    loading: false,
+    isLoggedIn: false
   });
 });
 
@@ -102,7 +106,8 @@ it("should call LOGIN_USER_SUCCESS ", () => {
     user: dummyUser,
     status: SUCCESS,
     error: null,
-    loading: false
+    loading: false,
+    isLoggedIn: true
   });
 });
 
@@ -122,6 +127,7 @@ it("should call OTP_VERIFICATION_SUCCESS ", () => {
     status: SUCCESS,
     error: null,
     loading: false,
-    user: dummyUser
+    user: dummyUser,
+    isLoggedIn: true
   });
 });
