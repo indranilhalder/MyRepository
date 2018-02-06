@@ -4,7 +4,7 @@
   background-color: #dedede;
   border-bottom: 1px solid #d0d0d0;
   position: relative;
-  line-height: 50px;
+  line-height: 49px;
   padding: 0px 60px 0px 15px;
 }
 .selected {
@@ -14,7 +14,7 @@
   position: absolute;
   vertical-align: middle;
   color: #ff1744;
-  right: 25px;
+  right: 0;
   top: 0;
   bottom: 0;
   margin: auto;
@@ -23,18 +23,16 @@
 }
 .selectedActive {
   composes: base;
-  height: 100%;
   background-color: #ffffff;
 }
 .selectedText {
-  width: 100%;
   display: inline-block;
+  width: 100%;
   line-height: normal;
   font-size: 14px;
   vertical-align: middle;
 }
 .selectedAdvance {
   composes: base;
-  height: 100%;
   background-color: #ececec;
 }

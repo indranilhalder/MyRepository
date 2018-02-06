@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./IconicFilter.css";
 import CenterAdd from "./CenterAdd";
-import Carousel from "./Carousel";
+import Carousel from "../../general/components/Carousel";
 import PropTypes from "prop-types";
 
 export default class IconicFilter extends React.Component {
@@ -21,7 +21,7 @@ export default class IconicFilter extends React.Component {
           }
         >
           {data.map((datum, i) => {
-            return <CenterAdd key={i} text={datum.text} />;
+            return <CenterAdd key={i} text={datum.name} />;
           })}
         </Carousel>
       </div>
@@ -33,7 +33,7 @@ IconicFilter.propTypes = {
   title: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      text: PropTypes.string
+      name: PropTypes.string
     })
   )
 };

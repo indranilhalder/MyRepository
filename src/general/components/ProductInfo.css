@@ -1,0 +1,29 @@
+.base {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.totalNoOfReviews {
+  color: #797979;
+  font-size: 12px;
+  font-family: regular;
+}
+.bestDeliveryInfo {
+  width: 100%;
+  height: auto;
+  color: #181818;
+  font-size: 12px;
+  font-family: regular;
+  line-height: 20px;
+}
+.date {
+  font-family: semibold;
+}
+.offerText {
+  composes: bestDeliveryInfo;
+  line-height: 25px;
+}
+.textWrapper {
+  composes: base;
+  padding-bottom: 5px;
+}

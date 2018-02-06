@@ -4,11 +4,10 @@ import ThemeProduct from "../../general/components/ThemeProduct";
 import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import styles from "./ThemeProductWidget.css";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class ThemeProductWidget extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push(PRODUCT_LISTINGS);
   }
   render() {
     const data = this.props.feedComponentData.data;
@@ -24,9 +23,10 @@ export default class ThemeProductWidget extends React.Component {
           <Logo image={data.brandLogo} />
         </div>
         <Carousel
+          {...this.props}
           header={data.title}
-          buttonText={data.btnText}
-          seeAll={this.handleClick}
+          buttonText={"See All"}
+          seeAll={() => this.handleClick()}
           elementWidthMobile={45}
           withFooter={false}
           isWhite={true}

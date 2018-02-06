@@ -10,3 +10,14 @@
 .content {
   margin-top: 20px;
 }
+.ListimageHolder {
+  composes: imageHolder;
+  width: 30%;
+  display: inline-block;
+  vertical-align: top;
+}
+.Listcontent {
+  width: 70%;
+  display: inline-block;
+  padding: 0 0 0 20px;
+}
