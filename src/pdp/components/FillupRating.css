@@ -1,0 +1,37 @@
+.base{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}
+.ratingHolder{
+  width:20%;
+  height:auto;
+  display:inline-block;
+  vertical-align:middle;
+  text-align:center;
+}
+.startHolder{
+  width:auto;
+  height:auto;
+  display:inline-block;
+  text-align:center;
+  vertical-align:middle;
+}
+.ratingStar{
+  width:22px;
+  height:22px;
+  background:url(../../general/components/img/star-stroke.svg)no-repeat;
+  background-size: auto 100%;
+  background-position:center;
+  display:inline-block;
+  transition:300ms;
+}
+.ratingFillStar{
+  width:22px;
+  height:22px;
+  background:url(../../general/components/img/star-fill.svg)no-repeat;
+  background-size: auto 100%;
+  background-position:center;
+  display:inline-block;
+  transition:300ms;
+}
