@@ -19,7 +19,7 @@
 <input type="hidden"  id ="tealiumOrderFlag" value ="${cartToOrderConvert}"  />
 <cart:tealiumCartParameters/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
-				<div class="alert alert-danger alert-dismissable juspayConnErrorSection" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
+				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
 					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
 				</div>
@@ -43,9 +43,7 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper" style="max-width: 1264px !important;">
-	 <c:if test="${isEGVCart ne true }">
-	   <div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
-	</c:if>
+	<div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
 		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
 			<jsp:body> --%>
 				<script>
@@ -203,11 +201,9 @@
 						           <p class="disclaimer-txt">
 										<spring:theme code="pay.price.change.notification"></spring:theme>
 									</p>
-					           </c:if>  
-						  <c:if test="${isEGVCart ne true }">
+					           </c:if>               
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
-					</c:if> 
 				<!-- Unwanted code commented -->
                <%--  <c:choose>
                     <c:when test="${showTax}">
@@ -1125,20 +1121,36 @@
 							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="lastNameErrorEmi"></span>
 						                           		</div>
+						                           		<!-- added for SDI 3691 starts -->
+														<div class="full">
+														<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+															<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
+														<textarea class="full-address" id="address1Emi" maxlength="120" onKeyUp="return taCount(this,'myCounter1')" required="required"></textarea>
+														Remaining characters :
+														<span id='myCounter1'></span>
+														<span class="error-message" id="address1ErrorEmi"></span>
+														</div>
+														<!-- added for SDI 3691 ends -->
+														<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline1"/></label>
 							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
 							                           		<span class="error-message" id="address1ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline2"/></label>
 							                           		<input type="text" id="address2Emi" maxlength="40">
 							                           		<span class="error-message" id="address2ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.landmark"/> </label>
 							                           		<input type="text" id="address3Emi" maxlength="40">
 							                           		<span class="error-message" id="address3ErrorEmi"></span>
+						                           		</div>
 						                           		</div>
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.city"/></label>
@@ -1448,8 +1460,6 @@
 				</div>				
 				<%-- </jsp:body>
 		</multiCheckout:checkoutSteps> --%>	
-		<input type="hidden" id="isEGVOrder" value="${isEGVCart}">
-		<input type="hidden" id="egvProductCode" value="${egvProductCode}">
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		<input type="hidden" name="juspayBaseUrl" id="juspayBaseUrl" value="${juspayBaseUrl}"/><!-- TPR-7448 -->
 	</div>		
@@ -1544,6 +1554,13 @@ span#juspayErrorMsg {
 		$(this).parents("#card").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
+		/* start add for TISPRDT-8297 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for TISPRDT-8297 */
 	});
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1567,7 +1584,12 @@ span#juspayErrorMsg {
 		$(this).parents("#cardDebit").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
+		/* start add for TISPRDT-8297 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for TISPRDT-8297 */
 	});
 	</script>
-
-	

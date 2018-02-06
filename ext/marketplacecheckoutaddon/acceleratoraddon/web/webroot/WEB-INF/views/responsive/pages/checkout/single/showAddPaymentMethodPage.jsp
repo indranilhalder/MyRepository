@@ -1,4 +1,3 @@
-
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
@@ -197,129 +196,9 @@
 				
 				<!--TPR-7486  -->
 
-	<spring:eval
-		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')"
-		var="walletEnable" />
-	<!-- Added for Wallet -->
-	<c:if test="${walletEnable}">
-		<div class="giftCheckoutContainer">
-			<div id="walletContainerId" class="giftCheckoutContainerTable">
-				<div class="clearfix">
-					<div class="col-md-3">
-						<div class="giftInfoLeft">
-							<table>
-								<tr>
-									<td class="giftWalletImg"><img
-										src="\_ui\responsive\common\images\walletImg.png" alt="wallet" /></td>
-									<td class="cliqTotalBalance"><p>
-											<strong><spring:theme
-													code="text.cliq.cash.payment.cliqcash.label" /></strong>
-										</p>
-										<p class="cliqTotalBalanceLabel">
-											<spring:theme code="text.cliq.cash.payment.total.label" />
-											<strong>&#8377; 0</strong>
-										</p></td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<div class="col-md-9 giftCheckoutInfoMiddle">
-						<div class="giftCheckoutSectionSize col-xs-3">
-							<div class="giftCheckoutInnerCols1">
-								<label for="cashOtherThanGiftCard"><p>
-										<spring:theme code="text.cliq.cash.payment.cash.label" />
-									</p>&#8377;<span id="qcCashId"><strong>0</strong></span></label>
-							</div>
-						</div>
-						<div class="giftCheckoutSectionSize col-xs-3">
-							<div class="giftCheckoutInnerCols2">
-								<label for="giftCardAmt"><p>
-										<spring:theme code="text.cliq.cash.payment.card.label" />
-									</p>&#8377;<span id="qcGiftCardId"><strong>0</strong></span></label>
-							</div>
-						</div>
-						<div class="giftCheckoutSectionSize col-xs-3">
-							<div class="giftCheckoutInnerCols3">
-								<label for="rewardPoints"><p>
-										<spring:theme code="text.cliq.cash.payment.points.label" />
-									</p>
-									<p id="qcPointsId">
-										<strong>0</strong>
-									</p></label>
-							</div>
-						</div>
-						<div class="giftCheckoutSectionSize col-xs-3">
-							<div class="giftCheckoutInnerCols4">
-								<label class="useGiftCardBtn"><input
-									id="useGiftCardCheckbox" type="checkbox" /> <span
-									id="useGiftBtnText"><spring:theme
-											code="text.cliq.cash.payment.use.label" /></span> <span
-									id="unUseGiftBtnText"><spring:theme
-											code="text.cliq.cash.payment.remove.label" /></span> </label>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12">
-						<div class="giftInfoBottom">
-							<div class="addNewGiftCard">
-
-								<div class="modal fade" id="singlePageAddEGVPopup">
-									<div class="content">
-										<span id="modalBody"></span>
-										<!-- <button class="close" data-dismiss="modal"></button> -->
-									</div>
-									<div class="overlay" data-dismiss="modal"></div>
-								</div>
-								<c:choose>
-									<c:when test="${isCustomerWalletActive}">
-										<span class="addNewCard" onclick="showAddEGV();"><a
-											href="#"><spring:theme
-													code="text.cliq.cash.payment.addcard.label" /></a></span>
-									</c:when>
-									<c:otherwise>
-										<span class="addNewCard" onclick="createWallet();"><a
-											href="#"><spring:theme
-													code="text.cliq.cash.payment.addcard.label" /></a></span>
-									</c:otherwise>
-								</c:choose>
-
-
-								<span class="viewCardTerms"><a href="#"><spring:theme
-											code="text.cliq.cash.payment.term.label" /> </a></span> 
-							</div>
-							<br />
-							<spring:theme code="text.cliq.cash.payment.addcash.label"
-								var="addCliqCash" />
-							<spring:theme code="text.cliq.cash.usecash.label"
-								var="useCliqCash" />
-							<spring:theme code="text.cliq.cash.payment.juspyamt.label"
-								var="useJuspay" />
-							<spring:theme code="text.cliq.cash.payment.juspyamt1.label"
-								var="useJuspay1" />
-							<spring:theme code="text.cliq.cash.loadingcash.label"
-								var="loadingCliqCash" />
-							<div class="payRemainingDesc" data-addCliqCash="${addCliqCash}"
-								data-useCliqCash="${useCliqCash}" data-useJuspay="${useJuspay}"
-								data-useJuspay1="${useJuspay1}"
-								data-loadingCliqCash="${loadingCliqCash}">
-								<i id="addCliqCashId"> </i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
-		<br />&nbsp; <br />
-	</c:if>
-	<!-- End for Wallet -->
-
-
-
-	<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive" style="display:none">
+				<button class="button btn-block payment-button proceed-button validatepayment" type="button" id="continue_payment_after_validate_responsive" style="display:none">
 				      <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			       </button>	
-			     <button type="button" class="button topPlaceOrderBtn cliqCashPlaceOrderBtnMobile"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
@@ -1550,20 +1429,36 @@
 							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="lastNameErrorEmi"></span>
 						                           		</div>
+						                           		<!-- added for SDI 3691 starts -->
+ 													<div class="full">
+ 															<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+ 															<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
+ 															<textarea class="full-address" id="address1Emi" maxlength="120" onKeyUp="return taCount(this,'myCounter1')" required="required"></textarea>
+ 															Remaining characters :
+ 																<span id='myCounte1r'></span>
+																<span class="error-message" id="address1ErrorEmi"></span>
+ 													</div>
+ 														<!-- added for SDI 3691 ends -->
+ 														<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline1"/></label>
 							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
 							                           		<span class="error-message" id="address1ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline2"/></label>
 							                           		<input type="text" id="address2Emi" maxlength="40">
 							                           		<span class="error-message" id="address2ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.landmark"/> </label>
 							                           		<input type="text" id="address3Emi" maxlength="40">
 							                           		<span class="error-message" id="address3ErrorEmi"></span>
+						                           		</div>
 						                           		</div>
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.city"/></label>
@@ -1863,7 +1758,6 @@
 						<button class="button validatepayment" type="button" id="continue_payment_after_validate">
 				         <spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/>
 			           </button>
-			           <button type="button" class="topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 			             <div class="terms" id="prepaidtermsconditions">
 										<p class="redirect">You will be redirected to secure payment
 											gateway.</p>
@@ -1887,13 +1781,6 @@
 			<single-Checkout:showCheckoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		</div>
 		<input type="hidden" name="juspayBaseUrl" id="juspayBaseUrl" value="${juspayBaseUrl}"/><!-- TPR-7448 -->
-	</div>	
-		<div class="createWalletModel" id="createWalletPopup">
-		<div class="createWalletModel-content">
-			<button type="button" onclick="closepop()" id="closePop"><span class="glyphicon glyphicon-remove-circle"></span></button>
-			<span id="createWalletPopup" class="close">&times;</span>
-			<div id="createWalletData"></div>
-		</div>
 	</div>		
 
 <style>
@@ -1956,6 +1843,13 @@
 		$(this).parents("#card").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
+		/* start add for SDI-2885 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for SDI-2885 */
 	});
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1979,6 +1873,13 @@
 		$(this).parents("#cardDebit").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
+		/* start add for SDI-2885 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for SDI-2885 */
 	});
 	</script>
 	<script>
@@ -1992,155 +1893,3 @@
 		 $('ul.accepted-cards li').removeClass('active-card');
 	 });
 	</script>
-		<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-var createWalletModel = document.getElementById('createWalletPopup');
-var createWalletData = document.getElementById('createWalletData');
-var createWalletPopup = document.getElementById('createWalletPopup');
-function createWallet() {
-		$.ajax({
-			type : "GET",
-			url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
-			contentType : "html/text",
-			success : function(response){
-				createWalletData.innerHTML=response;
-				createWalletModel.style.display = "block";   
-					  },	
-					failure : function(data) {
-					}
-				});  
-	
-}
-
-function closepop(){
-	createWalletModel.style.display = "none";
-}
-
-var count=0;
-function createWalletOTP(){
-    $(".mobileNumberError").hide();
-    $(".otpLastNameError").hide();
-    $(".otpFirstNameError").hide();
-    var mobileNo=$("#otpPhonenumber").val();
-    var firstName = $("#otpFirstName").val();
-	var lastName = $("#otpLastName").val();
-	var isFirstName = false;
-	var isLastName = false;
-	
- var isString = isNaN(mobileNo);
-
-	//First Name Validation
-	if(firstName == null || firstName.trim() == '' ){
-			$(".otpFirstNameError").show();
-			$(".otpFirstNameError").text("First name cannot be blank.");
-			isFirstName = false;
-	}else {
-		$(".otpFirstNameError").hide();
-		isFirstName = true;
-	}
-	
-	//Last Name Validation
- if(lastName == null || lastName.trim() == '' ){
-			$(".otpLastNameError").show();
-			$(".otpLastNameError").text("Last name cannot be blank.");
-			isLastName = false;
-	}else {
-		$(".otpLastNameError").hide();
-		isLastName = true;
-	} 
- if(isString==true || mobileNo.trim()==''){
-		$(".mobileNumberError").show();
-		$(".mobileNumberError").text("Enter only Numbers");
-  	}
- else if(!/^[0-9]+$/.test(mobileNo))
-    {
-  		  $(".mobileNumberError").show();
-          $(".mobileNumberError").text("Enter only Numbers");
-  }
- else if(mobileNo.length > 0 && mobileNo.length < 9 ){
-    	  $(".mobileNumberError").show();
-          $(".mobileNumberError").text("Enter correct mobile number");
-  	}
- else{
-	 
-	 if(isFirstName && isLastName) {
-		 count++;
-		 	var staticHost = $('#staticHost').val();
-			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-			
-			if(count <= 4){
-			 $.ajax({
-					type : "POST",
-					url : ACC.config.encodedContextPath + "/wallet/walletCreateOTP",
-					data :"mobileNumber="+mobileNo,
-					success : function(response) {
-						$("#no-click,.loaderDiv").remove();
-						if(response =='isUsed'){
-							$(".mobileNumberError").show();
-							$(".mobileNumberError").text("This mobile number is alredy used. Please enter different number and try again");
-							$('#otp-submit-section').hide();
-						}else{
-						$(".wcOTPError").show();
-						$(".wcOTPError").html("<span class='text-success'>OTP sent succesfully</span>");
-						$('#otp-submit-section').show();
-						}
-					}
-				}); 
-			 
-			}else{
-				$(".otpError").show();
-				$(".otpError").text("OTP limt exceeded 5 times, pleae try again");
-			}
-	 }
-  	}
-}
-
-function editOtpField(fieldId) {
-	var value = document.getElementById(fieldId);
-	value.readOnly = false;
-	value.focus();
-}
-
-function submitWalletData(){
-	var data = $("#walletForm").serialize();
-	$(".mobileNumberError").hide();
-	$(".wcOTPError").hide();
-	var staticHost = $('#staticHost').val();
-	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-	
-	 $.ajax({
-			type : "GET",
-			url : ACC.config.encodedContextPath + "/wallet/validateWalletOTP",
-			data :data,
-			contentType: "text/application/html",
-			success : function(response) {
-				$("#no-click,.loaderDiv").remove();
-				
-			   if(response =="isUsed"){
-					$(".mobileNumberError").text("This mobile number is alredy used. Please enter other mobile number for this account");
-					$(".mobileNumberError").show();
-				}
-				else if(response=='OTPERROR'){
-					$(".wcOTPError").text("OTP verification failed. Please try again");
-					$(".wcOTPError").show();
-				}
-				else if(response=='success'){
-					closepop();
-					showAddEGV();
-				}
-				else {
-					$(".wcOTPError").text(response);
-					$(".wcOTPError").show();
-				} 
-				
-			}
-		}); 
-}
-</script>

@@ -26,6 +26,7 @@ import java.util.Date;
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -201,8 +202,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEBIT = "Debit Card".intern();
 	public static final String CREDIT = "Credit Card".intern();
 	public static final String COD = "COD".intern();
-	public static final String CLIQ_CASH = "Cliq Cash".intern();
-	public static final String CLIQCASH = "CliqCash".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
@@ -1074,25 +1073,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2001 = "B2001";
 	public static final String B2002 = "B2002";
 
-
-	// Codes For EGV Functionaity START
-	public static final String B5001 = "B5001";
-	public static final String B5002 = "B5002";
-	// Codes For EGV Functionaity END
-	
-	public static final String B5010 = "B5010";
-	public static final String B5011 = "B5011";
-	public static final String B5012 = "B5012";
-	public static final String B5013 = "B5013";
-	public static final String B5014 = "B5014";
-	public static final String B5015 = "B5015";
-	public static final String B5016 = "B5016";
-	public static final String B5017 = "B5017";
-	public static final String B5018 = "B5018";
-
-	
-	
-
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "B8000";
@@ -1319,6 +1299,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
 	public static final String ORDERTHRESHOLD = "order".intern();
 	//public static final String ORDER = "order".intern();
+	public static final String WH_ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -2359,31 +2340,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
-	
-	// EGV  changes Start
-
-		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
-		public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
-		public static final String QC_REFUND_TYPE_RETURN = "RETURN";
-		public static final String QC_REFUND_TYPE_REFUND = "REFUND";
-		
-		
-		public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
-		public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
-		public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
-		public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
-		// EGV Changes End
-		public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
-		
-		public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
-		
-		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
-		
-		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
-
-		public static final String PAYMENT_MODE_SPLIT = "split".trim();
-		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
-
 
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
 
@@ -2441,19 +2397,26 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SELLERVIOLATION = "Coupon you applied is not applicable on product, brand or seller selected in the Cart"
 			.intern();
-
+	public static final String AMP_SERVICEWORKER_QUERY = "select pk from {AmpServiceworker}";
+	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
-	
-	//SDI-4494	
+	//UBI-605
+	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
+		
+	//SDI-4494
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOMATIC = "AUTOMATIC";
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
-	
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
-	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
-	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "One-time password for activating your CLiQ Cash wallet is {1}. Please do not share with anyone. Feel free to call us at {2} in case of any queries.";
-	public static final String INVALID_WALLET_OTP = "INVALID";
+	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
+	
 
+	//Report for bulk cancellation
+	/*
+	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
+	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
+	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
+	 */
 }
