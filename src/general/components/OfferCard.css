@@ -1,0 +1,82 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding: 20px;
+  float: left;
+  background-image: linear-gradient(131deg, #fd2c7a, #ff7255);
+}
+.headingText {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  padding-bottom: 20px;
+  font-family: semibold;
+  color: #ffff;
+  text-align: left;
+}
+.headingDescription {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  padding-bottom: 10px;
+  color: #ffff;
+}
+.text {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  padding-bottom: 15px;
+  font-family: semibold;
+  color: #ffff;
+}
+.description {
+  width: 50%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  padding-bottom: 15px;
+  color: white;
+}
+.button {
+  width: auto;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+  padding-bottom: 3px;
+  font-family: semibold;
+  float: right;
+}
+.button:after {
+  height: 1px;
+  width: 100%;
+  color: #fff;
+  font-size: 15px;
+  line-height: 20px;
+  content: "";
+  position: absolute;
+  background-color: #fff;
+  left: 0;
+  bottom: 0;
+  display: inline-block;
+}
+.timer {
+  width: 50px;
+  float: right;
+}
+
+.iconHolder {
+  width: auto;
+  height: auto;
+  float: right;
+  position: relative;
+  padding-left: 30px;
+  padding-right: 15px;
+}
+.timerHolder {
+  position: absolute;
+  left: 0;
+}
