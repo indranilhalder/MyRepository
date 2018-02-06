@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./SellerCard.css";
 import CheckBox from "./CheckBox.js";
 import PropTypes from "prop-types";
-
 export default class SellerCard extends React.Component {
   handleClick() {
     if (this.props.onSelect) {
