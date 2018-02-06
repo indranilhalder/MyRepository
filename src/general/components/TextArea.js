@@ -19,7 +19,7 @@ export default class TextArea extends React.Component {
       <div className={styles.container}>
         <textarea
           className={styles.textAreaBox}
-          placeholder="Write your comments*"
+          placeholder="Write your comments"
           value={this.props.value ? this.props.value : this.state.value}
           onChange={event => {
             this.handleChange(event);
