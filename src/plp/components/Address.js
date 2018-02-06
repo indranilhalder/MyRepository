@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./Address.css";
 import PropTypes from "prop-types";
+
 export default class Address extends React.Component {
   handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.selectItem) {
+      this.props.selectItem();
     }
   }
   render() {
@@ -12,10 +13,10 @@ export default class Address extends React.Component {
     if (this.props.selected) {
       classActive = styles.addressHolderActive;
     }
-    let data = this.props;
+
     return (
-      <div className={styles.base}>
-        <div className={classActive} onClick={() => this.handleClick()}>
+      <div className={styles.base} onClick={() => this.handleClick()}>
+        <div className={classActive}>
           <div className={styles.heading}>{this.props.heading}</div>
           <div className={styles.text}>{this.props.address}</div>
         </div>
@@ -27,5 +28,6 @@ Address.propTypes = {
   text: PropTypes.string,
   heading: PropTypes.string,
   address: PropTypes.string,
-  onClick: PropTypes.func
+  selectItem: PropTypes.func,
+  selected: PropTypes.bool
 };
