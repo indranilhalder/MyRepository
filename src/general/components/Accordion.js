@@ -2,8 +2,6 @@ import React from "react";
 import styles from "./Accordion.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
-import iconImageURL from "./img/makefg.png";
-import searchImageURL from "./img/down-arrow.svg";
 import SizeGuide from "./SizeGuide.js";
 
 export default class Accordion extends React.Component {
@@ -35,11 +33,11 @@ export default class Accordion extends React.Component {
             this.changeIcon();
           }}
         >
-          <div className={activeheader}>
+          <div
+            className={activeheader}
+            style={{ fontSize: this.props.headerFontSize }}
+          >
             {this.props.text}
-            {this.props.size && (
-              <span className={styles.span}>({this.props.size})</span>
-            )}
             <div className={iconActive} />
           </div>
         </div>
@@ -53,6 +51,10 @@ export default class Accordion extends React.Component {
 Accordion.propTypes = {
   text: PropTypes.string,
   iconImageURL: PropTypes.string,
-  size: PropTypes.string,
+  headerFontSize: PropTypes.number,
   searchImageURL: PropTypes.string
+};
+
+Accordion.defaultProps = {
+  headerFontSize: 14
 };

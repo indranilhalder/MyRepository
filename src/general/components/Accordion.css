@@ -1,7 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  background-color: #f8f8f8;
   display: inline-block;
 }
 .holder {
@@ -18,16 +17,11 @@
   font-family: regular;
   text-align: left;
   transition: 300ms;
+  padding: 0 10px;
 }
 .textBoxActive {
-  height: auto;
-  color: #212121;
-  line-height: 50px;
-  text-align: left;
-  padding-left: 15px;
+  composes: textBox;
   font-family: semibold;
-  font-size: 16px;
-  transition: 300ms;
 }
 .span {
   margin-left: 5px;
@@ -48,18 +42,6 @@
   transition: 300ms;
 }
 .iconup {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  background-image: url("./img/down-arrow.svg");
-  position: absolute;
-  background-size: auto 14px;
-  background-repeat: no-repeat;
-  right: 10px;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  background-position: center;
+  composes: icon;
   transform: rotate(180deg);
-  transition: 300ms;
 }
