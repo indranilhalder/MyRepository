@@ -21,10 +21,9 @@ export default class Accordion extends React.Component {
     let activeheader = styles.textBox;
     if (this.state.isOpen) {
       iconActive = styles.iconup;
-    }
-    if (this.state.isOpen) {
       activeheader = styles.textBoxActive;
     }
+
     return (
       <div className={styles.base}>
         <div
