@@ -6,6 +6,7 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./Login.css";
 import LoginButton from "./LogInButton";
+import { SUCCESS } from "../../lib/constants";
 
 // Forgot password --> shows a modal
 // Don't have an account --> sign up --> a route change.
@@ -18,14 +19,19 @@ class Login extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.isLoggedIn === true) {
+      this.props.history.push("/home");
+    }
+  }
+
   onSubmit = () => {
     if (this.props.onSubmit) {
-      this.props.homeFeed();
-      this.props.history.push("/home");
-      this.props.onSubmit({
-        email: this.state.emailValue,
-        password: this.state.passwordValue
-      });
+      let userDetails = {};
+      userDetails.username = this.state.emailValue;
+      userDetails.password = this.state.passwordValue;
+      this.props.customerAccessToken(userDetails);
     }
   };
 

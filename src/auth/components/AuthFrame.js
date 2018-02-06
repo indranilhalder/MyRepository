@@ -16,7 +16,7 @@ export default class AuthFrame extends React.Component {
         {this.props.children}
         {this.props.showSocialButtons && (
           <div className={styles.socialButtons}>
-            <SocialButtons />
+            <SocialButtons {...this.props} />
           </div>
         )}
 
