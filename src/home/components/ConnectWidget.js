@@ -21,7 +21,7 @@ export default class ConnectWidget extends React.Component {
     return (
       <div className={styles.holder}>
         <MediaQuery query="(min-device-width: 1025px)">
-          <ConnectBaseWidget data={this.props.feedComponentData.data} />
+          <ConnectBaseWidget {...this.props.feedComponentData.data} />
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
           <div className={className}>

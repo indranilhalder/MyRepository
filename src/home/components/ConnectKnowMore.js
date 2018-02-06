@@ -3,7 +3,7 @@ import styles from "./ConnectKnowMore.css";
 export default class ConnectKnowMore extends React.Component {
   handleClick() {
     if (this.props.showConnectModal) {
-      this.props.showConnectModal(this.props);
+      this.props.showConnectModal(this.props.data);
     }
   }
   render() {

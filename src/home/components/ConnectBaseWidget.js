@@ -10,7 +10,7 @@ export default class ConnectBaseWidget extends React.Component {
     }
   };
   render() {
-    let data = this.props.data;
+    let data = this.props;
 
     return (
       <div
