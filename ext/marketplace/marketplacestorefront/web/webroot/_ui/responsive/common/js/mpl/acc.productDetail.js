@@ -3136,6 +3136,14 @@ function loadDefaultWishListName_SizeGuide() {
 			$(".emi-overlay").remove();
 			$("body").removeClass("no-scroll");	/*add for SDI-763*/
 			});
+		/*start for SDI-5548*/
+		$(document).off('click', ".pdp .Emi .modal-content .Close").on("click",function(e){
+			e.stopPropagation();
+			$(".Emi > p").removeClass("active mobile");
+			$(".emi-overlay").remove();
+			$("body").removeClass("no-scroll");
+		});
+		/*end for SDI-5548*/
 		$(".pdp .Emi > #EMImodal-content").on("click",function(e){
 			e.stopPropagation();
 			if($(window).width() > 1024){
