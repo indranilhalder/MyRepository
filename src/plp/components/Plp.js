@@ -1,5 +1,5 @@
 import React from "react";
-import Filter from "./Filter";
+import FilterContainer from "../containers/FilterContainer";
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import InformationHeader from "../../general/components/InformationHeader";
@@ -48,7 +48,10 @@ export default class Plp extends React.Component {
           }
         >
           <InformationHeader onClick={this.toggleFilter} text="Refine by" />
-          <Filter filterData={this.props.facetData} onApply={this.onApply} />
+          <FilterContainer
+            filterData={this.props.facetData}
+            onApply={this.onApply}
+          />
         </div>
         <div className={styles.footer}>
           <PlpMobileFooter
