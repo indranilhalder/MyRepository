@@ -25,24 +25,19 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
-import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
 import de.hybris.platform.solrfacetsearch.handler.KeywordRedirectHandler;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
@@ -74,6 +69,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -97,7 +93,6 @@ import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.wsdto.AmountOptionsWSDTO;
 import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationDTO;
 import com.tisl.mpl.wsdto.ClassificationDTOLister;
@@ -105,7 +100,6 @@ import com.tisl.mpl.wsdto.ClassificationMobileWsData;
 import com.tisl.mpl.wsdto.Classifications;
 import com.tisl.mpl.wsdto.ColorLinkData;
 import com.tisl.mpl.wsdto.DeliveryModeData;
-import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.ExchangeLinkUrl;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListDTO;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO;
@@ -121,7 +115,6 @@ import com.tisl.mpl.wsdto.PromotionMobileData;
 import com.tisl.mpl.wsdto.RefundReturnDTO;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
-import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.VariantOptionMobileData;
 
 
@@ -192,11 +185,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
 
-	@Resource(name = "mplDefaultPriceDataFactory")
-	private DefaultPriceDataFactory priceDataFactory;
-	
-	@Autowired
-	private UserService userService;
+
 	/**
 	 * @throws CMSItemNotFoundException
 	 * @desc This service fetches all the details of A+ content based on product code
@@ -926,7 +915,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
-
+				//TPR-6228/SDI-2805
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
+				{
+					productDetailMobile
+							.setBrandInfo(productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+									.getBrand().getBrandDescription() : StringUtils.substring(
+									productData.getBrand().getBrandDescription(), 0, MplConstants.BRANDINFO_CHAR_LIMIT));
+				}
 
 				// changed for TPR-796
 				//first set false to make all available
@@ -2987,7 +2983,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 
 			//TPR-1727 Removal of Out of stock
-			if (null != buyBoxData && null != buyBoxData.getAvailable() && buyBoxData.getAvailable().intValue() <= 0)
+			//SDI-4314
+			if (null != buyBoxData
+					&& ((StringUtils.isEmpty(buyBoxData.getSellerArticleSKU())) || (null != buyBoxData.getAvailable()))
+					&& (buyBoxData.getAvailable().intValue() <= 0))
 			{
 				return null;
 			}
@@ -3132,135 +3131,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 		}
 		return displayConfigurableAttributeForPriceBreakup;
-	}
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
-	 */
-	@Override
-	public EgvProductInfoWSDTO getEgvProductDetails()
-	{
-		LOG.debug("Getting EGV product Details");
-		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
-		AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
-		double minPrice = 1.0D;
-		double maxPrice = 30000.0D;
-		String priceOptions = null;
-		try {
-			
-			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-
-			if(null != customer) {
-				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
-					egvProductData.setIsWalletCreated(true);
-				}else {
-					egvProductData.setIsWalletCreated(false);
-					egvProductData.setFirstName(customer.getQcVerifyFirstName());
-					egvProductData.setLastName(customer.getQcVerifyLastName());
-					egvProductData.setMobileNumber(customer.getQcVerifyMobileNo());
-				}
-				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
-				{
-					egvProductData.setIsWalletOtpVerified(true);
-				}
-			}
-			
-			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
-			{
-				minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);
-				LOG.debug("Configurable Buying EGV Min Price " +minPrice);
-			}
-			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE))
-			{
-				maxPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE);
-				LOG.debug("Configurable Buying EGV Max Price " +maxPrice);
-			}
-			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS))
-			{
-				priceOptions = configurationService.getConfiguration()
-						.getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
-				LOG.debug("Configurable Buying EGV price options " +priceOptions);
-			}
-			if (minPrice > 0.0D)
-			{
-				TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
-				final BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
-				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
-						MarketplacecommerceservicesConstants.INR);
-				if (null != priceData)
-				{
-					minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
-					minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
-					minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
-					minPriceWsDto.setPriceType(priceData.getPriceType());
-					minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-					minPriceWsDto.setValue(priceData.getValue());
-					amountOptions.setMinPrice(minPriceWsDto);
-				}
-			}
-
-			if (maxPrice > 0.0D)
-			{
-				TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
-				final BigDecimal minPriceBigDecimal = new BigDecimal(maxPrice);
-				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
-						MarketplacecommerceservicesConstants.INR);
-				if (null != priceData)
-				{
-					minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
-					minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
-					minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
-					minPriceWsDto.setPriceType(priceData.getPriceType());
-					minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-					minPriceWsDto.setValue(priceData.getValue());
-					amountOptions.setMaxPrice(minPriceWsDto);
-				}
-			}
-
-			if (null != priceOptions)
-			{
-				final String[] configurablePriceOptions = priceOptions.split(",");
-				List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
-				if (null != configurablePriceOptions)
-				{
-					for (final String price : configurablePriceOptions)
-					{
-						TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
-						final BigDecimal PriceBigDecimal = new BigDecimal(Double.valueOf(price).doubleValue());
-						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, PriceBigDecimal,
-								MarketplacecommerceservicesConstants.INR);
-						if (null != priceData)
-						{
-							PriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
-							PriceWsDto.setDoubleValue(priceData.getDoubleValue());
-							PriceWsDto.setFormattedValue(priceData.getFormattedValue());
-							PriceWsDto.setPriceType(priceData.getPriceType());
-							PriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-							PriceWsDto.setValue(priceData.getValue());
-							configurablePrices.add(PriceWsDto);
-						}
-					}
-					
-					if(CollectionUtils.isNotEmpty(configurablePrices)){
-						amountOptions.setOptions(configurablePrices);
-					}
-				}
-			}
-			
-			egvProductData.setAmountOptions(amountOptions);
-			egvProductData.setIsCustomizationAvailable(true);
-			egvProductData.setIsMoreDesigns(false);
-			egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
-			egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
-		//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
-
-		}catch (Exception e) {
-			LOG.error("Exception occurredd while getting EGV Product Details "+e.getMessage());
-		}
-	
-		return egvProductData;
 	}
 
 	/**
@@ -3450,5 +3320,5 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		this.redirectHandlers = redirectHandlers;
 	}
 
-	
+
 }
