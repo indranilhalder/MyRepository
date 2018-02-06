@@ -23,6 +23,7 @@ class ProductListingsPage extends Component {
           searchresult={this.props.productListings.searchresult}
           facetData={this.props.productListings.facetdata}
           showSort={this.props.showSort}
+          onApply={this.props.onApply}
         />
       );
     } else {

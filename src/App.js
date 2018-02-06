@@ -62,12 +62,13 @@ class App extends Component {
     return (
       <div className={className}>
         <Switch>
+          <Route path="/productListings" component={ProductListingsContainer} />
+
           <Route path="/home" component={HomeContainer} />
           <Route
             path="/"
             render={routeProps => <Auth {...routeProps} {...this.props} />}
           />
-          <Route path="/productListings" component={ProductListingsContainer} />
         </Switch>
         <ModalContainer />
       </div>
