@@ -16,11 +16,16 @@ export default class TextArea extends React.Component {
           onChange={event => {
             this.handleChange(event);
           }}
+          style={{ height: `${this.props.height}px` }}
         />
       </div>
     );
   }
 }
 TextArea.propTypes = {
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  height: PropTypes.number
+};
+TextArea.defaultProps = {
+  height: 100
 };
