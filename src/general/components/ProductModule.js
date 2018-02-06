@@ -71,7 +71,11 @@ ProductModule.propTypes = {
   onClick: PropTypes.func,
   onDownload: PropTypes.func,
   isWhite: PropTypes.bool,
-  onConnect: PropTypes.func
+  onConnect: PropTypes.func,
+  averageRating: PropTypes.number,
+  totalNoOfReviews: PropTypes.number,
+  offerText: PropTypes.string,
+  bestDeliveryInfo: PropTypes.string
 };
 ProductModule.defaultProps = {
   view: "grid"

@@ -3,12 +3,11 @@ import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import Background from "./img/bg.jpg";
 import { transformData } from "./utils.js";
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 
 export default class ThemeOffer extends React.Component {
   handleClick() {
-    if (this.props.seeAll) {
-      this.props.seeAll();
-    }
+    this.props.history.push(PRODUCT_LISTINGS);
   }
 
   render() {

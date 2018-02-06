@@ -2,6 +2,7 @@
   width: 100%;
   height: auto;
   background: #ececec;
+  min-height: calc(100vh - 140px);
 }
 .header {
   width: 100%;
@@ -9,6 +10,7 @@
   position: relative;
   padding-right: 50px;
   padding-left: 20px;
+  margin-bottom: 20px;
 }
 .area {
   display: inline-block;
