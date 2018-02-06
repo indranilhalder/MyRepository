@@ -128,7 +128,7 @@ export function loginUser(userLoginDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${LOGIN_PATH}/${
           userLoginDetails.username
         }/customerLogin?access_token=${
@@ -172,10 +172,10 @@ export function signUpUser(userObj) {
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${SIGN_UP}?access_token=${
           JSON.parse(globalCookie).access_token
-        }&isPwa=true&loginId=${userObj.loginId}&password=${
+        }&isPwa=true&username=${userObj.loginId}&password=${
           userObj.password
         }&platformNumber=${PLATFORM_NUMBER}`
       );
@@ -217,7 +217,7 @@ export function otpVerification(otpDetails, userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(otpVerificationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${OTP_VERIFICATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&otp=${otpDetails}&isPwa=true&platformNumber=${PLATFORM_NUMBER}&username=${
@@ -262,7 +262,7 @@ export function forgotPassword(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(forgotPasswordRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${FORGOT_PASSWORD_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&platformNumber=2&isPwa=true&username=${userDetails}`
@@ -307,7 +307,7 @@ export function forgotPasswordOtpVerification(otpDetails, userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(forgotPasswordOtpVerificationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${FORGOT_PASSWORD_OTP_VERIFICATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&platformNumber=2&otp=${otpDetails}&isPwa=true&username=${userDetails}`
@@ -349,7 +349,7 @@ export function resetPassword(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(resetPasswordRequest());
     try {
-      const result = await api.post(RESET_PASSWORD, userDetails);
+      const result = await api.postMock(RESET_PASSWORD, userDetails);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -388,7 +388,7 @@ export function getGlobalAccessToken() {
   return async (dispatch, getState, { api }) => {
     dispatch(globalAccessTokenRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret`
       );
       const resultJson = await result.json();
@@ -430,7 +430,7 @@ export function refreshToken() {
   return async (dispatch, getState, { api }) => {
     dispatch(refreshTokenRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${TOKEN_PATH}?refresh_token=${
           JSON.parse(customerCookie).refresh_token
         }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
@@ -473,7 +473,7 @@ export function customerAccessToken(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${
           userDetails.username
         }&password=${userDetails.password}&access_token=${
@@ -613,7 +613,7 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&access_token=${
           JSON.parse(globalCookie).access_token
         }&isSocialMedia=Y&socialMediaPlatform=${platForm}`
@@ -651,7 +651,7 @@ export function socialMediaRegistration(userName, accessToken, platForm) {
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaRegistrationRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${SOCIAL_MEDIA_REGISTRATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
@@ -710,7 +710,7 @@ export function socialMediaLogin(userName, platform) {
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${
           JSON.parse(customerCookie).access_token
         }&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
@@ -756,7 +756,7 @@ export function getCustomerProfile() {
   return async (dispatch, getState, { api }) => {
     dispatch(getCustomerProfileRequest());
     try {
-      const result = await api.post(
+      const result = await api.postMock(
         `${CUSTOMER_PROFILE_PATH}/9886973967/getMyProfile?access_token=${
           JSON.parse(customerCookie).access_token
         }&isPwa=true`

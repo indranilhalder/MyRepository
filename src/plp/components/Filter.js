@@ -4,6 +4,8 @@ import FilterSelect from "./FilterSelect";
 import FilterCategories from "./FilterCategories";
 import PropTypes from "prop-types";
 import styles from "./Filter.css";
+import map from "lodash/map";
+import compact from "lodash/compact";
 
 export default class Filter extends React.Component {
   constructor(props) {
@@ -32,7 +34,17 @@ export default class Filter extends React.Component {
   };
   onApply(val) {
     if (this.props.onApply) {
-      this.props.onApply(val);
+      const filters = map(this.state.selected, (selectedArr, i) => {
+        const key = this.props.filterData[i].key;
+        const compactedSelectedArr = compact(selectedArr);
+        const selectedArrObject = {
+          key,
+          filters: compactedSelectedArr
+        };
+        return selectedArrObject;
+      });
+
+      this.props.onApply(filters);
     }
   }
   handleSelect(val, index) {
