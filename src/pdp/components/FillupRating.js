@@ -9,9 +9,16 @@ export default class FillupRating extends React.Component {
     };
   }
   rate(rating) {
-    this.setState({
-      rating
-    });
+    this.setState(
+      {
+        rating
+      },
+      () => {
+        if (this.props.onChange) {
+          this.props.onChange(this.state.rating);
+        }
+      }
+    );
   }
   render() {
     const starSpans = [];
@@ -32,5 +39,6 @@ export default class FillupRating extends React.Component {
   }
 }
 FillupRating.propTypes = {
-  rating: PropTypes.number
+  rating: PropTypes.number,
+  onChange: PropTypes.func
 };
