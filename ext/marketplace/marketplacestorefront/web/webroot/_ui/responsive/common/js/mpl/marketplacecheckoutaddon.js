@@ -6589,6 +6589,7 @@ function useWalletForPaymentAjax(){
 	}
 
 	$(".cliqCashApplyAlert").hide();
+	$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").show();
 	$(".topPlaceOrderBtn").hide();
 
 	$("#make_cc_payment").show();
