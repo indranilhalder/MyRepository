@@ -15,7 +15,11 @@ class SignUp extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.isLoggedIn === true) {
+      this.props.history.push("/home");
+    }
+  }
   onSubmit() {
     if (this.props.onSubmit) {
       this.props.onSubmit({

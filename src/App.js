@@ -13,13 +13,11 @@ import {
   PRODUCT_DESCRIPTION_ROUTER,
   MAIN_ROUTER
 } from "../src/lib/constants";
-
 import {
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
   REFRESH_TOKEN
 } from "./lib/constants.js";
-
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -40,7 +38,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const auth = {
   isAuthenticated: false
 };
-
 class App extends Component {
   componentWillMount() {
     this.getAccessToken();
@@ -60,7 +57,6 @@ class App extends Component {
       auth.isAuthenticated = true;
     }
   };
-
   render() {
     let className = AppStyles.base;
     if (this.props.modalStatus) {
@@ -70,12 +66,9 @@ class App extends Component {
     return (
       <div className={className}>
         <Switch>
-          <Route
-            path={MAIN_ROUTER}
-            render={routeProps => <Auth {...routeProps} {...this.props} />}
-          />
-          <PrivateRoute path={HOME_ROUTER} component={HomeContainer} />
           <Route path={PRODUCT_LISTINGS} component={ProductListingsContainer} />
+          <Route path={HOME_ROUTER} component={HomeContainer} />
+          <Route path={MAIN_ROUTER} component={Auth} />
           <Route
             path={PRODUCT_DESCRIPTION_ROUTER}
             component={ProductDescriptionContainer}
