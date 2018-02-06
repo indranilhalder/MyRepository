@@ -3,18 +3,27 @@ import BrandImage from "../../general/components/BrandImage";
 import Carousel from "../../general/components/Carousel";
 import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
-
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class FollowingBrands extends React.Component {
   newFollow = () => {
     if (this.props.onFollow) {
       this.props.onFollow();
     }
   };
+
+  handleClick() {
+    this.props.history.push(PRODUCT_LISTINGS);
+  }
+
   render() {
     const followWidgetData = this.props.feedComponentData.data;
     return (
       <div className={styles.base}>
-        <Carousel header={this.props.feedComponentData.title}>
+        <Carousel
+          header={this.props.feedComponentData.title}
+          buttonText="See All"
+          seeAll={() => this.handleClick()}
+        >
           {followWidgetData.items &&
             followWidgetData.items.map((datum, i) => {
               return (
@@ -23,7 +32,7 @@ export default class FollowingBrands extends React.Component {
                   image={datum.imageURL}
                   value={datum.type}
                   fit={datum.type}
-                  onClick={datum.onClick}
+                  onClick={() => this.handleClick()}
                 />
               );
             })}

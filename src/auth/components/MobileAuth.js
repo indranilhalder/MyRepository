@@ -33,6 +33,7 @@ export default class Auth extends React.Component {
     }
     return (
       <AuthFrame
+        {...this.props}
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}

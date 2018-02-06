@@ -39,5 +39,5 @@ FilterSelect.propTypes = {
   selected: PropTypes.bool,
   icon: PropTypes.element,
   label: PropTypes.string,
-  count: PropTypes.string
+  count: PropTypes.number
 };
