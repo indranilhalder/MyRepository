@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export default class TextArea extends React.Component {
   handleChange(event) {
     if (this.props.onChange) {
-      this.props.onChange();
+      this.props.onChange(event.target.value);
     }
   }
   render() {
@@ -13,6 +13,7 @@ export default class TextArea extends React.Component {
         <textarea
           className={styles.textAreaBox}
           placeholder="Address*"
+          value={this.props.value}
           onChange={event => {
             this.handleChange(event);
           }}
@@ -24,7 +25,8 @@ export default class TextArea extends React.Component {
 }
 TextArea.propTypes = {
   onChange: PropTypes.func,
-  height: PropTypes.number
+  height: PropTypes.number,
+  value: PropTypes.string
 };
 TextArea.defaultProps = {
   height: 100

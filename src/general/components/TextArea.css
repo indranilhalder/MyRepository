@@ -14,6 +14,6 @@
 .textAreaBox:focus {
   outline: none;
 }
-.textAreaBoxcolor:placeholder {
+.textAreaBox:placeholder {
   color: #8d8d8d;
 }
