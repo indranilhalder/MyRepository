@@ -11,7 +11,8 @@ export default class Accordion extends React.Component {
       isOpen: false
     };
   }
-  changeIcon() {
+
+  openMenue() {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen
     }));
@@ -29,7 +30,7 @@ export default class Accordion extends React.Component {
         <div
           className={styles.holder}
           onClick={() => {
-            this.changeIcon();
+            this.openMenue();
           }}
         >
           <div
