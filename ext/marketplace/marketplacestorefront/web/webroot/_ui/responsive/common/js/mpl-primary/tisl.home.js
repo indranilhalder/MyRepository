@@ -298,7 +298,8 @@ $(document).on("click", ".showcaseItem", function() {
 	var name=$(this).parents('#showcase').children('h2').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
-		link_obj: this,
+		/*1122186_SDI-5746*/
+		/*link_obj: this,*/
 		link_text: name+'_'+value,
 		event_type : name+'_click'
 	});
