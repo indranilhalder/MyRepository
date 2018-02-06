@@ -16,12 +16,19 @@ export const userDetails = {
     firstName: "Suraj",
     gender: "Male",
     lastName: "Kumar",
-    mobileNumber: "7503721061"
+    mobileNumber: "7503721061",
+    loginId: "d2470a48-e71e-41b7-b6b2-a083af3d8c08"
   }
 };
 
 export const userDetailsFailure = {
-  status: "FAILURE",
+  status: "Failure",
   errorCode: "B00001",
-  message: "Failed"
+  message: "Cannot read property 'username' of undefined"
+};
+
+export const userDetailsLoginFailure = {
+  status: "Failure",
+  errorCode: "B00001",
+  message: "Cannot read property 'loginId' of undefined"
 };

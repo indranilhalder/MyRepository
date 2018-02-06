@@ -44,7 +44,7 @@ export function multiSelectSubmit(values, questionId, positionInFeed) {
   return async (dispatch, getState, { api }) => {
     dispatch(multiSelectSubmitRequest(positionInFeed));
     try {
-      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
+      const result = await api.postMock(SINGLE_SELECT_SUBMIT_PATH, {
         optionId: values,
         questionId
       });
@@ -88,7 +88,7 @@ export function selectSingleSelectResponse(value, questionId, positionInFeed) {
   return async (dispatch, getState, { api }) => {
     dispatch(singleSelectRequest(positionInFeed));
     try {
-      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
+      const result = await api.postMock(SINGLE_SELECT_SUBMIT_PATH, {
         questionId,
         optionId: [value]
       });
@@ -130,7 +130,7 @@ export function homeFeed() {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
-      const result = await api.get(HOME_FEED_PATH);
+      const result = await api.getMock(HOME_FEED_PATH);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
@@ -173,7 +173,7 @@ export function getComponentData(positionInFeed, fetchURL) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
     try {
-      const result = await api.get(
+      const result = await api.getMock(
         fetchURL.substring(fetchURL.lastIndexOf("/") + 1)
       );
       const resultJson = await result.json();
