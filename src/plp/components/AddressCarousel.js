@@ -2,13 +2,14 @@ import React from "react";
 import styles from "./AddressCarousel.css";
 import PropTypes from "prop-types";
 import Address from "./Address.js";
-import Carousel from "./Carousel";
+import CarouselWithSelect from "../../general/components/CarouselWithSelect";
 export default class AddressCarousel extends React.Component {
   render() {
     let data = this.props.data;
     return (
       <div className={styles.base}>
-        <Carousel
+        <CarouselWithSelect
+          limit={1}
           headerComponent={
             <div className={styles.header}>{this.props.text}</div>
           }
@@ -21,17 +22,22 @@ export default class AddressCarousel extends React.Component {
                 key={i}
                 heading={datum.heading}
                 address={datum.address}
-                selected={datum.selected}
+                value={datum.value}
               />
             );
           })}
-        </Carousel>
+        </CarouselWithSelect>
       </div>
     );
   }
 }
 AddressCarousel.propTypes = {
-  text: PropTypes.string
+  text: PropTypes.string,
+  data: PropTypes.shape({
+    heading: PropTypes.string,
+    addres: PropTypes.string,
+    value: PropTypes.string
+  })
 };
 AddressCarousel.defaultProps = {
   text: "Select from your saved list."

@@ -5,6 +5,7 @@ import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
 import ConnectDetails from "../../home/components/ConnectDetailsWithModal";
 import Sort from "../../plp/components/SortModal";
+import AddressModal from "../../plp/components/AddressModal";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -74,10 +75,11 @@ export default class ModalRoot extends React.Component {
         />
       ),
       ConnectDetails: <ConnectDetails closeModal={() => this.handleClose()} />,
-      Sort: <Sort />
+      Sort: <Sort />,
+      Address: <AddressModal />
     };
 
-    let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
+    let SelectedModal = MODAL_COMPONENTS["Address"];
 
     const Modal = this.props.modalStatus ? (
       <ModalPanel
