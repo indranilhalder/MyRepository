@@ -7,6 +7,12 @@ import HomeContainer from "./home/containers/HomeContainer.js";
 import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
 import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionContainer";
 import * as Cookie from "./lib/Cookie";
+import {
+  HOME_ROUTER,
+  PRODUCT_LISTINGS,
+  PRODUCT_DESCRIPTION_ROUTER,
+  MAIN_ROUTER
+} from "../src/lib/constants";
 
 import {
   GLOBAL_ACCESS_TOKEN,
@@ -23,7 +29,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
       ) : (
         <Redirect
           to={{
-            pathname: "/"
+            pathname: { MAIN_ROUTER }
           }}
         />
       )
@@ -45,6 +51,7 @@ class App extends Component {
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
     }
+    console.log(globalCookie);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
@@ -64,13 +71,13 @@ class App extends Component {
       <div className={className}>
         <Switch>
           <Route
-            path="/"
+            path={MAIN_ROUTER}
             render={routeProps => <Auth {...routeProps} {...this.props} />}
           />
-          <Route path="/home" component={HomeContainer} />
-          <Route path="/productListings" component={ProductListingsContainer} />
+          <PrivateRoute path={HOME_ROUTER} component={HomeContainer} />
+          <Route path={PRODUCT_LISTINGS} component={ProductListingsContainer} />
           <Route
-            path="/productDescription"
+            path={PRODUCT_DESCRIPTION_ROUTER}
             component={ProductDescriptionContainer}
           />
         </Switch>
