@@ -1,8 +1,6 @@
 import React from "react";
-import withTouchControls from "../../higherOrderComponents/withTouchControls";
-
 import styles from "./ProductGalleryMobile.css";
-class ProductGalleryMobile extends React.Component {
+export default class ProductGalleryMobile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,4 +76,3 @@ class ProductGalleryMobile extends React.Component {
     );
   }
 }
-export default ProductGalleryMobile;
