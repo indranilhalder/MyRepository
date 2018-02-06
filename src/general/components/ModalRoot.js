@@ -10,14 +10,9 @@ export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
     this.el = document.createElement("div");
-  }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.user.isLoggedIn === true &&
-      nextProps.user.nextProps.error !== ""
-    ) {
-      this.props.history.push("/home");
-    }
+    this.state = {
+      loggedIn: false
+    };
   }
 
   componentDidMount() {
@@ -37,6 +32,7 @@ export default class ModalRoot extends React.Component {
   submitOtp(otpDetails) {
     this.props.otpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
+    this.props.history.push("/home");
   }
 
   resetPassword(userDetails) {
