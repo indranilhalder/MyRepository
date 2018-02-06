@@ -15,6 +15,7 @@ var checkTamperingPlaceOrder = false; //TISUAT-6107 fix
 function viewPaymentCredit(){
 	//SDI-2149
 	$(".card_nochooseErrorSavedCard_popup").css("display","none");
+	$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");		/*add for SDI-5438*/
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -74,6 +75,7 @@ function viewPaymentCredit(){
 function viewPaymentDebit(){
 	//SDI-2149
 	$(".card_nochooseErrorSavedCard_popup").css("display","none");
+	$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");		/*add for SDI-5438*/
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
