@@ -127,6 +127,8 @@ public final class MessageConstants
 	public static final String PROFILE_OTPNUMBER_INVALID = "profile.OTPNumber.invalid";
 	public static final String LOGIN_PW_CHANGE = "/login/pw/change";
 	public static final String TOKEN = "?token=";
+	//added for SDI-4363
+	public static final String CUSTOMER_UNIQUE_ID = "customerUniqueID";
 	public static final String UPDATEPWD_TOKEN_INVALID = "updatePwd.token.invalid";
 	public static final String ACCOUNT_CONFIRMATION_PASSWORD_UPDATED = "account.confirmation.password.updated";
 	public static final String ACCOUNT_CONFIRMATION_PASSWORD_ENTERUNIQUEPASSWORD = "account.confirmation.password.enteruniquepassword";
@@ -228,8 +230,5 @@ public final class MessageConstants
 	//Luxury Gigya
 	public static final String LUXURY_GIGYA_APIKEY = "luxury.gigya.apikey";
 	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
-	
-	public static final String TEXT_ACCOUNT_PROFILE_QC_SERVER_ERROR = "text.account.profile.qcServerError";
-
 
 }
