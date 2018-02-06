@@ -845,5 +845,10 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 		}
 		return null;
 	}
+	@Override
+	public List<OrderModel> fetchCliqCashOrdersWithMultiplePayments(Date startTime, Date endTime)
+	{
+		return forwardPaymentCleanUpDao.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
 
+	}
 }
