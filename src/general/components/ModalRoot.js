@@ -12,10 +12,7 @@ export default class ModalRoot extends React.Component {
     this.el = document.createElement("div");
   }
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.user.isLoggedIn === true &&
-      nextProps.user.nextProps.error !== ""
-    ) {
+    if (nextProps.user.isLoggedIn === true) {
       this.props.history.push("/home");
     }
   }
