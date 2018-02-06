@@ -12,29 +12,7 @@ export default class Address extends React.Component {
           <div className={styles.searchHolder}>
             <PinCodeUpdate />
           </div>
-
-          <AddressCarousel
-            data={[
-              {
-                heading: "Home",
-                address:
-                  "Ranka Colony Rd, Munivenkatppa Layout, Bilekahalli, Bengaluru, Karnataka 560076",
-                value: "one"
-              },
-              {
-                heading: "Office",
-                address:
-                  "4th Floor, Agies Building, #17, 1st A Cross, Koramangala 5th Block, Bengaluru, Karnataka 560095",
-                value: "two"
-              },
-              {
-                heading: "Hotel",
-                address:
-                  "4th Floor, Agies Building, #17, 1st A Cross, Koramangala 5th Block, Bengaluru, Karnataka 560095",
-                value: "three"
-              }
-            ]}
-          />
+          {this.props.data && <AddressCarousel data={this.props.data} />}
         </div>
       </BottomSlideModal>
     );
