@@ -4,9 +4,13 @@ import CheckBox from "./CheckBox.js";
 import PropTypes from "prop-types";
 
 export default class SellerCard extends React.Component {
+  handleClick() {
+    if (this.props.onSelect) {
+      this.props.onClick();
+    }
+  }
   render() {
     let priceClass = styles.priceHolder;
-
     if (
       this.props.discountPrice &&
       this.props.Price !== this.props.discountPrice
@@ -14,7 +18,7 @@ export default class SellerCard extends React.Component {
       priceClass = styles.priceCancelled;
     }
     return (
-      <div className={styles.base}>
+      <div className={styles.base} onClick={() => this.handleClick()}>
         <div className={styles.textBox}>
           <div className={styles.heading}>
             {this.props.heading}
@@ -55,5 +59,6 @@ SellerCard.propTypes = {
   cashText: PropTypes.string,
   policyText: PropTypes.string,
   offerText: PropTypes.string,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
+  onClick: PropTypes.func
 };
