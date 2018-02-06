@@ -43,7 +43,8 @@
 }
 .focused {
   composes: base;
-  border-bottom-color: #000000;
+  border: 0px;
+  border-bottom-color: #d3d3d3;
   border-bottom-style: solid;
 }
 .disabled {

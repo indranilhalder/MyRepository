@@ -5,7 +5,8 @@ export default class Input2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      focused: false
+      focused: false,
+      value: props.value ? props.value : ""
     };
   }
   handleFocus(event) {
@@ -19,6 +20,12 @@ export default class Input2 extends React.Component {
       this.props.onBlur(event);
     }
     this.setState({ focused: false });
+  }
+  handleChange(event) {
+    if (this.props.onChange) {
+      this.props.onChange(event.target.value);
+    }
+    this.setState({ value: event.target.value });
   }
   render() {
     return (
@@ -40,6 +47,7 @@ export default class Input2 extends React.Component {
               hollow={this.props.hollow}
               onFocus={event => this.handleFocus(event)}
               onBlur={event => this.handleBlur(event)}
+              onChange={event => this.handleChange(event)}
               {...this.props}
             />
           </div>
