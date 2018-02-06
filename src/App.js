@@ -48,7 +48,6 @@ class App extends Component {
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
     }
-    console.log(globalCookie);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));

@@ -1,6 +1,7 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import { CUSTOMER_ACCESS_TOKEN } from "../../lib/constants";
+
+import { CUSTOMER_ACCESS_TOKEN, FAILURE } from "../../lib/constants";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -26,10 +27,8 @@ export const REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE =
 export const ADD_PRODUCT_TO_BAG_REQUEST = "ADD_PRODUCT_TO_BAG_REQUEST";
 export const ADD_PRODUCT_TO_BAG_SUCCESS = "ADD_PRODUCT_TO_BAG_SUCCESS";
 export const ADD_PRODUCT_TO_BAG_FAILURE = "ADD_PRODUCT_TO_BAG_FAILURE";
-
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
-const FAILURE = "FAILURE";
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
@@ -139,7 +138,7 @@ export function addProductToWishListFailure(error) {
   };
 }
 
-export function addProductToWishList() {
+export function addProductToWishList(productDetails) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToWishListRequest());
@@ -187,7 +186,7 @@ export function removeProductFromWishListFailure(error) {
   };
 }
 
-export function removeProductFromWishList() {
+export function removeProductFromWishList(productDetails) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(removeProductFromWishListRequest());

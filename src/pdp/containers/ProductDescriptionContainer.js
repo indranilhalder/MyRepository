@@ -14,17 +14,17 @@ const mapDispatchToProps = dispatch => {
     getProductDescription: () => {
       dispatch(getProductDescription());
     },
-    getProductPinCode: () => {
-      dispatch(getProductPinCode());
+    getProductPinCode: productDetails => {
+      dispatch(getProductPinCode(productDetails));
     },
-    addProductToWishList: () => {
-      dispatch(addProductToWishList());
+    addProductToWishList: productDetails => {
+      dispatch(addProductToWishList(productDetails));
     },
-    removeProductFromWishList: () => {
-      dispatch(removeProductFromWishList());
+    removeProductFromWishList: productDetails => {
+      dispatch(removeProductFromWishList(productDetails));
     },
-    addProductToBag: () => {
-      dispatch(addProductToBag());
+    addProductToBag: productDetails => {
+      dispatch(addProductToBag(productDetails));
     }
   };
 };

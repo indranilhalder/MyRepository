@@ -16,8 +16,10 @@ class SignUp extends Component {
     };
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.user.isLoggedIn === true) {
-      this.props.history.push("/home");
+    if (this.props.user) {
+      if (this.props.user.isLoggedIn === true) {
+        this.props.history.push("/home");
+      }
     }
   }
   onSubmit() {
