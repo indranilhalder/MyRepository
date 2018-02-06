@@ -1,22 +1,18 @@
 import "isomorphic-fetch";
-export const API_URL_ROOT = "https://cliq-json-server.herokuapp.com";
+export const API_URL_ROOT =
+  "https://fierce-bastion-16980.herokuapp.com/marketplacewebservices";
 
-export async function post(url, payload) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+export async function post(path) {
+  return await fetch(`${API_URL_ROOT}/${path}`, {
     method: "POST",
-    body: JSON.stringify(payload),
     headers: {
-      access_token: localStorage.getItem("authorizationKey")
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }
   });
 }
 
 export async function get(url) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
-    headers: {
-      access_token: localStorage.getItem("authorizationKey")
-    }
-  });
+  return await fetch(`${API_URL_ROOT}/${url}`, {});
 }
 
 export async function patch(url, payload) {
