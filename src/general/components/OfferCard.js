@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./OfferCard.css";
 import Counter from "./TimerCounter.js";
 import { Icon } from "xelpmoc-core";
+import PropTypes from "prop-types";
 
 export default class OfferCard extends React.Component {
   handleClick(val) {
@@ -14,19 +15,23 @@ export default class OfferCard extends React.Component {
       <div className={styles.base}>
         <div className={styles.headingText}>
           {this.props.heading}
-          <div className={styles.IconHolder}>
+          <div className={styles.iconHolder}>
             <span className={styles.timer}>
               {" "}
-              <Counter />
+              <Counter endTime={this.props.endTime} />
             </span>
             <div className={styles.timerHolder}>
-              <Icon image={this.props.imageUrl} color="transparent" size={20} />
+              <Icon
+                image={this.props.imageUrl}
+                color="transparent"
+                size={this.props.size}
+              />
             </div>
           </div>
         </div>
         <div className={styles.headingDescription}>
           {this.props.description}
-          <span className={styles.text}>{this.props.extra}</span>
+          <span className={styles.text}>{this.props.couponCode}</span>
         </div>
         <div className={styles.description}>{this.props.descriptionData}</div>
         <div className={styles.button} onClick={() => this.handleClick()}>
@@ -36,3 +41,17 @@ export default class OfferCard extends React.Component {
     );
   }
 }
+
+OfferCard.propTypes = {
+  image: PropTypes.string,
+  heading: PropTypes.string,
+  imageUrl: PropTypes.string,
+  description: PropTypes.string,
+  couponCode: PropTypes.string,
+  descriptionData: PropTypes.string,
+  buttonText: PropTypes.string,
+  onClick: PropTypes.func
+};
+OfferCard.defaultProps = {
+  size: 20
+};

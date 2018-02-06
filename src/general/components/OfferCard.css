@@ -65,11 +65,10 @@
 }
 .timer {
   width: 50px;
-
   float: right;
 }
 
-.IconHolder {
+.iconHolder {
   width: auto;
   height: auto;
   float: right;
