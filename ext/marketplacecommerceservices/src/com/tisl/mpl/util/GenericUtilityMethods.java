@@ -34,7 +34,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -750,11 +749,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1683,7 +1682,7 @@ public class GenericUtilityMethods
 		double cartTotalNetSelPrice = 0.0D;
 		//double couponDiscount = 0.0D;
 		double cartEntryNetSellPrice = 0.0D;
-		final DecimalFormat df = new DecimalFormat("#.##");
+		//		final DecimalFormat df = new DecimalFormat("#.##");
 		double totalDeliveryCharge = 0;
 		Long cartEntryMrp = Long.valueOf(0);
 		double cartDiscount = 0.0D;
@@ -1935,7 +1934,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * SDI_2801
-	 * 
+	 *
 	 * @param cartModel
 	 * @param cartDataDetails
 	 */

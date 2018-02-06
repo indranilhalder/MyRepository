@@ -554,6 +554,15 @@ public class UsersController extends BaseCommerceController
 	private static final String UTF = "UTF-8";
 	private static final String STORE_NA = "Store Not available";
 
+	private static final String PLATFORM_NO = "The platform number is ";
+	private static final String MPLCARTVOUCHER = "mplcartvoucher";
+	private static final String PROMOVOUCHER = "promovoucher";
+	private static final String IS = " is ";
+	private static final String PCMUSSID = "PCMUSSID FOR JEWELLERY :::::::::: for";
+	private static final String FOR_TRANSACTION_ID = " for the TransactionId :";
+	private static final String RETURN_PICK_SLOT = "Return Pickup Slot From Time :";
+	private static final String EXCEPTION_OCCURED = "Exception Occured during saving Customer BankDetails for COD order : ";
+	private static final String EXCEPTION_OCCURED_FICO = "Exception Occured while sending bank details to Fico  :  ";
 	@Autowired
 	private HttpServletRequest request;
 
@@ -589,7 +598,7 @@ public class UsersController extends BaseCommerceController
 
 
 			//TPR-6272 starts here
-			LOG.debug("The platform number is " + platformNumber);
+			LOG.debug(PLATFORM_NO + platformNumber);
 			int platformDecider;
 			if (StringUtils.isNotEmpty(platformNumber))//IQA
 			{
@@ -599,7 +608,7 @@ public class UsersController extends BaseCommerceController
 			{
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
 			}
-			LOG.debug("The platform number is " + platformDecider);
+			LOG.debug(PLATFORM_NO + platformDecider);
 			//TPR-6272 ends here
 			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable, platformDecider);//TPR-6272 Parameter platformNumber added
 			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
@@ -740,7 +749,7 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			//SDI-639 starts here
-			LOG.debug("The platform number is " + platformNumber);
+			LOG.debug(PLATFORM_NO + platformNumber);
 			int platformDecider;
 			if (StringUtils.isNotEmpty(platformNumber))//IQA
 			{
@@ -750,7 +759,7 @@ public class UsersController extends BaseCommerceController
 			{
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
 			}
-			LOG.debug("The platform number is " + platformDecider);
+			LOG.debug(PLATFORM_NO + platformDecider);
 			//SDI-639 ends here
 
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
@@ -7069,11 +7078,11 @@ public class UsersController extends BaseCommerceController
 
 										if (mplCartVoucher)
 										{ //MplCartOfferVoucherModel
-											voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+											voucherMap.put(MPLCARTVOUCHER, Boolean.valueOf(willApply));
 										}
 										else
 										{ //PromotionVoucherModel
-											voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+											voucherMap.put(PROMOVOUCHER, Boolean.valueOf(willApply));
 										}
 
 										//if (willApply == false)
@@ -7099,14 +7108,14 @@ public class UsersController extends BaseCommerceController
 						for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
 						{
 
-							if (voucherentry.getKey().equals("mplcartvoucher"))
+							if (voucherentry.getKey().equals(MPLCARTVOUCHER))
 							{
 								if (!voucherentry.getValue().booleanValue())
 								{
 									checkcartVoucher1 = false;
 								}
 							}
-							if (voucherentry.getKey().equals("promovoucher"))
+							if (voucherentry.getKey().equals(PROMOVOUCHER))
 							{
 								if (!voucherentry.getValue().booleanValue())
 								{
@@ -7427,11 +7436,11 @@ public class UsersController extends BaseCommerceController
 									}
 									if (mplCartVoucher)
 									{ //MplCartOfferVoucherModel
-										voucherMap.put("mplcartvoucher", Boolean.valueOf(willApply));
+										voucherMap.put(MPLCARTVOUCHER, Boolean.valueOf(willApply));
 									}
 									else
 									{ //PromotionVoucherModel
-										voucherMap.put("promovoucher", Boolean.valueOf(willApply));
+										voucherMap.put(PROMOVOUCHER, Boolean.valueOf(willApply));
 									}
 
 									//if (willApply == false)
@@ -7456,14 +7465,14 @@ public class UsersController extends BaseCommerceController
 					for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
 					{
 
-						if (voucherentry.getKey().equals("mplcartvoucher"))
+						if (voucherentry.getKey().equals(MPLCARTVOUCHER))
 						{
 							if (!voucherentry.getValue().booleanValue())
 							{
 								checkcartVoucher1 = false;
 							}
 						}
-						if (voucherentry.getKey().equals("promovoucher"))
+						if (voucherentry.getKey().equals(PROMOVOUCHER))
 						{
 							if (!voucherentry.getValue().booleanValue())
 							{
@@ -7869,8 +7878,7 @@ public class UsersController extends BaseCommerceController
 								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
-						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
-								+ jewelleryInfo.get(0).getPCMUSSID());
+						LOG.debug(PCMUSSID + orderEntry.getSelectedUssid() + IS + jewelleryInfo.get(0).getPCMUSSID());
 					}
 					else
 					{
@@ -7899,7 +7907,8 @@ public class UsersController extends BaseCommerceController
 					}
 					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
 					{
-						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerRichAttrOfQuickDrop
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)))
 						{
 							returnmodes.setQuickDrop(true);
 						}
@@ -8120,8 +8129,8 @@ public class UsersController extends BaseCommerceController
 							}
 							if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
 							{
-								if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop
-										.equalsIgnoreCase("yes")))
+								if ((productRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerRichAttrOfQuickDrop
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)))
 								{
 									returnModes.setQuickDrop(true);
 								}
@@ -8251,8 +8260,7 @@ public class UsersController extends BaseCommerceController
 								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
-						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
-								+ jewelleryInfo.get(0).getPCMUSSID());
+						LOG.debug(PCMUSSID + orderEntry.getSelectedUssid() + IS + jewelleryInfo.get(0).getPCMUSSID());
 					}
 					else
 					{
@@ -8345,7 +8353,7 @@ public class UsersController extends BaseCommerceController
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Self Courier return file download location for transaction id " + transactionId + " with order code  "
-						+ orderCode + " is " + SelfCourierDocumentLink);
+						+ orderCode + IS + SelfCourierDocumentLink);
 			}
 			returnDeatails.setSelfCourierDocumentLink(SelfCourierDocumentLink);
 
@@ -8457,8 +8465,7 @@ public class UsersController extends BaseCommerceController
 								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
-						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + subOrderEntry.getSelectedUssid() + " is "
-								+ jewelleryInfo.get(0).getPCMUSSID());
+						LOG.debug(PCMUSSID + subOrderEntry.getSelectedUssid() + IS + jewelleryInfo.get(0).getPCMUSSID());
 					}
 					else
 					{
@@ -8488,7 +8495,8 @@ public class UsersController extends BaseCommerceController
 					}
 					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
 					{
-						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerRichAttrOfQuickDrop
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)))
 						{
 							returnModes.setQuickDrop(true);
 						}
@@ -8521,8 +8529,7 @@ public class UsersController extends BaseCommerceController
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("Return Pickup Slot From Time :" + timeSlotFrom + " for the TransactionId :"
-									+ returnData.getTransactionId());
+							LOG.debug(RETURN_PICK_SLOT + timeSlotFrom + FOR_TRANSACTION_ID + returnData.getTransactionId());
 						}
 						timeSlotFrom = time;
 					}
@@ -8530,8 +8537,7 @@ public class UsersController extends BaseCommerceController
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("Return Pickup Slot From Time :" + timeSlotto + " for the TransactionId :"
-									+ returnData.getTransactionId());
+							LOG.debug(RETURN_PICK_SLOT + timeSlotto + FOR_TRANSACTION_ID + returnData.getTransactionId());
 						}
 						timeSlotto = time;
 					}
@@ -8727,13 +8733,11 @@ public class UsersController extends BaseCommerceController
 
 				catch (final EtailNonBusinessExceptions e)
 				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 
 				}
 
@@ -8773,13 +8777,11 @@ public class UsersController extends BaseCommerceController
 				}
 				catch (final EtailNonBusinessExceptions e)
 				{
-					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED_FICO + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED_FICO + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 			}
 			//for self Courier
@@ -9617,12 +9619,13 @@ public class UsersController extends BaseCommerceController
 	{
 		final String returnCancelFlag = "R";
 		final ReturnRequestDTO returnRequestDTO = new ReturnRequestDTO();
-		final ReturnReasonDetails returnReasonData = null;
-		final ReturnReasonDTO reasonDto = new ReturnReasonDTO();
-		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		//SONR Unused Variable
+		//		final ReturnReasonDetails returnReasonData = null;
+		//		final ReturnReasonDTO reasonDto = new ReturnReasonDTO();
+		//		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
 		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
 				"finejewellery.reverseseal.sellername");
-		boolean isFineJew = false;
+		//	boolean isFineJew = false;
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
@@ -9725,8 +9728,8 @@ public class UsersController extends BaseCommerceController
 							}
 							if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
 							{
-								if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop
-										.equalsIgnoreCase("yes")))
+								if ((productRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerRichAttrOfQuickDrop
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)))
 								{
 									returnModes.setQuickDrop(true);
 								}
@@ -9740,7 +9743,7 @@ public class UsersController extends BaseCommerceController
 						//break;
 						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 						{
-							isFineJew = true;
+							//isFineJew = true;
 
 							if (showRevSeal)
 							{
@@ -9888,8 +9891,7 @@ public class UsersController extends BaseCommerceController
 								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
-						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + subOrderEntry.getSelectedUssid() + " is "
-								+ jewelleryInfo.get(0).getPCMUSSID());
+						LOG.debug(PCMUSSID + subOrderEntry.getSelectedUssid() + IS + jewelleryInfo.get(0).getPCMUSSID());
 					}
 					else
 					{
@@ -9919,7 +9921,8 @@ public class UsersController extends BaseCommerceController
 					}
 					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
 					{
-						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerRichAttrOfQuickDrop
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)))
 						{
 							returnModes.setQuickDrop(true);
 						}
@@ -9952,8 +9955,7 @@ public class UsersController extends BaseCommerceController
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("Return Pickup Slot From Time :" + timeSlotFrom + " for the TransactionId :"
-									+ returnData.getTransactionId());
+							LOG.debug(RETURN_PICK_SLOT + timeSlotFrom + FOR_TRANSACTION_ID + returnData.getTransactionId());
 						}
 						timeSlotFrom = time;
 					}
@@ -9961,8 +9963,7 @@ public class UsersController extends BaseCommerceController
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("Return Pickup Slot From Time :" + timeSlotto + " for the TransactionId :"
-									+ returnData.getTransactionId());
+							LOG.debug(RETURN_PICK_SLOT + timeSlotto + FOR_TRANSACTION_ID + returnData.getTransactionId());
 						}
 						timeSlotto = time;
 					}
@@ -10165,13 +10166,11 @@ public class UsersController extends BaseCommerceController
 
 				catch (final EtailNonBusinessExceptions e)
 				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception Occured during saving Customer BankDetails for COD order : " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 
 				}
 
@@ -10211,13 +10210,11 @@ public class UsersController extends BaseCommerceController
 				}
 				catch (final EtailNonBusinessExceptions e)
 				{
-					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED_FICO + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 				catch (final Exception e)
 				{
-					LOG.error("Exception Occured while sending bank details to Fico  :  " + orderCode
-							+ MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
+					LOG.error(EXCEPTION_OCCURED_FICO + orderCode + MarketplacecommerceservicesConstants.EXCEPTIONCAUSELOG + e);
 				}
 			}
 			//for self Courier
@@ -10288,7 +10285,7 @@ public class UsersController extends BaseCommerceController
 		final GetOrderHistoryListWsDTO orderHistoryListData = new GetOrderHistoryListWsDTO();
 		final List<OrderDataWsDTO> orderTrackingListWsDTO = new ArrayList<OrderDataWsDTO>();
 
-		final int orderCount = 0;
+		//		final int orderCount = 0;
 		final int start = 0, end = 0;
 		OrderData orderDetails = null;
 		try

@@ -34,4 +34,6 @@ public interface RefundClearPerformableDao
 	List<ConsignmentModel> getRefundClearConsignments(Date queryTAT, Date queryStartTime);
 
 
+	List<String> fetchRtmRequestIds(List<String> requestIds);
+
 }

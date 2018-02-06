@@ -19,8 +19,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.bulk.service.BulkCancellationService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -50,9 +52,9 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	 */
 	/*
 	 * @Resource(name = "sessionService") private SessionService sessionService;
-	 *
+	 * 
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private PriceDataFactory priceDataFactory;
 	 */
 	private Converter<OrderModel, OrderData> orderConverter;
@@ -60,8 +62,16 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private ConfigurationService configurationService;
 	private TaskService taskService;
 
+	@Autowired
+	private BulkCancellationService bulkCancellationService;
 
 	@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
+	/*
+	 * private static final String COMMA_DELIMITER = ","; private static final String NEW_LINE = "\r\n"; private static
+	 * final String DOUBLE_QUOTE = "\""; private static final String HYPHEN = "-"; private static final String DOT = ".";
+	 * private static final String FILE_EXTENSION = "csv"; private static final String REPORT_FILENAME =
+	 * "bulk_cancellation_report";
+	 */
 	@Override
 	public PerformResult perform(final CronJobModel arg0)
 	{
@@ -74,6 +84,7 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			 * ArrayList<BulkCancellationProcessModel>();
 			 */
 
+			//final List<BulkCancellationProcessModel> bulkCanProcessList = bulkCancellationService.getOrderCancelData();
 			final List<OrderEntryModel> orderCanList = orderModelService.getOrderCancelData();
 
 			for (final OrderEntryModel orderEntry : orderCanList)
@@ -95,6 +106,19 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 					}
 
 				}
+
+				/*
+				 * final Date date = new Date(); final SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd-HHmmss-"); final
+				 * String fileName = ft.format(date) + HYPHEN + REPORT_FILENAME + DOT + FILE_EXTENSION; final
+				 * List<Map<Integer, String>> listOfMaps = new ArrayList<Map<Integer, String>>(); Map<Integer, String>
+				 * dataMap = null; for (final BulkCancellationProcessModel bulkCanEntry : bulkCanProcessList) { String
+				 * status = null; bulkCanEntry.getTransactionId(); bulkCanEntry.getParentOrderNo();
+				 * bulkCanEntry.getLoadStatus(); if ("1".equals(bulkCanEntry.getLoadStatus())) { status = "Success"; } else
+				 * if ("-1".equals(bulkCanEntry.getLoadStatus())) { status = "Failure"; } else { status = "Initiate"; }
+				 * dataMap = new HashMap<Integer, String>(); dataMap.put(Integer.valueOf(1),
+				 * bulkCanEntry.getParentOrderNo()); dataMap.put(Integer.valueOf(2), bulkCanEntry.getTransactionId());
+				 * dataMap.put(Integer.valueOf(3), status); listOfMaps.add(dataMap); } writeToCSV(listOfMaps, fileName);
+				 */
 
 			}
 
@@ -119,6 +143,35 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 		}
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
+
+	/*
+	 * public void writeToCSV(final List<Map<Integer, String>> listOfMaps, final String fileName) { final String
+	 * exportFilePath = configurationService.getConfiguration().getString(
+	 * MarketplacecommerceservicesConstants.bulk_cancellation_report_path); final File exportDir = new
+	 * File(exportFilePath); // Creating export directory if not exists. if (!exportDir.isDirectory()) {
+	 * exportDir.mkdir(); } String exportFileName = null;
+	 *
+	 *
+	 * exportFileName = exportFilePath + fileName;
+	 *
+	 *
+	 * final File exportFile = new File(exportFileName); if (!exportFile.exists()) { try { exportFile.createNewFile(); }
+	 * catch (final IOException e) { LOG.error("error occurred while creating the export file" + e.getMessage()); } }
+	 *
+	 * try { BufferedWriter bufferedWriter = null; final FileWriter fileWriter = new FileWriter(exportFileName, true);
+	 * bufferedWriter = new BufferedWriter(fileWriter); if (listOfMaps != null && listOfMaps.size() > 0) { for (final
+	 * Map<Integer, String> dataMap : listOfMaps) { for (int i = 0; i < dataMap.size(); i++) {
+	 * bufferedWriter.append(DOUBLE_QUOTE); bufferedWriter.append(dataMap.get(Integer.valueOf(i + 1)));
+	 * bufferedWriter.append(DOUBLE_QUOTE); if ((i + 1) != dataMap.size()) { bufferedWriter.append(COMMA_DELIMITER); }
+	 *
+	 * } bufferedWriter.append(NEW_LINE); } bufferedWriter.flush(); bufferedWriter.close(); fileWriter.close();
+	 *
+	 *
+	 *
+	 * } } catch (UnsupportedEncodingException | FileNotFoundException e) {
+	 * LOG.error("Error occurred while creating the export file" + e.getMessage()); } catch (final IOException e) {
+	 * LOG.error("Error occurred while writing into the export file" + e.getMessage()); } }
+	 */
 
 	/**
 	 * @param finalModelToSaveList

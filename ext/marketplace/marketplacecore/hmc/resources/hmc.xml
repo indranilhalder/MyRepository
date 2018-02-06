@@ -53,7 +53,11 @@
 		<group name="ticketsystemgroup">
 			<typeref type="CRMTicketDetail"  description="typeref.crmticketdetail.description"/>		
 		</group>
-
+		
+		<group name="group.amp">
+			<typeref type="AmpServiceworker" description="group.ampserviceworker.description" />
+			<typeref type="AmpMenifest" description="group.ampmenifest.description" />		
+		</group>
 	</explorertree>
 
 	<!-- Configuration for GlobalCodeMaster -->
@@ -5258,5 +5262,59 @@
 <!-- PR-15 starts here -->	
 
 
+	<type name="AmpServiceworker" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="code" />
+				<condition attribute="cacheName" />
+				<condition attribute="cacheVersion" />
+				<condition attribute="filesToCache" />
+				<condition attribute="cachingStrategy" />
+				<condition attribute="serviceworkerJs" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="code" width="100"></attribute>
+						<attribute name="cacheName" width="200"></attribute>
+						<attribute name="cacheVersion" width="100"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="code" />
+						<attribute name="cacheName" />
+						<attribute name="cacheVersion" />
+						<attribute name="filesToCache" />
+						<attribute name="cachingStrategy" />
+						<attribute name="serviceworkerJs" />
+					</itemlayout>
+				</treeview>
+			</result>
+		</organizer>
+	</type>
 	
+	
+	<type name="AmpMenifest" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="code" />
+				<condition attribute="menifestJson" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="code" width="100"></attribute>
+						<attribute name="menifestJson" width="200"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="code" />
+						<attribute name="menifestJson" />
+					</itemlayout>
+				</treeview>
+			</result>
+		</organizer>
+	</type>
 </configuration>

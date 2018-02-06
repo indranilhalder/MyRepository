@@ -271,7 +271,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			//Bug Id TISRLUAT-986 20-02-2017 Start
 			if (shipment.getInScan() != null)
 			{
-				if (Boolean.valueOf(shipment.getInScan()).booleanValue())
+				if (Boolean.parseBoolean(shipment.getInScan()))
 				{
 					LOG.info("******************** Sending notification for HOTC");
 					sendNotificationForHotc(orderModel, orderNumber, mobileNumber, trackingUrl, logisticPartner, shipmentNewStatus);
@@ -446,8 +446,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
 	 */
 

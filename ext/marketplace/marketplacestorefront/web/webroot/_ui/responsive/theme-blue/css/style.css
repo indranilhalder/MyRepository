@@ -9555,7 +9555,7 @@ footer .banner {
       .half.square > div *:first-child {
         margin-top: 0px; }
       .half.square > div *:last-child {
-        margin: 20px auto; }
+        margin: 20px auto; }	
   .half.square h3 {
     font-size: 24px;
     line-height: 1.5;
@@ -10227,7 +10227,7 @@ body .account .right-account .order-history .pagination li{
     font-weight: lighter;
     margin-top: 3px;
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 5px;	/* modify for SDI-2915 */
     color: #7e7e7e;
       }
       #productYouCare .home-product-you-care-carousel-img img {
@@ -17129,6 +17129,7 @@ body .compare>.wrapper {
     display: block;
     line-height: 20px;
     font-weight: 400;
+    word-wrap: break-word;	/* add for TISUAT-6296 */ 
 }
 .return-form.success .return-container .reason {
     margin: 30px 0;
@@ -32648,12 +32649,12 @@ body.page-homepage .trending h1 > span{
 }
 #productYouCare .short-info > h3 span {
     color: #fff;
-    font-size: 14px;
-    padding: 20px 15px;
+    font-size: 11px;	/* modify for SDI-2915 */
+    padding: 20px 8px;	/* modify right & left padding for SDI-2915 */
 }
 #productYouCare .short-info > h3 span:after {
     color: #fff;
-    font-size: 16px;
+    font-size: 15px;	/* modify for SDI-2915 */
 }
 .qued-content a.button.maroon:hover {
     background-color: transparent;
@@ -67028,7 +67029,7 @@ footer .banner {
     	line-height: 24px;
 	}
 	footer>div>ul>li.active ul {
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */	/* commented for SDI-4687 */
 	}
 	footer>div>ul>li.active ul li {
     height: 24px;
@@ -69581,7 +69582,7 @@ body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block 
 select.update-entry-quantity-input.review-page-select{
    background-image: none ! important;
    width: 50px ! important;
-   padding: 0px 18px 0 22px ! important;
+   padding: 0px 18px 0 15px ! important;	/* change left padding for SDI-3524 & SDI-3904 */
 }
 .footer-copyrigt-text{
 	float:right;
@@ -72545,7 +72546,7 @@ footer .banner {
     	line-height: 24px;
 	}
 	footer>div>ul>li.active ul {
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */		/* commented for SDI-4687 */
 	}
 	footer>div>ul>li.active ul li {
     height: 24px;
@@ -77574,7 +77575,7 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	.brandsCarouselItem .home-brands-you-love-main-image-heading {padding: 13px 7px; text-overflow: ellipsis !important; overflow: hidden; white-space: nowrap;}
 	.brandsCarouselItem .home-brands-you-love-main-image-desc {padding: 0px 7px; color: #666666; height: 65px;}
-	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; text-align: left;}
+	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; text-align: left;}	
 	.brandsCarouselItem .visit-store-wrapper a {color: #0066c0;}
 	
 	#brandsYouLoveMobileComp .owl-controls .owl-page {display: none;}

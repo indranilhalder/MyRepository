@@ -2285,7 +2285,7 @@ public class CartsController extends BaseCommerceController
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 				List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
 				GetWishListProductWsDTO gwlp = null;
-				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
 				{
 					if (null != abstractOrderEntry)
@@ -2294,6 +2294,19 @@ public class CartsController extends BaseCommerceController
 
 						if (StringUtils.isNotEmpty((abstractOrderEntry.getQuantity().toString())))
 						{
+							//SDI-4069 Unable to Buy More Than 1 qty for Same Size Ring starts
+							if ((entryNumber == abstractOrderEntry.getEntryNumber().longValue())
+									&& (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(abstractOrderEntry.getProduct()
+											.getProductCategoryType())))
+							{
+								maximum_configured_quantiy = siteConfigService.getInt(
+										MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+							}
+							else
+							{
+								maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+							}
+							//SDI-4069 ends
 							/////////// TISSAM-14
 							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 							{
@@ -2758,7 +2771,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */

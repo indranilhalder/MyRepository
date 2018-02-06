@@ -900,6 +900,3 @@ $(document).ready(function()
 	    }
     });
 });
-		
-
-		

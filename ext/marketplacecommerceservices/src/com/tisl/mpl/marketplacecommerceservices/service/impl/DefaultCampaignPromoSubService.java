@@ -1426,8 +1426,16 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		final CampaignData data = campaignData;
 
 		data.setIdentifier(promotion.getCode());
-		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
-		data.setPriority(promotion.getPriority().toString());
+		//SDI-4760
+		// Null Checking
+		if (null != promotion.getPromotionGroup())
+		{
+			data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
+		}
+		if (null != promotion.getPriority())
+		{
+			data.setPriority(promotion.getPriority().toString());
+		}
 		data.setStartDate(formatter.format(promotion.getStartDate()));
 		data.setEndDate(formatter.format(promotion.getEndDate()));
 		data.setUrl(populateOfferURL(promotion));

@@ -98,9 +98,9 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 			}
 
 			JSONObject jobjectOrdrRes = null;
-			if (null != (jobjectContent.get(MarketplacecommerceservicesConstants.ORDER)))
+			if (null != (jobjectContent.get(MarketplacecommerceservicesConstants.WH_ORDER)))
 			{
-				jobjectOrdrRes = (JSONObject) jobjectContent.get(MarketplacecommerceservicesConstants.ORDER);
+				jobjectOrdrRes = (JSONObject) jobjectContent.get(MarketplacecommerceservicesConstants.WH_ORDER);
 			}
 
 			//validating order response

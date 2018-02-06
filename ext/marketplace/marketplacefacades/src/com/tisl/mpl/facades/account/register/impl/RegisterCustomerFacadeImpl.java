@@ -55,7 +55,6 @@ import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtDefaultCustomerService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -280,9 +279,6 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 		this.mplCustomerWebService = mplCustomerWebService;
 	}
 
-
-	@Resource(name = "GigyaService")
-	private GigyaService gigyaservice;
 
 	/**
 	 * @description this is used to register a new customer

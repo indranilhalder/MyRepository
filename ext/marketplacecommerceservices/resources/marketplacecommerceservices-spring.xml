@@ -2064,7 +2064,7 @@
                 <property name="excludedCronJobCodes">
                     <set/>
                 </property>
-                <property name="expiryDays" value="${cronjob.dayOld.count}"/>
+                <!-- <property name="expiryDays" value="${cronjob.dayOld.count}"/>  -->
             </bean>
         </property>
     </bean>
@@ -2481,6 +2481,23 @@
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.OmsSubmissionPendingReportJob"
 		autowire="byName">
 	</bean>
+	<!-- gigya data pulling job starts-->
+	
+	<bean id="gigyaDataPullingJob" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullingJob"
+		autowire="byName" />
+	
+	<bean id="gigyaDataPullServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.GigyaDataPullServiceImpl">
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
+	<bean id="gigyaDataPullDaoImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.GigyaDataPullDaoImpl" />
+		
+	<bean id="gigyaDataPullUtility" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullUtility" />
+	
+	<!-- gigya data pulling job ends -->
+
     
     
        <!--  Added EGV Beans 22-09-2017 --> 

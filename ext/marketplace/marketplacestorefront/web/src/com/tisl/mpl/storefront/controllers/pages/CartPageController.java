@@ -1021,6 +1021,18 @@ public class CartPageController extends AbstractPageController
 
 
 			{
+			//SDI-4009
+			         final int maximum_configured_quantiy = siteConfigService.getInt(
+						MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+
+				if (form.getQuantity().longValue() > maximum_configured_quantiy)
+				{
+					GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							"basket.page.message.update.reducedNumberOfItemsAdded.lowStock");
+					return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+
+				}
+			//SDI-4009
 				//TPR-5346 start
 				final boolean checkMaxLimList = getMplCartFacade().checkMaxLimitUpdate(entryNumber, form.getQuantity().longValue());
 				if (!checkMaxLimList)
