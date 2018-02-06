@@ -12,6 +12,18 @@ export default class FilterCategories extends React.Component {
   }
   render() {
     let data = this.props.data;
+    let filterCount = [];
+    if (this.props.selected) {
+      filterCount = this.props.selected.map(val => {
+        let summer = 0;
+        val.forEach(val => {
+          if (val !== null) {
+            summer++;
+          }
+        });
+        return summer;
+      });
+    }
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {
@@ -19,7 +31,7 @@ export default class FilterCategories extends React.Component {
             <FilterTab
               key={i}
               name={datum.name}
-              selectedFilterCount={datum.selectedFilterCount}
+              selectedFilterCount={filterCount[i]}
               onClick={val => this.handleClick(i)}
               selected={this.props.pageNumber === i}
               type={datum.isGlobalFilter ? GLOBAL : ADVANCE}
@@ -32,11 +44,13 @@ export default class FilterCategories extends React.Component {
 }
 
 FilterCategories.propTypes = {
-  data: PropTypes.shape({
-    name: PropTypes.string,
-    selectedFilterCount: PropTypes.number,
-    isGlobalFilter: PropTypes.bool
-  }),
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      selectedFilterCount: PropTypes.number,
+      isGlobalFilter: PropTypes.bool
+    })
+  ),
   pageNumber: PropTypes.number,
   onClick: PropTypes.func
 };
