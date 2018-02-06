@@ -3,8 +3,12 @@ import styles from "./SizeGuide.css";
 import propTypes from "prop-types";
 export default class SizeGuide extends React.Component {
   render() {
-    const data = this.props.data;
-    console.log(data);
+    const data = [
+      { key: "Chest/Bust", value: ": 36" },
+      { key: "Length HSP", value: ": 50" },
+      { key: "Shoulder", value: ": 16" },
+      { key: "Waist", value: ": 30" }
+    ];
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
