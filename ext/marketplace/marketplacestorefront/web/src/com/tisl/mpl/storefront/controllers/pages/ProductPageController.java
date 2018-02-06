@@ -60,6 +60,7 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
@@ -67,6 +68,7 @@ import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -76,6 +78,7 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,6 +86,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -163,8 +169,10 @@ import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.cms.data.FooterLinkData;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MSDRequestdata;
+import com.tisl.mpl.facades.data.MSDResponsedata;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -180,6 +188,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
@@ -198,15 +207,19 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
+import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+
+import atg.taglib.json.util.JSONException;
 
 
 
@@ -220,6 +233,12 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	
+	private static final String PLEASE_PROVIDE_CORRECT_INFORMATION = "Please provide correct information ";
+
+	private static final String ERRO_MSG = "erroMsg";
+
+	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -353,6 +372,8 @@ public class ProductPageController extends MidPageController
 	private BuyBoxFacade buyBoxFacade;
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 
 	@Resource(name = "baseSiteService")
@@ -401,7 +422,11 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
+	@Resource(name = "mplSlaveMasterFacade")
+	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
+	@Resource(name = "pointOfServiceConverter")
+	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
 
 	@Autowired
@@ -5477,4 +5502,107 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
+	@RequireHardLogIn
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
+	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+			final Model model, final HttpServletRequest request,@RequestParam(value = "egvErrorMsg", required = false) final String egvErrorMsg)
+	{
+		try
+		{
+
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			CustomerModel currentCustomer=null;
+			try
+			{
+				 currentCustomer = (CustomerModel) userService.getCurrentUser();
+				if(currentCustomer ==null){
+					return REDIRECT_PREFIX + "/login";
+				}
+				if(currentCustomer.getOriginalUid()==null){
+					return REDIRECT_PREFIX + "/login";
+				}
+			}
+			catch (Exception exception)
+			{
+				LOG.error("Getting Excpetion While getting current customer ");
+				return REDIRECT_PREFIX + "/login";
+			}
+
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			populateProductDetailForDisplay(productModel, model, request);
+			if (currentCustomer.getIsWalletActivated() != null)
+			{
+				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+				{
+					model.addAttribute("isOTPValidtion", Boolean.TRUE);
+				}
+				else
+				{
+					model.addAttribute("isOTPValidtion", Boolean.FALSE);
+				}
+			}
+			else
+			{
+				model.addAttribute("isOTPValidtion", Boolean.FALSE);
+			}
+			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
+			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
+			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+			model.addAttribute(new ReviewForm());
+			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
+			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
+			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+			try{
+			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
+			 String [] amountList = productPrice.split(",");
+			 model.addAttribute("amountList", amountList);
+			}catch(Exception exception){
+				LOG.error("Exception Occur while getting product price  ");
+			}
+			 
+			 model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE, variantProductModel.getSize());
+			}
+			getViewForPage(model);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		final EgvDetailForm egvDetailsform = new EgvDetailForm();
+		model.addAttribute("egvDetailsform", egvDetailsform);
+		if (StringUtils.isNotEmpty(egvErrorMsg))
+		{
+			 if(egvErrorMsg.equalsIgnoreCase("formValidation")){
+			     model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
+			 }
+			 else if(egvErrorMsg.equalsIgnoreCase("EGVOderError")){
+				 GlobalMessages.addMessage(model, GlobalMessages.CONF_MESSAGES_HOLDER, "mpl.gift.error.message",
+							new Object[] {});
+			 }
+		}
+		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
+		storeCmsPageInModel(model, contentPage);
+		setUpMetaDataForContentPage(model, contentPage);
+		return PAGES_LAYOUT_EGV_PDP_RESPONSIVE;
+	}
 }
