@@ -12,19 +12,19 @@ export default class ProductDetailsCard extends React.Component {
         </div>
         <div className={styles.productDescriptionHolder}>
           <div className={styles.productName}>{this.props.productName}</div>
-          <div className={styles.productMatirial}>
+          <div className={styles.producMaterial}>
             {this.props.productMaterial}
           </div>
 
           <div className={styles.productPrice}>
-            {this.props.onPrice && (
-              <span className={styles.onPrice}>Rs {this.props.onPrice}</span>
+            {this.props.price && (
+              <span className={styles.onPrice}>Rs {this.props.price}</span>
             )}
-            {this.props.oldPrice && (
+            {this.props.discountPrice && (
               <del>
                 <span className={styles.deletePrice}>
                   Rs
-                  {this.props.oldPrice}
+                  {this.props.discountPrice}
                 </span>
               </del>
             )}
@@ -42,7 +42,7 @@ export default class ProductDetailsCard extends React.Component {
           </div>
           {this.props.averageRating && (
             <div className={styles.displayRatingText}>
-              Rating <span>{this.props.averageRating}/ 5</span>
+              Rating <span>{this.props.averageRating}/5</span>
             </div>
           )}
         </div>
@@ -54,8 +54,8 @@ ProductDetailsCard.propTypes = {
   productImage: PropTypes.string,
   productName: PropTypes.string,
   productMaterial: PropTypes.string,
-  onPrice: PropTypes.string,
-  oldPrice: PropTypes.string,
+  price: PropTypes.string,
+  discountPrice: PropTypes.string,
   averageRating: PropTypes.number,
   totalNoOfReviews: PropTypes.number
 };
