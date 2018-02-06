@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: ownProps.feedComponentData
+    data: ownProps
   };
 };
 const mapDispatchToProps = dispatch => {

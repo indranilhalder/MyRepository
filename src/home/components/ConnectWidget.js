@@ -33,7 +33,9 @@ export default class ConnectWidget extends React.Component {
                 <div className={styles.connectBox}>{this.props.header}</div>
                 <div className={styles.label}>{this.props.text}</div>
                 <div className={styles.buttonBox}>
-                  <ConnectKnowMoreContainer {...this.props} />
+                  <ConnectKnowMoreContainer
+                    data={this.props.feedComponentData.data}
+                  />
                 </div>
               </div>
             </div>
