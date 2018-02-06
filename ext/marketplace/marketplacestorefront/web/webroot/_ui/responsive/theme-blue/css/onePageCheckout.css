@@ -3923,10 +3923,10 @@ div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation{
     height: 40px;
 	}
 .cart.wrapper .left-block li#savedCard div.card p{
-	font-size: 10px;
+	/* font-size: 10px; */		/* commented for SDI-3160 */
   	letter-spacing: 0.5px;
   	color: #666666;
-  	padding-bottom: 2px;
+  	/* padding-bottom: 2px; */	/* commented for SDI-3160 */
 	}
 .add_address_button, .new-address > p{
 	display: none !important;
