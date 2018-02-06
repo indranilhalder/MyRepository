@@ -5,7 +5,9 @@ import { default as AppStyles } from "./App.css";
 import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
 import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
+import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionContainer";
 import * as Cookie from "./lib/Cookie";
+
 import {
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
@@ -43,7 +45,6 @@ class App extends Component {
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
     }
-
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
@@ -62,12 +63,16 @@ class App extends Component {
     return (
       <div className={className}>
         <Switch>
-          <Route path="/home" component={HomeContainer} />
           <Route
             path="/"
             render={routeProps => <Auth {...routeProps} {...this.props} />}
           />
+          <Route path="/home" component={HomeContainer} />
           <Route path="/productListings" component={ProductListingsContainer} />
+          <Route
+            path="/productDescription"
+            component={ProductDescriptionContainer}
+          />
         </Switch>
         <ModalContainer />
       </div>

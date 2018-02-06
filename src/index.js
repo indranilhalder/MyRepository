@@ -12,12 +12,14 @@ import modal from "../src/general/modal.reducers";
 import home from "../src/home/reducers/home.reducer";
 import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
+import productDescription from "./pdp/reducers/pdp.reducer";
 
 const rootReducer = combineReducers({
   user,
   modal,
   home,
-  productListings
+  productListings,
+  productDescription
 });
 
 let store = createStore(
