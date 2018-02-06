@@ -35,6 +35,7 @@ export default function withMultiSelect(Component, ownProps) {
       }
     }
     render() {
+      console.log(this.props);
       const children = this.props.children;
       const childrenWithProps = React.Children.map(children, (child, i) => {
         return React.cloneElement(child, {
@@ -46,7 +47,7 @@ export default function withMultiSelect(Component, ownProps) {
         });
       });
       return (
-        <Component selected={this.state.selected}>
+        <Component selected={this.state.selected} {...this.props}>
           {childrenWithProps}
         </Component>
       );
