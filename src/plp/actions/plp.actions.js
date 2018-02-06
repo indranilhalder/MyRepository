@@ -67,7 +67,7 @@ export function getProductListings() {
         }
       }
 
-      const result = await api.get(queryString);
+      const result = await api.getMock(queryString);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

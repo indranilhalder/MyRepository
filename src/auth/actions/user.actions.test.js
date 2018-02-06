@@ -4,12 +4,24 @@ import * as userActions from "./user.actions.js";
 import thunk from "redux-thunk";
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as user from "../mocks/user.mock";
+import * as Cookie from "../../lib/Cookie";
+const SIGN_UP_PATH =
+  "v2/mpl/users/customerRegistration?access_token=undefined&isPwa=true&username=undefined&password=123456&platformNumber=2";
+const LOGIN_PATH =
+  "v2/mpl/users/test@xelpmoc.in/customerLogin?access_token=undefined&password=123456&isPwa=true";
+const OTP_VERIFICATION_PATH =
+  "/v2/mpl/users/registrationOTPVerification?access_token=undefined&otp=[object Object]&isPwa=true&platformNumber=2&username=undefined&password=undefined";
+import {
+  GLOBAL_ACCESS_TOKEN,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants";
 import {
   SIGN_UP_OTP_VERIFICATION,
   SHOW_MODAL,
   HIDE_MODAL
 } from "../../general/modal.actions";
 import "../mocks/localStorage.mock";
+
 let userMock,
   inputDetails,
   apiMock,
@@ -33,6 +45,15 @@ describe("User Actions", () => {
     };
   });
 
+  Cookie.createCookie(
+    CUSTOMER_ACCESS_TOKEN,
+    JSON.stringify(user.userDetails.access_token)
+  );
+  Cookie.createCookie(
+    GLOBAL_ACCESS_TOKEN,
+    JSON.stringify(user.userDetails.access_token)
+  );
+
   //Login Test Case
   it("LOG_IN", () => {
     postMock = jest.fn();
@@ -46,7 +67,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postMock: postMock
     };
 
     middleWares = [
@@ -63,12 +84,9 @@ describe("User Actions", () => {
     ];
 
     return store.dispatch(userActions.loginUser(inputDetails)).then(() => {
-      expect(localStorage.getItem("authorizationKey")).toEqual(
-        user.userDetails.access_token
-      );
       expect(store.getActions()).toEqual(expectedActions);
       expect(postMock.mock.calls.length).toBe(1);
-      expect(postMock.mock.calls[0][0]).toBe(userActions.LOGIN);
+      expect(postMock.mock.calls[0][0]).toBe(LOGIN_PATH);
     });
   });
 
@@ -84,7 +102,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postMock: postMock
     };
 
     middleWares = [
@@ -106,8 +124,7 @@ describe("User Actions", () => {
     return store.dispatch(userActions.loginUser(inputDetails)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
       expect(postMock.mock.calls.length).toBe(1);
-      expect(postMock.mock.calls[0][0]).toBe(userActions.LOGIN);
-      // expect(postMock.mock.calls[0][1]).toBe(userMock);
+      expect(postMock.mock.calls[0][0]).toBe(LOGIN_PATH);
     });
   });
 
@@ -124,7 +141,7 @@ describe("User Actions", () => {
     postMock.mockReturnValueOnce(result);
 
     apiMock = {
-      post: postMock
+      postMock: postMock
     };
 
     middleWares = [
@@ -139,7 +156,7 @@ describe("User Actions", () => {
       { type: userActions.SIGN_UP_USER_REQUEST, status: REQUESTING },
       {
         modalType: SIGN_UP_OTP_VERIFICATION,
-        ownProps: undefined,
+        ownProps: { password: "123456", username: "test@xelpmoc.in" },
         type: SHOW_MODAL
       },
       {
@@ -149,19 +166,16 @@ describe("User Actions", () => {
     ];
 
     return store.dispatch(userActions.signUpUser(inputDetails)).then(() => {
-      expect(localStorage.getItem("authorizationKey")).toEqual(
-        user.userDetails.access_token
-      );
       expect(store.getActions()).toEqual(expectedActions);
       expect(postMock.mock.calls.length).toBe(1);
-      expect(postMock.mock.calls[0][0]).toBe(userActions.SIGN_UP);
+      expect(postMock.mock.calls[0][0]).toBe(SIGN_UP_PATH);
     });
   });
 });
 
 it("SIGN_UP_FAILURE", () => {
   postMock = jest.fn();
-  const signUpResponse = user.userDetailsFailure;
+  const signUpResponse = user.userDetailsLoginFailure;
 
   const result = {
     status: ERROR,
@@ -171,7 +185,7 @@ it("SIGN_UP_FAILURE", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    post: postMock
+    postMock: postMock
   };
 
   middleWares = [
@@ -187,15 +201,14 @@ it("SIGN_UP_FAILURE", () => {
     {
       type: userActions.SIGN_UP_USER_FAILURE,
       status: ERROR,
-      error: user.userDetailsFailure.message
+      error: user.userDetailsLoginFailure.message
     }
   ];
 
   return store.dispatch(userActions.signUpUser(inputDetails)).then(() => {
     expect(store.getActions()).toEqual(expectedActions);
     expect(postMock.mock.calls.length).toBe(1);
-    expect(postMock.mock.calls[0][0]).toBe(userActions.SIGN_UP);
-    // expect(postMock.mock.calls[0][1]).toBe(userMock);
+    expect(postMock.mock.calls[0][0]).toBe(SIGN_UP_PATH);
   });
 });
 
@@ -212,7 +225,7 @@ it("OTP_VERIFICATION", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    post: postMock
+    postMock: postMock
   };
 
   middleWares = [
@@ -236,19 +249,18 @@ it("OTP_VERIFICATION", () => {
     }
   ];
 
-  return store.dispatch(userActions.otpVerification(inputDetails)).then(() => {
-    expect(localStorage.getItem("authorizationKey")).toEqual(
-      user.userDetails.access_token
-    );
-    expect(store.getActions()).toEqual(expectedActions);
-    expect(postMock.mock.calls.length).toBe(1);
-    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION_PATH);
-  });
+  return store
+    .dispatch(userActions.otpVerification(inputDetails, user.userDetails))
+    .then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(postMock.mock.calls.length).toBe(1);
+      expect(postMock.mock.calls[0][0]).toBe(OTP_VERIFICATION_PATH);
+    });
 });
 
 it("OTP_VERIFICATION_FAILURE", () => {
   postMock = jest.fn();
-  const otpVerificationResponse = user.userDetailsFailure;
+  const otpVerificationResponse = user.userDetailsLoginFailure;
 
   const result = {
     status: ERROR,
@@ -258,7 +270,7 @@ it("OTP_VERIFICATION_FAILURE", () => {
   postMock.mockReturnValueOnce(result);
 
   apiMock = {
-    post: postMock
+    postMock: postMock
   };
 
   middleWares = [
@@ -274,14 +286,15 @@ it("OTP_VERIFICATION_FAILURE", () => {
     {
       type: userActions.OTP_VERIFICATION_FAILURE,
       status: ERROR,
-      error: user.userDetailsFailure.message
+      error: user.userDetailsLoginFailure.message
     }
   ];
 
-  return store.dispatch(userActions.otpVerification(inputDetails)).then(() => {
-    expect(store.getActions()).toEqual(expectedActions);
-    expect(postMock.mock.calls.length).toBe(1);
-    expect(postMock.mock.calls[0][0]).toBe(userActions.OTP_VERIFICATION_PATH);
-    // expect(postMock.mock.calls[0][1]).toBe(userMock);
-  });
+  return store
+    .dispatch(userActions.otpVerification(inputDetails, ""))
+    .then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+      expect(postMock.mock.calls.length).toBe(1);
+      expect(postMock.mock.calls[0][0]).toBe(OTP_VERIFICATION_PATH);
+    });
 });
