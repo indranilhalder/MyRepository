@@ -1965,6 +1965,34 @@ $(document).ready(function(){
 			}
 			});
 		
+		$(document).ready(function() {
+			if($("#pageType").val() == "cart")
+			{
+					
+					$("body.page-cartPage .cart.wrapper .product-block li.item").each(function(){
+						if($(this).find("ul.desktop>li.price").css("position")=="absolute"){
+							var price_height=$(this).find("ul.desktop>li.price").height() + 20;
+							$(this).find(".cart-product-info").css("padding-bottom",price_height+"px");
+							var price_top = $(this).find(".cart-product-info").height() + 8;
+							$(this).find("ul.desktop>li.price").css("top",price_top+"px");
+							var qty_top = price_top + $(this).find("ul.desktop>li.price").height() + 11;
+							$(this).find("ul.desktop>li.qty").css("top",qty_top+"px");
+						}
+						else{
+							$(this).find(".cart-product-info").css("padding-bottom","0px");
+							$(this).find("ul.desktop>li.price").css("top","auto");
+							$(this).find("ul.desktop>li.qty").css("top","auto");
+						}
+					});
+					if($("body.page-cartPage .cart.wrapper .checkout-types li.express-checkout").children().length == 0){
+						$("body.page-cartPage .cart.wrapper .checkout-types li#checkout-id").addClass("onlyCheckout");
+						$("body.page-cartPage .cart.wrapper .checkout-types").addClass("onlyCheckoutButton");
+						$("body.page-cartPage .continue-shopping.desk-view-shopping").addClass("onlyCheckoutLink");
+					}
+					
+			}		
+		});
+		
 		$(".product-tile .image .item.quickview").each(function(){
 			if($(this).find(".addtocart-component").length == 1){
 				$(this).addClass("quick-bag-both");
@@ -3852,7 +3880,11 @@ $(document).ready(function(){
 				$(this).find('li.viewDetails').css('margin-bottom','30px');
 			}
 		});
+		$(".homepage-banner #rotatingImageTimeout").remove();	/*add for SDI-3883*/
 	}	
+	else{
+		$(".homepage-banner #rotatingImageTimeoutMobile").remove();		/*add for SDI-3883*/
+	}
 });
 /*PRDI-402 end*/
 /* start change of PRDI-92 */

@@ -668,9 +668,11 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 
 //	if(loggedIn == 'false') {
 	if(!headerLoggedinStatus) {
+		$(".wishAddLogin>span").css("display","block");	/*add for TISCSS-166*/
 		$(".wishAddLogin").addClass("active");
 		setTimeout(function(){
-			$(".wishAddLogin").removeClass("active")
+			$(".wishAddLogin").removeClass("active");
+			$(".wishAddLogin>span").css("display","none");	/*add for TISCSS-166*/
 		},3000)
 	}
 	else {
@@ -690,9 +692,11 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
 					//$('#addedMessage').html(msg);
+					$(".wishAddSucess>span").css("display","block");		/*add for TISCSS-166*/
 					$(".wishAddSucess").addClass("active");
 					setTimeout(function(){
-						$(".wishAddSucess").removeClass("active")
+						$(".wishAddSucess").removeClass("active");
+						$(".wishAddSucess>span").css("display","none");	/*add for TISCSS-166*/
 					},3000)
 					$("#add_to_wishlist").attr("disabled",true);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
@@ -3351,10 +3355,11 @@ function loadDefaultWishListName_SizeGuide() {
 						console.log('Error Adding trackers when remove from cart: '+err.message);					
 					}
 				}
-				
+				$(".wishRemoveSucess>span").css("display","block");	/*add for TISCSS-166*/
 				$(".wishRemoveSucess").addClass("active");
 				setTimeout(function(){
-					$(".wishRemoveSucess").removeClass("active")
+					$(".wishRemoveSucess").removeClass("active");
+					$(".wishRemoveSucess>span").css("display","none");	/*add for TISCSS-166*/
 				},3000)
 				$("#add_to_wishlist").attr("disabled",false);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
@@ -4532,6 +4537,12 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
+			//SDI-4334
+			var spPrice = data['specialPrice'];
+			var mrpPrice = data['mrp'];
+			var mop = data['price'];
+			var savingsOnProduct= data['savingsOnProduct'];
+			dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 			//TPR-1375
 			for(var i in data['buyboxList'] ){
 				buyBoxList.push(data['buyboxList'][i]);
@@ -4866,10 +4877,10 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#jewelDetailsUssid").html(data['sellerArticleSKU'].substring(6));
 					}
 
-					var spPrice = data['specialPrice'];
+					/*var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
 					var mop = data['price'];
-					var savingsOnProduct= data['savingsOnProduct'];
+					var savingsOnProduct= data['savingsOnProduct'];*/
 					$("#stock").val(data['availablestock']);
 					//SDI-1023
 					if($("#pageType").val() == "/sellersdetailpage")
@@ -4882,7 +4893,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					});
 					displayDeliveryDetails(sellerName);
 					//TISPRM-33 savingsOnProduct added
-					dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+					//dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 					
 					//Add to Wishlist PDP CR
 					var ussIdWishlist = data['sellerArticleSKU'];
