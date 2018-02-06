@@ -10,15 +10,11 @@ const productListings = (
 ) => {
   switch (action.type) {
     case plpActions.PRODUCT_LISTINGS_REQUEST:
-    case plpActions.SORT_PRODUCT_LISTINGS_REQUEST:
-    case plpActions.FILTER_PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true
       });
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
-    case plpActions.SORT_PRODUCT_LISTINGS_SUCCESS:
-    case plpActions.FILTER_PRODUCT_LISTINGS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         productListings: action.productListings,
@@ -26,8 +22,6 @@ const productListings = (
       });
 
     case plpActions.PRODUCT_LISTINGS_FAILURE:
-    case plpActions.SORT_PRODUCT_LISTINGS_FAILURE:
-    case plpActions.FILTER_PRODUCT_LISTINGS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
