@@ -6,8 +6,8 @@
 .holder {
   width: 100%;
   height: 50px;
-  position: relative;
   transition: 300ms;
+  position: relative;
 }
 .textBox {
   height: auto;
