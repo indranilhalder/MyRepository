@@ -1,0 +1,20 @@
+.container {
+  width: 100%;
+  height: auto;
+}
+.textAreaBox {
+  width: 100%;
+  height: 150px;
+  border: 1px solid #d2d2d2;
+  padding: 10px;
+  resize: none;
+  font-size: 14px;
+  border-radius: 2px;
+  color: #000000;
+}
+.textAreaBox:focus {
+  outline: none;
+}
+.textAreaBoxcolor:placeholder {
+  color: #8d8d8d;
+}
