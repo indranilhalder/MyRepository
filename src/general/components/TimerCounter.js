@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Countdown from "react-countdown-now";
+import PropTypes from "prop-types";
 
 const renderTimer = ({ hours, minutes, seconds }) => {
   return (
@@ -16,3 +17,6 @@ export default class Counter extends React.Component {
     return <Countdown date={Date.now() + finalTime} renderer={renderTimer} />;
   }
 }
+Counter.propTypes = {
+  endTime: PropTypes.string
+};

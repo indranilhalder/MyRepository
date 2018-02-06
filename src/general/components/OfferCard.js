@@ -21,11 +21,7 @@ export default class OfferCard extends React.Component {
               <Counter endTime={this.props.endTime} />
             </span>
             <div className={styles.timerHolder}>
-              <Icon
-                image={this.props.imageUrl}
-                color="transparent"
-                size={this.props.size}
-              />
+              <Icon image={this.props.imageUrl} size={this.props.size} />
             </div>
           </div>
         </div>
@@ -45,7 +41,7 @@ export default class OfferCard extends React.Component {
 OfferCard.propTypes = {
   image: PropTypes.string,
   heading: PropTypes.string,
-  imageUrl: PropTypes.string,
+  endTime: PropTypes.string,
   description: PropTypes.string,
   couponCode: PropTypes.string,
   descriptionData: PropTypes.string,
