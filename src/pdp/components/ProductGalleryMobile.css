@@ -21,3 +21,24 @@
   background: #999;
   border: 1px solid #fff;
 }
+.navHolder {
+  height: 8px;
+  width: auto;
+  white-space: nowrap;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+.navButton {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ececec;
+  transition: 200ms;
+  margin-right: 10px;
+  display: inline-block;
+}
+.navActive {
+  composes: navButton;
+  background: #000;
+}

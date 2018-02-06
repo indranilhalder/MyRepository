@@ -36,6 +36,7 @@ class ProductGalleryMobile extends React.Component {
       this.forward();
     }
   }
+  renderNav() {}
   render() {
     const translateAmount = this.state.position * -100;
 
@@ -56,6 +57,20 @@ class ProductGalleryMobile extends React.Component {
                 <div className={styles.content} key={i}>
                   {child}
                 </div>
+              );
+            })}
+        </div>
+        <div className={styles.navHolder}>
+          {this.props.children &&
+            this.props.children.map((val, i) => {
+              return (
+                <div
+                  className={
+                    this.state.position === i
+                      ? styles.navActive
+                      : styles.navButton
+                  }
+                />
               );
             })}
         </div>
