@@ -1777,9 +1777,10 @@ margin-bottom:10px;
 	{
 	position: relative;
 	min-height: 1px;
-	padding-left: 15px;
-
-	padding-right: 15px;
+	/* start modify for SDI-5784 */
+	padding-left: 11px;
+	padding-right: 11px;
+	/* end modify for SDI-5784 */
 }
 
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6,
