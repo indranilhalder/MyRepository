@@ -4,6 +4,7 @@ import propTypes from "prop-types";
 export default class SizeGuide extends React.Component {
   render() {
     const data = this.props.data;
+    console.log(data);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
