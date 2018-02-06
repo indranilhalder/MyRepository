@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
-import ConnectDetails from "../../home/components/ConnectDetailsWithModal";
+import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
 import Sort from "../../plp/components/SortModal";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
@@ -75,7 +75,7 @@ export default class ModalRoot extends React.Component {
       ),
 
       ConnectDetails: (
-        <ConnectDetails
+        <ConnectDetailsWithModal
           closeModal={() => this.handleClose()}
           {...this.props.ownProps}
         />
