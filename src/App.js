@@ -62,7 +62,7 @@ class App extends Component {
     return (
       <div className={className}>
         <Switch>
-          <PrivateRoute path="/home" component={HomeContainer} />
+          <Route path="/home" component={HomeContainer} />
           <Route
             path="/"
             render={routeProps => <Auth {...routeProps} {...this.props} />}
