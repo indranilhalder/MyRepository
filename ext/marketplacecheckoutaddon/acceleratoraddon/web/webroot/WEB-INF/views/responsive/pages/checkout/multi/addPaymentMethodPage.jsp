@@ -43,7 +43,9 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper" style="max-width: 1264px !important;">
-	<div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
+	 <c:if test="${isEGVCart ne true }">
+	   <div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
+	</c:if>
 		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
 			<jsp:body> --%>
 				<script>
@@ -201,9 +203,11 @@
 						           <p class="disclaimer-txt">
 										<spring:theme code="pay.price.change.notification"></spring:theme>
 									</p>
-					           </c:if>               
+					           </c:if>  
+						  <c:if test="${isEGVCart ne true }">
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
+					</c:if> 
 				<!-- Unwanted code commented -->
                <%--  <c:choose>
                     <c:when test="${showTax}">
@@ -1460,6 +1464,8 @@
 				</div>				
 				<%-- </jsp:body>
 		</multiCheckout:checkoutSteps> --%>	
+		<input type="hidden" id="isEGVOrder" value="${isEGVCart}">
+		<input type="hidden" id="egvProductCode" value="${egvProductCode}">
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		<input type="hidden" name="juspayBaseUrl" id="juspayBaseUrl" value="${juspayBaseUrl}"/><!-- TPR-7448 -->
 	</div>		

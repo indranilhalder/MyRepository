@@ -1,46 +1,7 @@
 package com.tisl.mpl.commerceservices.order.hook;
 
 
-import de.hybris.platform.category.CategoryService;
-import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
-import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
-import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
-import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.user.AddressModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.order.AbstractOrderEntryTypeService;
-import de.hybris.platform.order.InvalidCartException;
-import de.hybris.platform.order.OrderService;
-import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
-import de.hybris.platform.promotions.model.OrderPromotionModel;
-import de.hybris.platform.promotions.model.ProductPromotionModel;
-import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
-import de.hybris.platform.promotions.model.PromotionResultModel;
-import de.hybris.platform.promotions.util.Tuple2;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.voucher.VoucherModelService;
-import de.hybris.platform.voucher.VoucherService;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import de.hybris.platform.voucher.model.VoucherInvalidationModel;
-
-import java.math.BigDecimal;
+ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -71,12 +32,17 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.WalletEnum;
+import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
@@ -84,6 +50,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 //import de.hybris.platform.voucher.model.VoucherModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 //SONAR FIX
 //import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
@@ -92,8 +59,63 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.request.Customer;
+import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
+import com.tisl.mpl.pojo.response.PurchaseEGVResponse;
+import com.tisl.mpl.service.MplWalletServices;
+import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.OrderStatusSpecifier;
+
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook;
+import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
+import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
+import de.hybris.platform.core.model.VoucherCardPerOfferInvalidationModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.order.AbstractOrderEntryTypeService;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.OrderService;
+import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.OrderPromotionModel;
+import de.hybris.platform.promotions.model.ProductPromotionModel;
+import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.event.EventService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.voucher.VoucherModelService;
+import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.RestrictionModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 
 
 
@@ -106,6 +128,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 {
 
 
+	private static final String SUCCESS = "success";
+	private static final String CLIQ_CASH_DOWN = "Cliq Cash Down...";
+	private static final String FAIL = "fail";
+	private static final String SOME_ERROR_WHILE_SENDING_REQUEST_QC = "Some Error While sending Request QC.......";
+	private static final String CLIQ_CASH_SERVICE_ERROR_RESPONSE_CODE_0 = "Cliq Cash Service Error response code != 0";
 	private static final Logger LOG = Logger.getLogger(MplDefaultPlaceOrderCommerceHooks.class);
 	private CloneAbstractOrderStrategy cloneAbstractOrderStrategy;
 
@@ -138,7 +165,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource
 	private MplCommerceCartService mplCommerceCartService;
 
-
+	@Autowired
+	private EventService eventService;
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
@@ -171,8 +199,33 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private BaseStoreService baseStoreService;
 
+	@Autowired
+	private SessionService sessionService;
+
+	@Autowired
+	private MplWalletServices mplWalletServices;
+
+	@Autowired
+	MplEGVCartService mplEGVCartService;
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
+
+	/**
+	 * @return the sessionService
+	 */
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
+	}
 
 	private static final String middleDigits = "000";
 
@@ -185,11 +238,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
 
-	//SONR FIX
-	//	@Resource(name = "mplVoucherService")
-	//	private MplVoucherService mplVoucherService;
-	//	@Resource(name = "discountUtility")
-	//	private DiscountUtility discountUtility;
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
+	@Resource(name = "discountUtility")
+	private DiscountUtility discountUtility;
 
 	/*
 	 * (non-Javadoc)
@@ -377,7 +429,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					LOG.error("Exception in Setting Mode of Payment >>>" + exception.getMessage());
 				}
 
-
+				if (null != orderModel.getSplitModeInfo()
+						&& (orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH)
+								|| orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)))
+				{
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.CLIQ_CASH);
+				}
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
@@ -842,11 +899,37 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//SDI-2922
 			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+
+				/**
+				 * EGV CARD PURCHASE
+				 */
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+				{
+
+					mplEGVCartService.removeOldEGVCartCurrentCustomer();
+					final String response = getPurchaseEGVRequestPopulate(orderModel);
+					if (response.equalsIgnoreCase(SUCCESS))
+					{
+						sendNotifiactionForEGVOrder(orderModel);
 			}
+			else
+			{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						LOG.error(CLIQ_CASH_DOWN);
+					}
+				}
+				/**
+				 * EGV CARD PURCHASE END
+				 */
+
 			else
 			{
 
@@ -878,6 +961,105 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			LOG.error("MplDefaultPlaceOrderCommerceHooks--beforeSubmitOrder--Without parent trying to create suborder");
 		}
+	}
+	}
+	
+	private void sendNotifiactionForEGVOrder(final OrderModel orderModel)
+	{
+		final OrderProcessModel orderProcessModel = new OrderProcessModel();
+		orderProcessModel.setOrder(orderModel);
+		final OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+		eventService.publishEvent(orderEGVRecipientEmailEvent);
+	}
+
+	/**
+	 * @param orderModel
+	 */
+	private String getPurchaseEGVRequestPopulate(final OrderModel orderModel)
+	{
+
+		String status = FAIL;
+		try
+		{
+			if (null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+			{
+				final Customer customer = new Customer();
+				final PurchaseEGVRequest purchaseEGVRequest = new PurchaseEGVRequest();
+				purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
+				purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
+				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
+				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
+				customer.setEmail(orderModel.getUser().getUid());
+				customer.setFirstname(orderModel.getFromFirstName());
+				customer.setLastName(orderModel.getFromLastName());
+				customer.setPhoneNumber(orderModel.getFromPhoneNo());
+				customer.setAddressLine1("Address1");
+				customer.setAddressLine2("Address2");
+				customer.setAddressLine3("Address3");
+				purchaseEGVRequest.setCustomer(customer);
+				purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
+				final PurchaseEGVResponse data = mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
+
+				final AbstractOrderEntryModel orderEntry = orderModel.getEntries().get(0);
+
+				if (null != data && data.getResponseCode() != null && data.getResponseCode().intValue() == 0)
+				{
+
+					final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
+							.create(WalletApportionPaymentInfoModel.class);
+					walletApportionPaymentInfo.setOrderId(orderModel.getCode());
+					walletApportionPaymentInfo.setTransactionId(orderModel.getCode());
+
+					final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+							.create(WalletCardApportionDetailModel.class);
+					chlidCardApportionDetail.setOrderId(orderModel.getCode());
+
+					if (data.getAmount() != null)
+					{
+
+						chlidCardApportionDetail.setCardAmount(data.getAmount().toString());
+					}
+					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
+					chlidCardApportionDetail.setCardExpiry(data.getCardExpiry());
+					chlidCardApportionDetail.setCardPinNumber(data.getCardPIN());
+					cardQtyWiseList.add(chlidCardApportionDetail);
+
+					walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+
+					orderEntry.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+					final AbstractOrderEntryModel AbstractOrderEntryChild = orderModel.getChildOrders().get(0).getEntries().get(0);
+
+					AbstractOrderEntryChild.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+					getModelService().save(AbstractOrderEntryChild);
+
+					getModelService().save(orderEntry);
+
+					getModelService().save(orderModel);
+
+					status = SUCCESS;
+
+				}
+				else
+				{
+
+					status = FAIL;
+					LOG.error(CLIQ_CASH_SERVICE_ERROR_RESPONSE_CODE_0);
+				}
+
+				return status;
+
+			}
+		}
+		catch (final Exception exceeption)
+		{
+			LOG.error(SOME_ERROR_WHILE_SENDING_REQUEST_QC);
+		}
+		return status;
+
 	}
 
 	//}
@@ -1184,7 +1366,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						 * entryModelList.getSelectedUSSID());
 						 */
 
-						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
+						//EGV Order change
+						if (null !=sellerOrderList.getIsEGVCart() && !sellerOrderList.getIsEGVCart().booleanValue())
+						{
+						 final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
 								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(), ussid);
 
 						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
@@ -1275,6 +1460,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				modelService.refresh(sellerOrderList);
 			}
 
+		}
 		}
 
 		catch (final ModelSavingException e)
@@ -2594,14 +2780,41 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//final BuyBoxModel buyBoxInfo = getBuyBoxService().getpriceForUssid(abstractOrderEntryModel.getSelectedUSSID());
 		for (int qty = 0; qty < quantity; qty++)
 		{
-
+       LOG.debug("Step :-1 "+qty);
 			OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder, abstractOrderEntryModel.getProduct(), 1,
 					abstractOrderEntryModel.getUnit(), -1, false);
 
 			orderEntryModel.setBasePrice(abstractOrderEntryModel.getBasePrice());
+		/**
+		 * WALLET CHANGES
+		 */
+
+
+		int splitQty = 0;
+		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+				||(clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
+		{
+			 LOG.debug("Step :-2 "+clonedSubOrder.getSplitModeInfo() );
+			splitQty = abstractOrderEntryModel.getQuantity().intValue();
+
+			System.out.println(abstractOrderEntryModel.getQuantity().intValue() + " -&&&&&&& Product Code- "
+					+ abstractOrderEntryModel.getProduct().getCode());
+
+			if (null != abstractOrderEntryModel.getFreeCount() && abstractOrderEntryModel.getFreeCount().intValue() > 0)
+			{
+				splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
+			}
+			System.out.println("*********** Hook Apportion Logic ---- Qty " + quantity + " & Spliit Qty" + splitQty);
+			LOG.debug("Step :-3 "+splitQty);
+		}
+
+		/**
+		 * WALLET CHANGES END
+		 */
+
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
-
+			LOG.debug("Step :-4 "+sellerID);
 			if (abstractOrderEntryModel.getSellerInfo() != null)
 			{
 				orderEntryModel.setSellerInfo(abstractOrderEntryModel.getSellerInfo());
@@ -2614,6 +2827,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (StringUtils.isNotEmpty(sequenceGeneratorApplicable)
 					&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
 			{
+				LOG.debug("Step :-5 "+sequenceGeneratorApplicable);
 				final String orderLineIdSequence = getMplCommerceCartService().generateOrderLineId();
 
 				//Transaction ID have to strict with 15 digits, using the middle 3 zeros
@@ -2649,6 +2863,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					orderEntryModel.setOrderLineId(sellerID.concat(middleDigits).concat(Integer.toString(num)));
 					orderEntryModel.setTransactionID(sellerID.concat(middleDigits).concat(Integer.toString(num)));
 				}
+				LOG.debug("Step :-6 "+orderEntryModel.toString());
 			}
 			orderEntryModel.setExchangeId(abstractOrderEntryModel.getExchangeId());
 
@@ -2769,6 +2984,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final double netAmountAfterAllDisc = Double.parseDouble(df.format(price - cartApportionValue - productApportionvalue
 					- couponApportionValue - cartcouponApportionValue));
 			LOG.debug("setCurrDelCharge" + deliveryCharge);
+			LOG.debug("Step :-10 "+deliveryCharge);
 			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
 			orderEntryModel.setCartCouponValue(Double.valueOf(cartcouponApportionValue));
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));
@@ -2901,7 +3117,34 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			// End Order line  Code for OrderLine
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
+			/**
+			 * WALLET CHANGES
+			 */
 
+			LOG.debug("Step :-11 Try to set Wallet apportion ");
+			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+					|| (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
+			{
+				setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
+				//setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
+			}
+			LOG.debug("Step :-17 ");
+
+			/**
+			 * WALLET CHANGES END
+			 */
+			
+			//Added for tpr-3782
+			if (null != abstractOrderEntryModel.getProduct() && MarketplacecommerceservicesConstants.FINEJEWELLERY
+					.equalsIgnoreCase(orderEntryModel.getProduct().getProductCategoryType()))
+			{
+				LOG.debug("Step :-18 ");
+				priceBreakupService.createPricebreakupOrder(orderEntryModel, abstractOrderEntryModel);
+				LOG.debug("Step :-23 ");
+
+			}
+
+			//ended for tpr-3782
 		}
 	}
 
@@ -3546,7 +3789,159 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		return isPresent;
 
 	}
+	public void setPaymentModeApporsionValue(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
+			final OrderEntryModel orderEntryModel, final OrderModel clonedSubOrder)
+	{
+		LOG.debug("Step :-12 Try to set Wallet apportion ");
+		final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
+				.create(WalletApportionPaymentInfoModel.class);
 
+		if (null != orderEntryModel.getIsBOGOapplied() && orderEntryModel.getIsBOGOapplied().booleanValue()
+				|| null != orderEntryModel.getGiveAway() && orderEntryModel.getGiveAway().booleanValue())
+		{
+			LOG.debug("Step :-13 Try to set Wallet apportion ");
+
+			System.out.println(" **************** Hook BOGO PRODUCT FOUND " + orderEntryModel.getIsBOGOapplied().booleanValue()
+					+ " free bi product -" + (null != orderEntryModel.getFreeCount() ? orderEntryModel.getFreeCount().intValue() : 0));
+
+			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+
+			walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
+
+			walletApportionPaymentInfo.setQcApportionPartValue("0");
+			walletApportionPaymentInfo.setQcDeliveryPartValue("0");
+			walletApportionPaymentInfo.setQcShippingPartValue("0");
+			walletApportionPaymentInfo.setQcSchedulingPartValue("0");
+			walletApportionPaymentInfo.setJuspayApportionValue("0");
+			walletApportionPaymentInfo.setJuspayDeliveryValue("0");
+			walletApportionPaymentInfo.setJuspayShippingValue("0");
+			walletApportionPaymentInfo.setJuspaySchedulingValue("0");
+
+			final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+			final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+					.create(WalletCardApportionDetailModel.class);
+			chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+			cardQtyWiseList.add(chlidCardApportionDetail);
+			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+		}
+		else
+		{
+			LOG.debug("Step :-14 Try to set Wallet apportion ");
+
+			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+
+			walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcApportionPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcDeliveryPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcShippingPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcSchedulingPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayApportionValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayDeliveryValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayShippingValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
+								/ quantity));
+			}
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspaySchedulingValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
+								/ quantity));
+			}
+
+			final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+			if (abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList().size() > 0)
+			{
+
+				for (final WalletCardApportionDetailModel cardList : abstractOrderEntryModel.getWalletApportionPaymentInfo()
+						.getWalletCardList())
+				{
+					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+							.create(WalletCardApportionDetailModel.class);
+
+					chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+					chlidCardApportionDetail.setCardNumber(cardList.getCardNumber());
+					chlidCardApportionDetail.setCardExpiry(cardList.getCardExpiry());
+					chlidCardApportionDetail.setBucketType(cardList.getBucketType());
+
+					if (Double.parseDouble(cardList.getCardAmount()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail.setCardAmount("" + (Double.parseDouble(cardList.getCardAmount()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcApportionValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcApportionValue("" + (Double.parseDouble(cardList.getQcApportionValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcDeliveryValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcDeliveryValue("" + (Double.parseDouble(cardList.getQcDeliveryValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcShippingValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcShippingValue("" + (Double.parseDouble(cardList.getQcShippingValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcSchedulingValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcSchedulingValue("" + (Double.parseDouble(cardList.getQcSchedulingValue()) / quantity));
+					}
+					cardQtyWiseList.add(chlidCardApportionDetail);
+				}
+			}
+			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+		}
+		LOG.debug("Step :-15 Try to set Wallet apportion ");
+		modelService.saveAll(walletApportionPaymentInfo,orderEntryModel);
+		LOG.debug("Step :-16  Try to set Wallet apportion Saved Successfully");
+	}
 
 
 }
