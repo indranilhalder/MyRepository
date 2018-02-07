@@ -9,6 +9,7 @@ export default class SearchBox extends React.Component {
       this.props.onChange(event.target.value);
     }
   }
+
   render() {
     return (
       <Input2

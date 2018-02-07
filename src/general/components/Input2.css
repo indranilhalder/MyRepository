@@ -8,14 +8,14 @@
   height: 100%;
   border: none;
   padding: 0 10px;
-  color:#212121;
-  background-color:transparent;
+  color: #212121;
+  background-color: transparent;
 }
 .wrapper {
   composes: container;
 }
 .base {
-  width:100%;
+  width: 100%;
   height: auto;
   position: relative;
 }
@@ -28,25 +28,28 @@
 .whiteHollow {
   composes: container;
   color: #fff;
-  border-bottom:1px solid #fff;
+  border-bottom: 1px solid #fff;
 }
-.whiteBox{
+.whiteBox {
   composes: container;
   color: #fff;
-  border:1px solid #fff;
+  border: 1px solid #fff;
 }
 .inputBox::placeholder {
   color: #8d8d8d;
 }
-.whiteHollow .hollow,.whiteBox .box{
-  border:0px;
+.whiteHollow .hollow,
+.whiteBox .box {
+  border: 0px;
 }
-.whiteHollow .inputBox,.whiteBox .inputBox{
-  color:#fff;
+.whiteHollow .inputBox,
+.whiteBox .inputBox {
+  color: #fff;
 }
-.whiteHollow .inputBox::placeholder,.whiteBox .inputBox::placeholder{
-color: #fff;
-opacity: 0.5;
+.whiteHollow .inputBox::placeholder,
+.whiteBox .inputBox::placeholder {
+  color: #fff;
+  opacity: 0.5;
 }
 .box {
   composes: base;

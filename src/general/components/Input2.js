@@ -35,6 +35,7 @@ export default class Input2 extends React.Component {
     if (this.props.isWhite) {
       className = styles.whiteHollow;
     }
+
     if (this.props.isWhite && this.props.boxy) {
       className = styles.whiteBox;
     }
