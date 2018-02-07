@@ -1,49 +1,30 @@
 import React from "react";
+import withTouchControls from "../../higherOrderComponents/withTouchControls";
 import styles from "./ProductGalleryMobile.css";
-export default class ProductGalleryMobile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      position: 0
-    };
-  }
-  forward = () => {
-    if (this.state.position < this.props.children.length - 1) {
-      const position = this.state.position + 1;
-      this.setState({ position: position });
-    }
-  };
-  back = () => {
-    if (this.state.position > 0) {
-      const position = this.state.position - 1;
-      this.setState({ position: position });
-    }
-  };
-  swipeStart(evt) {
-    evt.stopPropagation();
-    this.setState({ touchStart: evt.touches[0].clientX });
-  }
-  swipeMove(evt) {
-    evt.stopPropagation();
-    this.setState({ touchEnd: evt.touches[0].clientX });
-  }
-  swipeEnd() {
-    if (this.state.touchStart < this.state.touchEnd) {
-      this.back();
-    } else {
-      this.forward();
+class ProductGalleryMobile extends React.Component {
+  handleSwipeStart(evt) {
+    if (this.props.onTouchStart) {
+      this.props.onTouchStart(evt);
     }
   }
-  renderNav() {}
+  handleSwipeMove(evt) {
+    if (this.props.onTouchStart) {
+      this.props.onTouchMove(evt);
+    }
+  }
+  handleSwipeEnd(evt) {
+    if (this.props.onTouchEnd) {
+      this.props.onTouchEnd(evt);
+    }
+  }
   render() {
-    const translateAmount = this.state.position * -100;
-
+    const translateAmount = this.props.position * -100;
     return (
       <div
         className={styles.base}
-        onTouchStart={evt => this.swipeStart(evt)}
-        onTouchMove={evt => this.swipeMove(evt)}
-        onTouchEnd={evt => this.swipeEnd(evt)}
+        onTouchStart={evt => this.handleSwipeStart(evt)}
+        onTouchMove={evt => this.handleSwipeMove(evt)}
+        onTouchEnd={evt => this.handleSwipeEnd(evt)}
       >
         <div
           className={styles.gallery}
@@ -64,10 +45,11 @@ export default class ProductGalleryMobile extends React.Component {
               return (
                 <div
                   className={
-                    this.state.position === i
+                    this.props.position === i
                       ? styles.navActive
                       : styles.navButton
                   }
+                  key={i}
                 />
               );
             })}
@@ -76,3 +58,4 @@ export default class ProductGalleryMobile extends React.Component {
     );
   }
 }
+export default withTouchControls(ProductGalleryMobile);
