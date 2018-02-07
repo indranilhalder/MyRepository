@@ -1196,7 +1196,7 @@ footer #footerLink div.column ul li {
   .footer-child section[expanded] h4 .fa-angle-down {transform:rotate(180deg);}
   .footer-child section:first-child h4 {font-size: 18px;}
   .footer-child h4 i:last-child {display: block;}
-  .footer-child ul li {padding-left: 15px;}
+  .footer-child ul li {padding-left: 20px;}		/* modified for TISUAT-6353 */
   .footer-child ul {margin-bottom: 0px !important;margin-top: 0px;}	/* modified for TISUAT-6354 */
   .footer-copyright {padding: 0 25px; line-height: 48px; margin-bottom: 20px; font-size: 11px; letter-spacing: .6px;}
   .footer-child h4 i, .footer-child h4 i:before {font-size: 18px; line-height: 48px;}
