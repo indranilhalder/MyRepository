@@ -11607,6 +11607,7 @@ public class UsersController extends BaseCommerceController
 		final UpdateCustomerDetailDto updateCustomerDetailError = new UpdateCustomerDetailDto();
 		final ExtRegisterData registration = new ExtRegisterData();
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
+		MplCustomerProfileData customerToSave = null;
 		if (null == customerData)
 		{
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -11614,7 +11615,14 @@ public class UsersController extends BaseCommerceController
 		else
 		{
 			final String userIdLwCase = userId.toLowerCase();
-			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
+			if (userId.contains("@"))
+			{
+				customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
+			}
+			else
+			{
+				customerToSave = mplCustomerProfileService.getCustomerProfileDetailMobile(userIdLwCase);
+			}
 			final String channel = MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE;
 			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(
 					customerData.getDisplayUid(), channel);
