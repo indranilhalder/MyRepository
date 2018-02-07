@@ -1,5 +1,5 @@
 import React from "react";
-export default function withMultiSelect(Component) {
+export default function withTouchControls(Component) {
   return class extends React.Component {
     constructor(props) {
       super(props);
