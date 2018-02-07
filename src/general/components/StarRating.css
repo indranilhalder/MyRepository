@@ -1,0 +1,22 @@
+.base {
+  width: 100%;
+  height: auto;
+  line-height: 25px;
+  display: inline-block;
+}
+.starHolder {
+  width: auto;
+  height: auto;
+  display: inline-block;
+}
+.star {
+  width: 15px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.content {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}

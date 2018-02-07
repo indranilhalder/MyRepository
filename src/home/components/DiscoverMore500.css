@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   background-color: #ececec;
-  padding: 30px 0px;
+  padding: 20px 0px;
 }
 .header {
   width: 100%;
@@ -11,5 +11,5 @@
   font-size: 20px;
   font-family: semibold;
   padding: 0 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
