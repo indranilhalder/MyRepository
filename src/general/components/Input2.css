@@ -8,38 +8,54 @@
   height: 100%;
   border: none;
   padding: 0 10px;
-  font-size: 14px;
+  color:#212121;
+  background-color:transparent;
 }
 .wrapper {
   composes: container;
 }
+.base {
+  width:100%;
+  height: auto;
+  position: relative;
+}
+.hollow {
+  composes: base;
+  border: 2px;
+  border-color: #d3d3d3;
+  border-style: solid;
+}
+.whiteHollow {
+  composes: container;
+  color: #fff;
+  border-bottom:1px solid #fff;
+}
+.whiteBox{
+  composes: container;
+  color: #fff;
+  border:1px solid #fff;
+}
+.inputBox::placeholder {
+  color: #8d8d8d;
+}
+.whiteHollow .hollow,.whiteBox .box{
+  border:0px;
+}
+.whiteHollow .inputBox,.whiteBox .inputBox{
+  color:#fff;
+}
+.whiteHollow .inputBox::placeholder,.whiteBox .inputBox::placeholder{
+color: #fff;
+opacity: 0.5;
+}
+.box {
+  composes: base;
+  border: 1px;
+  border-color: #d2d2d2;
+  border-style: solid;
+}
 .inputBox:focus {
   outline: none;
-}
-@media screen and (min-width: 1025px) {
-  .base {
-    height: auto;
-    border: 2px;
-    border-color: #d3d3d3;
-    border-style: solid;
-  }
-}
-@media screen and (max-width: 1024px) {
-  .base {
-    height: auto;
-    border-bottom: 1px;
-    border-bottom-color: #d3d3d3;
-    border-bottom-style: solid;
-  }
-  .hollow {
-    composes: base;
-    color: #fff;
-    border-bottom-color: #fff;
-  }
-  .hollow input::placeholder {
-    color: #fff;
-    opacity: 0.5;
-  }
 }
 .focused {
   composes: base;
@@ -54,15 +70,6 @@
   border-bottom-color: #d3d3d3;
   border-bottom-style: solid;
 }
-.box {
-  width: 100%;
-  border: 1px solid #d2d2d2;
-  position: relative;
-  border-radius: 2px;
-}
-.box input::placeholder {
-  color: #8d8d8d;
-}
 .boxIconLeft {
   position: absolute;
   left: 0;
@@ -72,7 +79,4 @@
   composes: boxIconLeft;
   left: initial;
   right: 0;
-}
-.box .base {
-  border: 0px;
 }

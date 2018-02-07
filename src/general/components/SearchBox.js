@@ -12,10 +12,11 @@ export default class SearchBox extends React.Component {
   render() {
     return (
       <Input2
-        boxy="true"
+        boxy={true}
+        height={35}
         placeholder="Search by brands"
-        rightchildsize={35}
-        rightchild={
+        rightChildSize={35}
+        rightChild={
           <CircleButton
             size={35}
             color={"transparent"}
