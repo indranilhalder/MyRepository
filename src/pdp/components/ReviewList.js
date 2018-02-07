@@ -2,13 +2,12 @@ import React from "react";
 import styles from "./ReviewList.css";
 import ReviewPage from "./ReviewPage";
 import PropTypes from "prop-types";
-export default class RatingHolder extends React.Component {
+export default class ReviewList extends React.Component {
   render() {
-    console.log(this.props.reviewList);
-    if (this.props.reviewList) {
-      return (
-        <div className={styles.base}>
-          {this.props.reviewList.map((data, i) => {
+    return (
+      <div className={styles.base}>
+        {this.props.reviewList &&
+          this.props.reviewList.map((data, i) => {
             return (
               <ReviewPage
                 rating={data.averageRating}
@@ -18,15 +17,12 @@ export default class RatingHolder extends React.Component {
               />
             );
           })}
-        </div>
-      );
-    } else {
-      return <div />;
-    }
+      </div>
+    );
   }
 }
 
-RatingHolder.propTypes = {
+ReviewList.propTypes = {
   reviewList: PropTypes.arrayOf(
     PropTypes.shape({
       rating: PropTypes.String,
