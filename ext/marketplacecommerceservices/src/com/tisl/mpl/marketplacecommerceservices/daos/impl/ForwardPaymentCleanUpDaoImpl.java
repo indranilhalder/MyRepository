@@ -40,8 +40,9 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT {mcf:" + MplConfigurationModel.PK + "}");
-		queryString.append(" FROM {" + MplConfigurationModel._TYPECODE + " AS mcf}");
-		queryString.append(" WHERE" + "{mcf:" + MplConfigurationModel.MPLCONFIGCODE + "} = ?code");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS mcf}");//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{mcf:" + MplConfigurationModel.MPLCONFIGCODE //SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+				+ "} = ?code");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("code", code);
@@ -56,9 +57,10 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
-		queryString.append(" FROM {" + OrderModel._TYPECODE + " AS ord},");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS ord},");
 		queryString.append(" {" + MplPaymentAuditModel._TYPECODE + " AS mpa}");
-		queryString.append(" WHERE {ord:" + OrderModel.GUID + "} = {mpa:" + MplPaymentAuditModel.CARTGUID + "}");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.GUID + "} = {mpa:"
+				+ MplPaymentAuditModel.CARTGUID + "}");
 		queryString.append(" AND {ord:" + OrderModel.STATUS + "} = ?orderStatus");
 		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
 		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
@@ -80,8 +82,9 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT  {mpa:" + MplPaymentAuditModel.PK + "} ");
-		queryString.append(" FROM {" + MplPaymentAuditModel._TYPECODE + " AS mpa");
-		queryString.append("} WHERE {mpa:" + MplPaymentAuditModel.CARTGUID + "}  = ?guid");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + MplPaymentAuditModel._TYPECODE + " AS mpa");
+		queryString.append("} " + MarketplacecommerceservicesConstants.QUERYWHERE + " {mpa:" + MplPaymentAuditModel.CARTGUID
+				+ "}  = ?guid");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("guid", guid);
@@ -96,8 +99,9 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
-		queryString.append(" FROM {" + OrderModel._TYPECODE + " AS ord}");
-		queryString.append(" WHERE {ord:" + OrderModel.STATUS + "} IN ( ?orderStatusOne , ?OrderStatusTwo )");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS ord}");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.STATUS
+				+ "} IN ( ?orderStatusOne , ?OrderStatusTwo )");
 		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
 		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
 
@@ -116,10 +120,10 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT {pa:" + MplPaymentAuditModel.PK + "}");
-		queryString.append(" FROM {" + MplPaymentAuditModel._TYPECODE + " AS pa");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + MplPaymentAuditModel._TYPECODE + " AS pa");
 		queryString.append(" LEFT JOIN " + OrderModel._TYPECODE + " AS ord");
 		queryString.append(" ON {pa:" + MplPaymentAuditModel.CARTGUID + "} = {ord:" + OrderModel.GUID + "}}");
-		queryString.append(" WHERE {ord:" + OrderModel.PK + "} is null");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.PK + "} is null");
 		queryString.append(" AND {pa:" + MplPaymentAuditModel.CREATIONTIME + "}");
 		queryString.append(" BETWEEN ?startTime AND ?endTime");
 
@@ -135,8 +139,8 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT  {ord:" + OrderModel.PK + "} ");
-		queryString.append(" FROM {" + OrderModel._TYPECODE + " AS ord}");
-		queryString.append(" WHERE {ord:" + OrderModel.STATUS + "} = ?orderStatus");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS ord}");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.STATUS + "} = ?orderStatus");
 		queryString.append(" AND {ord:" + OrderModel.CREATIONTIME + "}  BETWEEN ?startTime and ?endTime");
 		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
 
@@ -154,8 +158,9 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT {fre:" + FPCRefundEntryModel.PK + "}");
-		queryString.append(" FROM {" + FPCRefundEntryModel._TYPECODE + " AS fre}");
-		queryString.append(" WHERE" + "{fre:" + FPCRefundEntryModel.AUDITID + "} = ?auditId");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + FPCRefundEntryModel._TYPECODE + " AS fre}");
+		queryString
+				.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{fre:" + FPCRefundEntryModel.AUDITID + "} = ?auditId");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("auditId", auditId);
@@ -171,8 +176,9 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT {fre:" + FPCRefundEntryModel.PK + "}");
-		queryString.append(" FROM {" + FPCRefundEntryModel._TYPECODE + " AS fre}");
-		queryString.append(" WHERE" + "{fre:" + FPCRefundEntryModel.ISEXPIRED + "} = ?expiredFlag");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + FPCRefundEntryModel._TYPECODE + " AS fre}");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{fre:" + FPCRefundEntryModel.ISEXPIRED
+				+ "} = ?expiredFlag");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("expiredFlag", expiredFlag);
@@ -186,8 +192,8 @@ public class ForwardPaymentCleanUpDaoImpl implements ForwardPaymentCleanUpDao
 	{
 		final StringBuilder queryString = new StringBuilder(500);
 		queryString.append("SELECT {ord:" + OrderModel.PK + "}");
-		queryString.append(" FROM {" + OrderModel._TYPECODE + " AS ord}");
-		queryString.append(" WHERE" + "{ord:" + OrderModel.GUID + "} = ?GUID");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS ord}");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYWHERE + "{ord:" + OrderModel.GUID + "} = ?GUID");
 		queryString.append(" AND {ord:" + OrderModel.TYPE + "}  = ?orderType");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);

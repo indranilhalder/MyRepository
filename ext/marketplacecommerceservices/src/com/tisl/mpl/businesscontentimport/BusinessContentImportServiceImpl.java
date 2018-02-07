@@ -55,7 +55,9 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	private MplCmsPageService cmsPageService;
 	//Sonar fix
 	//StringBuilder sbError;
-	StringBuilder sbError = new StringBuilder(1000);
+	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+	//StringBuilder sbError = new StringBuilder(1000);
+	StringBuilder sbError = new StringBuilder();
 
 
 	/**

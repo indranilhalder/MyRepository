@@ -19,10 +19,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.tisl.mpl.bulk.service.BulkCancellationService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -62,8 +60,9 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	private ConfigurationService configurationService;
 	private TaskService taskService;
 
-	@Autowired
-	private BulkCancellationService bulkCancellationService;
+	//SONAR FIX
+	//@Autowired
+	//private BulkCancellationService bulkCancellationService;
 
 	@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
 	/*

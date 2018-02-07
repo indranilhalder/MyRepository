@@ -530,9 +530,12 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	@Override
 	public ContentPageModel getLandingPageForCategoryCode(final String categoryCode)
 	{
-		final String queryString = MarketplacecommerceservicesConstants.LANDING_PAGE_BY_CATEGORY_CODE_QUERY;
+		//SONAR FIX
+		//final String queryString = MarketplacecommerceservicesConstants.LANDING_PAGE_BY_CATEGORY_CODE_QUERY;
+		//final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(
+				MarketplacecommerceservicesConstants.LANDING_PAGE_BY_CATEGORY_CODE_QUERY);
 		query.addQueryParameter("categoryCode", categoryCode);
 		query.addQueryParameter("catalogVersion", ONLINE_CATALOG_VERSION);
 
