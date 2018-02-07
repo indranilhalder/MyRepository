@@ -79,7 +79,7 @@
   top: 0;
 }
 .boxIconRight {
-  composes: boxIconLeft;
-  left: initial;
+  position: absolute;
+  top: 0;
   right: 0;
 }
