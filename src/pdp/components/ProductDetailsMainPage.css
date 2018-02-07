@@ -1,0 +1,78 @@
+.base{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  padding:15px 0px 25px 0px;
+  border-bottom:1px solid  #d2d2d2;
+}
+.productDescriptionSection{
+  width:75%;
+  height:auto;
+  display:inline-block;
+  vertical-align:top;
+}
+.productName{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  color:#181818;
+  font-size:16px;
+  font-family:semibold;
+  margin-bottom:10px;
+}
+.productMaterial{
+  width:100%;
+  height:auto;
+  color:#181818;
+  font-size:16px;
+  font-family:regular;
+  margin-bottom:10px;
+  display:inline-block;
+}
+.ratingHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  vertical-align:middle;
+}
+.ratingText{
+  width:auto;
+  height:auto;
+  display:inline-block;
+  color: #8d8d8d;
+  font-size:14px;
+  padding:0px 6px 0px 6px;
+}
+.arrowHolder{
+  width:20px;
+  height:20px;
+  opacity:0.5;
+  display:inline-block;
+  vertical-align:middle;
+}
+.productPriceSection{
+  width:25%;
+  height:auto;
+  display:inline-block;
+  vertical-align:top;
+}
+.price{
+  width:100%;
+  height:auto;
+  color:#181818;
+  font-size:16px;
+  font-family:semibold;
+  margin-bottom:10px;
+  display:inline-block;
+  text-align:right;
+}
+.discountPrice{
+  width:100%;
+  height:auto;
+  color:#8d8d8d;
+  font-size:14px;
+  font-family:regular;
+  margin-bottom:7px;
+  display:inline-block;
+  text-align:right;
+}
