@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./Accordion.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
-
 export default class Accordion extends React.Component {
   constructor(props) {
     super(props);
