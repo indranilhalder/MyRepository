@@ -845,7 +845,9 @@ text-transform: uppercase;
       .half.square > div *:first-child {
         margin-top: 0px; }
       .half.square > div *:last-child {
-        margin: 20px auto; }
+        margin: 20px auto;
+        margin-top: 0px;	/* add style for TISUAT-6358 */
+   }
   .half.square h3 {
     font-size: 24px;
     line-height: 1.5;
