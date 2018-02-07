@@ -5,11 +5,6 @@ import FilledStar from "./img/star-fill.svg";
 import Star from "./img/star-stroke.svg";
 import { Icon } from "xelpmoc-core";
 export default class StarRating extends React.Component {
-  onClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
-  }
   render() {
     const starSpans = [];
     const rating = this.props.averageRating;
@@ -32,15 +27,12 @@ export default class StarRating extends React.Component {
       <div className={styles.base}>
         <div className={styles.starHolder}>{starSpans}</div>
         {this.props.children && (
-          <div className={styles.content} onClick={() => this.onClick()}>
-            {this.props.children}
-          </div>
+          <div className={styles.content}>{this.props.children}</div>
         )}
       </div>
     );
   }
 }
 StarRating.propTypes = {
-  averageRating: PropTypes.number,
-  onClick: PropTypes.func
+  averageRating: PropTypes.number
 };

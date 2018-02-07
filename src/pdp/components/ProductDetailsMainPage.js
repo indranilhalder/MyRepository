@@ -25,7 +25,10 @@ export default class ProductDetailsMainPage extends React.Component {
                 onClick={() => this.onClick()}
               >
                 {this.props.averageRating && (
-                  <div className={styles.ratingText}>
+                  <div
+                    className={styles.ratingText}
+                    onClick={() => this.onClick()}
+                  >
                     Rating {this.props.averageRating}/5
                   </div>
                 )}
