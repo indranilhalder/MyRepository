@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
+import styles from "./ProductDescriptionPage.css";
+import { PRODUCT_REVIEW_ROUTER } from "../../lib/constants";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
@@ -7,17 +9,21 @@ class ProductDescriptionPage extends Component {
 
   renderLoader() {
     return (
-      <div>
+      <div className={styles.loadingIndicator}>
         <MDSpinner />
       </div>
     );
   }
 
+  goToReviewPage = () => {
+    this.props.history.push(PRODUCT_REVIEW_ROUTER);
+  };
+
   render() {
-    if (this.props.loading) {
-      return this.renderLoader();
+    if (this.props.productDetails) {
+      return <div onClick={this.goToReviewPage}>Go to Review</div>;
     } else {
-      return <div />;
+      return this.renderLoader();
     }
   }
 }
