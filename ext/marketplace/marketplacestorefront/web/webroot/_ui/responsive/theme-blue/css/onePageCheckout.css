@@ -5780,6 +5780,7 @@ label[for='priority_paytm'] img {
 	margin: 4px 0px 0px 18px;	/* modify margin-left for SDI-5387 */
 	font-size: 13px;
 	color: #787878;
+	word-wrap: break-word;		/* add for TISUAT-6350 */
 }
 
 .max-min-value .offer_des {
