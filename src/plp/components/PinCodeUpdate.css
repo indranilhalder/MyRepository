@@ -1,0 +1,15 @@
+.base {
+  width: 100%;
+  padding-right: 70px;
+  position: relative;
+}
+.inputHolder {
+  width: 100%;
+  height: auto;
+}
+.buttonHolder {
+  width: auto;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}

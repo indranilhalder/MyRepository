@@ -44,6 +44,16 @@ export default class OtpVerification extends React.Component {
               Change number
             </span>
           </div>
+          <div>
+            {" "}
+            <Input
+              placeholder={"Enter 4-digit code"}
+              onChange={val => {
+                this.handleOtpInput(val);
+              }}
+              type="tel"
+            />
+          </div>
           <div className={ownStyles.buttonHolder}>
             <div className={ownStyles.left}>
               <Button

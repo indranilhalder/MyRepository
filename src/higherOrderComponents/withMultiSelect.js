@@ -7,7 +7,7 @@ export default function withMultiSelect(Component, ownProps) {
         selected: this.props.selected ? this.props.selected : []
       };
     }
-    selectItem(val) {
+    selectItem(val, i) {
       let selected = this.state.selected;
       if (selected.includes(val)) {
         selected = selected.filter(label => val !== label);
@@ -15,6 +15,7 @@ export default function withMultiSelect(Component, ownProps) {
         if (this.props.limit && this.props.limit <= selected.length) {
           selected.shift();
         }
+
         selected.push(val);
       }
       this.setState({ selected }, () => {
@@ -28,19 +29,25 @@ export default function withMultiSelect(Component, ownProps) {
         this.props.onApply(this.state.selected);
       }
     }
+    componentWillReceiveProps(props) {
+      if (props.selected !== this.props.selected) {
+        this.setState({ selected: props.selected });
+      }
+    }
     render() {
+      console.log(this.props);
       const children = this.props.children;
       const childrenWithProps = React.Children.map(children, (child, i) => {
         return React.cloneElement(child, {
           selected: this.state.selected.includes(child.props.value),
 
           selectItem: () => {
-            this.selectItem(child.props.value);
+            this.selectItem(child.props.value, i);
           }
         });
       });
       return (
-        <Component selected={this.state.selected}>
+        <Component selected={this.state.selected} {...this.props}>
           {childrenWithProps}
         </Component>
       );

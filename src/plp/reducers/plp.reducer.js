@@ -14,7 +14,6 @@ const productListings = (
         status: action.status,
         loading: true
       });
-
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
@@ -28,7 +27,6 @@ const productListings = (
         error: action.error,
         loading: false
       });
-
     default:
       return state;
   }
