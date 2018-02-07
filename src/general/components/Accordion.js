@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./Accordion.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
-import SizeGuide from "./SizeGuide.js";
 
 export default class Accordion extends React.Component {
   constructor(props) {
@@ -11,7 +10,6 @@ export default class Accordion extends React.Component {
       isOpen: false
     };
   }
-
   openMenu() {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen
@@ -24,7 +22,6 @@ export default class Accordion extends React.Component {
       iconActive = styles.iconup;
       activeheader = styles.textBoxActive;
     }
-
     return (
       <div className={styles.base}>
         <div
@@ -41,9 +38,7 @@ export default class Accordion extends React.Component {
             <div className={iconActive} />
           </div>
         </div>
-        <Collapse isOpened={this.state.isOpen}>
-          <SizeGuide data={this.props.data} />
-        </Collapse>
+        <Collapse isOpened={this.state.isOpen}>{this.props.children}</Collapse>
       </div>
     );
   }
