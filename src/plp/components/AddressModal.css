@@ -1,0 +1,11 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 20px 0;
+}
+.searchHolder {
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,17 @@
+.base {
+  width: auto;
+  position: relative;
+  user-select: none;
+  padding-bottom: 5px;
+  color: #212121;
+  font-size: 14px;
+  font-family: regular;
+}
+.underline {
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: #212121;
+}
