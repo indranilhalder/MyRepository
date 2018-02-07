@@ -21,7 +21,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -638,34 +637,6 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		return false;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#checkWalletDetailsChanged(com.tisl.mpl.facades.product.data.
-	 * MplCustomerProfileData)
-	 */
-	@Override
-	public boolean checkWalletDetailsChanged(final MplCustomerProfileData mplCustomerProfileData)
-	{
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-
-		if (null != currentCustomer && currentCustomer.getIsWalletActivated() != null && currentCustomer.getIsWalletActivated().booleanValue())
-		{
-			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyFirstName())
-					&& StringUtils.isNotBlank(mplCustomerProfileData.getFirstName())
-					&& !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getFirstName()))
-			{
-				return true;		
-			}
-	
-			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyLastName()) && StringUtils.isNotBlank(mplCustomerProfileData.getLastName())
-					&& !currentCustomer.getQcVerifyLastName().equalsIgnoreCase(mplCustomerProfileData.getLastName()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	
 }
