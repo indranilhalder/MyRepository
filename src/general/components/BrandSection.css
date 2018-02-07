@@ -5,7 +5,6 @@
   background-repeat: no-repeat;
   background-color: #ececec;
 }
-
 .heading {
   width: 100%;
   height: auto;
@@ -19,7 +18,7 @@
   height: auto;
   font-family: regular;
   font-size: 14px;
-  line-height: 15px;
+  line-height: 24px;
 }
 .brandLogo {
   width: 100%;
