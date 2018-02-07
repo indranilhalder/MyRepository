@@ -15,20 +15,25 @@ export default class CuponDetails extends React.Component {
                 <div className={styles.promotionDetailsText}>
                   {promotion.promotionDetail}
                 </div>
+
                 <div className={styles.dataHolder}>
-                  <div className={styles.amountExpireHolder}>
-                    <div className={styles.dataHeader}>Valid till</div>
-                    <div className={styles.dataInformation}>
-                      {promotion.validTill.formattedDate}
+                  {promotion.validTill.formattedDate && (
+                    <div className={styles.amountExpireHolder}>
+                      <div className={styles.dataHeader}>Valid till</div>
+                      <div className={styles.dataInformation}>
+                        {promotion.validTill.formattedDate}
+                      </div>
                     </div>
-                  </div>
-                  <div className={styles.amountExpireHolder}>
-                    <div className={styles.dataHeader}>Min.bag amount</div>
-                    <div className={styles.dataInformation}>
-                      Rs.
-                      {promotion.validTill.amount}
+                  )}
+                  {promotion.validTill.amount && (
+                    <div className={styles.amountExpireHolder}>
+                      <div className={styles.dataHeader}>Min.bag amount</div>
+                      <div className={styles.dataInformation}>
+                        Rs.
+                        {promotion.validTill.amount}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             );
