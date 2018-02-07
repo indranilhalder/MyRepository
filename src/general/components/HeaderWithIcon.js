@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./LocationIcon.css";
+import styles from "./HeaderWithIcon.css";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 
-export default class LocationCard extends React.Component {
+export default class HeaderWithIcon extends React.Component {
   render() {
     console.log(this.props.ImageUrl);
     return (
@@ -17,7 +17,7 @@ export default class LocationCard extends React.Component {
     );
   }
 }
-LocationCard.propTypes = {
+HeaderWithIcon.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string
 };

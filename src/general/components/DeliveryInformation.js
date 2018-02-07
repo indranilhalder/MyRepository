@@ -1,10 +1,10 @@
 import React from "react";
-import LocationCard from "./LocationIcon";
-import styles from "./IconWithHeader.css";
+import HeaderWithIcon from "./HeaderWithIcon";
+import styles from "./DeliveryInformation.css";
 import UnderLinedButton from "./UnderLinedButton";
 import PropTypes from "prop-types";
 
-export default class IconWithHeader extends React.Component {
+export default class DeliveryInformation extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -13,7 +13,7 @@ export default class IconWithHeader extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <LocationCard image={this.props.image} text={this.props.text}>
+        <HeaderWithIcon image={this.props.image} text={this.props.text}>
           <div className={styles.headingHolder}>{this.props.heading}</div>
           <div className={styles.headingHolder}>
             {this.props.deliverText}
@@ -31,8 +31,8 @@ export default class IconWithHeader extends React.Component {
               />
             </span>
           </div>
-        </LocationCard>
-        <LocationCard image={this.props.image} text={this.props.text}>
+        </HeaderWithIcon>
+        <HeaderWithIcon image={this.props.image} text={this.props.text}>
           <div className={styles.headerHolder}>
             <div className={styles.buttonHolder}>
               <UnderLinedButton
@@ -44,12 +44,12 @@ export default class IconWithHeader extends React.Component {
               />
             </div>
           </div>
-        </LocationCard>
+        </HeaderWithIcon>
       </div>
     );
   }
 }
-IconWithHeader.propTypes = {
+DeliveryInformation.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string,
   heading: PropTypes.string,
