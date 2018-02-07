@@ -314,7 +314,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			else
 			{
 				successFlag = false;
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU003);
 			}
 		}
 		catch (final EtailBusinessExceptions businessException)
@@ -345,7 +345,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			result.setUsername(mobileNumber);
-			result.setMessage("OTP has been sent on your specified email id/phone number");
+			result.setMessage("OTP has been sent on your specified email id or phone number");
 		}
 		return result;
 	}

@@ -11190,7 +11190,7 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			final boolean validOtpFlag = mobileUserService.validateOtp(username, otp, OTPTypeEnum.REG);
-			if (true) //if (validOtpFlag)
+			if (validOtpFlag)
 			{
 				final String emailIdLwCase = emailId.toLowerCase();
 				LOG.debug("The platform number is " + platformNumber);
@@ -11222,7 +11222,8 @@ public class UsersController extends BaseCommerceController
 
 			else
 			{
-				userResult.setError("Invalid otp");
+				userLoginResultWsDto.setError("Incorrect OTP.Please try again");
+				userLoginResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
