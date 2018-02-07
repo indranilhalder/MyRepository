@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.facades.wallet.impl;
 
-import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -11,23 +10,26 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
+import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
@@ -41,12 +43,6 @@ import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
-import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
-import com.tisl.mpl.pojo.request.Customer;
 
 
 
@@ -304,8 +300,8 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		//			System.out.println("Customer has Actived try to redim the card");
 		//			if(null != currentCustomer.getCustomerWalletDetail() && null!= currentCustomer.getCustomerWalletDetail().getWalletId()){
 		final String transactionId = generateQCTransactionId();
-		walletTransacationsList = getMplWalletServices()
-				.getWalletTransactionList(currentCustomer.getCustomerWalletDetail().getWalletId(), transactionId);
+		walletTransacationsList = getMplWalletServices().getWalletTransactionList(
+				currentCustomer.getCustomerWalletDetail().getWalletId(), transactionId);
 		//			}
 		//		 }
 
@@ -336,7 +332,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 			//			data.setTransactionType(trasaction.getTransactionType());
 			//			data.setErrorCode(trasaction.getErrorCode());
 			//			data.setErrorDescription(trasaction.getErrorDescription());
-			//			
+			//
 			//			walletTrasacationsListDataList.add(data);
 			//		  }
 
@@ -489,48 +485,71 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 		customerRegisterReq.setCustomer(custInfo);
 		customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
-		
-		final CustomerWalletDetailResponse customerRegisterResponse =updateCustomerWallet(customerRegisterReq, currentCustomer.getCustomerWalletDetail().getWalletId(), currentCustomer.getUid());
+
+		final CustomerWalletDetailResponse customerRegisterResponse = updateCustomerWallet(customerRegisterReq, currentCustomer
+				.getCustomerWalletDetail().getWalletId(), currentCustomer.getUid());
 		return customerRegisterResponse;
 	}
-	
-	
+
+
 	@Override
-	public boolean customerWalletUpdate(MplCustomerProfileData mplCustomerProfileData){
-		CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		if(currentCustomer.getIsWalletActivated()!=null && currentCustomer.getIsWalletActivated().booleanValue()){
-			boolean isChanged=false;
-			String qcFirstName=null;
-			String qcLastName=null;
-			String qcMobileNo=null;
-			if(StringUtils.isNotBlank(currentCustomer.getQcVerifyFirstName()) && !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getFirstName()) &&  StringUtils.isNotBlank(mplCustomerProfileData.getFirstName())){
-				qcFirstName=mplCustomerProfileData.getFirstName();
-						isChanged=true;
-				}else{
-					qcFirstName=currentCustomer.getQcVerifyFirstName();
-				}
-			if(StringUtils.isNotBlank(currentCustomer.getQcVerifyLastName()) && !currentCustomer.getQcVerifyLastName().equalsIgnoreCase(mplCustomerProfileData.getLastName()) &&  StringUtils.isNotBlank(mplCustomerProfileData.getLastName())){
-				qcLastName=mplCustomerProfileData.getLastName();
-						isChanged=true;
-				}else{
-					qcLastName=currentCustomer.getQcVerifyFirstName();
-				}
-			
-			if(StringUtils.isNotBlank(currentCustomer.getQcVerifyMobileNo()) && !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getMobileNumber()) &&  StringUtils.isNotBlank(mplCustomerProfileData.getMobileNumber())){
-				qcMobileNo=mplCustomerProfileData.getMobileNumber();
-						isChanged=true;
-				} else if(StringUtils.isEmpty(currentCustomer.getQcVerifyMobileNo()) && StringUtils.isNotBlank(mplCustomerProfileData.getMobileNumber())){
-					qcMobileNo=mplCustomerProfileData.getMobileNumber();
-					isChanged=true;
-				}else{
-					qcMobileNo=currentCustomer.getQcVerifyMobileNo();
-				}
-			
-			
-			if(isChanged){
+	public boolean customerWalletUpdate(final MplCustomerProfileData mplCustomerProfileData)
+	{
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		if (currentCustomer.getIsWalletActivated() != null && currentCustomer.getIsWalletActivated().booleanValue())
+		{
+			boolean isChanged = false;
+			String qcFirstName = null;
+			String qcLastName = null;
+			String qcMobileNo = null;
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyFirstName())
+					&& !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getFirstName())
+					&& StringUtils.isNotBlank(mplCustomerProfileData.getFirstName()))
+			{
+				qcFirstName = mplCustomerProfileData.getFirstName();
+				isChanged = true;
+			}
+			else
+			{
+				qcFirstName = currentCustomer.getQcVerifyFirstName();
+			}
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyLastName())
+					&& !currentCustomer.getQcVerifyLastName().equalsIgnoreCase(mplCustomerProfileData.getLastName())
+					&& StringUtils.isNotBlank(mplCustomerProfileData.getLastName()))
+			{
+				qcLastName = mplCustomerProfileData.getLastName();
+				isChanged = true;
+			}
+			else
+			{
+				qcLastName = currentCustomer.getQcVerifyFirstName();
+			}
+
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyMobileNo())
+					&& !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getMobileNumber())
+					&& StringUtils.isNotBlank(mplCustomerProfileData.getMobileNumber()))
+			{
+				qcMobileNo = mplCustomerProfileData.getMobileNumber();
+				isChanged = true;
+			}
+			else if (StringUtils.isEmpty(currentCustomer.getQcVerifyMobileNo())
+					&& StringUtils.isNotBlank(mplCustomerProfileData.getMobileNumber()))
+			{
+				qcMobileNo = mplCustomerProfileData.getMobileNumber();
+				isChanged = true;
+			}
+			else
+			{
+				qcMobileNo = currentCustomer.getQcVerifyMobileNo();
+			}
+
+
+			if (isChanged)
+			{
 				final CustomerWalletDetailResponse customerRegisterResponse = editWalletInformtion(currentCustomer, qcFirstName,
 						qcLastName, qcMobileNo);
-				if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
+				if (null != customerRegisterResponse.getResponseCode()
+						&& customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
 				{
 					currentCustomer.setIsqcOtpVerify(Boolean.valueOf(true));
 					currentCustomer.setQcVerifyFirstName(qcFirstName);
@@ -587,4 +606,66 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		return "success";
 
 	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#checkWalletDetailsChanged(com.tisl.mpl.facades.product.data.
+	 * MplCustomerProfileData)
+	 */
+	@Override
+	public boolean checkWalletDetailsChanged(final MplCustomerProfileData mplCustomerProfileData)
+	{
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+		if (null != currentCustomer && currentCustomer.getIsWalletActivated() != null && currentCustomer.getIsWalletActivated().booleanValue())
+		{
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyFirstName())
+					&& StringUtils.isNotBlank(mplCustomerProfileData.getFirstName())
+					&& !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getFirstName()))
+			{
+				return true;		
+			}
+	
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyLastName()) && StringUtils.isNotBlank(mplCustomerProfileData.getLastName())
+					&& !currentCustomer.getQcVerifyLastName().equalsIgnoreCase(mplCustomerProfileData.getLastName()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#checkWalletDetailsChanged(com.tisl.mpl.facades.product.data.
+	 * MplCustomerProfileData)
+	 */
+	@Override
+	public boolean checkWalletDetailsChanged(final MplCustomerProfileData mplCustomerProfileData)
+	{
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+		if (null != currentCustomer && currentCustomer.getIsWalletActivated() != null && currentCustomer.getIsWalletActivated().booleanValue())
+		{
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyFirstName())
+					&& StringUtils.isNotBlank(mplCustomerProfileData.getFirstName())
+					&& !currentCustomer.getQcVerifyFirstName().equalsIgnoreCase(mplCustomerProfileData.getFirstName()))
+			{
+				return true;		
+			}
+	
+			if (StringUtils.isNotBlank(currentCustomer.getQcVerifyLastName()) && StringUtils.isNotBlank(mplCustomerProfileData.getLastName())
+					&& !currentCustomer.getQcVerifyLastName().equalsIgnoreCase(mplCustomerProfileData.getLastName()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 }

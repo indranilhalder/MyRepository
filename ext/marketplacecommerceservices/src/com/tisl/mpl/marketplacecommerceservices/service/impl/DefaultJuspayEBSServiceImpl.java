@@ -444,9 +444,18 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 			}
 			
 			final String splitInfoMode = orderModel.getSplitModeInfo();
+			LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 			if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 			{
-				mplQcPaymentFailService.processQcRefund(orderModel);
+				try
+				{
+					mplQcPaymentFailService.processQcRefund(orderModel);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+					LOG.error(e.getMessage(), e);
+				}
 			}
 
 		}

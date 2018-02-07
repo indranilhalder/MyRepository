@@ -104,13 +104,15 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	}
 
 	@Override
-	public void createRefundEntryForMultiplePayments(final OrderModel orderModel)
+	public void createRefundEntryForMultiplePayments(final OrderModel orderModel,boolean isCliqCashOrder)
 	{
+		LOG.debug("Inside createRefundEntryForMultiplePayments Method" );
 		if (!checkCOD(orderModel))
 		{
+			LOG.debug("Fetching AuditsForGUID for guid  "+ orderModel.getGuid()  );
 			final List<MplPaymentAuditModel> paymentAuditList = forwardPaymentCleanUpDao.fetchAuditsForGUID(orderModel.getGuid());
-
-			if (paymentAuditList.size() > 1)
+         
+			if ( (null != paymentAuditList && paymentAuditList.size() > 1 ) || ( isCliqCashOrder && paymentAuditList.size() >= 1))
 			{
 				LOG.debug("Found multiple audits for order: " + orderModel.getCode());
 				final List<PaymentTransactionModel> paymentTransactionList = orderModel.getPaymentTransactions();
@@ -123,11 +125,12 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 						break;
 					}
 					for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
-					{
+				 	{
 						if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
 								.equals(paymentTransactionEntry.getType()))
 								&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
-										.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
+										.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())) &&  (null != paymentTransactionEntry.getType() 
+										&& !paymentTransactionEntry.getType().equals(PaymentTransactionType.QC_CAPTURE)) )
 						{
 							firstAuditId = paymentTransactionEntry.getRequestToken();
 							break;
@@ -848,7 +851,13 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	@Override
 	public List<OrderModel> fetchCliqCashOrdersWithMultiplePayments(Date startTime, Date endTime)
 	{
-		return forwardPaymentCleanUpDao.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
+		try {
+			return forwardPaymentCleanUpDao.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
 
+		}catch(Exception e) {
+			LOG.error("Exception occurred while getting  CliqCashOrdersWithMultiplePayments "+e.getMessage(),e);
+		}
+     return null;
 	}
+
 }

@@ -366,6 +366,8 @@
 		<property name="dateOfAnniversary" type="String" />
 		<property name="mobileNumber" type="String" />
 		<property name="nickName" type="String" />
+		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyMobileWsDTO"
@@ -2347,7 +2349,8 @@
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
@@ -2485,7 +2488,8 @@
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashApplied" type="boolean" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -2655,11 +2659,11 @@
  -->		<property name="remaingPaybleAmount" type="java.lang.Double" />
 		<property name="total" type="String" />
 		<property name="discount" type="String" />
-		
+		<property name="couponDiscount" type="String" />
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashApplied" type="boolean" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -3667,7 +3671,8 @@
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashApplied" type="boolean" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -3738,7 +3743,8 @@
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashApplied" type="boolean" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />

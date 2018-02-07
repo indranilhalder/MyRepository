@@ -2514,5 +2514,7 @@
    <bean id="MplQcPaymentFailDao" class="com.tisl.mpl.promotion.dao.impl.MplQcPaymentFailDaoImpl">
    </bean>
    
+   <bean id="MplQcRefundService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
+   </bean>
 </beans>
 

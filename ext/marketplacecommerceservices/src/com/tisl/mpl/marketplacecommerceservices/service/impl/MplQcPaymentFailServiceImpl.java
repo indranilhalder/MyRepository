@@ -5,16 +5,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.model.ModelService;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
-import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
@@ -43,6 +32,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplQcPaymentFailService;
+import com.tisl.mpl.marketplacecommerceservices.service.QcRefundService;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.response.QCCard;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
@@ -50,6 +40,15 @@ import com.tisl.mpl.promotion.dao.MplQcPaymentFailDao;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.util.OrderStatusSpecifier;
+
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 
 public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
@@ -85,6 +84,9 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 	private OrderStatusSpecifier orderStatusSpecifier;
 	@Autowired
 	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
+
+	@Autowired
+	private QcRefundService qcRefundService;
 
 //	@Autowired
 //	private PaymentService juspayService;
@@ -495,52 +497,24 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 	@Override
 	public void processQcRefund(OrderModel orderModel)
 	{
-		double totalQcRefundAmount = 0.0D;
-		if(null != orderModel.getChildOrders()) {
-			for (OrderModel childOrder : orderModel.getChildOrders()) {
-				for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
-					totalQcRefundAmount += calculateSplitQcRefundAmount(orderEntry);
-				}
-			}
-		}
-		String walletId = null;
-		DecimalFormat daecimalFormat = new DecimalFormat("#.00");
-		CustomerModel customerModel = (CustomerModel) orderModel.getUser();
-		if (null != customerModel && null != customerModel.getCustomerWalletDetail())
-		{
-			walletId = customerModel.getCustomerWalletDetail().getWalletId();
-		}
-
-		QCCreditRequest qcCreditRequest = new QCCreditRequest();
-		qcCreditRequest.setAmount(daecimalFormat.format(totalQcRefundAmount));
-		qcCreditRequest.setInvoiceNumber(orderModel.getCode());
-		qcCreditRequest.setNotes("Cancel for " + daecimalFormat.format(totalQcRefundAmount));
-		QCRedeeptionResponse response = mplWalletService.qcCredit(walletId, qcCreditRequest);
-		if(null != response ) {
-			LOG.debug("*****************************" + response.getResponseCode());
-			
-			if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
-			{
-				if (null != response.getResponseCode() && StringUtils.equalsIgnoreCase(response.getResponseCode().toString(), "0"))
-				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
-				}
-				
-				else 
-				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
-				}
-			}
-			if(null != orderModel.getChildOrders()) {
-				for (OrderModel childOrder : orderModel.getChildOrders()) {
-					for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
-						constructQuickCilverOrderEntry(response, orderEntry);
+		if(null != orderModel) {
+			LOG.debug("Processing QC Refund For Order Id "+orderModel.getCode());
+			try {
+				if(null != orderModel.getChildOrders() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())) {
+					for (OrderModel childOrder : orderModel.getChildOrders()) {
+						if(null != childOrder.getEntries() && CollectionUtils.isNotEmpty(childOrder.getEntries()))
+						{
+							for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
+								qcRefundService.processQcRefundEntryWise(orderEntry);
+							}
+						}
+					
 					}
 				}
+			}catch(Exception e) {
+				LOG.error("Exception occurred while processing QC Refund for order "+orderModel.getCode()+" "+e.getMessage(),e);
 			}
 		}
-		
-
 	}
 
 	private double calculateSplitJuspayRefundAmount(AbstractOrderEntryModel orderEntry){

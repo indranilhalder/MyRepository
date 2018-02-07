@@ -111,7 +111,7 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 			{
 				try
 				{
-					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel);
+					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel,false);
 				}
 				catch (final Exception e)
 				{
@@ -121,13 +121,13 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 			}
 		}
 		final List<OrderModel> multiPayCliqCashOrderList = forwardPaymentCleanUpService.fetchCliqCashOrdersWithMultiplePayments(startTime, endTime);
-		if (CollectionUtils.isNotEmpty(multiPayCliqCashOrderList))
+		if (null != multiPayCliqCashOrderList && CollectionUtils.isNotEmpty(multiPayCliqCashOrderList))
 		{
 			for (final OrderModel orderModel : multiPayCliqCashOrderList)
 			{
 				try
 				{
-					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel);
+					forwardPaymentCleanUpService.createRefundEntryForMultiplePayments(orderModel,true);
 				}
 				catch (final Exception e)
 				{
@@ -152,9 +152,18 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 					LOG.error(e.getMessage(), e);
 				}
 				final String splitInfoMode = orderModel.getSplitModeInfo();
+				LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 				if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 				{
-					mplQcPaymentFailService.processQcRefund(orderModel);
+					try
+					{
+						mplQcPaymentFailService.processQcRefund(orderModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+						LOG.error(e.getMessage(), e);
+					}
 				}
 			}
 		}
@@ -179,9 +188,18 @@ public class ForwardPaymentCleanUpJob extends AbstractJobPerformable<CronJobMode
 				}
 				
 				final String splitInfoMode = orderModel.getSplitModeInfo();
+				LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 				if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 				{
-					mplQcPaymentFailService.processQcRefund(orderModel);
+					try
+					{
+						mplQcPaymentFailService.processQcRefund(orderModel);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+						LOG.error(e.getMessage(), e);
+					}
 				}
 			}
 		}

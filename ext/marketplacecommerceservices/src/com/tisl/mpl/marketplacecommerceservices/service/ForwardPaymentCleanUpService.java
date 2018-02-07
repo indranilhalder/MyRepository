@@ -33,7 +33,7 @@ public interface ForwardPaymentCleanUpService
 
 	MplConfigurationModel fetchConfigDetails(final String code);
 
-	void createRefundEntryForMultiplePayments(final OrderModel orderModel);
+	void createRefundEntryForMultiplePayments(final OrderModel orderModel,boolean isCliqCashOrder);
 
 	void createRefundEntryForFailedOrders(final OrderModel orderModel);
 

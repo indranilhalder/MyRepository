@@ -593,7 +593,8 @@ public class PaymentServicesController extends BaseController
 		total = new BigDecimal(couponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
-		promoPriceData.setCouponDiscount(couponPriceData);
+		promoPriceData.setCouponDiscount(total.toString());
+		promoPriceData.setAppliedCouponDiscount(couponPriceData);
 
 		if (payableWalletAmount > 0.0D)
 		{
@@ -1857,6 +1858,13 @@ public class PaymentServicesController extends BaseController
 								}
 
 								final BigDecimal walletAmount = new BigDecimal(responce.getWallet().getBalance().doubleValue());
+								if(null != cart) {
+									cart.setTotalWalletAmount(responce.getWallet().getBalance());
+									modelService.save(cart);
+								}else if (null != orderModel) {
+									orderModel.setTotalWalletAmount(responce.getWallet().getBalance());
+									modelService.save(orderModel);
+								}
 								final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
 										MarketplacecommerceservicesConstants.INR);
 

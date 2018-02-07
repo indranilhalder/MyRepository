@@ -232,6 +232,7 @@ import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.user.data.AddressDataList;
@@ -513,6 +514,9 @@ public class UsersController extends BaseCommerceController
 	
 	@Autowired
 	private RegisterCustomerFacade registerCustomerFacade;
+	
+	@Autowired
+	private MplEgvWalletService mplEgvWalletService;
 
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
@@ -4000,134 +4004,104 @@ public class UsersController extends BaseCommerceController
 					{
 						customerToSave.setDisplayUid(customerToSave.getDisplayUid());
 					}
-					if (StringUtils.isNotEmpty(emailid))
-					{
-						if (!customerData.getDisplayUid().equalsIgnoreCase(emailid.trim().toLowerCase()))
+					
+				/*	EGV Changes Start */
+					boolean isWalletUpdated = true;
+					CustomerModel customer = (CustomerModel)userService.getCurrentUser();
+					
+					isWalletUpdated = mplEgvWalletService.updateWallet(customer, otp, customerToSave);
+					/*Egv Changes End */
+					
+					if(isWalletUpdated) {
+						if (StringUtils.isNotEmpty(emailid))
 						{
-							if (mplCustomerProfileFacade.checkUniquenessOfEmail(customerToSave.getEmailId()))
+							if (!customerData.getDisplayUid().equalsIgnoreCase(emailid.trim().toLowerCase()))
 							{
-								CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-
-								if(!customer.getMobileNumber().equalsIgnoreCase(customerToSave.getMobileNumber()) )
-										{
-									OTPResponseData response = mplWalletFacade.validateOTP(customer.getUid(), otp);
-									if (response.getOTPValid().booleanValue())
-									{
-										if (registerCustomerFacade.checkUniquenessOfMobileForWallet(customerToSave.getMobileNumber()))
-										{
-
-											boolean isWalletUpdated = updateCustomerWallet(customerToSave,customer);
-											if (isWalletUpdated)
-											{
-												mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
-											}
-										}else {
-											throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
-
-										}
-									}
-										}
-								
-							
-							}
-							else
-							{
-								duplicateEmail = true;
-								updateCustomerDetailError.setError(MarketplacecommerceservicesConstants.DUPLICATE_EMAIL);
-								updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-								return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
-							}
-						}
-					}
-					final String specificUrl = MarketplacecommerceservicesConstants.LINK_MY_ACCOUNT
-							+ MarketplacecommerceservicesConstants.LINK_UPDATE_PROFILE;
-					final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
-					CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-
-					if(!customer.getMobileNumber().equalsIgnoreCase(customerToSave.getMobileNumber())) {
-						OTPResponseData response = mplWalletFacade.validateOTP(customer.getUid(), otp);
-						if (response.getOTPValid().booleanValue())
-						{
-							if (registerCustomerFacade.checkUniquenessOfMobileForWallet(customerToSave.getMobileNumber()))
-							{
-								boolean isWalletUpdated = updateCustomerWallet(customerToSave,customer);
-								if (isWalletUpdated)
+								if (mplCustomerProfileFacade.checkUniquenessOfEmail(customerToSave.getEmailId()))
 								{
 									mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
 								}
-							}else {
-								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
-
+								else
+								{
+									duplicateEmail = true;
+									updateCustomerDetailError.setError(MarketplacecommerceservicesConstants.DUPLICATE_EMAIL);
+									updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+									return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+								}
 							}
 						}
-					}
-				
-					mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, customerToSave.getDisplayUid(),
-							profileUpdateUrl);
-					if (StringUtils.isNotEmpty(customerToSave.getDateOfAnniversary()))
-					{
-						updateCustomerDetailDto.setDateOfAnniversary(customerToSave.getDateOfAnniversary());
-					}
-					if (StringUtils.isNotEmpty(customerToSave.getFirstName()))
-					{
-						updateCustomerDetailDto.setFirstName(customerToSave.getFirstName());
-					}
-					if (StringUtils.isNotEmpty(customerToSave.getLastName()))
-					{
-						updateCustomerDetailDto.setLastName(customerToSave.getLastName());
-					}
-					if (StringUtils.isNotEmpty(customerToSave.getNickName()))
-					{
-						updateCustomerDetailDto.setNickName(customerToSave.getNickName());
-					}
-					if (StringUtils.isNotEmpty(customerToSave.getEmailId()))
-					{
-						updateCustomerDetailDto.setEmailId(customerToSave.getEmailId());
-					}
-
-					if (StringUtils.isNotEmpty(customerToSave.getMobileNumber()))
-					{
-						updateCustomerDetailDto.setMobileNumber(customerToSave.getMobileNumber());
-					}
-					if (StringUtils.isNotEmpty(customerToSave.getGender()))
-					{
-						updateCustomerDetailDto.setGender(customerToSave.getGender());
-					}
-					if (StringUtils.isNotEmpty(customerToSave.getDateOfBirth()))
-					{
-						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
-					}
-					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
-					final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
-							MarketplacewebservicesConstants.USE_GIGYA);
-					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
-					{
-						final String gigyaMethod = configurationService.getConfiguration().getString(
-								MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
-						String fnameGigya = null;
-						String lnameGigya = null;
-
-						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getFirstName()))
+						final String specificUrl = MarketplacecommerceservicesConstants.LINK_MY_ACCOUNT
+								+ MarketplacecommerceservicesConstants.LINK_UPDATE_PROFILE;
+						final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
+						mplCustomerProfileFacade.updateCustomerProfile(customerToSave);
+						mplCustomerProfileFacade.checkChangesForSendingEmail(preSavedDetailMap, customerToSave.getDisplayUid(),
+								profileUpdateUrl);
+						if (StringUtils.isNotEmpty(customerToSave.getDateOfAnniversary()))
 						{
-							fnameGigya = updateCustomerDetailDto.getFirstName().trim();
+							updateCustomerDetailDto.setDateOfAnniversary(customerToSave.getDateOfAnniversary());
 						}
-						else
+						if (StringUtils.isNotEmpty(customerToSave.getFirstName()))
 						{
-
-							fnameGigya = MarketplacewebservicesConstants.EMPTY;
+							updateCustomerDetailDto.setFirstName(customerToSave.getFirstName());
 						}
-						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getLastName()))
+						if (StringUtils.isNotEmpty(customerToSave.getLastName()))
 						{
-							lnameGigya = updateCustomerDetailDto.getLastName().trim();
+							updateCustomerDetailDto.setLastName(customerToSave.getLastName());
 						}
-						else
+						if (StringUtils.isNotEmpty(customerToSave.getNickName()))
 						{
-							lnameGigya = MarketplacewebservicesConstants.EMPTY;
+							updateCustomerDetailDto.setNickName(customerToSave.getNickName());
+						}
+						if (StringUtils.isNotEmpty(customerToSave.getEmailId()))
+						{
+							updateCustomerDetailDto.setEmailId(customerToSave.getEmailId());
 						}
 
-						gigyaFacade.notifyGigya(updateCustomerDetailDto.getEmailId(), null, fnameGigya, lnameGigya,
-								updateCustomerDetailDto.getEmailId().trim(), gigyaMethod);
+						if (StringUtils.isNotEmpty(customerToSave.getMobileNumber()))
+						{
+							updateCustomerDetailDto.setMobileNumber(customerToSave.getMobileNumber());
+						}
+						if (StringUtils.isNotEmpty(customerToSave.getGender()))
+						{
+							updateCustomerDetailDto.setGender(customerToSave.getGender());
+						}
+						if (StringUtils.isNotEmpty(customerToSave.getDateOfBirth()))
+						{
+							updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
+						}
+						// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+						final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
+								MarketplacewebservicesConstants.USE_GIGYA);
+						if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
+						{
+							final String gigyaMethod = configurationService.getConfiguration().getString(
+									MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+							String fnameGigya = null;
+							String lnameGigya = null;
+
+							if (StringUtils.isNotEmpty(updateCustomerDetailDto.getFirstName()))
+							{
+								fnameGigya = updateCustomerDetailDto.getFirstName().trim();
+							}
+							else
+							{
+
+								fnameGigya = MarketplacewebservicesConstants.EMPTY;
+							}
+							if (StringUtils.isNotEmpty(updateCustomerDetailDto.getLastName()))
+							{
+								lnameGigya = updateCustomerDetailDto.getLastName().trim();
+							}
+							else
+							{
+								lnameGigya = MarketplacewebservicesConstants.EMPTY;
+							}
+
+							gigyaFacade.notifyGigya(updateCustomerDetailDto.getEmailId(), null, fnameGigya, lnameGigya,
+									updateCustomerDetailDto.getEmailId().trim(), gigyaMethod);
+						}
 					}
+					
 				}
 				catch (final DuplicateUidException e)
 				{
@@ -4170,28 +4144,7 @@ public class UsersController extends BaseCommerceController
 		}
 	}
 
-	/**
-	 * @param customerToSave 
-	 * 
-	 */
-	private boolean updateCustomerWallet(MplCustomerProfileData customerToSave,CustomerModel customer)
-	{
-
-		QCCustomerRegisterRequest registerCustomerRequest  = new QCCustomerRegisterRequest();
-		CustomerModel customerModel = new CustomerModel();
-		customerModel.setMobileNumber(customerToSave.getMobileNumber());
-		customerModel.setFirstName(customerToSave.getFirstName());
-		customerModel.setLastName(customerToSave.getLastName());
-		customerModel.setOriginalUid(customerToSave.getEmailId());
-		registerCustomerRequest.setExternalwalletid(customerToSave.getEmailId());
-		String walletId = customer.getCustomerWalletDetail().getWalletId();
-		CustomerWalletDetailResponse responce =mplWalletFacade.updateCustomerWallet(registerCustomerRequest, walletId, customerModel.getUid());
-		if(null != responce && null !=  responce.getResponseCode() && responce.getResponseCode().intValue() == 0) {
-			return true;
-		}else {
-			return false;
-		}
-	}
+	
 
 	/**
 	 * @description method will return the validated formate of date
@@ -4368,6 +4321,24 @@ public class UsersController extends BaseCommerceController
 				final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
 				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
 
+				CustomerModel currentUser = null;
+				if (null != userService.getCurrentUser())
+				{
+					 currentUser = (CustomerModel) userService.getCurrentUser();
+					 boolean customerWalletCreated = false;
+
+						if(null !=currentUser.getIsWalletActivated() && currentUser.getIsWalletActivated().booleanValue())
+						{
+							customerWalletCreated =true;
+						}
+						if(customerWalletCreated) {
+							 customer.setIsWalletCreated(true);
+						}
+						if(null != currentUser.getIsqcOtpVerify() && currentUser.getIsqcOtpVerify().booleanValue() )
+						{
+							customer.setIsWalletOtpVerified(true);
+						}
+				}
 				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
 				if (null != customerData)
 				{

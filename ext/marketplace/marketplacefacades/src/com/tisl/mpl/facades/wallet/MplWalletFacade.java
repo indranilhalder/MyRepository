@@ -83,6 +83,8 @@ public interface MplWalletFacade
 	
 	public CustomerWalletDetailResponse editWalletInformtion(CustomerModel currentCustomer, String qcFirstName, String qcLastName,
 			String qcMobileNo);
+	public boolean checkWalletDetailsChanged(MplCustomerProfileData mplCustomerProfileData);
+
 
 	/**
 	 * @param mobileNo

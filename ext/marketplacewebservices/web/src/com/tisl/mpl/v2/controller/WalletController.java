@@ -3,138 +3,64 @@
  */
 package com.tisl.mpl.v2.controller;
 
-import de.hybris.platform.commercefacades.address.AddressVerificationFacade;
-import de.hybris.platform.commercefacades.address.data.AddressVerificationResult;
-import de.hybris.platform.commercefacades.converter.ConfigurablePopulator;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
-import de.hybris.platform.commercefacades.customergroups.CustomerGroupFacade;
-import de.hybris.platform.commercefacades.i18n.I18NFacade;
-import de.hybris.platform.commercefacades.order.OrderFacade;
-import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
-import de.hybris.platform.commercefacades.user.UserFacade;
-import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.commerceservices.address.AddressVerificationDecision;
-import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
-import de.hybris.platform.commercewebservicescommons.dto.error.ErrorWsDTO;
-import de.hybris.platform.commercewebservicescommons.oauth2.token.OAuthTokenService;
-import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.util.localization.Localization;
-import de.hybris.platform.voucher.VoucherService;
-import de.hybris.platform.wishlist2.Wishlist2Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
-import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
-import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
-import com.tisl.mpl.facade.config.MplConfigFacade;
-import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
-import com.tisl.mpl.facade.product.ExchangeGuideFacade;
-import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
-import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
-import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
-import com.tisl.mpl.facades.account.preference.MplPreferenceFacade;
-import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
-import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
-import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
-import com.tisl.mpl.facades.account.reviews.GigyaFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
-import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
-import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
-import com.tisl.mpl.facades.webform.MplWebFormFacade;
-import com.tisl.mpl.helper.MplEnumerationHelper;
-import com.tisl.mpl.helper.MplUserHelper;
-import com.tisl.mpl.helper.ProductDetailsHelper;
-import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
-import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
-import com.tisl.mpl.marketplacecommerceservices.service.FriendsInviteService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
-import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
-import com.tisl.mpl.model.MplCartOfferVoucherModel;
-import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
-import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
-import com.tisl.mpl.populator.options.PaymentInfoOption;
-import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
-import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
-import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
-import com.tisl.mpl.service.MplMobileUserService;
-import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.v2.controller.UsersController.AddressField;
-import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
-import com.tisl.mpl.wsdto.ErrorDTO;
 import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
@@ -151,177 +77,31 @@ import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 @CacheControl(directive = CacheControlDirective.PRIVATE)
 public class WalletController
 {
-	private static final Logger LOG = Logger.getLogger(UsersController.class);
-	@Resource(name = "customerFacade")
-	private CustomerFacade customerFacade;
-	@Resource(name = "userFacade")
-	private UserFacade userFacade;
-	@Resource(name = "ordersHelper")
-	private OrdersHelper ordersHelper;
+	private static final Logger LOG = Logger.getLogger(WalletController.class);
+	
 	@Resource(name = "modelService")
 	private ModelService modelService;
-	@Resource(name = "customerGroupFacade")
-	private CustomerGroupFacade customerGroupFacade;
-	@Resource(name = "addressVerificationFacade")
-	private AddressVerificationFacade addressVerificationFacade;
-	@Resource(name = "httpRequestCustomerDataPopulator")
-	private HttpRequestCustomerDataPopulator httpRequestCustomerDataPopulator;
-	@Resource(name = "httpRequestAddressDataPopulator")
-	private Populator<HttpServletRequest, AddressData> httpRequestAddressDataPopulator;
-	//	@Resource(name = "HttpRequestUserSignUpDTOPopulator") Critical Sonar fixes Unused private Field
-	//	private Populator<HttpServletRequest, UserSignUpWsDTO> httpRequestUserSignUpDTOPopulator;
-	@Resource(name = "addressValidator")
-	private Validator addressValidator;
-	@Resource(name = "httpRequestPaymentInfoPopulator")
-	private ConfigurablePopulator<HttpServletRequest, CCPaymentInfoData, PaymentInfoOption> httpRequestPaymentInfoPopulator;
-	@Resource(name = "addressDataErrorsPopulator")
-	private Populator<AddressVerificationResult<AddressVerificationDecision>, Errors> addressDataErrorsPopulator;
-	@Resource(name = "validationErrorConverter")
-	private Converter<Object, List<ErrorWsDTO>> validationErrorConverter;
-	@Resource(name = "ccPaymentInfoValidator")
-	private Validator ccPaymentInfoValidator;
-	@Resource(name = "orderFacade")
-	private OrderFacade orderFacade;
-	@Resource(name = "putUserDTOValidator")
-	private Validator putUserDTOValidator;
-	//	@Resource(name = "userSignUpDTOValidator") Critical Sonar fixes Unused private Field
-	//	private Validator userSignUpDTOValidator;
-	//	@Resource(name = "guestConvertingDTOValidator")
-	//	private Validator guestConvertingDTOValidator;
-	@Resource(name = "passwordStrengthValidator")
-	private Validator passwordStrengthValidator;
 
-	@Resource
-	private MplCheckoutFacade mplCheckoutFacade;
-	/* R2.3 start */
-	@Autowired
-	private CustomAddressReversePopulator addressReversePopulator;
-	/* R2.3 end */
-	@Resource
-	private Wishlist2Service wishlistService;
-
-	@Resource(name = "accProductFacade")
-	private ProductFacade productFacade;
-
-	@Resource(name = "orderModelService")
-	private OrderModelService orderModelService;
-
-	//Exchange Changes
-	@Resource(name = "exchangeGuideFacade")
-	private ExchangeGuideFacade exchangeFacade;
-
-	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-	//
-	@Resource
-	private MplPreferenceFacade mplPreferenceFacade;
-	@Resource
-	private ExtendedUserService extUserService;
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 	@Resource
-	private MplMobileUserService mobileUserService;
-	@Resource
-	private MplCustomerProfileService mplCustomerProfileService;
-	@Resource
 	private UserService userService;
-	@Resource
-	private FriendsInviteService friendsInviteService;
-	@Resource
-	private CustomerAccountService customerAccountService;
-	@Resource
-	private WishlistFacade wishlistFacade;
-	@Resource
-	private FriendsInviteFacade friendsInviteFacade;
-	//	@Autowired Critical Sonar fixes Unused private Field
-	//	private HybrisOAuthTokenStore hybrisOAuthTokenStore;
-	//	@Autowired
-	//	private ForgetPasswordFacade forgetPasswordFacade;
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
-	@Resource(name = "mplPaymentService")
-	private MplPaymentService mplPaymentService;
-	@Resource
-	private MplAccountAddressFacade accountAddressFacade;
-	@Resource
-	private UpdateFeedbackFacade updateFeedbackFacade;
-	//	@Autowired Critical Sonar fixes Unused private Field
-	//	private EnumerationService enumerationService;
-	//	@Autowired
-	//	private ExtendedUserService extendedUserService;
+	
 	@Resource
 	private CommerceCartService commerceCartService;
 
 	@Resource
 	private MplCartFacade mplCartFacade;
 
-	@Resource
-	private MplEnumerationHelper mplEnumerationHelper;
-	@Resource
-	private BaseSiteService baseSiteService;
-
-	@Resource
-	private NotificationFacade notificationFacade;
-
-	@Resource
-	private CancelReturnFacade cancelReturnFacade;
-
+	
 	@Resource
 	private MplOrderFacade mplOrderFacade;
 
-	@Resource
-	private MplMyFavBrandCategoryFacade mplMyFavBrandCategoryFacade;
-
-	@Autowired
-	private CartService cartService;
-	//	@Autowired Critical Sonar fixes Unused private Field
-	//	private DefaultCheckoutFacade defaultCheckoutFacade;
-	@Autowired
-	private MplCartWebService mplCartWebService;
-	@Autowired
-	private MplUserHelper mplUserHelper;
+	
 	@Autowired
 	private MplPaymentWebFacade mplPaymentWebFacade;
-	@Autowired
-	private MplProductWebServiceImpl mplProductWebService;
-
-	@Autowired
-	private BuyBoxFacade buyBoxFacade;
-	@Autowired
-	private ProductDetailsHelper productDetailsHelper;
-
-	@Autowired
-	private MplCouponWebFacade mplCouponWebFacade;
-	@Autowired
-	private GigyaFacade gigyaFacade;
-	@Autowired
-	private ExtendedUserService extendedUserService;
-	@Resource(name = "productService")
-	private ProductService productService;
-	@Autowired
-	private DefaultGetOrderDetailsFacadeImpl getOrderDetailsFacade;
-
-	@Autowired
-	private MplConfigFacade mplConfigFacade;
-	@Autowired
-	private PincodeServiceFacade pincodeServiceFacade;
-	@Autowired
-	private MplCheckoutFacadeImpl mplCheckoutFacadeImpl;
-	@Autowired
-	private MplOrderService mplOrderService;
-
-
-	@Autowired
-	private DateUtilHelper dateUtilHelper;
-	@Autowired
-	private OrderModelDao orderModelDao;
-	@Autowired
-	private CommonUtils commonUtils;
-
-	@Resource(name = "mplJewelleryService")
-	private MplJewelleryService jewelleryService;
-
-	@Resource(name = "voucherService")
-	private VoucherService voucherService;
 
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
@@ -335,19 +115,6 @@ public class WalletController
 	@Autowired
 	private MplEGVCartService mplEGVCartService;
 	
-	@Resource(name = "mplWebFormFacade")
-	private MplWebFormFacade mplWebFormFacade;
-
-	@Autowired
-	private ExtendedUserServiceImpl userexService;
-
-	@Resource(name = "oauthTokenService")
-	private OAuthTokenService oauthTokenService;
-	@Autowired
-	private MplCustomerProfileFacade mplCustomerProfileFacade;
-
-	@Resource(name = "i18NFacade")
-	private I18NFacade i18NFacade;
 
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
@@ -384,20 +151,21 @@ public class WalletController
 		ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
 		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
+		LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
 
 		try
 		{
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				LOG.info("Applying  cliq Cash For Card Guid " + cartGuid);
-				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, null);
+				Double totalWalletAmount = cart.getTotalWalletAmount();
+
+				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, totalWalletAmount);
 			}
 			else
 			{
-				//orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-				LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
-				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, null);
+				Double totalWalletAmount = orderModel.getTotalWalletAmount();
+				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, totalWalletAmount);
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -456,7 +224,7 @@ public class WalletController
 				removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
 				
 				
-				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
+				final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(cart.getDiscounts());
 
 				boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
 				String cartCouponCode =null;
@@ -477,7 +245,7 @@ public class WalletController
 					cart.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(cart);
 					modelService.refresh(cart);
-					getTotalPrice(removeCliqCashWsDto, cart);
+					removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
@@ -490,7 +258,7 @@ public class WalletController
 					{
 						removeCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
 					}
-					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(order.getDiscounts());
+					final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(order.getDiscounts());
 
 					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
 					String cartCouponCode =null;
@@ -511,7 +279,7 @@ public class WalletController
 						orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
 						modelService.save(orderModel);
 						modelService.refresh(orderModel);
-					getTotalPrice(removeCliqCashWsDto, orderModel);
+						removeCliqCashWsDto =mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
 					removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
@@ -533,110 +301,6 @@ public class WalletController
 
 	}
 
-
-	
-	public void getTotalPrice(ApplyCliqCashWsDto applyCliqCashWsDto, AbstractOrderModel cartModel)
-	{
-		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
-		double bankCouponDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-		if (!cartModel.getDiscounts().isEmpty())
-		{
-			for (final DiscountModel discount : cartModel.getDiscounts())
-			{
-				if (discount instanceof MplCartOfferVoucherModel)
-				{
-					bankCouponDiscount += discount.getValue().doubleValue();
-				}
-				else
-				{
-					couponDiscount += discount.getValue().doubleValue();
-				}
-			}
-		}
-
-		BigDecimal total = new BigDecimal(0.0D);
-		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
-		if (null != cartModel.getSubtotal())
-		{
-			total = new BigDecimal(cartModel.getSubtotal().doubleValue());
-			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applyCliqCashWsDto.setSubTotalPrice(subTotalPriceData);
-
-		}
-
-		if (null != cartModel.getDeliveryCost())
-		{
-			total = new BigDecimal(cartModel.getDeliveryCost().doubleValue());
-			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applyCliqCashWsDto.setDeliveryCharges(deliveryChargesPriceData);
-		}
-		total = new BigDecimal(bankCouponDiscount);
-		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applyCliqCashWsDto.setOtherDiscount(otherDiscountPriceData);
-
-		total = new BigDecimal(couponDiscount);
-		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applyCliqCashWsDto.setCouponDiscount(couponPriceData);
-
-		if (payableWalletAmount > 0.0D)
-		{
-			applyCliqCashWsDto.setCliqCashApplied(true);
-
-		}
-
-		total = new BigDecimal(payableWalletAmount);
-		final PriceData payableWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applyCliqCashWsDto.setCliqCashPaidAmount(payableWalletAmountPriceData);
-
-		total = new BigDecimal(remainingWalletAmount);
-		final PriceData remainingWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applyCliqCashWsDto.setCliqCashBalance(remainingWalletAmountPriceData);
-
-		if (null != cartModel.getTotalPrice())
-		{
-			total = new BigDecimal(cartModel.getTotalPrice().doubleValue() - payableWalletAmount);
-			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applyCliqCashWsDto.setTotalPrice(cartTotalPriceData);
-		}
-	}
-
-
-
-
-/**
- * @param discounts
- * @return
- */
-	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
-	{
-		boolean flag = false;
-		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
-		if (CollectionUtils.isNotEmpty(discounts))
-		{
-			for (final DiscountModel discount : discounts)
-			{
-				if (discount instanceof MplCartOfferVoucherModel)
-				{
-					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
-					flag = true;
-					couponCode = object.getVoucherCode();
-					break;
-				}
-			}
-		}
-
-		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
-
-		return cartCouponObj;
-	}
 
 
 /**
@@ -1035,146 +699,34 @@ public class WalletController
 		public EgvCheckMobileNumberWsDto checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request ,@RequestParam(required=false) boolean isUpdateProfile)
 				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
-{
-	EgvCheckMobileNumberWsDto responce = new EgvCheckMobileNumberWsDto();
-	try
 	{
-			if (null != request)
+		EgvCheckMobileNumberWsDto responce = new EgvCheckMobileNumberWsDto();
+		try
+		{
+			responce = mplEgvWalletService.checkWalletMobileNumber(request, isUpdateProfile);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode())
 			{
-				CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-
-				if(isUpdateProfile) 
-				{
-					if (null == request.getMobileNumber() || ( StringUtils.length(request.getMobileNumber()) != MarketplacecommerceservicesConstants.MOBLENGTH
-							&& !request.getMobileNumber().matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)))
-					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
-					}
-					boolean isOtpGenerated =	mplEgvWalletService.generateOtpForUpdateWallet(request.getMobileNumber(),customer);
-					if(isOtpGenerated) 
-					{
-						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
-						return responce;
-					}
-				}else {
-					validateRequest(request);
-				}
-				if(null != customer) {
-					boolean isWalletCreated = false ; 
-					boolean isWalletOtpVerified = false ;
-					boolean isMobileNumberChanged = true;
-					boolean isNameChanged = true;
-					
-					if((null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ) )
-					{
-						isWalletCreated = true;
-					}
-					if( null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
-					{
-						isWalletOtpVerified = true;
-					}
-					if( null != customer.getQcVerifyMobileNo() && 
-								(customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(request.getMobileNumber().trim())))
-					{
-						isMobileNumberChanged = false;
-					}
-					
-					if( ( null != customer.getQcVerifyFirstName() && 
-							(customer.getQcVerifyFirstName().trim().equalsIgnoreCase(request.getFirstName())) )|| 
-							(  null != customer.getQcVerifyLastName() && 
-							(customer.getQcVerifyLastName().trim().equalsIgnoreCase(request.getLastName())) ))
-				{
-						isNameChanged = false;
-				}
-					
-					if( !isWalletCreated || !isWalletOtpVerified ) {
-						
-						if(isMobileNumberChanged) {
-							if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
-							{
-								registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
-								mplWalletFacade.generateOTP(customer,request.getMobileNumber());
-								//Set success flag
-								responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-								responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
-
-							}
-							else
-							{
-								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
-							}
-						}else {
-							if(isNameChanged){
-								registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
-							}
-							mplWalletFacade.generateOTP(customer,request.getMobileNumber());
-							//Set success flag
-							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
-						}
-								
-					}else {
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5016);
-
-					}
-					
-				}
-			}else
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5015);
+				responce.setErrorCode(e.getErrorCode());
+				responce.setError(Localization.getLocalizedString(e.getErrorCode()));
 			}
-		
-	}catch (final EtailBusinessExceptions e)
-	{
-		ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		if (null != e.getErrorCode())
-		{
-			responce.setErrorCode(e.getErrorCode());
-			responce.setError(Localization.getLocalizedString(e.getErrorCode()));
+			responce.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		responce.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-	}
-	catch (final Exception ex)
-	{
+		catch (final Exception ex)
 		{
-			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			responce.setError(ex.getMessage());
-			LOG.error("Exception occrred while saving mobile number for QC wallet " + ex.getMessage());
+			{
+				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				responce.setError(ex.getMessage());
+				LOG.error("Exception occrred while saving mobile number for QC wallet " + ex.getMessage());
+			}
 		}
+		return responce;
 	}
-	return responce;
-}
 
 
-/**
- * @param request
- */
-private void validateRequest(EgvWalletCreateRequestWsDTO request)
-	{
-		if (null == request)
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5015);
-		}
-		else if (null == request.getFirstName() || request.getFirstName().isEmpty())
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5011);
-		}
-		else if (null == request.getLastName() || request.getLastName().isEmpty())
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5012);
-		}
-		else if (null == request.getMobileNumber() || request.getMobileNumber().isEmpty())
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5013);
-
-		}
-		else if (StringUtils.length(request.getMobileNumber()) != MarketplacecommerceservicesConstants.MOBLENGTH
-				&& !request.getMobileNumber().matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
-		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023);
-		}
-	}
 
 
 @Secured(
@@ -1223,29 +775,4 @@ private void validateRequest(EgvWalletCreateRequestWsDTO request)
 		}
 		return responce;
 	}
-
-
-
-/**
- * @description method is called to validate the StringField
- * @param addressField
- * @param fieldType
- * @param maxFieldLength
- *
- */
-protected static String validateStringField(final String addressField, final AddressField fieldType, final int maxFieldLength)
-{
-	String errorMsg = null;
-
-	if (addressField == null || StringUtils.isEmpty(addressField) || (StringUtils.length(addressField) > maxFieldLength))
-	{
-		errorMsg = fieldType + MarketplacecommerceservicesConstants.EMPTYSPACE + MarketplacecommerceservicesConstants.NOT_VALID;
-		return errorMsg;
-
-	}
-	return errorMsg;
-
-}
-
-
 }

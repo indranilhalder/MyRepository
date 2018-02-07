@@ -3474,7 +3474,7 @@ public class CartsController extends BaseCommerceController
 					applycouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
 				}
 				applycouponDto = mplCouponWebFacade.applyVoucher(couponCode, cartModel, null, paymentMode);
-				getTotalPrice(applycouponDto, cartModel);
+				applycouponDto=	mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
@@ -3487,7 +3487,7 @@ public class CartsController extends BaseCommerceController
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				final Double totalWithoutCoupon = orderModel.getTotalPrice();
-				getTotalPrice(applycouponDto, orderModel);
+				applycouponDto=mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
 
 				if (null != totalWithoutCoupon)
 				{
@@ -3528,83 +3528,7 @@ public class CartsController extends BaseCommerceController
 		return applycouponDto;
 	}
 
-	/**
-	 * @param applycouponDto
-	 * @param cartModel
-	 * @return
-	 */
-	private void getTotalPrice(final ApplyCouponsDTO applycouponDto, final AbstractOrderModel cartModel)
-	{
-		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
-		double bankCouponDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-		if (!cartModel.getDiscounts().isEmpty())
-		{
-			for (final DiscountModel discount : cartModel.getDiscounts())
-			{
-				if (discount instanceof MplCartOfferVoucherModel)
-				{
-					bankCouponDiscount += discount.getValue().doubleValue();
-				}
-				else
-				{
-					couponDiscount += discount.getValue().doubleValue();
-				}
-			}
-		}
-
-		BigDecimal total = new BigDecimal(0.0D);
-		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
-		if (null != cartModel.getSubtotal())
-		{
-			total = new BigDecimal(cartModel.getSubtotal().doubleValue());
-			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applycouponDto.setSubTotalPrice(subTotalPriceData);
-
-		}
-
-		if (null != cartModel.getDeliveryCost())
-		{
-			total = new BigDecimal(cartModel.getDeliveryCost().doubleValue());
-			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applycouponDto.setDeliveryCharges(deliveryChargesPriceData);
-		}
-		total = new BigDecimal(bankCouponDiscount);
-		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setOtherDiscount(otherDiscountPriceData);
-
-		total = new BigDecimal(couponDiscount);
-		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setCouponDiscount(couponPriceData);
-
-		if (payableWalletAmount > 0.0D)
-		{
-			applycouponDto.setCliqCashApplied(true);
-
-		}
-
-		total = new BigDecimal(payableWalletAmount);
-		final PriceData payableWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setCliqCashPaidAmount(payableWalletAmountPriceData);
-
-		total = new BigDecimal(remainingWalletAmount);
-		final PriceData remainingWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setCliqCashBalance(remainingWalletAmountPriceData);
-
-		if (null != cartModel.getTotalPrice())
-		{
-			total = new BigDecimal(cartModel.getTotalPrice().doubleValue() - payableWalletAmount);
-			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applycouponDto.setTotalPrice(cartTotalPriceData);
-		}
-	}
+	
 
 	/**
 	 * TPR - 7486
@@ -3675,7 +3599,7 @@ public class CartsController extends BaseCommerceController
 					applycouponDto = mplCouponWebFacade.applyCartVoucher(couponCode, cartModel, null, paymentMode);
 					cartModel.setCheckForBankVoucher("false");
 					modelService.save(cartModel);
-					getTotalPrice(applycouponDto, cartModel);
+					mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
 					applycouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
@@ -3701,7 +3625,7 @@ public class CartsController extends BaseCommerceController
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				
-				getTotalPrice(applycouponDto, orderModel);
+				applycouponDto=mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
 				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(orderModel));
 			}
 		}
@@ -3739,85 +3663,6 @@ public class CartsController extends BaseCommerceController
 	}
 
 
-
-
-
-	/**
-	 * @param applycouponDto
-	 * @param cartModel
-	 */
-	private void getTotalPrice(ApplyCartCouponsDTO applycouponDto, AbstractOrderModel cartModel)
-	{
-		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
-		double bankCouponDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-		if (!cartModel.getDiscounts().isEmpty())
-		{
-			for (final DiscountModel discount : cartModel.getDiscounts())
-			{
-				if (discount instanceof MplCartOfferVoucherModel)
-				{
-					bankCouponDiscount += discount.getValue().doubleValue();
-				}
-				else
-				{
-					couponDiscount += discount.getValue().doubleValue();
-				}
-			}
-		}
-
-		BigDecimal total = new BigDecimal(0.0D);
-		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
-		if (null != cartModel.getSubtotal())
-		{
-			total = new BigDecimal(cartModel.getSubtotal().doubleValue());
-			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applycouponDto.setSubTotalPrice(subTotalPriceData);
-
-		}
-
-		if (null != cartModel.getDeliveryCost())
-		{
-			total = new BigDecimal(cartModel.getDeliveryCost().doubleValue());
-			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applycouponDto.setDeliveryCharges(deliveryChargesPriceData);
-		}
-		total = new BigDecimal(bankCouponDiscount);
-		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setOtherDiscount(otherDiscountPriceData);
-
-		total = new BigDecimal(couponDiscount);
-		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setCouponDiscount(couponPriceData);
-
-		if (payableWalletAmount > 0.0D)
-		{
-			applycouponDto.setCliqCashApplied(true);
-
-		}
-
-		total = new BigDecimal(payableWalletAmount);
-		final PriceData payableWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setCliqCashPaidAmount(payableWalletAmountPriceData);
-
-		total = new BigDecimal(remainingWalletAmount);
-		final PriceData remainingWalletAmountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-				MarketplacecommerceservicesConstants.INR);
-		applycouponDto.setCliqCashBalance(remainingWalletAmountPriceData);
-
-		if (null != cartModel.getTotalPrice())
-		{
-			total = new BigDecimal(cartModel.getTotalPrice().doubleValue() - payableWalletAmount);
-			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
-					MarketplacecommerceservicesConstants.INR);
-			applycouponDto.setTotalPrice(cartTotalPriceData);
-		}
-	}
 
 	/**
 	 * @description release the Coupon for the particular user
@@ -4111,7 +3956,8 @@ public class CartsController extends BaseCommerceController
 		total = new BigDecimal(couponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
-		releaseCouponDto.setCouponDiscount(couponPriceData);
+		releaseCouponDto.setAppliedCouponDiscount(couponPriceData);
+		releaseCouponDto.setCouponDiscount(total.toString());
 
 		if (payableWalletAmount > 0.0D)
 		{

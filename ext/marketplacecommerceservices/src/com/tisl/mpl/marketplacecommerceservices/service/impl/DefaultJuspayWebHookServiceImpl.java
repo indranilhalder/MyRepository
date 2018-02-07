@@ -1183,9 +1183,18 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											oModel.getOrderStatus().getPaymentMethodType());
 									final String splitInfoMode = orderModel.getSplitModeInfo();
+									LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 									if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 									{
-										mplQcPaymentFailService.processQcRefund(orderModel);
+										try
+										{
+											mplQcPaymentFailService.processQcRefund(orderModel);
+										}
+										catch (final Exception e)
+										{
+											LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+											LOG.error(e.getMessage(), e);
+										}
 									}
 								}
 								//TISPRO-675
@@ -1196,9 +1205,18 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											MarketplacecommerceservicesConstants.EMI);
 									final String splitInfoMode = orderModel.getSplitModeInfo();
+									LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 									if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 									{
-										mplQcPaymentFailService.processQcRefund(orderModel);
+										try
+										{
+											mplQcPaymentFailService.processQcRefund(orderModel);
+										}
+										catch (final Exception e)
+										{
+											LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+											LOG.error(e.getMessage(), e);
+										}
 									}
 								}
 								else
@@ -1207,9 +1225,18 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
 											oModel.getOrderStatus().getCardResponse().getCardType());
 									final String splitInfoMode = orderModel.getSplitModeInfo();
+									LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 									if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 									{
-										mplQcPaymentFailService.processQcRefund(orderModel);
+										try
+										{
+											mplQcPaymentFailService.processQcRefund(orderModel);
+										}
+										catch (final Exception e)
+										{
+											LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+											LOG.error(e.getMessage(), e);
+										}
 									}
 								}
 							}
@@ -1282,9 +1309,18 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 							}
 
 							final String splitInfoMode = orderModel.getSplitModeInfo();
+							LOG.debug("Payment SplitMode for order  "+orderModel.getCode()+ " "+splitInfoMode);
 							if (null != splitInfoMode && splitInfoMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT))
 							{
-								mplQcPaymentFailService.processQcRefund(orderModel);
+								try
+								{
+									mplQcPaymentFailService.processQcRefund(orderModel);
+								}
+								catch (final Exception e)
+								{
+									LOG.error("Error while processing QC refund for order: " + orderModel.getCode());
+									LOG.error(e.getMessage(), e);
+								}
 							}
 							updateWebHookExpired(oModel);
 
