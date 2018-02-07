@@ -5418,22 +5418,6 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     position: fixed;
     font-size: 12px;
     border-bottom: 1px solid #eaeaeb;
-    padding: 15px 25px;
-    width: 100%;
-    display: inline-block;
-    background: #fff none repeat scroll 0 0;
-    border-top: 1px solid #eaeaeb;
-    bottom: 40px;
-    left: 0;
-    position: fixed;
-    z-index: 99;
-    text-transform: none;
-    font-weight: normal;
-}
-.totals.outstanding-totalss {
-    position: fixed;
-    font-size: 12px;
-    border-bottom: 1px solid #eaeaeb;
     padding: 15px 25px !important;
     width: 100% !important;
     display: inline-block;
@@ -5445,6 +5429,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     z-index: 99;
     text-transform: none;
     visibility: visible;
+    font-weight: normal;
+    margin: 0;
 }
 .totals.outstanding-totalss {
     padding: 18px 8px !important;
