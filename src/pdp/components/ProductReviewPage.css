@@ -1,0 +1,19 @@
+.base {
+  width: 100%;
+}
+
+.reviewText {
+  width: 100%;
+  text-align: right;
+  text-decoration: underline;
+  color: #181818;
+  font-family: regular;
+  margin-bottom: 5px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.productBackground {
+  width: 100%;
+  background-color: #ececec;
+}
