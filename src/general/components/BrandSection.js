@@ -4,6 +4,7 @@ import Carousel from "./Carousel";
 import styles from "./BrandSection.css";
 import Button from "./Button";
 import Logo from "./Logo";
+import PropTypes from "prop-types";
 
 export default class BrandSection extends React.Component {
   follow() {
@@ -28,7 +29,7 @@ export default class BrandSection extends React.Component {
         <div className={styles.heading}>{this.props.heading}</div>
         <div className={styles.brandLogo}>
           <Logo image={this.props.image} />
-          <span className={styles.firstHolder}>
+          <span className={styles.buttonHolder}>
             <Button
               type="hollow"
               color="#fff"
@@ -54,7 +55,6 @@ export default class BrandSection extends React.Component {
                   price={datum.price}
                   description={datum.description}
                   descriptionText={datum.descriptionText}
-                  onDownload={datum.onDownload}
                 />
               );
             })}
@@ -63,3 +63,20 @@ export default class BrandSection extends React.Component {
     );
   }
 }
+
+BrandSection.propTypes = {
+  image: PropTypes.string,
+  heading: PropTypes.string,
+  buttonText: PropTypes.string,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      productImage: PropTypes.string,
+      title: PropTypes.string,
+      price: PropTypes.string,
+      descriptionText: PropTypes.string,
+      description: PropTypes.string
+    })
+  ),
+  seeAll: PropTypes.func,
+  onClick: PropTypes.func
+};
