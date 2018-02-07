@@ -1,5 +1,5 @@
 import React from "react";
-export default function withTouchControls(Component) {
+export default function withMobileGallery(Component) {
   return class extends React.Component {
     constructor(props) {
       super(props);

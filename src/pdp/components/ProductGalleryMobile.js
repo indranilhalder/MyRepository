@@ -1,5 +1,5 @@
 import React from "react";
-import withTouchControls from "../../higherOrderComponents/withTouchControls";
+import withMobileGallery from "../../higherOrderComponents/withMobileGallery";
 import styles from "./ProductGalleryMobile.css";
 class ProductGalleryMobile extends React.Component {
   handleSwipeStart(evt) {
@@ -58,4 +58,4 @@ class ProductGalleryMobile extends React.Component {
     );
   }
 }
-export default withTouchControls(ProductGalleryMobile);
+export default withMobileGallery(ProductGalleryMobile);
