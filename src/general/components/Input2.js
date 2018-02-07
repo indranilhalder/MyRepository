@@ -47,7 +47,6 @@ export default class Input2 extends React.Component {
             <input
               type="text"
               className={styles.inputBox}
-              hollow={this.props.hollow}
               onFocus={event => this.handleFocus(event)}
               onBlur={event => this.handleBlur(event)}
               onChange={event => this.handleChange(event)}
