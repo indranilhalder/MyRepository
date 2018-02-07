@@ -10,6 +10,7 @@ $(document).ready(function(){
 	if(subdomain != "undefined"){
 		subDomain = subdomain;
 	}
+	 var currentPageURL = window.location.href;
 	var Promo_Id ="";
 	if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
 	{
@@ -61,7 +62,7 @@ $(document).ready(function(){
 		
 		}
 		if(pageType =='productsearch'){
-			
+			alert("lux serp call");
 			if(typeof _satellite !="undefined"){
 				_satellite.track('cpj_search_pages');
 			}
@@ -90,8 +91,7 @@ $(document).ready(function(){
 			}	
 			dtmLuxSearchTags();
 			dtmLuxProductImpressionsSerp();		
-			
-
+		
 		}
 			
 		if (pageType == "category" ){
@@ -204,10 +204,10 @@ $(document).ready(function(){
 				//TPR-6333 | Track Geo-location of users
 				if($('#pin').val() != 'undefined' && $('#pin').val() != '' ){
 					digitalData.geolocation = {
-							pin : {
-								code : pincode
-							}
-					}
+							       pin : {
+								      code : pincode
+							       }
+					        }
 				}
 				if(Promo_Id != ""){
 					if(typeof(digitalData.cpj.promo) != "undefined"){
@@ -281,15 +281,6 @@ $(document).ready(function(){
 						}
 					}
 				
-				//TPR-6333 | Track Geo-location of users
-				  if(pinCode != ''){
-					   digitalData.geolocation = {
-							pin : {
-							code : pinCode
-							}
-					}
-				}
-				
 			/*	//TPR-6371 | track promotions
 				if($('#promolist').val() != '[]') {
 					   digitalData.cpj.promo = {
@@ -307,10 +298,22 @@ $(document).ready(function(){
 							id   : sellerList
 						}   
 					}
+				
+				//TPR-6333 | Track Geo-location of users
+				
+				setTimeout(function() {
+					  if(pinCode != '' && pinCode != 'undefined'){
+							digitalData.geolocation = {
+								              pin : {
+									             code : pinCode
+								              }
+						                 }
+					  }
+					}, 1500);
 			}
 			catch(e)
 			{
-				console.log("ERROR in cart inside dtm call:"+e.message);
+				console.log("luxCartDtm error:"+e.message);
 			}
 		}
 		//check in local first
@@ -511,7 +514,7 @@ function dtmLuxProductImpressionsSerp(){
 					productID=productIDlist[0].toLowerCase();
 				}
 				productArray.push(productID);
-				//alert("serp"+productArray);
+				alert("serp>>>>"+productArray);
 			   	count++;
 	   }) 
 	     var impressions = productArray.join("|");
@@ -530,15 +533,15 @@ function dtmLuxProductImpressionsSerp(){
  }
 function populateHeader(linkName){
 	
-	if(typeof _satellite !="undefined"){
-	    _satellite.track('header_link_clicks');
-	}
-	
 	digitalData.header ={
 			link :{
 				name : linkName
 			}
 	}
+	if(typeof _satellite !="undefined"){
+	    _satellite.track('header_link_clicks');
+	}
+	
 }
 
 function populateFooter(footer){
@@ -647,10 +650,6 @@ function differentiateLuxSellerDtm(){
 function dtmLuxAddWL(pagetype,productId,category){
 	try{
 		console.log("luxdtm  add wislist:");
-		if(typeof _satellite != "undefined") {
-			_satellite.track('add_to_wishlist');
-		}
-
 		if(typeof(digitalData.cpj.product) != "undefined"){
 			digitalData.cpj.product.id = productId;
 			digitalData.cpj.product.category = category;
@@ -670,6 +669,11 @@ function dtmLuxAddWL(pagetype,productId,category){
 					location : pagetype 
 			}
 		}
+		
+		if(typeof _satellite != "undefined") {
+			_satellite.track('add_to_wishlist');
+		}
+
 	}
 	catch(e){
 		console.log("error fn:dtmAddToWishlist"+e.message);
@@ -1090,9 +1094,40 @@ $(document).on('mouseup','#header-account .h4 a',function(){
 	if(typeof(_satellite)!="undefined"){
 		_satellite.track('signup_start');
 	}
+	
+	document.cookie = "luxDtmRegistrationJourney=Started; path=/;";
 })
 
-
+$(document).on('click','.facetList .facetValues .le-checkbox',function(){
+	//alert("facetValue >> "+$(this).find('label').text())
+	//alert("facet type>>>"+$(this).parents('.facet').find('.facetHead > h4').text())
+	var filterType = $(this).parents('.facet').find('.facetHead > h4').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	var filterValue = 	$(this).find('label').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+	if(typeof digitalData.filter != "undefined"){
+		if(typeof digitalData.filter.temp != "undefined"){
+			digitalData.filter.temp.type = filterType;
+			digitalData.filter.temp.value = filterValue;
+		}
+		else{
+			digitalData.filter.temp = {
+				type : filterType,
+				value : filterValue
+			}
+		}
+	}
+	else{
+		digitalData.filter = {
+			temp :  {
+				type : filterType,
+				value : filterValue
+			}
+     	}
+	}
+	
+	if (typeof _satellite != "undefined") {
+		_satellite.track('filter_temp');
+    }
+})
 
 
 
