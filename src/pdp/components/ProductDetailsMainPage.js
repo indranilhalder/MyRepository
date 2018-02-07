@@ -5,7 +5,7 @@ import { Icon } from "xelpmoc-core";
 import arrowIcon from "../../general/components/img/arrow.svg";
 import PropTypes from "prop-types";
 export default class ProductDetailsMainPage extends React.Component {
-  onClick() {
+  handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
     }
@@ -20,14 +20,11 @@ export default class ProductDetailsMainPage extends React.Component {
           </div>
           <div className={styles.ratingHolder}>
             {this.props.averageRating && (
-              <StarRating
-                averageRating={this.props.averageRating}
-                onClick={() => this.onClick()}
-              >
+              <StarRating averageRating={this.props.averageRating}>
                 {this.props.averageRating && (
                   <div
                     className={styles.ratingText}
-                    onClick={() => this.onClick()}
+                    onClick={() => this.handleClick()}
                   >
                     Rating {this.props.averageRating}/5
                   </div>
