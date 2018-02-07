@@ -1,0 +1,24 @@
+.base {
+  width: 100%;
+  height: auto;
+  background-color: #ffff;
+  padding: 20px 20px 0px 70px;
+  display: inline-block;
+  position: relative;
+}
+.textHolder {
+  width: 100%;
+  height: auto;
+  font-family: semibold;
+  font-size: 16px;
+  line-height: 30px;
+  display: inline-block;
+}
+.iconHolder {
+  width: 10%;
+  float: left;
+  height: auto;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
