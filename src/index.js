@@ -13,13 +13,16 @@ import home from "../src/home/reducers/home.reducer";
 import search from "../src/search/reducers/search.reducer";
 import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
+import productDescription from "./pdp/reducers/pdp.reducer";
 
 const rootReducer = combineReducers({
   user,
   modal,
   home,
   productListings,
+  productDescription,
   search
+
 });
 
 let store = createStore(
