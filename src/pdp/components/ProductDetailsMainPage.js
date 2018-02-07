@@ -1,0 +1,58 @@
+import React from "react";
+import styles from "./ProductDetailsMainPage.css";
+import StarRating from "../../general/components/StarRating.js";
+import { Icon } from "xelpmoc-core";
+import arrowIcon from "../../general/components/img/arrow.svg";
+import PropTypes from "prop-types";
+export default class ProductDetailsMainPage extends React.Component {
+  onClick() {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
+  render() {
+    return (
+      <div className={styles.base}>
+        <div className={styles.productDescriptionSection}>
+          <div className={styles.productName}>{this.props.productName}</div>
+          <div className={styles.productMaterial}>
+            {this.props.productMaterial}
+          </div>
+          <div className={styles.ratingHolder}>
+            {this.props.averageRating && (
+              <StarRating
+                averageRating={this.props.averageRating}
+                onClick={() => this.onClick()}
+              >
+                {this.props.averageRating && (
+                  <div className={styles.ratingText}>
+                    Rating {this.props.averageRating}/5
+                  </div>
+                )}
+                <div className={styles.arrowHolder}>
+                  <Icon image={arrowIcon} size={15} />
+                </div>
+              </StarRating>
+            )}
+          </div>
+        </div>
+        <div className={styles.productPriceSection}>
+          <div className={styles.price}>{this.props.price}</div>
+          {this.props.discountPrice && (
+            <div className={styles.discountPrice}>
+              <del>{this.props.discountPrice}</del>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
+ProductDetailsMainPage.propTypes = {
+  productName: PropTypes.string,
+  productMaterial: PropTypes.string,
+  price: PropTypes.string,
+  discountPrice: PropTypes.string,
+  averageRating: PropTypes.number,
+  onClick: PropTypes.func
+};
