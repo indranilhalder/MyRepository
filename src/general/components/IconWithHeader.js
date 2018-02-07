@@ -1,10 +1,10 @@
 import React from "react";
-import LocationIconCard from "./LocationIconCard";
-import styles from "./LocationCard.css";
+import LocationCard from "./LocationIcon";
+import styles from "./IconWithHeader.css";
 import UnderLinedButton from "./UnderLinedButton";
 import PropTypes from "prop-types";
 
-export default class LocationCard extends React.Component {
+export default class IconWithHeader extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -13,7 +13,7 @@ export default class LocationCard extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <LocationIconCard image={this.props.image} text={this.props.text}>
+        <LocationCard image={this.props.image} text={this.props.text}>
           <div className={styles.headingHolder}>{this.props.heading}</div>
           <div className={styles.headingHolder}>
             {this.props.deliverText}
@@ -31,8 +31,8 @@ export default class LocationCard extends React.Component {
               />
             </span>
           </div>
-        </LocationIconCard>
-        <LocationIconCard image={this.props.image} text={this.props.text}>
+        </LocationCard>
+        <LocationCard image={this.props.image} text={this.props.text}>
           <div className={styles.headerHolder}>
             <div className={styles.buttonHolder}>
               <UnderLinedButton
@@ -44,12 +44,12 @@ export default class LocationCard extends React.Component {
               />
             </div>
           </div>
-        </LocationIconCard>
+        </LocationCard>
       </div>
     );
   }
 }
-LocationCard.propTypes = {
+IconWithHeader.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string,
   heading: PropTypes.string,
