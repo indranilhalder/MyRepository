@@ -42,3 +42,13 @@ export default class CuponDetails extends React.Component {
     );
   }
 }
+CuponDetails.propTypes = {
+  productOfferPromotion: PropTypes.arrayOf(
+    PropTypes.shape({
+      promotionTitle: PropTypes.string,
+      promotionDetail: PropTypes.string,
+      formattedDate: PropTypes.string,
+      amount: PropTypes.string
+    })
+  )
+};
