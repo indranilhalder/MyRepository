@@ -298,7 +298,8 @@ $(document).on("click", ".showcaseItem", function() {
 	var name=$(this).parents('#showcase').children('h2').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var value = $(this).find('a').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	utag.link({
-		link_obj: this,
+		/*1122186_SDI-5746*/
+		/*link_obj: this,*/
 		link_text: name+'_'+value,
 		event_type : name+'_click'
 	});
@@ -320,7 +321,35 @@ $(window).on("load resize", function() {
         });
     }
 });
-
+/*start change for SDI-3988*/
+wishlistHover = setTimeout(function(){
+	$.ajax({
+        url: ACC.config.encodedContextPath + "/headerWishlist",
+        type: 'GET',
+        //data: "&productCount=" + $(this).attr("data-count"),
+        data: "&productCount=" + $('li.wishlist').find('a').attr("data-count"),
+        success: function(html) {
+        	/*alert("ready");*/
+            $("div.wishlist-info").html(html);
+            var wlCode = [];
+			$(".wlCode").each(function(){
+				wlCode.push($(this).text().trim());
+			});
+			$(".plpWlcode").each(function(){
+				var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+				//wlPlpCode.push(productCode.toUpperCase());
+				
+				for(var i = 0; i < wlCode.length; i++) {
+					if(productCode.toUpperCase() == wlCode[i]) {
+						console.log("Controle Inside");
+						$(this).siblings(".plp-wishlist").addClass("added");
+					}
+				}
+			});
+        }
+    });
+},700);
+/*end change for SDI-3988*/
 });
 
 $(document).ready(function() {

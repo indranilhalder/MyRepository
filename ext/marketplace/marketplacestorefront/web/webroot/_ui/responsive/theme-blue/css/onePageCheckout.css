@@ -3923,10 +3923,10 @@ div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation{
     height: 40px;
 	}
 .cart.wrapper .left-block li#savedCard div.card p{
-	font-size: 10px;
+	/* font-size: 10px; */		/* commented for SDI-3160 */
   	letter-spacing: 0.5px;
   	color: #666666;
-  	padding-bottom: 2px;
+  	/* padding-bottom: 2px; */	/* commented for SDI-3160 */
 	}
 .add_address_button, .new-address > p{
 	display: none !important;
@@ -5777,9 +5777,10 @@ label[for='priority_paytm'] img {
 }
 .offer_des {
 	display: block;
-	margin: 4px 0px 0px 24px;
+	margin: 4px 0px 0px 18px;	/* modify margin-left for SDI-5387 */
 	font-size: 13px;
 	color: #787878;
+	word-wrap: break-word;		/* add for TISUAT-6350 */
 }
 
 .max-min-value .offer_des {
@@ -6059,12 +6060,19 @@ button#continue_payment_after_validate {
     width: 97%;
    /*  word-break: break-all; */
     display: inline-block;
-    padding-left: 25px;
+    padding-left: 25px;	
     vertical-align: sub;
     white-space: pre-wrap;
     position: relative;
     top: -16px;
 }
+/* start change for SDI-5387 */
+.offerui .offer_title {
+	width: 260px;					/* modify for TISUAT-6349 */
+	padding-left: 18px !important;		/* add important for TISUAT-6349 */
+	word-wrap: break-word;		/* add for TISUAT-6349 */
+}
+/* end change for SDI-5387 */
 #paymentoffersPopup span.offer_des,
 .offerui .offer_des {
     position: relative;

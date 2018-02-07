@@ -157,7 +157,9 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-	private final StringBuffer callTrace = new StringBuffer(5000);
+	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+	//private final StringBuffer callTrace = new StringBuffer(5000);
+	private final StringBuffer callTrace = new StringBuffer();
 
 	private static final String UNCOLLECTED_ORDER = "publishEvent::sendUnCollectedOrderToCRMEvent->";
 	private static final String FOUND = " found.";
@@ -715,7 +717,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 			}
 			createRefundEntry(shipment, shipmentNewStatus, consignmentModel, orderModel);
-			
+
 			//SDI-5018
 			boolean isReturnClosedExitInHistory = false;
 
@@ -909,7 +911,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 				target.setLastname(names[1]);
 			}
 		}
-		
+
 		CountryModel countryModel = null;
 		try
 		{
@@ -921,7 +923,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 			callTrace.append(ExceptionUtils.getStackTrace(e));
 			isError = true;
 		}
-		
+
 		try
 		{
 			final RegionModel regionModel = getRegionModel(countryModel, source.getCountrySubentity());

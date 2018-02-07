@@ -7709,7 +7709,7 @@ body.no-scroll {
     top: 100%;
     margin-bottom: 10px;
     width: 78px;
-    border-bottom: 2px solid #a9143c;
+    /* border-bottom: 2px solid #a9143c; */		/* commented for SDI-6035 */
 }
 /* pdp-v4-temp template2 starts */
 .Manufacturer.Temp03{
@@ -7744,7 +7744,7 @@ body.no-scroll {
     padding: 5.8% 2.2% 0 7%;
 }
 .Manufacturer h3{
-	font-size: 24px !important;		/* add important for TISCSS-104 */
+	font-size: 16px !important;		/* add important for TISCSS-104 */	/* modify for SDI-6035 */
     font-weight: bold;
     padding-bottom: 10px;
     margin: 0 0 17px !important;	/* add important for TISCSS-104 */

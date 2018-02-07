@@ -601,14 +601,17 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	private boolean refundEntryExists(final String auditId)
 	{
 		final FPCRefundEntryModel refundEntry = forwardPaymentCleanUpDao.fetchRefundEntryForAuditId(auditId);
-		if (null != refundEntry)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		//		if (null != refundEntry)
+		//		{
+		//			return true;
+		//		}
+		//		else
+		//		{
+		//			return false;
+		//		}
+
+		//SONAR FIX
+		return null != refundEntry;
 	}
 
 	private String checkRefundStatus(final GetOrderStatusResponse orderStatusResponse)
@@ -655,7 +658,7 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 				if (null != refundResponse.getStatus()
 						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
-					if (StringUtils.equals(refundResponse.getUniqueRequestId(),orderStatusResponse.getOrderId()))
+					if (StringUtils.equals(refundResponse.getUniqueRequestId(), orderStatusResponse.getOrderId()))
 					{
 						return MarketplacecommerceservicesConstants.AUTOMATIC;
 					}

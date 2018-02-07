@@ -28,6 +28,7 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
+
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
  * class.
@@ -1455,8 +1456,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SUBORDER = "SubOrder";
 	public static final String PARENTORDER = "Parent";
 	public static final String WEBHOOKUPDATEMSG = "Updating the Web Hook Enty with status EXPIRED".intern();
-	public static final String QUERYFROM = "FROM {".intern();
-	public static final String QUERYWHERE = "WHERE ".intern();
+	public static final String QUERYFROM = " FROM {".intern();
+	public static final String QUERYWHERE = " WHERE ".intern();
 	public static final String QUERYEMAIL = "}=?email ".intern();
 
 	public static final String ORDER_CONF_SUCCESS = "message.orderProcessed";
@@ -2403,7 +2404,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
 	//UBI-605
 	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
-		
+
 	//SDI-4494
 	public static final String MANUAL = "MANUAL";
 	public static final String AUTOMATIC = "AUTOMATIC";
@@ -2411,7 +2412,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
-	
+
+	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+	public static final String BANNERURLLINK = "bannerUrlLink".intern();
+	public static final String PROMOTEXT1 = "promoText1".intern();
+	public static final String PROMOTEXT2 = "promoText2".intern();
+	public static final String PROMOTEXT3 = "promoText3".intern();
+	public static final String SEQUENCENUMBER = "sequenceNumber".intern();
+
 
 	//Report for bulk cancellation
 	/*

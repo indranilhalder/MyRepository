@@ -356,7 +356,7 @@ body .account .right-account .order-history.order-details li.item {
     padding: 0;
     padding-bottom: 20px;
     padding-top: 20px;
-    border-top: solid 1px #eee;
+    /* border-top: solid 1px #eee; */	/* commented for SDI-5714 */
     font-size: 12px;
     font-weight: 400;
     position: relative;
