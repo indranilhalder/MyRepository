@@ -5,35 +5,7 @@ import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
 import map from "lodash/map";
 import extend from "lodash/map";
-let filterData;
 class ProductSellerPage extends Component {
-  constructor(props) {
-    super(props);
-    filterData = map(this.props.filterData, subData => {
-      return extend({}, subData, { selected: false });
-    });
-    this.state = {
-      pageNumber: 0,
-      selected: filterData.map(val => {
-        return !val.selected;
-      })
-    };
-  }
-
-  handleSelect(val, index) {
-    let selected = this.state.selected;
-    selected[index] = val;
-    this.setState({ selected });
-  }
-
-  handleApply(values) {
-    this.props.onApply(
-      values,
-      this.props.feedComponentData.data.questionId,
-      this.props.positionInFeed
-    );
-  }
-
   render() {
     return (
       <div className={styles.base}>
@@ -52,11 +24,7 @@ class ProductSellerPage extends Component {
           totalNoOfReviews={this.props.productDetails.productReviewsCount}
         />
         <div>
-          <SellerWithMultiSelect
-            onSelect={val => {
-              this.handleSelect(val, this.state.pageNumber);
-            }}
-          >
+          <SellerWithMultiSelect>
             {this.props.productDetails.otherChildProducts &&
               this.props.productDetails.otherChildProducts.map(
                 (value, index) => {
