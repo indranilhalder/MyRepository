@@ -7501,9 +7501,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (isCartVoucherPresent.booleanValue())
 						{
 							formattedValueNoDecimal = cart.getTotalDiscounts().floatValue();
-							if (null != voucher.getValue())
+							if (null != voucher.getValue() && formattedValueNoDecimal > 0)
 							{
 								formattedValueNoDecimal -= (float) voucher.getValue().doubleValue();
+							}
+							else if (null != voucher.getValue())
+							{
+								formattedValueNoDecimal = (float) voucher.getValue().doubleValue();
 							}
 						}
 						getSessionService().setAttribute("WalletTotal", "" + totalCartAmt);
@@ -7544,9 +7548,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							}
 							catch (final VoucherOperationException ex)
 							{
-								if (null != voucher.getValue())
+								if (null != voucher.getValue() && formattedValueNoDecimal > 0)
 								{
 									formattedValueNoDecimal -= (float) voucher.getValue().doubleValue();
+								}
+								else if (null != voucher.getValue())
+								{
+									formattedValueNoDecimal = (float) voucher.getValue().doubleValue();
 								}
 								ex.printStackTrace();
 							}
