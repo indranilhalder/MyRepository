@@ -6641,10 +6641,7 @@ function useWalletForPaymentAjax(){
 		type : "POST",
 		cache : false,
 		success : function(data) {
-
 			$("#addCliqCashId").show();
-			
-
 			if(value.checked){
 
 				$("#useGiftBtnText").hide();
@@ -7110,6 +7107,20 @@ function useWalletForPaymentAjax(){
 
 function WalletDetailAjax(){
 
+	$(".cliqCashInfoSection").remove();
+	$('#useGiftCardCheckbox').attr('checked', false);
+	$("#unUseGiftBtnText").hide();
+	$("#useGiftBtnText").show();
+	$(".cliqCashApplyAlert").hide();				
+	$(".topPlaceOrderBtn").hide();
+	$("#make_cc_payment").show();
+	$(".choose-payment").find('*').prop('disabled',false);
+	$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
+	$(".checkout-paymentmethod li span").css('pointer-events', 'all');
+	$("#addCliqCashId").text("");
+	document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
+	globalCliqCashMode = false;
+	
 	var value = document.getElementById('useGiftCardCheckbox');
 
 	if(!value.checked){
