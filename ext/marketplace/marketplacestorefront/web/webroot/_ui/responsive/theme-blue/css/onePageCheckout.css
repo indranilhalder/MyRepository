@@ -6164,4 +6164,9 @@ span#offer_section_responsive_error_msg {
 	.alert-dismissable .close, .alert-dismissible .close {
 	    float: left;
 	}
+	/* start for TISUAT-6369 */
+	.offerui .offer_title {
+		padding-right: 33px;
+	}
+	/* end for TISUAT-6369 */
 }
