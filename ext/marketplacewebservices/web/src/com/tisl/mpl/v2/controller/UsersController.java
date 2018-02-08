@@ -10107,13 +10107,17 @@ public class UsersController extends BaseCommerceController
 	public MplRegistrationResultWsDto registerUser(@RequestParam final String username,
 			@RequestParam(required = false) final String emailId, @RequestParam(required = false) final String platformNumber)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
-
 	{
 		LOG.debug("User Registration mobile web service :::::::::::::" + username);
 		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
 		String emailIdLwCase = null;
+		final String regexStr = "^[6-9][0-9]{9}$";
 		try
 		{
+			if (!username.matches(regexStr))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU004);
+			}
 			if (StringUtils.isNotEmpty(emailId))
 			{
 				emailIdLwCase = emailId.toLowerCase();
@@ -10159,7 +10163,6 @@ public class UsersController extends BaseCommerceController
 		}
 		return userResult;
 	}
-
 
 	/**
 	 * @return the mplProductWebService
@@ -11187,12 +11190,16 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
 		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
 		final UpdateCustomerDetailDto customerInfo = new UpdateCustomerDetailDto();
+		String emailIdLwCase = null;
 		try
 		{
 			final boolean validOtpFlag = mobileUserService.validateOtp(username, otp, OTPTypeEnum.REG);
 			if (validOtpFlag)
 			{
-				final String emailIdLwCase = emailId.toLowerCase();
+				if (StringUtils.isNotEmpty(emailId))
+				{
+					emailIdLwCase = emailId.toLowerCase();
+				}
 				LOG.debug("The platform number is " + platformNumber);
 				int platformDecider;
 				if (StringUtils.isNotEmpty(platformNumber))
@@ -11209,7 +11216,7 @@ public class UsersController extends BaseCommerceController
 				userLoginResultWsDto.setStatus(userResult.getStatus());
 				userLoginResultWsDto.setCustomerId(userResult.getCustomerId());
 				userLoginResultWsDto.setMessage("OTP verified. Registration Successful");
-				if (emailIdLwCase.contains("@"))
+				if (StringUtils.isNotEmpty(emailIdLwCase) && emailIdLwCase.contains("@"))
 				{
 					customerInfo.setEmailId(emailIdLwCase);
 				}
@@ -11231,11 +11238,11 @@ public class UsersController extends BaseCommerceController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
-				userResult.setError(e.getErrorMessage());
+				userLoginResultWsDto.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				userResult.setErrorCode(e.getErrorCode());
+				userLoginResultWsDto.setErrorCode(e.getErrorCode());
 			}
 			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
@@ -11244,13 +11251,13 @@ public class UsersController extends BaseCommerceController
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
-				userResult.setError(e.getErrorMessage());
+				userLoginResultWsDto.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				userResult.setErrorCode(e.getErrorCode());
+				userLoginResultWsDto.setErrorCode(e.getErrorCode());
 			}
-			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			userLoginResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return userLoginResultWsDto;
 	}
