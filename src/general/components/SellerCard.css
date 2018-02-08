@@ -1,0 +1,69 @@
+.base {
+  width: 100%;
+  height: auto;
+  background-color: #ececec;
+  padding: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.textBox {
+  width: 100%;
+  height: auto;
+  background-color: #ffff;
+  font-family: semibold;
+  padding: 20px;
+}
+.heading {
+  width: 100%;
+  height: auto;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+.priceTitle {
+  width: 100%;
+  height: auto;
+  line-height: 20px;
+  margin-bottom: 10px;
+}
+.description {
+  white-space: normal;
+}
+.priceHolder {
+  display: inline-block;
+  line-height: 24px;
+}
+
+.discount {
+  composes: priceHolder;
+  margin-right: 10px;
+}
+.offerText {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 16px;
+  line-height: 20px;
+}
+.priceCancelled {
+  composes: priceHolder;
+  text-decoration: line-through;
+  color: #ececec;
+}
+.shippingText {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 20px;
+  font-family: regular;
+}
+.textBox2 {
+  composes: textBox;
+  margin-top: 1px;
+}
+.checkCircle {
+  position: absolute;
+  width: 25px;
+  height: auto;
+  right: 25px;
+}

@@ -1,0 +1,13 @@
+.header {
+  color: #ffffff;
+  font-family: semibold;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+.base {
+  width: 100%;
+  height: auto;
+  padding: 35px 0px;
+  background-image: linear-gradient(110deg, #ff878b, #c85be5);
+}

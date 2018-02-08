@@ -1,0 +1,41 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding: 70px 0;
+  background: #ececec;
+}
+.filter {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(-100%);
+  background: #fff;
+  z-index: 15;
+  transition: 300ms;
+}
+.pageHeader {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index:10
+}
+.filterOpen {
+  composes: filter;
+  transform: translateX(0);
+}
+.main {
+  width: 100%;
+  height: auto;
+}
+.footer {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+}

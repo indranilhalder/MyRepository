@@ -1,10 +1,6 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
 import AuthFrame from "./AuthFrame.js";
-import LoginContainer from "../containers/LoginContainer.js";
-import SignUpContainer from "../containers/SignUpContainer.js";
-const LOGIN_PATH = "/login";
-const SIGN_UP_PATH = "/sign_up";
+import { LOGIN_PATH, SIGN_UP_PATH, MAIN_ROUTER } from "../../lib/constants";
 
 export default class Auth extends React.Component {
   navigateToSignUp() {
@@ -20,7 +16,7 @@ export default class Auth extends React.Component {
     let footerText = "";
     let footerClick;
     let showSocialButtons;
-    if (pathName === LOGIN_PATH || "/") {
+    if (pathName === LOGIN_PATH || MAIN_ROUTER) {
       footerText = "Don't have an account? Sign up";
       footerClick = () => this.navigateToSignUp();
       showSocialButtons = true;
@@ -33,16 +29,11 @@ export default class Auth extends React.Component {
     }
     return (
       <AuthFrame
+        {...this.props}
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}
-      >
-        <Switch>
-          <Route path="/login" component={LoginContainer} />
-          <Route path="/sign_up" component={SignUpContainer} />
-          {/* <Route path="*" component={LoginContainer} /> */}
-        </Switch>
-      </AuthFrame>
+      />
     );
   }
 }

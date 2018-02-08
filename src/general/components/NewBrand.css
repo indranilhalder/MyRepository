@@ -1,0 +1,73 @@
+.base {
+	width: 100%;
+	padding-bottom: 70.6%;
+	height: auto;
+	position: relative;
+	background-size: cover;
+	overflow: hidden;
+}
+
+.imageHolder {
+	height: 100%;
+	width: 100%;
+	top: 0;
+	bottom: 0;
+	position: absolute;
+	border-radius: 4px;
+}
+
+.brandOverlay {
+	composes: imageHolder;
+	text-align: center;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 75) 0, rgba(0, 0, 0, 0) 60%);
+}
+
+.brandTextHolder {
+	height: auto;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 20px 110px 30px 20px;
+}
+
+.brandLogo {
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+	margin: auto;
+}
+
+.brandText {
+	height: auto;
+	width: 100%;
+	padding: 0px;
+	color: #fff;
+	font-size: 14px;
+	font-family: regular;
+	display: inline-block;
+	vertical-align: top;
+	line-height: normal;
+	white-space: normal;
+}
+
+.brandButton {
+	width: auto;
+	height: auto;
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
+.brandWrapper {
+	text-align: left;
+	height: auto;
+	width: 100%;
+	display: inline-block;
+}

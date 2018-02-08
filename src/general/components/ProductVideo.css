@@ -1,0 +1,72 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding-top: 56.25%;
+  position: relative;
+  overflow: hidden;
+}
+.video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.overlay {
+  composes: video;
+  cursor: pointer;
+  transition: 300ms;
+}
+.overlay:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+.overlayHidden {
+  composes: overlay;
+  opacity: 0;
+}
+.logoHolder {
+  width: 100%;
+  height: 25px;
+  position: absolute;
+  top: -100px;
+  bottom: 0;
+  margin: auto;
+  text-align: center;
+}
+.logo {
+  height: 100%;
+  width: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+.play {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: url(./img/play.svg)no-repeat;
+  background-size: 50px;
+  background-position: center;
+}
+.description {
+  width: 100%;
+  height: 20px;
+  position: absolute;
+  top: 100px;
+  bottom: 0;
+  font-family: regular;
+  color: #fff;
+  font-size: 14px;
+  margin: auto;
+  text-align: center;
+}

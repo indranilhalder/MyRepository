@@ -11,7 +11,7 @@ export default class LogInButton extends React.Component {
   render() {
     return (
       <div>
-        <MediaQuery query="(min-device-width: 1024px)">
+        <MediaQuery query="(min-device-width: 1025px)">
           <Button
             label={"Sign in"}
             width={150}
@@ -23,7 +23,7 @@ export default class LogInButton extends React.Component {
             textStyle={{ color: "#FFF", fontSize: 14 }}
           />
         </MediaQuery>
-        <MediaQuery query="(max-device-width:1023px)">
+        <MediaQuery query="(max-device-width:1024px)">
           <Button
             backgroundColor={"#FF1744"}
             label={"Login"}

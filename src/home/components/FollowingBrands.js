@@ -1,33 +1,43 @@
 import React from "react";
 import BrandImage from "../../general/components/BrandImage";
 import Carousel from "../../general/components/Carousel";
+import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
-
+import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class FollowingBrands extends React.Component {
   newFollow = () => {
     if (this.props.onFollow) {
       this.props.onFollow();
     }
   };
+
+  handleClick() {
+    this.props.history.push(PRODUCT_LISTINGS);
+  }
+
   render() {
-    const data = this.props.data;
-    data.push({ url: this.props.circle, fit: "25px", onClick: this.newFollow });
-    data.push({ url: this.props.circle, fit: "25px", onClick: this.newFollow });
-    data.push({ url: this.props.circle, fit: "25px", onClick: this.newFollow });
+    const followWidgetData = this.props.feedComponentData.data;
     return (
-      <Carousel header={BrandImage.defaultProps.header}>
-        {data.map((datum, i) => {
-          return (
-            <BrandImage
-              key={i}
-              image={datum.url}
-              value={datum.value}
-              fit={datum.fit}
-              onClick={datum.onClick}
-            />
-          );
-        })}
-      </Carousel>
+      <div className={styles.base}>
+        <Carousel
+          header={this.props.feedComponentData.title}
+          buttonText="See All"
+          seeAll={() => this.handleClick()}
+        >
+          {followWidgetData.items &&
+            followWidgetData.items.map((datum, i) => {
+              return (
+                <BrandImage
+                  key={i}
+                  image={datum.imageURL}
+                  value={datum.type}
+                  fit={datum.type}
+                  onClick={() => this.handleClick()}
+                />
+              );
+            })}
+        </Carousel>
+      </div>
     );
   }
 }

@@ -5,7 +5,13 @@ import MediaQuery from "react-responsive";
 import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./SignUp.css";
-
+import AuthFrame from "./AuthFrame.js";
+import {
+  LOGIN_PATH,
+  SIGN_UP_PATH,
+  HOME_ROUTER,
+  MAIN_ROUTER
+} from "../../lib/constants";
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -15,16 +21,26 @@ class SignUp extends Component {
       passwordValue: props.passwordValue ? props.passwordValue : ""
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user) {
+      if (this.props.user.isLoggedIn === true) {
+        this.props.history.push(HOME_ROUTER);
+      }
+    }
+  }
   onSubmit() {
     if (this.props.onSubmit) {
       this.props.onSubmit({
-        name: this.state.nameValue,
-        email: this.state.emailValue,
+        loginId: this.state.emailValue,
         password: this.state.passwordValue
       });
     }
   }
 
+  navigateToLogin() {
+    this.props.history.push(LOGIN_PATH);
+  }
   onChangeName(val) {
     if (this.props.onChangeName) {
       this.props.onChangeName(val);
@@ -47,75 +63,97 @@ class SignUp extends Component {
   }
 
   render() {
+    const pathName = this.props.location.pathname;
+    let footerText = "";
+    let footerClick;
+    let showSocialButtons;
+    if (pathName === LOGIN_PATH || MAIN_ROUTER) {
+      footerText = "Don't have an account? Sign up";
+      footerClick = () => this.navigateToSignUp();
+      showSocialButtons = true;
+    }
+
+    if (pathName === SIGN_UP_PATH) {
+      footerText = "Already have an account? Login";
+      footerClick = () => this.navigateToLogin();
+      showSocialButtons = false;
+    }
     return (
-      <div>
+      <AuthFrame
+        {...this.props}
+        showSocialButtons={showSocialButtons}
+        footerText={footerText}
+        footerClick={footerClick}
+      >
         <div>
-          <div className={styles.input}>
-            <Input
-              value={this.props.value ? this.props.value : this.state.value}
-              placeholder={"Name"}
-              onChange={val => this.onChangeName(val)}
-            />
-          </div>
-          <div className={styles.input}>
-            <Input
-              placeholder={"Email or phone number"}
-              value={
-                this.props.emailValue
-                  ? this.props.emailValue
-                  : this.state.emailValue
+          <div>
+            <div className={styles.input}>
+              <Input
+                value={this.props.value ? this.props.value : this.state.value}
+                placeholder={"Name"}
+                onChange={val => this.onChangeName(val)}
+              />
+            </div>
+            <div className={styles.input}>
+              <Input
+                placeholder={"Email or phone number"}
+                value={
+                  this.props.emailValue
+                    ? this.props.emailValue
+                    : this.state.emailValue
+                }
+                onChange={val => this.onChangeEmail(val)}
+              />
+            </div>
+            <PasswordInput
+              placeholder={"Password"}
+              password={
+                this.props.passwordValue
+                  ? this.props.passwordValue
+                  : this.state.passwordValue
               }
-              onChange={val => this.onChangeEmail(val)}
+              onChange={val => this.onChangePassword(val)}
             />
           </div>
-          <PasswordInput
-            placeholder={"Password"}
-            password={
-              this.props.passwordValue
-                ? this.props.passwordValue
-                : this.state.passwordValue
-            }
-            onChange={val => this.onChangePassword(val)}
-          />
-        </div>
-        <div className={styles.buttonSignup}>
-          <div className={styles.buttonHolder}>
-            <MediaQuery query="(min-device-width: 1024px)">
-              <Button
-                label={"Sign Up"}
-                width={200}
-                height={40}
-                borderColor={"#000000"}
-                borderRadius={20}
-                backgroundColor={"#ffffff"}
-                onClick={() => this.onSubmit()}
-                loading={this.props.loading}
-                textStyle={{
-                  color: "#000000",
-                  fontSize: 14,
-                  fontFamily: "regular"
-                }}
-              />
-            </MediaQuery>
-            <MediaQuery query="(max-device-width:1023px)">
-              <Button
-                backgroundColor={"#FF1744"}
-                label={"Sign Up"}
-                width={150}
-                height={45}
-                borderRadius={22.5}
-                onClick={() => this.onSubmit()}
-                loading={this.props.loading}
-                textStyle={{
-                  color: "#FFFFFF",
-                  fontSize: 14,
-                  fontFamily: "regular"
-                }}
-              />
-            </MediaQuery>
+          <div className={styles.buttonSignup}>
+            <div className={styles.buttonHolder}>
+              <MediaQuery query="(min-device-width: 1025px)">
+                <Button
+                  label={"Sign Up"}
+                  width={200}
+                  height={40}
+                  borderColor={"#000000"}
+                  borderRadius={20}
+                  backgroundColor={"#ffffff"}
+                  onClick={() => this.onSubmit()}
+                  loading={this.props.loading}
+                  textStyle={{
+                    color: "#000000",
+                    fontSize: 14,
+                    fontFamily: "regular"
+                  }}
+                />
+              </MediaQuery>
+              <MediaQuery query="(max-device-width:1024px)">
+                <Button
+                  backgroundColor={"#FF1744"}
+                  label={"Sign Up"}
+                  width={150}
+                  height={45}
+                  borderRadius={22.5}
+                  onClick={() => this.onSubmit()}
+                  loading={this.props.loading}
+                  textStyle={{
+                    color: "#FFFFFF",
+                    fontSize: 14,
+                    fontFamily: "regular"
+                  }}
+                />
+              </MediaQuery>
+            </div>
           </div>
         </div>
-      </div>
+      </AuthFrame>
     );
   }
 }

@@ -3,29 +3,36 @@ import ReactDOM from "react-dom";
 import ModalPanel from "./ModalPanel";
 import RestorePassword from "../../auth/components/RestorePassword";
 import OtpVerification from "../../auth/components/OtpVerification";
-
+import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
+import Sort from "../../plp/components/SortModal";
+import AddressModal from "../../plp/components/AddressModal";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
     super(props);
     this.el = document.createElement("div");
+    this.state = {
+      loggedIn: false
+    };
   }
+
   componentDidMount() {
     modalRoot.appendChild(this.el);
   }
+
   componentWillUnmount() {
     modalRoot.removeChild(this.el);
   }
+
   handleClose() {
     if (this.props.hideModal) {
       this.props.hideModal();
     }
   }
 
-  submitOtp(userDetails) {
-    this.props.otpVerification(userDetails);
+  submitOtp(otpDetails) {
+    this.props.otpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
-    this.props.history.push("/home");
   }
 
   resetPassword(userDetails) {
@@ -38,8 +45,8 @@ export default class ModalRoot extends React.Component {
     this.props.hideModal();
   }
 
-  submitOtpForgotPassword(userDetails) {
-    this.props.forgotPasswordOtpVerification(userDetails);
+  submitOtpForgotPassword(otpDetails) {
+    this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
   render() {
@@ -47,24 +54,33 @@ export default class ModalRoot extends React.Component {
       RestorePassword: (
         <RestorePassword
           handleCancel={() => this.handleClose()}
-          handleRestoreClick={() => this.handleRestoreClick()}
+          handleRestoreClick={userId => this.handleRestoreClick(userId)}
         />
       ),
       SignUpOtpVerification: (
         <OtpVerification
           closeModal={() => this.handleClose()}
-          submitOtp={() => this.submitOtp()}
+          submitOtp={otpDetails => this.submitOtp(otpDetails)}
         />
       ),
       ForgotPasswordOtpVerification: (
         <OtpVerification
           closeModal={() => this.handleClose()}
-          submitOtp={() => this.submitOtpForgotPassword()}
+          submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
+        />
+      ),   
+      Sort: <Sort />,
+      Address: <AddressModal />,
+      ConnectDetails: (
+        <ConnectDetailsWithModal
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
         />
       )
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
+
     const Modal = this.props.modalStatus ? (
       <ModalPanel
         closeModal={() => {
