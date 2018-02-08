@@ -2198,7 +2198,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData)
+	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData, boolean isSplit)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		//Declare variable
@@ -2232,7 +2232,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				for (final PaymentTypeModel mode : paymentTypes)
 				{
 					//retrieving the data
-					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					if ((isSplit && MarketplaceFacadesConstants.PAYMENT_METHOS_COD.equalsIgnoreCase(mode.getMode()))
+							|| (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+							|| (isSplit && EMI.equalsIgnoreCase(mode.getMode())))
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
 					}

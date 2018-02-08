@@ -1165,6 +1165,7 @@ li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
     font-size: 14px;
     float: none;
 }
+.checkout-order-summary ul.totals #CliqCashId span {font-size: 14px; color: #000;}
 #chckoutadrs .proceed-button, .cart.wrapper .button.proceed-button, 
 #selectDeliveryMethodForm .button#deliveryMethodSubmitUp, #deliveryAddressSubmitUp{
     bottom: 7.2px;

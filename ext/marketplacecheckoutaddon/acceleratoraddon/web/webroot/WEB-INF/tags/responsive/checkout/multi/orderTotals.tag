@@ -192,35 +192,69 @@
 			</span>
 		</li>
 	</c:if>
+	<c:if test="${isSplit eq true}">
+		<li id="CliqCashId"><spring:theme code="basket.page.totals.cliqcash" /> Applied
+     		<span>&#8377;${cliqCashAmount}</span>
+     	</li>
+	</c:if>
 	
 	<li id="convChargeFieldId">
 		<span><spring:theme code="basket.page.totals.convenience"/></span>
 		<span id="convChargeField" style="float: right">
 		</span>
 	</li>
+	
     <li id="couponApplied" >
-	<button class="remove-coupon-button" onclick="removeAppliedVoucher();"></button>
+		<c:if test="${isSplit ne true}">
+	    	<button class="remove-coupon-button" onclick="removeAppliedVoucher();"></button>
+	    </c:if>
 		<span class="couponSpan"><spring:theme code="basket.page.totals.coupons"/></span>
 		<span id="couponValue" style="float: right"> </span>
 		<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 	</li>
     
     
-	<li class="total" id="total">
-		<div id="totalPriceConvChargeId">
-			<spring:theme code="basket.page.totals.total"/> 
-			<span id="totalWithConvField" style="float: right"><format:price priceData="${orderData.totalPrice}"/></span>
-		</div>
-	</li>
-	
-	<c:if test="${orderData.net && orderData.totalTax.value > 0 && showTax}">
-		<li class="tax">
-			<span><spring:theme code="basket.page.totals.netTax"/></span>
-			<span>
-				<format:price priceData="${orderData.totalTax}"/>
-			</span>
-		</li>
-	</c:if>
+	<c:choose>
+					<c:when test="${isSplit eq true}">
+						<li class="total" id="total">
+							<div id="totalPriceConvChargeId">
+								<spring:theme code="basket.page.totals.total" />
+								<span id="totalWithConvField" style=" display:none;"><format:price
+										priceData="${orderData.totalPrice}" />${juspayAmount}
+										</span>
+										<span id="juspayAmount" style="float: right; ">${juspayAmount}
+										</span>
+							</div>
+						</li>
+
+						<c:if
+							test="${orderData.net && orderData.totalTax.value > 0 && showTax}">
+							<li class="tax"><span><spring:theme
+										code="basket.page.totals.netTax" /></span> <span style="display:none;"> <format:price
+										priceData="${orderData.totalTax}" />
+							</span>
+							${juspayAmount}
+							</li>
+						</c:if>
+					</c:when>
+					<c:otherwise>
+						<li class="total" id="total">
+							<div id="totalPriceConvChargeId">
+								<spring:theme code="basket.page.totals.total" />
+								<span id="totalWithConvField" style="float: right"><format:price
+										priceData="${orderData.totalPrice}" /></span>
+							</div>
+						</li>
+
+						<c:if
+							test="${orderData.net && orderData.totalTax.value > 0 && showTax}">
+							<li class="tax"><span><spring:theme
+										code="basket.page.totals.netTax" /></span> <span> <format:price
+										priceData="${orderData.totalTax}" />
+							</span></li>
+						</c:if>
+					</c:otherwise>
+	 </c:choose>
 	
 	<li id="promotionMessage" />
 	<li id="couponMessage" />
@@ -228,8 +262,17 @@
 </div>
 <ul class="totals outstanding-totalss">
     <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
-         <format:price priceData="${orderData.totalPrice}"/>
+               <c:choose>
+				   		<c:when test="${isSplit eq true}">
+				   		<span> ${juspayAmount}</span>
+				   		</c:when>
+				   		<c:otherwise>
+				   	          <format:price priceData="${orderData.totalPrice}"/>
+				   		</c:otherwise>
+				</c:choose>
       </ycommerce:testId></span></li>
  </ul>	
+ 
+ </div>
 </c:otherwise>
 </c:choose>

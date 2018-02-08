@@ -565,8 +565,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
-				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
-
+				//Condition for split order - START
+				if ("Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+				{
+					paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData,
+							true);
+				}
+				else
+				{
+					paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData,
+							false);
+				}
+				//Condition for split order - END
 
 				//TISSQAUAT-536 fixes
 
@@ -595,8 +605,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			final String payNowPromotionCheck = getSessionService()
 					.getAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED);
-			//Egv Changes
-			model.addAttribute("isEGVCart", Boolean.FALSE);
+			
 			if (StringUtils.isNotEmpty(payNowPromotionCheck)
 					&& payNowPromotionCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
 			{
@@ -604,6 +613,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.PROMOTIONEXPIRED);
 			}
 
+			//Condition for Split - START
+			if ("Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+			{
+				model.addAttribute("isSplit", Boolean.TRUE);
+				model.addAttribute("juspayAmount", orderModel.getPayableNonWalletAmount());
+				model.addAttribute("cliqCashAmount", orderModel.getTotalWalletAmount());
+			}
+			//Egv Changes
+			model.addAttribute("isEGVCart", Boolean.FALSE);
+			//Condition for Split - END
 
 		}
 		//Nullpointer exception commented TPR-629
@@ -5009,6 +5028,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						//final OrderData orderData = getMplCheckoutFacade().placeOrder();
 						getMplCheckoutFacade().placeOrder();
+					} else {
+						throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
 					}
 					/**
 					 * Change for Wallet
@@ -5020,12 +5042,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					/**
 					 * Change for Wallet end
 					 */
-
-					else
-					{
-						throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
-								+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
-					}
 
 				}
 

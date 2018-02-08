@@ -389,7 +389,7 @@ public interface MplPaymentFacade
 	 * @return Map<String, Boolean>
 	 * @throws EtailNonBusinessExceptions
 	 */
-	Map<String, Boolean> getPaymentModes(String store, OrderData orderData) throws EtailNonBusinessExceptions;
+	Map<String, Boolean> getPaymentModes(String store, OrderData orderData, boolean isSplit) throws EtailNonBusinessExceptions;
 
 
 	/**
