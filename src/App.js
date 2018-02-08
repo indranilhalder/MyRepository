@@ -9,6 +9,7 @@ import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionCont
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
+import FilterContainer from "./plp/containers/FilterContainer";
 import * as Cookie from "./lib/Cookie";
 import {
   HOME_ROUTER,
@@ -17,7 +18,8 @@ import {
   MAIN_ROUTER,
   PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
-  SIGN_UP_PATH
+  SIGN_UP_PATH,
+  PRODUCT_FILTER_ROUTER
 } from "../src/lib/constants";
 import {
   GLOBAL_ACCESS_TOKEN,
@@ -90,6 +92,12 @@ class App extends Component {
             exact
             path={PRODUCT_REVIEW_ROUTER}
             component={ProductReviewContainer}
+          />
+
+          <Route
+            exact
+            path={PRODUCT_FILTER_ROUTER}
+            component={FilterContainer}
           />
         </Switch>
         <ModalContainer />

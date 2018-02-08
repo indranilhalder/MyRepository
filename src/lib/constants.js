@@ -21,3 +21,4 @@ export const PRODUCT_DESCRIPTION_ROUTER = "/productDescription";
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
+export const PRODUCT_FILTER_ROUTER = "/filter";
