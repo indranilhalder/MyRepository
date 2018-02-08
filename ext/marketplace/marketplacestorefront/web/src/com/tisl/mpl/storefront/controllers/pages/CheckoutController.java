@@ -570,6 +570,18 @@ public class CheckoutController extends AbstractCheckoutController
 				//saving IP of the Customer
 				try
 				{
+					double totalQcTotalAmount =0d;
+					boolean isCliqCashApplied =false;
+					if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+						if(null!=orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount()>0){
+						totalQcTotalAmount=orderModel.getTotalWalletAmount();
+						isCliqCashApplied=true;
+						}
+					}else if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+						isCliqCashApplied =true;
+					}
+					model.addAttribute("totalQcTotalAmount", totalQcTotalAmount);
+					model.addAttribute("isCliqCashApplied", isCliqCashApplied);
 					final String userIpAddress = request.getHeader("X-Forwarded-For");
 					orderModel.setIpAddress(userIpAddress);
 					getModelService().save(orderModel);
@@ -608,7 +620,7 @@ public class CheckoutController extends AbstractCheckoutController
 				}
 
 				final String uid;
-
+				
 				if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm"))
 				{
 					final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
