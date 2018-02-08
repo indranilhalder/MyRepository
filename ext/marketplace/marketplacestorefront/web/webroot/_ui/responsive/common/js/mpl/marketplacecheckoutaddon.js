@@ -6682,7 +6682,7 @@ function useWalletForPaymentAjax(){
 						currentDis = currentDis.substr(0, 0) + '' + currentDis.substr(0 + 1);	
 						currentDis =parseFloat(currentDis) - parseFloat(data.totalDiscount);
 						document.getElementById('promotion').innerHTML ="";
-						document.getElementById('promotion').innerHTML = currentDis; 
+						document.getElementById('promotion').innerHTML ="&#8377;"+ currentDis; 
 					}
 					
 					
@@ -6741,7 +6741,6 @@ function useWalletForPaymentAjax(){
 					$(divText).addClass('cliqCashInfoSection');
 					divText.innerHTML = '<span class="shippingSpan cliqCashSpan" id="cliqCashPayId"> CliqCash Applied </span><span class="pull-right cliqCashSpanAmt">&#8377;'+data.cliqCashAmt+'</span>';
 					$('#convChargeFieldId').before(divText);
-					
 					document.getElementById('totalWithConvField').innerHTML ="";
 					document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
 					if(data.totalDiscount !=0 && !data.bankCheckBox){
@@ -6750,7 +6749,7 @@ function useWalletForPaymentAjax(){
 						currentDis = currentDis.substr(0, 0) + '' + currentDis.substr(0 + 1);	
 						currentDis =parseFloat(currentDis) - parseFloat(data.totalDiscount);
 						document.getElementById('promotion').innerHTML ="";
-						document.getElementById('promotion').innerHTML = currentDis; 
+						document.getElementById('promotion').innerHTML = "&#8377;" +currentDis; 
 					}
 					
 					if(!value.checked){
@@ -12050,6 +12049,9 @@ function recalculateCart(loadOffer,chooseOfferId,offerradioID) {
 
 			}
 
+		},
+		complete : function(resp){
+			useWalletForPaymentAjax();
 		},
 		error : function(resp) {
 			if(ACC.singlePageCheckout.getIsResponsive())
