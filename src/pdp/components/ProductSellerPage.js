@@ -32,6 +32,7 @@ class ProductSellerPage extends Component {
                     <SellerCard
                       heading={value[0].productListingId}
                       key={index}
+                      value={value}
                     />
                   );
                 }
