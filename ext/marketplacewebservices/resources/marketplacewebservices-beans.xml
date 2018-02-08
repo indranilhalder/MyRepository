@@ -3844,6 +3844,7 @@
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
 		<property name="isWalletCreated" type="boolean" />	
 		<property name="isWalletOtpVerified" type="boolean" />
+		<property name="message" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO" >		

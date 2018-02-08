@@ -284,7 +284,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					responce.setIsWalletCreated(true);
 					responce.setTotalCliqCashBalance(responce.getTotalCliqCashBalance());
 					responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
-
+					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode())
 				{

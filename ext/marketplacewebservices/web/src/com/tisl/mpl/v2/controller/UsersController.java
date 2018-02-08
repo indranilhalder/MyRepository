@@ -4008,8 +4008,10 @@ public class UsersController extends BaseCommerceController
 				/*	EGV Changes Start */
 					boolean isWalletUpdated = true;
 					CustomerModel customer = (CustomerModel)userService.getCurrentUser();
-					
-					isWalletUpdated = mplEgvWalletService.updateWallet(customer, otp, customerToSave);
+					if(null != otp && StringUtils.isNotEmpty(otp) && null != customer && null != customer.getIsWalletActivated()
+							&& customer.getIsWalletActivated().booleanValue()) {
+						isWalletUpdated = mplEgvWalletService.updateWallet(customer, otp, customerToSave);
+					}
 					/*Egv Changes End */
 					
 					if(isWalletUpdated) {

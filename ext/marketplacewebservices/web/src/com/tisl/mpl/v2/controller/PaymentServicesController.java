@@ -1754,7 +1754,9 @@ public class PaymentServicesController extends BaseController
 							.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
-					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
+					if(!isEgvOrder) {
+						paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
+					}
 					paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 					cart.setPayableNonWalletAmount(Double.valueOf(cart.getTotalPrice().doubleValue()));
@@ -1774,13 +1776,24 @@ public class PaymentServicesController extends BaseController
 						.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
-				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
+				if(!isEgvOrder) {
+					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
+				}
                                 paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 					orderModel.setPayableNonWalletAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()));
 					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(orderModel);
 					modelService.refresh(orderModel);
+			}
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+			if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
+			{
+				paymentModesData.setIsWalletCreated(true);
+				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+				{
+					paymentModesData.setIsWalletOtpVerified(true);
+				}
 			}
 			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty()
@@ -1796,7 +1809,6 @@ public class PaymentServicesController extends BaseController
 			paymentModesData.setMerchantKey(juspayMerchantKey);
 			
 			/* Added for cliq Cash Functionality start */
-			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 			try
 			{
 				LOG.debug("Getting saved Card Details");
@@ -1842,11 +1854,7 @@ public class PaymentServicesController extends BaseController
 						if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
 								&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
 						{
-							paymentModesData.setIsWalletCreated(true);
-							if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
-							{
-								paymentModesData.setIsWalletOtpVerified(true);
-							}
+							
 							CustomerWalletDetailResponse responce = mplWalletFacade
 									.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
 							if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())

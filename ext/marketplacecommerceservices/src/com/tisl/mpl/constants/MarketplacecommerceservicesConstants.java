@@ -2460,6 +2460,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
 	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "One-time password for activating your CLiQ Cash wallet is {1}. Please do not share with anyone. Feel free to call us at {2} in case of any queries.";
 	public static final String INVALID_WALLET_OTP = "INVALID";
+	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
 
 
 	//Report for bulk cancellation

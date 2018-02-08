@@ -747,6 +747,7 @@ public class WalletController
 					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp);
 					if(null != responce) {
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						responce.setMessage(MarketplacecommerceservicesConstants.WALLET_ACTIVATED_MESSAGE);
 					}
 
 			}else {
