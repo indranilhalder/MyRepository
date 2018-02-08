@@ -35,7 +35,10 @@ export default class Plp extends React.Component {
           />
         </div>
         <div className={styles.main}>
-          <ProductGrid data={this.props.searchresult} />
+          <ProductGrid
+            history={this.props.history}
+            data={this.props.searchresult}
+          />
         </div>
         <div className={styles.filter}>
           <InformationHeader onClick={this.toggleFilter} text="Refine by" />
