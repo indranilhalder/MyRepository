@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "./BagPageComponent.css";
+import styles from "./BagHeaderWithImage.css";
 import { Image } from "xelpmoc-core";
 import ProductImage from "./ProductImage";
 import PropTypes from "prop-types";
 
-export default class BagPageComponent extends React.Component {
+export default class BagHeaderWithImage extends React.Component {
   render() {
     return (
       <div className={styles.base}>
@@ -21,7 +21,7 @@ export default class BagPageComponent extends React.Component {
   }
 }
 
-BagPageComponent.propTypes = {
+BagHeaderWithImage.propTypes = {
   header: PropTypes.string,
   features: PropTypes.string,
   priceText: PropTypes.string,
