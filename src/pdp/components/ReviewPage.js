@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ReviewPage.css";
 import PropTypes from "prop-types";
-import StarRating from "./StarRating.js";
+import StarRating from "../../general/components/StarRating";
 export default class ReviewPage extends React.Component {
   render() {
     return (
