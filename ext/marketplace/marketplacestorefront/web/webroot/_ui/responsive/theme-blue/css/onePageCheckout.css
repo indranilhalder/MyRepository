@@ -6068,7 +6068,7 @@ button#continue_payment_after_validate {
 }
 /* start change for SDI-5387 */
 .offerui .offer_title {
-	width: 260px;					/* modify for TISUAT-6349 */
+	width: 260px !important;					/* modify & add important for TISUAT-6349 */
 	padding-left: 18px !important;		/* add important for TISUAT-6349 */
 	word-wrap: break-word;		/* add for TISUAT-6349 */
 }
