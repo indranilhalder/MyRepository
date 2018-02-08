@@ -20,7 +20,7 @@ class ProductListingsPage extends Component {
     } else if (this.props.productListings !== null) {
       return (
         <Plp
-          {...this.props}
+          history={this.props.history}
           searchresult={this.props.productListings.searchresult}
           facetData={this.props.productListings.facetdata}
           showSort={this.props.showSort}
