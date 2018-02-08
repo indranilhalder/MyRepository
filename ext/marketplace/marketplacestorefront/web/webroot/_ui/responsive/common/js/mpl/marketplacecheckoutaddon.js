@@ -6625,6 +6625,7 @@ function useWalletForPaymentAjax(){
 	}
 
 	$(".cliqCashApplyAlert").hide();
+	$("#continue_payment_after_validate").show();
 	$(".topPlaceOrderBtn").hide();
 
 	$("#make_cc_payment").show();
@@ -6655,7 +6656,7 @@ function useWalletForPaymentAjax(){
 				
 				if(data.disableJsMode){
 					//alert(data.disableJsMode);
-					$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").hide();
+					$("#continue_payment_after_validate").hide();
 					//$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 					$(".topPlaceOrderBtn").show();//
 					if($(window).width() < 768){
@@ -6688,40 +6689,28 @@ function useWalletForPaymentAjax(){
 					
 
 				}else{
-					$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").show();
+					$("#continue_payment_after_validate").show();
 
 					
 					//COD, EMI Place Order Button Fix
 					if($(window).width() < 768){
 						//Responsive
-						if(value.checked){
-							$("#make_emi_payment_up, #paymentButtonId_up").hide();
-							$("#paymentButtonId").attr('style', 'display: none !important');
-							if($("#viewPaymentCODMobile").closest("li").hasClass("active")){
-								$(".totals.outstanding-totalss").css("bottom","0px");
-							}
-						} else {
-							$("#make_emi_payment_up, #paymentButtonId_up").show();
-							if($("#viewPaymentEMIMobile").closest("li").hasClass("active")){
-								ACC.singlePageCheckout.onPaymentModeSelection('EMI','newCard','','false');
-							}
-							if($("#viewPaymentCODMobile").closest("li").hasClass("active")){
-								ACC.singlePageCheckout.onPaymentModeSelection('COD','newCard','','false');
-								$(".totals.outstanding-totalss").css("bottom","0px");
-							}
+						$("#continue_payment_after_validate").hide();
+						if($("#viewPaymentCODMobile").closest("li").hasClass("active")){
+							$("#continue_payment_after_validate_responsive").hide();
+							$(".totals.outstanding-totalss").css("bottom","0px");
+						}
+						if($("#viewPaymentEMIMobile").closest("li").hasClass("active")){
+							$("#continue_payment_after_validate_responsive").hide();
+							$(".totals.outstanding-totalss").css("bottom","0px");
 						}
 					} else {
 						//Web View
-						if(value.checked){
-							$("#paymentButtonId, #make_emi_payment").hide();
-						} else {
-							$("#paymentButtonId, #make_emi_payment").show();
-							if($("#viewPaymentEMI").closest("li").hasClass("active")){
-								viewPaymentEMI();
-							}
-							if($("#viewPaymentCOD").closest("li").hasClass("active")){
-								viewPaymentCOD();
-							}
+						if($("#viewPaymentCOD").closest("li").hasClass("active")){
+							$("#continue_payment_after_validate").hide();
+						}
+						if($("#viewPaymentEMI").closest("li").hasClass("active")){
+							$("#continue_payment_after_validate").hide();
 						}
 					}
 
@@ -6742,7 +6731,7 @@ function useWalletForPaymentAjax(){
 					divText.innerHTML = '<span class="shippingSpan cliqCashSpan" id="cliqCashPayId"> CliqCash Applied </span><span class="pull-right cliqCashSpanAmt">&#8377;'+data.cliqCashAmt+'</span>';
 					$('#convChargeFieldId').before(divText);
 					document.getElementById('totalWithConvField').innerHTML ="";
-					document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
+					document.getElementById('totalWithConvField').innerHTML =  "&#8377;"+data.juspayAmt;
 					if(data.totalDiscount !=0 && !data.bankCheckBox){
 //						alert("in");
 						var currentDis=document.getElementById('promotion').innerHTML;
@@ -6759,11 +6748,35 @@ function useWalletForPaymentAjax(){
 				}
 				
 			}else{
+				
+				//COD, EMI Place Order Button Fix
+				if($(window).width() < 768){
+					//Responsive
+					$("#continue_payment_after_validate").hide();
+					$("#continue_payment_after_validate_responsive").show();
+					if($("#viewPaymentEMIMobile").closest("li").hasClass("active")){
+						ACC.singlePageCheckout.onPaymentModeSelection('EMI','newCard','','false');
+					}
+					if($("#viewPaymentCODMobile").closest("li").hasClass("active")){
+						ACC.singlePageCheckout.onPaymentModeSelection('COD','newCard','','false');
+						$(".totals.outstanding-totalss").css("bottom","0px");
+					}
+				} else {
+					//WEB VIEW
+					$("#continue_payment_after_validate").show();
+					if($("#viewPaymentEMI").closest("li").hasClass("active")){
+						viewPaymentEMI();
+					}
+					if($("#viewPaymentCOD").closest("li").hasClass("active")){
+						viewPaymentCOD();
+					}
+				}
+				
 				usedCliqCashFlag = false;
 				
 				$(".cliqCashInfoSection").remove();
 				document.getElementById('totalWithConvField').innerHTML ="";
-				document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
+				document.getElementById('totalWithConvField').innerHTML =  "&#8377;"+data.juspayAmt;
 				
 				$("#unUseGiftBtnText").hide();
 				$("#useGiftBtnText").show();
@@ -6788,6 +6801,11 @@ function useWalletForPaymentAjax(){
 		},
 		
 		complete : function(data){
+			
+			if(value.checked && data.responseJSON.disableJsMode){
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+	 			$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
+			}
 			
 			if(!value.checked && !data.responseJSON.disableJsMode){
 				$("#juspayconnErrorDiv").css("display","none");
