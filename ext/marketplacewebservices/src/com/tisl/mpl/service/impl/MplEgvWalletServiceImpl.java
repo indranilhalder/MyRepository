@@ -18,6 +18,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -366,7 +367,13 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					 applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setIsRemainingAmount(false);
 					//applyCliqCashWsDto.setCliqCashApplied(totalAmt);
-					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
+					Double amount = Double.valueOf(0.0D);
+			        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final String decimalFormat = "0.00";
+					final DecimalFormat df = new DecimalFormat(decimalFormat);
+					final String totalPayableAmount = df.format(bigDecimal);
+					applyCliqCashWsDto.setPaybleAmount(totalPayableAmount);
+				//	applyCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
 					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 					
 					applyCliqCashWsDto =setTotalPrice(applyCliqCashWsDto,cart);
@@ -406,7 +413,14 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						juspayTotalAmt = cart.getTotalPrice().doubleValue();
 					}
 					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
+					
+					Double amount = Double.valueOf(juspayTotalAmt);
+			        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final String decimalFormat = "0.00";
+					final DecimalFormat df = new DecimalFormat(decimalFormat);
+					final String totalPayableAmount = df.format(bigDecimal);
+					applyCliqCashWsDto.setPaybleAmount(totalPayableAmount);
+					//applyCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
 					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 					applyCliqCashWsDto = setTotalPrice(applyCliqCashWsDto,cart);
 
@@ -565,7 +579,9 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		applyCliqCashWsDto.setOtherDiscount(otherDiscountPriceData);
-
+      if(bankCouponDiscount > 0.0D) {
+      	applyCliqCashWsDto.setIsBankPromotionApplied(true);
+      }
 		total = new BigDecimal(couponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
@@ -744,7 +760,9 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		applycouponDto.setOtherDiscount(otherDiscountPriceData);
-
+		if(bankCouponDiscount > 0.0D) {
+			applycouponDto.setIsBankPromotionApplied(true);
+      }
 		total = new BigDecimal(couponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
@@ -853,7 +871,9 @@ public ApplyCartCouponsDTO setTotalPrice(ApplyCartCouponsDTO applycouponDto, Abs
 	final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 			MarketplacecommerceservicesConstants.INR);
 	applycouponDto.setOtherDiscount(otherDiscountPriceData);
-
+  if(bankCouponDiscount > 0.0D) {
+	  applycouponDto.setIsBankPromotionApplied(true);
+  }
 	total = new BigDecimal(couponDiscount);
 	final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 			MarketplacecommerceservicesConstants.INR);

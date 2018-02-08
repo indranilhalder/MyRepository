@@ -35,6 +35,7 @@ import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -413,16 +414,41 @@ public class PaymentServicesController extends BaseController
 							
 							if (null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D )
 							{
-								promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
+							//	promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
+							Double juspayAmount = Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue());
+
+								if(null !=  juspayAmount) {
+									Double amount = juspayAmount;
+							        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+									final String decimalFormat = "0.00";
+									final DecimalFormat df = new DecimalFormat(decimalFormat);
+									final String totalPayableAmount = df.format(bigDecimal);
+									promoPriceData.setPaybleAmount(totalPayableAmount);
+								}
 								promoPriceData.setCliqCashApplied(true);
 							}
 						}
 						else if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 						{
-							promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+						//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+							
+								Double amount = Double.valueOf(0.0D);
+						        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+								final String decimalFormat = "0.00";
+								final DecimalFormat df = new DecimalFormat(decimalFormat);
+								final String totalPayableAmount = df.format(bigDecimal);
+								promoPriceData.setPaybleAmount(totalPayableAmount);
 							promoPriceData.setCliqCashApplied(true);
 						}else {
-							promoPriceData.setPaybleAmount(cart.getTotalPrice());
+							//promoPriceData.setPaybleAmount(cart.getTotalPrice());
+							if(null !=  cart.getTotalPrice()) {
+								Double amount = cart.getTotalPrice();
+						        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+								final String decimalFormat = "0.00";
+								final DecimalFormat df = new DecimalFormat(decimalFormat);
+								final String totalPayableAmount = df.format(bigDecimal);
+								promoPriceData.setPaybleAmount(totalPayableAmount);
+							}
 							promoPriceData.setCliqCashApplied(false);
 						}
 						setTotalPrice(promoPriceData,cart);
@@ -482,16 +508,39 @@ public class PaymentServicesController extends BaseController
 					
 					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D )
 					{
-						promoPriceData.setPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue()));
+					///	promoPriceData.setPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue()));
+						Double juspayAmount = Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue());
+						if(null !=  juspayAmount) {
+							Double amount = juspayAmount;
+					        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+							final String decimalFormat = "0.00";
+							final DecimalFormat df = new DecimalFormat(decimalFormat);
+							final String totalPayableAmount = df.format(bigDecimal);
+							promoPriceData.setPaybleAmount(totalPayableAmount);
+						}
+						
 						promoPriceData.setCliqCashApplied(true);
 					}
 				}
 				else if (null != orderModel.getSplitModeInfo() &&  orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 				{
-					promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+				//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+					Double amount =Double.valueOf(0.0D);
+			        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final String decimalFormat = "0.00";
+					final DecimalFormat df = new DecimalFormat(decimalFormat);
+					final String totalPayableAmount = df.format(bigDecimal);
+					promoPriceData.setPaybleAmount(totalPayableAmount);
 					promoPriceData.setCliqCashApplied(true);
 				}else {
-					promoPriceData.setPaybleAmount(orderModel.getTotalPrice());
+					if(null !=  orderModel.getTotalPrice()) {
+						Double amount = orderModel.getTotalPrice();
+				        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+						final String decimalFormat = "0.00";
+						final DecimalFormat df = new DecimalFormat(decimalFormat);
+						final String totalPayableAmount = df.format(bigDecimal);
+						promoPriceData.setPaybleAmount(totalPayableAmount);
+					}
 					promoPriceData.setCliqCashApplied(false);
 				}
 				setTotalPrice(promoPriceData,orderModel);
@@ -589,7 +638,9 @@ public class PaymentServicesController extends BaseController
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setOtherDiscount(otherDiscountPriceData);
-
+		if(bankCouponDiscount > 0.0D) {
+			promoPriceData.setIsBankPromotionApplied(true);
+	    }
 		total = new BigDecimal(couponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);

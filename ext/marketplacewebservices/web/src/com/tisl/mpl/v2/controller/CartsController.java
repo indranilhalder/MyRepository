@@ -3436,6 +3436,7 @@ public class CartsController extends BaseCommerceController
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
 	 * @throws JaloSecurityException
+	 * 
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
@@ -3731,7 +3732,7 @@ public class CartsController extends BaseCommerceController
 
 				releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, cartModel, null, paymentMode);
 
-				getTotalPrice(releaseCouponDto, cartModel);
+				getTotalPrice(releaseCouponDto, cartModel,true);
 				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
@@ -3751,7 +3752,7 @@ public class CartsController extends BaseCommerceController
 				{
 					releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
 				}
-				getTotalPrice(releaseCouponDto, orderModel);
+				getTotalPrice(releaseCouponDto, orderModel,true);
 				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
@@ -3848,7 +3849,7 @@ public class CartsController extends BaseCommerceController
 					{
 						mplEgvWalletService.useCliqCash(cartModel);
 					}
-					getTotalPrice(releaseCouponDto, cartModel);
+					getTotalPrice(releaseCouponDto, cartModel,false);
 					// EGV Changes END
 					releaseCouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -3866,7 +3867,7 @@ public class CartsController extends BaseCommerceController
 					mplEgvWalletService.useCliqCash(orderModel);
 				}
 				// EGV Changes END
-				getTotalPrice(releaseCouponDto, orderModel);
+				getTotalPrice(releaseCouponDto, orderModel,false);
 
 				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
@@ -3910,7 +3911,7 @@ public class CartsController extends BaseCommerceController
 	 * @param releaseCouponDto
 	 * @param cartModel
 	 */
-	private void getTotalPrice(ReleaseCouponsDTO releaseCouponDto, AbstractOrderModel cartModel)
+	private void getTotalPrice(ReleaseCouponsDTO releaseCouponDto, AbstractOrderModel cartModel,boolean isReleaseCoupon)
 	{
 		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
 		double bankCouponDiscount = 0.0D;
@@ -3952,12 +3953,17 @@ public class CartsController extends BaseCommerceController
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		releaseCouponDto.setOtherDiscount(otherDiscountPriceData);
-
+		 if(bankCouponDiscount > 0.0D) {
+			 releaseCouponDto.setIsBankPromotionApplied(true);
+	      }
 		total = new BigDecimal(couponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		releaseCouponDto.setAppliedCouponDiscount(couponPriceData);
-		releaseCouponDto.setCouponDiscount(total.toString());
+		// Not Sending  CouponDiscount Value Because of backward compatible Issues
+		if(!isReleaseCoupon) {
+			releaseCouponDto.setCouponDiscount(total.toString());
+		}
 
 		if (payableWalletAmount > 0.0D)
 		{

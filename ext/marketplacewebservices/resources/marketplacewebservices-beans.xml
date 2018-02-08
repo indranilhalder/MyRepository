@@ -1247,7 +1247,7 @@
 		<property name="cliqCash"
 			type="com.tisl.mpl.wsdto.CliqCashWsDto"/>	
 		<property name="cliqCashApplied" type="boolean" />
-		<property name="paybleAmount" type="java.lang.Double" />
+		<property name="paybleAmount" type="String" />
 		<property name="CliqCashAmountDeducted" type="java.lang.Double" />
 			
 	   <!-- Added For CLiq Cash Functionality  End -->		
@@ -2344,8 +2344,8 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mobileNo" type="String" />
 		<property name="cliqCashApplied" type="boolean" />
-		<property name="paybleAmount" type="java.lang.Double" />
-		
+		<property name="paybleAmount" type="String" />
+		<property name="isBankPromotionApplied" type="boolean" /> 
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -2483,7 +2483,8 @@
 		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
 		<property name="totalCliqCash" type="java.lang.Double" />
 		<!-- <property name="cliqCashApplied" type="boolean" /> -->
-		<property name="remaingPaybleAmount" type="java.lang.Double" />
+		<property name="remaingPaybleAmount" type="String" />
+		<property name="isBankPromotionApplied" type="boolean" /> 
 		
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -2668,6 +2669,7 @@
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isBankPromotionApplied" type="boolean" /> 
 	</bean>
 
 	<!-- TPR-816 -->
@@ -3667,7 +3669,7 @@
  -->		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
-		
+		<property name="isBankPromotionApplied" type="boolean" /> 
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -3737,9 +3739,9 @@
 		<property name="totalAmount" type="String" />
 		<property name="discount" type="Double" />
 <!-- 		<property name="cliqCashApplied" type="Double" />
- -->		<property name="paybleAmount" type="Double" />
+ -->		<property name="paybleAmount" type="String" />
 		<property name="isRemainingAmount" type="boolean" />	
-		
+		<property name="isBankPromotionApplied" type="boolean" /> 
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />

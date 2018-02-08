@@ -24,6 +24,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 import javax.annotation.Resource;
 
@@ -221,7 +222,15 @@ public class WalletController
 				{
 					removeCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 				}
-				removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
+			//	removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
+				if(null !=  cart.getTotalPrice()) {
+					Double amount = cart.getTotalPrice();
+			        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final String decimalFormat = "0.00";
+					final DecimalFormat df = new DecimalFormat(decimalFormat);
+					final String totalPayableAmount = df.format(bigDecimal);
+					removeCliqCashWsDto.setPaybleAmount(totalPayableAmount);
+				}
 				
 				
 				final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(cart.getDiscounts());
@@ -252,11 +261,16 @@ public class WalletController
 			{
 			//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 				AbstractOrderModel order =orderModel; 
-				commerceCartService.recalculateCart((CartModel)order);
+			//	commerceCartService.recalculateCart((CartModel)order);
+				
 					removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
 					if (null != orderModel.getTotalPrice())
 					{
-						removeCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
+						BigDecimal bigDecimal = new BigDecimal(orderModel.getTotalPrice().doubleValue());
+						final String decimalFormat = configurationService.getConfiguration().getString("site.decimal.format", "0.00");
+						final DecimalFormat df = new DecimalFormat(decimalFormat);
+						final String totalPriceFormatted = df.format(bigDecimal);
+						removeCliqCashWsDto.setPaybleAmount(totalPriceFormatted);
 					}
 					final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(order.getDiscounts());
 
@@ -475,6 +489,7 @@ public class WalletController
 						if(paybleAmount > 0.0D) {
 							LOG.debug("Toatal Payable Amount :"+paybleAmount);
 							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							
 							buyingEgvResponce.setPaybleAmount(Double.valueOf(paybleAmount));
 							buyingEgvResponce.setTotalPrice(Double.valueOf(paybleAmount));
 							buyingEgvResponce.setDiscounts(Double.valueOf(0.0D));
