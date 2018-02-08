@@ -132,7 +132,6 @@ import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
-import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exception.QCServiceCallException;
@@ -7478,6 +7477,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (null != cart.getTotalWalletAmount())
 				{
+					VoucherModel voucher = new VoucherModel();
+
 					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
 
 					isCartVoucherPresent = cartCouponObj.getFirst();
@@ -7485,23 +7486,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					if (isCartVoucherPresent.booleanValue())
 					{
 						cartCouponCode = cartCouponObj.getSecond();
+						voucher = voucherService.getVoucher(cartCouponCode);
 						mplCouponFacade.removeLastCartCoupon(cart); // Removing any Bank level Coupon
 					}
 
 					totalCartAmt = cart.getTotalPrice().doubleValue();
 					final Double WalletAmt = cart.getTotalWalletAmount();
 
-
-
-					//	System.out.println("totalAmt"+totalCartAmt);
-
-					//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
-					//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
-
 					System.out.println("**************  totalAmt" + totalCartAmt);
+					float formattedValueNoDecimal = 0.0f;
 
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
 					{
+						if (isCartVoucherPresent.booleanValue())
+						{
+							formattedValueNoDecimal = cart.getTotalDiscounts().floatValue();
+							if (null != voucher.getValue())
+							{
+								formattedValueNoDecimal -= (float) voucher.getValue().doubleValue();
+							}
+						}
 						getSessionService().setAttribute("WalletTotal", "" + totalCartAmt);
 						getSessionService().setAttribute("getCliqCashMode", value);
 						getSessionService().setAttribute("juspayTotalAmt", "" + 0);
@@ -7512,6 +7516,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("totalCartAmt", totalCartAmt);
 						jsonObject.put("cartCouponCode", cartCouponCode);
 						jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
+						jsonObject.put("totalDiscount", formattedValueNoDecimal);
+						//jsonObject.put("bankCheckBox", applyStatus);
 						cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -7519,11 +7525,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
-						final double formattedValueNoDecimal = 0.0d;
 						boolean applyStatus = false;
 
 						if (isCartVoucherPresent.booleanValue())
 						{
+							formattedValueNoDecimal = cart.getTotalDiscounts().floatValue();
 							final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 
 							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
@@ -7533,12 +7539,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							try
 							{
 								applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Bank Coupon
-								final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(null, cart, applyStatus, true,
-										cartCouponCode);
-								formattedValueNoDecimal = newData.getTotalDiscount().getDoubleValue().doubleValue();
+
+
 							}
 							catch (final VoucherOperationException ex)
 							{
+								if (null != voucher.getValue())
+								{
+									formattedValueNoDecimal -= (float) voucher.getValue().doubleValue();
+								}
 								ex.printStackTrace();
 							}
 							finally

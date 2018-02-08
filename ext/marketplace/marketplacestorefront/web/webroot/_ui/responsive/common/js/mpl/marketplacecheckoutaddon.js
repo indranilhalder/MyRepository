@@ -6676,6 +6676,19 @@ function useWalletForPaymentAjax(){
 					var cliqCash = data.totalCartAmt;
 					divText.innerHTML = '<span class="shippingSpan cliqCashSpan" id="cliqCashPayId"> CliqCash Applied </span><span class="pull-right cliqCashSpanAmt">&#8377;'+cliqCash+'</span>';
 					$('#convChargeFieldId').before(divText);
+					
+					document.getElementById('totalWithConvField').innerHTML ="";
+					document.getElementById('totalWithConvField').innerHTML =  0;
+					if(data.totalDiscount !=0){
+//						alert("in");
+						var currentDis=document.getElementById('promotion').innerHTML;
+						currentDis = currentDis.substr(0, 0) + '' + currentDis.substr(0 + 1);	
+						currentDis =parseFloat(currentDis) - parseFloat(data.totalDiscount);
+						document.getElementById('promotion').innerHTML ="";
+						document.getElementById('promotion').innerHTML = currentDis; 
+					}
+					
+					
 
 				}else{
 					$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment, #continue_payment_after_validate").show();
@@ -6734,12 +6747,14 @@ function useWalletForPaymentAjax(){
 					
 					document.getElementById('totalWithConvField').innerHTML ="";
 					document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
-//					if(data.totalDiscount !=0 && !data.bankCheckBox){
+					if(data.totalDiscount !=0 && !data.bankCheckBox){
 //						alert("in");
-//						var currentDis=document.getElementById('promotion').val();
-//						document.getElementById('promotion').innerHTML ="";
-//						document.getElementById('promotion').innerHTML =  currentDis - data.totalDiscount;
-//					}
+						var currentDis=document.getElementById('promotion').innerHTML;
+						currentDis = currentDis.substr(0, 0) + '' + currentDis.substr(0 + 1);	
+						currentDis =parseFloat(currentDis) - parseFloat(data.totalDiscount);
+						document.getElementById('promotion').innerHTML ="";
+						document.getElementById('promotion').innerHTML = currentDis; 
+					}
 					
 					if(!value.checked){
 						$("#addCliqCashId").text("");
