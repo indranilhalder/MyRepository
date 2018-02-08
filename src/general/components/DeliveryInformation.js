@@ -13,8 +13,8 @@ export default class DeliveryInformation extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <HeaderWithIcon image={this.props.image} text={this.props.text}>
-          <div className={styles.headingHolder}>{this.props.heading}</div>
+        <HeaderWithIcon image={this.props.image} header={this.props.header}>
+          <div className={styles.headingHolder}>{this.props.placedTime}</div>
           <div className={styles.headingHolder}>
             {this.props.deliverText}
             <span className={styles.text}>{this.props.textHeading}</span>
@@ -23,8 +23,7 @@ export default class DeliveryInformation extends React.Component {
             <span>{this.props.deliveryOptions}</span>
             <span className={styles.buttonHolder}>
               <UnderLinedButton
-                label="1011"
-                color={this.props.color}
+                label={this.props.label}
                 onClick={() => {
                   this.handleClick();
                 }}

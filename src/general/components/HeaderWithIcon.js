@@ -10,7 +10,7 @@ export default class HeaderWithIcon extends React.Component {
         <div className={styles.iconHolder}>
           <Icon image={this.props.image} />
         </div>
-        <div className={styles.textHolder}>{this.props.text}</div>
+        <div className={styles.textHolder}>{this.props.header}</div>
         {this.props.children}
       </div>
     );
