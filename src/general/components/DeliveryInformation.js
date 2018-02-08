@@ -14,12 +14,12 @@ export default class DeliveryInformation extends React.Component {
     return (
       <div className={styles.base}>
         <HeaderWithIcon image={this.props.image} header={this.props.header}>
-          <div className={styles.headingHolder}>{this.props.placedTime}</div>
-          <div className={styles.headingHolder}>
+          <div className={styles.placeTime}>{this.props.placedTime}</div>
+          <div className={styles.placeTime}>
             {this.props.deliverText}
             <span className={styles.text}>{this.props.textHeading}</span>
           </div>
-          <div className={styles.headingHolder}>
+          <div className={styles.placeTime}>
             <span>{this.props.deliveryOptions}</span>
             <span className={styles.buttonHolder}>
               <UnderLinedButton
