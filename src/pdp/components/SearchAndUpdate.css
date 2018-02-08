@@ -1,0 +1,25 @@
+.base{
+  width:100%;
+  height:auto;
+  display:inline-block;
+
+}
+.inputHolder{
+  width:75%;
+  height:auto;
+  display:inline-block;
+  vertical-align:middle;
+}
+.buttonHolder{
+  width:25%;
+  height:auto;
+  display:inline-block;
+  vertical-align:middle;
+  text-align:center
+}
+.buttonCover{
+  width: auto;
+  height: auto;
+  margin: auto;
+  display: inline-block;
+}
