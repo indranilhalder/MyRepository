@@ -1,0 +1,26 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  position: relative;
+  display: inline-block;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  margin-bottom: 5px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+.imageHolder {
+  width: 30%;
+  height: auto;
+  display: inline-block;
+}
+.textContainer {
+  width: 70%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
