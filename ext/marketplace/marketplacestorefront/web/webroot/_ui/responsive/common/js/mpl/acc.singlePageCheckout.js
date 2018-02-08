@@ -3531,7 +3531,7 @@ ACC.singlePageCheckout = {
     	xhrResponse.complete(function(response, textStatus, jqXHR) {
     		
     		if (usedCliqCashFlag == true){
-			  useWalletForPaymentAjax();
+    			useWalletForPaymentAjax();
     		}
 		});
         
@@ -3644,7 +3644,7 @@ ACC.singlePageCheckout = {
         
 		xhrResponse.complete(function(response, textStatus, jqXHR) {
 			if (usedCliqCashFlag == true){
-			  useWalletForPaymentAjax();
+				useWalletForPaymentAjax();
 			}
 		});
 		
