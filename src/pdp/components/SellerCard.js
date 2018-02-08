@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./SellerCard.css";
-import CheckBox from "./CheckBox.js";
+import CheckBox from "../../general/components/CheckBox";
 import PropTypes from "prop-types";
 export default class SellerCard extends React.Component {
-  handleClick() {
-    if (this.props.onSelect) {
-      this.props.onClick();
+  handleClick(val, key) {
+    if (this.props.selectItem) {
+      this.props.selectItem(val);
     }
   }
   render() {
@@ -16,8 +16,12 @@ export default class SellerCard extends React.Component {
     ) {
       priceClass = styles.priceCancelled;
     }
+
     return (
-      <div className={styles.base} onClick={() => this.handleClick()}>
+      <div
+        className={styles.base}
+        onClick={() => this.handleClick(this.props, this.props.value)}
+      >
         <div className={styles.textBox}>
           <div className={styles.heading}>
             {this.props.heading}
