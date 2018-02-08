@@ -2416,5 +2416,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NU001 = "NU001";
 	public static final String NU002 = "NU002";
 	public static final String NU003 = "NU003";
+	public static final String NU004 = "NU004";
 
 }

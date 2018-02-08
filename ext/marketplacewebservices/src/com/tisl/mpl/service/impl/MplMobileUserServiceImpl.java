@@ -1196,20 +1196,36 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			{
 				registration.setCheckTataRewards(true);
 			}
-			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
+			if (registerCustomerFacade.checkMobileNumberUnique(registration))
 			{
+				if (StringUtils.isNotEmpty(emailId))
+				{
+					registration.setUid(emailId);
+					if (!registerCustomerFacade.checkEmailIdUnique(registration))
+					{
+						successFlag = false;
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU002);
+					}
+				}
 				registerCustomerFacade.register(registration, platformNumber);
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU003);
 			}
 		}
 		catch (final EtailBusinessExceptions businessException)
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			if (businessException.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NU003))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU003);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			}
 		}
 		catch (final DuplicateUidException e)
 		{
