@@ -1,6 +1,23 @@
+.base {
+  width: 100%;
+  background: #ececec;
+}
 .loadingIndicator {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+.center {
+  width: 100%;
+  max-width: 1200px;
+}
+
+@media screen and (min-width: 1025px) {
+  .base {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    -webkit-justify-content: center;
+  }
 }

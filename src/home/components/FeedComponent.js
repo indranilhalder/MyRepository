@@ -1,5 +1,6 @@
 import React from "react";
 import Carousel from "../../general/components/Carousel";
+import MediaQuery from "react-responsive";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FeedComponent.css";
@@ -14,10 +15,17 @@ export default class FeedComponent extends React.Component {
           backgroundImage: `url(${this.props.backgroundImage})`
         }}
       >
-        {this.props.banner && (
-          <div className={styles.banner}>{this.props.banner}</div>
-        )}
-        <Carousel {...this.props.carouselOptions}>
+        <MediaQuery query="(max-device-width: 1024px)">
+          {this.props.banner && (
+            <div className={styles.banner}>{this.props.banner}</div>
+          )}
+        </MediaQuery>
+        <Carousel
+          {...this.props.carouselOptions}
+          banner={this.props.banner}
+          bannerWidth="42%"
+          elementWidthDesktop={33.333}
+        >
           {this.props.data &&
             this.props.data.map((datum, i) => {
               return (
