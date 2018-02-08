@@ -58868,7 +58868,7 @@ display: inline !important;
 }
 @media (max-width: 1500px) and (min-width: 1025px){
 	.Manufacturer {
-	    margin: 70px 40px 0;
+	    margin: 70px 22px 0;	/*modify 1122186_TISUAT-6365*/
 	}
 	.temp4-features li .contOvrlay .media-content {
     	padding: 10px 15px;
@@ -59284,13 +59284,6 @@ display: inline !important;
 		/* end change of INC144314102 */
 	}
 }
-
-@media (max-width: 1500px) and (min-width: 1025px){
-	.Manufacturer {
-    	margin: 70px 40px 0;
-	}
-}
-
 
 @media (max-width: 1280px) and (min-width: 791px){
 	
