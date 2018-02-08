@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 import styles from "./Filter.css";
 import map from "lodash/map";
 import compact from "lodash/compact";
-
+import InformationHeader from "../../general/components/InformationHeader";
+const FILTER_HEADER = "Refine by";
 export default class Filter extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +33,10 @@ export default class Filter extends React.Component {
     }
     this.setState({ selected: [[null]] });
   };
+  handleBackClick = () => {
+    this.props.history.goBack();
+  };
+
   onApply(val) {
     if (this.props.onApply) {
       const filters = map(this.state.selected, (selectedArr, i) => {
@@ -58,6 +63,12 @@ export default class Filter extends React.Component {
     const filterDatum = this.props.filterData[this.state.pageNumber];
     return (
       <div className={styles.base}>
+        <div className={styles.pageHeader}>
+          <InformationHeader
+            onClick={this.handleBackClick}
+            text={FILTER_HEADER}
+          />
+        </div>
         <div className={styles.tabs}>
           <FilterCategories
             data={this.props.filterData}
