@@ -5396,7 +5396,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-bottom: solid 1px #e8e8e8;
 }
 .cart.wrapper.checkout-payment .blocks {
-    padding: 0px 16px 63px 16px;
+    padding: 0px 16px 7px 16px;		/*modify bottom for 1122186_TISUAT-6361*/
 }
 .cart.wrapper.checkout-payment .blocks h3 {
     display: none;
