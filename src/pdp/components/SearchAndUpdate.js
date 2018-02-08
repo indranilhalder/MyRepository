@@ -24,6 +24,17 @@ export default class SearchAndUpdate extends React.Component {
   render() {
     return (
       <div className={styles.base}>
+        <div className={styles.buttonHolder}>
+          <div className={styles.buttonCover}>
+            <UnderLinedButton
+              size="14px"
+              fontFamily="regular"
+              color="#000"
+              label="Update"
+              onClick={() => this.onUpdate()}
+            />
+          </div>
+        </div>
         <div className={styles.inputHolder}>
           <Input2
             boxy={true}
@@ -41,17 +52,6 @@ export default class SearchAndUpdate extends React.Component {
               />
             }
           />
-        </div>
-        <div className={styles.buttonHolder}>
-          <div className={styles.buttonCover}>
-            <UnderLinedButton
-              size="14px"
-              fontFamily="regular"
-              color="#000"
-              label="Update"
-              onClick={() => this.onUpdate()}
-            />
-          </div>
         </div>
       </div>
     );

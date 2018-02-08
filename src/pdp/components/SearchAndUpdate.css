@@ -2,10 +2,11 @@
   width:100%;
   height:auto;
   display:inline-block;
-
+  position:relative;
+  padding-right:25%
 }
 .inputHolder{
-  width:75%;
+  width:100%;
   height:auto;
   display:inline-block;
   vertical-align:middle;
@@ -15,11 +16,18 @@
   height:auto;
   display:inline-block;
   vertical-align:middle;
-  text-align:center
+  text-align:center;
+  position: absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  margin:auto;
 }
 .buttonCover{
   width: auto;
   height: auto;
   margin: auto;
   display: inline-block;
+  vertical-align: sub;
+  padding: 0px 0px 0px 10px;
 }
