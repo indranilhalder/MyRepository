@@ -1,5 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 15" x="0px" y="0px"><metadata><?xpacket begin="&#65279;" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c138 79.159824, 2016/09/14-01:09:01        "/><?xpacket end="w"?></metadata><defs><style>
-      .cls-1 {
-        fill-rule: evenodd;
-      }
-    </style></defs><path data-name="Sort icon copy 4" class="cls-1" d="M830,42l-4,4.008L822,42h3V34h2v8h3Zm-22-8h14v2H808V34Zm0,5h12v2H808V39Zm0,5h9v2h-9V44Z" transform="translate(-808 -34)"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>03</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="03" stroke="#8D8D8D" stroke-width="4.5">
+            <path d="M33.0909091,10 L33.0909091,30 M38,25 L33.0909091,30 L28.1818182,25 M2,13.3333333 L24.9090909,13.3333333 M5.27272727,20 L21.6363636,20 M8.54545455,26.6666667 L18.3636364,26.6666667" id="Shape"></path>
+        </g>
+    </g>
+</svg>
