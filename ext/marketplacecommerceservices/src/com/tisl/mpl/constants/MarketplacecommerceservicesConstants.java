@@ -534,7 +534,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OTP_EXPIRY_MESSAGE = "Sorry! This OTP has expired.";
 	public static final String INVALID_OTP = "The OTP entered is incorrect or invalid."; //UF-277
 	public static final String OTPERROR = "Please Enter valid OTP";
-	public static final String MOBILE_REGEX = "^[0-9]*$";
+	public static final String MOBILE_REGEX = "^[6-9][0-9]{9}$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 2;
 

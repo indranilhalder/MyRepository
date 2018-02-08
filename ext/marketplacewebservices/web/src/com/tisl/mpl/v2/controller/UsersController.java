@@ -10111,10 +10111,9 @@ public class UsersController extends BaseCommerceController
 		LOG.debug("User Registration mobile web service :::::::::::::" + username);
 		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
 		String emailIdLwCase = null;
-		final String regexStr = "^[6-9][0-9]{9}$";
 		try
 		{
-			if (!username.matches(regexStr))
+			if (!username.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU004);
 			}
@@ -11222,7 +11221,7 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-					customerInfo.setMobileNumber(emailIdLwCase);
+					customerInfo.setMobileNumber(username);
 				}
 				userLoginResultWsDto.setCustomerInfo(customerInfo);
 			}
