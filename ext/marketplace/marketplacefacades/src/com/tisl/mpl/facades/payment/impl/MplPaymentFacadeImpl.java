@@ -3704,6 +3704,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 				productprice -= abstractOrderEntryModel.getCartLevelDisc().doubleValue();
 			}
+			if(null != abstractOrderEntryModel.getCartCouponValue() && abstractOrderEntryModel.getCartCouponValue().doubleValue() > 0){
+				productprice -= abstractOrderEntryModel.getCartCouponValue().doubleValue();
+			}
 			//			if (null != abstractOrderEntryModel.getCartLevelPercentageDisc()
 			//					&& abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue() > 0)
 			//			{
