@@ -31,7 +31,7 @@ class ProductSellerPage extends Component {
                   return (
                     <SellerCard
                       heading={value[0].productListingId}
-                      value={index}
+                      key={index}
                     />
                   );
                 }

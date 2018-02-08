@@ -2,10 +2,6 @@ import { connect } from "react-redux";
 import ProductSellerPage from "../components/ProductSellerPage";
 import { withRouter } from "react-router-dom";
 
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails
@@ -13,7 +9,7 @@ const mapStateToProps = state => {
 };
 
 const ProductSellerContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProductSellerPage)
+  connect(mapStateToProps)(ProductSellerPage)
 );
 
 export default ProductSellerContainer;
