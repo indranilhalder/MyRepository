@@ -32,7 +32,10 @@ export default class DeliveryInformation extends React.Component {
             </span>
           </div>
         </HeaderWithIcon>
-        <HeaderWithIcon image={this.props.image} text={this.props.text}>
+        <HeaderWithIcon
+          image={this.props.imageUrl}
+          text={this.props.headerText}
+        >
           <div className={styles.headerHolder}>
             <div className={styles.buttonHolder}>
               <UnderLinedButton

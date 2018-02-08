@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 export default class HeaderWithIcon extends React.Component {
   render() {
-    console.log(this.props.ImageUrl);
     return (
       <div className={styles.base}>
         <div className={styles.iconHolder}>
