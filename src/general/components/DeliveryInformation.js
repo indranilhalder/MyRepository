@@ -32,22 +32,6 @@ export default class DeliveryInformation extends React.Component {
             </span>
           </div>
         </HeaderWithIcon>
-        <HeaderWithIcon
-          image={this.props.imageUrl}
-          text={this.props.headerText}
-        >
-          <div className={styles.headerHolder}>
-            <div className={styles.buttonHolder}>
-              <UnderLinedButton
-                label="check for pickup options"
-                color={this.props.color}
-                onClick={() => {
-                  this.handleClick();
-                }}
-              />
-            </div>
-          </div>
-        </HeaderWithIcon>
       </div>
     );
   }
