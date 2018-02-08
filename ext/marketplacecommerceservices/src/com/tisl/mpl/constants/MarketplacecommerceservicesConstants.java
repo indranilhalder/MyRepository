@@ -2419,6 +2419,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PROMOTEXT2 = "promoText2".intern();
 	public static final String PROMOTEXT3 = "promoText3".intern();
 	public static final String SEQUENCENUMBER = "sequenceNumber".intern();
+	public static final String ORDERTYPE2 = "orderType".intern();
+	public static final String REFUNDCREATEDFORAUDIT = "RefundEntry created for the audit :".intern();
+	public static final String ERRORCREATINGREFUNDENTRYFORAUDIT = "Error while creating refund entry for audit: ".intern();
+	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
+	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
 
 
 	//Report for bulk cancellation

@@ -12651,16 +12651,13 @@ div.other-sellers .other-sellers-table tbody tr td .price {
 }
 @media (min-width: 1025px) and (max-width: 1500px){
 	.Manufacturer {
-	    margin: 70px 40px 0;
+	    margin: 70px 22px 0;	/*modify 1122186_TISUAT-6365*/
 	}
 	.temp4-features li .contOvrlay .media-content {
     	padding: 10px 15px;
 	}
 	.Manufacturer.Temp01 .Padd > div.DLeft > div, .Manufacturer.Temp01 .Padd > div.DRight > div {
     width: 55%;
-	}
-	.Manufacturer {
-    	margin: 70px 40px 0;
 	}
 	.SpecWrap{ margin: 45px 40px 0;}
 }

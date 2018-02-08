@@ -3911,6 +3911,7 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
 	}
 .cart.wrapper.checkout-payment .card-sec .card-num .card_image{
 	margin-left: 30px;
+	height: 40px;		/* add for TISUAT-6362 */
 	}
 .cart.wrapper.checkout-payment .card-sec .card-num .payment-failed-card-image{
 	margin-left: 0px;
@@ -4328,13 +4329,6 @@ div.radio {
     min-height: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-.cart.wrapper.checkout-payment .card-sec .card-num .card_image {
-    float: left;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    height: 35px;
-    width: 42px;
 }
 .cart.wrapper.checkout-payment .card-sec .card-num .visa {
     margin-right: 8px;
@@ -5396,7 +5390,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-bottom: solid 1px #e8e8e8;
 }
 .cart.wrapper.checkout-payment .blocks {
-    padding: 0px 16px 63px 16px;
+    padding: 0px 16px 7px 16px;		/*modify bottom for 1122186_TISUAT-6361*/
 }
 .cart.wrapper.checkout-payment .blocks h3 {
     display: none;
@@ -6068,7 +6062,7 @@ button#continue_payment_after_validate {
 }
 /* start change for SDI-5387 */
 .offerui .offer_title {
-	width: 260px;					/* modify for TISUAT-6349 */
+	width: 260px !important;					/* modify & add important for TISUAT-6349 */
 	padding-left: 18px !important;		/* add important for TISUAT-6349 */
 	word-wrap: break-word;		/* add for TISUAT-6349 */
 }
@@ -6147,6 +6141,11 @@ span#offer_section_responsive_error_msg {
 	.tnc-fixed-header button.close {
 		top: 8px !important;
 	}
+	/* start for TISUAT-6369 */
+	.offerui .offer_title {
+		padding-right: 33px;
+	}
+	/* end for TISUAT-6369 */
 }
 /* TISPRDT-7983 */
 @media (min-width: 1125px)

@@ -4550,7 +4550,9 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			var mrpPrice = data['mrp'];
 			var mop = data['price'];
 			var savingsOnProduct= data['savingsOnProduct'];
-			dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+			if ( null != mrpPrice && null != mop ) {
+				dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+			}
 			//TPR-1375
 			for(var i in data['buyboxList'] ){
 				buyBoxList.push(data['buyboxList'][i]);

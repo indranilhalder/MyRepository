@@ -57,7 +57,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	//StringBuilder sbError;
 	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
 	//StringBuilder sbError = new StringBuilder(1000);
-	StringBuilder sbError = new StringBuilder();
+	StringBuilder sbError = new StringBuilder(500);
 
 
 	/**
