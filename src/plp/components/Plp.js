@@ -1,18 +1,13 @@
 import React from "react";
-import FilterContainer from "../containers/FilterContainer";
+
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import InformationHeader from "../../general/components/InformationHeader";
 import styles from "./Plp.css";
+import { PRODUCT_FILTER_ROUTER } from "../../lib/constants";
 export default class Plp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filterVisible: false
-    };
-  }
   toggleFilter = () => {
-    this.setState({ filterVisible: !this.state.filterVisible });
+    this.props.history.push(PRODUCT_FILTER_ROUTER);
   };
   onApply = val => {
     this.toggleFilter();
@@ -42,16 +37,8 @@ export default class Plp extends React.Component {
         <div className={styles.main}>
           <ProductGrid data={this.props.searchresult} />
         </div>
-        <div
-          className={
-            this.state.filterVisible ? styles.filterOpen : styles.filter
-          }
-        >
+        <div className={styles.filter}>
           <InformationHeader onClick={this.toggleFilter} text="Refine by" />
-          <FilterContainer
-            filterData={this.props.facetData}
-            onApply={this.onApply}
-          />
         </div>
         <div className={styles.footer}>
           <PlpMobileFooter

@@ -45,6 +45,7 @@ export default class Filter extends React.Component {
       });
 
       this.props.onApply(filters);
+      this.props.history.goBack();
     }
   }
   handleSelect(val, index) {
