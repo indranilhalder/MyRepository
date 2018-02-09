@@ -31,22 +31,23 @@
   color: #ffff;
 }
 .description {
-  width: 50%;
+  width: 70%;
   height: auto;
   font-family: regular;
   font-size: 14px;
+  line-height: 20px;
   padding-bottom: 15px;
   color: white;
 }
 .button {
-  width: auto;
-
-  float: right;
+  width: 75px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 
 .timer {
-  width: 50px;
-  float: right;
+  width: 60px;
 }
 
 .iconHolder {
@@ -54,10 +55,10 @@
   height: auto;
   float: right;
   position: relative;
-  padding-left: 30px;
-  padding-right: 15px;
+  padding-left: 20px;
 }
 .timerHolder {
   position: absolute;
   left: 0;
+  top: 0;
 }

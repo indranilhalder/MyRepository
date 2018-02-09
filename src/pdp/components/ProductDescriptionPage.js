@@ -55,7 +55,11 @@ class ProductDescriptionPage extends Component {
               averageRating={productData.averageRating}
             />
           </div>
-          <OfferCard endTime={productData.productOfferPromotion[1]} />
+          <OfferCard
+            endTime={productData.productOfferPromotion[0].validTill.date}
+            heading={productData.productOfferPromotion[0].promotionTitle}
+            description={productData.productOfferPromotion[0].promotionDetail}
+          />
           <div className={styles.separator}>
             <RatingAndTextLink
               onClick={this.goToReviewPage}
@@ -72,8 +76,6 @@ class ProductDescriptionPage extends Component {
                 className={styles.sellers}
                 dangerouslySetInnerHTML={{
                   __html: productData.otherSellersText
-                    .replace("<p>", "")
-                    .replace("</p>", "")
                 }}
               />
             </PdpLink>
