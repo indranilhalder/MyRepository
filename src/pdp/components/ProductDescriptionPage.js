@@ -32,10 +32,7 @@ class ProductDescriptionPage extends Component {
   };
   render() {
     if (this.props.productDetails) {
-      console.log(this.props.productDetails);
-
       const productData = this.props.productDetails;
-      console.log(productData.otherSellersText.split("<"));
       const mobileGalleryImages = productData.galleryImagesList.filter(val => {
         return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
