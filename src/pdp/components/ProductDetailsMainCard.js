@@ -11,37 +11,45 @@ export default class ProductDetailsMainCard extends React.Component {
     }
   }
   render() {
+    let discountPrice = this.props.discountPrice;
+    let price = this.props.price;
+    let classDiscountPrice = styles.discountPrice;
+    if (discountPrice === price) {
+      classDiscountPrice = styles.displayNone;
+    }
     return (
       <div className={styles.base}>
-        <div className={styles.productDescriptionSection}>
-          <div className={styles.productName}>{this.props.productName}</div>
-          <div className={styles.productDescription}>
-            {this.props.productDescription}
+        <div className={styles.productInfo}>
+          <div className={styles.productDescriptionSection}>
+            <div className={styles.productName}>{this.props.productName}</div>
+            <div className={styles.productDescription}>
+              {this.props.productDescription}
+            </div>
           </div>
-          <div className={styles.ratingHolder}>
-            {this.props.averageRating && (
-              <StarRating averageRating={this.props.averageRating}>
-                {this.props.averageRating && (
-                  <div
-                    className={styles.ratingText}
-                    onClick={() => this.handleClick()}
-                  >
-                    Rating {this.props.averageRating}/5
-                  </div>
-                )}
-                <div className={styles.arrowHolder}>
-                  <Icon image={arrowIcon} size={15} />
-                </div>
-              </StarRating>
+          <div className={styles.productPriceSection}>
+            <div className={styles.price}>Rs. {this.props.price}</div>
+            {this.props.discountPrice && (
+              <div className={classDiscountPrice}>
+                <del>Rs. {this.props.discountPrice}</del>
+              </div>
             )}
           </div>
         </div>
-        <div className={styles.productPriceSection}>
-          <div className={styles.price}>Rs. {this.props.price}</div>
-          {this.props.discountPrice && (
-            <div className={styles.discountPrice}>
-              <del>Rs. {this.props.discountPrice}</del>
-            </div>
+        <div className={styles.ratingHolder}>
+          {this.props.averageRating && (
+            <StarRating averageRating={this.props.averageRating}>
+              {this.props.averageRating && (
+                <div
+                  className={styles.ratingText}
+                  onClick={() => this.handleClick()}
+                >
+                  Rating {this.props.averageRating}/5
+                </div>
+              )}
+              <div className={styles.arrowHolder}>
+                <Icon image={arrowIcon} size={15} />
+              </div>
+            </StarRating>
           )}
         </div>
       </div>
