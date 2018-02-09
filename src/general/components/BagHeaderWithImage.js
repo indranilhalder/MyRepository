@@ -9,7 +9,7 @@ export default class BagHeaderWithImage extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.textContainer}>
-          <div className={styles.header}>{this.props.header}</div>
+          <div className={styles.mobileBrand}>{this.props.mobileBrand}</div>
           <div className={styles.header}>{this.props.features}</div>
           <div className={styles.header}>{this.props.priceText}</div>
         </div>
