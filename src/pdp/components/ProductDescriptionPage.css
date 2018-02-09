@@ -12,5 +12,11 @@
 .content {
   width: 100%;
   height: auto;
-  padding: 0 20px;
+  padding: 0 15px;
+}
+.details {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 15px;
 }
