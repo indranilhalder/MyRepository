@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
+import ProductDetails from "./ProductDetails";
 import { Image } from "xelpmoc-core";
 import styles from "./ProductDescriptionPage.css";
 import { PRODUCT_REVIEW_ROUTER, MOBILE_PDP_VIEW } from "../../lib/constants";
@@ -42,6 +43,9 @@ class ProductDescriptionPage extends Component {
               discountPrice={productData.discountedPrice.formattedValue}
               averageRating={productData.averageRating}
             />
+          </div>
+          <div className={styles.details}>
+            <ProductDetails data={productData.productDetails} />
           </div>
           <div onClick={this.goToReviewPage}>Go to Review</div>
         </div>
