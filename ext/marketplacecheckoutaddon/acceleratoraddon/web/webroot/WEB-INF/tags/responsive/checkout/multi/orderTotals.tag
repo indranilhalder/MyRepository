@@ -100,7 +100,7 @@
     
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
-			<spring:theme code="basket.page.totals.total"/> 
+			<strong id="totalPayableLabel"><spring:theme code="basket.page.totals.total"/></strong>
 			<c:choose>
 			  <c:when test="${isEGVCart}">
 			  <span style="float: right">
@@ -136,7 +136,7 @@
 	</ul>
 </div>
 <ul class="totals outstanding-totalss">
-    <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
+    <li id="totals" class="outstanding-amounts"><strong id="totalPayableLabelBottom"><spring:theme code="basket.page.totals.outstanding.amount"/></strong><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
              <c:choose>
 			  <c:when test="${isEGVCart}">
 			  <format:price priceData="${cartTotalMrp}"/>
@@ -218,7 +218,7 @@
 					<c:when test="${isSplit eq true}">
 						<li class="total" id="total">
 							<div id="totalPriceConvChargeId">
-								<spring:theme code="basket.page.totals.total" />
+								<strong id="totalPayableLabel"><spring:theme code="basket.page.totals.total" /></strong>
 								<span id="totalWithConvField" style=" display:none;"><format:price
 										priceData="${orderData.totalPrice}" />${juspayAmount}
 										</span>
@@ -240,7 +240,7 @@
 					<c:otherwise>
 						<li class="total" id="total">
 							<div id="totalPriceConvChargeId">
-								<spring:theme code="basket.page.totals.total" />
+								<strong id="totalPayableLabel"><spring:theme code="basket.page.totals.total" /></strong>
 								<span id="totalWithConvField" style="float: right"><format:price
 										priceData="${orderData.totalPrice}" /></span>
 							</div>
@@ -261,7 +261,7 @@
 	</ul>
 </div>
 <ul class="totals outstanding-totalss">
-    <li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
+    <li id="totals" class="outstanding-amounts"><strong id="totalPayableLabelBottom"><spring:theme code="basket.page.totals.outstanding.amount"/></strong><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
                <c:choose>
 				   		<c:when test="${isSplit eq true}">
 				   		<span> ${juspayAmount}</span>

@@ -1769,6 +1769,15 @@ $("#otpMobileNUMField").focus(function(){
 	 				//applyPromotion(null,"none","none");
 				}
 	 		},
+	 		complete: function () {
+	 			if(globalCliqCashMode) {
+	 				document.getElementById('totalWithConvField').innerHTML = "&#8377;"+0;
+					if(document.getElementById("outstanding-amount")!=null) {
+						document.getElementById("outstanding-amount").innerHTML= "&#8377;"+0;
+					}
+					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+0;
+	 			}
+	 		},
 	 		error : function(resp) {
 	 		}
 	 	});	 
@@ -6652,6 +6661,12 @@ function useWalletForPaymentAjax(){
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
 				
+				//Changing the Total Label
+				if(document.getElementById('totalPayableLabel')!=null)
+				document.getElementById('totalPayableLabel').innerHTML ="Payable";
+				if(document.getElementById('totalPayableLabelBottom')!=null)
+				document.getElementById('totalPayableLabelBottom').innerHTML ="Payable:";
+				
 				usedCliqCashFlag = true;
 				
 				if(data.disableJsMode){
@@ -6664,6 +6679,7 @@ function useWalletForPaymentAjax(){
 					}
 					globalCliqCashMode = true;
 					$(".choose-payment").find('*').prop('disabled',true);
+					$(".checkout-indent li span").css('pointer-events', 'none');
 					$("#paymentOptionsMobiles li span").css('pointer-events', 'none');
 					$(".checkout-paymentmethod li span").css('pointer-events', 'none');
 					$(".topPlaceOrderBtn").prop('disabled',false);
@@ -6676,7 +6692,11 @@ function useWalletForPaymentAjax(){
 					$('#convChargeFieldId').before(divText);
 					
 					document.getElementById('totalWithConvField').innerHTML ="";
-					document.getElementById('totalWithConvField').innerHTML =  0;
+					document.getElementById('totalWithConvField').innerHTML = "&#8377;"+0;
+					if(document.getElementById("outstanding-amount")!=null) {
+						document.getElementById("outstanding-amount").innerHTML= "&#8377;"+0;
+					}
+					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+0;
 					if(data.totalDiscount !=0){
 //						alert("in");
 						var currentDis=document.getElementById('promotion').innerHTML;
@@ -6717,6 +6737,7 @@ function useWalletForPaymentAjax(){
 					$(".topPlaceOrderBtn").hide();
 					$(".topPlaceOrderBtn").prop('disabled',true);
 					$(".choose-payment").find('*').prop('disabled',false);
+					$(".checkout-indent li span").css('pointer-events', 'all');
 					$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 					$(".checkout-paymentmethod li span").css('pointer-events', 'all');
 
@@ -6732,6 +6753,10 @@ function useWalletForPaymentAjax(){
 					$('#convChargeFieldId').before(divText);
 					document.getElementById('totalWithConvField').innerHTML ="";
 					document.getElementById('totalWithConvField').innerHTML =  "&#8377;"+data.juspayAmt;
+					if(document.getElementById("outstanding-amount")!=null) {
+						document.getElementById("outstanding-amount").innerHTML= "&#8377;"+data.juspayAmt;
+					}
+					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+data.juspayAmt;
 					if(data.totalDiscount !=0 && !data.bankCheckBox){
 //						alert("in");
 						var currentDis=document.getElementById('promotion').innerHTML;
@@ -6748,6 +6773,12 @@ function useWalletForPaymentAjax(){
 				}
 				
 			}else{
+				
+				//Changing the Total Label
+				if(document.getElementById('totalPayableLabel')!=null)
+				document.getElementById('totalPayableLabel').innerHTML ="Total";
+				if(document.getElementById('totalPayableLabelBottom')!=null)
+				document.getElementById('totalPayableLabelBottom').innerHTML ="Total:";
 				
 				//COD, EMI Place Order Button Fix
 				if($(window).width() < 768){
@@ -6777,6 +6808,10 @@ function useWalletForPaymentAjax(){
 				$(".cliqCashInfoSection").remove();
 				document.getElementById('totalWithConvField').innerHTML ="";
 				document.getElementById('totalWithConvField').innerHTML =  "&#8377;"+data.juspayAmt;
+				if(document.getElementById("outstanding-amount")!=null) {
+					document.getElementById("outstanding-amount").innerHTML= "&#8377;"+data.juspayAmt;
+				}
+				document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+data.juspayAmt;
 				
 				$("#unUseGiftBtnText").hide();
 				$("#useGiftBtnText").show();
@@ -6784,6 +6819,7 @@ function useWalletForPaymentAjax(){
 				$(".topPlaceOrderBtn").hide();
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
+				$(".checkout-indent li span").css('pointer-events', 'all');
 				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				$("#addCliqCashId").text("");

@@ -6144,3 +6144,5 @@ span#offer_section_responsive_error_msg {
 	    float: left;
 	}
 }
+/*Total Label Css*/
+#totalPayableLabel, #totalPayableLabelBottom {font-weight: 500;}
