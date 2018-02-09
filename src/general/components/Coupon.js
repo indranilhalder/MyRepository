@@ -16,7 +16,7 @@ export default class Coupon extends React.Component {
       <div className={styles.base}>
         <div className={styles.couponInnerBox}>
           <div className={styles.couponIcon}>
-            <Icon image={couponIcon} size={35} />
+            <Icon image={couponIcon} size={25} />
           </div>
           <div className={styles.headingText}>{this.props.heading}</div>
           <div className={styles.button}>

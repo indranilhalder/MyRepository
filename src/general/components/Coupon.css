@@ -12,7 +12,7 @@
   width: 100%;
   height: auto;
   position: relative;
-  padding: 0px 50px 0px 75px;
+  padding: 0px 50px 0px 50px;
 }
 .headingText {
   width: 100%;
@@ -21,11 +21,11 @@
   font-family: semibold;
   margin: auto;
   text-align: left;
-  line-height: 35px;
+  line-height: 25px;
 }
 .couponIcon {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   position: absolute;
   left: 0;
   top: 0;
@@ -34,8 +34,7 @@
   width: auto;
   position: absolute;
   right: 0;
-  left: auto;
-  margin: auto;
   line-height: 16px;
   top: 6px;
+  bottom: 0;
 }
