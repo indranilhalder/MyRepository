@@ -4,8 +4,8 @@ import CheckBox from "../../general/components/CheckBox.js";
 import PropTypes from "prop-types";
 export default class CuponDetails extends React.Component {
   handleClick() {
-    if (this.props.applyCupon) {
-      this.props.applyCupon();
+    if (this.props.selectItem) {
+      this.props.selectItem();
     }
   }
   render() {
@@ -21,9 +21,9 @@ export default class CuponDetails extends React.Component {
               >
                 <div className={styles.headerText}>
                   <span>{promotion.promotionTitle}</span>
-                  {promotion.itemSelect && (
+                  {this.props.selectItem && (
                     <div className={styles.checkBoxHolder}>
-                      <CheckBox selected={true} />
+                      <CheckBox selected={this.props.selected} />
                     </div>
                   )}
                 </div>
@@ -64,8 +64,8 @@ CuponDetails.propTypes = {
       promotionDetail: PropTypes.string,
       formattedDate: PropTypes.string,
       amount: PropTypes.string,
-      itemSelect: PropTypes.bool,
-      applyCupon: PropTypes.func
+      selectItem: PropTypes.func,
+      selected: PropTypes.bool
     })
   )
 };
