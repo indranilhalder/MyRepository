@@ -5549,14 +5549,22 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
     background-position: calc(100% - 12px) center;
 }
 @media (max-width: 767px){
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select #bankCodeSelection {
-    width: 100%;
-}
-.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
-    font-size: 14px;
-    padding-top: 17.5px;
-    padding-bottom: 5px;
-}
+	.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select #bankCodeSelection {
+	    width: 100%;
+	}
+	.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
+	    font-size: 14px;
+	    padding-top: 17.5px;
+	    padding-bottom: 5px;
+	}
+	/* start change for TISUAT-6383 */
+	.offer_des {
+		padding-left: 23px;
+	}
+	#paymentoffersPopup ul.offerui span.offer_des {
+		padding-left: 0;
+	}
+	/* end change for TISUAT-6383 */
 }
 .cart.wrapper .product-block.emi #EMITermTable{
 	border:none;
