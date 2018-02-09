@@ -5,11 +5,6 @@ import PropTypes from "prop-types";
 import CheckBox from "./CheckBox.js";
 
 export default class DeliveryOption extends React.Component {
-  handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
-    }
-  }
   render() {
     return (
       <div className={styles.base}>
@@ -17,9 +12,16 @@ export default class DeliveryOption extends React.Component {
           <span className={styles.checkCircle}>
             <CheckBox selected={this.props.selected} />
           </span>
-          <div className={styles.placeTime}>{this.props.deliveryText}</div>
+          <div className={styles.deliveryText}>{this.props.deliveryText}</div>
         </IconWithHeader>
       </div>
     );
   }
 }
+
+DeliveryOption.propTypes = {
+  image: PropTypes.string,
+  header: PropTypes.string,
+  deliveryText: PropTypes.string,
+  selected: PropTypes.bool
+};
