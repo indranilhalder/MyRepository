@@ -1,13 +1,11 @@
 .base {
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow: hidden;
-  text-align: center;
-  color: #fff;
+  border-radius: 4px;
   position: relative;
-  padding-bottom: 100%;
-  overflow: visible;
-  margin: 20px 0px;
+  padding-bottom: 150%;
+  overflow: hidden;
 }
 .overlay {
   height: 100%;
@@ -20,20 +18,15 @@
     rgba(0, 0, 0, 75) 0,
     rgba(0, 0, 0, 0) 60%
   );
-  padding: 30px;
 }
 .content {
   overflow: hidden;
   position: absolute;
-  width: 70%;
-  height: auto;
-  border-radius: 4px;
+  width: 100%;
+  height: 100%;
   text-align: center;
   left: 0;
-  right: 0;
-  margin: auto;
-  top: -20px;
-  bottom: -20px;
+  top: 0;
 }
 .header {
   width: 100%;
@@ -43,54 +36,26 @@
   margin: auto;
   font-size: 20px;
   font-family: semibold;
-  padding-top: 52px;
+  padding-top: 80px;
 }
 .label {
   width: 100%;
   height: auto;
   font-size: 12px;
-  text-align: center;
-  line-height: 12px;
-  padding: 7px 15px 7px 15px;
+  line-height: 20px;
+  padding: 0 25px;
   position: absolute;
+  color: #ffffff;
   left: 0;
-  bottom: 80px;
+  bottom: 0px;
 }
 .buttonBox {
   height: auto;
-  color: #fff;
-  font-size: 12px;
-  line-height: 20px;
-  width: 40%;
-  margin: auto;
-  padding: 20px 0px 0 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  margin: 25px 0;
 }
 .button {
-  width: auto;
-  height: auto;
-  color: #fff;
-  font-size: 14px;
-  line-height: 20px;
-  font-family: semibold;
-  position: relative;
-  display: inline-block;
-  text-align: left;
-  top: 50px;
-}
-.button:after {
-  height: 1px;
-  color: #fff;
-  font-size: 15px;
-  line-height: 20px;
-  content: "";
-  position: absolute;
-  width: 100%;
-  background-color: #fff;
-  left: 0;
-  bottom: 0;
-  margin-bottom: 2px;
   display: inline-block;
 }

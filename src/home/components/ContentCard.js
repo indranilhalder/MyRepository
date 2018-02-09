@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./ContentCard.css";
 import { Image } from "xelpmoc-core";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PropTypes from "prop-types";
 
 export default class ContentCard extends React.Component {
@@ -19,13 +20,14 @@ export default class ContentCard extends React.Component {
             <div className={styles.label}>
               {this.props.description}
               <div className={styles.buttonBox}>
-                <div
-                  className={styles.button}
-                  onClick={() => {
-                    this.handleClick();
-                  }}
-                >
-                  Read More
+                <div className={styles.button}>
+                  <UnderLinedButton
+                    label="Read More"
+                    color="#fff"
+                    onClick={() => {
+                      this.handleClick();
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -40,9 +42,4 @@ ContentCard.propTypes = {
   header: PropTypes.string,
   description: PropTypes.string,
   onClick: PropTypes.func
-};
-ContentCard.defaultProps = {
-  travelHeaderText: "Parisian Chic",
-  travelText:
-    "The new trends thats caching up this summer.loremipsum lorem ipsum is a dummy text which is used to act as a placeholder. loremipsum lorem ipsum is a dummy text which is used to act as a placeholder."
 };
