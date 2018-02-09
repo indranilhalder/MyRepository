@@ -6,11 +6,12 @@
   position: relative;
 }
 .linkArrow {
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   position: absolute;
   top: 0px;
   right: 10px;
   bottom: 0;
   margin: auto;
+  transform: rotate(-90deg);
 }

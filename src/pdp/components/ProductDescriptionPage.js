@@ -5,8 +5,13 @@ import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import ProductDetails from "./ProductDetails";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
+import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
-import { PRODUCT_REVIEW_ROUTER, MOBILE_PDP_VIEW } from "../../lib/constants";
+import {
+  PRODUCT_REVIEW_ROUTER,
+  MOBILE_PDP_VIEW,
+  PRODUCT_SELLER_ROUTER
+} from "../../lib/constants";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
@@ -22,10 +27,15 @@ class ProductDescriptionPage extends Component {
   goToReviewPage = () => {
     this.props.history.push(PRODUCT_REVIEW_ROUTER);
   };
+  goToSellerPage = () => {
+    this.props.history.push(PRODUCT_SELLER_ROUTER);
+  };
   render() {
     if (this.props.productDetails) {
       console.log(this.props.productDetails);
+
       const productData = this.props.productDetails;
+      console.log(productData.otherSellersText.split("<"));
       const mobileGalleryImages = productData.galleryImagesList.filter(val => {
         return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
@@ -56,8 +66,18 @@ class ProductDescriptionPage extends Component {
           <div className={styles.details}>
             <ProductDetails data={productData.productDetails} />
           </div>
-          <div className={styles.separator}>{productData.otherSellersText}</div>
-          <div onClick={this.goToReviewPage}>Go to Review</div>
+          <div className={styles.separator}>
+            <PdpLink onClick={this.goToSellerPage}>
+              <div
+                className={styles.sellers}
+                dangerouslySetInnerHTML={{
+                  __html: productData.otherSellersText
+                    .replace("<p>", "")
+                    .replace("</p>", "")
+                }}
+              />
+            </PdpLink>
+          </div>
         </div>
       );
     } else {
