@@ -78430,3 +78430,8 @@ span#offer_section_responsive_error_msg {
     padding-right: 10px;
     text-decoration: none;
 }
+@media (max-width: 767px){
+	.cart.wrapper.checkout-payment .blocks {
+    	padding: 0px 16px 7px 16px !important;		/*modify bottom for 1122186_TISUAT-6361*/
+	}
+}

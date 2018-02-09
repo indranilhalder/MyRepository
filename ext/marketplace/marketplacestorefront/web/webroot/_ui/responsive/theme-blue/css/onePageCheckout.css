@@ -5389,9 +5389,6 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-top: none;
     border-bottom: solid 1px #e8e8e8;
 }
-.cart.wrapper.checkout-payment .blocks {
-    padding: 0px 16px 7px 16px;		/*modify bottom for 1122186_TISUAT-6361*/
-}
 .cart.wrapper.checkout-payment .blocks h3 {
     display: none;
 }
@@ -6170,5 +6167,10 @@ span#offer_section_responsive_error_msg {
 @media (max-width: 790px){
 	.alert-dismissable .close, .alert-dismissible .close {
 	    float: left;
+	}
+}
+@media (max-width: 767px){
+	.cart.wrapper.checkout-payment .blocks {
+    	padding: 0px 16px 7px 16px !important;		/*modify bottom for 1122186_TISUAT-6361*/
 	}
 }
