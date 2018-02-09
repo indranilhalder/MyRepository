@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./HeaderWithIcon.css";
+import styles from "./IconWithHeader.css";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 
-export default class HeaderWithIcon extends React.Component {
+export default class IconWithHeader extends React.Component {
   render() {
     return (
       <div className={styles.base}>
@@ -16,7 +16,7 @@ export default class HeaderWithIcon extends React.Component {
     );
   }
 }
-HeaderWithIcon.propTypes = {
+IconWithHeader.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string
 };

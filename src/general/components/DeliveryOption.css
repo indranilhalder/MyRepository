@@ -1,0 +1,19 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.deliveryText {
+  width: 100%;
+  font-family: bolder;
+  height: auto;
+  line-height: 20px;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.checkCircle {
+  position: absolute;
+  width: 25px;
+  height: auto;
+  right: 25px;
+  top: 25px;
+}

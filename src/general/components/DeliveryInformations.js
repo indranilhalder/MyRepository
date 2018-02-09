@@ -1,6 +1,6 @@
 import React from "react";
-import HeaderWithIcon from "./HeaderWithIcon";
-import styles from "./DeliveryInformation.css";
+import IconWithHeader from "./IconWithHeader";
+import styles from "./DeliveryInformations.css";
 import UnderLinedButton from "./UnderLinedButton";
 import PropTypes from "prop-types";
 
@@ -13,7 +13,7 @@ export default class DeliveryInformation extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <HeaderWithIcon image={this.props.image} header={this.props.header}>
+        <IconWithHeader image={this.props.image} header={this.props.header}>
           <div className={styles.placeTime}>{this.props.placedTime}</div>
           <div className={styles.placeTime}>
             {this.props.deliverText}
@@ -30,7 +30,7 @@ export default class DeliveryInformation extends React.Component {
               />
             </span>
           </div>
-        </HeaderWithIcon>
+        </IconWithHeader>
       </div>
     );
   }

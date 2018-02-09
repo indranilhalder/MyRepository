@@ -17,7 +17,6 @@
   font-family: regular;
   text-align: left;
   transition: 300ms;
-  padding: 0 10px;
 }
 .textBoxActive {
   composes: textBox;

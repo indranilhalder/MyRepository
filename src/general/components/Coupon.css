@@ -1,0 +1,40 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 12px;
+  background-color: #ffff;
+}
+.couponInnerTextIcon {
+  width: 100%;
+  height: auto;
+}
+.couponInnerBox {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding: 0px 50px 0px 50px;
+}
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 16px;
+  font-family: semibold;
+  margin: auto;
+  text-align: left;
+  line-height: 25px;
+}
+.couponIcon {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.button {
+  width: auto;
+  position: absolute;
+  right: 0;
+  line-height: 16px;
+  top: 6px;
+  bottom: 0;
+}
