@@ -10,7 +10,7 @@ export const SINGLE_SELECT_DESCRIPTION_COPY =
 export const MULTI_SELECT_HEADING_COPY = "Thanks!!!";
 export const MULTI_SELECT_DESCRIPTION_COPY =
   "We will curate the experience based on your choices. Loading products...";
-
+export const MOBILE_PDP_VIEW = "mobilePdpView";
 export const MAIN_ROUTER = "/";
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";

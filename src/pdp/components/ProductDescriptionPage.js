@@ -3,7 +3,7 @@ import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import { Image } from "xelpmoc-core";
 import styles from "./ProductDescriptionPage.css";
-import { PRODUCT_REVIEW_ROUTER } from "../../lib/constants";
+import { PRODUCT_REVIEW_ROUTER, MOBILE_PDP_VIEW } from "../../lib/constants";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
@@ -23,7 +23,7 @@ class ProductDescriptionPage extends Component {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
       const mobileGalleryImages = productData.galleryImagesList.filter(val => {
-        return val.imageType === "mobilePdpView";
+        return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
 
       return (
