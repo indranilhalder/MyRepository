@@ -1,0 +1,27 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  position: relative;
+  display: inline-block;
+}
+.mobileBrand {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.imageHolder {
+  width: 50px;
+  height: auto;
+  display: inline-block;
+  right: 15px;
+  top: 25px;
+  position: absolute;
+}
+.textContainer {
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
