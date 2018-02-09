@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
+import ProductDetails from "./ProductDetails";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import styles from "./ProductDescriptionPage.css";
@@ -52,6 +53,11 @@ class ProductDescriptionPage extends Component {
               numberOfReview={productData.productReviewsCount}
             />
           </div>
+          <div className={styles.details}>
+            <ProductDetails data={productData.productDetails} />
+          </div>
+          <div className={styles.separator}>{productData.otherSellersText}</div>
+          <div onClick={this.goToReviewPage}>Go to Review</div>
         </div>
       );
     } else {
