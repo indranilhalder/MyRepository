@@ -26,8 +26,3 @@ GiftCard.propTypes = {
   heading: PropTypes.string,
   lable: PropTypes.string
 };
-GiftCard.defaultProps = {
-  giftImageURL: giftImageURL,
-  heading: "Surprise for a special one? ",
-  lable: "Gift warp for free"
-};
