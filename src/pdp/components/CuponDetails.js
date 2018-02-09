@@ -1,16 +1,31 @@
 import React from "react";
 import styles from "./CuponDetails.css";
+import CheckBox from "../../general/components/CheckBox.js";
 import PropTypes from "prop-types";
 export default class CuponDetails extends React.Component {
+  handleClick() {
+    if (this.props.applyCupon) {
+      this.props.applyCupon();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
         {this.props.productOfferPromotion &&
           this.props.productOfferPromotion.map((promotion, i) => {
             return (
-              <div className={styles.cuponCard} key={i}>
+              <div
+                className={styles.cuponCard}
+                key={i}
+                onClick={() => this.handleClick()}
+              >
                 <div className={styles.headerText}>
-                  {promotion.promotionTitle}
+                  <span>{promotion.promotionTitle}</span>
+                  {promotion.itemSelect && (
+                    <div className={styles.checkBoxHolder}>
+                      <CheckBox selected={true} />
+                    </div>
+                  )}
                 </div>
                 <div className={styles.promotionDetailsText}>
                   {promotion.promotionDetail}
@@ -48,7 +63,9 @@ CuponDetails.propTypes = {
       promotionTitle: PropTypes.string,
       promotionDetail: PropTypes.string,
       formattedDate: PropTypes.string,
-      amount: PropTypes.string
+      amount: PropTypes.string,
+      itemSelect: PropTypes.bool,
+      applyCupon: PropTypes.func
     })
   )
 };
