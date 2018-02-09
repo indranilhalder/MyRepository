@@ -8,8 +8,8 @@
   text-align: center;
   font-family: semibold;
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 40%;
+  height: 40%;
   top: 0;
   left: 0;
   right: 0;
@@ -18,6 +18,11 @@
   line-height: 20px;
   padding-left: 15px;
   display: inline-block;
+  background: url(../../general/components/img/3w.svg)no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0;
+  transition: 200ms;
 }
 .color {
   width: 100%;
@@ -35,9 +40,9 @@
   left: 0;
   top: 0;
   position: absolute;
-  padding: 4px;
+  padding: 2px;
 }
 .textHolderActive {
   composes: textHolder;
-  background: url(./img/3w.svg)no-repeat;
+  opacity: 1;
 }
