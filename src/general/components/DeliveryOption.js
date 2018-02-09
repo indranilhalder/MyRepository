@@ -9,9 +9,9 @@ export default class DeliveryOption extends React.Component {
     return (
       <div className={styles.base}>
         <IconWithHeader image={this.props.image} header={this.props.header}>
-          <span className={styles.checkCircle}>
+          <div className={styles.checkCircle}>
             <CheckBox selected={this.props.selected} />
-          </span>
+          </div>
           <div className={styles.deliveryText}>{this.props.deliveryText}</div>
         </IconWithHeader>
       </div>
