@@ -30,6 +30,10 @@ class ProductDescriptionPage extends Component {
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
+
+  goToCouponPage = () => {
+    this.props.showCouponModal(this.props.productDetails);
+  };
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
