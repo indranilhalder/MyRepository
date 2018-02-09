@@ -10108,7 +10108,10 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String emailId, @RequestParam(required = false) final String platformNumber)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
-		LOG.debug("User Registration mobile web service :::::::::::::" + username);
+		LOG.debug("UserName :::::::::::::" + username);
+		LOG.debug("Email ID :::::::::::::" + emailId);
+		LOG.debug("Platform No :::::::::::::" + platformNumber);
+
 		MplRegistrationResultWsDto userResult = new MplRegistrationResultWsDto();
 		String emailIdLwCase = null;
 		try
@@ -11185,6 +11188,13 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
 			MalformedURLException
 	{
+		LOG.debug("UserName :::::::::::::" + username);
+		LOG.debug("Password :::::::::::::" + password);
+		LOG.debug("OTP :::::::::::::" + otp);
+		LOG.debug("Email ID :::::::::::::" + emailId);
+		LOG.debug("Platform No :::::::::::::" + platformNumber);
+
+
 		LOG.debug("User Registration mobile web service ***********" + username);
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
 		final UserLoginResultWsDto userLoginResultWsDto = new UserLoginResultWsDto();
