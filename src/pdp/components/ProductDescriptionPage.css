@@ -20,3 +20,12 @@
   background: #fff;
   padding: 15px;
 }
+.separator {
+  width: 100%;
+  height: auto;
+  margin: 30px 0;
+}
+.sellers {
+  font-size: 14px;
+  font-family: regular;
+}
