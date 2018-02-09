@@ -11,11 +11,12 @@ export default class ProductDetailsMainCard extends React.Component {
     }
   }
   render() {
-    let discountPrice = this.props.discountPrice;
-    let price = this.props.price;
     let classDiscountPrice = styles.discountPrice;
-    if (discountPrice === price) {
-      classDiscountPrice = styles.displayNone;
+    if (
+      this.props.discountPrice &&
+      this.props.price !== this.props.discountPrice
+    ) {
+      classDiscountPrice = styles.priceCancelled;
     }
     return (
       <div className={styles.base}>
@@ -27,12 +28,13 @@ export default class ProductDetailsMainCard extends React.Component {
             </div>
           </div>
           <div className={styles.productPriceSection}>
-            <div className={styles.price}>Rs. {this.props.price}</div>
-            {this.props.discountPrice && (
-              <div className={classDiscountPrice}>
-                <del>Rs. {this.props.discountPrice}</del>
-              </div>
-            )}
+            <div className={styles.price}>{`Rs. ${this.props.price}`}</div>
+            {this.props.discountPrice &&
+              this.props.discountPrice !== this.props.price && (
+                <div className={classDiscountPrice}>
+                  {`Rs. ${this.props.discountPrice}`}
+                </div>
+              )}
           </div>
         </div>
         <div className={styles.ratingHolder}>

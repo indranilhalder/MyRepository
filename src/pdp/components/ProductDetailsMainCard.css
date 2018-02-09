@@ -82,7 +82,7 @@
   display: inline-block;
   text-align: right;
 }
-.displayNone{
+.priceCancelled{
   composes:discountPrice;
-  display:none;
+  text-decoration:line-through;
 }
