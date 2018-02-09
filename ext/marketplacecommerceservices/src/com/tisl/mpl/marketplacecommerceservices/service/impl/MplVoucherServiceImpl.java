@@ -2653,13 +2653,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	private double getDiscountAmount(final AbstractOrderModel oModel, final VoucherModel voucher)
 	{
 		final List<AbstractOrderEntryModel> entries = getOrderEntryModelFromVouEntries(voucher, oModel);
-		final double subtotal = getSubtotalForCoupon(entries);
+		 double subtotal = getSubtotalForCoupon(entries);
 
+		if(oModel.getSplitModeInfo().equalsIgnoreCase("Split") && null == voucher.getCurrency()){
+			
+			subtotal -= oModel.getTotalWalletAmount().doubleValue(); 
+		}
+		
 		return getDiscountValue(voucher, subtotal);
 	}
-
-
-
 
 	private double getDiscountValue(final VoucherModel voucher, final double subtotal)
 	{
@@ -2682,7 +2684,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		return discountAmt;
 	}
-
 
 	private double getSubtotalForCoupon(final List<AbstractOrderEntryModel> entries)
 	{
