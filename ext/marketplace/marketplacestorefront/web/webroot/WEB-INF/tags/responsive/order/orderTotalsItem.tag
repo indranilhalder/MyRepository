@@ -50,21 +50,35 @@
 			</c:if>
 		</li>
 		</c:if>
+		<c:if test="${isCliqCashApplied eq true}">
+			<li>
+				<spring:theme code="basket.page.totals.cliqcash" /> Applied
+				<span class="amt">&#8377;${totalQcTotalAmount}</span>
+			</li>
+		</c:if>
 		<!-- TISBOX-1417 Displaying COD related Information-->
 		<li id="total"> 
-			<spring:theme code="text.account.order.total" text="Total"/>
 			<c:choose>
-				<c:when test="${order.convenienceChargeForCOD.value > 0}">
-					<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
-				</c:when>
-				<c:when test="${order.deliveryCost.value > 0}">
-					<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
-				</c:when>
-				<c:when test="${order.net}">
-					<span class="amt"><format:price priceData="${order.totalPriceWithTax}"/></span>
+				<c:when test="${isCliqCashApplied eq true}">
+					<spring:theme code="text.account.order.paid" text="Paid"/>
+					<span class="amt">&#8377;${totalPayableAmount}</span>
 				</c:when>
 				<c:otherwise>
-					<span class="amt"><format:price priceData="${order.totalPrice}"/></span>
+					<spring:theme code="text.account.order.total" text="Total"/>
+					<c:choose>
+						<c:when test="${order.convenienceChargeForCOD.value > 0}">
+							<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
+						</c:when>
+						<c:when test="${order.deliveryCost.value > 0}">
+							<span class="amt"><format:price priceData="${order.totalPriceWithConvCharge}"/></span>
+						</c:when>
+						<c:when test="${order.net}">
+							<span class="amt"><format:price priceData="${order.totalPriceWithTax}"/></span>
+						</c:when>
+						<c:otherwise>
+							<span class="amt"><format:price priceData="${order.totalPrice}"/></span>
+						</c:otherwise>
+					</c:choose>
 				</c:otherwise>
 			</c:choose>
 		</li>

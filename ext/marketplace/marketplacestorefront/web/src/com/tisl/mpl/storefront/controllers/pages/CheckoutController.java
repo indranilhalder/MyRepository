@@ -571,15 +571,20 @@ public class CheckoutController extends AbstractCheckoutController
 				try
 				{
 					double totalQcTotalAmount =0d;
+					double totalPayableAmount = 0d;
 					boolean isCliqCashApplied =false;
 					if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
 						if(null!=orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount()>0){
 						totalQcTotalAmount=orderModel.getTotalWalletAmount();
+						totalPayableAmount=orderModel.getTotalPrice()-orderModel.getTotalWalletAmount();
 						isCliqCashApplied=true;
 						}
 					}else if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+						totalQcTotalAmount=orderModel.getTotalPrice();
 						isCliqCashApplied =true;
+						totalPayableAmount = 0;
 					}
+					model.addAttribute("totalPayableAmount", totalPayableAmount);
 					model.addAttribute("totalQcTotalAmount", totalQcTotalAmount);
 					model.addAttribute("isCliqCashApplied", isCliqCashApplied);
 					final String userIpAddress = request.getHeader("X-Forwarded-For");
