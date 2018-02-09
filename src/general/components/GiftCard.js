@@ -14,7 +14,7 @@ export default class GiftCard extends React.Component {
           </div>
           <div className={styles.headingBox}>
             <div className={styles.headingText}>{this.props.heading}</div>
-            <span className={styles.text}>{this.props.lable}</span>
+            <div className={styles.text}>{this.props.lable}</div>
           </div>
         </div>
       </div>
