@@ -5770,7 +5770,7 @@ label[for='priority_paytm'] img {
 	display: inline;
 	float: left;
 	width: 268px;
-	height: 104px;
+	height: 125px;		/* modified for TISUST-6349 */
 	border: solid 1px #dddddd;
 	margin: 6px 19px 6px 0px;
 	padding: 7px;
@@ -5779,7 +5779,7 @@ label[for='priority_paytm'] img {
 }
 .offer_des {
 	display: block;
-	margin: 4px 0px 0px 18px;	/* modify margin-left for SDI-5387 */
+	margin: 0px 0px 0px 18px;	/* modify margin-left for SDI-5387 */	/* modified margin-top for TISUST-6349 */
 	font-size: 13px;
 	color: #787878;
 	word-wrap: break-word;		/* add for TISUAT-6350 */
@@ -6078,7 +6078,7 @@ button#continue_payment_after_validate {
 #paymentoffersPopup span.offer_des,
 .offerui .offer_des {
     position: relative;
-    top: -14px;
+    top: -8px;	/* modified for TISUST-6349 */
     /* word-break: break-all; */
 }
 /* #paymentoffersPopup .max-min-value {
