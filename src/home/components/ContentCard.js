@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./TravelInspiration.css";
+import styles from "./ContentCard.css";
 import { Image } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import travelBackImage from "./img/background.jpg";
-export default class TravelInspiration extends React.Component {
+
+export default class ContentCard extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -12,12 +12,12 @@ export default class TravelInspiration extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.travelHolder}>
-          <Image image={this.props.travelImage} color="transparent" />
+        <div className={styles.content}>
+          <Image image={this.props.image} color="transparent" />
           <div className={styles.overlay}>
-            <div className={styles.header}>{this.props.travelHeaderText}</div>
+            <div className={styles.header}>{this.props.header}</div>
             <div className={styles.label}>
-              {this.props.travelText}
+              {this.props.description}
               <div className={styles.buttonBox}>
                 <div
                   className={styles.button}
@@ -25,7 +25,7 @@ export default class TravelInspiration extends React.Component {
                     this.handleClick();
                   }}
                 >
-                  {this.props.readMore}
+                  Read More
                 </div>
               </div>
             </div>
@@ -35,16 +35,13 @@ export default class TravelInspiration extends React.Component {
     );
   }
 }
-TravelInspiration.propTypes = {
-  travelImage: PropTypes.string,
-  travelHeaderText: PropTypes.string,
-  travelText: PropTypes.string,
-  readMore: PropTypes.string,
+ContentCard.propTypes = {
+  image: PropTypes.string,
+  header: PropTypes.string,
+  description: PropTypes.string,
   onClick: PropTypes.func
 };
-TravelInspiration.defaultProps = {
-  travelImage: travelBackImage,
-  readMore: "Read More",
+ContentCard.defaultProps = {
   travelHeaderText: "Parisian Chic",
   travelText:
     "The new trends thats caching up this summer.loremipsum lorem ipsum is a dummy text which is used to act as a placeholder. loremipsum lorem ipsum is a dummy text which is used to act as a placeholder."
