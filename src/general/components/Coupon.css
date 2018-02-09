@@ -4,6 +4,10 @@
   padding: 12px;
   background-color: #ffff;
 }
+.couponInnerTextIcon {
+  width: 100%;
+  height: auto;
+}
 .couponInnerBox {
   width: 100%;
   height: auto;
@@ -19,7 +23,6 @@
   text-align: left;
   line-height: 35px;
 }
-
 .couponIcon {
   width: 35px;
   height: 35px;
@@ -35,9 +38,4 @@
   margin: auto;
   line-height: 16px;
   top: 6px;
-}
-
-.couponInnerTextIcon {
-  width: 100%;
-  height: auto;
 }

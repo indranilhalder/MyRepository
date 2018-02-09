@@ -6,6 +6,11 @@ import couponIcon from "./img/coupon-1.svg";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 
 export default class Coupon extends React.Component {
+  handleClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
