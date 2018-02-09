@@ -3,6 +3,7 @@ import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import ProductDetails from "./ProductDetails";
+import ColourSelector from "./ColourSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
@@ -57,6 +58,20 @@ class ProductDescriptionPage extends Component {
               averageRating={productData.averageRating}
             />
           </div>
+          {productData.variantOptions &&
+            productData.variantOptions.showColor && (
+              <ColourSelector
+                data={productData.variantOptions.colorlink}
+                selected={productData.variantOptions.colorlink
+                  .filter(option => {
+                    return option.selected;
+                  })
+                  .map(value => {
+                    return value.color;
+                  })}
+                updateColour={val => {}}
+              />
+            )}
           <div className={styles.separator}>
             <RatingAndTextLink
               onClick={this.goToReviewPage}
