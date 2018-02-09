@@ -34,6 +34,10 @@
   cursor: pointer;
   float: left;
 }
+.content {
+  width: 100%;
+  height: auto;
+}
 .forward {
   composes: navButton;
 }
@@ -108,6 +112,13 @@
     bottom: 0;
     height: 1px;
     background: #fff;
+  }
+  .banner {
+    flex-shrink: 0;
+  }
+  .content {
+    display: flex;
+    display: -webkit-flex;
   }
 }
 @media screen and (max-width: 1024px) {
