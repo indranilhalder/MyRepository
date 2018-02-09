@@ -5703,7 +5703,7 @@ margin-top: 3px;
 label[for='priority_paytm'] img {
 	height: 70px;
     margin-top: -29px;
-    margin-left: 10px;
+    margin-left: 20px;		/* modified for TISUAT-6384 */
 }
 /*paytm integration end*/
 /*Paytm changes*/
