@@ -56,19 +56,17 @@ class ProductDescriptionPage extends Component {
           </div>
           {productData.variantOptions &&
             productData.variantOptions.showColor && (
-              <div>
-                <ColourSelector
-                  data={productData.variantOptions.colorlink}
-                  selected={productData.variantOptions.colorlink
-                    .filter(option => {
-                      return option.selected;
-                    })
-                    .map(value => {
-                      return value.color;
-                    })}
-                  updateColour={val => {}}
-                />
-              </div>
+              <ColourSelector
+                data={productData.variantOptions.colorlink}
+                selected={productData.variantOptions.colorlink
+                  .filter(option => {
+                    return option.selected;
+                  })
+                  .map(value => {
+                    return value.color;
+                  })}
+                updateColour={val => {}}
+              />
             )}
           <div className={styles.separator}>
             <RatingAndTextLink
