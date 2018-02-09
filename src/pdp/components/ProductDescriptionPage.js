@@ -3,6 +3,7 @@ import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import { Image } from "xelpmoc-core";
+import RatingAndTextLink from "./RatingAndTextLink";
 import styles from "./ProductDescriptionPage.css";
 import { PRODUCT_REVIEW_ROUTER, MOBILE_PDP_VIEW } from "../../lib/constants";
 class ProductDescriptionPage extends Component {
@@ -22,6 +23,7 @@ class ProductDescriptionPage extends Component {
   };
   render() {
     if (this.props.productDetails) {
+      console.log(this.props.productDetails);
       const productData = this.props.productDetails;
       const mobileGalleryImages = productData.galleryImagesList.filter(val => {
         return val.imageType === MOBILE_PDP_VIEW;
@@ -43,7 +45,13 @@ class ProductDescriptionPage extends Component {
               averageRating={productData.averageRating}
             />
           </div>
-          <div onClick={this.goToReviewPage}>Go to Review</div>
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.productReviewsCount}
+            />
+          </div>
         </div>
       );
     } else {

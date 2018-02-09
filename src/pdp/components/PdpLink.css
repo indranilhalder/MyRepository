@@ -1,17 +1,16 @@
-.base{
-  width:100%;
-  height:auto;
-  background:#fff;
-  padding:15px 30px 15px 10px;
-  display:inline-block;
-  position:relative;
+.base {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 15px 30px 15px 10px;
+  position: relative;
 }
-.linkArrow{
-  width:20px;
-  height:20px;
-  position:absolute;
-  top:0px;
-  right:10px;
-  bottom:0;
-  margin:auto
+.linkArrow {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  bottom: 0;
+  margin: auto;
 }
