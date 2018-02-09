@@ -13,7 +13,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    ...ownProps
+    ...ownProps,
+    filterData: state.productListings.productListings.facetdata
   };
 };
 

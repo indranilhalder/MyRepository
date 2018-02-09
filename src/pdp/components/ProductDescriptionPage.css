@@ -1,0 +1,22 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #ececec;
+}
+.loadingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.content {
+  width: 100%;
+  height: auto;
+  padding: 0 15px;
+}
+.details {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 15px;
+}

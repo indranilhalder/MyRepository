@@ -1,0 +1,63 @@
+.base{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  background-color: #ececec;
+}
+.cuponCard{
+  width:100%;
+  height:auto;
+  padding:15px;
+  border-bottom: 1px solid #d2d2d2;
+}
+.headerText{
+  width:100%;
+  height:auto;
+  color:#181818;
+  font-size:14px;
+  font-family:semibold;
+  text-align:left;
+  display:inline-block;
+  margin-bottom:10px;
+}
+.promotionDetailsText{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  font-size:13px;
+  color:#181818;
+  font-family:regular;
+  line-height:normal;
+  margin-bottom:10px;
+  line-height:22px;
+}
+.dataHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}
+.amountExpireHolder{
+  width:50%;
+  height:auto;
+  display:inline-block;
+  vertical-align:top;
+}
+.dataHeader{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  color:#181818;
+  font-size:11px;
+  font-family:semibold;
+  text-align:left;
+  margin-bottom:3px;
+}
+.dataInformation{
+  width:100%;
+  height:auto;
+  text-align:left;
+  color:#181818;
+  font-size:13px;
+  font-family:regular;
+}
+

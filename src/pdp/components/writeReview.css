@@ -1,0 +1,46 @@
+.base {
+  width: 100%;
+  padding: 10px;
+}
+.input {
+  width: 100%;
+  margin-bottom: 10px;
+  border-color: #ffffff;
+  color: #000000;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.ratingContainer {
+  width: 100%;
+  height: 30px;
+  position: relative;
+  padding-right: 50px;
+  margin-bottom: 20px;
+}
+.ratingHeader {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 24px;
+  font-family: regular;
+  margin-right: 10px;
+}
+.ratingBar {
+  width: auto;
+  height: auto;
+  width: 60%;
+  display: inline-block;
+}
+
+.container {
+  padding: 15px;
+}
+.cancelButton {
+  display: inline-block;
+  width: 40%;
+}
+.submitButton {
+  display: inline-block;
+  width: 40%;
+  text-align: right;
+}

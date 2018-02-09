@@ -32,7 +32,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     loading: state.productDescription.loading,
-    productDescription: state.productDescription.productDescription
+    productDetails: state.productDescription.productDetails
   };
 };
 

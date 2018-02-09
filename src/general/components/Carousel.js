@@ -123,32 +123,45 @@ export default class Carousel extends React.Component {
             )}
           {this.props.headerComponent && this.props.headerComponent}
         </MediaQuery>
-
-        <div className={styles.sliderHolder}>
-          <div className={styles.slider} style={style}>
-            {this.props.children &&
-              this.props.children.map((child, i) => {
-                return (
-                  <React.Fragment key={i}>
-                    <MediaQuery query="(min-device-width: 1025px)">
-                      <div
-                        className={styles.element}
-                        style={{ width: `${this.props.elementWidthDesktop}%` }}
-                      >
-                        {child}
-                      </div>
-                    </MediaQuery>
-                    <MediaQuery query="(max-device-width: 1024px)">
-                      <div
-                        className={styles.element}
-                        style={{ width: `${this.props.elementWidthMobile}%` }}
-                      >
-                        {child}
-                      </div>
-                    </MediaQuery>
-                  </React.Fragment>
-                );
-              })}
+        <div className={styles.content}>
+          <MediaQuery query="(min-device-width: 1025px)">
+            {this.props.banner && (
+              <div
+                className={styles.banner}
+                style={{ width: this.props.bannerWidth }}
+              >
+                {this.props.banner}
+              </div>
+            )}
+          </MediaQuery>
+          <div className={styles.sliderHolder}>
+            <div className={styles.slider} style={style}>
+              {this.props.children &&
+                this.props.children.map((child, i) => {
+                  return (
+                    <React.Fragment key={i}>
+                      <MediaQuery query="(min-device-width: 1025px)">
+                        <div
+                          className={styles.element}
+                          style={{
+                            width: `${this.props.elementWidthDesktop}%`
+                          }}
+                        >
+                          {child}
+                        </div>
+                      </MediaQuery>
+                      <MediaQuery query="(max-device-width: 1024px)">
+                        <div
+                          className={styles.element}
+                          style={{ width: `${this.props.elementWidthMobile}%` }}
+                        >
+                          {child}
+                        </div>
+                      </MediaQuery>
+                    </React.Fragment>
+                  );
+                })}
+            </div>
           </div>
         </div>
         <MediaQuery query="(max-device-width: 1024px)">
