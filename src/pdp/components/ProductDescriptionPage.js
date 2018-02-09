@@ -3,6 +3,7 @@ import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import ProductDetails from "./ProductDetails";
+import OfferCard from "./OfferCard";
 import ColourSelector from "./ColourSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
@@ -54,6 +55,7 @@ class ProductDescriptionPage extends Component {
               averageRating={productData.averageRating}
             />
           </div>
+
           {productData.variantOptions &&
             productData.variantOptions.showColor && (
               <ColourSelector
@@ -68,6 +70,11 @@ class ProductDescriptionPage extends Component {
                 updateColour={val => {}}
               />
             )}
+          <OfferCard
+            endTime={productData.productOfferPromotion[0].validTill.date}
+            heading={productData.productOfferPromotion[0].promotionTitle}
+            description={productData.productOfferPromotion[0].promotionDetail}
+          />
           <div className={styles.separator}>
             <RatingAndTextLink
               onClick={this.goToReviewPage}
@@ -84,8 +91,6 @@ class ProductDescriptionPage extends Component {
                 className={styles.sellers}
                 dangerouslySetInnerHTML={{
                   __html: productData.otherSellersText
-                    .replace("<p>", "")
-                    .replace("</p>", "")
                 }}
               />
             </PdpLink>
