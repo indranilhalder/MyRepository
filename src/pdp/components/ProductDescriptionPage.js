@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import ProductGalleryMobile from "./ProductGalleryMobile";
+import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import { Image } from "xelpmoc-core";
 import styles from "./ProductDescriptionPage.css";
 import { PRODUCT_REVIEW_ROUTER, MOBILE_PDP_VIEW } from "../../lib/constants";
@@ -33,6 +34,15 @@ class ProductDescriptionPage extends Component {
               return <Image image={val.value} />;
             })}
           </ProductGalleryMobile>
+          <div className={styles.content}>
+            <ProductDetailsMainCard
+              productName={productData.productName}
+              productDescription={productData.productDescription}
+              price={productData.mrpPrice.formattedValue}
+              discountPrice={productData.discountedPrice.formattedValue}
+              averageRating={productData.averageRating}
+            />
+          </div>
           <div onClick={this.goToReviewPage}>Go to Review</div>
         </div>
       );
