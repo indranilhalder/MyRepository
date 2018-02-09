@@ -35,5 +35,6 @@ export default class Coupon extends React.Component {
 Coupon.propTypes = {
   couponImage: PropTypes.string,
   heading: PropTypes.string,
-  label: PropTypes.string
+  label: PropTypes.string,
+  onClick: PropTypes.func
 };
