@@ -35,10 +35,5 @@ export default class Coupon extends React.Component {
 Coupon.propTypes = {
   couponImage: PropTypes.string,
   heading: PropTypes.string,
-  buttonText: PropTypes.string
-};
-Coupon.defaultProps = {
-  couponImage: couponIcon,
-  heading: " Have a Coupon ?",
-  label: "Apply"
+  label: PropTypes.string
 };
