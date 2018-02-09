@@ -159,7 +159,7 @@ public class OrderSyncUtilityImpl implements OrderSyncUtility
 
 	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
 	//private final StringBuffer callTrace = new StringBuffer(5000);
-	private final StringBuffer callTrace = new StringBuffer(1000);
+	private final StringBuffer callTrace = new StringBuffer(3000);
 
 	private static final String UNCOLLECTED_ORDER = "publishEvent::sendUnCollectedOrderToCRMEvent->";
 	private static final String FOUND = " found.";

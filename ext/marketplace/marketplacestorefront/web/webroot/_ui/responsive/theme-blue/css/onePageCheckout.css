@@ -5389,9 +5389,6 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-top: none;
     border-bottom: solid 1px #e8e8e8;
 }
-.cart.wrapper.checkout-payment .blocks {
-    padding: 0px 16px 7px 16px;		/*modify bottom for 1122186_TISUAT-6361*/
-}
 .cart.wrapper.checkout-payment .blocks h3 {
     display: none;
 }
@@ -5549,14 +5546,22 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
     background-position: calc(100% - 12px) center;
 }
 @media (max-width: 767px){
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select #bankCodeSelection {
-    width: 100%;
-}
-.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
-    font-size: 14px;
-    padding-top: 17.5px;
-    padding-bottom: 5px;
-}
+	.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select #bankCodeSelection {
+	    width: 100%;
+	}
+	.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
+	    font-size: 14px;
+	    padding-top: 17.5px;
+	    padding-bottom: 5px;
+	}
+	/* start change for TISUAT-6383 */
+	.offer_des {
+		padding-left: 23px;
+	}
+	#paymentoffersPopup ul.offerui span.offer_des {
+		padding-left: 0;
+	}
+	/* end change for TISUAT-6383 */
 }
 .cart.wrapper .product-block.emi #EMITermTable{
 	border:none;
@@ -5695,7 +5700,7 @@ margin-top: 3px;
 label[for='priority_paytm'] img {
 	height: 70px;
     margin-top: -29px;
-    margin-left: 10px;
+    margin-left: 20px;		/* modified for TISUAT-6384 */
 }
 /*paytm integration end*/
 /*Paytm changes*/
@@ -5762,7 +5767,7 @@ label[for='priority_paytm'] img {
 	display: inline;
 	float: left;
 	width: 268px;
-	height: 104px;
+	height: 125px;		/* modified for TISUST-6349 */
 	border: solid 1px #dddddd;
 	margin: 6px 19px 6px 0px;
 	padding: 7px;
@@ -5771,7 +5776,7 @@ label[for='priority_paytm'] img {
 }
 .offer_des {
 	display: block;
-	margin: 4px 0px 0px 18px;	/* modify margin-left for SDI-5387 */
+	margin: 0px 0px 0px 18px;	/* modify margin-left for SDI-5387 */	/* modified margin-top for TISUST-6349 */
 	font-size: 13px;
 	color: #787878;
 	word-wrap: break-word;		/* add for TISUAT-6350 */
@@ -6070,7 +6075,7 @@ button#continue_payment_after_validate {
 #paymentoffersPopup span.offer_des,
 .offerui .offer_des {
     position: relative;
-    top: -14px;
+    top: -8px;	/* modified for TISUST-6349 */
     /* word-break: break-all; */
 }
 /* #paymentoffersPopup .max-min-value {
@@ -6162,5 +6167,10 @@ span#offer_section_responsive_error_msg {
 @media (max-width: 790px){
 	.alert-dismissable .close, .alert-dismissible .close {
 	    float: left;
+	}
+}
+@media (max-width: 767px){
+	.cart.wrapper.checkout-payment .blocks {
+    	padding: 0px 16px 7px 16px !important;		/*modify bottom for 1122186_TISUAT-6361*/
 	}
 }
