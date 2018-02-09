@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "./ProductDetailsMainPage.css";
+import styles from "./ProductDetailsOnMainPage.css";
 import StarRating from "../../general/components/StarRating.js";
 import { Icon } from "xelpmoc-core";
 import arrowIcon from "../../general/components/img/arrow.svg";
 import PropTypes from "prop-types";
-export default class ProductDetailsMainPage extends React.Component {
+export default class ProductDetailsOnMainPage extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -48,7 +48,7 @@ export default class ProductDetailsMainPage extends React.Component {
     );
   }
 }
-ProductDetailsMainPage.propTypes = {
+ProductDetailsOnMainPage.propTypes = {
   productName: PropTypes.string,
   productMaterial: PropTypes.string,
   price: PropTypes.string,
