@@ -7709,7 +7709,7 @@ body.no-scroll {
     top: 100%;
     margin-bottom: 10px;
     width: 78px;
-    /* border-bottom: 2px solid #a9143c; */		/* commented for SDI-6035 */
+    border-bottom: 2px solid #a9143c;		/* commented for SDI-6035 */	/* uncommented for TISUAT-6376 */
 }
 /* pdp-v4-temp template2 starts */
 .Manufacturer.Temp03{
@@ -7744,7 +7744,7 @@ body.no-scroll {
     padding: 5.8% 2.2% 0 7%;
 }
 .Manufacturer h3{
-	font-size: 16px !important;		/* add important for TISCSS-104 */	/* modify for SDI-6035 */
+	font-size: 24px !important;		/* add important for TISCSS-104 */	/* modify for TISUAT-6376 */
     font-weight: bold;
     padding-bottom: 10px;
     margin: 0 0 17px !important;	/* add important for TISCSS-104 */
@@ -7975,12 +7975,12 @@ body.no-scroll {
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content h3 {
     color: #a9143c;
-    font-size: 16px;
+    font-size: 16px !important;		/* add important TISUAT-6376 */
     margin-bottom: 0;
     text-transform: uppercase;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content h3:after {
-    border: none;
+    border: none !important;		/* add important TISUAT-6376 */
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content {
     font-size: 14px;
@@ -8018,19 +8018,6 @@ body.no-scroll {
     line-height: 22px;
     text-align: center;
 }
-.every-scene ul li .media-content h3 {
-    color: #a9143c;
-    font-size: 16px;
-    text-transform: uppercase;
-    padding-bottom: 0;
-    margin: 18px 0 4px;
-    text-align: center;
-    line-height: 30px;
-}
-.every-scene ul li .media-content h3:after {
-    border: none;
-}
-
 .Temp07 .Padd .every-scene li .media-content {
     width: 88%;
     margin: 0 auto;
@@ -8214,7 +8201,7 @@ display: inline !important;
 }
 .every-scene ul li .media-content h3 {
     color: #a9143c;
-    font-size: 16px;
+    font-size: 16px !important;		/* add important for TISUAT-6376 */
     text-transform: uppercase;
     padding-bottom: 0;
     margin: 18px 0 4px;
@@ -8223,7 +8210,7 @@ display: inline !important;
 }
 
 .every-scene ul li .media-content h3:after {
-    border: none;
+    border: none !important;		/* add important for TISUAT-6376 */
 }
 .temp-five .Padd .world-possibilities {
     background: #f2f2f2;

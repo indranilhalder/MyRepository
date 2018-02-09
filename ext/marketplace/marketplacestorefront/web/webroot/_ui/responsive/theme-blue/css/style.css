@@ -58416,7 +58416,7 @@ header > .content .top.header_fix .toggle{
 	max-width:100%;
 }
 .Manufacturer h3 {
-    font-size: 24px;
+    font-size: 24px !important;		/* add important for TISUAT-6376 */
     font-weight: bold;
     padding-bottom: 10px;
     margin: 0 0 17px;
@@ -58754,12 +58754,12 @@ header > .content .top.header_fix .toggle{
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content h3 {
     color: #a9143c;
-    font-size: 16px;
+    font-size: 16px !important;		/* add important TISUAT-6376 */
     margin-bottom: 0;
     text-transform: uppercase;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content h3:after {
-    border: none;
+    border: none !important;		/* add important TISUAT-6376 */
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content {
     font-size: 14px;
@@ -58800,7 +58800,7 @@ header > .content .top.header_fix .toggle{
 }
 .every-scene ul li .media-content h3 {
     color: #a9143c;
-    font-size: 16px;
+    font-size: 16px !important;		/* add important for TISUAT-6376 */
     text-transform: uppercase;
     padding-bottom: 0;
     margin: 18px 0 4px;
@@ -58808,7 +58808,7 @@ header > .content .top.header_fix .toggle{
     line-height: 30px;
 }
 .every-scene ul li .media-content h3:after {
-    border: none;
+    border: none !important;		/* add important for TISUAT-6376 */
 }
 
 .Temp07 .Padd .every-scene li .media-content {
