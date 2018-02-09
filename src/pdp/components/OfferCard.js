@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./OfferCard.css";
-import Counter from "./TimerCounter.js";
+import TimerCounter from "../../general/components/TimerCounter.js";
+import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 
@@ -18,7 +19,7 @@ export default class OfferCard extends React.Component {
           <div className={styles.iconHolder}>
             <span className={styles.timer}>
               {" "}
-              <Counter endTime={this.props.endTime} />
+              <TimerCounter endTime={this.props.endTime} />
             </span>
             <div className={styles.timerHolder}>
               <Icon image={this.props.imageUrl} size={this.props.size} />
@@ -30,8 +31,13 @@ export default class OfferCard extends React.Component {
           <span className={styles.text}>{this.props.couponCode}</span>
         </div>
         <div className={styles.description}>{this.props.descriptionData}</div>
-        <div className={styles.button} onClick={() => this.handleClick()}>
+        <div className={styles.button}>
           {this.props.buttonText}
+          <UnderLinedButton
+            color="#fff"
+            label="More Offers"
+            onClick={() => this.handleClick()}
+          />
         </div>
       </div>
     );
