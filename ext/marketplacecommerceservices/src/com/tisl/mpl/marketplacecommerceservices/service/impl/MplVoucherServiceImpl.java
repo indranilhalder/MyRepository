@@ -2654,8 +2654,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		final List<AbstractOrderEntryModel> entries = getOrderEntryModelFromVouEntries(voucher, oModel);
 		 double subtotal = getSubtotalForCoupon(entries);
-
-		if(oModel.getSplitModeInfo().equalsIgnoreCase("Split") && null == voucher.getCurrency()){
+		 boolean isbankVoucher = false;
+		 if(null != oModel.getCheckForBankVoucher()) {
+			  isbankVoucher = Boolean.valueOf(oModel.getCheckForBankVoucher()).booleanValue();
+		 }
+		if(oModel.getSplitModeInfo().equalsIgnoreCase("Split") && null == voucher.getCurrency()  && isbankVoucher){
 			
 			subtotal -= oModel.getTotalWalletAmount().doubleValue(); 
 		}
