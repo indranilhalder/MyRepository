@@ -671,4 +671,5 @@ public class MarketplacewebservicesConstants
 
 
 	public static final String H9002 = "H9002";
+	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
 }

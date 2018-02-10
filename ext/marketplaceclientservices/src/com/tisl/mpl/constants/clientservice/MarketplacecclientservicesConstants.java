@@ -326,5 +326,9 @@ public class MarketplacecclientservicesConstants
 	public static final String CRM_WEBFORM_TICKET_TYPE = "W";
 	public static final String CRM_WEBFORM_TICKET_SUB_ORDER = "O";
 
-
+	public static final String FB_URL = "O";
+	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
+	public static final String SOCIAL_AUTH_GOOGLE_TOKEN = "marketplace.socialAuth.google.adminToken";
+	public static final String MASTER_SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled.master";
 }

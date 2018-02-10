@@ -191,6 +191,9 @@
 		
 		<!-- Added for TPR-5989 -->
 		<bean id="clientIntegration" class="com.tisl.mpl.service.ClientIntegrationImpl" />
+		
+		<!-- NU-36 -->
+ 		<bean id="socialAccessValidationService" class="com.tisl.mpl.social.SocialAccessValidationServiceImpl" />
 		 
 </beans>
 
