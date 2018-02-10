@@ -3,7 +3,6 @@
   height: auto;
   position: relative;
   padding: 20px;
-  float: left;
   background-image: linear-gradient(131deg, #fd2c7a, #ff7255);
 }
 .headingText {
@@ -32,40 +31,23 @@
   color: #ffff;
 }
 .description {
-  width: 50%;
+  width: 70%;
   height: auto;
   font-family: regular;
   font-size: 14px;
+  line-height: 20px;
   padding-bottom: 15px;
   color: white;
 }
 .button {
-  width: auto;
-  height: auto;
-  color: #fff;
-  font-size: 14px;
-  line-height: 20px;
-  position: relative;
-  padding-bottom: 3px;
-  font-family: semibold;
-  float: right;
-}
-.button:after {
-  height: 1px;
-  width: 100%;
-  color: #fff;
-  font-size: 15px;
-  line-height: 20px;
-  content: "";
+  width: 75px;
   position: absolute;
-  background-color: #fff;
-  left: 0;
-  bottom: 0;
-  display: inline-block;
+  bottom: 20px;
+  right: 20px;
 }
+
 .timer {
-  width: 50px;
-  float: right;
+  width: 60px;
 }
 
 .iconHolder {
@@ -73,10 +55,10 @@
   height: auto;
   float: right;
   position: relative;
-  padding-left: 30px;
-  padding-right: 15px;
+  padding-left: 20px;
 }
 .timerHolder {
   position: absolute;
   left: 0;
+  top: 0;
 }

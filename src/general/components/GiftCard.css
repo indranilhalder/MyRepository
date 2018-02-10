@@ -1,0 +1,48 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 12px;
+  background-color: #ffff;
+}
+.giftInnerBox {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.giftIcon {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.headingBox {
+  width: 100%;
+  height: auto;
+  padding-left: 49px;
+}
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 16px;
+  font-family: semibold;
+  margin: auto;
+  left: 0;
+  right: 0;
+  text-align: left;
+  margin-bottom: 3px;
+  display: inline-block;
+}
+
+.text {
+  width: 100%;
+  color: #000000;
+  font-size: 14px;
+  line-height: 13px;
+  font-family: regular;
+  margin: auto;
+  text-align: left;
+  display: inline-block;
+}

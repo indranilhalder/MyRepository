@@ -80,7 +80,11 @@ class Feed extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
-    return <div>{this.renderFeedComponents()}</div>;
+    return (
+      <div className={styles.base}>
+        <div className={styles.center}>{this.renderFeedComponents()}</div>
+      </div>
+    );
   }
 }
 
