@@ -4512,3 +4512,62 @@ background: url(../images/search_image.png) no-repeat;}
 #productYouCare .short-info>h3 span:hover, #productYouCare .short-info>h3 span:hover:after, #bestPicks .short-info:hover span {
     color: #a9143c;
 }
+
+/* start change for SDI-5890 */
+.r2-center {
+	text-align: center;
+    margin: 20px 0;
+    color: #333;
+}
+.r2-sitemap h1 {
+	font-size: 36px;
+}
+.r2-sitemap section {
+	width: 95%;
+    margin: auto;
+    /*border-color: #f3f3f3;*/
+}
+.r2-borderBottom {
+	border-bottom: 2px solid #b9b9b9;
+}
+.r2-sitemap section h4 {
+	padding-bottom: 5px;
+}
+.r2-sitemap a {
+	color: #4a4a4a;
+}
+.r2-sitemap>section>ul {
+	height: auto;
+    overflow: hidden;
+    padding: 20px;
+}
+.r2-sitemap>section>ul>li {
+	width: 19%;
+    display: inline-block;
+    vertical-align: top;
+}
+.r2-sitemap>section>ul>li>ul>h5 {
+	text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    padding-right: 5px;
+}
+.r2-sitemap>section>ul>li>ul>li {
+	padding: 4px 0;
+    font-size: 12px;
+}
+.r2-sitemap>section>ul>li>ul li a {
+	line-height: 18px;
+    font-size: 12px;
+}
+@media (max-width: 650px) {
+	width: 49%;
+    display: inline-block;
+    vertical-align: top;
+}
+/* end change for SDI-5890 */
