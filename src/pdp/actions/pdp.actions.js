@@ -28,6 +28,7 @@ export const ADD_PRODUCT_TO_BAG_REQUEST = "ADD_PRODUCT_TO_BAG_REQUEST";
 export const ADD_PRODUCT_TO_BAG_SUCCESS = "ADD_PRODUCT_TO_BAG_SUCCESS";
 export const ADD_PRODUCT_TO_BAG_FAILURE = "ADD_PRODUCT_TO_BAG_FAILURE";
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
+export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
@@ -98,13 +99,7 @@ export function getProductPinCode(productDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
-      const result = await api.get(
-        `${PRODUCT_DETAILS_PATH}/${CLIENT_ID}/checkPincode?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&pin=${productDetails.pinCode}&productCode=${
-          getState().productDescription.productListingId
-        }`
-      );
+      const result = await api.getMock(PIN_CODE_AVAILABILITY_PATH);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
