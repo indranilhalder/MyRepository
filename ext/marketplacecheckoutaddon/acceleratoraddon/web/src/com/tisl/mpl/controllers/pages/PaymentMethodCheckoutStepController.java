@@ -7533,7 +7533,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (isCartVoucherPresent.booleanValue())
 						{
 							// Split Mode with Bank voucher check
-							
+
 							final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 
 							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
@@ -7597,15 +7597,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							getModelService().refresh(cart);
 							return jsonObject;
 						}
-
 					}
 				}
 			}
 			else
 			{
-				
-			    // De-select CliqCash, payment mode Juspay
-				
+				// De-select CliqCash, payment mode Juspay
+
 				totalCartAmt = cart.getTotalPrice().doubleValue();
 				jsonObject.put("juspayAmt", Double.valueOf(totalCartAmt));
 				jsonObject.put("disableJsMode", false);
@@ -7613,15 +7611,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsonObject.put("apportionMode", "Juspay");
 				getSessionService().setAttribute("WalletTotal", "" + 0);
 				cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
+				jsonObject.put("totalDiscount",0);
 				getModelService().save(cart);
 				getModelService().refresh(cart);
-			
-					if (isCartVoucherPresent.booleanValue())
-					{
-						mplCouponFacade.recalculateCartForCoupon(cart, null); 
-					}
+
+				if (isCartVoucherPresent.booleanValue())
+				{
+				// De-select CliqCash, payment mode Juspay check for Bank voucher					
+					mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
+					mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Cart/Bank Voucher
 					VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
 					jsonObject.put("totalDiscount", data.getTotalDiscount().getDoubleValue());	
+					jsonObject.put("juspayAmt", data.getTotalPrice().getDoubleValue());
+				}
+				
 				return jsonObject;
 			}
 		}
