@@ -2,14 +2,14 @@
   width: 100%;
   height: auto;
   background-color: #ececec;
-  padding: 20px;
+  padding: 10px;
   border-radius: 4px;
   overflow: hidden;
 }
 .textBox {
   width: 100%;
   height: auto;
-  background-color: #ffff;
+  background-color: #ffffff;
   font-family: semibold;
   padding: 20px;
 }

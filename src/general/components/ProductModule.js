@@ -29,14 +29,13 @@ export default class ProductModule extends React.Component {
       downloadImage = downloadIconWhite;
     }
     return (
-      <div className={styles.base}>
+      <div className={styles.base} onClick={this.onClick}>
         <div
           className={
             this.props.view === "grid"
               ? styles.imageHolder
               : styles.ListimageHolder
           }
-          onClick={this.onClick}
         >
           <ProductImage image={this.props.productImage} />
           {this.props.onConnect && (
