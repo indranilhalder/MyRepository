@@ -2418,4 +2418,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NU003 = "NU003";
 	public static final String NU004 = "NU004";
 
+	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
+
 }
