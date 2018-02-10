@@ -35,9 +35,9 @@ class ProductSellerPage extends Component {
           totalNoOfReviews={this.props.productDetails.productReviewsCount}
         />
         <div>
-          <SellerWithMultiSelect>
-            {this.props.productDetails.otherSellers &&
-              this.props.productDetails.otherSellers.map((value, index) => {
+          {this.props.productDetails.otherSellers && (
+            <SellerWithMultiSelect>
+              {this.props.productDetails.otherSellers.map((value, index) => {
                 return (
                   <SellerCard
                     heading={value.sellerName}
@@ -54,7 +54,8 @@ class ProductSellerPage extends Component {
                   />
                 );
               })}
-          </SellerWithMultiSelect>
+            </SellerWithMultiSelect>
+          )}
         </div>
       </div>
     );
