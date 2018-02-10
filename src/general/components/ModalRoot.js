@@ -68,9 +68,14 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           submitOtp={otpDetails => this.submitOtpForgotPassword(otpDetails)}
         />
-      ),   
+      ),
       Sort: <Sort />,
-      Address: <AddressModal />,
+      Address: (
+        <AddressModal
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
+        />
+      ),
       ConnectDetails: (
         <ConnectDetailsWithModal
           closeModal={() => this.handleClose()}

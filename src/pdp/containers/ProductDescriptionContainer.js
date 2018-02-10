@@ -8,6 +8,7 @@ import {
 } from "../actions/pdp.actions";
 import ProductDescriptionPage from "../components/ProductDescriptionPage";
 import { withRouter } from "react-router-dom";
+import { showModal, ADDRESS } from "../../general/modal.actions";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -25,6 +26,9 @@ const mapDispatchToProps = dispatch => {
     },
     addProductToBag: productDetails => {
       dispatch(addProductToBag(productDetails));
+    },
+    showAddress: data => {
+      dispatch(showModal(ADDRESS, data));
     }
   };
 };

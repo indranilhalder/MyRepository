@@ -5,6 +5,7 @@ export const SIGN_UP_OTP_VERIFICATION = "SignUpOtpVerification";
 export const FORGOT_PASSWORD_OTP_VERIFICATION = "ForgotPasswordOtpVerification";
 export const CONNECT_DETAILS = "ConnectDetails";
 export const SORT = "Sort";
+export const ADDRESS = "Address";
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,

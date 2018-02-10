@@ -15,6 +15,8 @@ import {
   MOBILE_PDP_VIEW,
   PRODUCT_SELLER_ROUTER
 } from "../../lib/constants";
+const DELIVERY_TEXT = "Delivery Options For";
+const PIN_CODE = "110011";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
@@ -32,6 +34,12 @@ class ProductDescriptionPage extends Component {
   };
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
+  };
+
+  renderAddressModal = () => {
+    if (this.props.showAddress) {
+      this.props.showAddress(this.props.productDetails);
+    }
   };
   render() {
     if (this.props.productDetails) {
@@ -79,6 +87,9 @@ class ProductDescriptionPage extends Component {
           <DeliveryInformation
             header={productData.eligibleDeliveryModes[0].name}
             placedTime={productData.eligibleDeliveryModes[0].timeline}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
           />
           <div className={styles.separator}>
             <RatingAndTextLink
