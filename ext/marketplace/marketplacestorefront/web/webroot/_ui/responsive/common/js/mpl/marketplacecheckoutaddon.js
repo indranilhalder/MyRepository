@@ -6751,7 +6751,7 @@ function useWalletForPaymentAjax(){
 					}
 					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+data.juspayAmt;
 
-					alert(data.totalDiscount +"---"+ data.bankCheckBox);
+					//alert(data.totalDiscount +"---"+ data.bankCheckBox);
 					if(data.totalDiscount !=0 && data.bankCheckBox == 'true'){
 						alert("in");
 						document.getElementById('promotion').innerHTML ="";
