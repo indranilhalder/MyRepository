@@ -10,7 +10,7 @@
 		<c:if test="${not empty accConfMsgs}">
 			<c:forEach items="${accConfMsgs}" var="msg">
 				<div class="alert alert-info alert-dismissable">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+					<button class="close" aria-hidden="true" data-dismiss="alert" type="button"></button>
 					<span><spring:theme code="${msg.code}" arguments="${msg.attributes}"/></span>
 				</div>
 			</c:forEach>
