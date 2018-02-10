@@ -194,7 +194,14 @@
 					<ul class="product-block orderDetailsThankyou">
 				<li class="header">
 			<ul>
-				<li id="header2"><spring:theme code="text.productDetails" text="Product Information"/></li>
+				<c:choose>
+					<c:when test="${orderData.isEGVOrder eq true}">
+						<li id="header2" class="egvProductOrderInfoHeading"><spring:theme code="text.productDetails" text="Product Information"/></li>
+					</c:when>
+					<c:otherwise>
+						<li id="header2"><spring:theme code="text.productDetails" text="Product Information"/></li>
+					</c:otherwise>
+				</c:choose>
 				<%-- <li id="header4"><spring:theme code="text.quantity" text="Quantity"/></li>
 				<li id="header5"><spring:theme code="text.itemPrice" text="Item Price"/></li> --%>
 			    <c:if test="${orderData.isEGVOrder ne true}">
