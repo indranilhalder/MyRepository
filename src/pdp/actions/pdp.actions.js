@@ -95,7 +95,6 @@ export function getProductPinCodeFailure(error) {
 }
 
 export function getProductPinCode(productDetails) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
