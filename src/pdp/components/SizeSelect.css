@@ -6,6 +6,7 @@
   padding-bottom: 100%;
   position: relative;
   background-color: white;
+  transition: 200ms;
 }
 .textHolder {
   text-align: center;
@@ -21,6 +22,7 @@
   bottom: 0;
   margin: auto;
   line-height: 20px;
+  transition: 200ms;
 }
 .selected {
   composes: textHolder;

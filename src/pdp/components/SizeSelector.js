@@ -2,14 +2,22 @@ import React from "react";
 import styles from "./SizeSelector.css";
 import SizeSelect from "./SizeSelect";
 import CarouselWithSelect from "../../general/components/CarouselWithSelect";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PropTypes from "prop-types";
 
 export default class SizeSelector extends React.Component {
   render() {
+    console.log(this.props);
     let data = this.props.data[0];
     return (
       <div className={styles.base}>
-        <CarouselWithSelect elementWidthMobile={18} limit={1} {...this.props}>
+        <div className={styles.header}>
+          Select a size
+          <div className={styles.button}>
+            <UnderLinedButton label="Size guide" />
+          </div>
+        </div>
+        <CarouselWithSelect elementWidthMobile={18} limit={1}>
           {data.map((datum, i) => {
             return (
               <SizeSelect
@@ -28,9 +36,11 @@ export default class SizeSelector extends React.Component {
 
 SizeSelector.propTypes = {
   data: PropTypes.arrayOf(
-    PropTypes.shape({
-      size: PropTypes.string,
-      selected: PropTypes.bool
-    })
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        size: PropTypes.string,
+        selected: PropTypes.bool
+      })
+    )
   )
 };

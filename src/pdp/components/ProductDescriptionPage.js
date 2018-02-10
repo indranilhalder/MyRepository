@@ -39,6 +39,7 @@ class ProductDescriptionPage extends Component {
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
+      console.log(productData);
       const mobileGalleryImages = productData.galleryImagesList.filter(val => {
         return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
@@ -87,6 +88,7 @@ class ProductDescriptionPage extends Component {
             endTime={productData.productOfferPromotion[0].validTill.date}
             heading={productData.productOfferPromotion[0].promotionTitle}
             description={productData.productOfferPromotion[0].promotionDetail}
+            onClick={this.goToCouponPage}
           />
           <div className={styles.separator}>
             <RatingAndTextLink

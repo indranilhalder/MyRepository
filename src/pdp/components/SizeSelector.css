@@ -5,3 +5,18 @@
   float: left;
   background-color: #ececec;
 }
+.header {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: semibold;
+  position: relative;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+.button {
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 20px;
+}
