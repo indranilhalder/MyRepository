@@ -3,12 +3,12 @@ import styles from "./ProductSellerPage.css";
 import ProductDetailsCard from "./ProductDetailsCard";
 import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
-import map from "lodash/map";
-import extend from "lodash/map";
+import HollowHeader from "./HollowHeader.js";
 class ProductSellerPage extends Component {
   render() {
     return (
       <div className={styles.base}>
+        <HollowHeader {...this.props} />
         <ProductDetailsCard
           productImage={this.props.productDetails.galleryImagesList}
           productName={this.props.productDetails.productName}

@@ -7,6 +7,7 @@ import OfferCard from "./OfferCard";
 import ColourSelector from "./ColourSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
+import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
 import {
@@ -36,6 +37,7 @@ class ProductDescriptionPage extends Component {
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.productDetails);
   };
+
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -45,6 +47,7 @@ class ProductDescriptionPage extends Component {
 
       return (
         <div className={styles.base}>
+          <HollowHeader {...this.props} />
           <ProductGalleryMobile>
             {mobileGalleryImages.map(val => {
               return <Image image={val.value} />;
