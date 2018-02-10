@@ -5,6 +5,7 @@ import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import ProductDetails from "./ProductDetails";
 import OfferCard from "./OfferCard";
 import ColourSelector from "./ColourSelector";
+import SizeSelector from "./SizeSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
@@ -18,7 +19,6 @@ class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
   }
-
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
@@ -38,7 +38,6 @@ class ProductDescriptionPage extends Component {
       const mobileGalleryImages = productData.galleryImagesList.filter(val => {
         return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
-
       return (
         <div className={styles.base}>
           <ProductGalleryMobile>
@@ -55,20 +54,30 @@ class ProductDescriptionPage extends Component {
               averageRating={productData.averageRating}
             />
           </div>
-
           {productData.variantOptions &&
             productData.variantOptions.showColor && (
-              <ColourSelector
-                data={productData.variantOptions.colorlink}
-                selected={productData.variantOptions.colorlink
-                  .filter(option => {
-                    return option.selected;
-                  })
-                  .map(value => {
-                    return value.color;
-                  })}
-                updateColour={val => {}}
-              />
+              <div>
+                <SizeSelector
+                  data={productData.variantOptions.colorlink
+                    .filter(option => {
+                      return option.selected;
+                    })
+                    .map(value => {
+                      return value.sizelink;
+                    })}
+                />
+                <ColourSelector
+                  data={productData.variantOptions.colorlink}
+                  selected={productData.variantOptions.colorlink
+                    .filter(option => {
+                      return option.selected;
+                    })
+                    .map(value => {
+                      return value.color;
+                    })}
+                  updateColour={val => {}}
+                />
+              </div>
             )}
           <OfferCard
             endTime={productData.productOfferPromotion[0].validTill.date}
