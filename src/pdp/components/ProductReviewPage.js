@@ -5,7 +5,9 @@ import ProductDetailsCard from "./ProductDetailsCard";
 import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
+import { MOBILE_PDP_VIEW } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
+
 class ProductDescriptionPage extends Component {
   state = {
     visible: false
@@ -29,7 +31,11 @@ class ProductDescriptionPage extends Component {
         <div className={styles.base}>
           <div className={styles.productBackground}>
             <ProductDetailsCard
-              productImage={this.props.productDetails.galleryImagesList}
+              productImage={
+                this.props.productDetails.galleryImagesList.filter(val => {
+                  return val.imageType === MOBILE_PDP_VIEW;
+                })[0].galleryImages[0].value
+              }
               productName={this.props.productDetails.productName}
               productMaterial={
                 this.props.productDetails.classificationList[0].value

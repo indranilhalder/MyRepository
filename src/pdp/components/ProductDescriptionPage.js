@@ -9,6 +9,7 @@ import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
+import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
@@ -74,6 +75,10 @@ class ProductDescriptionPage extends Component {
             endTime={productData.productOfferPromotion[0].validTill.date}
             heading={productData.productOfferPromotion[0].promotionTitle}
             description={productData.productOfferPromotion[0].promotionDetail}
+          />
+          <DeliveryInformation
+            header={productData.eligibleDeliveryModes[0].name}
+            placedTime={productData.eligibleDeliveryModes[0].timeline}
           />
           <div className={styles.separator}>
             <RatingAndTextLink
