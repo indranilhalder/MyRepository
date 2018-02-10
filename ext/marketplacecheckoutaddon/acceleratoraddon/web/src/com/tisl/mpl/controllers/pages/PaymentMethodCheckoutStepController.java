@@ -7486,20 +7486,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		double totalCartAmt = 0.0d;
 		try
 		{
-
 			totalCartAmt = cart.getTotalPrice().doubleValue();
+			
+			final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
 
+			isCartVoucherPresent = cartCouponObj.getFirst();
+
+			if (isCartVoucherPresent.booleanValue())
+			{
+				cartCouponCode = cartCouponObj.getSecond();
+			}
+			
 			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
 				if (null != cart.getTotalWalletAmount())
 				{
-					final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
-
-					isCartVoucherPresent = cartCouponObj.getFirst();
-
 					if (isCartVoucherPresent.booleanValue())
 					{
-						cartCouponCode = cartCouponObj.getSecond();
 						mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
 					}
 
