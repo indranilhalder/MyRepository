@@ -299,7 +299,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
 								<label>
-								<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" value="${facetValue.code}"/>	
+								<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only js-facet-sizebutton" value="${facetValue.code}"/>		<!-- add class for SDI-4484 -->	
 								<span class="facet-label">
 										<span class="facet-mark"></span>
 										<div class="facet-text">

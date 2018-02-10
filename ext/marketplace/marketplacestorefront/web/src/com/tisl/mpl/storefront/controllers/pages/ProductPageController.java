@@ -3444,53 +3444,73 @@ public class ProductPageController extends MidPageController
 						buyboxJson.put(ModelAttributetConstants.SELLERMESSAGE, message);
 					}
 				}
-				
+
 				//SDI-4334
-				if (!buyboxJson.isNull("mrp"))
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.MRP))
 				{
-					buyboxJson.getJSONObject("mrp").remove("priceType");
-					buyboxJson.getJSONObject("mrp").remove("_classname");
-					buyboxJson.getJSONObject("mrp").remove("class");
-					buyboxJson.getJSONObject("mrp").remove("_type");
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
 				}
 
-				if (!buyboxJson.isNull("price"))
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.PRICE))
 				{
-					buyboxJson.getJSONObject("price").remove("priceType");
-					buyboxJson.getJSONObject("price").remove("_classname");
-					buyboxJson.getJSONObject("price").remove("class");
-					buyboxJson.getJSONObject("price").remove("_type");
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
 				}
 
-				if (!buyboxJson.isNull("minPrice"))
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.MIN_PRICE))
 				{
-					buyboxJson.getJSONObject("minPrice").remove("priceType");
-					buyboxJson.getJSONObject("minPrice").remove("_classname");
-					buyboxJson.getJSONObject("minPrice").remove("class");
-					buyboxJson.getJSONObject("minPrice").remove("_type");
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
 				}
 
-				if (!buyboxJson.isNull("specialPrice"))
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE))
 				{
-					buyboxJson.getJSONObject("specialPrice").remove("priceType");
-					buyboxJson.getJSONObject("specialPrice").remove("_classname");
-					buyboxJson.getJSONObject("specialPrice").remove("class");
-					buyboxJson.getJSONObject("specialPrice").remove("_type");
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
 				}
 
 
-				if (!buyboxJson.isNull("specialPriceMobile"))
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE))
 				{
-					buyboxJson.getJSONObject("specialPriceMobile").remove("priceType");
-					buyboxJson.getJSONObject("specialPriceMobile").remove("_classname");
-					buyboxJson.getJSONObject("specialPriceMobile").remove("class");
-					buyboxJson.getJSONObject("specialPriceMobile").remove("_type");
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
 				}
 
 				final JSONArray arr = buyboxJson.getJSONArray("buyboxList");
 				if (null != arr)
 				{
-				
+
 					final int i = arr.size();
 					if (i > 0)
 					{
@@ -3498,60 +3518,84 @@ public class ProductPageController extends MidPageController
 						{
 							if (o instanceof JSONObject)
 							{
-								if (!((JSONObject) o).isNull("mrpPriceValue"))
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE))
 								{
-									((JSONObject) o).getJSONObject("mrpPriceValue").remove("priceType");
-									((JSONObject) o).getJSONObject("mrpPriceValue").remove("_classname");
-									((JSONObject) o).getJSONObject("mrpPriceValue").remove("class");
-									((JSONObject) o).getJSONObject("mrpPriceValue").remove("_type");
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
 								}
 
-								if (!((JSONObject) o).isNull("mrp"))
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.MRP))
 								{
-									((JSONObject) o).getJSONObject("mrp").remove("priceType");
-									((JSONObject) o).getJSONObject("mrp").remove("_classname");
-									((JSONObject) o).getJSONObject("mrp").remove("class");
-									((JSONObject) o).getJSONObject("mrp").remove("_type");
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
 								}
 
-								if (!((JSONObject) o).isNull("price"))
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.PRICE))
 								{
-									((JSONObject) o).getJSONObject("price").remove("priceType");
-									((JSONObject) o).getJSONObject("price").remove("_classname");
-									((JSONObject) o).getJSONObject("price").remove("class");
-									((JSONObject) o).getJSONObject("price").remove("_type");
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
 								}
-								if (!((JSONObject) o).isNull("minPrice"))
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.MIN_PRICE))
 								{
-									((JSONObject) o).getJSONObject("minPrice").remove("priceType");
-									((JSONObject) o).getJSONObject("minPrice").remove("_classname");
-									((JSONObject) o).getJSONObject("minPrice").remove("class");
-									((JSONObject) o).getJSONObject("minPrice").remove("_type");
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
 								}
-								if (!((JSONObject) o).isNull("specialPrice"))
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE))
 								{
-									((JSONObject) o).getJSONObject("specialPrice").remove("priceType");
-									((JSONObject) o).getJSONObject("specialPrice").remove("_classname");
-									((JSONObject) o).getJSONObject("specialPrice").remove("class");
-									((JSONObject) o).getJSONObject("specialPrice").remove("_type");
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
 								}
 
 
-								if (!((JSONObject) o).isNull("specialPriceMobile"))
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE))
 								{
-									((JSONObject) o).getJSONObject("specialPriceMobile").remove("priceType");
-									((JSONObject) o).getJSONObject("specialPriceMobile").remove("_classname");
-									((JSONObject) o).getJSONObject("specialPriceMobile").remove("class");
-									((JSONObject) o).getJSONObject("specialPriceMobile").remove("_type");
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
 								}
 
-								((JSONObject) o).remove("class");
-								((JSONObject) o).remove("_classname");
+								((JSONObject) o).remove(ControllerConstants.Views.Fragments.Product.CLASS);
+								((JSONObject) o).remove(ControllerConstants.Views.Fragments.Product._CLASSNAME);
 							}
 						}
 
 					}
-				
+
 				}
 			}
 			else
@@ -4905,6 +4949,7 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
+	//Commented for SONAR FIX
 	/**
 	 * PCM will send hierarchies together in brandcode field of the brand feed, this method will extract the brand
 	 * hierarchy code alone
@@ -4912,24 +4957,24 @@ public class ProductPageController extends MidPageController
 	 * @param superCategories
 	 * @return brandCode
 	 */
-	private String getBrandCodeFromSuperCategories(final String superCategories)
-	{
-		String[] superCatArray = null;
-		String brandCode = null;
-		if (StringUtils.isNotBlank(superCategories))
-		{
-			superCatArray = superCategories.split(MplConstants.COMMA);
-			for (final String superCat : superCatArray)
-			{
-				if (superCat.toUpperCase().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
-				{
-					brandCode = superCat;
-					break;
-				}
-			}
-		}
-		return brandCode;
-	}
+	//	private String getBrandCodeFromSuperCategories(final String superCategories)
+	//	{
+	//		String[] superCatArray = null;
+	//		String brandCode = null;
+	//		if (StringUtils.isNotBlank(superCategories))
+	//		{
+	//			superCatArray = superCategories.split(MplConstants.COMMA);
+	//			for (final String superCat : superCatArray)
+	//			{
+	//				if (superCat.toUpperCase().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+	//				{
+	//					brandCode = superCat;
+	//					break;
+	//				}
+	//			}
+	//		}
+	//		return brandCode;
+	//	}
 
 	//CKD:TPR-250: End
 	/**
