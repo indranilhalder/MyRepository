@@ -6751,9 +6751,7 @@ function useWalletForPaymentAjax(){
 					}
 					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+data.juspayAmt;
 
-					//alert(data.totalDiscount +"---"+ data.bankCheckBox);
 					if(data.totalDiscount !=0 && data.bankCheckBox == 'true'){
-						alert("in");
 						document.getElementById('promotion').innerHTML ="";
 						document.getElementById('promotion').innerHTML = "&#8377;" +data.totalDiscount; 
 					}
@@ -6815,6 +6813,11 @@ function useWalletForPaymentAjax(){
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 				globalCliqCashMode = false;
+				
+				if(data.totalDiscount !=0){
+					document.getElementById('promotion').innerHTML ="";
+					document.getElementById('promotion').innerHTML = "&#8377;" +data.totalDiscount; 
+				}
 			}
 			$("#no-click,.loaderDiv").remove();
 		},	

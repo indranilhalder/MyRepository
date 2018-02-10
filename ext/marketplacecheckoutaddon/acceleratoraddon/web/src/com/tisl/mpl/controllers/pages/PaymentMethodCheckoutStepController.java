@@ -7603,6 +7603,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
+				
 			    // De-select CliqCash, payment mode Juspay
 				
 				totalCartAmt = cart.getTotalPrice().doubleValue();
@@ -7614,6 +7615,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 				getModelService().save(cart);
 				getModelService().refresh(cart);
+			
+					if (isCartVoucherPresent.booleanValue())
+					{
+						mplCouponFacade.recalculateCartForCoupon(cart, null); 
+					}
+					VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
+					jsonObject.put("totalDiscount", data.getTotalDiscount().getDoubleValue());	
 				return jsonObject;
 			}
 		}
