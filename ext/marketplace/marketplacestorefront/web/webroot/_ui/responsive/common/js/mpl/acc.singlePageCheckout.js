@@ -2973,6 +2973,7 @@ ACC.singlePageCheckout = {
 	onPaymentModeSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
 	{
 		var formValidationSuccess=true;
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");		/*add for SDI-5438*/
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
 		//TPR-7486
 		if(savedOrNew=="savedCard")
