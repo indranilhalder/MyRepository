@@ -614,9 +614,9 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
     dispatch(customerAccessTokenRequest());
     try {
       const result = await api.post(
-        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&access_token=${
+        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&testing_param=N&username=${userName}&access_token=${
           JSON.parse(globalCookie).access_token
-        }&isSocialMedia=Y&socialMediaPlatform=${platForm}`
+        }&isSocialMedia=Y`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
