@@ -83,8 +83,10 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 
 import java.math.BigDecimal;
@@ -3643,6 +3645,18 @@ public class CartsController extends BaseCommerceController
 			}
 			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			applycouponDto.setCouponMessage("Sorry! The Offer cannot be used for this purchase.");
+			if(null != cartModel) {
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				
+				applycouponDto=mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+			}else if(null != orderModel) {
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				
+				applycouponDto=mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			
+			}
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -3658,7 +3672,18 @@ public class CartsController extends BaseCommerceController
 			}
 			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			applycouponDto.setCouponMessage("Sorry! The Offer cannot be used for this purchase.");
-
+			if(null != cartModel) {
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				
+				applycouponDto=mplEgvWalletService.setTotalPrice(applycouponDto, cartModel);
+			}else if(null != orderModel) {
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				
+				applycouponDto=mplEgvWalletService.setTotalPrice(applycouponDto, orderModel);
+			
+			}
 		}
 		return applycouponDto;
 	}
@@ -3915,22 +3940,45 @@ public class CartsController extends BaseCommerceController
 	{
 		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
 		double bankCouponDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-		if (!cartModel.getDiscounts().isEmpty())
+		double userCouponDiscount = 0.0D;
+		double otherDiscount = 0.0D;
+		double totalDiscount = 0.0D;
+		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
+		final List<DiscountModel> voucherList = cartModel.getDiscounts();
+		if (CollectionUtils.isNotEmpty(discountList))
 		{
-			for (final DiscountModel discount : cartModel.getDiscounts())
+			for (final DiscountValue discount : discountList)
 			{
-				if (discount instanceof MplCartOfferVoucherModel)
+				totalDiscount += discount.getAppliedValue();
+				for (final DiscountModel voucher : voucherList)
 				{
-					bankCouponDiscount += discount.getValue().doubleValue();
+					if (discount.getCode().equalsIgnoreCase(voucher.getCode()))
+					{
+
+						final double value = discount.getAppliedValue();
+						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel))
+						{
+							if (value > 0.0d)
+							{
+								userCouponDiscount += value;
+							}
+						}
+						else if (voucher instanceof MplCartOfferVoucherModel)
+						{
+							if (value > 0.0d)
+							{
+								bankCouponDiscount += value;
+							}
+						}
+
+
+					}
 				}
-				else
-				{
-					couponDiscount += discount.getValue().doubleValue();
-				}
+
 			}
 		}
 
+		otherDiscount = totalDiscount - userCouponDiscount;
 		BigDecimal total = new BigDecimal(0.0D);
 		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
 		if (null != cartModel.getSubtotal())
@@ -3949,14 +3997,14 @@ public class CartsController extends BaseCommerceController
 					MarketplacecommerceservicesConstants.INR);
 			releaseCouponDto.setDeliveryCharges(deliveryChargesPriceData);
 		}
-		total = new BigDecimal(bankCouponDiscount);
+		total = new BigDecimal(otherDiscount);
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		releaseCouponDto.setOtherDiscount(otherDiscountPriceData);
 		 if(bankCouponDiscount > 0.0D) {
 			 releaseCouponDto.setIsBankPromotionApplied(true);
 	      }
-		total = new BigDecimal(couponDiscount);
+		total = new BigDecimal(userCouponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		releaseCouponDto.setAppliedCouponDiscount(couponPriceData);
@@ -3987,6 +4035,10 @@ public class CartsController extends BaseCommerceController
 			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			releaseCouponDto.setTotalPrice(cartTotalPriceData);
+			if((cartModel.getTotalPrice().doubleValue() - payableWalletAmount) > 0.0D) 
+			{
+				releaseCouponDto.setIsRemainingAmount(true);
+			}
 		}
 	}
 

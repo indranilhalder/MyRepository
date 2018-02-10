@@ -278,7 +278,7 @@ public class WalletController
 					String cartCouponCode =null;
 					 if(isCartVoucherPresent) {
 						 cartCouponCode = cartCouponObj.getSecond();
-						 mplCouponFacade.removeLastCartCoupon(cart);
+						 mplCouponFacade.removeLastCartCoupon(orderModel);
 					 }
 					 if (isCartVoucherPresent)
 						{
@@ -533,8 +533,13 @@ public class WalletController
 		try
 		{
 			 EgvDetailsData egvDetailsData=null;
+			 validateEgvForm(buyingEgvRequest);
 			if(null != buyingEgvRequest){
+				
 				egvDetailsData = populateEGVFormToData(buyingEgvRequest);
+			}else {
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5005);
+
 			}
 			if (null != egvDetailsData)
 			{
@@ -562,11 +567,11 @@ public class WalletController
 				buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			}
 		}
-		catch (final EtailNonBusinessExceptions ex)
+		catch (final EtailBusinessExceptions ex)
 		{
 			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			buyingEgvResponce.setErrorCode(ex.getErrorCode());
-			buyingEgvResponce.setError(ex.getErrorMessage());
+			buyingEgvResponce.setError(Localization.getLocalizedString(ex.getErrorCode()));
 			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
 		}
 		catch (final Exception ex)
@@ -579,6 +584,29 @@ public class WalletController
 		return buyingEgvResponce;
 	}
 	
+	/**
+	 * @param buyingEgvRequest
+	 */
+	private void validateEgvForm(BuyingEgvRequestWsDTO buyingEgvRequest)
+	{
+	if(null !=buyingEgvRequest )
+	{
+		if(null == buyingEgvRequest.getMobileNumber()) {
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5021);
+		}else if (null == buyingEgvRequest.getFrom()) {
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5022);
+		}else if(null == buyingEgvRequest.getPriceSelectedByUserPerQuantity()) {
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5023);
+		}else if (null == buyingEgvRequest.getReceiverEmailID()) {
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5024);
+		}
+	}else {
+		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5020);
+	}
+		
+	}
+
+
 	private EgvDetailsData populateEGVFormToData(final BuyingEgvRequestWsDTO requestData)
 	{
 		final EgvDetailsData egvDetailsData = new EgvDetailsData();
@@ -642,7 +670,16 @@ public class WalletController
 			LOG.info("SendNotificationRecipient  ");
 			mplOrderFacade.sendNotificationEGVOrder(orderId);
 			responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}else {
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5003);
 		}
+	}
+	catch (final EtailBusinessExceptions ex)
+	{
+		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+		responce.setErrorCode(ex.getErrorCode());
+		responce.setError(ex.getErrorMessage());
+		LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
 	}
 	catch (final Exception ex)
 	{

@@ -2485,7 +2485,7 @@
 		<!-- <property name="cliqCashApplied" type="boolean" /> -->
 		<property name="remaingPaybleAmount" type="String" />
 		<property name="isBankPromotionApplied" type="boolean" /> 
-		
+		<property name="isRemainingAmount" type="boolean" />
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
@@ -2670,6 +2670,7 @@
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="isBankPromotionApplied" type="boolean" /> 
+		<property name="isRemainingAmount" type="boolean" />
 	</bean>
 
 	<!-- TPR-816 -->
@@ -3669,7 +3670,8 @@
  -->		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
-		<property name="isBankPromotionApplied" type="boolean" /> 
+		<property name="isBankPromotionApplied" type="boolean" />
+		<property name="isRemainingAmount" type="boolean" /> 
 		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />

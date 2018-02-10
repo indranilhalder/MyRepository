@@ -4006,11 +4006,28 @@ public class UsersController extends BaseCommerceController
 					}
 					
 				/*	EGV Changes Start */
+					boolean isWalletCreated = false;
 					boolean isWalletUpdated = true;
+					boolean IsMobileNumberChanged = false; 
+
 					CustomerModel customer = (CustomerModel)userService.getCurrentUser();
-					if(null != otp && StringUtils.isNotEmpty(otp) && null != customer && null != customer.getIsWalletActivated()
+					if(null != customer && null != customer.getIsWalletActivated()
 							&& customer.getIsWalletActivated().booleanValue()) {
-						isWalletUpdated = mplEgvWalletService.updateWallet(customer, otp, customerToSave);
+						isWalletCreated = true;
+					}
+					if(null != customer.getQcVerifyMobileNo() && null !=  mobilenumber && 
+							!customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(mobilenumber.trim())) {
+						IsMobileNumberChanged = true;
+					}
+					if(IsMobileNumberChanged) {
+						if(null == otp || StringUtils.isEmpty(otp)) {
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5025);
+						}
+					}
+					if(isWalletCreated) {
+						if(null != otp && StringUtils.isNotEmpty(otp)) {
+							isWalletUpdated = mplEgvWalletService.updateWallet(customer, otp, customerToSave);
+						}
 					}
 					/*Egv Changes End */
 					
@@ -4124,9 +4141,10 @@ public class UsersController extends BaseCommerceController
 				catch (final EtailBusinessExceptions e)
 				{
 					ExceptionUtil.etailBusinessExceptionHandler(e, null);
-					if (null != e.getErrorMessage())
+					if (null != e.getErrorCode())
 					{
-						updateCustomerDetailError.setError(e.getErrorMessage());
+						updateCustomerDetailError.setErrorCode(e.getErrorCode());
+						updateCustomerDetailError.setError(Localization.getLocalizedString(e.getErrorCode()));
 					}
 					updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
