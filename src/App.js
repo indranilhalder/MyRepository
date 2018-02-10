@@ -75,15 +75,31 @@ class App extends Component {
     return (
       <div className={className}>
         <Switch>
-          <Route exact path={LOGIN_PATH} component={LoginContainer} />
-          <Route exact path={SIGN_UP_PATH} component={SignUpContainer} />
+          <Route
+            exact
+            path={LOGIN_PATH}
+            render={routeProps => (
+              <LoginContainer {...routeProps} {...this.props} />
+            )}
+          />
+          <Route
+            exact
+            path={SIGN_UP_PATH}
+            render={routeProps => (
+              <SignUpContainer {...routeProps} {...this.props} />
+            )}
+          />
           <Route
             exact
             path={PRODUCT_LISTINGS}
             component={ProductListingsContainer}
           />
           <Route exact path={HOME_ROUTER} component={HomeContainer} />
-          <Route exact path={MAIN_ROUTER} component={Auth} />
+          <Route
+            exact
+            path={MAIN_ROUTER}
+            render={routeProps => <Auth {...routeProps} {...this.props} />}
+          />
 
           <Route
             exact
