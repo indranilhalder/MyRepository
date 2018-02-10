@@ -51,6 +51,9 @@ ACC.product = {
 	enableAddToCartButton: function ()
 	{
 		$('.js-add-to-cart').removeAttr("disabled");
+		if($("#addToCartButton-wrong").attr("disable")) {
+			$("#buyNowButton").attr("disabled",true);
+		}
 	},
 	
 	enableVariantSelectors: function ()

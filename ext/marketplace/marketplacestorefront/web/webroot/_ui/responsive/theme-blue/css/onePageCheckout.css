@@ -3911,6 +3911,7 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
 	}
 .cart.wrapper.checkout-payment .card-sec .card-num .card_image{
 	margin-left: 30px;
+	height: 40px;		/* add for TISUAT-6362 */
 	}
 .cart.wrapper.checkout-payment .card-sec .card-num .payment-failed-card-image{
 	margin-left: 0px;
@@ -3923,10 +3924,10 @@ div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation{
     height: 40px;
 	}
 .cart.wrapper .left-block li#savedCard div.card p{
-	font-size: 10px;
+	/* font-size: 10px; */		/* commented for SDI-3160 */
   	letter-spacing: 0.5px;
   	color: #666666;
-  	padding-bottom: 2px;
+  	/* padding-bottom: 2px; */	/* commented for SDI-3160 */
 	}
 .add_address_button, .new-address > p{
 	display: none !important;
@@ -4263,6 +4264,9 @@ input[type="radio"] + label:before, input[type="checkbox"] + label:before {
 input[type="radio"] + label:before, input[type="checkbox"] + label:before {
     border: 2px solid #fff;
 }
+input[type="radio"] + label:before {
+	bottom: 2px;
+}
 input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + label:before {
     content: '';
     text-align: center;
@@ -4328,13 +4332,6 @@ div.radio {
     min-height: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-.cart.wrapper.checkout-payment .card-sec .card-num .card_image {
-    float: left;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    height: 35px;
-    width: 42px;
 }
 .cart.wrapper.checkout-payment .card-sec .card-num .visa {
     margin-right: 8px;
@@ -5395,9 +5392,6 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-top: none;
     border-bottom: solid 1px #e8e8e8;
 }
-.cart.wrapper.checkout-payment .blocks {
-    padding: 0px 16px 63px 16px;
-}
 .cart.wrapper.checkout-payment .blocks h3 {
     display: none;
 }
@@ -5555,14 +5549,22 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
     background-position: calc(100% - 12px) center;
 }
 @media (max-width: 767px){
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select #bankCodeSelection {
-    width: 100%;
-}
-.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
-    font-size: 14px;
-    padding-top: 17.5px;
-    padding-bottom: 5px;
-}
+	.cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select #bankCodeSelection {
+	    width: 100%;
+	}
+	.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
+	    font-size: 14px;
+	    padding-top: 17.5px;
+	    padding-bottom: 5px;
+	}
+	/* start change for TISUAT-6383 */
+	.offer_des {
+		padding-left: 23px;
+	}
+	#paymentoffersPopup ul.offerui span.offer_des {
+		padding-left: 0;
+	}
+	/* end change for TISUAT-6383 */
 }
 .cart.wrapper .product-block.emi #EMITermTable{
 	border:none;
@@ -5701,7 +5703,7 @@ margin-top: 3px;
 label[for='priority_paytm'] img {
 	height: 70px;
     margin-top: -29px;
-    margin-left: 10px;
+    margin-left: 20px;		/* modified for TISUAT-6384 */
 }
 /*paytm integration end*/
 /*Paytm changes*/
@@ -5768,7 +5770,7 @@ label[for='priority_paytm'] img {
 	display: inline;
 	float: left;
 	width: 268px;
-	height: 104px;
+	height: 250px;		/* modified for TISUST-6349 */	/* modified for TISUST-6383 */
 	border: solid 1px #dddddd;
 	margin: 6px 19px 6px 0px;
 	padding: 7px;
@@ -5777,9 +5779,10 @@ label[for='priority_paytm'] img {
 }
 .offer_des {
 	display: block;
-	margin: 4px 0px 0px 24px;
+	margin: 0px 0px 0px 18px;	/* modify margin-left for SDI-5387 */	/* modified margin-top for TISUST-6349 */
 	font-size: 13px;
 	color: #787878;
+	word-wrap: break-word;		/* add for TISUAT-6350 */
 }
 
 .max-min-value .offer_des {
@@ -6059,16 +6062,28 @@ button#continue_payment_after_validate {
     width: 97%;
    /*  word-break: break-all; */
     display: inline-block;
-    padding-left: 25px;
+    padding-left: 25px;	
     vertical-align: sub;
     white-space: pre-wrap;
     position: relative;
     top: -16px;
 }
+/* start TISUST-6349 */
+#paymentoffersPopup .offer_title {
+	padding-right: 10px;
+}
+/* end TISUST-6349 */
+/* start change for SDI-5387 */
+.offerui .offer_title {
+	width: 260px !important;					/* modify & add important for TISUAT-6349 */
+	padding-left: 18px !important;		/* add important for TISUAT-6349 */
+	word-wrap: break-word;		/* add for TISUAT-6349 */
+}
+/* end change for SDI-5387 */
 #paymentoffersPopup span.offer_des,
 .offerui .offer_des {
     position: relative;
-    top: -14px;
+    top: -8px;	/* modified for TISUST-6349 */
     /* word-break: break-all; */
 }
 /* #paymentoffersPopup .max-min-value {
@@ -6139,6 +6154,11 @@ span#offer_section_responsive_error_msg {
 	.tnc-fixed-header button.close {
 		top: 8px !important;
 	}
+	/* start for TISUAT-6369 */
+	.offerui .offer_title {
+		padding-right: 33px;
+	}
+	/* end for TISUAT-6369 */
 }
 /* TISPRDT-7983 */
 @media (min-width: 1125px)
@@ -6156,4 +6176,41 @@ span#offer_section_responsive_error_msg {
 	.alert-dismissable .close, .alert-dismissible .close {
 	    float: left;
 	}
+}
+@media (max-width: 767px){
+	.cart.wrapper.checkout-payment .blocks {
+    	padding: 0px 16px 7px 16px !important;		/*modify bottom for 1122186_TISUAT-6361*/
+	}
+	/* start TISUAT-6383 */
+	.offerui li {
+		height: 200px;
+	}
+	.offer_des {
+		margin: 5px 0 0 18px;
+	}
+	.offerui .offer_title {
+		top: -10px;
+	}
+	#paymentoffersPopup .offer_title {
+		top: -14px;
+	}
+	.offerui .offer_title {
+		top: -12px;
+	}
+	input[type="radio"] + label:before {
+		bottom: 8px;
+	}
+	#paymentoffersPopup input[type="radio"] + label:before {
+		bottom: -2px;
+	}
+	#paymentoffersPopup .content.offer-content {
+		max-width: 80% !important;
+	}
+	#paymentoffersPopup .offerui li {
+		height: 300px;
+	}
+	/* end TISUAT-6383 */	
+}
+#paymentoffersPopup .offerui li {
+	height: 300px;
 }
