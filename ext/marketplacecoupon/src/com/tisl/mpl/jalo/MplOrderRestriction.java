@@ -77,11 +77,19 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			}
 
 			// Coupon Evaluation
+			if (isPositiveAsPrimitive() ) {
+				if(cliqCashValidation) {
+					return true;
+				}else {
+					return (currentTotal >= minimumTotal);
 
-			if (isPositiveAsPrimitive() && cliqCashValidation)
+				}
+			}
+
+			/*if (isPositiveAsPrimitive() && cliqCashValidation)
 			{
 				return (currentTotal >= minimumTotal);
-			}
+			}*/
 
 
 		}
