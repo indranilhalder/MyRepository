@@ -366,7 +366,13 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					modelService.save(cart);
 					modelService.refresh(cart);
 
-					 commerceCartService.recalculateCart((CartModel)cart);
+					if(cart instanceof CartModel){
+						mplCouponFacade.applyCartVoucher(cartCouponCode,(CartModel) cart, null);
+
+					}else {
+						mplCouponFacade.applyCartVoucher(cartCouponCode,null, (OrderModel) cart);
+
+					}
 					 applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 					applyCliqCashWsDto.setIsRemainingAmount(false);
 					//applyCliqCashWsDto.setCliqCashApplied(totalAmt);
@@ -442,7 +448,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				applyCliqCashWsDto.setErrorCode(MarketplacecommerceservicesConstants.B5001);
 			}
 		}catch (Exception e) {
-			LOG.error("Exception occurred while applying cliqCash");
+			LOG.error("Exception occurred while applying cliqCash"+e.getMessage(),e);
 		}
 		
 	return applyCliqCashWsDto;
