@@ -442,8 +442,10 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 							for (PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions())
 							{
 								if (null != paymentEntry && null != paymentEntry.getPaymentProvider()
-										&& !paymentEntry.getPaymentProvider()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
+										&& ( paymentEntry.getPaymentProvider()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())
+												|| paymentEntry.getPaymentProvider()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())))
 								{
 									processJuspayRefund(orderModel, paymentEntry.getRequestId(), false);
 									break;
@@ -470,8 +472,10 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 								for (PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions())
 								{
 									if (null != paymentEntry && null != paymentEntry.getPaymentProvider()
-											&& paymentEntry.getPaymentProvider()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
+											&& ( paymentEntry.getPaymentProvider()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())
+													|| paymentEntry.getPaymentProvider()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())))
 										processQcRefund(orderModel);
 									break;
 								}
