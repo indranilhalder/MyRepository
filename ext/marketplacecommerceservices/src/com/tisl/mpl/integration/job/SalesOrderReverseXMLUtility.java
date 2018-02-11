@@ -21,6 +21,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -856,9 +857,7 @@ public class SalesOrderReverseXMLUtility
 								LOG.info("Split merchantInfoXMlData and QC merchantInfoXMlData");
 								if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null 
 										&& entry.getWalletApportionReturnInfo().getStatus()!=null && SUCCESS.equalsIgnoreCase(entry.getWalletApportionReturnInfo().getStatus())  && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
-									LOG.info("Split merchantInfoXMlData for  QC data");
 									for(WalletCardApportionDetailModel walletCardApportionDetailModel:entry.getWalletApportionReturnInfo().getWalletCardList()){
-										LOG.debug("QC bucket data##"+getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
 										MerchantInfoXMlData splitMerchantInfoXMlDataQC=new MerchantInfoXMlData();
 										splitMerchantInfoXMlDataQC
 										.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
@@ -882,9 +881,7 @@ public class SalesOrderReverseXMLUtility
 										}
 										splitMerchantInfoXMlDataQC.setPaymentRefID(payemntrefid);
 										splitMerchantInfoXMlDataQC.setBucketId(walletCardApportionDetailModel.getBucketType());
-										
-										LOG.debug("QC bucket data##"+walletCardApportionDetailModel.getBucketType());
-									   String date=getCardExpDate(walletCardApportionDetailModel);
+										String date=getCardExpDate(walletCardApportionDetailModel);
 										splitMerchantInfoXMlDataQC.setCardExpiryDate(date);
 										splitMerchantInfoXMlDataQC.setCardNumber(walletCardApportionDetailModel.getCardNumber());
 										splitMerchantInfoXMlDataQC.setReversePaymentRefId(payemntrefid);
@@ -894,30 +891,25 @@ public class SalesOrderReverseXMLUtility
 										{
 											qcDelivery = Double.parseDouble(walletCardApportionDetailModel.getQcDeliveryValue());
 										}
-										LOG.debug("QC qcDelivery############"+qcDelivery);
-										splitMerchantInfoXMlDataQC.setShipmentCharge(qcDelivery);
+										splitMerchantInfoXMlDataQC.setShipmentCharge(getDecimalFormateValue(qcDelivery));
 										double scheduleDelCharge = 0;
 										if (walletCardApportionDetailModel.getQcSchedulingValue() != null)
 										{
 											scheduleDelCharge = Double.parseDouble(walletCardApportionDetailModel.getQcSchedulingValue());
 										}
-										splitMerchantInfoXMlDataQC.setScheduleDelCharge(scheduleDelCharge);
-										LOG.debug("QC scheduleDelCharge############"+scheduleDelCharge);
+										splitMerchantInfoXMlDataQC.setScheduleDelCharge(getDecimalFormateValue(scheduleDelCharge));
 										double shippingValue = 0;
 										if (walletCardApportionDetailModel.getQcShippingValue() != null)
 										{
 											shippingValue = Double.parseDouble(walletCardApportionDetailModel.getQcShippingValue());
 										}
-										splitMerchantInfoXMlDataQC.setExpressDelCharge(shippingValue);
-										LOG.debug("QC shippingValue############"+shippingValue);
+										splitMerchantInfoXMlDataQC.setExpressDelCharge(getDecimalFormateValue(shippingValue));
 										double totalAmount=0;
 										if (walletCardApportionDetailModel.getQcApportionValue() != null)
 										{
 											totalAmount = Double.parseDouble(walletCardApportionDetailModel.getQcApportionValue());
 										}
-										
-										LOG.debug("QC setProductAmount############"+totalAmount);
-										splitMerchantInfoXMlDataQC.setProductAmount(totalAmount);
+										splitMerchantInfoXMlDataQC.setProductAmount(getDecimalFormateValue(totalAmount));
 										merchantInfoList.add(splitMerchantInfoXMlDataQC);
 									}
 								}else{
@@ -926,7 +918,7 @@ public class SalesOrderReverseXMLUtility
 								}
 								
 								if(xmlToFico){
-								LOG.info("Juspay MerchantInfoXMlData");
+								LOG.info("Juspay order MerchantInfoXMlData");
 								MerchantInfoXMlData splitMerchantInfoXMlDataJuspay=new MerchantInfoXMlData();
 								splitMerchantInfoXMlDataJuspay.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
 								splitMerchantInfoXMlDataJuspay.setBucketId("");
@@ -971,15 +963,13 @@ public class SalesOrderReverseXMLUtility
 											totalAmountJuspay = Double.parseDouble(entry.getWalletApportionReturnInfo().getJuspayApportionValue());
 										
 										}
-										LOG.info("Juspay split  MerchantInfoXMlData totalAmountJuspay"+totalAmountJuspay);
-										splitMerchantInfoXMlDataJuspay.setProductAmount(totalAmountJuspay);
+										splitMerchantInfoXMlDataJuspay.setProductAmount(getDecimalFormateValue(totalAmountJuspay));
 										double scheduleDelCharge = 0;
 										if (entry.getWalletApportionReturnInfo()!=null && entry.getWalletApportionReturnInfo().getJuspaySchedulingValue() != null)
 										{
 											scheduleDelCharge = Double.parseDouble(entry.getWalletApportionReturnInfo().getJuspaySchedulingValue());
 										}
-										LOG.info("Juspay split  MerchantInfoXMlData scheduleDelCharge"+scheduleDelCharge);
-										splitMerchantInfoXMlDataJuspay.setScheduleDelCharge(scheduleDelCharge);
+										splitMerchantInfoXMlDataJuspay.setScheduleDelCharge(getDecimalFormateValue(scheduleDelCharge));
 										
 										
 										double shippingValue = 0;
@@ -987,13 +977,13 @@ public class SalesOrderReverseXMLUtility
 										{
 											shippingValue = Double.parseDouble(entry.getWalletApportionReturnInfo().getJuspayShippingValue());
 										}
-										splitMerchantInfoXMlDataJuspay.setExpressDelCharge(shippingValue);
+										splitMerchantInfoXMlDataJuspay.setExpressDelCharge(getDecimalFormateValue(shippingValue));
 										double juspayDelivery = 0;
 										if (entry.getWalletApportionReturnInfo()!=null && entry.getWalletApportionReturnInfo().getJuspayDeliveryValue() != null)
 										{
 											juspayDelivery = Double.parseDouble(entry.getWalletApportionReturnInfo().getJuspayDeliveryValue());
 										}
-										splitMerchantInfoXMlDataJuspay.setShipmentCharge(juspayDelivery);
+										splitMerchantInfoXMlDataJuspay.setShipmentCharge(getDecimalFormateValue(juspayDelivery));
 										
 								      merchantInfoList.add(splitMerchantInfoXMlDataJuspay);
 								}
@@ -1038,20 +1028,19 @@ public class SalesOrderReverseXMLUtility
 										{
 											qcDelivery = Double.parseDouble(walletCardApportionDetailQcData.getQcDeliveryValue());
 										}
-										merchantInfoXMlDataQC.setShipmentCharge(qcDelivery);
+										merchantInfoXMlDataQC.setShipmentCharge(getDecimalFormateValue(qcDelivery));
 										double scheduleDelCharge = 0;
 										if (walletCardApportionDetailQcData.getQcSchedulingValue() != null)
 										{
 											scheduleDelCharge = Double.parseDouble(walletCardApportionDetailQcData.getQcSchedulingValue());
 										}
-										LOG.info("qc +++++scheduleDelCharge"+scheduleDelCharge);
-										merchantInfoXMlDataQC.setScheduleDelCharge(scheduleDelCharge);
+										merchantInfoXMlDataQC.setScheduleDelCharge(getDecimalFormateValue(scheduleDelCharge));
 										double shippingValue = 0;
 										if (entry.getWalletApportionReturnInfo().getWalletCardList().get(0).getQcShippingValue() != null)
 										{
 											shippingValue = Double.parseDouble(walletCardApportionDetailQcData.getQcShippingValue());
 										}
-										merchantInfoXMlDataQC.setExpressDelCharge(shippingValue);
+										merchantInfoXMlDataQC.setExpressDelCharge(getDecimalFormateValue(shippingValue));
 										
 										double qcJuspayProductData=0;
 										if (walletCardApportionDetailQcData.getQcApportionValue() != null)
@@ -1059,8 +1048,7 @@ public class SalesOrderReverseXMLUtility
 											qcJuspayProductData = Double.parseDouble(walletCardApportionDetailQcData.getQcApportionValue());
 										
 										}
-										LOG.info("qc +++++qcJuspayProductData"+qcJuspayProductData);
-									  merchantInfoXMlDataQC.setProductAmount(qcJuspayProductData);
+									  merchantInfoXMlDataQC.setProductAmount(getDecimalFormateValue(qcJuspayProductData));
 							
 									}
 									merchantInfoList.add(merchantInfoXMlDataQC);
@@ -1575,14 +1563,20 @@ public class SalesOrderReverseXMLUtility
 	}
 
 	private double getTotalAmount(List<MerchantInfoXMlData> merchantInfoList, double tAmount)
-	{try{
-		for(MerchantInfoXMlData merchantInfoXMlTotal:merchantInfoList){
-			tAmount +=merchantInfoXMlTotal.getScheduleDelCharge()+merchantInfoXMlTotal.getShipmentCharge()+merchantInfoXMlTotal.getExpressDelCharge()+merchantInfoXMlTotal.getProductAmount();	
+	{
+		try
+		{
+			for (MerchantInfoXMlData merchantInfoXMlTotal : merchantInfoList)
+			{
+				tAmount += merchantInfoXMlTotal.getScheduleDelCharge() + merchantInfoXMlTotal.getShipmentCharge()
+						+ merchantInfoXMlTotal.getExpressDelCharge() + merchantInfoXMlTotal.getProductAmount();
+			}
+			return tAmount;
 		}
-		return tAmount;
-	}catch(Exception exception){
-		LOG.error("Error occure while sum of total amount"+exception.getMessage());
-	}
+		catch (Exception exception)
+		{
+			LOG.error("Error occure while sum of total amount" + exception.getMessage());
+		}
 		return tAmount;
 	}
 	protected DefaultPromotionManager getDefaultPromotionsManager()
@@ -1665,5 +1659,10 @@ public class SalesOrderReverseXMLUtility
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 		}
 
+	}
+	
+	
+	private double getDecimalFormateValue(double value){
+		return Double.parseDouble(new DecimalFormat(".##").format(value));
 	}
 }
