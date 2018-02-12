@@ -4,7 +4,9 @@ const productDescription = (
     status: null,
     error: null,
     loading: false,
-    productDetails: null
+    productDetails: null,
+    sizeGuide: null,
+    emiResult: null
   },
   action
 ) => {
@@ -109,6 +111,45 @@ const productDescription = (
         loading: false
       });
 
+    case pdpActions.PRODUCT_SIZE_GUIDE_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_SIZE_GUIDE_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        sizeGuide: action.sizeGuide,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_SIZE_GUIDE_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_PDP_EMI_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_PDP_EMI_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        emiResult: action.emiResult,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_PDP_EMI_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
     default:
       return state;
   }

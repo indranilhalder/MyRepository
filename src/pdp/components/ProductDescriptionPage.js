@@ -18,6 +18,8 @@ import {
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
+    this.props.getProductSizeGuide();
+    this.props.getPdpEmi();
   }
   renderLoader() {
     return (
