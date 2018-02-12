@@ -10,8 +10,8 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
 import FooterButton from "../../general/components/FooterButton.js";
-import sortIcon from "../../plp/components/img/sort.svg";
-import filterIcon from "../../plp/components/img/filter.svg";
+import saveIcon from "./img/Save.svg";
+import addToBagIcon from "./img/order-historyWhite.svg";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
@@ -23,12 +23,12 @@ class ProductDescriptionPage extends Component {
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
   }
-  onSort() {
-    if (this.props.onSort) {
-      this.props.onSort();
+  onSave() {
+    if (this.props.onSave) {
+      this.props.onSave();
     }
   }
-  onFilter() {
+  onAddToBag() {
     if (this.props.onFilter) {
       this.props.onFilter();
     }
@@ -63,17 +63,23 @@ class ProductDescriptionPage extends Component {
           <div className={styles.mobileFooterHolder}>
             <div className={styles.footerButtonHolder}>
               <FooterButton
-                icon={filterIcon}
                 borderColor="#ececec"
-                label="Filter"
-                onClick={() => this.onFilter()}
+                icon={saveIcon}
+                label="save"
+                onClick={() => this.onSave()}
               />
             </div>
             <div className={styles.footerButtonHolder}>
               <FooterButton
-                icon={sortIcon}
-                label="Sort"
-                onClick={() => this.onSort()}
+                icon={addToBagIcon}
+                backgroundColor="#ff1744"
+                label="Add to bag"
+                onClick={() => this.onAddToBag()}
+                labelStyle={{
+                  color: "#fff",
+                  fontSize: 14,
+                  fontFamily: "semibold"
+                }}
               />
             </div>
           </div>
