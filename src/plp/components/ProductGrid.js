@@ -8,6 +8,7 @@ import { Icon } from "xelpmoc-core";
 import styles from "./ProductGrid.css";
 import gridImage from "./img/grid.svg";
 import listImage from "./img/list.svg";
+import { PRODUCT_DESCRIPTION_ROUTER } from "../../lib/constants";
 const LIST = "list";
 const GRID = "grid";
 const PRODUCT = "product";
@@ -33,6 +34,11 @@ export default class ProductGrid extends React.Component {
       this.props.changeAddress();
     }
   }
+
+  goToProductDescription = () => {
+    this.props.history.push(PRODUCT_DESCRIPTION_ROUTER);
+  };
+
   renderComponent = data => {
     if (data.type === PRODUCT) {
       return (
@@ -47,6 +53,7 @@ export default class ProductGrid extends React.Component {
           averageRating={data.averageRating}
           totalNoOfReviews={data.totalNoOfReviews}
           view={this.state.view}
+          onClick={() => this.goToProductDescription()}
         />
       );
     } else if (data.type === PLPAD) {

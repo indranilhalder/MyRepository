@@ -6,6 +6,7 @@ import OtpVerification from "../../auth/components/OtpVerification";
 import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
 import Sort from "../../plp/components/SortModal";
 import AddressModal from "../../plp/components/AddressModal";
+import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -78,6 +79,12 @@ export default class ModalRoot extends React.Component {
       ),
       ConnectDetails: (
         <ConnectDetailsWithModal
+          closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
+        />
+      ),
+      Coupons: (
+        <ProductCouponDetails
           closeModal={() => this.handleClose()}
           {...this.props.ownProps}
         />

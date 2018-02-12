@@ -36,10 +36,15 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
 
+
   renderAddressModal = () => {
     if (this.props.showAddress) {
       this.props.showAddress(this.props.productDetails);
     }
+  }
+
+  goToCouponPage = () => {
+    this.props.showCouponModal(this.props.productDetails);
   };
   render() {
     if (this.props.productDetails) {

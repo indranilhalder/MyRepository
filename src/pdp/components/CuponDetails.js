@@ -27,9 +27,14 @@ export default class CuponDetails extends React.Component {
                     </div>
                   )}
                 </div>
-                <div className={styles.promotionDetailsText}>
-                  {promotion.promotionDetail}
-                </div>
+                <div
+                  className={styles.promotionDetailsText}
+                  dangerouslySetInnerHTML={{
+                    __html: promotion.promotionDetail
+                      .replace("<p>", "")
+                      .replace("</p>", "")
+                  }}
+                />
 
                 <div className={styles.dataHolder}>
                   {promotion.validTill.formattedDate && (
