@@ -607,10 +607,16 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
      		  responseCheck=true;
      		  
      	  }
-        	  
+        if(null != response){
         	if(!responseCheck){
-      		  if(null != response.getWallet() && null!= response.getWallet().getWalletNumber()){
- 			  builder.append(response.getWallet().getWalletNumber()+",");
+        		String columnNamesList =null;
+        		if(!headerCheck){
+         		  columnNamesList = "Wallet Id,Email ID,Remarks,Comments";
+         		  builder.append(columnNamesList +"\n");
+         		  headerCheck=true;
+         	  }
+      		  if(null != response &&  null != response.getWallet() && null!= response.getWallet().getWalletNumber()){
+ 			         builder.append(response.getWallet().getWalletNumber()+",");
       		  }else{
       			 builder.append(",");
       		  }
@@ -623,7 +629,8 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
        	  }
  		  builder.append(commentMsg);
  		  builder.append('\n');
-       }
+         }
+     	  }
    	}
    	 return builder;
    }
