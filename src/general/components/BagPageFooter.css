@@ -1,24 +1,28 @@
 .icon {
   width: 100%;
-  position: relative;
   height: auto;
+  position: relative;
   color: #000;
   background-color: #fff;
   background-image: url(./img/download.svg)no-repeat;
 }
 .saveLabel {
-  position: relative;
-  bottom: 22px;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 10px;
   left: 30px;
   font-family: bolder;
   font-size: 14px;
 }
 .removeLabel {
-  position: relative;
-  bottom: 38px;
+  width: 100%;
+  height: auto;
+  position: absolute;
   left: 90px;
   font-family: bolder;
   font-size: 14px;
+  top: 10px;
   color: #8d8d8d;
 }
 .base {
