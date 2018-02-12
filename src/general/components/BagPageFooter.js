@@ -6,9 +6,13 @@ export default class BagPageFooter extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.icon}>
-          <Icon image={this.props.image} />
-          <div className={styles.saveLabel}>{this.props.saveText}</div>
+        <div className={styles.wrapper}>
+          <div className={styles.iconText}>
+            <div className={styles.iconHolder}>
+              <Icon image={this.props.image} />
+            </div>
+            <div className={styles.saveLabel}>{this.props.saveText}</div>
+          </div>
           <div className={styles.removeLabel}>{this.props.removeText}</div>
         </div>
       </div>

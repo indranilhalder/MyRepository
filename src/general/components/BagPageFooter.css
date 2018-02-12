@@ -1,32 +1,37 @@
-.icon {
-  width: 100%;
+.iconText {
+  width: auto;
   height: auto;
   position: relative;
   color: #000;
   background-color: #fff;
-  background-image: url(./img/download.svg)no-repeat;
+  display: inline-block;
+  padding: 0 20px 0 30px;
 }
 .saveLabel {
-  width: 100%;
+  width: auto;
   height: auto;
-  position: absolute;
-  top: 10px;
-  left: 30px;
   font-family: bolder;
   font-size: 14px;
 }
 .removeLabel {
-  width: 100%;
+  width: auto;
   height: auto;
-  position: absolute;
-  left: 90px;
   font-family: bolder;
   font-size: 14px;
-  top: 10px;
   color: #8d8d8d;
+  display: inline-block;
 }
 .base {
   width: 100%;
   height: auto;
   padding: 20px;
+}
+.iconHolder {
+  position: absolute;
+  left: 0px;
+  top: 0;
+}
+.wrapper {
+  width: 100%;
+  line-height: 30px;
 }
