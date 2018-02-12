@@ -7523,7 +7523,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("totalCartAmt", totalCartAmt);
 						jsonObject.put("cartCouponCode", cartCouponCode);
 						jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
-						jsonObject.put("totalDiscount", data1.getTotalDiscount().getDoubleValue());
+						jsonObject.put("totalDiscount", data1.getTotalDiscount().getFormattedValue());
 						cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -7567,7 +7567,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								jsonObject.put("totalCartAmt", totalCartAmt);
 								jsonObject.put("cartCouponCode", cartCouponCode);
 								jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
-								jsonObject.put("totalDiscount", data.getTotalDiscount().getDoubleValue());
+								jsonObject.put("totalDiscount", data.getTotalDiscount().getFormattedValue());
 								jsonObject.put("bankCheckBox", applyStatus);
 								cart.setSplitModeInfo("Split");
 								jsonObject.put("apportionMode", "Split");
@@ -7624,7 +7624,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
 					mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Cart/Bank Voucher
 					VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
-					jsonObject.put("totalDiscount", data.getTotalDiscount().getDoubleValue());	
+					jsonObject.put("totalDiscount", data.getTotalDiscount().getFormattedValue());	
 					jsonObject.put("juspayAmt", data.getTotalPrice().getDoubleValue());
 				}
 				
