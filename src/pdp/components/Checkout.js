@@ -20,11 +20,11 @@ export default class Checkout extends React.Component {
         <div className={styles.totalPriceButtonHolder}>
           <div className={styles.checkoutButtonHolder}>
             <Button
-              borderRadius={25}
+              type="primary"
               backgroundColor="#ff1744"
-              height={38}
+              height={40}
               label="Checkout"
-              width={121}
+              width={120}
               textStyle={{ color: "#FFF", fontSize: 14 }}
               onClick={() => this.handleClick()}
             />
@@ -32,7 +32,7 @@ export default class Checkout extends React.Component {
           <div className={styles.totalPriceHeading}>Total</div>
           <div className={styles.amountHolder}>
             <div className={styles.amount}>Rs. {this.props.amount}</div>
-            <div className={styles.infoIconholder}>
+            <div className={styles.infoIconHolder}>
               <Icon image={infoIcon} size={22} />
             </div>
           </div>
