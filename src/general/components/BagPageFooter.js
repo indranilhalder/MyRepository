@@ -17,13 +17,11 @@ export default class BagPageFooter extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.wrapper}>
-          <div className={styles.iconText}>
+          <div className={styles.icon} onClick={() => this.onSave()}>
             <div className={styles.iconHolder}>
               <Icon image={this.props.image} />
             </div>
-            <div className={styles.saveLabel} onClick={() => this.onSave()}>
-              {this.props.saveText}
-            </div>
+            <div className={styles.saveLabel}>{this.props.saveText}</div>
           </div>
           <div className={styles.removeLabel} onClick={() => this.onRemove()}>
             {this.props.removeText}
