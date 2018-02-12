@@ -5,8 +5,8 @@
 .placeTime {
   width: 100%;
   height: auto;
-  font-family: bold;
-  font-size: 16px;
+  font-family: bolder;
+  font-size: 14px;
   line-height: 20px;
   margin-bottom: 5px;
 }
@@ -19,9 +19,7 @@
 }
 .buttonHolder {
   width: auto;
-  position: absolute;
-  height: auto;
-  bottom: 0;
+  display: inline-block;
   margin-left: 5px;
 }
 .headerHolder {

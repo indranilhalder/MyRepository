@@ -89,8 +89,8 @@ class ProductDescriptionPage extends Component {
           </ProductGalleryMobile>
           <div className={styles.content}>
             <ProductDetailsMainCard
-              productName={productData.productName}
-              productDescription={productData.productDescription}
+              productName={productData.productBrandInfo.brandName}
+              productDescription={productData.productName}
               price={productData.mrpPrice.formattedValue}
               discountPrice={productData.discountedPrice.formattedValue}
               averageRating={productData.averageRating}
