@@ -2115,7 +2115,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mediaFormat" value="searchPage" />
 	</bean>
 	<!--  Added for NU-35 end-->
-</beans>
+
 
 	<bean id="ampServiceworkerConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.cms.data.AmpServiceWorkerData"/>
