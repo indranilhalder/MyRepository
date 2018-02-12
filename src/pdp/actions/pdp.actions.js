@@ -27,8 +27,19 @@ export const REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE =
 export const ADD_PRODUCT_TO_BAG_REQUEST = "ADD_PRODUCT_TO_BAG_REQUEST";
 export const ADD_PRODUCT_TO_BAG_SUCCESS = "ADD_PRODUCT_TO_BAG_SUCCESS";
 export const ADD_PRODUCT_TO_BAG_FAILURE = "ADD_PRODUCT_TO_BAG_FAILURE";
+
+export const PRODUCT_SIZE_GUIDE_REQUEST = "PRODUCT_SIZE_GUIDE_REQUEST";
+export const PRODUCT_SIZE_GUIDE_SUCCESS = "PRODUCT_SIZE_GUIDE_SUCCESS";
+export const PRODUCT_SIZE_GUIDE_FAILURE = "PRODUCT_SIZE_GUIDE_FAILURE";
+
+export const PRODUCT_PDP_EMI_REQUEST = "PRODUCT_PDP_EMI_REQUEST";
+export const PRODUCT_PDP_EMI_SUCCESS = "PRODUCT_PDP_EMI_SUCCESS";
+export const PRODUCT_PDP_EMI_FAILURE = "PRODUCT_PDP_EMI_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
+export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
+export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
@@ -253,6 +264,82 @@ export function addProductToBag(products) {
       dispatch(addProductToBagSuccess(resultJson));
     } catch (e) {
       dispatch(addProductToBagFailure(e.message));
+    }
+  };
+}
+
+export function getProductSizeGuideRequest() {
+  return {
+    type: PRODUCT_SIZE_GUIDE_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getProductSizeGuideSuccess(sizeGuide) {
+  return {
+    type: PRODUCT_SIZE_GUIDE_SUCCESS,
+    status: SUCCESS,
+    sizeGuide
+  };
+}
+
+export function getProductSizeGuideFailure(error) {
+  return {
+    type: PRODUCT_SIZE_GUIDE_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getProductSizeGuide() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getProductSizeGuideRequest());
+    try {
+      const result = await api.postMock(PRODUCT_SIZE_GUIDE_PATH);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      // TODO: dispatch a modal here
+      dispatch(getProductSizeGuideSuccess(resultJson));
+    } catch (e) {
+      dispatch(getProductSizeGuideFailure(e.message));
+    }
+  };
+}
+
+export function getPdpEmiRequest() {
+  return {
+    type: PRODUCT_PDP_EMI_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getPdpEmiSuccess(emiResult) {
+  return {
+    type: PRODUCT_PDP_EMI_SUCCESS,
+    status: SUCCESS,
+    emiResult
+  };
+}
+
+export function getPdpEmiFailure(error) {
+  return {
+    type: PRODUCT_PDP_EMI_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getPdpEmi() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getPdpEmiRequest());
+    try {
+      const result = await api.postMock(PRODUCT_PDP_EMI_PATH);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      // TODO: dispatch a modal here
+      dispatch(getPdpEmiSuccess(resultJson));
+    } catch (e) {
+      dispatch(getPdpEmiFailure(e.message));
     }
   };
 }

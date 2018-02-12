@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 
 export default class OfferCard extends React.Component {
   handleClick(val) {
-    if (this.props.onClick()) {
+    if (this.props.onClick) {
       this.props.onClick();
     }
   }
