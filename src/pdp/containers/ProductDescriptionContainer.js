@@ -10,7 +10,11 @@ import {
 } from "../actions/pdp.actions";
 import ProductDescriptionPage from "../components/ProductDescriptionPage";
 import { withRouter } from "react-router-dom";
-import { showModal, PRODUCT_COUPONS } from "../../general/modal.actions";
+import {
+  showModal,
+  PRODUCT_COUPONS,
+  SIZE_GUIDE
+} from "../../general/modal.actions";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -37,11 +41,15 @@ const mapDispatchToProps = dispatch => {
     },
     getPdpEmi: () => {
       dispatch(getPdpEmi());
+    },
+    showSizeGuide: () => {
+      dispatch(showModal(SIZE_GUIDE));
     }
   };
 };
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     loading: state.productDescription.loading,
     productDetails: state.productDescription.productDetails

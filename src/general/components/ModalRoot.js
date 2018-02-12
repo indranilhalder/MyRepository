@@ -6,6 +6,7 @@ import OtpVerification from "../../auth/components/OtpVerification";
 import ConnectDetailsWithModal from "../../home/components/ConnectDetailsWithModal";
 import Sort from "../../plp/components/SortModal";
 import AddressModal from "../../plp/components/AddressModal";
+import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
@@ -83,7 +84,8 @@ export default class ModalRoot extends React.Component {
           closeModal={() => this.handleClose()}
           {...this.props.ownProps}
         />
-      )
+      ),
+      SizeGuide: <SizeGuideModal closeModal={() => this.handleClose()} />
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];

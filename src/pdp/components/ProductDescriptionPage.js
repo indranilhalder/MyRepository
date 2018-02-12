@@ -64,6 +64,7 @@ class ProductDescriptionPage extends Component {
             productData.variantOptions.showColor && (
               <div>
                 <SizeSelector
+                  showSizeGuide={this.props.showSizeGuide}
                   data={productData.variantOptions.colorlink
                     .filter(option => {
                       return option.selected;
