@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Info</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Candidate---RWD" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Info" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M25,12.5 C23.269,12.5 21.875,13.895 21.875,15.625 C21.875,17.355 23.269,18.75 25,18.75 C26.721,18.75 28.125,17.356 28.125,15.625 C28.125,13.894 26.721,12.5 25,12.5 Z M25,21.875 C23.269,21.875 21.875,23.269 21.875,25 L21.875,34.375 C21.875,36.089 23.269,37.5 25,37.5 C26.721,37.5 28.125,36.089 28.125,34.375 L28.125,25 C28.125,23.27 26.721,21.875 25,21.875 Z M25,0 C11.209,0 0,11.209 0,25 C0,38.774 11.209,50 25,50 C38.774,50 50,38.774 50,25 C50,11.209 38.774,0 25,0 Z M25,46.875 C12.938,46.875 3.125,37.061 3.125,25 C3.125,12.939 12.938,3.125 25,3.125 C37.061,3.125 46.875,12.939 46.875,25 C46.875,37.061 37.061,46.875 25,46.875 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

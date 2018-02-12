@@ -27,7 +27,7 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user.isLoggedIn === true) {
+    if (nextProps.user.isLoggedIn === true) {
       this.props.history.push(HOME_ROUTER);
     }
   }
