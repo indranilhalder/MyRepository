@@ -5,6 +5,7 @@ import ProductDetailsCard from "./ProductDetailsCard";
 import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
+import HollowHeader from "./HollowHeader";
 import { MOBILE_PDP_VIEW } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 
@@ -30,6 +31,11 @@ class ProductDescriptionPage extends Component {
       return (
         <div className={styles.base}>
           <div className={styles.productBackground}>
+            <HollowHeader
+              addProductToBag={this.props.addProductToBag}
+              addProductToWishList={this.props.addProductToWishList}
+              history={this.props.history}
+            />
             <ProductDetailsCard
               productImage={
                 this.props.productDetails.galleryImagesList.filter(val => {

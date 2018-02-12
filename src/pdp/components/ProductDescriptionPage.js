@@ -8,6 +8,7 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
+import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
@@ -48,6 +49,7 @@ class ProductDescriptionPage extends Component {
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.productDetails);
   };
+
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -56,6 +58,14 @@ class ProductDescriptionPage extends Component {
       })[0].galleryImages;
       return (
         <div className={styles.base}>
+          <div className={styles.pageHeader}>
+            <HollowHeader
+              addProductToBag={this.props.addProductToBag}
+              addProductToWishList={this.props.addProductToWishList}
+              history={this.props.history}
+            />
+          </div>
+
           <ProductGalleryMobile>
             {mobileGalleryImages.map(val => {
               return <Image image={val.value} />;
