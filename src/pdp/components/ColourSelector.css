@@ -1,0 +1,18 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px 0px;
+  background-color: #ececec;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: semibold;
+  padding: 0 10px;
+  margin-bottom: 15px;
+}
+.colourName {
+  font-family: regular;
+  text-transform: capitalize;
+}

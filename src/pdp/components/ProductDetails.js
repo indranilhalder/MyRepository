@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ProductDetails.css";
 import PropTypes from "prop-types";
-import Accordion from "./Accordion.js";
+import Accordion from "../../general/components/Accordion.js";
 export default class ProductDetails extends React.Component {
   render() {
     const data = this.props.data;

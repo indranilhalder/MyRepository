@@ -4,10 +4,13 @@ import {
   getProductPinCode,
   addProductToWishList,
   removeProductFromWishList,
-  addProductToBag
+  addProductToBag,
+  getProductSizeGuide,
+  getPdpEmi
 } from "../actions/pdp.actions";
 import ProductDescriptionPage from "../components/ProductDescriptionPage";
 import { withRouter } from "react-router-dom";
+import { showModal, PRODUCT_COUPONS } from "../../general/modal.actions";
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -25,6 +28,15 @@ const mapDispatchToProps = dispatch => {
     },
     addProductToBag: productDetails => {
       dispatch(addProductToBag(productDetails));
+    },
+    showCouponModal: data => {
+      dispatch(showModal(PRODUCT_COUPONS, data));
+    },
+    getProductSizeGuide: () => {
+      dispatch(getProductSizeGuide());
+    },
+    getPdpEmi: () => {
+      dispatch(getPdpEmi());
     }
   };
 };

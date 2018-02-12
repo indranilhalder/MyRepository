@@ -19,6 +19,15 @@
   text-align:left;
   display:inline-block;
   margin-bottom:10px;
+  position: relative;
+  padding-right:23px;
+}
+.checkBoxHolder{
+  width:20px;
+  height:20px;
+  position: absolute;
+  right:0;
+  top:0;
 }
 .promotionDetailsText{
   width:100%;
