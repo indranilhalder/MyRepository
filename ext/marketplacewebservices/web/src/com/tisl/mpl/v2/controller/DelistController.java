@@ -36,13 +36,14 @@ public class DelistController extends BaseController
 
 	@Resource(name = "mplDelistingService")
 	private MplDelistingService mplDelistingService;
+	private static final String EXCEPTION = "the exception is **** ";
 	private static final Logger LOG = Logger.getLogger(DelistController.class);
 
 	/*
 	 * to receive delist xml from PI
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/Delist/productDelisting", method = RequestMethod.POST)
@@ -59,15 +60,15 @@ public class DelistController extends BaseController
 		}
 		catch (final RequestParameterException e)
 		{
-			LOG.error("the exception is **** " + e);
+			LOG.error(EXCEPTION + e);
 		}
 		catch (final JAXBException e)
 		{
-			LOG.error("the exception is **** " + e);
+			LOG.error(EXCEPTION + e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("the exception is **** " + e);
+			LOG.error(EXCEPTION + e);
 		}
 	}
 
@@ -85,15 +86,15 @@ public class DelistController extends BaseController
 		}
 		catch (final RequestParameterException e)
 		{
-			LOG.error("the exception is **** " + e);
+			LOG.error(EXCEPTION + e);
 		}
 		catch (final JAXBException e)
 		{
-			LOG.error("the exception is **** " + e);
+			LOG.error(EXCEPTION + e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("the exception is **** " + e);
+			LOG.error(EXCEPTION + e);
 		}
 	}
 

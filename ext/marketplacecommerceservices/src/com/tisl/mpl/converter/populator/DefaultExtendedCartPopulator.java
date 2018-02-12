@@ -6,8 +6,6 @@ package com.tisl.mpl.converter.populator;
 import de.hybris.platform.commercefacades.order.converters.populator.CartPopulator;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -24,7 +22,6 @@ import de.hybris.platform.promotions.result.PromotionOrderResults;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.util.DiscountValue;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,7 +108,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
 				{
 					final Set<PromotionResultModel> eligiblePromoList = source.getAllPromotionResults();
-					boolean isShippingPromoApplied = false;
+					//boolean isShippingPromoApplied = false;
 					for (final PromotionResultModel promotionResultModel : eligiblePromoList)
 					{
 
@@ -121,7 +118,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
 										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 						{
-							isShippingPromoApplied = true;
+							//isShippingPromoApplied = true;
 							break;
 						}
 					}
@@ -350,41 +347,41 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 	}
 
-	private void addDeliveryModePromotion(final CartModel source, final CartData target)
-	{
-		Double discountedPrice = Double.valueOf(target.getTotalDiscounts().getValue().doubleValue());
-		boolean deliveryCostPromotionApplied = false;
-
-		for (final AbstractOrderEntryModel entryModel : source.getEntries())
-		{
-			for (final OrderEntryData entryData : target.getEntries())
-			{
-				if (entryModel.getSelectedUSSID() != null && entryData.getSelectedUssid() != null
-						&& entryModel.getCurrDelCharge() != null && entryModel.getPrevDelCharge() != null
-						&& entryModel.getSelectedUSSID().equalsIgnoreCase(entryData.getSelectedUssid()))
-				{
-					final Double prevDeliveryCost = entryModel.getPrevDelCharge();
-					final Double currDeliveryCost = entryModel.getCurrDelCharge();
-					final Double deliveryCostDisc = Double.valueOf(prevDeliveryCost.doubleValue() - currDeliveryCost.doubleValue());
-
-					if (deliveryCostDisc.doubleValue() > 0)
-					{
-						discountedPrice = Double.valueOf(discountedPrice.doubleValue() + deliveryCostDisc.doubleValue());
-						deliveryCostPromotionApplied = true;
-					}
-				}
-			}
-		}
-
-		if (discountedPrice.doubleValue() > 0 && deliveryCostPromotionApplied)
-		{
-			final BigDecimal totalDiscount = new BigDecimal(discountedPrice.doubleValue());
-			final PriceData cartTotalDiscount = getPriceDataFactory().create(PriceDataType.BUY, totalDiscount,
-					MarketplacecommerceservicesConstants.INR);
-			target.setTotalDiscounts(cartTotalDiscount);
-		}
-
-	}
+	//	private void addDeliveryModePromotion(final CartModel source, final CartData target)
+	//	{
+	//		Double discountedPrice = Double.valueOf(target.getTotalDiscounts().getValue().doubleValue());
+	//		boolean deliveryCostPromotionApplied = false;
+	//
+	//		for (final AbstractOrderEntryModel entryModel : source.getEntries())
+	//		{
+	//			for (final OrderEntryData entryData : target.getEntries())
+	//			{
+	//				if (entryModel.getSelectedUSSID() != null && entryData.getSelectedUssid() != null
+	//						&& entryModel.getCurrDelCharge() != null && entryModel.getPrevDelCharge() != null
+	//						&& entryModel.getSelectedUSSID().equalsIgnoreCase(entryData.getSelectedUssid()))
+	//				{
+	//					final Double prevDeliveryCost = entryModel.getPrevDelCharge();
+	//					final Double currDeliveryCost = entryModel.getCurrDelCharge();
+	//					final Double deliveryCostDisc = Double.valueOf(prevDeliveryCost.doubleValue() - currDeliveryCost.doubleValue());
+	//
+	//					if (deliveryCostDisc.doubleValue() > 0)
+	//					{
+	//						discountedPrice = Double.valueOf(discountedPrice.doubleValue() + deliveryCostDisc.doubleValue());
+	//						deliveryCostPromotionApplied = true;
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//		if (discountedPrice.doubleValue() > 0 && deliveryCostPromotionApplied)
+	//		{
+	//			final BigDecimal totalDiscount = new BigDecimal(discountedPrice.doubleValue());
+	//			final PriceData cartTotalDiscount = getPriceDataFactory().create(PriceDataType.BUY, totalDiscount,
+	//					MarketplacecommerceservicesConstants.INR);
+	//			target.setTotalDiscounts(cartTotalDiscount);
+	//		}
+	//
+	//	}
 
 	//TPR-5346
 

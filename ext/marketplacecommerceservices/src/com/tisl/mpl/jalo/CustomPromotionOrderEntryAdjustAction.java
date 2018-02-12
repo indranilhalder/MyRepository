@@ -58,7 +58,8 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 		//****New Code Added for TISPRO-670*******
 
 		final AbstractPromotion promotion = result.getPromotion();
-		if (null != promotion && promotion instanceof BuyABFreePrecentageDiscount)
+		//if (null != promotion && promotion instanceof BuyABFreePrecentageDiscount) No need to check for null before an instanceof
+		if (promotion instanceof BuyABFreePrecentageDiscount)
 		{
 			isFreebiePromo = true;
 			if (log.isDebugEnabled())

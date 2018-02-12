@@ -4,6 +4,7 @@
 package com.tisl.mpl.service;
 
 import com.tisl.mpl.wsdto.BrandListHierarchyData;
+import com.tisl.mpl.wsdto.BrandListHierarchyDataAmp;
 
 
 /**
@@ -13,5 +14,7 @@ import com.tisl.mpl.wsdto.BrandListHierarchyData;
 public interface MplCustomBrandService
 {
 	public BrandListHierarchyData getShopByBrand();
+
+	public BrandListHierarchyDataAmp getShopByBrandAmp();
 
 }

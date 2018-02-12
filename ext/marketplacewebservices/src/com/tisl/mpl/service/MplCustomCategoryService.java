@@ -11,6 +11,7 @@ import java.util.List;
 import com.tisl.mpl.category.data.LandingDetailsforCategoryData;
 import com.tisl.mpl.wsdto.AboutUsResultWsData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyData;
+import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.ProductForCategoryData;
 
@@ -36,6 +37,6 @@ public interface MplCustomCategoryService
 
 	public String getHTMLParsedTextContent(String description);
 
-
+	public DepartmentListHierarchyDataAmp getAllCategoriesAmp();
 
 }

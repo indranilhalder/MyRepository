@@ -97,7 +97,8 @@ public class MplCancelOrderTicketImpl implements MplCancelOrderTicket
 		sendTicketRequestData.setRefundType("S");
 		try
 		{
-			getTicketCreate().ticketCreationModeltoWsDTO(sendTicketRequestData);
+			//SDI-4957
+			getTicketCreate().ticketCreationModeltoWsDTO(sendTicketRequestData, Boolean.TRUE);
 			returnflag = true;
 		}
 		catch (final NullPointerException e)

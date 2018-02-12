@@ -60,7 +60,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 		BufferedReader statusReader = null;
 		final StringBuffer sb = new StringBuffer();
 		String urlListToBerefreshed = "";
-
+		boolean isError = false;
 		try
 		{
 			/****************** Read Properties from properties file *******************/
@@ -344,12 +344,17 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 				e.printStackTrace();
 				LOG.error("ERROR: in finally ... :" + e);
 				LOG.error("ERROR: Going to ABORT AkamaiRefreshCronJob .................");
-				e.printStackTrace();
-				return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
+				isError = true;
+				//SONR FIX
+				//return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 			}
 		}
 
 		LOG.error("DEBUG: Going to END AkamaiRefreshCronJob .................");
+		if (isError)
+		{
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
+		}
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
