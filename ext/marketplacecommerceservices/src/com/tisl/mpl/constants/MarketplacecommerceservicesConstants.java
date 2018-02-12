@@ -2415,5 +2415,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OTP_TIME = "otp.time.value".intern();
 	public static final String NU001 = "NU001";
 	public static final String NU002 = "NU002";
+	//NU-47
+	public static final String B001122 = "B001122";
 
 }
