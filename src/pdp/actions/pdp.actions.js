@@ -37,6 +37,7 @@ export const PRODUCT_PDP_EMI_SUCCESS = "PRODUCT_PDP_EMI_SUCCESS";
 export const PRODUCT_PDP_EMI_FAILURE = "PRODUCT_PDP_EMI_FAILURE";
 
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
+export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
@@ -105,17 +106,10 @@ export function getProductPinCodeFailure(error) {
 }
 
 export function getProductPinCode(productDetails) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(getProductPinCodeRequest());
     try {
-      const result = await api.get(
-        `${PRODUCT_DETAILS_PATH}/${CLIENT_ID}/checkPincode?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&pin=${productDetails.pinCode}&productCode=${
-          getState().productDescription.productListingId
-        }`
-      );
+      const result = await api.getMock(PIN_CODE_AVAILABILITY_PATH);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
