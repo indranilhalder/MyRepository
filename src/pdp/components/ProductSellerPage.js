@@ -25,7 +25,7 @@ class ProductSellerPage extends Component {
           productName={this.props.productDetails.productName}
           productMaterial={
             this.props.productDetails.classificationList[0].value
-              .classificationListJwlry[5].value.classificationListValueJwlry[0]
+              .classificationListValue[5].value.classificationListValue[0]
           }
           price={this.props.productDetails.mrpPrice.formattedValue}
           discountPrice={
