@@ -34,6 +34,16 @@
 <c:set var="isWeight" value="false"/>
 
 	<c:url value="${entry.product.url}" var="productUrl" />
+	<!-- EGV Changes Start-->
+	<c:if test="${orderData.isEGVOrder eq  true}">
+		<spring:eval
+			expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvProductCode')"
+			var="productCode" />
+		<c:set var="myVar" value="/giftCard-" />
+		<c:set var="egvProduct" value="${myVar}${productCode}" />
+		<c:url value="${egvProduct}" var="productUrl" />
+	</c:if>
+<!-- EGV Changes END-->
 	<li class="item">
 		<ul class="desktop">
 			<li>
@@ -56,12 +66,26 @@
 
 					<p class="company"></p>
 					<ycommerce:testId code="orderDetails_productName_link">
-						<h3 class="product-brand-name">
-							<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.brand.brandname}</a>
-						</h3>
-						<h3 class="product-name">
-							<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
-						</h3>
+                     <!-- EGV Changes Start-->
+					   <c:choose>
+				   		<c:when test="${orderData.isEGVOrder eq  true}">
+				   		 <h3 class="product-brand-name">
+									<a href="${productUrl}">${entry.product.brand.brandname}</a>
+								</h3>
+								<h3 class="product-name">
+									<a href="${productUrl}">${entry.product.name}</a>
+								</h3>
+				   		</c:when>
+				   		<c:otherwise>
+				   	     <h3 class="product-brand-name">
+									<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.brand.brandname}</a>
+								</h3>
+								<h3 class="product-name">
+									<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
+								</h3>
+				   		</c:otherwise>
+				   		</c:choose>
+                     <!-- EGV Changes END-->
 						<input type="hidden" name="productArrayForIA"
 							value="${entry.product.code}" />
 					</ycommerce:testId>
