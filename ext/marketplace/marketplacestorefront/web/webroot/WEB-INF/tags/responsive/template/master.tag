@@ -78,9 +78,24 @@
 	<%-- Additional meta tags --%>
 	<!-- commented for PRDI-422 -->
 	<%-- <htmlmeta:meta items="${metatags}"/> --%>
-	<!-- Added for PRDI-422 starts-->
+	<!-- Added for PRDI-422 starts-->    
+    <c:choose>
+	<c:when test="${not empty keywords || not empty description}">
     <meta name="keywords" content="${keywords}">
     <meta name="description" content="${description}">
+    </c:when>
+    <c:otherwise>
+
+    <c:forEach items="${metatags}" var="metatag">
+		<c:if test="${metatag.name eq 'keywords'}">
+			<meta name="keywords" content="${metatag.content}">
+		</c:if>
+		<c:if test="${metatag.name eq 'description'}">
+			<meta name="description" content="${metatag.content}">
+		</c:if>
+	</c:forEach>
+    </c:otherwise>
+    </c:choose>
 	<!-- PRDI-422 ends-->
 	
 	

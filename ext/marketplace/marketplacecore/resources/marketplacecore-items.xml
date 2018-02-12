@@ -2473,6 +2473,7 @@
 					<attribute qualifier="dimension" type="java.lang.String">
 						<description>Dimension</description>
 						<persistence type="property" />
+						<modifiers optional="false" unique="false" />
 					</attribute>
 					<attribute qualifier="unit" type="java.lang.String">
 						<description>Unit</description>
@@ -2481,6 +2482,7 @@
 					<attribute qualifier="size" type="java.lang.String">
 						<description>Size</description>
 						<persistence type="property" />
+						<modifiers optional="false" unique="false" />
 					</attribute>
 					<attribute qualifier="euroSize" type="java.lang.String">
 						<description>Size</description>

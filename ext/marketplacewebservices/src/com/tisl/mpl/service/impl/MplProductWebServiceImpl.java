@@ -69,6 +69,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -914,7 +915,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
-
+				//TPR-6228/SDI-2805
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
+				{
+					productDetailMobile
+							.setBrandInfo(productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+									.getBrand().getBrandDescription() : StringUtils.substring(
+									productData.getBrand().getBrandDescription(), 0, MplConstants.BRANDINFO_CHAR_LIMIT));
+				}
 
 				// changed for TPR-796
 				//first set false to make all available
@@ -2975,7 +2983,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 
 			//TPR-1727 Removal of Out of stock
-			if (null != buyBoxData && null != buyBoxData.getAvailable() && buyBoxData.getAvailable().intValue() <= 0)
+			//SDI-4314
+			if (null != buyBoxData
+					&& ((StringUtils.isEmpty(buyBoxData.getSellerArticleSKU())) || (null != buyBoxData.getAvailable()))
+					&& (buyBoxData.getAvailable().intValue() <= 0))
 			{
 				return null;
 			}

@@ -3880,22 +3880,28 @@ $(document).ready(function(){
 				$(this).find('li.viewDetails').css('margin-bottom','30px');
 			}
 		});
+		$(".homepage-banner #rotatingImageTimeout").remove();	/*add for SDI-3883*/
 	}	
+	else{
+		$(".homepage-banner #rotatingImageTimeoutMobile").remove();		/*add for SDI-3883*/
+	}
 });
 /*PRDI-402 end*/
+
+/*start comment for SDI-2161*/
 /* start change of PRDI-92 */
-$(document).ready(function() {
+/*$(document).ready(function() {
 	if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
 		$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
 	}
-	/*start change of INC144319119*/
-	/*if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+	start change of INC144319119
+	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
-	}*/
+	}
 	if ($(".facet_mobile .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
         $(".facet_mobile .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
     }
-	/*end change of INC144319119*/
+	end change of INC144319119
 });
 
 $(window).on("load",function(){
@@ -3903,14 +3909,14 @@ $(window).on("load",function(){
 		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
 			$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
 		}
-		/*start change of INC144319119*/
-		/*if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		start change of INC144319119
+		if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 			$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
-		}*/
+		}
 		if ($(".facet_mobile .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
 			$(".facet_mobile .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
         }
-		/*end change of INC144319119*/
+		end change of INC144319119
 	},500);
 });
 
@@ -3918,13 +3924,14 @@ $(window).on("resize click",function(){
 	if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
 		$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
 	}
-	/*start change of INC144319119*/
+	start change of INC144319119
 	if ($(".facet_mobile .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
 		$(".facet_mobile .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
     }
-	/*end change of INC144319119*/
-});
+	end change of INC144319119
+});*/
 /* end change of PRDI-92 */
+/*end comment for SDI-2161*/
 
 /*start change of INC144319119*/
 $(window).on("scroll",function(){

@@ -1125,6 +1125,12 @@ function focusOnElement() {
 				if (typeof(data['errMsg']) != "undefined" && data['errMsg'] != "") {
 					return false;
 				} else {
+					//SDI-4334
+					var spPrice = data['specialPrice'];
+					var mrpPrice = data['mrp'];
+					var mop = data['price'];
+					var savingsOnProduct= data['savingsOnProduct'];
+					dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 					var promorestrictedSellers = $("#promotedSellerId").val();
 					if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
@@ -1214,17 +1220,17 @@ function focusOnElement() {
 
 					$("#ussid").val(data['sellerArticleSKU']);
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
-					var spPrice = data['specialPrice'];
+					/*var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
 					var mop = data['price'];
-					var savingsOnProduct= data['savingsOnProduct'];
+					var savingsOnProduct= data['savingsOnProduct'];*/
 					$("#stock").val(data['availablestock']);
 					$(".selectQty").change(function() {
 						$("#qty").val($(".selectQty :selected").val());
 					});
 					displayDeliveryDetails(sellerName);
 					//TISPRM-33 savingsOnProduct added
-					dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+					//dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
 					//Add to Wishlist PDP CR
 					var ussIdWishlist = data['sellerArticleSKU'];
 					getLastModifiedWishlist(ussIdWishlist);

@@ -977,9 +977,24 @@ function toggleNextPrevButton(){
         }
         return (k === f) ? l : k
     };
+	
+    e.fn.getPageNo = function(i) {
+    	var browserPathName = window.location.pathname;
+    	if (/page-[0-9]+/.test(browserPathName)) {
+    		        	  var currentFullPageNo = browserPathName.match(/page-[0-9]+/).toString();
+    		        	  var pageArray = currentFullPageNo.split("-");
+    		        	  var updatedcurrentPageNo = parseInt(pageArray[1]);
+    		        	  
+    		        	}
+    		        	else {
+    		        	  var updatedcurrentPageNo = 1;  
+    		        	}
+    	return updatedcurrentPageNo;
+    };
+	
     e.fn.twbsPagination.defaults = {
         totalPages: 1,
-        startPage: 1,
+        startPage: e.fn.getPageNo(),
         visiblePages: 5,
         initiateStartPageClick: true,
         href: true,
