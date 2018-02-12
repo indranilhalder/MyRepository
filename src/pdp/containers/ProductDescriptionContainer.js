@@ -49,7 +49,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     loading: state.productDescription.loading,
     productDetails: state.productDescription.productDetails
