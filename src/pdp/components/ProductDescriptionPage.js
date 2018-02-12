@@ -11,7 +11,9 @@ import RatingAndTextLink from "./RatingAndTextLink";
 import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
+import PdpFooter from "./PdpFooter.js";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
@@ -24,6 +26,16 @@ class ProductDescriptionPage extends Component {
     this.props.getProductDescription();
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
+  }
+  onSave() {
+    if (this.props.onSave) {
+      this.props.onSave();
+    }
+  }
+  onAddToBag() {
+    if (this.props.onAddToBag) {
+      this.props.onAddToBag();
+    }
   }
   renderLoader() {
     return (
@@ -57,6 +69,11 @@ class ProductDescriptionPage extends Component {
       })[0].galleryImages;
       return (
         <div className={styles.base}>
+          <PdpFooter
+            onSave={() => this.onSave()}
+            onAddToBag={() => this.onAddToBag()}
+          />
+
           <div className={styles.pageHeader}>
             <HollowHeader
               addProductToBag={this.props.addProductToBag}
