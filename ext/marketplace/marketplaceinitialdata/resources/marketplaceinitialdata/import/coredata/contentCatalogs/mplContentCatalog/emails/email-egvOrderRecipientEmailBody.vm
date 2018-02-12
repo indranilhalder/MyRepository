@@ -12,7 +12,11 @@
 						${ctx.cmsSlotContents.productImage}
 					</div>
 					<div style="padding: 15px;color: darkgrey;text-align: justify;line-height: normal;border-top: 1px solid #ccc;">
-						<span><i>${ctx.senderMSG}</i></span>
+						<span><i>
+							#if($ctx.senderMSG)
+						${ctx.senderMSG}
+                         #end
+						</i></span>
 					</div>
 					<div style="text-align: left;padding: 8px 15px;font-size: 28px;border-top: 1px solid #ccc;">
 						<span>&#8377;${ctx.cardAmount}</span>
