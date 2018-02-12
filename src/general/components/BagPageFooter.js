@@ -3,12 +3,12 @@ import styles from "./BagPageFooter.css";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 export default class BagPageFooter extends React.Component {
-  handleClick() {
+  onSave() {
     if (this.props.onClick) {
       this.props.onClick();
     }
   }
-  removeClick() {
+  onRemove() {
     if (this.props.onClick) {
       this.props.onClick();
     }
@@ -21,17 +21,11 @@ export default class BagPageFooter extends React.Component {
             <div className={styles.iconHolder}>
               <Icon image={this.props.image} />
             </div>
-            <div
-              className={styles.saveLabel}
-              onClick={() => this.handleClick()}
-            >
+            <div className={styles.saveLabel} onClick={() => this.onSave()}>
               {this.props.saveText}
             </div>
           </div>
-          <div
-            className={styles.removeLabel}
-            onClick={() => this.removeClick()}
-          >
+          <div className={styles.removeLabel} onClick={() => this.onRemove()}>
             {this.props.removeText}
           </div>
         </div>
