@@ -47,7 +47,14 @@ class ProductDescriptionPage extends Component {
 
       return (
         <div className={styles.base}>
-          <HollowHeader {...this.props} />
+          <div className={styles.pageHeader}>
+            <HollowHeader
+              addProductToBag={this.props.addProductToBag}
+              addProductToWishList={this.props.addProductToWishList}
+              history={this.props.history}
+            />
+          </div>
+
           <ProductGalleryMobile>
             {mobileGalleryImages.map(val => {
               return <Image image={val.value} />;

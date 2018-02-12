@@ -8,7 +8,11 @@ class ProductSellerPage extends Component {
   render() {
     return (
       <div className={styles.base}>
-        <HollowHeader {...this.props} />
+        <HollowHeader
+          addProductToBag={this.props.addProductToBag}
+          addProductToWishList={this.props.addProductToWishList}
+          history={this.props.history}
+        />
         <ProductDetailsCard
           productImage={this.props.productDetails.galleryImagesList}
           productName={this.props.productDetails.productName}

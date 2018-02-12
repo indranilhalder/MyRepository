@@ -29,7 +29,11 @@ class ProductDescriptionPage extends Component {
       return (
         <div className={styles.base}>
           <div className={styles.productBackground}>
-            <HollowHeader {...this.props} />
+            <HollowHeader
+              addProductToBag={this.props.addProductToBag}
+              addProductToWishList={this.props.addProductToWishList}
+              history={this.props.history}
+            />
             <ProductDetailsCard
               productImage={this.props.productDetails.galleryImagesList}
               productName={this.props.productDetails.productName}
