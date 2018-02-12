@@ -9,6 +9,9 @@ import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
+import FooterButton from "../../general/components/FooterButton.js";
+import sortIcon from "../../plp/components/img/sort.svg";
+import filterIcon from "../../plp/components/img/filter.svg";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
@@ -19,6 +22,16 @@ class ProductDescriptionPage extends Component {
     this.props.getProductDescription();
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
+  }
+  onSort() {
+    if (this.props.onSort) {
+      this.props.onSort();
+    }
+  }
+  onFilter() {
+    if (this.props.onFilter) {
+      this.props.onFilter();
+    }
   }
 
   renderLoader() {
@@ -47,6 +60,23 @@ class ProductDescriptionPage extends Component {
 
       return (
         <div className={styles.base}>
+          <div className={styles.mobileFooterHolder}>
+            <div className={styles.footerButtonHolder}>
+              <FooterButton
+                icon={filterIcon}
+                borderColor="#ececec"
+                label="Filter"
+                onClick={() => this.onFilter()}
+              />
+            </div>
+            <div className={styles.footerButtonHolder}>
+              <FooterButton
+                icon={sortIcon}
+                label="Sort"
+                onClick={() => this.onSort()}
+              />
+            </div>
+          </div>
           <ProductGalleryMobile>
             {mobileGalleryImages.map(val => {
               return <Image image={val.value} />;
