@@ -3,6 +3,7 @@ import styles from "./ProductSellerPage.css";
 import ProductDetailsCard from "./ProductDetailsCard";
 import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
+import HollowHeader from "./HollowHeader.js";
 import {
   MOBILE_PDP_VIEW,
   PRICE_TEXT,
@@ -12,10 +13,16 @@ import {
   CASH_TEXT
 } from "../../lib/constants";
 
+
 class ProductSellerPage extends Component {
   render() {
     return (
       <div className={styles.base}>
+        <HollowHeader
+          addProductToBag={this.props.addProductToBag}
+          addProductToWishList={this.props.addProductToWishList}
+          history={this.props.history}
+        />
         <ProductDetailsCard
           productImage={
             this.props.productDetails.galleryImagesList.filter(val => {

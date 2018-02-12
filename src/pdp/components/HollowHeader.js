@@ -7,18 +7,18 @@ import downloadIcon from "../../general/components/img/download.svg";
 import { Icon } from "xelpmoc-core";
 export default class HollowHeader extends React.Component {
   backPage() {
-    if (this.props.backPage) {
-      this.props.backPage();
+    if (this.props.history) {
+      this.props.history.goBack();
     }
   }
-  orderProduct() {
-    if (this.props.orderProduct) {
-      this.props.orderProduct();
+  addToBag() {
+    if (this.props.addProductToBag) {
+      this.props.addProductToBag();
     }
   }
-  downloadProduct() {
-    if (this.props.downloadProduct) {
-      this.props.downloadProduct();
+  addToWishList() {
+    if (this.props.addProductToWishList) {
+      this.props.addProductToWishList();
     }
   }
   render() {
@@ -30,13 +30,13 @@ export default class HollowHeader extends React.Component {
         <div className={styles.historyDownloadIcon}>
           <div
             className={styles.orderIconHolder}
-            onClick={() => this.orderProduct()}
+            onClick={() => this.addToBag()}
           >
             <Icon image={orderIcon} size={20} />
           </div>
           <div
             className={styles.downloadIconHolder}
-            onClick={() => this.downloadProduct()}
+            onClick={() => this.addToWishList()}
           >
             <Icon image={downloadIcon} size={20} />
           </div>
