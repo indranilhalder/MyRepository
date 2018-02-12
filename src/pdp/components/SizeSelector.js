@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 
 export default class SizeSelector extends React.Component {
   render() {
-    console.log(this.props);
     let data = this.props.data[0];
     return (
       <div className={styles.base}>
