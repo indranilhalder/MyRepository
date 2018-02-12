@@ -28,6 +28,8 @@ import java.text.DecimalFormat;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -591,13 +593,11 @@ public class WalletController
 	{
 	if(null !=buyingEgvRequest )
 	{
-		if(null == buyingEgvRequest.getMobileNumber()) {
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5021);
-		}else if (null == buyingEgvRequest.getFrom()) {
+		if (null == buyingEgvRequest.getFrom() || StringUtil.isEmpty(buyingEgvRequest.getFrom())) {
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5022);
 		}else if(null == buyingEgvRequest.getPriceSelectedByUserPerQuantity()) {
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5023);
-		}else if (null == buyingEgvRequest.getReceiverEmailID()) {
+		}else if (null == buyingEgvRequest.getReceiverEmailID() || StringUtil.isEmpty(buyingEgvRequest.getReceiverEmailID())) {
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5024);
 		}
 	}else {
@@ -612,6 +612,7 @@ public class WalletController
 		final EgvDetailsData egvDetailsData = new EgvDetailsData();
 		if (null != requestData)
 		{
+			CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 			egvDetailsData.setProductCode(requestData.getProductID());
 			if (null != requestData.getPriceSelectedByUserPerQuantity()
 					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
@@ -635,9 +636,9 @@ public class WalletController
 			{
 				egvDetailsData.setGiftRange(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
 			}
-			if (null != requestData.getMobileNumber())
+			if (null != customer.getQcVerifyMobileNo())
 			{
-				egvDetailsData.setFromPhoneNo(requestData.getMobileNumber());
+				egvDetailsData.setFromPhoneNo(customer.getQcVerifyMobileNo());
 			}
 
 			if (null != requestData.getMessageOnCard())

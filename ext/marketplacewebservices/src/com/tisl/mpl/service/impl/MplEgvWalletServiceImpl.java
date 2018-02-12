@@ -45,6 +45,7 @@ import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.service.MplEgvWalletService;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
@@ -1043,7 +1044,15 @@ public boolean updateWallet(CustomerModel customer, String otp, MplCustomerProfi
 			 isWalletUpdated = updateCustomerWallet(customerToSave, customer);
 
 		}
-	}catch(Exception e) {
+	}catch (final EtailBusinessExceptions e)
+	{
+		ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		if (null != e.getErrorCode())
+		{
+			throw new EtailBusinessExceptions(e.getErrorCode());
+		}
+	}
+	catch(Exception e) {
 		LOG.error("Exception occurred while updating Customer Wallet"+e.getMessage(),e);
 		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5004);
 
@@ -1096,9 +1105,9 @@ public boolean updateCustomerWallet(MplCustomerProfileData customerToSave,Custom
 				customerModel.getUid());
 		if (null != responce && null != responce.getResponseCode() && responce.getResponseCode().intValue() == 0)
 		{
-			customer.setQcVerifyFirstName(customerToSave.getMobileNumber());
+			customer.setQcVerifyFirstName(customerToSave.getFirstName());
 			customer.setQcVerifyLastName(customerToSave.getFirstName());
-			customer.setQcVerifyMobileNo(customerToSave.getLastName());
+			customer.setQcVerifyMobileNo(customerToSave.getMobileNumber());
 			modelService.save(customer);
 			return true;
 		}

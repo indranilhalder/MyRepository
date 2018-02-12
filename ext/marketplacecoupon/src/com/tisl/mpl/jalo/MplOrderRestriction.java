@@ -74,16 +74,16 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") && checkForBankVoucher)
 			{
 				cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder);
+				if (isPositiveAsPrimitive() && cliqCashValidation ) {
+					return true;
+				}else {
+					return false;
+				}
 			}
 
 			// Coupon Evaluation
 			if (isPositiveAsPrimitive() ) {
-				if(cliqCashValidation) {
-					return true;
-				}else {
 					return (currentTotal >= minimumTotal);
-
-				}
 			}
 
 			/*if (isPositiveAsPrimitive() && cliqCashValidation)
