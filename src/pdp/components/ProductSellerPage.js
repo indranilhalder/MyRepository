@@ -13,7 +13,6 @@ import {
   CASH_TEXT
 } from "../../lib/constants";
 
-
 class ProductSellerPage extends Component {
   render() {
     return (

@@ -6,6 +6,11 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PropTypes from "prop-types";
 const SIZE_GUIDE = "Size guide";
 export default class SizeSelector extends React.Component {
+  handleShowSize() {
+    if (this.props.showSizeGuide) {
+      this.props.showSizeGuide();
+    }
+  }
   render() {
     let data = this.props.data[0];
     return (
@@ -13,7 +18,12 @@ export default class SizeSelector extends React.Component {
         <div className={styles.header}>
           Select a size
           <div className={styles.button}>
-            <UnderLinedButton label={SIZE_GUIDE} />
+            <UnderLinedButton
+              label={SIZE_GUIDE}
+              onClick={() => {
+                this.handleShowSize();
+              }}
+            />
           </div>
         </div>
         <CarouselWithSelect elementWidthMobile={18} limit={1}>

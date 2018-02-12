@@ -39,12 +39,11 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
 
-
   renderAddressModal = () => {
     if (this.props.showAddress) {
       this.props.showAddress(this.props.productDetails);
     }
-  }
+  };
 
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.productDetails);
@@ -84,6 +83,7 @@ class ProductDescriptionPage extends Component {
             productData.variantOptions.showColor && (
               <div>
                 <SizeSelector
+                  showSizeGuide={this.props.showSizeGuide}
                   data={productData.variantOptions.colorlink
                     .filter(option => {
                       return option.selected;
