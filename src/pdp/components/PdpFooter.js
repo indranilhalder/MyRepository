@@ -22,7 +22,7 @@ export default class PdfFooter extends React.Component {
           <FooterButton
             borderColor="#ececec"
             icon={saveIcon}
-            label="save"
+            label="Save"
             onClick={() => this.onSave()}
           />
         </div>

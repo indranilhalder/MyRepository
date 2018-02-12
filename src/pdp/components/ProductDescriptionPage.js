@@ -9,7 +9,7 @@ import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
-import PdfFooter from "./PdpFooter.js";
+import PdpFooter from "./PdpFooter.js";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
@@ -57,7 +57,7 @@ class ProductDescriptionPage extends Component {
 
       return (
         <div className={styles.base}>
-          <PdfFooter
+          <PdpFooter
             onSave={() => this.onSave()}
             onAddToBag={() => this.onAddToBag()}
           />
