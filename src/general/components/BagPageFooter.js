@@ -4,13 +4,13 @@ import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 export default class BagPageFooter extends React.Component {
   onSave() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.onSave) {
+      this.props.onSave();
     }
   }
   onRemove() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.onRemove) {
+      this.props.onRemove();
     }
   }
   render() {
