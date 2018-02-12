@@ -66,6 +66,8 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -3164,16 +3166,29 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if(null != customer) {
 				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
 					egvProductData.setIsWalletCreated(true);
-				}else {
-					egvProductData.setIsWalletCreated(false);
-					egvProductData.setFirstName(customer.getQcVerifyFirstName());
-					egvProductData.setLastName(customer.getQcVerifyLastName());
-					egvProductData.setMobileNumber(customer.getQcVerifyMobileNo());
 				}
 				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
 				{
 					egvProductData.setIsWalletOtpVerified(true);
+				}else {
+					if(null != customer.getQcVerifyFirstName() && StringUtils.isNotEmpty(customer.getQcVerifyFirstName())) {
+						egvProductData.setFirstName(customer.getQcVerifyFirstName());
+					}else {
+						egvProductData.setFirstName(customer.getFirstName());
+					}
+					if(null != customer.getQcVerifyLastName() && StringUtils.isNotEmpty(customer.getQcVerifyLastName())) {
+						egvProductData.setLastName(customer.getQcVerifyLastName());
+					}else {
+						egvProductData.setLastName(customer.getLastName());
+					}
+					if(null != customer.getQcVerifyMobileNo() && StringUtil.isNotEmpty(customer.getQcVerifyMobileNo())) {
+						egvProductData.setMobileNumber(customer.getQcVerifyMobileNo());
+					}else {
+						egvProductData.setMobileNumber(customer.getMobileNumber());
+					}
 				}
+					
+				
 			}
 			
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
