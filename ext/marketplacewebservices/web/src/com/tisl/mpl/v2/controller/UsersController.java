@@ -4025,9 +4025,9 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 					if(isWalletCreated) {
-						if(null != otp && StringUtils.isNotEmpty(otp)) {
+						//if(null != otp && StringUtils.isNotEmpty(otp)) {
 							isWalletUpdated = mplEgvWalletService.updateWallet(customer, otp, customerToSave);
-						}
+					//	}
 					}
 					/*Egv Changes End */
 					
