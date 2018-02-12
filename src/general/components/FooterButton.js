@@ -16,7 +16,7 @@ export default class FooterButton extends React.Component {
           backgroundColor: this.props.backgroundColor,
           "border-right": `1px solid ${this.props.borderColor}`
         }}
-        onClick={() => this.props.handleClick()}
+        onClick={() => this.handleClick()}
       >
         {this.props.icon && (
           <div className={styles.iconHolder}>
@@ -36,7 +36,7 @@ export default class FooterButton extends React.Component {
 FooterButton.propTyes = {
   backgroundColor: PropTypes.string,
   borderColor: PropTypes.string,
-  icon: PropTypes.obj,
+  icon: PropTypes.string,
   onClick: PropTypes.func,
   labelStyle: PropTypes.shape({
     color: PropTypes.string,
