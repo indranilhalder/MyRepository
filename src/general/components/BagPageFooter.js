@@ -35,7 +35,8 @@ export default class BagPageFooter extends React.Component {
 }
 BagPageFooter.propTypes = {
   image: PropTypes.string,
-  onClick: PropTypes.func
+  onSave: PropTypes.func,
+  onRemove: PropTypes.func
 };
 BagPageFooter.defaultProps = {
   saveText: "Save",
