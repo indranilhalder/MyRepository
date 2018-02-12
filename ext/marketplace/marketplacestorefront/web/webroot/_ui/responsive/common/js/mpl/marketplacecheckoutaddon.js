@@ -6656,7 +6656,7 @@ function useWalletForPaymentAjax(){
 
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
-				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
+				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully. EMI and Cash on Delivery are not available by using CliQ Cash.');
 				$(".cliqCashApplyAlert").show();
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
@@ -11939,6 +11939,13 @@ function getlistofEMIbanks(){
 
 function recalculateCart(loadOffer,chooseOfferId,offerradioID) {
 
+	var isEGVOrder=$("#isEGVOrder").val();
+	if(isEGVOrder == ''){
+		isEGVOrder=false;
+	}else if(isEGVOrder == "undefined"){
+		isEGVOrder=false;
+	}
+	
 	var staticHost=$('#staticHost').val();
 	var paymentMode=$("#paymentMode").val();
 	$("#promotionApplied,#promotionMessage").css("display","none");
@@ -12091,7 +12098,9 @@ function recalculateCart(loadOffer,chooseOfferId,offerradioID) {
 
 		},
 		complete : function(resp){
-			useWalletForPaymentAjax();
+			if(!isEGVOrder) {
+				useWalletForPaymentAjax();
+			}
 		},
 		error : function(resp) {
 			if(ACC.singlePageCheckout.getIsResponsive())
