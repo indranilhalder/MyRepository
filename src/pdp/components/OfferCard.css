@@ -48,6 +48,7 @@
 
 .timer {
   width: 60px;
+  line-height: 20px;
 }
 
 .iconHolder {
@@ -55,7 +56,7 @@
   height: auto;
   float: right;
   position: relative;
-  padding-left: 20px;
+  padding-left: 25px;
 }
 .timerHolder {
   position: absolute;
