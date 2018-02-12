@@ -7,6 +7,7 @@ export const CONNECT_DETAILS = "ConnectDetails";
 export const PRODUCT_COUPONS = "Coupons";
 export const SIZE_GUIDE = "SizeGuide";
 export const SORT = "Sort";
+export const ADDRESS = "Address";
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,

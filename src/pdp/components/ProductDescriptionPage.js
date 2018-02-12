@@ -8,13 +8,17 @@ import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
+import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
+import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
   PRODUCT_SELLER_ROUTER
 } from "../../lib/constants";
+const DELIVERY_TEXT = "Delivery Options For";
+const PIN_CODE = "110011";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription();
@@ -35,9 +39,16 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
 
+  renderAddressModal = () => {
+    if (this.props.showAddress) {
+      this.props.showAddress(this.props.productDetails);
+    }
+  };
+
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.productDetails);
   };
+
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -46,6 +57,14 @@ class ProductDescriptionPage extends Component {
       })[0].galleryImages;
       return (
         <div className={styles.base}>
+          <div className={styles.pageHeader}>
+            <HollowHeader
+              addProductToBag={this.props.addProductToBag}
+              addProductToWishList={this.props.addProductToWishList}
+              history={this.props.history}
+            />
+          </div>
+
           <ProductGalleryMobile>
             {mobileGalleryImages.map(val => {
               return <Image image={val.value} />;
@@ -91,6 +110,13 @@ class ProductDescriptionPage extends Component {
             heading={productData.productOfferPromotion[0].promotionTitle}
             description={productData.productOfferPromotion[0].promotionDetail}
             onClick={this.goToCouponPage}
+          />
+          <DeliveryInformation
+            header={productData.eligibleDeliveryModes[0].name}
+            placedTime={productData.eligibleDeliveryModes[0].timeline}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
           />
           <div className={styles.separator}>
             <RatingAndTextLink
