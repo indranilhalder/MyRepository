@@ -1014,7 +1014,7 @@ public boolean updateWallet(CustomerModel customer, String otp, MplCustomerProfi
 	boolean nameChanged = true ; 
 	try {
 		nameChanged = mplWalletFacade.checkWalletDetailsChanged(customerToSave);
-		if (null != otp && !customer.getMobileNumber().equalsIgnoreCase(customerToSave.getMobileNumber()))
+		if (null != otp && StringUtils.isNotEmpty(otp) )
 		{
 			OTPResponseData response = mplWalletFacade.validateOTP(customer.getUid(), otp);
 				if (null !=response && response.getOTPValid().booleanValue())
