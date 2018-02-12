@@ -7,7 +7,6 @@ export default class SelectBox extends React.Component {
   onChange(val) {
     if (this.props.onChange) {
       val !== null ? this.props.onChange(val.value) : this.props.onChange(null);
-      console.log(this.props.selected);
     }
   }
   render() {
