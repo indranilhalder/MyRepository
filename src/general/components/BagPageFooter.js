@@ -33,7 +33,6 @@ export default class BagPageFooter extends React.Component {
     );
   }
 }
-
 BagPageFooter.propTypes = {
   image: PropTypes.string
 };
