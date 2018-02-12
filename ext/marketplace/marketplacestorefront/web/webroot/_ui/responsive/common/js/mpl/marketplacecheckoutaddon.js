@@ -6833,6 +6833,46 @@ function useWalletForPaymentAjax(){
 				$("#juspayconnErrorDiv").css("display","none");
 				$("#offer_section_responsive_error_msgDiv").css("display","none");
 			}
+
+			if(value.checked && $('input:radio[name=offer_name]:checked').val()) {
+				var guid = $('#guid').val();
+				var offerId = $('input:radio[name=offer_name]:checked').val();
+				checkVoucherForEGV(guid, offerId);
+			} else if(value.checked && $('input:radio[name=offer_name_more]:checked').val()) {
+				var guid = $('#guid').val();
+				var offerId = $('input:radio[name=offer_name_more]:checked').val();
+				checkVoucherForEGV(guid, offerId);
+			}
+		}
+	});
+}
+
+function checkVoucherForEGV(id, value) {
+	var data= {manuallyselectedvoucher:value,guid:id};
+	
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/checkout/multi/coupon/usevoucher",
+		data : data,
+		type : "POST",
+		cache : false,
+		success : function(response) {
+			if(!response.couponRedeemed) {
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
+				if(response.couponDiscount.value != 0 && response.couponDiscount.value !=null){
+					$("#promotionApplied").css("display","block");
+					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				} else {
+					$("#promotionApplied").css("display","none");
+				}
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+	        		document.getElementById("offer_section_responsive_error_msg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+					$("#offer_section_responsive_error_msgDiv").css("display","block");
+	 			} else {
+	        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+	 			}
+			}
 		}
 	});
 }
@@ -12316,7 +12356,7 @@ function tokenizeJuspayCard(paymentMode)
 	}
 	else if(paymentMode=="EM")
 	{
-		merchant_id=$("#newCardCCEmi #merchant_id").val();
+		merchant_id=$("#newCardCCEmi #merchant_id_emi").val();
 		card_number=$("#newCardCCEmi #cardNoEmi").val();
 		card_exp_year=$("#newCardCCEmi select[name=expyy] option:selected").val();
 		card_exp_month=$("#newCardCCEmi select[name=expmm] option:selected").val();
