@@ -1106,7 +1106,7 @@ public boolean updateCustomerWallet(MplCustomerProfileData customerToSave,Custom
 		if (null != responce && null != responce.getResponseCode() && responce.getResponseCode().intValue() == 0)
 		{
 			customer.setQcVerifyFirstName(customerToSave.getFirstName());
-			customer.setQcVerifyLastName(customerToSave.getFirstName());
+			customer.setQcVerifyLastName(customerToSave.getLastName());
 			customer.setQcVerifyMobileNo(customerToSave.getMobileNumber());
 			modelService.save(customer);
 			return true;
