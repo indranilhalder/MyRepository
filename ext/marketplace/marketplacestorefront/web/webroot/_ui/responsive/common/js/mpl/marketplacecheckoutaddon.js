@@ -6656,7 +6656,7 @@ function useWalletForPaymentAjax(){
 
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
-				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
+				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully. EMI and Cash on Delivery are not available by using CliQ Cash.');
 				$(".cliqCashApplyAlert").show();
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
