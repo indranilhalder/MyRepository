@@ -26,7 +26,7 @@ export default class SelectBox extends React.Component {
   }
 }
 SelectBox.propTypes = {
-  selected: PropTypes.string,
+  selected: PropTypes.any,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
