@@ -9,9 +9,7 @@ import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
-import FooterButton from "../../general/components/FooterButton.js";
-import saveIcon from "./img/Save.svg";
-import addToBagIcon from "./img/order-historyWhite.svg";
+import PdfFooter from "./PdpFooter.js";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
@@ -29,11 +27,10 @@ class ProductDescriptionPage extends Component {
     }
   }
   onAddToBag() {
-    if (this.props.onFilter) {
-      this.props.onFilter();
+    if (this.props.onAddToBag) {
+      this.props.onAddToBag();
     }
   }
-
   renderLoader() {
     return (
       <div className={styles.loadingIndicator}>
@@ -60,29 +57,10 @@ class ProductDescriptionPage extends Component {
 
       return (
         <div className={styles.base}>
-          <div className={styles.mobileFooterHolder}>
-            <div className={styles.footerButtonHolder}>
-              <FooterButton
-                borderColor="#ececec"
-                icon={saveIcon}
-                label="save"
-                onClick={() => this.onSave()}
-              />
-            </div>
-            <div className={styles.footerButtonHolder}>
-              <FooterButton
-                icon={addToBagIcon}
-                backgroundColor="#ff1744"
-                label="Add to bag"
-                onClick={() => this.onAddToBag()}
-                labelStyle={{
-                  color: "#fff",
-                  fontSize: 14,
-                  fontFamily: "semibold"
-                }}
-              />
-            </div>
-          </div>
+          <PdfFooter
+            onSave={() => this.onSave()}
+            onAddToBag={() => this.onAddToBag()}
+          />
           <ProductGalleryMobile>
             {mobileGalleryImages.map(val => {
               return <Image image={val.value} />;
