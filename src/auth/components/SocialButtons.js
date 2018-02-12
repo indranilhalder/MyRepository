@@ -51,8 +51,8 @@ export default class SocialButtons extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user) {
-      if (this.props.user.isLoggedIn === true) {
+    if (nextProps.user) {
+      if (nextProps.user.isLoggedIn === true) {
         this.props.history.push("/home");
       }
     }
