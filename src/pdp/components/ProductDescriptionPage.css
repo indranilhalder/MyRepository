@@ -1,8 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  background: #ececec;
-  padding-bottom: 60px;
 }
 .loadingIndicator {
   display: flex;

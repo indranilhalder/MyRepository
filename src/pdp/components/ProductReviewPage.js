@@ -5,6 +5,7 @@ import ProductDetailsCard from "./ProductDetailsCard";
 import WriteReview from "./WriteReview";
 import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
+import PdpFrame from "./PdpFrame";
 import HollowHeader from "./HollowHeader";
 import { MOBILE_PDP_VIEW } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
@@ -29,40 +30,42 @@ class ProductDescriptionPage extends Component {
   render() {
     if (this.props.productDetails) {
       return (
-        <div className={styles.base}>
-          <div className={styles.productBackground}>
-            <HollowHeader
-              addProductToBag={this.props.addProductToBag}
-              addProductToWishList={this.props.addProductToWishList}
-              history={this.props.history}
-            />
-            <ProductDetailsCard
-              productImage={
-                this.props.productDetails.galleryImagesList.filter(val => {
-                  return val.imageType === MOBILE_PDP_VIEW;
-                })[0].galleryImages[0].value
-              }
-              productName={this.props.productDetails.productName}
-              productMaterial={
-                this.props.productDetails.classificationList[0].value
-                  .classificationListValue[5].value.classificationListValue[0]
-              }
-              price={this.props.productDetails.mrpPrice.formattedValue}
-              discountPrice={
-                this.props.productDetails.discountedPrice.formattedValue
-              }
-              averageRating={this.props.productDetails.averageRating}
-              totalNoOfReviews={this.props.productDetails.productReviewsCount}
-            />
+        <PdpFrame>
+          <div className={styles.base}>
+            <div className={styles.productBackground}>
+              <HollowHeader
+                addProductToBag={this.props.addProductToBag}
+                addProductToWishList={this.props.addProductToWishList}
+                history={this.props.history}
+              />
+              <ProductDetailsCard
+                productImage={
+                  this.props.productDetails.galleryImagesList.filter(val => {
+                    return val.imageType === MOBILE_PDP_VIEW;
+                  })[0].galleryImages[0].value
+                }
+                productName={this.props.productDetails.productName}
+                productMaterial={
+                  this.props.productDetails.classificationList[0].value
+                    .classificationListValue[5].value.classificationListValue[0]
+                }
+                price={this.props.productDetails.mrpPrice.formattedValue}
+                discountPrice={
+                  this.props.productDetails.discountedPrice.formattedValue
+                }
+                averageRating={this.props.productDetails.averageRating}
+                totalNoOfReviews={this.props.productDetails.productReviewsCount}
+              />
 
-            <RatingHolder ratingData={this.props.ratingData} />
+              <RatingHolder ratingData={this.props.ratingData} />
+            </div>
+            <div className={styles.reviewText} onClick={this.reviewSection}>
+              {WRITE_REVIEW_TEXT}
+            </div>
+            {this.renderReviewSection()}
+            <ReviewList reviewList={this.props.reviewList} />
           </div>
-          <div className={styles.reviewText} onClick={this.reviewSection}>
-            {WRITE_REVIEW_TEXT}
-          </div>
-          {this.renderReviewSection()}
-          <ReviewList reviewList={this.props.reviewList} />
-        </div>
+        </PdpFrame>
       );
     } else {
       return <div />;
