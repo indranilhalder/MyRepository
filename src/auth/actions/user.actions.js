@@ -99,6 +99,8 @@ const MY_PROFILE = "me";
 const GOOGLE_PLUS = "plus";
 const GOOGLE_PLUS_VERSION = "v1";
 const FAILURE = "Failure";
+const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
+const SOCIAL_CHANNEL_FACEBOOK = "F";
 
 export function loginUserRequest() {
   return {
@@ -522,8 +524,10 @@ export function facebookLogin() {
                 dispatch(
                   socialMediaRegistration(
                     response.email,
+                    response.id,
                     resp.authResponse.accessToken,
-                    FACEBOOK_PLATFORM
+                    FACEBOOK_PLATFORM,
+                    SOCIAL_CHANNEL_FACEBOOK
                   )
                 );
               }
@@ -568,13 +572,18 @@ export function googlePlusLogin() {
               userId: MY_PROFILE
             });
             request.execute(function(resp) {
-              dispatch(
-                socialMediaRegistration(
-                  resp.emails[0].value,
-                  authResponse.access_token,
-                  GOOGLE_PLUS_PLATFORM
-                )
-              );
+              if (resp.emails) {
+                let emailAddress = resp.emails[0].value;
+                dispatch(
+                  socialMediaRegistration(
+                    emailAddress,
+                    emailAddress,
+                    authResponse.id_token,
+                    GOOGLE_PLUS_PLATFORM,
+                    SOCIAL_CHANNEL_GOOGLE_PLUS
+                  )
+                );
+              }
             });
           });
         },
@@ -606,23 +615,23 @@ export function generateCustomerLevelAccessTokenFailure(error) {
 
 export function generateCustomerLevelAccessTokenForSocialMedia(
   userName,
+  id,
   accessToken,
-  platForm
+  platForm,
+  socialChannel
 ) {
-  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
       const result = await api.post(
-        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&testing_param=N&username=${userName}&access_token=${
-          JSON.parse(globalCookie).access_token
-        }&isSocialMedia=Y`
+        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&social_token=${accessToken}&isSocialMedia=Y&social_channel=${socialChannel}&userId_param=${id}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
+      console.log(resultJson);
+      dispatch(socialMediaLogin(userName, platForm, resultJson.access_token));
       dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
       dispatch(customerAccessTokenFailure(e.message));
@@ -645,7 +654,13 @@ export function socialMediaRegistrationFailure(error) {
   };
 }
 
-export function socialMediaRegistration(userName, accessToken, platForm) {
+export function socialMediaRegistration(
+  userName,
+  id,
+  accessToken,
+  platForm,
+  socialChannel
+) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -660,21 +675,14 @@ export function socialMediaRegistration(userName, accessToken, platForm) {
       dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
           userName,
+          id,
           accessToken,
-          platForm
+          platForm,
+          socialChannel
         )
       );
       if (resultJson.status === FAILURE) {
-        if (
-          resultJson.error ===
-          "Email Id already exists, please try with another email Id!"
-        ) {
-          if (customerCookie) {
-            dispatch(socialMediaLogin(userName, platForm));
-          }
-        } else {
-          throw new Error(`${resultJson.message}`);
-        }
+        throw new Error(`${resultJson.message}`);
       }
     } catch (e) {
       dispatch(socialMediaRegistrationFailure(e.message));
@@ -705,24 +713,21 @@ export function socialMediaLoginFailure(error) {
   };
 }
 
-export function socialMediaLogin(userName, platform) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+export function socialMediaLogin(userName, platform, CustomerAccessToken) {
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
       const result = await api.post(
-        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
+        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${CustomerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
-
+      console.log(resultJson);
       dispatch(socialMediaLoginSuccess(resultJson));
     } catch (e) {
+      console.log(e.message);
       dispatch(socialMediaLoginFailure(e.message));
     }
   };

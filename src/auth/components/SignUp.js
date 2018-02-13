@@ -6,6 +6,7 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./SignUp.css";
 import AuthFrame from "./AuthFrame.js";
+import MDSpinner from "react-md-spinner";
 import {
   LOGIN_PATH,
   SIGN_UP_PATH,
@@ -77,6 +78,13 @@ class SignUp extends Component {
       footerText = "Already have an account? Login";
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
+    }
+    if (this.props.user.loading) {
+      return (
+        <div className={styles.loadingIndicator}>
+          <MDSpinner />
+        </div>
+      );
     }
     return (
       <AuthFrame

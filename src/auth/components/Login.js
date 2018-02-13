@@ -8,6 +8,7 @@ import styles from "./Login.css";
 import LoginButton from "./LogInButton";
 import { SUCCESS } from "../../lib/constants";
 import AuthFrame from "./AuthFrame.js";
+import MDSpinner from "react-md-spinner";
 import {
   LOGIN_PATH,
   SIGN_UP_PATH,
@@ -61,7 +62,6 @@ class Login extends Component {
     if (this.props.onChangePassword) {
       this.props.onChangePassword(val);
     }
-
     this.setState({ passwordValue: val });
   }
 
@@ -80,6 +80,13 @@ class Login extends Component {
       footerText = "Already have an account? Login";
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
+    }
+    if (this.props.user.loading) {
+      return (
+        <div className={styles.loadingIndicator}>
+          <MDSpinner />
+        </div>
+      );
     }
     return (
       <AuthFrame
