@@ -36,6 +36,11 @@ export const PRODUCT_PDP_EMI_REQUEST = "PRODUCT_PDP_EMI_REQUEST";
 export const PRODUCT_PDP_EMI_SUCCESS = "PRODUCT_PDP_EMI_SUCCESS";
 export const PRODUCT_PDP_EMI_FAILURE = "PRODUCT_PDP_EMI_FAILURE";
 
+export const PRODUCT_WISH_LIST_REQUEST = "PRODUCT_WISH_LIST_REQUEST";
+export const PRODUCT_WISH_LIST_SUCCESS = "PRODUCT_WISH_LIST_SUCCESS";
+export const PRODUCT_WISH_LIST_FAILURE = "PRODUCT_WISH_LIST_FAILURE";
+export const PRODUCT_WISH_LIST_PATH = "wishList";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
@@ -334,6 +339,44 @@ export function getPdpEmi() {
       dispatch(getPdpEmiSuccess(resultJson));
     } catch (e) {
       dispatch(getPdpEmiFailure(e.message));
+    }
+  };
+}
+
+export function getProductWishListRequest() {
+  return {
+    type: PRODUCT_WISH_LIST_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getProductWishListSuccess(wishList) {
+  return {
+    type: PRODUCT_WISH_LIST_SUCCESS,
+    status: SUCCESS,
+    wishList
+  };
+}
+
+export function getProductWishListFailure(error) {
+  return {
+    type: PRODUCT_WISH_LIST_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getProductWishList() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getProductWishListRequest());
+    try {
+      const result = await api.postMock(PRODUCT_WISH_LIST_PATH);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      // TODO: dispatch a modal here
+      dispatch(getProductWishListSuccess(resultJson));
+    } catch (e) {
+      dispatch(getProductWishListFailure(e.message));
     }
   };
 }
