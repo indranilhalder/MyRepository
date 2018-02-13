@@ -8,11 +8,13 @@ import styles from "./Login.css";
 import LoginButton from "./LogInButton";
 import { SUCCESS } from "../../lib/constants";
 import AuthFrame from "./AuthFrame.js";
+import MDSpinner from "react-md-spinner";
 import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   HOME_ROUTER,
-  MAIN_ROUTER
+  MAIN_ROUTER,
+  SOCIAL_LOG_IN
 } from "../../lib/constants";
 // Forgot password --> shows a modal
 // Don't have an account --> sign up --> a route change.
@@ -61,7 +63,6 @@ class Login extends Component {
     if (this.props.onChangePassword) {
       this.props.onChangePassword(val);
     }
-
     this.setState({ passwordValue: val });
   }
 
@@ -81,12 +82,20 @@ class Login extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = false;
     }
+    if (this.props.user.loading) {
+      return (
+        <div className={styles.loadingIndicator}>
+          <MDSpinner />
+        </div>
+      );
+    }
     return (
       <AuthFrame
         {...this.props}
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}
+        type={SOCIAL_LOG_IN}
       >
         <React.Fragment>
           <div>

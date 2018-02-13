@@ -29,3 +29,5 @@ export const EMI_AVAILABLE = "EMI Available";
 export const DELIVERY_INFORMATION_TEXT = "Delivery Information";
 export const DELIVERY_RATES = "Delivery Rates & Return Policy";
 export const CASH_TEXT = "Cash on Delivery Available!";
+export const SOCIAL_LOG_IN = "logIn";
+export const SOCIAL_SIGN_UP = "signUp";
