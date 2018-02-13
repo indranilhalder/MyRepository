@@ -684,7 +684,6 @@ export function socialMediaRegistration(
   socialChannel
 ) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaRegistrationRequest());
     try {
