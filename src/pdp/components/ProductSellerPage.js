@@ -44,7 +44,7 @@ class ProductSellerPage extends Component {
           />
           <div>
             {this.props.productDetails.otherSellers && (
-              <SellerWithMultiSelect>
+              <SellerWithMultiSelect limit={1}>
                 {this.props.productDetails.otherSellers.map((value, index) => {
                   return (
                     <SellerCard

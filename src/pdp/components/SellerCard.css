@@ -18,12 +18,15 @@
   height: auto;
   line-height: 20px;
   margin-bottom: 10px;
+  font-size:16px;
+
 }
 .priceTitle {
   width: 100%;
   height: auto;
   line-height: 20px;
   margin-bottom: 10px;
+  font-size:14px;
 }
 .description {
   white-space: normal;
@@ -36,24 +39,26 @@
 .discount {
   composes: priceHolder;
   margin-right: 10px;
+  font-size:14px;
 }
 .offerText {
   width: 100%;
   height: auto;
   font-family: regular;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
 }
 .priceCancelled {
   composes: priceHolder;
   text-decoration: line-through;
   color: #ececec;
+  font-size:14px;
 }
 .shippingText {
   width: 100%;
   height: auto;
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
   font-family: regular;
 }
@@ -63,7 +68,7 @@
 }
 .checkCircle {
   position: absolute;
-  width: 25px;
+  width: 20px;
   height: auto;
-  right: 25px;
+  right: 20px;
 }
