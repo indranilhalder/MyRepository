@@ -63,7 +63,7 @@ export default class SocialButtons extends Component {
 
   facebookLogin = () => {
     if (this.props.type) {
-      this.props.googlePlusLogin(this.props.type);
+      this.props.facebookLogin(this.props.type);
     }
   };
   googlePlusLogin = () => {

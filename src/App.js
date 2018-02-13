@@ -77,9 +77,6 @@ class App extends Component {
   }
 
   render() {
-    if (this.props.user.loading) {
-      this.renderLoader();
-    }
     let className = AppStyles.base;
     if (this.props.modalStatus) {
       className = AppStyles.blur;
