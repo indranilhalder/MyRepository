@@ -1,7 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  background: #ececec;
 }
 .loadingIndicator {
   display: flex;
@@ -29,9 +28,10 @@
   font-size: 14px;
   font-family: regular;
 }
+
 .pageHeader {
   width: 100%;
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   z-index: 10;

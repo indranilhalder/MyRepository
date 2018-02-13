@@ -13,7 +13,8 @@ import { withRouter } from "react-router-dom";
 import {
   showModal,
   ADDRESS,
-  PRODUCT_COUPONS
+  PRODUCT_COUPONS,
+  SIZE_GUIDE
 } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
@@ -44,6 +45,9 @@ const mapDispatchToProps = dispatch => {
     },
     getPdpEmi: () => {
       dispatch(getPdpEmi());
+    },
+    showSizeGuide: () => {
+      dispatch(showModal(SIZE_GUIDE));
     }
   };
 };
