@@ -1309,6 +1309,8 @@
 		<property name="inchesWaistSize" type="String" />
 		<property name="inchesBeltLength" type="String" />
 		<!-- This is added by SAP For Accessories END :::: -->
+		<!-- for new ui/ux sizeguide api -->
+		<property name="priority" type="String" />
 	</bean>
 
 	<!-- About Us -->

@@ -576,6 +576,8 @@
 		<property name="cmsWaistSize" type="String" />
 		<property name="inchesWaistSize" type="String" />
 		<property name="inchesBeltLength" type="String" />
+		<!-- for new ui/ux sizeguide api -->
+		<property name="priority" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">
