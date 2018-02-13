@@ -30,7 +30,10 @@ class ProductDescriptionPage extends Component {
   render() {
     if (this.props.productDetails) {
       return (
-        <PdpFrame>
+        <PdpFrame
+          addProductToBag={this.props.addProductToBag}
+          addProductToWishList={this.props.addProductToWishList}
+        >
           <div className={styles.base}>
             <div className={styles.productBackground}>
               <HollowHeader

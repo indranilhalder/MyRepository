@@ -68,7 +68,10 @@ class ProductDescriptionPage extends Component {
         return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
       return (
-        <PdpFrame>
+        <PdpFrame
+          addProductToBag={this.props.addProductToBag}
+          addProductToWishList={this.props.addProductToWishList}
+        >
           <div className={styles.base}>
             <div className={styles.pageHeader}>
               <HollowHeader

@@ -17,7 +17,10 @@ import {
 class ProductSellerPage extends Component {
   render() {
     return (
-      <PdpFrame>
+      <PdpFrame
+        addProductToBag={this.props.addProductToBag}
+        addProductToWishList={this.props.addProductToWishList}
+      >
         <div className={styles.base}>
           <HollowHeader
             addProductToBag={this.props.addProductToBag}
