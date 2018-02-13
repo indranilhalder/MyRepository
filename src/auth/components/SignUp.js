@@ -11,8 +11,10 @@ import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   HOME_ROUTER,
-  MAIN_ROUTER
+  MAIN_ROUTER,
+  SOCIAL_SIGN_UP
 } from "../../lib/constants";
+
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +79,7 @@ class SignUp extends Component {
     if (pathName === SIGN_UP_PATH) {
       footerText = "Already have an account? Login";
       footerClick = () => this.navigateToLogin();
-      showSocialButtons = false;
+      showSocialButtons = true;
     }
     if (this.props.user.loading) {
       return (
@@ -92,6 +94,7 @@ class SignUp extends Component {
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}
+        type={SOCIAL_SIGN_UP}
       >
         <div>
           <div>

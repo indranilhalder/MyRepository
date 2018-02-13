@@ -13,7 +13,8 @@ import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   HOME_ROUTER,
-  MAIN_ROUTER
+  MAIN_ROUTER,
+  SOCIAL_LOG_IN
 } from "../../lib/constants";
 // Forgot password --> shows a modal
 // Don't have an account --> sign up --> a route change.
@@ -94,6 +95,7 @@ class Login extends Component {
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}
+        type={SOCIAL_LOG_IN}
       >
         <React.Fragment>
           <div>

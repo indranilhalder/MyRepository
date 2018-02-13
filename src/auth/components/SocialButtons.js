@@ -9,6 +9,7 @@ import googlePlus from "./img/googlePlus.svg";
 import desktopGooglePlus from "./img/googlePlus_desktop.svg";
 import PropTypes from "prop-types";
 import config from "../../lib/config";
+import { SOCIAL_SIGN_UP } from "../../lib/constants";
 const FACEBOOK_VERSION = "v2.11";
 const FACEBOOK_SDK = "https://connect.facebook.net/en_US/sdk.js";
 const GOOGLE_PLUS_SDK =
@@ -16,6 +17,8 @@ const GOOGLE_PLUS_SDK =
 const SCRIPT = "script";
 const FACEBOOK_JSDK = "facebook-jssdk";
 const TYPE = "text/javascript";
+const SIGN_IN_TEXT = "Sign in with your social account";
+const SIGN_UP_TEXT = "Sign Up with your social account";
 export default class SocialButtons extends Component {
   componentDidMount() {
     //load FaceBook Sdk
@@ -59,22 +62,26 @@ export default class SocialButtons extends Component {
   }
 
   facebookLogin = () => {
-    if (this.props.facebookLogin) {
-      this.props.facebookLogin();
+    if (this.props.type) {
+      this.props.googlePlusLogin(this.props.type);
     }
   };
   googlePlusLogin = () => {
-    if (this.props.googlePlusLogin) {
-      this.props.googlePlusLogin();
+    if (this.props.type) {
+      this.props.googlePlusLogin(this.props.type);
     }
   };
 
   render() {
+    let titleText =
+      this.props.type === SOCIAL_SIGN_UP
+        ? this.props.titleTextSignIp
+        : this.props.titleTextLogin;
     return (
       <div>
         <MediaQuery query="(min-device-width: 1025px)">
           <div className={styles.textHolder}>
-            <p className={styles.title}>{this.props.titleText}</p>
+            <p className={styles.title}>{titleText}</p>
           </div>
           <div className={styles.base}>
             <div className={styles.holder}>
@@ -127,10 +134,12 @@ export default class SocialButtons extends Component {
 }
 
 SocialButtons.propTypes = {
-  titleText: PropTypes.string,
+  titleTextSignIp: PropTypes.string,
+  titleTextLogin: PropTypes.string,
   facebookLogin: PropTypes.func,
   googlePlusLogin: PropTypes.func
 };
 SocialButtons.defaultProps = {
-  titleText: " Sign in with your social account"
+  titleTextLogin: SIGN_IN_TEXT,
+  titleTextSignIp: SIGN_UP_TEXT
 };

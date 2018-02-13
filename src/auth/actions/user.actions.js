@@ -11,6 +11,7 @@ import {
 } from "../../general/modal.actions.js";
 import * as Cookie from "../../lib/Cookie";
 import config from "../../lib/config";
+import { SOCIAL_SIGN_UP } from "../../lib/constants";
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -510,7 +511,8 @@ export function faceBookLoginFailure(error) {
   };
 }
 
-export function facebookLogin() {
+export function facebookLogin(type) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async dispatch => {
     try {
       dispatch(faceBookLoginRequest());
@@ -521,15 +523,25 @@ export function facebookLogin() {
               `/${MY_PROFILE}`,
               { locale: LOCALE, fields: FACEBOOK_FIELDS },
               function(response) {
-                dispatch(
-                  socialMediaRegistration(
-                    response.email,
-                    response.id,
-                    resp.authResponse.accessToken,
-                    FACEBOOK_PLATFORM,
-                    SOCIAL_CHANNEL_FACEBOOK
-                  )
-                );
+                if (type === SOCIAL_SIGN_UP || !customerCookie) {
+                  dispatch(
+                    socialMediaRegistration(
+                      response.email,
+                      response.id,
+                      resp.authResponse.accessToken,
+                      FACEBOOK_PLATFORM,
+                      SOCIAL_CHANNEL_FACEBOOK
+                    )
+                  );
+                } else {
+                  dispatch(
+                    socialMediaLogin(
+                      response.email,
+                      FACEBOOK_PLATFORM,
+                      JSON.parse(customerCookie).access_token
+                    )
+                  );
+                }
               }
             );
           } else {
@@ -561,7 +573,8 @@ export function googlePlusLoginFailure(error) {
   };
 }
 
-export function googlePlusLogin() {
+export function googlePlusLogin(type) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async dispatch => {
     try {
       dispatch(googlePlusLoginRequest());
@@ -574,15 +587,25 @@ export function googlePlusLogin() {
             request.execute(function(resp) {
               if (resp.emails) {
                 let emailAddress = resp.emails[0].value;
-                dispatch(
-                  socialMediaRegistration(
-                    emailAddress,
-                    emailAddress,
-                    authResponse.id_token,
-                    GOOGLE_PLUS_PLATFORM,
-                    SOCIAL_CHANNEL_GOOGLE_PLUS
-                  )
-                );
+                if (type === SOCIAL_SIGN_UP || !customerCookie) {
+                  dispatch(
+                    socialMediaRegistration(
+                      emailAddress,
+                      emailAddress,
+                      authResponse.id_token,
+                      GOOGLE_PLUS_PLATFORM,
+                      SOCIAL_CHANNEL_GOOGLE_PLUS
+                    )
+                  );
+                } else {
+                  dispatch(
+                    socialMediaLogin(
+                      emailAddress,
+                      GOOGLE_PLUS_PLATFORM,
+                      JSON.parse(customerCookie).access_token
+                    )
+                  );
+                }
               }
             });
           });
