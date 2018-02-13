@@ -29,7 +29,7 @@
 .iconHolder {
   position: absolute;
   left: 0px;
-  top: 0;
+  bottom: 5px;
 }
 .wrapper {
   width: 100%;
