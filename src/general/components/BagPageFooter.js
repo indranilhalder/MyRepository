@@ -17,7 +17,7 @@ export default class BagPageFooter extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.wrapper}>
-          <div className={styles.icon} onClick={() => this.onSave()}>
+          <div className={styles.saveButton} onClick={() => this.onSave()}>
             <div className={styles.iconHolder}>
               <Icon image={this.props.image} />
             </div>
