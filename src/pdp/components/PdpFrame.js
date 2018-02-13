@@ -25,3 +25,7 @@ export default class PdpFrame extends React.Component {
     );
   }
 }
+PdpFrame.propTypes = {
+  onSave: PropTypes.func,
+  onAddToBag: PropTypes.func
+};
