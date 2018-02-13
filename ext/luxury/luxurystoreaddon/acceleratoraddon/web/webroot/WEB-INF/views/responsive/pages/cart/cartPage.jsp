@@ -102,6 +102,7 @@
 							</div>
 							<div id="checkout-id" class="checkoutBtn text-center mt-20">
 								<a id="checkout-enabled" href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
+								<span class="tooltiptext">Enter pincode below to continue</span>
 								<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
 							</div>
 							<div class="cartBottomCheck">
