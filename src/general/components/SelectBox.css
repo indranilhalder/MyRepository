@@ -45,11 +45,7 @@
 :global .Select.is-focused > .Select-control {
   background: #fff;
 }
-/* :global .Select.is-focused:not(.is-open) > .Select-control {
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 0 3px rgba(0, 126, 255, 0.1);
-  background: #fff;
-} */
+
 :global
   .Select.has-value.is-clearable.Select--single
   > .Select-control
@@ -82,30 +78,6 @@
   cursor: pointer;
   text-decoration: none;
 }
-/* :global
-  .Select.has-value.Select--single
-  > .Select-control
-  .Select-value
-  a.Select-value-label:hover,
-:global
-  .Select.has-value.is-pseudo-focused.Select--single
-  > .Select-control
-  .Select-value
-  a.Select-value-label:hover,
-:global
-  .Select.has-value.Select--single
-  > .Select-control
-  .Select-value
-  a.Select-value-label:focus,
-:global
-  .Select.has-value.is-pseudo-focused.Select--single
-  > .Select-control
-  .Select-value
-  a.Select-value-label:focus {
-  color: #007eff;
-  outline: none;
-  text-decoration: underline;
-} */
 :global
   .Select.has-value.Select--single
   > .Select-control

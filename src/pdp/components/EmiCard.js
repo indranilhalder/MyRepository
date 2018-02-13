@@ -36,43 +36,47 @@ export default class EmiCard extends React.Component {
     );
   }
   render() {
-    return (
-      <div className={styles.base}>
-        <div className={styles.row}>
-          <div className={styles.label}>Tenure(Months)</div>
-          <div className={styles.info}>
-            <div className={styles.selectBox}>
-              <SelectBox
-                options={this.props.options.map(val => {
-                  return { label: val.term, value: val.term };
-                })}
-                selected={this.state.term}
-                onChange={val => this.handleChange(val)}
-              />
+    if (this.props.options) {
+      return (
+        <div className={styles.base}>
+          <div className={styles.row}>
+            <div className={styles.label}>Tenure(Months)</div>
+            <div className={styles.info}>
+              <div className={styles.selectBox}>
+                <SelectBox
+                  options={this.props.options.map(val => {
+                    return { label: val.term, value: val.term };
+                  })}
+                  selected={this.state.term}
+                  onChange={val => this.handleChange(val)}
+                />
+              </div>
             </div>
           </div>
+          <div className={styles.row}>
+            <div className={styles.label}>Interest Rate</div>
+            <div className={styles.info}>{this.state.interestRate}</div>
+          </div>
+          <div className={styles.row}>
+            <div className={styles.label}>Monthly Installments</div>
+            <div className={styles.amount}>{this.state.monthlyInstallment}</div>
+          </div>
+          <div className={styles.row}>
+            <div className={styles.label}>Total Interest paid to bank</div>
+            <div className={styles.amount}>{this.state.interestPayable}</div>
+          </div>
         </div>
-        <div className={styles.row}>
-          <div className={styles.label}>Interest Rate</div>
-          <div className={styles.info}>{this.state.interestRate}</div>
-        </div>
-        <div className={styles.row}>
-          <div className={styles.label}>Monthly Installments</div>
-          <div className={styles.amount}>{this.state.monthlyInstallment}</div>
-        </div>
-        <div className={styles.row}>
-          <div className={styles.label}>Total Interest paid to bank</div>
-          <div className={styles.amount}>{this.state.interestPayable}</div>
-        </div>
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 }
 EmiCard.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
       interestRate: PropTypes.string,
-      monthlyInstallment: PropTypes.monthlyInstallment,
+      monthlyInstallment: PropTypes.string,
       term: PropTypes.number,
       interestPayable: PropTypes.string
     })
