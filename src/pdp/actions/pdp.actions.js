@@ -51,6 +51,7 @@ const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
 const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
+const REMOVE_FROM_WISH_LIST = "removeFromWl";
 
 export function getProductDescriptionRequest() {
   return {
@@ -150,7 +151,6 @@ export function addProductToWishListFailure(error) {
 }
 
 export function addProductToWishList(productDetails) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToWishListRequest());
     try {
@@ -161,7 +161,7 @@ export function addProductToWishList(productDetails) {
       }
 
       // TODO: dispatch a modal here
-      dispatch(addProductToWishListSuccess(resultJson));
+      dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
     }
@@ -190,23 +190,16 @@ export function removeProductFromWishListFailure(error) {
 }
 
 export function removeProductFromWishList(productDetails) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(removeProductFromWishListRequest());
     try {
-      const result = await api.postMock(
-        `${PRODUCT_DETAILS_PATH}/${CLIENT_ID}/removeProductFromWishlist?USSID=${
-          getState().productDescription.ussid
-        }&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&channel=${CHANNEL}&wishlistName=${MY_WISH_LIST}`
-      );
+      const result = await api.postMock(REMOVE_FROM_WISH_LIST);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(removeProductFromWishListSuccess(resultJson));
+      dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       dispatch(removeProductFromWishListFailure(e.message));
     }
@@ -243,7 +236,7 @@ export function addProductToBag(products) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(addProductToBagSuccess(resultJson));
+      dispatch(addProductToBagSuccess());
       console.log(resultJson);
     } catch (e) {
       console.log(e.message);
