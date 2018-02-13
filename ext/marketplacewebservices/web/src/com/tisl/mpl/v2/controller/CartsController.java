@@ -3943,8 +3943,17 @@ public class CartsController extends BaseCommerceController
 		double userCouponDiscount = 0.0D;
 		double otherDiscount = 0.0D;
 		double totalDiscount = 0.0D;
+		double productDiscount = 0.0D;
 		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
+			{
+				 productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc()
+						.doubleValue() > 0) ? entry.getTotalProductLevelDisc().doubleValue() : 0;
+			}
+		}
 		if (CollectionUtils.isNotEmpty(discountList))
 		{
 			for (final DiscountValue discount : discountList)
@@ -3978,7 +3987,7 @@ public class CartsController extends BaseCommerceController
 			}
 		}
 
-		otherDiscount = totalDiscount - userCouponDiscount;
+		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
 		BigDecimal total = new BigDecimal(0.0D);
 		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
 		if (null != cartModel.getSubtotal())
