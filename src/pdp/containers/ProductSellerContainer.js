@@ -1,7 +1,17 @@
 import { connect } from "react-redux";
 import ProductSellerPage from "../components/ProductSellerPage";
 import { withRouter } from "react-router-dom";
-
+import { addProductToWishList, addProductToBag } from "../actions/pdp.actions";
+const mapDispatchToProps = dispatch => {
+  return {
+    addProductToBag: productDetails => {
+      dispatch(addProductToBag(productDetails));
+    },
+    addProductToWishList: productDetails => {
+      dispatch(addProductToWishList(productDetails));
+    }
+  };
+};
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails
@@ -9,7 +19,7 @@ const mapStateToProps = state => {
 };
 
 const ProductSellerContainer = withRouter(
-  connect(mapStateToProps)(ProductSellerPage)
+  connect(mapStateToProps, mapDispatchToProps)(ProductSellerPage)
 );
 
 export default ProductSellerContainer;

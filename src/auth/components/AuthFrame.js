@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import tataLogo from "./img/tata_Logo.svg";
 import { default as styles } from "./AuthFrame.css";
 import SocialButtons from "./SocialButtons.js";
+
 export default class AuthFrame extends React.Component {
   render() {
     return (
@@ -36,9 +37,11 @@ export default class AuthFrame extends React.Component {
 AuthFrame.propTypes = {
   footerText: PropTypes.string,
   footerClick: PropTypes.func,
-  showSocialButtons: PropTypes.bool
+  showSocialButtons: PropTypes.bool,
+  type: PropTypes.String
 };
 
 AuthFrame.defaultProps = {
-  showSocialButtons: false
+  showSocialButtons: false,
+  type: "Login"
 };

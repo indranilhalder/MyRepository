@@ -11,6 +11,7 @@ import {
 } from "../../general/modal.actions.js";
 import * as Cookie from "../../lib/Cookie";
 import config from "../../lib/config";
+import { SOCIAL_SIGN_UP } from "../../lib/constants";
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -99,6 +100,8 @@ const MY_PROFILE = "me";
 const GOOGLE_PLUS = "plus";
 const GOOGLE_PLUS_VERSION = "v1";
 const FAILURE = "Failure";
+const SOCIAL_CHANNEL_GOOGLE_PLUS = "G";
+const SOCIAL_CHANNEL_FACEBOOK = "F";
 
 export function loginUserRequest() {
   return {
@@ -128,7 +131,7 @@ export function loginUser(userLoginDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${LOGIN_PATH}/${
           userLoginDetails.username
         }/customerLogin?access_token=${
@@ -172,7 +175,7 @@ export function signUpUser(userObj) {
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${SIGN_UP}?access_token=${
           JSON.parse(globalCookie).access_token
         }&isPwa=true&username=${userObj.loginId}&password=${
@@ -217,7 +220,7 @@ export function otpVerification(otpDetails, userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(otpVerificationRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${OTP_VERIFICATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&otp=${otpDetails}&isPwa=true&platformNumber=${PLATFORM_NUMBER}&username=${
@@ -262,7 +265,7 @@ export function forgotPassword(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(forgotPasswordRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${FORGOT_PASSWORD_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&platformNumber=2&isPwa=true&username=${userDetails}`
@@ -307,7 +310,7 @@ export function forgotPasswordOtpVerification(otpDetails, userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(forgotPasswordOtpVerificationRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${FORGOT_PASSWORD_OTP_VERIFICATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&platformNumber=2&otp=${otpDetails}&isPwa=true&username=${userDetails}`
@@ -349,7 +352,7 @@ export function resetPassword(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(resetPasswordRequest());
     try {
-      const result = await api.postMock(RESET_PASSWORD, userDetails);
+      const result = await api.post(RESET_PASSWORD, userDetails);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -388,7 +391,7 @@ export function getGlobalAccessToken() {
   return async (dispatch, getState, { api }) => {
     dispatch(globalAccessTokenRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${TOKEN_PATH}?grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=secret`
       );
       const resultJson = await result.json();
@@ -430,7 +433,7 @@ export function refreshToken() {
   return async (dispatch, getState, { api }) => {
     dispatch(refreshTokenRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${TOKEN_PATH}?refresh_token=${
           JSON.parse(customerCookie).refresh_token
         }&client_id=${CLIENT_ID}&client_secret=secret&grant_type=refresh_token`
@@ -473,7 +476,7 @@ export function customerAccessToken(userDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${
           userDetails.username
         }&password=${userDetails.password}&access_token=${
@@ -508,7 +511,8 @@ export function faceBookLoginFailure(error) {
   };
 }
 
-export function facebookLogin() {
+export function facebookLogin(type) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async dispatch => {
     try {
       dispatch(faceBookLoginRequest());
@@ -519,13 +523,25 @@ export function facebookLogin() {
               `/${MY_PROFILE}`,
               { locale: LOCALE, fields: FACEBOOK_FIELDS },
               function(response) {
-                dispatch(
-                  socialMediaRegistration(
-                    response.email,
-                    resp.authResponse.accessToken,
-                    FACEBOOK_PLATFORM
-                  )
-                );
+                if (type === SOCIAL_SIGN_UP || !customerCookie) {
+                  dispatch(
+                    socialMediaRegistration(
+                      response.email,
+                      response.id,
+                      resp.authResponse.accessToken,
+                      FACEBOOK_PLATFORM,
+                      SOCIAL_CHANNEL_FACEBOOK
+                    )
+                  );
+                } else {
+                  dispatch(
+                    socialMediaLogin(
+                      response.email,
+                      FACEBOOK_PLATFORM,
+                      JSON.parse(customerCookie).access_token
+                    )
+                  );
+                }
               }
             );
           } else {
@@ -557,7 +573,8 @@ export function googlePlusLoginFailure(error) {
   };
 }
 
-export function googlePlusLogin() {
+export function googlePlusLogin(type) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async dispatch => {
     try {
       dispatch(googlePlusLoginRequest());
@@ -568,13 +585,28 @@ export function googlePlusLogin() {
               userId: MY_PROFILE
             });
             request.execute(function(resp) {
-              dispatch(
-                socialMediaRegistration(
-                  resp.emails[0].value,
-                  authResponse.access_token,
-                  GOOGLE_PLUS_PLATFORM
-                )
-              );
+              if (resp.emails) {
+                let emailAddress = resp.emails[0].value;
+                if (type === SOCIAL_SIGN_UP || !customerCookie) {
+                  dispatch(
+                    socialMediaRegistration(
+                      emailAddress,
+                      emailAddress,
+                      authResponse.id_token,
+                      GOOGLE_PLUS_PLATFORM,
+                      SOCIAL_CHANNEL_GOOGLE_PLUS
+                    )
+                  );
+                } else {
+                  dispatch(
+                    socialMediaLogin(
+                      emailAddress,
+                      GOOGLE_PLUS_PLATFORM,
+                      JSON.parse(customerCookie).access_token
+                    )
+                  );
+                }
+              }
             });
           });
         },
@@ -606,23 +638,22 @@ export function generateCustomerLevelAccessTokenFailure(error) {
 
 export function generateCustomerLevelAccessTokenForSocialMedia(
   userName,
+  id,
   accessToken,
-  platForm
+  platForm,
+  socialChannel
 ) {
-  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(customerAccessTokenRequest());
     try {
-      const result = await api.postMock(
-        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&access_token=${
-          JSON.parse(globalCookie).access_token
-        }&isSocialMedia=Y&socialMediaPlatform=${platForm}`
+      const result = await api.post(
+        `${TOKEN_PATH}?grant_type=password&client_id=${CLIENT_ID}&client_secret=secret&username=${userName}&social_token=${accessToken}&isSocialMedia=Y&social_channel=${socialChannel}&userId_param=${id}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
+      dispatch(socialMediaLogin(userName, platForm, resultJson.access_token));
       dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
       dispatch(customerAccessTokenFailure(e.message));
@@ -645,13 +676,18 @@ export function socialMediaRegistrationFailure(error) {
   };
 }
 
-export function socialMediaRegistration(userName, accessToken, platForm) {
+export function socialMediaRegistration(
+  userName,
+  id,
+  accessToken,
+  platForm,
+  socialChannel
+) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaRegistrationRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${SOCIAL_MEDIA_REGISTRATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&emailId=${userName}&socialMedia=${platForm}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
@@ -660,21 +696,14 @@ export function socialMediaRegistration(userName, accessToken, platForm) {
       dispatch(
         generateCustomerLevelAccessTokenForSocialMedia(
           userName,
+          id,
           accessToken,
-          platForm
+          platForm,
+          socialChannel
         )
       );
       if (resultJson.status === FAILURE) {
-        if (
-          resultJson.error ===
-          "Email Id already exists, please try with another email Id!"
-        ) {
-          if (customerCookie) {
-            dispatch(socialMediaLogin(userName, platForm));
-          }
-        } else {
-          throw new Error(`${resultJson.message}`);
-        }
+        throw new Error(`${resultJson.message}`);
       }
     } catch (e) {
       dispatch(socialMediaRegistrationFailure(e.message));
@@ -705,22 +734,17 @@ export function socialMediaLoginFailure(error) {
   };
 }
 
-export function socialMediaLogin(userName, platform) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+export function socialMediaLogin(userName, platform, CustomerAccessToken) {
   return async (dispatch, getState, { api }) => {
     dispatch(socialMediaLoginRequest());
     try {
-      const result = await api.postMock(
-        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
+      const result = await api.post(
+        `${SOCIAL_MEDIA_LOGIN_PATH}/${userName}/loginSocialUser?access_token=${CustomerAccessToken}&emailId=${userName}&socialMedia=${platform}&platformNumber=${PLATFORM_NUMBER}&isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
-
       dispatch(socialMediaLoginSuccess(resultJson));
     } catch (e) {
       dispatch(socialMediaLoginFailure(e.message));
@@ -756,7 +780,7 @@ export function getCustomerProfile() {
   return async (dispatch, getState, { api }) => {
     dispatch(getCustomerProfileRequest());
     try {
-      const result = await api.postMock(
+      const result = await api.post(
         `${CUSTOMER_PROFILE_PATH}/9886973967/getMyProfile?access_token=${
           JSON.parse(customerCookie).access_token
         }&isPwa=true`

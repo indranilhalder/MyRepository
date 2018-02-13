@@ -14,11 +14,11 @@ const mapDispatchToProps = dispatch => {
     showModal: type => {
       dispatch(showModal(type));
     },
-    facebookLogin: () => {
-      dispatch(facebookLogin());
+    facebookLogin: type => {
+      dispatch(facebookLogin(type));
     },
-    googlePlusLogin: () => {
-      dispatch(googlePlusLogin());
+    googlePlusLogin: type => {
+      dispatch(googlePlusLogin(type));
     },
     getGlobalAccessToken: () => {
       dispatch(getGlobalAccessToken());

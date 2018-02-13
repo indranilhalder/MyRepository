@@ -6,12 +6,15 @@ import Input from "../../general/components/Input";
 import PasswordInput from "./PasswordInput";
 import styles from "./SignUp.css";
 import AuthFrame from "./AuthFrame.js";
+import MDSpinner from "react-md-spinner";
 import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   HOME_ROUTER,
-  MAIN_ROUTER
+  MAIN_ROUTER,
+  SOCIAL_SIGN_UP
 } from "../../lib/constants";
+
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +26,8 @@ class SignUp extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user) {
-      if (this.props.user.isLoggedIn === true) {
+    if (nextProps.user) {
+      if (nextProps.user.isLoggedIn === true) {
         this.props.history.push(HOME_ROUTER);
       }
     }
@@ -76,7 +79,14 @@ class SignUp extends Component {
     if (pathName === SIGN_UP_PATH) {
       footerText = "Already have an account? Login";
       footerClick = () => this.navigateToLogin();
-      showSocialButtons = false;
+      showSocialButtons = true;
+    }
+    if (this.props.user.loading) {
+      return (
+        <div className={styles.loadingIndicator}>
+          <MDSpinner />
+        </div>
+      );
     }
     return (
       <AuthFrame
@@ -84,6 +94,7 @@ class SignUp extends Component {
         showSocialButtons={showSocialButtons}
         footerText={footerText}
         footerClick={footerClick}
+        type={SOCIAL_SIGN_UP}
       >
         <div>
           <div>
