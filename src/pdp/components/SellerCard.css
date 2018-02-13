@@ -11,7 +11,7 @@
   height: auto;
   background-color: #ffffff;
   font-family: semibold;
-  padding: 20px;
+  padding: 20px 10px 20px 15px;
 }
 .heading {
   width: 100%;
@@ -19,6 +19,8 @@
   line-height: 20px;
   margin-bottom: 10px;
   font-size:16px;
+  position: relative;
+  padding-right: 25px;
 
 }
 .priceTitle {
@@ -46,20 +48,21 @@
   height: auto;
   font-family: regular;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 22px;
 }
 .priceCancelled {
   composes: priceHolder;
   text-decoration: line-through;
-  color: #ececec;
-  font-size:14px;
+  color: #8d8d8d;
+  font-size: 14px;
+  font-family: regular;
 }
 .shippingText {
   width: 100%;
   height: auto;
   margin-top: 10px;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 22px;
   font-family: regular;
 }
 .textBox2 {
@@ -68,7 +71,8 @@
 }
 .checkCircle {
   position: absolute;
-  width: 20px;
+  width: 18px;
   height: auto;
-  right: 20px;
+  right: 0px;
+  top:0;
 }
