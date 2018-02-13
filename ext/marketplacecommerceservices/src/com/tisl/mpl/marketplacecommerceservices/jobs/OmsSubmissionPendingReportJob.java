@@ -426,14 +426,16 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			else if (paymentInfoModel instanceof ThirdPartyWalletInfoModel)
 			{
 				//changes for paytm integration--Start
-				if (((ThirdPartyWalletInfoModel) paymentInfoModel).getProviderName().equalsIgnoreCase("PAYTM"))
+				if (!((ThirdPartyWalletInfoModel) paymentInfoModel).getProviderName().equalsIgnoreCase("PAYTM"))
 				{
 					//return MplCodeMasterUtility.getglobalCode(MarketplacecommerceservicesConstants.PAYTM.toUpperCase());
+					//SONR FIX -Avoid empty if blocks
+					return MplCodeMasterUtility.getglobalCode(MarketplacecommerceservicesConstants.MRUPEE);
 				}
 				else
-				{
-					return MplCodeMasterUtility.getglobalCode(MarketplacecommerceservicesConstants.MRUPEE);
-					//changes for paytm integration--End
+				{ //SONR FIX
+				  //return MplCodeMasterUtility.getglobalCode(MarketplacecommerceservicesConstants.MRUPEE);
+				  //changes for paytm integration--End
 				}
 			}
 

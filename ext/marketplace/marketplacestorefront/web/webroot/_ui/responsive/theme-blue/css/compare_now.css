@@ -1,0 +1,102 @@
+/* start CMR-11 */
+.page-header {
+	margin: 25px 0 0;
+}
+.container .compare {
+	padding-bottom: 5px;
+}
+.compare {
+	margin-top: 10px;
+}
+.comparison-table {
+	width: 100%;
+    margin-bottom: 15px;
+    position: relative;
+}
+.comparison-table td:first-child {
+	width: 20%;
+    vertical-align: top;
+}
+.comparison-table .jump li.title {
+	text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1.5px;	
+}
+.comparison-table .jump li {
+	font-size: 16px;
+    font-weight: 500;
+    line-height: 40px;
+    word-wrap: break-word;
+    text-transform: capitalize;
+}
+.comparison-table.stats thead tr {
+	background-color: #f0f4f5;
+}
+.comparison-table.stats {
+	border: 2px solid #f0f4f5;
+}
+.comparison-table.stats thead tr td, .comparison-table.stats tbody tr td {
+	padding: 15px;
+    line-height: 20px;
+}
+.comparison-table.stats thead tr td {
+	text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.comparison-table.stats tbody tr td:first-child {
+	text-transform: capitalize;
+    font-size: 16px;
+}
+.comparison-table.stats tbody tr td {
+    float: left;
+}
+/* end CMR-11 */
+.comparison-table.active .jump, .comparison-table.active .image {
+    display: none;
+}
+/* start CMR-45 */
+@media (max-width: 650px) {
+	.page-header h2 {
+		font-size: 24px !important; 	/* changes for TISCSS-113 */
+	}
+	.comparison-table.stats, .comparison-table.stats thead, .comparison-table.stats tbody, .comparison-table.stats tr {
+		display: block;
+	}
+	.comparison-table.stats tr {
+		position: relative;
+	}
+	.comparison-table td {
+	    display: none;
+	}
+	.comparison-table td:nth-child(2), .comparison-table td:nth-child(3) {
+		display: table-cell;
+    	vertical-align: top;
+	}
+	.comparison-table.stats td:first-child {
+	    display: block;
+	    width: 100% !important;
+	}
+	.comparison-table.stats tr::after {
+		clear: both;
+	    content: "";
+	    display: table;
+	}
+	.comparison-table.stats tbody tr td:first-child {
+		font-size: 20px;
+    	padding-bottom: 0;
+	}
+	.comparison-table.stats td {
+    	width: 50% !important;
+	}
+}
+/* start CMR-45 */
+/* start change of TISCSS-68 */
+@media (min-width: 651px) {
+	.page-compare .page-header {
+		padding: 50px 0 !important;		/* modify for TISCSS-68 */
+		margin: 0;
+	}
+}
+/* end change of TISCSS-68 */

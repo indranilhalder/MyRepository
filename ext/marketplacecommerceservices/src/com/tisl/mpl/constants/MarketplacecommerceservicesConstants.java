@@ -26,6 +26,8 @@ import java.util.Date;
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -534,7 +536,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OTP_EXPIRY_MESSAGE = "Sorry! This OTP has expired.";
 	public static final String INVALID_OTP = "The OTP entered is incorrect or invalid."; //UF-277
 	public static final String OTPERROR = "Please Enter valid OTP";
-	public static final String MOBILE_REGEX = "^[0-9]*$";
+	public static final String MOBILE_REGEX = "^[6-9][0-9]{9}$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 2;
 
@@ -1300,6 +1302,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
 	public static final String ORDERTHRESHOLD = "order".intern();
 	//public static final String ORDER = "order".intern();
+	public static final String WH_ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -1455,8 +1458,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SUBORDER = "SubOrder";
 	public static final String PARENTORDER = "Parent";
 	public static final String WEBHOOKUPDATEMSG = "Updating the Web Hook Enty with status EXPIRED".intern();
-	public static final String QUERYFROM = "FROM {".intern();
-	public static final String QUERYWHERE = "WHERE ".intern();
+	public static final String QUERYFROM = " FROM {".intern();
+	public static final String QUERYWHERE = " WHERE ".intern();
 	public static final String QUERYEMAIL = "}=?email ".intern();
 
 	public static final String ORDER_CONF_SUCCESS = "message.orderProcessed";
@@ -2401,8 +2404,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PROFILE_UPDATE_SUCCESS = "Profile updated successfully";
 	public static final String PROFILE_UPDATE_FAIL = "Profile data is not updated";
 
+	public static final String AMP_SERVICEWORKER_QUERY = "select pk from {AmpServiceworker}";
+	public static final String AMP_MENIFEST_JSON_QUERY = "select pk from {AmpMenifest}";
 	//CAR-330
 	public static final String ISVOUCHERTOBEDISPLAYED = "myAcc.voucher.display.flag";
+	//UBI-605
+	public static final String LANDING_PAGE_BY_CATEGORY_CODE_QUERY = "select pk from {ContentPage} where {categoryAssociated} IN ({{select {c.pk} from {Category as c JOIN Catalogversion as cv ON {c.catalogversion}={cv.pk}} WHERE {c.code} = ?categoryCode AND {cv.version} = ?catalogVersion}})";
 
 	//SDI-4494
 	public static final String MANUAL = "MANUAL";
@@ -2418,4 +2425,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//NU-47
 	public static final String B001122 = "B001122";
 
+	public static final String NU003 = "NU003";
+	public static final String NU004 = "NU004";
+
+	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
+
+	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
+
+	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+	public static final String BANNERURLLINK = "bannerUrlLink".intern();
+	public static final String PROMOTEXT1 = "promoText1".intern();
+	public static final String PROMOTEXT2 = "promoText2".intern();
+	public static final String PROMOTEXT3 = "promoText3".intern();
+	public static final String SEQUENCENUMBER = "sequenceNumber".intern();
+	public static final String ORDERTYPE2 = "orderType".intern();
+	public static final String REFUNDCREATEDFORAUDIT = "RefundEntry created for the audit :".intern();
+	public static final String ERRORCREATINGREFUNDENTRYFORAUDIT = "Error while creating refund entry for audit: ".intern();
+	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
+	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
+
+
+	//Report for bulk cancellation
+	/*
+	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
+	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
+	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
+	 */
 }

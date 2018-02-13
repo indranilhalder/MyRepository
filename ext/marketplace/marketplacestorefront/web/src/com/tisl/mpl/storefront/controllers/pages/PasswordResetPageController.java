@@ -145,8 +145,8 @@ public class PasswordResetPageController extends AbstractPageController
 			final String password = loginForm.getJ_password();
 			final String userName = (String) session.getAttribute(SPRING_SECURITY_LAST_USERNAME);
 
-			if (StringUtils
-					.isNotEmpty((String) sessionService.getAttribute(ModelAttributetConstants.LAST_USERNAME_WITH_ERROR_ATTEMPT)))
+			if (StringUtils.isNotEmpty((String) sessionService
+					.getAttribute(ModelAttributetConstants.LAST_USERNAME_WITH_ERROR_ATTEMPT)))
 			{
 				final String username = (String) sessionService
 						.getAttribute(ModelAttributetConstants.LAST_USERNAME_WITH_ERROR_ATTEMPT);
@@ -354,9 +354,8 @@ public class PasswordResetPageController extends AbstractPageController
 					sessionService.setAttribute(ModelAttributetConstants.SESSION_USER_EMAIL, email.trim().toLowerCase());
 
 					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-							MarketplacecommerceservicesConstants.SMS_MESSAGE_FORGOT_PWD
-									.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp),
-							mobileNumber);
+							MarketplacecommerceservicesConstants.SMS_MESSAGE_FORGOT_PWD.replace(
+									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
 					if (null != currentUserToken)
 					{
 						sessionService.setAttribute(ModelAttributetConstants.SESSION_USER_TOKEN, currentUserToken);
@@ -386,8 +385,8 @@ public class PasswordResetPageController extends AbstractPageController
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			callNonBusinessError(model, MessageConstants.ACCOUNT_CONFIRMATION_INVALID_USER);
 			return ModelAttributetConstants.FAILURE;
 		}
@@ -486,8 +485,9 @@ public class PasswordResetPageController extends AbstractPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_REQUEST_EXTERNAL, method = RequestMethod.POST)
-	public String externalPasswordRequest(@Valid final ForgottenPwdForm form, final BindingResult bindingResult, final Model model,
-			final HttpServletRequest request, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	public String externalPasswordRequest(@Valid final ForgottenPwdForm form, final BindingResult bindingResult,
+			final Model model, final HttpServletRequest request, final RedirectAttributes redirectModel)
+			throws CMSItemNotFoundException
 	{
 		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
@@ -538,8 +538,8 @@ public class PasswordResetPageController extends AbstractPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_OTPVALIDATION, method = RequestMethod.POST)
 	public String validateOTP(@Valid final SendSmsOtpForm sendSmsOtpForm, final BindingResult bindingResult, final Model model,
-			final Errors errors, final RedirectAttributes redirectModel)
-			throws CMSItemNotFoundException, UnsupportedEncodingException
+			final Errors errors, final RedirectAttributes redirectModel) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
 		try
 		{
@@ -595,8 +595,8 @@ public class PasswordResetPageController extends AbstractPageController
 		}
 		catch (final UnsupportedEncodingException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0013));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0013));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -784,23 +784,28 @@ public class PasswordResetPageController extends AbstractPageController
 								//TISSAM-2
 								if (enableApp)
 								{
+									//added for SDI-4363 added customerUniqueId
 									return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
 											+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
 											+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS
-											+ ModelAttributetConstants.FAILURE + MarketplacecommerceservicesConstants.MOBILE_SOURCE;
+											+ ModelAttributetConstants.FAILURE + MessageConstants.CUSTOMER_UNIQUE_ID
+											+ ModelAttributetConstants.EQUALS + form.getCustomerUniqueID()
+											+ MarketplacecommerceservicesConstants.MOBILE_SOURCE;
 								}
 								else
 								{
+									//added for SDI-4363 added customerUniqueId
 									return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
 											+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
 											+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS
-											+ ModelAttributetConstants.FAILURE;
+											+ ModelAttributetConstants.FAILURE + MessageConstants.CUSTOMER_UNIQUE_ID
+											+ ModelAttributetConstants.EQUALS + form.getCustomerUniqueID();
 								}
 							}
 							catch (final UnsupportedEncodingException e)
 							{
-								ExceptionUtil.etailNonBusinessExceptionHandler(
-										new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0013));
+								ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+										MarketplacecommerceservicesConstants.E0013));
 								//TISSAM-2
 								if (enableApp)
 								{
@@ -846,15 +851,22 @@ public class PasswordResetPageController extends AbstractPageController
 								MessageConstants.ACCOUNT_CONFIRMATION_PASSWORD_ENTERUNIQUEPASSWORD);
 						try
 						{
-
+							//added for SDI-4363 added customerUniqueId
+							/*
+							 * return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN +
+							 * getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND +
+							 * ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS +
+							 * ModelAttributetConstants.FAILURE;
+							 */
 							return REDIRECT_PREFIX + MessageConstants.LOGIN_PW_CHANGE + MessageConstants.TOKEN
 									+ getURLEncodedToken(form.getToken()) + ModelAttributetConstants.AMPARSAND
-									+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS + ModelAttributetConstants.FAILURE;
+									+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS + ModelAttributetConstants.FAILURE
+									+ MessageConstants.CUSTOMER_UNIQUE_ID + ModelAttributetConstants.EQUALS + form.getCustomerUniqueID();
 						}
 						catch (final UnsupportedEncodingException e)
 						{
-							ExceptionUtil.etailNonBusinessExceptionHandler(
-									new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0013));
+							ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+									MarketplacecommerceservicesConstants.E0013));
 							return REDIRECT_LOGIN;
 						}
 					}
@@ -868,8 +880,8 @@ public class PasswordResetPageController extends AbstractPageController
 
 			catch (final TokenInvalidatedException e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0011));
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.B0011));
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.UPDATEPWD_TOKEN_INVALID);
 			}
 			catch (final EtailBusinessExceptions e)
@@ -917,8 +929,8 @@ public class PasswordResetPageController extends AbstractPageController
 		}
 		catch (final MalformedURLException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0016));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0016));
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 			return ModelAttributetConstants.FAILURE;
 		}

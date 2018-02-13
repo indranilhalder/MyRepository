@@ -314,7 +314,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			else
 			{
 				successFlag = false;
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU003);
 			}
 		}
 		catch (final EtailBusinessExceptions businessException)
@@ -345,7 +345,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			result.setUsername(mobileNumber);
-			result.setMessage("OTP has been sent on your specified email id/phone number");
+			result.setMessage("OTP has been sent on your specified email id or phone number");
 		}
 		return result;
 	}
@@ -945,7 +945,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1046,7 +1046,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1178,11 +1178,17 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			final boolean tataTreatsEnable, final int platformNumber, final String emailId) throws EtailBusinessExceptions,
 			EtailNonBusinessExceptions
 	{
+		LOG.debug("Step 1>>>>>>>>>>>>>>>>>");
+		LOG.debug("UserName :::::::::::::" + login);
+		LOG.debug("Password :::::::::::::" + password);
+		LOG.debug("Email ID :::::::::::::" + emailId);
+
 		final MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
 		try
 		{
 			mplUserHelper.validateRegistrationDataForMobileNumber(login, password);
+			LOG.debug("Step 2>>>>>>>>>>>>>>>>>");
 			LOG.debug("************** User details validated mobile web service ************" + login);
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
@@ -1196,20 +1202,40 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			{
 				registration.setCheckTataRewards(true);
 			}
-			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
+			if (registerCustomerFacade.checkMobileNumberUnique(registration))
 			{
+				LOG.debug("Step 3>>>>>>>>>>>>>>>>>");
+				if (StringUtils.isNotEmpty(emailId))
+				{
+					LOG.debug("Step 4>>>>>>>>>>>>>>>>>");
+					registration.setUid(emailId);
+					if (!registerCustomerFacade.checkEmailIdUnique(registration))
+					{
+						LOG.debug("Step 5>>>>>>>>>>>>>>>>>");
+						successFlag = false;
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU002);
+					}
+				}
+				LOG.debug("Step 6>>>>>>>>>>>>>>>>>");
 				registerCustomerFacade.register(registration, platformNumber);
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU003);
 			}
 		}
 		catch (final EtailBusinessExceptions businessException)
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			if (businessException.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.NU003))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU003);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			}
 		}
 		catch (final DuplicateUidException e)
 		{
@@ -1228,7 +1254,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-
+		LOG.debug("Step 7>>>>>>>>>>>>>>>>>");
 		if (successFlag)
 		{
 			//Set success flag

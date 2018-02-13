@@ -50,4 +50,11 @@ public interface MplCustomerProfileService
 	 */
 	boolean checkUniquenessOfEmail(String emailId);
 
+
+	/**
+	 * @param userIdLwCase
+	 * @return
+	 */
+	MplCustomerProfileData getCustomerProfileDetailMobile(String userIdLwCase);
+
 }

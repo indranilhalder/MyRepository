@@ -746,9 +746,11 @@ $(document).on("click",".plp-wishlist",function(e){
 		    //change for INC144314854 
 			//if(loggedIn == 'false') {
 		    if(!headerLoggedinStatus) {
+		    	$(".wishAddLoginPlp>span").css("display","block");	/*add for TISCSS-166*/
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
-					$(".wishAddLoginPlp").removeClass("active")
+					$(".wishAddLoginPlp").removeClass("active");
+					$(".wishAddLoginPlp>span").css("display","none");	/*add for TISCSS-166*/
 				},3000)
 				return false;
 			}	
@@ -759,17 +761,21 @@ $(document).on("click",".plp-wishlist",function(e){
 					data : dataString,
 					dataType : "json",			
 					success : function(data){
-						if (data == true) {					
+						if (data == true) {	
+							$(".wishRemoveSucessPlp>span").css("display","block");	/*add for TISCSS-166*/
 							$(".wishRemoveSucessPlp").addClass("active");
 							setTimeout(function(){
-								$(".wishRemoveSucessPlp").removeClass("active")
+								$(".wishRemoveSucessPlp").removeClass("active");
+								$(".wishRemoveSucessPlp>span").css("display","none");	/*add for TISCSS-166*/
 							},3000)
 							$(el).removeClass("added");
 						}
 						else{
+							$(".wishAlreadyAddedPlp>span").css("display","block");	/*add for TISCSS-166*/
 							$(".wishAlreadyAddedPlp").addClass("active");
 							setTimeout(function(){
-								$(".wishAlreadyAddedPlp").removeClass("active")
+								$(".wishAlreadyAddedPlp").removeClass("active");
+								$(".wishAlreadyAddedPlp>span").css("display","none");	/*add for TISCSS-166*/
 							},3000)
 						}
 						//TPR-6364
@@ -814,9 +820,11 @@ $(document).on("click",".plp-wishlist",function(e){
 		    // Change for INC144314854 
 			//if(loggedIn == 'false') {
 		    if(!headerLoggedinStatus) {
+		    	$(".wishAddLoginPlp>span").css("display","block");	/*add for TISCSS-166*/
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
-					$(".wishAddLoginPlp").removeClass("active")
+					$(".wishAddLoginPlp").removeClass("active");
+					$(".wishAddLoginPlp>span").css("display","none");	/*add for TISCSS-166*/
 				},3000)
 				return false;
 			}	
@@ -827,17 +835,21 @@ $(document).on("click",".plp-wishlist",function(e){
 					data : dataString,
 					dataType : "json",			
 					success : function(data){
-						if (data == true) {					
+						if (data == true) {			
+							$(".wishAddSucessPlp>span").css("display","block");	/*add for TISCSS-166*/
 							$(".wishAddSucessPlp").addClass("active");
 							setTimeout(function(){
-								$(".wishAddSucessPlp").removeClass("active")
+								$(".wishAddSucessPlp").removeClass("active");
+								$(".wishAddSucessPlp>span").css("display","none");	/*add for TISCSS-166*/
 							},3000)
 							$(el).addClass("added");
 						}
 						else{
+							$(".wishAlreadyAddedPlp>span").css("display","block");	/*add for TISCSS-166*/
 							$(".wishAlreadyAddedPlp").addClass("active");
 							setTimeout(function(){
-								$(".wishAlreadyAddedPlp").removeClass("active")
+								$(".wishAlreadyAddedPlp").removeClass("active");
+								$(".wishAlreadyAddedPlp>span").css("display","none");	/*add for TISCSS-166*/
 							},3000)
 						}
 						/*TPR-4723*//*TPR-4708*/

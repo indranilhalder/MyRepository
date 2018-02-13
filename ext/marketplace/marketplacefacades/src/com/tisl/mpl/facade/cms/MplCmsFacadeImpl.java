@@ -28,7 +28,6 @@ import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductD
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -59,6 +58,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
@@ -73,6 +74,8 @@ import com.tisl.mpl.core.model.SignColComponentModel;
 import com.tisl.mpl.core.model.SignColItemComponentModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.facades.cms.data.AmpMenifestData;
+import com.tisl.mpl.facades.cms.data.AmpServiceWorkerData;
 import com.tisl.mpl.facades.cms.data.BannerComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionHeroComponentData;
@@ -421,6 +424,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 		this.configurationService = configurationService;
 	}
+
+
+	private Converter<AmpServiceworkerModel, AmpServiceWorkerData> ampServiceworkerConverter;
+	private Converter<AmpMenifestModel, AmpMenifestData> ampMenifestJsonConverter;
 
 	/*
 	 * (non-Javadoc)
@@ -1542,10 +1549,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 									productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
 								}
 								// changes for INC144318868 - Offer prize is not coming for WCMS component
-								/*if (buyboxdata.getPrice() != null)
-								{
-									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
-								}*/
+								/*
+								 * if (buyboxdata.getPrice() != null) {
+								 * productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue()); }
+								 */
 								if (null != buyboxdata.getSpecialPriceMobile())
 								{
 									productComp.setSlashedPrice(buyboxdata.getSpecialPriceMobile().getFormattedValue());
@@ -1553,7 +1560,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								else if (null != buyboxdata.getPrice())
 								{
 									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
-								}  
+								}
 
 								if (productModel != null)
 								{
@@ -3355,6 +3362,77 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		}
 
 		return outerMap;
+	}
+
+	/**
+	 * @return AmpServiceWorkerData
+	 */
+	@Override
+	public AmpServiceWorkerData getAmpServiceWorkerData()
+	{
+		// The call for fetching list of serviceworker models
+		final AmpServiceworkerModel ampServiceWorkerModel = getMplCMSPageService().getAmpServiceworkers();
+
+		//The data object to convert model to data
+		AmpServiceWorkerData ampServiceWorkerData = null;
+		if (null != ampServiceWorkerModel)
+		{
+			ampServiceWorkerData = getAmpServiceworkerConverter().convert(ampServiceWorkerModel);
+		}
+		return ampServiceWorkerData;
+	}
+
+	/**
+	 * @return the ampServiceworkerConverter
+	 */
+	public Converter<AmpServiceworkerModel, AmpServiceWorkerData> getAmpServiceworkerConverter()
+	{
+		return ampServiceworkerConverter;
+	}
+
+	/**
+	 * @param ampServiceworkerConverter
+	 *           the ampServiceworkerConverter to set
+	 */
+	public void setAmpServiceworkerConverter(final Converter<AmpServiceworkerModel, AmpServiceWorkerData> ampServiceworkerConverter)
+	{
+		this.ampServiceworkerConverter = ampServiceworkerConverter;
+	}
+
+	/**
+	 * @return the ampMenifestJsonConverter
+	 */
+	public Converter<AmpMenifestModel, AmpMenifestData> getAmpMenifestJsonConverter()
+	{
+		return ampMenifestJsonConverter;
+	}
+
+	/**
+	 * @param ampMenifestJsonConverter
+	 *           the ampMenifestJsonConverter to set
+	 */
+	public void setAmpMenifestJsonConverter(final Converter<AmpMenifestModel, AmpMenifestData> ampMenifestJsonConverter)
+	{
+		this.ampMenifestJsonConverter = ampMenifestJsonConverter;
+	}
+
+	/**
+	 * @return AmpMenifestData
+	 */
+	@Override
+	public AmpMenifestData getAmpMenifestData()
+	{
+		// The call for fetching list of AmpMenifest models
+		final AmpMenifestModel ampMenifestModel = getMplCMSPageService().getAmpMenifestJsons();
+
+		//The data object to convert model to data
+		AmpMenifestData ampMenifestData = null;
+		if (null != ampMenifestModel)
+		{
+			ampMenifestData = getAmpMenifestJsonConverter().convert(ampMenifestModel);
+		}
+
+		return ampMenifestData;
 	}
 
 }

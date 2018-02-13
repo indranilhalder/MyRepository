@@ -18,4 +18,6 @@ public interface BulkCancellationService
 
 	List<CronJobModel> fetchJobDetails(String code);
 
+	/* public List<BulkCancellationProcessModel> getOrderCancelData(); */
+
 }

@@ -153,7 +153,10 @@ public class DefaultPromotionManager extends PromotionsManager
 	private static final String AS_PPROM = " ) AS pprom";
 	private static final String PPROM = " ) pprom";
 	private static final String SELECT_CAT2PROD_TARGET = "{{ SELECT {cat2prod:target} as pk  ";
-
+	private static final String DELIVERY_NOT_NULL="deliveryCode cannot be null";
+	private static final String CURRENCYISOCODE_NOT_NULL="currencyIsoCode cannot be null";
+	private static final String SELLERSKU_NOT_NULL="sellerArticleSKU cannot be null";
+	
 	//Change for FineJewellery
 	/**
 	 * @return the jewelleryService
@@ -1946,8 +1949,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	//				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 	//				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
 	//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-	//				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-	//				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+	//				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+	//				ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 	//				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 	//						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 	//				prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel);
@@ -2113,9 +2116,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			final String selectedDeliveryModeCode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
 			final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-			ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-			ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+			ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+			ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 			MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 					selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entryModel.getFulfillmentType());
 			if (null == mplZoneDeliveryModeValueModel)
@@ -2145,8 +2148,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		//				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 		//				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
 		//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-		//				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-		//				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+		//				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+		//				ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 		//				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 		//						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entry.getFulfillmentType());
 		//				if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
@@ -2220,9 +2223,9 @@ public class DefaultPromotionManager extends PromotionsManager
 			{
 				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+				ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 				if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
@@ -2303,9 +2306,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		{
 			final String selectedDeliveryModeCode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
 			final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-			ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-			ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+			ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+			ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 			MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 					selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entryModel.getFulfillmentType());
 			if (null == mplZoneDeliveryModeValueModel)
@@ -2353,9 +2356,9 @@ public class DefaultPromotionManager extends PromotionsManager
 			final String entryUssid = entry.getSelectedUSSID();
 			final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-			ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-			ServicesUtil.validateParameterNotNull(entryUssid, "sellerArticleSKU cannot be null");
+			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+			ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+			ServicesUtil.validateParameterNotNull(entryUssid, SELLERSKU_NOT_NULL);
 			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 					selectedDeliveryModeCode, currencyIsoCode, entryUssid);
 
@@ -2378,9 +2381,9 @@ public class DefaultPromotionManager extends PromotionsManager
 				final String entryUssid = entry.getSelectedUSSID();
 				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-				ServicesUtil.validateParameterNotNull(entryUssid, "sellerArticleSKU cannot be null");
+				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+				ServicesUtil.validateParameterNotNull(entryUssid, SELLERSKU_NOT_NULL);
 				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 						selectedDeliveryModeCode, currencyIsoCode, entryUssid, entry.getFulfillmentType());
 
@@ -2404,9 +2407,9 @@ public class DefaultPromotionManager extends PromotionsManager
 				final String entryUssid = entry.getSelectedUSSID();
 				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-				ServicesUtil.validateParameterNotNull(entryUssid, "sellerArticleSKU cannot be null");
+				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+				ServicesUtil.validateParameterNotNull(entryUssid, SELLERSKU_NOT_NULL);
 				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 						selectedDeliveryModeCode, currencyIsoCode, entryUssid, entry.getFulfillmentType());
 
@@ -2448,9 +2451,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	//			{
 	//				//				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 	//				//				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-	//				//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-	//				//				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-	//				//				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+	//				//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+	//				//				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+	//				//				ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 	//				//				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 	//				//						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 	//				entry.setCurrDelCharge(Double.valueOf(0.00D));
@@ -3999,9 +4002,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	//			{
 	//				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 	//				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-	//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-	//				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-	//				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+	//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+	//				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+	//				ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 	//				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 	//						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 	//				if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
@@ -4125,9 +4128,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	//			{
 	//				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 	//				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-	//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-	//				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-	//				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+	//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+	//				ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+	//				ServicesUtil.validateParameterNotNull(selectedUSSID, SELLERSKU_NOT_NULL);
 	//				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 	//						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID);
 	//				prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel);
@@ -4912,9 +4915,9 @@ public class DefaultPromotionManager extends PromotionsManager
 	//			final String entryUssid = entry.getSelectedUSSID();
 	//			final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 	//			final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-	//			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-	//			ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-	//			ServicesUtil.validateParameterNotNull(entryUssid, "sellerArticleSKU cannot be null");
+	//			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, DELIVERY_NOT_NULL);
+	//			ServicesUtil.validateParameterNotNull(currencyIsoCode, CURRENCYISOCODE_NOT_NULL);
+	//			ServicesUtil.validateParameterNotNull(entryUssid, SELLERSKU_NOT_NULL);
 	//			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
 	//					selectedDeliveryModeCode, currencyIsoCode, entryUssid);
 	//

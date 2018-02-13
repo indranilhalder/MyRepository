@@ -1,0 +1,184 @@
+### AMP footer text impex
+
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];footerText;
+;;FooterComponent;"<p class='MsoNormal'> 	<b> 		<span class='MsoNormalSpan'>Tata CLiQ: Online shopping in India at the most trusted destination</span> 	</b> 		<span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'> <span class='MsoNormalSpan'>Shop online whenever you want to - yes, that 24x7 experience is so convenient now, isn't it?! And you get genuine products delivered to your doorstep from your favourite brands with free shipping. Our clean, immersive design allows for easy navigation across categories and brand stores so you can find the best products from a wide range of <a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-smartphones/c-msh1210100'>smartphones</a>, <a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones/c-msh1210'>mobile phones</a>, <a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop/c-msh1223'>laptops</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing/c-msh10'>women's clothing</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing/c-msh11'>men's clothing</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/kids/c-msh21'>kids wear</a>,&nbsp; <a class='MsoNormalAnchor' href='https://www.tatacliq.com/footwear/c-msh13'>footwear</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/watches/c-msh15'>watches</a> and  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/accessories/c-msh16'>accessories</a> online. You can also check our great  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/offers-coupons'>offers</a> or  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/deal-of-the-day'>deal of the day</a> section and get the best prices on various products across lifestyle, fashion, electronics, appliances &amp; more.</span> <span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'> <span class='MsoNormalSpan'>&nbsp;</span> <span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'><b> <span class='MsoNormalSpan'>Online Shopping: Fast &amp; convenient with the click of a button</span></b> <span class='MsoNormalSpan'><o:p></o:p></span></p> <p class='MsoNormal' > <span class='MsoNormalSpan'>The upside of  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/'>online shopping at Tata CLiQ</a> is that you'll save on time and (money). It's as simple as comparing products and prices online before making the right buy. What's more, you also have the option to pay for your favourite brands and products using our easy EMI options. Of course, you can buy and try - in the convenience of your home. Returns are easy too: We'll pick up your returns for free or you can also drop off the goods at the nearest brand store. The downside? There is no downside. Still have a question? email us at  <a class='MsoNormalAnchor helloSpan' href='mailto:hello@tatacliq.com' target='_blank'><span>hello@tatacliq.com</span></a>. </span> <span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'> <span class='MsoNormalSpan'>&nbsp;</span> <span class='MsoNormalSpan'><o:p></o:p></span> </p>    <p class='MsoNormal'> <b> <span class='MsoNormalSpan'>Tata CLiQ Shopping App: Everything you want with just a few clicks on Android &amp; iOS</span> </b> <span class='MsoNormalSpan'><o:p></o:p></span> </p>   <p class='MsoNormal'> <span class='MsoNormalSpan'>Shopping on the Tata CLiQ App is an absolute delight. Download the  <a class='MsoNormalAnchor' href='https://play.google.com/store/apps/details?id=com.tul.tatacliq'>Tata CLiQ Android app</a> from the Play Store or the  <a class='MsoNormalAnchor' href='https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8'>iOS App</a> from Apple App Store and get set to enjoy a range of benefits. Apart from the best deals, amazing offers and the latest styles online, the app also gives you the flexibility to shop at your convenience. Shop during a commute, in the middle of a holiday or at any time you want to. You can also use the easy share options to share your shopping with your friends and family to ensure you're buying something that's perfect. With constant updates and a host of new features being introduced constantly, you also get to enjoy a shopping experience that you'll absolutely love. Download the Tata CLiQ App today and prepare to rediscover the way you shop. <br><br> </span> </p> <p class='MsoNormal'></p> <h2> <b> <span class='MsoNormalSpan'>Popular Searches</span> </b> </h2> <span class='MsoNormalSpan'><o:p></o:p></span><p></p> <p class='MsoNormal'> 	<b> 		<span class='MsoNormalSpan'>Tata CLiQ: Online shopping in India at the most trusted destination</span> 	</b> 		<span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'> <span class='MsoNormalSpan'>Shop online whenever you want to - yes, that 24x7 experience is so convenient now, isn't it?! And you get genuine products delivered to your doorstep from your favourite brands with free shipping. Our clean, immersive design allows for easy navigation across categories and brand stores so you can find the best products from a wide range of <a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-smartphones/c-msh1210100'>smartphones</a>, <a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones/c-msh1210'>mobile phones</a>, <a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop/c-msh1223'>laptops</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing/c-msh10'>women's clothing</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing/c-msh11'>men's clothing</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/kids/c-msh21'>kids wear</a>,&nbsp; <a class='MsoNormalAnchor' href='https://www.tatacliq.com/footwear/c-msh13'>footwear</a>,  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/watches/c-msh15'>watches</a> and  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/accessories/c-msh16'>accessories</a> online. You can also check our great  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/offers-coupons'>offers</a> or  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/deal-of-the-day'>deal of the day</a> section and get the best prices on various products across lifestyle, fashion, electronics, appliances &amp; more.</span> <span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'> <span class='MsoNormalSpan'>&nbsp;</span> <span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'><b> <span class='MsoNormalSpan'>Online Shopping: Fast &amp; convenient with the click of a button</span></b> <span class='MsoNormalSpan'><o:p></o:p></span></p> <p class='MsoNormal' > <span class='MsoNormalSpan'>The upside of  <a class='MsoNormalAnchor' href='https://www.tatacliq.com/'>online shopping at Tata CLiQ</a> is that you'll save on time and (money). It's as simple as comparing products and prices online before making the right buy. What's more, you also have the option to pay for your favourite brands and products using our easy EMI options. Of course, you can buy and try - in the convenience of your home. Returns are easy too: We'll pick up your returns for free or you can also drop off the goods at the nearest brand store. The downside? There is no downside. Still have a question? email us at  <a class='MsoNormalAnchor helloSpan' href='mailto:hello@tatacliq.com' target='_blank'><span>hello@tatacliq.com</span></a>. </span> <span class='MsoNormalSpan'><o:p></o:p></span> </p> <p class='MsoNormal'> <span class='MsoNormalSpan'>&nbsp;</span> <span class='MsoNormalSpan'><o:p></o:p></span> </p>    <p class='MsoNormal'> <b> <span class='MsoNormalSpan'>Tata CLiQ Shopping App: Everything you want with just a few clicks on Android &amp; iOS</span> </b> <span class='MsoNormalSpan'><o:p></o:p></span> </p>   <p class='MsoNormal'> <span class='MsoNormalSpan'>Shopping on the Tata CLiQ App is an absolute delight. Download the  <a class='MsoNormalAnchor' href='https://play.google.com/store/apps/details?id=com.tul.tatacliq'>Tata CLiQ Android app</a> from the Play Store or the  <a class='MsoNormalAnchor' href='https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8'>iOS App</a> from Apple App Store and get set to enjoy a range of benefits. Apart from the best deals, amazing offers and the latest styles online, the app also gives you the flexibility to shop at your convenience. Shop during a commute, in the middle of a holiday or at any time you want to. You can also use the easy share options to share your shopping with your friends and family to ensure you're buying something that's perfect. With constant updates and a host of new features being introduced constantly, you also get to enjoy a shopping experience that you'll absolutely love. Download the Tata CLiQ App today and prepare to rediscover the way you shop. <br><br> </span> </p> <p class='MsoNormal'></p> <h2> <b> <span class='MsoNormalSpan'>Popular Searches</span> </b> </h2> <span class='MsoNormalSpan'><o:p></o:p></span><p></p> <p class='MsoNormal'>
+<span class='MsoNormalSpan'>
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/samsung/c-mbh12e00016'>Samsung Mobile</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/lyf/c-mbh12e01011'>LYF Mobile</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/oppo/c-mbh12e00256'>Oppo Mobile</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/vivo/c-mbh12e00181'>Vivo Mobile</a>	 |  
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/gionee/c-mbh12e00037'>Gionee Mobile</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-micromax/c-msh1210/b-mbh12e00076'>Micromax Mobile</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-smartphones-vivo/c-msh1210100/b-mbh12e00181'>Vivo Smartphone</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-smartphones-samsung/c-msh1210100/b-mbh12e00016'>Samsung Smartphone</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-smartphones-oppo/c-msh1210100/b-mbh12e00256'>Oppo Smartphone</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-iphone-apple/c-msh1210102/b-mbh12e00008'>Apple iPhone</a>   | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/apple-iphone-8'>iPhone 8</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/apple-iphone-x'>iPhone X</a>  | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/infocus/c-mbh12e00379'>Infocus Mobile</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/xolo/c-mbh12e00211'>Xolo Mobile</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/intex/c-mbh12e00108'>Intex Mobiles</a>| 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/oppo-f5-32-gb-gold-4-gb-ram-dual-sim-4g/p-mp000000001979510'>Oppo F5</a>  | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/xiaomi-mi-max-2-64gb-black-4-gb-ram-dual-sim-4g/p-mp000000001666125'>Mi Max 2</a>  | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-accessories-power-bank-xiaomi/c-msh1222103/b-mbh12e00015'>Mi Power Bank</a>  | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/ambrane/c-mbh12e00768'>Ambrane Power Bank</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-full-hd-led-tv/c-msh1216104'>LED TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-sony/c-msh1216/b-mbh12e00002'>Sony TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-samsung/c-msh1216/b-mbh12e00016'>Samsung TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-lg/c-msh1216/b-mbh12e00007'>LG TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-full-hd-led-tv-samsung/c-msh1216104/b-mbh12e00016'>Samsung LED TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-full-hd-led-tv-sony/c-msh1216104/b-mbh12e00002'>Sony LED TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-micromax/c-msh1216/b-mbh12e00076'>Micromax TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-mobile-phones-smartphones-panasonic/c-msh1210100/b-mbh12e00017'>Panasonic LED TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-tv-full-hd-led-tv-lg/c-msh1216104/b-mbh12e00007'>LG LED TV</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-speakers-jbl/c-msh1235/b-mbh12e00013'>JBL Speakers</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/jbl/c-mbh12e00013'>JBL Headphones</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop-dell/c-msh1223/b-mbh12e00011'>Dell Laptops</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop-hp/c-msh1223/b-mbh12e00003'>HP Laptops</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop-lenovo/c-msh1223/b-mbh12e00018'>Lenovo Laptops</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop-acer/c-msh1223/b-mbh12e00044'>Acer Laptops</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop-asus/c-msh1223/b-mbh12e00093'>Asus Laptop</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-laptop-apple/c-msh1223/b-mbh12e00008'>Apple Laptop</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/canon/c-mbh12e00010'>Canon Camera</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/nikon/c-mbh12e00022'>Nikon Camera</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-camera-sony/c-msh1220/b-mbh12e00002'>Sony Camera</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-camera-dslr/c-msh1220105'>DSLR Camera</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-speakers-bluetooth/c-msh1235100'>Bluetooth Speakers</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/tp-link/c-mbh12e00473'>TP Link Router</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/dlink/c-mbh12e00074'>D-Link Router</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/xiaomi-mi-wi-fi-router-3c-white/p-mp000000001557711'>Mi Router 3C</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-washing-machine-lg/c-msh1214103/b-mbh12e00007'>LG Washing Machine</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-washing-machine-ifb/c-msh1214103/b-mbh12e00039'>IFB Washing Machine</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-washing-machine-samsung/c-msh1214103/b-mbh12e00016'>Samsung Washing Machine</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-washing-machine-whirlpool/c-msh1214103/b-mbh12e00047'>Whirlpool Washing Machine</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-refrigerators-lg/c-msh1214100/b-mbh12e00007'>LG Refrigerator</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-refrigerators-samsung/c-msh1214100/b-mbh12e00016'>Samsung Refrigerator</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-refrigerators-whirlpool/c-msh1214100/b-mbh12e00047'>Whirlpool Refrigerator</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-large-appliances-refrigerators-godrej/c-msh1214100/b-mbh12e00043'>Godrej Refrigerator</a>	 | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-personal-care-trimmer-shaver-philips/c-msh1236105/b-mbh12e00006'>Philips Trimmer</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-small-appliances-air-purifier/c-msh1231100'>Air Purifiers</a>   | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-small-appliances-vacuum-cleaner/c-msh1231101'>Vacuum Cleaner</a>     | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/electronics-printer-parts/c-msh1227'>Printers</a>     | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/philips/c-mbh12e00006'>Philips</a>    | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/lg/c-mbh12e00007'>LG</a>  | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/carrier/c-mbh12e00058'>Carrier AC</a>   | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/ifb/c-mbh12e00039'>IFB</a>    <br>      
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-casual-wear-shirts-mufti/c-msh1116101/b-mbh11a00332'>Mufti Shirts</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/jack-jones/c-mbh11a00082'>Jack &amp; Jones</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/pepe-jeans/c-mbh11a00020'>Pepe Jeans</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/levis/c-mbh11a00340'>Levi's India</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/allen-solly/c-mbh11a00023'>Allen Solly</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/fabindia/c-mbh11a00198'>FabIndia</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-casual-wear-jeans-spykar/c-msh1116105/b-mbh11a00100'>Spykar Jeans</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/vero-moda/c-mbh11a00018'>Vero Moda</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/only/c-mbh11a00019'>Only</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/w/c-mbh11a00006'>W For Women</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/aurelia/c-mbh11a00005'>Aurelia</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-inner-nightwear-bras-jockey/c-msh1014100/b-mbh11a00035'>Jockey Bras</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-inner-nightwear-bras-zivame/c-msh1014100/b-mbh11a00397'>Zivame Bras</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/clovia/c-mbh11a00353'>Clovia</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/amante/c-mbh11a00038'>Amante</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-ethnic-wear-kurtis-kurtas-aurelia/c-msh1012100/b-mbh11a00005'>Aurelia Kurtis</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/titan/c-mbh15e01399'>Titan Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/fastrack/c-mbh15w00072'>Fastrack Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/fossil/c-mbh15w00077'>Fossil Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/casio/c-mbh15e00576'>Casio Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/sonata/c-mbh15w00181'>Sonata Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/guess/c-mbh15e00461'>Guess Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/timex/c-mbh15w00206'>Timex Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/tommy-hilfiger/c-mbh15a00052'>Tommy Hilfiger Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/maxima/c-mbh15w00137'>Maxima Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/bata/c-mbh13f00015'>Bata Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mochi/c-mbh13f00005'>Mochi Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/metro/c-mbh13f00004'>Metro Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/aldo/c-mbh13f00012'>Aldo Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/catwalk/c-mbh13f00024'>Catwalk</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/crocs/c-mbh13f00032'>Crocs India</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/lotto/c-mbh13f00057'>Lotto Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/woodland/c-mbh13f00086'>Woodland Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/red-tape/c-mbh13f00070'>Red Tape Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/clarks/c-mbh13f00029'>Clarks</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/nike/c-mbh13a00092'>Nike Shoes India</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/reebok/c-mbh13a00099'>Reebok Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/ruosh/c-mbh13f00072'>Ruosh Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/adidas/c-mbh13f00009'>Adidas Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/alberto-torresi/c-mbh13f00011'>Alberto Torresi</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/puma/c-mbh13a00168'>Puma Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/caprese/c-mbh16w00035'>Caprese Bags</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/lavie/c-mbh16w00122'>Lavie Bags</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/accessories-mens-bags-fastrack/c-msh1604/b-mbh16w00072'>Fastrack Bags</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/skybags/c-mbh16w00180'>Skybags</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/lilliput/c-mbh11f00241'>Lilliput</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/nauti-nati/c-mbh11a00143'>Nauti Nati</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-ethnic-wear-sarees/c-msh1012102'>Sarees</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/kids-girls-clothing-dresses/c-msh2111102'>Dresses For Girls</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-casual-wear-tops-tunics/c-msh1016102'>Tops For Girls</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/watches-men/c-msh1500'>Mens Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-ethnic-wear-suits/c-msh1012101'>Salwar Suit</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/watches-women/c-msh1501'>Ladies Watches</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/accessories-mens-bags-wallets/c-msh1604000'>Wallets For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/footwear-men-running/c-msh1311117'>Sports Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-casual-wear-jackets/c-msh1116103'>Jackets For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-casual-wear-shirts/c-msh1116101'>Shirts For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-casual-wear-jumpsuits/c-msh1016108'>Jumpsuit</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-casual-wear-dresses/c-msh1016100'>Ladies Dresses</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/footwear-men-casual/c-msh1311113'>Mens Casual Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/footwear-men-sneakers/c-msh1311115'>Sneakers For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-inner-nightwear-panties/c-msh1014101'>Panties</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/accessories-women-bags-sling-bags/c-msh1600000'>Sling Bag</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/accessories-mens-bags-backpacks/c-msh1604005'>Backpack For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-casual-wear-skirts/c-msh1016105'>Skirt</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/womens-clothing-casual-wear-jackets-blazers/c-msh1016101'>Jackets For Women</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/footwear-boys/c-msh1319'>Boys Shoes</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-ethnic-wear-kurta/c-msh1112102'>Kurta For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-formal-wear-shirts/c-msh1117100'>Formal Shirts For Men</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/mens-clothing-casual-wear-the-souled-store/c-msh1116/b-mbh11a00418'>The Souled Store</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/superdry/c-mbh11a00641'>Superdry India</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/westside/c-mbh11a00004'>Westside</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/zivame/c-mbh11a00397'>Zivame</a> | 
+<a class='MsoNormalAnchor' href='https://www.tatacliq.com/wrangler/c-mbh11a00105'>Wrangler</a></span></p>"
+
+
+
+
+
+### MplShowcaseItemComponent impex
+
+
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerTextMobile;text_mobile;
+## Brand Studio
+;;comp_00004QLJ;"SPRING SUMMER'18 : FRESH COLLECTION";"Light up the new season with fresh styles by India's most loved fashion destination. This is your chance to lead the fashion charge in the new season, don't miss it.";
+;;comp_00007SVW;"Up to 70% off";"Surprise. Catch the eye. Stand out.  Accessories by Steve Madden will  help you do all this and more. Check out the    latest collection now.";
+;;comp_000011U5;"Shop everything @ Croma EXCLUSIVELY on Tata CLiQ";"Find your appliances (big and small), entertainment gadgets and tech toys at best prices.";
+;;comp_00005G0T;"Steal The Deal";"Make every memory look good with the Oppo range of smartphones. Never shy away from taking a selfie again.";
+;;comp_00002W6F;"An upgrade is waiting for you, shop the future";"Get the latest in tech from a wide range of products from Sony, merging the best of artistry and engineering. Be moved.";
+;;comp_000034ON;"Up to 20% Off";"Nikon is the name trusted by millions of photographers around the world. With their cutting-edge innovations and relentless pursuits of quality, they are the global leader in digital imaging and optics.";
+;;comp_00004LWQ;"Just Launched";"Get an ultra-stylish look with these timepieces from Sonata. Be it at work , or a weekend getaway these watches provide just the right edge to your personality.";
+;;comp_00001PQN;"Find clothes that make you look, feel, work and play better @ the AND store";"Browse our line-up of chic, contemporary western wear from one of the first fashion brands for Indian women";
+;;comp_00000JB5;"Steal the Deal: Get up to 35% off";"Keep cool and carry on buying from India's top (energy efficient) air conditioner brand. From All Star to WiFi-enabled, what's your next upgrade?";
+;;comp_000020JJ;"Steal the Deal";"EXCLUSIVE ACCESS: Get your hands on a stylish line-up of  playful and sexy lingerie from this Russian brand";
+;;comp_00007B4F;"MIN. 60% OFF";"Explore footwear for men. Go the distance with Red Tape and walk on edge effortlessly.";
+;;comp_00008OK6;"Great Deals";"Here's how you can make looking good second nature! Explore latest styles by Killer and own them now!";
+;;comp_000077CS;"Steal the deal";"Do your think data is safe? Explore state of the art  storage devices by Seagate and take make sure your data doesn't fall into the wrong hands.";
+;;comp_00009ACC;"Are you looking for jewellery that is as unique as you?";"Look no more, check out Pipa+Bella's collection and make your mark!";
+
+## Insipred Me
+;;PrettyInPetalsShowCaseitem;"PARTY DRESSES FOR THE CURVY GIRL";"Forget the rules and slip into these stunning dress that will enhance your curves and make you look as stylish as ever";
+;;IndigoSpectrumShowCaseitem;"INSTAGRAM-APPROVED JEWELLERY";"Some of Instagram's biggest style stars have picked their favourites, statement pieces for you";
+;;CelebrationOfColorShowCaseitem;"FRESHEST MEN'S SHOES TO OWN RIGHT NOW";"Our top picks from Red Tapes newest and nowest collection";
+
+
+#### Serviceworker and Manifest json impex
+
+INSERT_UPDATE AmpServiceworker;code[unique=true];cacheName;cacheVersion;filesToCache;cachingStrategy;serviceworkerJs
+;serviceWorker;"cliq-pwa-cache";"v1";"/";;"importScripts('https://unpkg.com/workbox-sw@2.0.3/build/importScripts/workbox-sw.prod.v2.0.3.js'); const workboxSW = new WorkboxSW({     clientsClaim: true });  workboxSW.router.registerRoute('/pwamp/*', workboxSW.strategies.cacheFirst({     cacheName: 'rest',     cacheExpiration: {         maxEntries: 25,         maxAgeSeconds: 120,     },     cacheableResponse: {         statuses: [0, 200]     }, })); workboxSW.router.registerRoute(new RegExp('.*\.jpg'), workboxSW.strategies.cacheFirst({     cacheName: 'images-jpg',     cacheExpiration: {         maxEntries: 25,         maxAgeSeconds: 120,     },     cacheableResponse: {         statuses: [0, 200]     }, })); workboxSW.router.registerRoute(new RegExp('.*\.jpeg'), workboxSW.strategies.cacheFirst({     cacheName: 'images-jpeg',     cacheExpiration: {         maxEntries: 25,         maxAgeSeconds: 120,     },     cacheableResponse: {         statuses: [0, 200]     }, })); workboxSW.router.registerRoute(new RegExp('.*\.png'), workboxSW.strategies.cacheFirst({     cacheName: 'images-png',     cacheExpiration: {         maxEntries: 25,         maxAgeSeconds: 120,     },     cacheableResponse: {         statuses: [0, 200]     }, })); self.addEventListener('install', () => self.skipWaiting()); self.addEventListener('activate', () => self.clients.claim());"
+
+
+INSERT_UPDATE AmpMenifest;code[unique=true];menifestJson
+;menifestJson;{   "name": "Tata Cliq",   "short_name": "Tata Cliq",   "start_url": "/",   "icons": [     {       "src": "/_ui/responsive/common/images/manifest/logo_48.png",       "sizes": "48x48",       "type": "image/png"     },     {       "src": "/_ui/responsive/common/images/manifest/logo_72.png",       "sizes": "72x72",       "type": "image/png"     },     {       "src": "/_ui/responsive/common/images/manifest/logo_96.png",       "sizes": "96x96",       "type": "image/png"     },     {       "src": "/_ui/responsive/common/images/manifest/logo_144.png",       "sizes": "144x144",       "type": "image/png"     },     {       "src": "/_ui/responsive/common/images/manifest/logo_168.png",       "sizes": "168x168",       "type": "image/png"     },     {       "src": "/_ui/responsive/common/images/manifest/logo_192.png",       "sizes": "192x192",       "type": "image/png"     }   ],   "theme_color": "#a9133d",   "background_color": "#a9133d",   "display": "fullscreen",   "orientation": "portrait",   "description": "Tata CLiQ: Online shopping in India at the most trusted destination." }

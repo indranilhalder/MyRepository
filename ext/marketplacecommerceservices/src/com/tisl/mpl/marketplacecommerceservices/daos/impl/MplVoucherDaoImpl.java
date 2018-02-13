@@ -41,7 +41,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 	private static final Logger LOG = Logger.getLogger(MplVoucherDaoImpl.class);
 
-
+	private static final String INVALIDATION_QUERY = "Invalidation query is ";
 
 	/**
 	 * This method returns list of Voucher Invalidation model for the voucher applied against the cart or order
@@ -61,7 +61,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 	//		{
 	//			String queryString = MarketplacecommerceservicesConstants.VOUCHERINVALIDATIONQUERY;
 	//			queryString += " and {vo.code}='" + voucherIdentifier + "' ";
-	//			LOG.debug("Invalidation query is " + queryString);
+	//			LOG.debug(INVALIDATION_QUERY + queryString);
 	//			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 	//			//query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHERIDENTIFIER, voucherIdentifier);
 	//			query.addQueryParameter(MarketplacecommerceservicesConstants.CUSTOMERUID, customerUid);
@@ -97,7 +97,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.VOUCHERINVALIDATIONQUERY;
-			LOG.debug("Invalidation query is " + queryString);
+			LOG.debug(INVALIDATION_QUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.USER, user);
@@ -133,7 +133,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFFERQUERY;
-			LOG.debug("Invalidation query is " + queryString);
+			LOG.debug(INVALIDATION_QUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
@@ -169,7 +169,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYMNTH;
-			LOG.debug("Invalidation query is " + queryString);
+			LOG.debug(INVALIDATION_QUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
@@ -205,7 +205,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYDAY;
-			LOG.debug("Invalidation query is " + queryString);
+			LOG.debug(INVALIDATION_QUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
@@ -241,7 +241,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYWEEK;
-			LOG.debug("Invalidation query is " + queryString);
+			LOG.debug(INVALIDATION_QUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
@@ -277,7 +277,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.VOUCHERCARDPEROFRMXAMTQUERYYEAR;
-			LOG.debug("Invalidation query is " + queryString);
+			LOG.debug(INVALIDATION_QUERY + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.VOUCHER, voucher);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.CARDFINGERPRINT1, cardFingerprint);
@@ -359,7 +359,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchUserRestrictionDetails(java.util.Date)
 	 */
 	@Override
@@ -376,7 +376,7 @@ public class MplVoucherDaoImpl implements MplVoucherDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao#fetchExistingVoucherData(de.hybris.platform.voucher
 	 * .model.VoucherModel)

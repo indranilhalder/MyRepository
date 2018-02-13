@@ -26,6 +26,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,8 +194,8 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 			if (null != findAnnotation(handler, RequireHardLogIn.class))
 			{
 				final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
-				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout())
-						&& checkForGUIDCookie(request, response, guid))))
+				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout()) && checkForGUIDCookie(
+						request, response, guid))))
 				{
 					boolean redirect = true;
 					if (keepLoginAlive(request))
@@ -223,7 +224,7 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 	protected boolean checkForGUIDCookie(final HttpServletRequest request, final HttpServletResponse response, final String guid)
 	{////Deeply nested if..then statements are hard to read
-		 //		if (guid != null && request.getCookies() != null)
+		//		if (guid != null && request.getCookies() != null)
 	 //		{
 	 //			final String guidCookieName = getCookieGenerator().getCookieName();
 	 //			if (guidCookieName != null)
@@ -328,7 +329,8 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 		{
 			for (final Cookie cookie : request.getCookies())
 			{
-				if (cookie.getName().equals("keepAlive"))
+				if (cookie.getName().equals("keepAlive")
+						&& isKeepAliveValueSameWithJsessionId(cookie.getValue(), request.getSession().getId()))
 				{
 					keepLoginAlive = true;
 					LOG.info("Found KEEP ALIVE cookie......");
@@ -338,5 +340,25 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 			}
 		}
 		return keepLoginAlive; //Sonar fix
+	}
+
+	private boolean isKeepAliveValueSameWithJsessionId(final String keepAliveEncodedCookievalue, final String sessionId)
+	{
+		try
+		{
+			if (keepAliveEncodedCookievalue != null && sessionId != null)
+			{
+				final String keepAliveDecodedValue = new String(Base64.decodeBase64(keepAliveEncodedCookievalue));
+				if (keepAliveDecodedValue != null && sessionId.equalsIgnoreCase(keepAliveDecodedValue))
+				{
+					return true;
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception in keepAliveValueSamewithJsessionId()" + e);
+		}
+		return false;
 	}
 }

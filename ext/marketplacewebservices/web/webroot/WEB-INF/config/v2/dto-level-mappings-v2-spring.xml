@@ -1606,6 +1606,20 @@
 			</map>
 		</property>
 	</bean>
+		<bean parent="fieldSetLevelMapping">
+		<property name="dtoClass"
+		          value="com.tisl.mpl.wsdto.BrandListHierarchyWsDTOAmp"/>
+		<property name="levelMapping">
+			<map>
+				<entry key="BASIC"
+				       value="modifiedTime,items,error"/>
+				<entry key="DEFAULT"
+				       value="modifiedTime,items,error"/>
+				<entry key="FULL"
+				       value="modifiedTime,items,error"/>
+			</map>
+		</property>
+	</bean>
 	<!--  Shop by brand Mobile -->
 	<!--  Shop by Dept Mobile -->
 	<bean parent="fieldSetLevelMapping">
@@ -1651,6 +1665,20 @@
 		</property>
 	</bean>
 	<bean parent="fieldSetLevelMapping">
+		<property name="dtoClass"
+		          value="com.tisl.mpl.wsdto.DepartmentListHierarchyWsDTO"/>
+		<property name="levelMapping">
+			<map>
+				<entry key="BASIC"
+				       value="modifiedTime,shopbydepartment,error"/>
+				<entry key="DEFAULT"
+				       value="modifiedTime,shopbydepartment,error"/>
+				<entry key="FULL"
+				       value="modifiedTime,shopbydepartment,error"/>
+			</map>
+		</property>
+	</bean>
+		<bean parent="fieldSetLevelMapping">
 		<property name="dtoClass"
 		          value="com.tisl.mpl.wsdto.DepartmentListHierarchyWsDTO"/>
 		<property name="levelMapping">

@@ -175,7 +175,8 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 
 		getCookieGenerator().addCookie(response, guid);
 		//Add the Keep Alive Cookie on login
-		getKeepAliveCookieGenerator().addCookie(response, createGUID());
+		getKeepAliveCookieGenerator().addCookie(response,
+				new String(Base64.encodeBase64String(request.getSession().getId().getBytes())));
 
 		//Set the luxury site cookies
 		if (userService.getCurrentUser() != null)
