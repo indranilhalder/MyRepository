@@ -630,7 +630,6 @@ export function generateCustomerLevelAccessTokenForSocialMedia(
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(resultJson);
       dispatch(socialMediaLogin(userName, platForm, resultJson.access_token));
       dispatch(customerAccessTokenSuccess(resultJson));
     } catch (e) {
@@ -724,10 +723,8 @@ export function socialMediaLogin(userName, platform, CustomerAccessToken) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(resultJson);
       dispatch(socialMediaLoginSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(socialMediaLoginFailure(e.message));
     }
   };
