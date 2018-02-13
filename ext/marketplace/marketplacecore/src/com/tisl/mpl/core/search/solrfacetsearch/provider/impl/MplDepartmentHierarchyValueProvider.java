@@ -35,8 +35,8 @@ import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 
 
-public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 	/**
 	 *
@@ -139,6 +139,11 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
 				}
+				else if (categoryPath != null && categoryPath.size() > 0 && isLuxury
+						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MarketplaceCoreConstants.ISH))
+				{
+					accumulateCategoryPaths(categoryPath, allPaths);
+				}
 				else if (categoryPath != null && categoryPath.size() > 0 && !isLuxury
 						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
@@ -180,9 +185,9 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 				}
 
 				final int rankingValue = (category.getRanking() != null) ? category.getRanking() : 0;
-				accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON)
-						.append(category.getName()).append(":L").append(level).append(MplConstants.COLON).append(department)
-						.append(MplConstants.COLON).append(rankingValue);
+				accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON).append(category.getName())
+						.append(":L").append(level).append(MplConstants.COLON).append(department).append(MplConstants.COLON)
+						.append(rankingValue);
 				output.add(accumulator.toString());
 				level = level + 1;
 			}

@@ -18,17 +18,14 @@
 	<c:if test="${not empty searchPageData.breadcrumbs}">
 		<nav:luxuryFacetNavAppliedFilters pageData="${searchPageData}"/>
 	</c:if>
-	
-	<div class="facetList">
-	    <nav:luxuryFacetNavRefinements pageData="${searchPageData}"/>
-	</div>
+
 
 	<c:choose>
 		<c:when test="${isCategoryPage}">
 			<form id="categoryPageDeptHierTreeForm" name="categoryPageDeptHierTreeForm" method="get">
 			<%-- <p class="filter-name facet_mobile"><spring:theme code="search.nav.facetTitle" arguments="Department"/></p> --%>
 				<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
-<!-- 				<div id="categoryPageDeptHierTree"></div> -->
+				<div id="categoryPageDeptHierTree"></div>
 			</form>
 		</c:when>		
 		<c:otherwise>
@@ -44,7 +41,12 @@
 						<input type="hidden" name="searchCategory" id="searchCategoryTree"/>
 					</c:otherwise>
 				</c:choose>				
-<!-- 				<div id="searchPageDeptHierTree"></div> -->
+				<div id="searchPageDeptHierTree"></div>
 			</form>
 		</c:otherwise>
 	</c:choose>
+
+	
+	<div class="facetList">
+	    <nav:luxuryFacetNavRefinements pageData="${searchPageData}"/>
+	</div>
