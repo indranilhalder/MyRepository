@@ -50,6 +50,11 @@ class ProductDescriptionPage extends Component {
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
+  showEmiModal = () => {
+    if (this.props.showEmiPlans) {
+      this.props.showEmiPlans();
+    }
+  };
 
   renderAddressModal = () => {
     if (this.props.showAddress) {
@@ -109,6 +114,15 @@ class ProductDescriptionPage extends Component {
                 averageRating={productData.averageRating}
               />
             </div>
+            {productData.emiInfo && (
+              <div className={styles.info}>
+                {productData.emiInfo.emiText}
+                <span className={styles.link} onClick={this.showEmiModal}>
+                  View Plans
+                </span>
+              </div>
+            )}
+
             {productData.variantOptions &&
               productData.variantOptions.showColor && (
                 <div>

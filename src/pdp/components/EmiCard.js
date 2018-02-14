@@ -77,7 +77,7 @@ EmiCard.propTypes = {
     PropTypes.shape({
       interestRate: PropTypes.string,
       monthlyInstallment: PropTypes.string,
-      term: PropTypes.number,
+      term: PropTypes.string,
       interestPayable: PropTypes.string
     })
   )
