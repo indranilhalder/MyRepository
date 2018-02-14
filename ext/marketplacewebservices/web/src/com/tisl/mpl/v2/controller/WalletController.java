@@ -207,43 +207,35 @@ public class WalletController
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
 		LOG.info("Removing cliq Cash ");
-		 ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
-		 OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
+		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
 		try
 		{
-			
+
 			//  Removing the cliqCash balacne from Cart and Setting SplitModeInfo To JUSPAY
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				commerceCartService.recalculateCart(cart);
-				 
-				removeCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-				if (null != cart.getTotalPrice())
-				{
-					removeCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-				}
-			//	removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
-				if(null !=  cart.getTotalPrice()) {
-					Double amount = cart.getTotalPrice();
-			        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-					final String decimalFormat = "0.00";
-					final DecimalFormat df = new DecimalFormat(decimalFormat);
-					final String totalPayableAmount = df.format(bigDecimal);
-					removeCliqCashWsDto.setPaybleAmount(totalPayableAmount);
-				}
-				
-				
-				final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(cart.getDiscounts());
+				//	commerceCartService.recalculateCart(cart);
+				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				cart.setPayableNonWalletAmount(cart.getTotalPrice());
+				cart.setPayableWalletAmount(Double.valueOf(0.0D));
+				modelService.save(cart);
+				modelService.refresh(cart);
 
-				boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
-				String cartCouponCode =null;
-				 if(isCartVoucherPresent) {
-					 cartCouponCode = cartCouponObj.getSecond();
-					 mplCouponFacade.removeLastCartCoupon(cart);
-				 }
-				 if (isCartVoucherPresent)
+
+				try
+				{
+					final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(cart.getDiscounts());
+					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+					String cartCouponCode = null;
+					if (isCartVoucherPresent)
+					{
+						cartCouponCode = cartCouponObj.getSecond();
+						mplCouponFacade.removeLastCartCoupon(cart);
+					}
+					if (isCartVoucherPresent)
 					{
 						cartCouponCode = cartCouponObj.getSecond();
 						cart.setCheckForBankVoucher("true");
@@ -251,52 +243,87 @@ public class WalletController
 						mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null);
 						cart.setCheckForBankVoucher("false");
 					}
-				  cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-					cart.setPayableNonWalletAmount(cart.getTotalPrice());
-					cart.setPayableWalletAmount(Double.valueOf(0.0D));
-					modelService.save(cart);
-					modelService.refresh(cart);
-					removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
+				}
+				catch (Exception e)
+				{
+					LOG.error("Exception occurred while removing and applying bank Coupon " + e.getMessage(), e);
+				}
+				removeCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+				if (null != cart.getTotalPrice())
+				{
+					removeCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+				}
+				//	removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
+				if (null != cart.getTotalPrice())
+				{
+					Double amount = cart.getTotalPrice();
+					BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final String decimalFormat = "0.00";
+					final DecimalFormat df = new DecimalFormat(decimalFormat);
+					final String totalPayableAmount = df.format(bigDecimal);
+					removeCliqCashWsDto.setPaybleAmount(totalPayableAmount);
+				}
+				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				cart.setPayableNonWalletAmount(cart.getTotalPrice());
+				cart.setPayableWalletAmount(Double.valueOf(0.0D));
+				modelService.save(cart);
+				modelService.refresh(cart);
+				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
-			//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-				AbstractOrderModel order =orderModel; 
-			//	commerceCartService.recalculateCart((CartModel)order);
+				//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+				AbstractOrderModel order = orderModel;
+				//	commerceCartService.recalculateCart((CartModel)order);
+				//	commerceCartService.recalculateCart(cart);
+				order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				order.setPayableNonWalletAmount(order.getTotalPrice());
+				order.setPayableWalletAmount(Double.valueOf(0.0D));
+				modelService.save(order);
+				modelService.refresh(order);
 				
-					removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-					if (null != orderModel.getTotalPrice())
-					{
-						BigDecimal bigDecimal = new BigDecimal(orderModel.getTotalPrice().doubleValue());
-						final String decimalFormat = configurationService.getConfiguration().getString("site.decimal.format", "0.00");
-						final DecimalFormat df = new DecimalFormat(decimalFormat);
-						final String totalPriceFormatted = df.format(bigDecimal);
-						removeCliqCashWsDto.setPaybleAmount(totalPriceFormatted);
-					}
+				try
+				{
 					final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(order.getDiscounts());
 
 					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
-					String cartCouponCode =null;
-					 if(isCartVoucherPresent) {
-						 cartCouponCode = cartCouponObj.getSecond();
-						 mplCouponFacade.removeLastCartCoupon(orderModel);
-					 }
-					 if (isCartVoucherPresent)
-						{
-							cartCouponCode = cartCouponObj.getSecond();
-							orderModel.setCheckForBankVoucher("true");
-							modelService.save(orderModel);
-							mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
-							orderModel.setCheckForBankVoucher("false");
-						}
-				   	 orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-						orderModel.setPayableNonWalletAmount(orderModel.getTotalPrice());
-						orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+					String cartCouponCode = null;
+					if (isCartVoucherPresent)
+					{
+						cartCouponCode = cartCouponObj.getSecond();
+						mplCouponFacade.removeLastCartCoupon(orderModel);
+					}
+					if (isCartVoucherPresent)
+					{
+						cartCouponCode = cartCouponObj.getSecond();
+						orderModel.setCheckForBankVoucher("true");
 						modelService.save(orderModel);
-						modelService.refresh(orderModel);
-						removeCliqCashWsDto =mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
-					removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
+						orderModel.setCheckForBankVoucher("false");
+					}
+
+				}
+				catch (Exception e)
+				{
+					LOG.error("Exception occurred while removing and applying bank Coupon " + e.getMessage(), e);
+				}
+				removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
+				if (null != orderModel.getTotalPrice())
+				{
+					BigDecimal bigDecimal = new BigDecimal(orderModel.getTotalPrice().doubleValue());
+					final String decimalFormat = configurationService.getConfiguration().getString("site.decimal.format", "0.00");
+					final DecimalFormat df = new DecimalFormat(decimalFormat);
+					final String totalPriceFormatted = df.format(bigDecimal);
+					removeCliqCashWsDto.setPaybleAmount(totalPriceFormatted);
+				}
+				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				orderModel.setPayableNonWalletAmount(orderModel.getTotalPrice());
+				orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+				modelService.save(orderModel);
+				modelService.refresh(orderModel);
+				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
+				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
 		}

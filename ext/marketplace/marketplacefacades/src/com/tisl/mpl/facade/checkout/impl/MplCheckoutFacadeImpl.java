@@ -2462,7 +2462,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						MarketplaceFacadesConstants.EGV_RESEND_EMAILAVAILABLE);
 				if(null != resendEmailValue ) {
 					boolean resendEmailAvalilble = Boolean.valueOf(resendEmailValue).booleanValue();
-					if(resendEmailAvalilble) {
+					boolean isOrderRedeemed = false; 
+					if(null != orderModel.getStatus() && orderModel.getStatus().equals(OrderStatus.REDEEMED)){
+						isOrderRedeemed = true;
+					}
+					if(resendEmailAvalilble && !isOrderRedeemed) {
 						orderData.setResendEgvMailAvailable(true);
 					}else{
 						orderData.setResendEgvMailAvailable(false);

@@ -339,7 +339,7 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
 			if(null!= walletObj.getCustomerLastName()){
 				custInfo.setLastName(walletObj.getCustomerLastName());
 			}
-			customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 			customerRegisterReq.setCustomer(custInfo);
 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
 			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
