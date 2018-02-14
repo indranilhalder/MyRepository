@@ -15,9 +15,27 @@ import {
 } from "../../lib/constants";
 
 class ProductSellerPage extends Component {
+  addProductToBag = () => {
+    if (this.props.addProductToBag) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToBag(productDetails);
+    }
+  };
+  addProductToWishList = () => {
+    if (this.props.addProductToWishList) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToWishList(productDetails);
+    }
+  };
+
   render() {
     return (
-      <PdpFrame>
+      <PdpFrame
+        addProductToBag={() => this.addProductToBag()}
+        addProductToWishList={() => this.addProductToWishList()}
+      >
         <div className={styles.base}>
           <HollowHeader
             addProductToBag={this.props.addProductToBag}
