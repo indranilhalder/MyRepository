@@ -147,6 +147,26 @@ const productDescription = (
         error: action.error,
         loading: false
       });
+
+    case pdpActions.PRODUCT_SPECIFICATION_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_SPECIFICATION_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        productDetails: action.productDetails,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_SPECIFICATION_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
     default:
       return state;
   }

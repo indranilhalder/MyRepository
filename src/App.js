@@ -119,7 +119,6 @@ class App extends Component {
           />
 
           <Route
-            exact
             path={PRODUCT_DESCRIPTION_ROUTER}
             component={ProductDescriptionContainer}
           />
