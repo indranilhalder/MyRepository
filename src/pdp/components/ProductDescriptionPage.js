@@ -158,6 +158,7 @@ class ProductDescriptionPage extends Component {
             <DeliveryInformation
               header={productData.eligibleDeliveryModes[0].name}
               placedTime={productData.eligibleDeliveryModes[0].timeline}
+              type={productData.eligibleDeliveryModes[0].code}
               onClick={() => this.renderAddressModal()}
               deliveryOptions={DELIVERY_TEXT}
               label={PIN_CODE}
