@@ -27,10 +27,28 @@ class ProductDescriptionPage extends Component {
       return <WriteReview />;
     }
   };
+  addProductToBag = () => {
+    if (this.props.addProductToBag) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToBag(productDetails);
+    }
+  };
+  addProductToWishList = () => {
+    if (this.props.addProductToWishList) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToWishList(productDetails);
+    }
+  };
+
   render() {
     if (this.props.productDetails) {
       return (
-        <PdpFrame>
+        <PdpFrame
+          addProductToBag={() => this.addProductToBag()}
+          addProductToWishList={() => this.addProductToWishList()}
+        >
           <div className={styles.base}>
             <div className={styles.productBackground}>
               <HollowHeader
