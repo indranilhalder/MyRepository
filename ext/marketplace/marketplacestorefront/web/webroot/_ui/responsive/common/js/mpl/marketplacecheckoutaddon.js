@@ -11463,7 +11463,7 @@ function tokenizeJuspayCard(paymentMode)
 	}
 	else if(paymentMode=="EM")
 	{
-		merchant_id=$("#newCardCCEmi #merchant_id_emi").val();
+		merchant_id=$("#newCardCCEmi #merchant_id").val();
 		card_number=$("#newCardCCEmi #cardNoEmi").val();
 		card_exp_year=$("#newCardCCEmi select[name=expyy] option:selected").val();
 		card_exp_month=$("#newCardCCEmi select[name=expmm] option:selected").val();
