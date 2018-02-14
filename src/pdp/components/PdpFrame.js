@@ -1,6 +1,7 @@
 import React from "react";
 import PdpFooter from "./PdpFooter";
 import styles from "./PdpFrame.css";
+import PropTypes from "prop-types";
 export default class PdpFrame extends React.Component {
   onSave() {
     if (this.props.addProductToWishList) {
