@@ -310,3 +310,8 @@ div.content ul {
 .emptyMessage{
 	font-weight: bold;
 }
+/* start TISPRDT-8244 */
+.btn {
+    text-transform: uppercase;
+}  
+/* end TISPRDT-8244 */

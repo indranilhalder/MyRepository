@@ -732,3 +732,9 @@ String strDate= formatter.format(result);
 line.put(Integer.valueOf(3), strDate);
 ";
 ;omsSubmissionFailReportCreationJob;
+
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;gigyaDataPullingJob;gigyaDataPullingJob;false;en 
+
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate[dateformat=yyyyMMddHHmmss]
+;gigyaDataPullingJob;;20150720000000

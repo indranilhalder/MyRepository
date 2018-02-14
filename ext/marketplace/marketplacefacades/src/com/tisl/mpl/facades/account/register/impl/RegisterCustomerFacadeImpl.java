@@ -56,7 +56,6 @@ import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtDefaultCustomerService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -282,9 +281,6 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 
-	@Resource(name = "GigyaService")
-	private GigyaService gigyaservice;
-
 	/**
 	 * @description this is used to register a new customer
 	 * @param registerData
@@ -308,13 +304,16 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
 				//NU-30
 				newCustomer.setOtpVerified(Boolean.TRUE);
-				if (StringUtils.isNotEmpty(registerData.getEmailId()))
+				if (StringUtils.isEmpty((registerData.getLogin()))) // CHECKING IF uid ALREADY SET
 				{
-					registerData.setLogin(registerData.getEmailId());
-				}
-				else
-				{
-					registerData.setLogin(registerData.getMobilenumber());
+					if (StringUtils.isNotEmpty(registerData.getEmailId()))
+					{
+						registerData.setLogin(registerData.getEmailId());
+					}
+					else
+					{
+						registerData.setLogin(registerData.getMobilenumber());
+					}
 				}
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
@@ -522,7 +521,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				 */
 				/*
 				 * Closing checks at gigya end for new Implementation Start
-				 *
+				 * 
 				 * try { LOG.debug("Method  registerSocial,Gigys's UID " + newCustomer.getUid());
 				 * LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 				 * LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
@@ -540,12 +539,12 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				 * newCustomer.getOriginalUid());
 				 * LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" +
 				 * registerData.getUid());
-				 *
+				 * 
 				 * LOG.debug("UID already existing in Gigya for this  New Customer :existing uid in Gigya" +
 				 * registerData.getLogin()); } //gigya code change for removing duplicate UID end
-				 *
+				 * 
 				 * } catch (final Exception e) { LOG.error("error notifing gigya of new registration", e); }
-				 *
+				 * 
 				 * //} Closing checks at gigya end for new Implementation Stop
 				 */
 				return data;
@@ -594,9 +593,9 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
 				return registerData;
 				/*
-				 * 
+				 *
 				 * Closing checks at gigya end for new Implementation Start
-				 * 
+				 *
 				 * // final String gigyaMethod = configurationService.getConfiguration().getString( ///closing gigya methods
 				 * // MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION); // LOG.debug("GIGYA METHOD" +
 				 * gigyaMethod); // // // //changes start for gigya duplicate uid check start // //TISUAT-5868 // if

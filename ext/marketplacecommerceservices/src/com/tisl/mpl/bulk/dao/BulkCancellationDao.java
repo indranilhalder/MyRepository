@@ -17,4 +17,6 @@ public interface BulkCancellationDao
 
 	List<CronJobModel> fetchJobDetails(String code);
 
+	/* List<BulkCancellationProcessModel> getOrderCancelData(); */
+
 }

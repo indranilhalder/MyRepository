@@ -215,9 +215,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -440,9 +440,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -852,7 +852,10 @@ public class OrdersController extends BaseCommerceController
 							}
 							/* capacity */
 							// R2.3 ChangesStart Bug ID TISRLUAT-1134 Start 17-03-2017
-							if (entry.getSelectedDeliverySlotDate() != null)
+							//SDI-3159 Condition added if CLICK N COLLECT is not there
+							if (entry.getSelectedDeliverySlotDate() != null
+									&& (null != entry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
+											.equalsIgnoreCase(entry.getMplDeliveryMode().getCode())))
 							{
 								orderProductDTO.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
 								if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
@@ -1079,11 +1082,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)

@@ -902,9 +902,11 @@ function openPop_quick(ussidfromSeller) {
 	
 	// if(loggedIn == 'false') {
 	if (!headerLoggedinStatus) {
-		$("div.wishAddLoginQv").addClass("active");
+		$("#wishLoginQV").addClass("active");
+		$("div.wishAddLoginQv>span").css("display","block");		/*add for TISCSS-166*/
 		setTimeout(function() {
-			$("div.wishAddLoginQv").removeClass("active")
+			$("#wishLoginQV").removeClass("active")
+			$("div.wishAddLoginQv>span").css("display","none");	/*add for TISCSS-166*/
 		}, 3000);
 	} else {
 		var isInWishlist = getLastModifiedWishlistQuick(ussidValue);
@@ -927,11 +929,15 @@ function openPop_quick(ussidfromSeller) {
 								// var msg=$('#wishlistSuccess').text();
 								// $('#addedMessage').show();
 								// $('#addedMessage').html(msg);
-								$("div.wishAddSucessQv").addClass("active");
+
+								$("#wishAddQV").addClass("active");
+
+								$("div.wishAddSucessQv>span").css("display","block");	/*add for TISCSS-166*/
 								$('.wishlist-icon-qv').addClass("added");
 								setTimeout(function() {
-									$("div.wishAddSucessQv").removeClass(
+									$("#wishAddQV").removeClass(
 											"active")
+									$("div.wishAddSucessQv>span").css("display","none");	/*add for TISCSS-166*/
 								}, 3000);
 								$("#add_to_wishlist_quick").attr("disabled",
 										true);
@@ -1062,10 +1068,12 @@ function removeFromWishlistInQuickView(wishlistName, productCode, ussid,
 						}
 					}
 
-					$(".wishRemoveSucessQV").addClass("active");
+					$("#wishRemoveQV").addClass("active");
+					$(".wishRemoveSucessQV>span").css("display","block");	/*add for TISCSS-166*/
 					$('.wishlist-icon-qv').removeClass("added");
 					setTimeout(function() {
-						$(".wishRemoveSucessQV").removeClass("active")
+						$("#wishRemoveQV").removeClass("active")
+						$(".wishRemoveSucessQV>span").css("display","none");		/*add for TISCSS-166*/
 					}, 3000)
 					$("#add_to_wishlist_quick").attr("disabled", false);
 					$('.add_to_cart_form .out_of_stock #add_to_wishlist_quick')
@@ -1094,7 +1102,7 @@ function removeFromWishlistInQuickView(wishlistName, productCode, ussid,
 								+ "/login";
 					} else {
 
-						alert("Some issues are there with Wishlist at this time. Please try later or contact our helpdesk");
+						console.log("Some issues are there with Wishlist at this time. Please try later or contact our helpdesk");
 					}
 
 				}

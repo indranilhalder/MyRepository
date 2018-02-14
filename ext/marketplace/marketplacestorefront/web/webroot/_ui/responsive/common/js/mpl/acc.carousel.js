@@ -445,7 +445,7 @@ ACC.carousel = {
     		loop: true,
     		nav:true,
     		dots:false,
-    		navText:[],
+    		navText:[], 
     		responsive: {
                 0: {
                     items: 1,

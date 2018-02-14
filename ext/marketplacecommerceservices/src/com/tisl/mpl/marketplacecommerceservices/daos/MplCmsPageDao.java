@@ -17,6 +17,8 @@ import de.hybris.platform.core.model.product.ProductModel;
 import java.util.List;
 
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.AmpMenifestModel;
+import com.tisl.mpl.core.model.AmpServiceworkerModel;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -30,6 +32,14 @@ import com.tisl.mpl.model.SellerMasterModel;
 public interface MplCmsPageDao extends CMSPageDao
 {
 	ContentPageModel getLandingPageForCategory(CategoryModel category);
+
+	/**
+	 * UBI-605
+	 * 
+	 * @param categoryCode
+	 * @return ContentPageModel
+	 */
+	ContentPageModel getLandingPageForCategoryCode(String categoryCode);
 
 	ContentPageModel getCategoryLandingPageForMobile(CategoryModel category, CMSChannel cms);
 
@@ -76,8 +86,18 @@ public interface MplCmsPageDao extends CMSPageDao
 
 	/**
 	 * TPR-5733
-	 * 
+	 *
 	 * @return List<MplFooterLinkModel>
 	 */
 	List<MplFooterLinkModel> getAllFooterLinks();
+
+	/**
+	 * @return List<AmpServiceworkerModel>
+	 */
+	List<AmpServiceworkerModel> getAllAmpServiceworkers();
+
+	/**
+	 * @return List<AmpServiceworkerModel>
+	 */
+	List<AmpMenifestModel> getAllAmpMenifestJsons();
 }
