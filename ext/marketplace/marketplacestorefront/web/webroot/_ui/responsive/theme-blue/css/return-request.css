@@ -386,6 +386,7 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin {
     display: block;
     line-height: 20px;
     font-weight: 400;
+    word-wrap: break-word;	/* add for TISUAT-6296 */
 }
 .return-form.success .return-container .reason, .return-form.success .return-container .method {
 	float: left;

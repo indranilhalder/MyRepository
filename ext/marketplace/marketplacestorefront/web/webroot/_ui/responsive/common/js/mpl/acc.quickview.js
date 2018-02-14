@@ -902,10 +902,10 @@ function openPop_quick(ussidfromSeller) {
 	
 	// if(loggedIn == 'false') {
 	if (!headerLoggedinStatus) {
+		$("#wishLoginQV").addClass("active");
 		$("div.wishAddLoginQv>span").css("display","block");		/*add for TISCSS-166*/
-		$("div.wishAddLoginQv").addClass("active");
 		setTimeout(function() {
-			$("div.wishAddLoginQv").removeClass("active");
+			$("#wishLoginQV").removeClass("active")
 			$("div.wishAddLoginQv>span").css("display","none");	/*add for TISCSS-166*/
 		}, 3000);
 	} else {
@@ -929,11 +929,14 @@ function openPop_quick(ussidfromSeller) {
 								// var msg=$('#wishlistSuccess').text();
 								// $('#addedMessage').show();
 								// $('#addedMessage').html(msg);
+
+								$("#wishAddQV").addClass("active");
+
 								$("div.wishAddSucessQv>span").css("display","block");	/*add for TISCSS-166*/
-								$("div.wishAddSucessQv").addClass("active");
 								$('.wishlist-icon-qv').addClass("added");
 								setTimeout(function() {
-									$("div.wishAddSucessQv").removeClass("active");
+									$("#wishAddQV").removeClass(
+											"active")
 									$("div.wishAddSucessQv>span").css("display","none");	/*add for TISCSS-166*/
 								}, 3000);
 								$("#add_to_wishlist_quick").attr("disabled",
@@ -1064,11 +1067,12 @@ function removeFromWishlistInQuickView(wishlistName, productCode, ussid,
 											+ err.message);
 						}
 					}
+
+					$("#wishRemoveQV").addClass("active");
 					$(".wishRemoveSucessQV>span").css("display","block");	/*add for TISCSS-166*/
-					$(".wishRemoveSucessQV").addClass("active");
 					$('.wishlist-icon-qv').removeClass("added");
 					setTimeout(function() {
-						$(".wishRemoveSucessQV").removeClass("active");
+						$("#wishRemoveQV").removeClass("active")
 						$(".wishRemoveSucessQV>span").css("display","none");		/*add for TISCSS-166*/
 					}, 3000)
 					$("#add_to_wishlist_quick").attr("disabled", false);
@@ -1098,7 +1102,7 @@ function removeFromWishlistInQuickView(wishlistName, productCode, ussid,
 								+ "/login";
 					} else {
 
-						alert("Some issues are there with Wishlist at this time. Please try later or contact our helpdesk");
+						console.log("Some issues are there with Wishlist at this time. Please try later or contact our helpdesk");
 					}
 
 				}

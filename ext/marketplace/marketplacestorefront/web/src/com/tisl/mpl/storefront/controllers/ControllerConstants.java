@@ -459,6 +459,14 @@ public interface ControllerConstants
 				public static final String STORE = "-allStores/{pincode}/{ussId}/{productCode}";
 				String StoreLocatorPopup = "fragments/product/storeLocatorPopup";
 				public static final String STORE_AVAIL = "storesAvailable";
+
+				//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+				public static final String PRICETYPE = "priceType";
+				public static final String _CLASSNAME = "_classname";
+				public static final String SPECIALPRICEMOBILE = "specialPriceMobile";
+				public static final String CLASS = "class";
+				public static final String _TYPE = "_type";
+				public static final String MRPPRICEVALUE = "mrpPriceValue";
 			}
 
 

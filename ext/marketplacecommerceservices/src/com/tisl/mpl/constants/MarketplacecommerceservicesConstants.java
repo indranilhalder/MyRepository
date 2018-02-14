@@ -21,7 +21,7 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
-import org.apache.solr.client.solrj.response.RangeFacet.Date;
+import java.util.Date;
 
 import com.tisl.mpl.core.model.FreebieDetailModel;
 import com.tisl.mpl.core.model.ProductFreebieDetailModel;
@@ -1300,6 +1300,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DATEFORMAT_FULL = "MMM dd yyyy".intern();
 	public static final String ORDERTHRESHOLD = "order".intern();
 	//public static final String ORDER = "order".intern();
+	public static final String WH_ORDER = "order".intern();
 	public final static String DECIMALERROR = "Can't seem to understand the input".intern();
 	public static final String DEFAULT_EBS_RISK_PERC = "-1.0".intern();
 
@@ -1455,8 +1456,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SUBORDER = "SubOrder";
 	public static final String PARENTORDER = "Parent";
 	public static final String WEBHOOKUPDATEMSG = "Updating the Web Hook Enty with status EXPIRED".intern();
-	public static final String QUERYFROM = "FROM {".intern();
-	public static final String QUERYWHERE = "WHERE ".intern();
+	public static final String QUERYFROM = " FROM {".intern();
+	public static final String QUERYWHERE = " WHERE ".intern();
 	public static final String QUERYEMAIL = "}=?email ".intern();
 
 	public static final String ORDER_CONF_SUCCESS = "message.orderProcessed";
@@ -2225,7 +2226,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
 	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type and {b:VersionID} is null"//SDI-2553
-			.intern();
+	.intern();
 	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
 			.intern();
 
@@ -2414,4 +2415,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_TAT_ENABLED = "mpl.forwardpaymentcleanup.tat.enabled";
 	public static final String FPC_TAT_DURATION = "mpl.forwardpaymentcleanup.tat.duration";
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
+	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
+
+	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
+	public static final String BANNERURLLINK = "bannerUrlLink".intern();
+	public static final String PROMOTEXT1 = "promoText1".intern();
+	public static final String PROMOTEXT2 = "promoText2".intern();
+	public static final String PROMOTEXT3 = "promoText3".intern();
+	public static final String SEQUENCENUMBER = "sequenceNumber".intern();
+	public static final String ORDERTYPE2 = "orderType".intern();
+	public static final String REFUNDCREATEDFORAUDIT = "RefundEntry created for the audit :".intern();
+	public static final String ERRORCREATINGREFUNDENTRYFORAUDIT = "Error while creating refund entry for audit: ".intern();
+	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
+	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
+
+
+	//Report for bulk cancellation
+	/*
+	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
+	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
+	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
+	 */
 }

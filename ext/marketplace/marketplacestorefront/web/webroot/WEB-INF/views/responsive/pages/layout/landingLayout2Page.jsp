@@ -10,6 +10,7 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <link rel="amphtml" href="/pwamp/home">
+<link rel="canonical" href="/">
 <!-- TPR-1072 START -->
 <c:if test="${not empty googlebot}">
 <div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div>

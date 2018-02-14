@@ -3446,6 +3446,158 @@ public class ProductPageController extends MidPageController
 					}
 				}
 
+				//SDI-4334
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.MRP))
+				{
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
+				}
+
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.PRICE))
+				{
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
+				}
+
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.MIN_PRICE))
+				{
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
+				}
+
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE))
+				{
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
+				}
+
+
+				if (!buyboxJson.isNull(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE))
+				{
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product.PRICETYPE);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product._CLASSNAME);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product.CLASS);
+					buyboxJson.getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+							ControllerConstants.Views.Fragments.Product._TYPE);
+				}
+
+				final JSONArray arr = buyboxJson.getJSONArray("buyboxList");
+				if (null != arr)
+				{
+
+					final int i = arr.size();
+					if (i > 0)
+					{
+						for (final Object o : arr)
+						{
+							if (o instanceof JSONObject)
+							{
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE))
+								{
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRPPRICEVALUE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
+								}
+
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.MRP))
+								{
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MRP).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
+								}
+
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.PRICE))
+								{
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
+								}
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.MIN_PRICE))
+								{
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.MIN_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
+								}
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE))
+								{
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
+								}
+
+
+								if (!((JSONObject) o).isNull(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE))
+								{
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product.PRICETYPE);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product._CLASSNAME);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product.CLASS);
+									((JSONObject) o).getJSONObject(ControllerConstants.Views.Fragments.Product.SPECIALPRICEMOBILE).remove(
+											ControllerConstants.Views.Fragments.Product._TYPE);
+								}
+
+								((JSONObject) o).remove(ControllerConstants.Views.Fragments.Product.CLASS);
+								((JSONObject) o).remove(ControllerConstants.Views.Fragments.Product._CLASSNAME);
+							}
+						}
+
+					}
+
+				}
 			}
 			else
 			{
@@ -4807,6 +4959,7 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
+	//Commented for SONAR FIX
 	/**
 	 * PCM will send hierarchies together in brandcode field of the brand feed, this method will extract the brand
 	 * hierarchy code alone
@@ -4814,24 +4967,24 @@ public class ProductPageController extends MidPageController
 	 * @param superCategories
 	 * @return brandCode
 	 */
-	private String getBrandCodeFromSuperCategories(final String superCategories)
-	{
-		String[] superCatArray = null;
-		String brandCode = null;
-		if (StringUtils.isNotBlank(superCategories))
-		{
-			superCatArray = superCategories.split(MplConstants.COMMA);
-			for (final String superCat : superCatArray)
-			{
-				if (superCat.toUpperCase().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
-				{
-					brandCode = superCat;
-					break;
-				}
-			}
-		}
-		return brandCode;
-	}
+	//	private String getBrandCodeFromSuperCategories(final String superCategories)
+	//	{
+	//		String[] superCatArray = null;
+	//		String brandCode = null;
+	//		if (StringUtils.isNotBlank(superCategories))
+	//		{
+	//			superCatArray = superCategories.split(MplConstants.COMMA);
+	//			for (final String superCat : superCatArray)
+	//			{
+	//				if (superCat.toUpperCase().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+	//				{
+	//					brandCode = superCat;
+	//					break;
+	//				}
+	//			}
+	//		}
+	//		return brandCode;
+	//	}
 
 	//CKD:TPR-250: End
 	/**

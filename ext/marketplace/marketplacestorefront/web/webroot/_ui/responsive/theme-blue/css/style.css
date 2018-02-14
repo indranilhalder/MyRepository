@@ -9555,7 +9555,7 @@ footer .banner {
       .half.square > div *:first-child {
         margin-top: 0px; }
       .half.square > div *:last-child {
-        margin: 20px auto; }
+        margin: 20px auto; }	
   .half.square h3 {
     font-size: 24px;
     line-height: 1.5;
@@ -10227,7 +10227,7 @@ body .account .right-account .order-history .pagination li{
     font-weight: lighter;
     margin-top: 3px;
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 5px;	/* modify for SDI-2915 */
     color: #7e7e7e;
       }
       #productYouCare .home-product-you-care-carousel-img img {
@@ -17129,6 +17129,7 @@ body .compare>.wrapper {
     display: block;
     line-height: 20px;
     font-weight: 400;
+    word-wrap: break-word;	/* add for TISUAT-6296 */ 
 }
 .return-form.success .return-container .reason {
     margin: 30px 0;
@@ -32648,12 +32649,12 @@ body.page-homepage .trending h1 > span{
 }
 #productYouCare .short-info > h3 span {
     color: #fff;
-    font-size: 14px;
-    padding: 20px 15px;
+    font-size: 11px;	/* modify for SDI-2915 */
+    padding: 20px 8px;	/* modify right & left padding for SDI-2915 */
 }
 #productYouCare .short-info > h3 span:after {
     color: #fff;
-    font-size: 16px;
+    font-size: 15px;	/* modify for SDI-2915 */
 }
 .qued-content a.button.maroon:hover {
     background-color: transparent;
@@ -58415,7 +58416,7 @@ header > .content .top.header_fix .toggle{
 	max-width:100%;
 }
 .Manufacturer h3 {
-    font-size: 24px;
+    font-size: 24px !important;		/* add important for TISUAT-6376 */
     font-weight: bold;
     padding-bottom: 10px;
     margin: 0 0 17px;
@@ -58753,12 +58754,12 @@ header > .content .top.header_fix .toggle{
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content h3 {
     color: #a9143c;
-    font-size: 16px;
+    font-size: 16px !important;		/* add important TISUAT-6376 */
     margin-bottom: 0;
     text-transform: uppercase;
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content h3:after {
-    border: none;
+    border: none !important;		/* add important TISUAT-6376 */
 }
 .Temp07 .Padd .twocolumn .onecolumn .media-content {
     font-size: 14px;
@@ -58799,7 +58800,7 @@ header > .content .top.header_fix .toggle{
 }
 .every-scene ul li .media-content h3 {
     color: #a9143c;
-    font-size: 16px;
+    font-size: 16px !important;		/* add important for TISUAT-6376 */
     text-transform: uppercase;
     padding-bottom: 0;
     margin: 18px 0 4px;
@@ -58807,7 +58808,7 @@ header > .content .top.header_fix .toggle{
     line-height: 30px;
 }
 .every-scene ul li .media-content h3:after {
-    border: none;
+    border: none !important;		/* add important for TISUAT-6376 */
 }
 
 .Temp07 .Padd .every-scene li .media-content {
@@ -58867,7 +58868,7 @@ display: inline !important;
 }
 @media (max-width: 1500px) and (min-width: 1025px){
 	.Manufacturer {
-	    margin: 70px 40px 0;
+	    margin: 70px 22px 0;	/*modify 1122186_TISUAT-6365*/
 	}
 	.temp4-features li .contOvrlay .media-content {
     	padding: 10px 15px;
@@ -59283,13 +59284,6 @@ display: inline !important;
 		/* end change of INC144314102 */
 	}
 }
-
-@media (max-width: 1500px) and (min-width: 1025px){
-	.Manufacturer {
-    	margin: 70px 40px 0;
-	}
-}
-
 
 @media (max-width: 1280px) and (min-width: 791px){
 	
@@ -59762,7 +59756,7 @@ padding: 30px 0;
 }
 #cboxContent #cboxLoadedContent .quickview.active{
 padding: 0 30px;
-height: 565px;
+height: auto;/*SDI-5488_1122186*/
 background: #fff;
 overflow: hidden;
 transition: height 0.2s ease;
@@ -59830,8 +59824,9 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 /*Specifications*/
 .SpecWrap .Padd .tabs-block .nav-wrapper{ overflow:hidden; display: block; position:relative;padding-top: 15px;}
 .SpecWrap .Padd .tabs-block .nav-wrapper > span	{ width:45px; height:45px; display:none;position: absolute; border:1px solid #ccc; background:#fff; right:0; bottom:5px; cursor: pointer; z-index: 1; color:#a9143c; text-align: center;font-size: 35px;padding: 3px 0 0;}
-.SpecWrap .Padd .tabs-block .nav{display: block;  /*   width: 1200px; */}	
-.SpecWrap .Padd .tabs-block .nav > li{  margin: 0 15px 0 0; display:inline-block;}
+.SpecWrap .Padd .tabs-block .nav{display: block;  /*   width: 1200px; */}
+/*SDI-5192-1122186(1/16/2018)*/	
+.SpecWrap .Padd .tabs-block .nav > li{  margin: 0 12px 0 0; display:inline-block;}
 .SpecWrap .Padd .tab-details li span{width: 230px;}
 }
 
@@ -59844,7 +59839,8 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 .SpecWrap .Padd .tabs-block .nav-wrapper > span	{ width:45px; height:45px; display:none;position: absolute; border:1px solid #ccc; background:#fff; right:0; bottom:5px; cursor: pointer; z-index: 1; color:#a9143c; text-align: center;font-size: 35px;padding: 3px 0 0;}
 .SpecWrap .Padd .tabs-block .nav{display: block;  /*   width: 1200px; */}
 .SpecWrap .Padd .tabs-block .nav.pdp{    padding: 30px 0 0;}
-.SpecWrap .Padd .tabs-block .nav > li{  margin: 0 15px 0 0; display:inline-block;}
+/*SDI-5192-1122186(1/16/2018)*/
+.SpecWrap .Padd .tabs-block .nav > li{  margin: 0 5px 0 0; display:inline-block;}
 .SpecWrap .Padd .tabs-block .tabs > li.active{ margin:0; width: 100%;}
 .SpecWrap .Padd .tab-details li span{width: 230px;}	
 	}
@@ -67028,7 +67024,7 @@ footer .banner {
     	line-height: 24px;
 	}
 	footer>div>ul>li.active ul {
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */	/* commented for SDI-4687 */
 	}
 	footer>div>ul>li.active ul li {
     height: 24px;
@@ -69581,7 +69577,7 @@ body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block 
 select.update-entry-quantity-input.review-page-select{
    background-image: none ! important;
    width: 50px ! important;
-   padding: 0px 18px 0 22px ! important;
+   padding: 0px 18px 0 15px ! important;	/* change left padding for SDI-3524 & SDI-3904 */
 }
 .footer-copyrigt-text{
 	float:right;
@@ -72545,7 +72541,7 @@ footer .banner {
     	line-height: 24px;
 	}
 	footer>div>ul>li.active ul {
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */		/* commented for SDI-4687 */
 	}
 	footer>div>ul>li.active ul li {
     height: 24px;
@@ -77574,7 +77570,7 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	.brandsCarouselItem .home-brands-you-love-main-image-heading {padding: 13px 7px; text-overflow: ellipsis !important; overflow: hidden; white-space: nowrap;}
 	.brandsCarouselItem .home-brands-you-love-main-image-desc {padding: 0px 7px; color: #666666; height: 65px;}
-	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; text-align: left;}
+	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; text-align: left;}	
 	.brandsCarouselItem .visit-store-wrapper a {color: #0066c0;}
 	
 	#brandsYouLoveMobileComp .owl-controls .owl-page {display: none;}
@@ -78433,4 +78429,9 @@ span#offer_section_responsive_error_msg {
     font-size: 14px;
     padding-right: 10px;
     text-decoration: none;
+}
+@media (max-width: 767px){
+	.cart.wrapper.checkout-payment .blocks {
+    	padding: 0px 16px 7px 16px !important;		/*modify bottom for 1122186_TISUAT-6361*/
+	}
 }

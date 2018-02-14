@@ -178,7 +178,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -525,9 +525,13 @@ public class SearchSuggestUtilityMethods
 							//facetValueWsDTOList.add(facetValueWsDTO);
 						}
 					}
-					facetWsDTO.setValues(facetValueWsDTOList);
+					//SDI-3333
+					if (CollectionUtils.isNotEmpty(facetValueWsDTOList))
+					{
+						facetWsDTO.setValues(facetValueWsDTOList);
+					}
 					//Fix to send only facets with visible true
-					if (facetWsDTO.getVisible().booleanValue())
+					if ((facetWsDTO.getVisible().booleanValue()) && CollectionUtils.isNotEmpty(facetValueWsDTOList))
 					{
 						searchfacetDTOList.add(facetWsDTO);
 					}
@@ -1507,9 +1511,13 @@ public class SearchSuggestUtilityMethods
 							//facetValueWsDTOList.add(facetValueWsDTO);
 						}
 					}
-					facetWsDTO.setValues(facetValueWsDTOList);
+					//SDI-3333
+					if (CollectionUtils.isNotEmpty(facetValueWsDTOList))
+					{
+						facetWsDTO.setValues(facetValueWsDTOList);
+					}
 					//Fix to send only facets with visible true
-					if (facetWsDTO.getVisible().booleanValue())
+					if ((facetWsDTO.getVisible().booleanValue()) && CollectionUtils.isNotEmpty(facetValueWsDTOList))
 					{
 						searchfacetDTOList.add(facetWsDTO);
 					}

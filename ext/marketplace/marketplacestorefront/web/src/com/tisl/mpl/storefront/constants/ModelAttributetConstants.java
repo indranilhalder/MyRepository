@@ -989,4 +989,7 @@ public final class ModelAttributetConstants
 	// TPR-3878 END
 	public static final String SUB_REASON = "subReason";
 	public static final String NEW_COMMENTS = "newComments";
+	
+	//SDI-2112
+	public static final String RETURN_ALREADY_INITIATED = "Your return is already initiated".intern();
 }

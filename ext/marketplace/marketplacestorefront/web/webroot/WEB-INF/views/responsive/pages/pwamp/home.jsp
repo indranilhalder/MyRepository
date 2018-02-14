@@ -11,6 +11,8 @@
 <html amp>
 <header:ampheader />
 <body on="tap:AMP.setState({visible: false})" role="menu" tabindex="0">
+	<amp-state id="user" credentials="include"
+    src="/pwamp/setheaderamp?timestamp=TIMESTAMP"></amp-state>
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('amp.analytics.utility.host')"
 		var="host" />
@@ -22,7 +24,7 @@
 		<a href="/">Marketplace</a> <a href="${luxuryHost}" target="_blank">Luxury</a>
 	</div>
 	<header>
-		<button class="header-icon-1 mobile-item" on='tap:sidebar.open'>
+		<button class="header-icon-1 mobile-item" on='tap:sidebar.open,AMP.setState({showAccountInfo : false})'>
 			<i class="fa fa-navicon"></i>
 		</button>
 		<section class="col-xs-12 header-search-section">
@@ -136,7 +138,7 @@
 			</section>
 		</section>
 		<p class="header-icon-2 mobile-item">
-			<a href="/cart"><span class="responsive-bag">0</span></a>
+			<a href="/cart"><span class="responsive-bag" [text]="user.items[0].cartcount">0</span></a>
 		</p>
 		<p class="header-icon-3 mobile-item">
 			<i tabindex="1" role="main"
@@ -321,54 +323,44 @@
 							code="text.backToMobileStore" />
 				</a></li>
 			</c:if>
-
-			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-			
-				<amp-accordion class="sidebar-menu l1-accordian user-information" disable-session-states>
-					<section>
-						<h4 class="l1-options">
-							<c:set var="userName" value="${fname}"/>
-							<a href="<c:url value="/my-account"/>" class="fa l1-my-account"><span class="sidebar-myaccount"></span> <spring:theme code="header.hi" arguments="${userName}" htmlEscape="true" />!</a>
-						<i class="fa fa-angle-right"></i></h4>
-						<div>
-							<c:if test="${not empty userName && !fn:contains(userName, 'Anonymous')}">
-		        				<ul>
-			        				<li class="header-myAccount"></li>
-									<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-												code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
-									<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-												code="header.flyout.Personal" /></a></li>
-									<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-												code="header.flyout.orders" /></a></li>
-									<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-												code="header.flyout.cards" /></a></li>
-									<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-												code="header.flyout.address" /></a></li>
-	                       <c:if test="${isVoucherToBeDisplayed eq true }">
-							    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-										code="header.flyout.coupons" /></a></li>
-							</c:if>
-								<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-											code="header.flyout.invite" /></a></li>
-											
-								<li><ycommerce:testId code="header_signOut">
-										<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
-												code="header.link.logout" />
-										</a></u>
-									</ycommerce:testId>
-								</li>
-								</ul>
-						</c:if>
-						</div>
+					<section class="hidden" [class]="user.items[0].loggedInStatus ? 'display-visible' : 'hidden'">
+						<p class="sidebar-divider-item show-user-header" role="profile" tabindex="1" on="tap:AMP.setState({showAccountInfo : !showAccountInfo})">
+									<c:set var="userName" value="${fname}"/>
+									<a href="<c:url value="/my-account"/>" class="l1-my-account"><span class="sidebar-myaccount"></span> <spring:theme code="header.hi.blank" />&nbsp;<data [text]="user.items[0].userFirstName"></data>!</a>
+								<i class="fa fa-angle-right" [class]="!showAccountInfo ? 'fa fa-angle-right' : 'fa fa-angle-down'"></i></p>
 					</section>
-				</amp-accordion>
-			</sec:authorize>
-
-			<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-					<p class="sidebar-divider-item sidebar-profile">
-					<a href="<c:url value="/login"/>"><span></span>Sign In/Sign Up</a>
+					<p class="sidebar-divider-item sidebar-profile display-visible" [class]="user.items[0].loggedInStatus ? 'hidden' : 'sidebar-divider-item sidebar-profile display-visible'">
+						<a href="<c:url value="/login"/>"><span></span>Sign In/Sign Up</a>
 					</p>
-			</sec:authorize>
+			<section class="hidden" [class]="showAccountInfo ? 'display-visible user-menu-section' : 'hidden'">
+       			<ul>
+       				<li class="header-myAccount"></li>
+					<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+								code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
+					<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
+								code="header.flyout.Personal" /></a></li>
+					<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
+								code="header.flyout.orders" /></a></li>
+					<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
+								code="header.flyout.cards" /></a></li>
+					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
+								code="header.flyout.address" /></a></li>
+                    <c:if test="${isVoucherToBeDisplayed eq true }">
+				    <li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+							code="header.flyout.coupons" /></a></li>
+					</c:if>
+					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
+								code="header.flyout.invite" /></a></li>
+								
+					<li><ycommerce:testId code="header_signOut">
+							<u><a href="<c:url value='/logout'/>"  class="header-myAccountSignOut"> <spring:theme
+									code="header.link.logout" />
+							</a></u>
+						</ycommerce:testId>
+					</li>
+				</ul>
+			</section>
+			
 		</c:if>
 	
 	<p class="sidebar-divider-item">
@@ -626,9 +618,10 @@
 							<div class="newInDesc">
 								<p class="newInDescName">{{productTitle}}</p>
 								{{#productPrice}}
-								<p class="newInDescPrice">
-									{{dispPrice}}<span class="price-right">{{strikePrice}}</span>
-								</p>
+								<p class="newInDescPrice">{{dispPrice}}
+								  <span class="price-right display-visible"
+								    [class]="'{{dispPrice}}' == '{{strikePrice}}' ? 'hidden' : 'price-right display-visible'">
+								  {{strikePrice}}</span></p>
 								{{/productPrice}}
 							</div>
 						</div></a> {{/newAndExclusiveProducts}} </amp-carousel> 
