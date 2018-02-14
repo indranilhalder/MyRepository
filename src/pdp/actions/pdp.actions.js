@@ -36,6 +36,11 @@ export const PRODUCT_PDP_EMI_REQUEST = "PRODUCT_PDP_EMI_REQUEST";
 export const PRODUCT_PDP_EMI_SUCCESS = "PRODUCT_PDP_EMI_SUCCESS";
 export const PRODUCT_PDP_EMI_FAILURE = "PRODUCT_PDP_EMI_FAILURE";
 
+export const PRODUCT_WISH_LIST_REQUEST = "PRODUCT_WISH_LIST_REQUEST";
+export const PRODUCT_WISH_LIST_SUCCESS = "PRODUCT_WISH_LIST_SUCCESS";
+export const PRODUCT_WISH_LIST_FAILURE = "PRODUCT_WISH_LIST_FAILURE";
+export const PRODUCT_WISH_LIST_PATH = "wishList";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
@@ -44,6 +49,9 @@ export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
+const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
+const ADD_PRODUCT_TO_CART = "addProductToCart";
+const REMOVE_FROM_WISH_LIST = "removeFromWl";
 
 export function getProductDescriptionRequest() {
   return {
@@ -127,11 +135,10 @@ export function addProductToWishListRequest() {
     status: REQUESTING
   };
 }
-export function addProductToWishListSuccess(productDescription) {
+export function addProductToWishListSuccess() {
   return {
     type: ADD_PRODUCT_TO_WISH_LIST_SUCCESS,
-    status: SUCCESS,
-    productDescription
+    status: SUCCESS
   };
 }
 
@@ -144,25 +151,17 @@ export function addProductToWishListFailure(error) {
 }
 
 export function addProductToWishList(productDetails) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToWishListRequest());
     try {
-      const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${CLIENT_ID}/addProductInWishlist?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&channel=${CHANNEL}&emailId=${getState().user.userId}&productCode=${
-          getState().productDescription.productListingId
-        }&ussid=${
-          getState().productDescription.ussid
-        }&wishlistName=${MY_WISH_LIST}`
-      );
+      const result = await api.postMock(ADD_PRODUCT_TO_WISH_LIST);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       // TODO: dispatch a modal here
-      dispatch(addProductToWishListSuccess(resultJson));
+      dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
     }
@@ -175,11 +174,10 @@ export function removeProductFromWishListRequest() {
     status: REQUESTING
   };
 }
-export function removeProductFromWishListSuccess(productDescription) {
+export function removeProductFromWishListSuccess() {
   return {
     type: REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS,
-    status: SUCCESS,
-    productDescription
+    status: SUCCESS
   };
 }
 
@@ -192,23 +190,16 @@ export function removeProductFromWishListFailure(error) {
 }
 
 export function removeProductFromWishList(productDetails) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(removeProductFromWishListRequest());
     try {
-      const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${CLIENT_ID}/removeProductFromWishlist?USSID=${
-          getState().productDescription.ussid
-        }&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&channel=${CHANNEL}&wishlistName=${MY_WISH_LIST}`
-      );
+      const result = await api.postMock(REMOVE_FROM_WISH_LIST);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(removeProductFromWishListSuccess(resultJson));
+      dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       dispatch(removeProductFromWishListFailure(e.message));
     }
@@ -221,11 +212,10 @@ export function addProductToBagRequest() {
     status: REQUESTING
   };
 }
-export function addProductToBagSuccess(productDescription) {
+export function addProductToBagSuccess() {
   return {
     type: ADD_PRODUCT_TO_BAG_SUCCESS,
-    status: SUCCESS,
-    productDescription
+    status: SUCCESS
   };
 }
 
@@ -237,25 +227,16 @@ export function addProductToBagFailure(error) {
   };
 }
 export function addProductToBag(products) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToBagRequest());
     try {
-      const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${CLIENT_ID}/carts/15481123719086096-22105306/addProductToCart?USSID=${
-          getState().productDescription.ussid
-        }&access_token=${
-          JSON.parse(customerCookie).access_token
-        }&addedToCartWl=true&brandParam=&exchangeParam=&l3code=&pinParam=&productCode=${
-          getState().productDescription.productListingId
-        }&quantity=${products.count}`
-      );
+      const result = await api.postMock(ADD_PRODUCT_TO_CART);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(addProductToBagSuccess(resultJson));
+      dispatch(addProductToBagSuccess());
     } catch (e) {
       dispatch(addProductToBagFailure(e.message));
     }
@@ -334,6 +315,44 @@ export function getPdpEmi() {
       dispatch(getPdpEmiSuccess(resultJson));
     } catch (e) {
       dispatch(getPdpEmiFailure(e.message));
+    }
+  };
+}
+
+export function getProductWishListRequest() {
+  return {
+    type: PRODUCT_WISH_LIST_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getProductWishListSuccess(wishList) {
+  return {
+    type: PRODUCT_WISH_LIST_SUCCESS,
+    status: SUCCESS,
+    wishList
+  };
+}
+
+export function getProductWishListFailure(error) {
+  return {
+    type: PRODUCT_WISH_LIST_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getProductWishList() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getProductWishListRequest());
+    try {
+      const result = await api.getMock(PRODUCT_WISH_LIST_PATH);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      // TODO: dispatch a modal here
+      dispatch(getProductWishListSuccess(resultJson));
+    } catch (e) {
+      dispatch(getProductWishListFailure(e.message));
     }
   };
 }
