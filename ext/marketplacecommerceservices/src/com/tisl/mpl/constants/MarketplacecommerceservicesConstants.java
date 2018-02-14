@@ -2446,10 +2446,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
 
 
-	//Report for bulk cancellation
-	/*
-	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
-	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
-	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
-	 */
+	public static final String NU005 = "NU005";
 }
