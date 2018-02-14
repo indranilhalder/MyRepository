@@ -1,0 +1,28 @@
+.base {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  background: #fff;
+}
+.content {
+  width: 100%;
+  height: auto;
+  padding: 0 20px;
+}
+.header {
+  width: 100%;
+  height: 40px;
+  background: #212121;
+  color: #fff;
+  font-family: semibold;
+  font-size: 14px;
+  line-height: 40px;
+  padding: 0 20px;
+}
+.info {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 20px 0;
+}
