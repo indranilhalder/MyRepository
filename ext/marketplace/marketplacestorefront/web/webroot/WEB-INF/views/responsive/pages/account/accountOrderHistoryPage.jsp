@@ -1222,4 +1222,30 @@ $(".get_order_statement").click(function() {
 $(".accountPopupClose").on('click', function () {
 	showStatementModel.style.display = "none";
 });
+
+//Autocollapsing Order Statement Info
+function toggleData(label) {
+	$(label).text(function(i, text){
+		if(text == '+'){
+			$(label).css('background-color', '#db001a');
+		} else {
+			$(label).css('background-color', 'green');
+		}
+		$(label).closest('.orderStatMainBody').find('.orderStatementL1Body').toggle();
+        return text === "+" ? "-" : "+";
+    })
+}
+
+function toggleInnerData(label) {
+	$(label).text(function(i, text){
+		if(text == '+'){
+			$(label).css('background-color', '#db001a');
+		} else {
+			$(label).css('background-color', 'green');
+		}
+		$(label).closest('.orderStatChildBody').find('.orderStatementL2Body').toggle();
+        return text === "+" ? "-" : "+";
+    })
+}
+
 </script>
