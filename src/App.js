@@ -81,14 +81,6 @@ class App extends Component {
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
-
-    if (this.props.user.loading) {
-      return (
-        <div className={AppStyles.loadingIndicator}>
-          <MDSpinner />
-        </div>
-      );
-    }
     return (
       <div className={className}>
         <Switch>
