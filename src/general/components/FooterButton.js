@@ -14,7 +14,7 @@ export default class FooterButton extends React.Component {
         className={styles.base}
         style={{
           backgroundColor: this.props.backgroundColor,
-          "border-right": `1px solid ${this.props.borderColor}`
+          borderRight: `1px solid ${this.props.borderColor}`
         }}
         onClick={() => this.handleClick()}
       >
