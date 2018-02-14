@@ -1,8 +1,6 @@
 :global .SelectBoxBase {
   width: 100%;
   background-color: #ffffff;
-  height: 300px;
-  padding: 20px;
 }
 :global .SelectBoxBase.borderNone .Select-control {
   border: 0px;
