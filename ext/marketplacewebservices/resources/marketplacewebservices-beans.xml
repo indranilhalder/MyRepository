@@ -1114,6 +1114,8 @@
 		<!-- TPR-6869: Start & end -->
 		<property name="classificationList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ClassificationDTOLister>" />
+		<property name="averageRating" type="Double" />
+		<property name="numberOfReviews" type="Integer" />
 	</bean>
 
 	<!-- TPR-6869 : Start -->
