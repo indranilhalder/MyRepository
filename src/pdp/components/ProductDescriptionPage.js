@@ -26,6 +26,7 @@ class ProductDescriptionPage extends Component {
     this.props.getProductDescription();
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
+    this.props.getProductWishList();
   }
   onSave() {
     if (this.props.onSave) {

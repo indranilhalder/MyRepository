@@ -344,7 +344,7 @@ export function getProductWishList() {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductWishListRequest());
     try {
-      const result = await api.getMock(PRODUCT_WISH_LIST_PATH);
+      const result = await api.postMock(PRODUCT_WISH_LIST_PATH);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

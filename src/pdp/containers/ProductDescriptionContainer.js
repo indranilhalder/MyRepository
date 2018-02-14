@@ -6,7 +6,8 @@ import {
   removeProductFromWishList,
   addProductToBag,
   getProductSizeGuide,
-  getPdpEmi
+  getPdpEmi,
+  getProductWishList
 } from "../actions/pdp.actions";
 import ProductDescriptionPage from "../components/ProductDescriptionPage";
 import { withRouter } from "react-router-dom";
@@ -50,8 +51,13 @@ const mapDispatchToProps = dispatch => {
     showSizeGuide: () => {
       dispatch(showModal(SIZE_GUIDE));
     },
+
+    getProductWishList: () => {
+      dispatch(getProductWishList());
+    },
     showEmiPlans: () => {
       dispatch(showModal(EMI_MODAL));
+
     }
   };
 };
@@ -59,7 +65,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     loading: state.productDescription.loading,
-    productDetails: state.productDescription.productDetails
+    productDetails: state.productDescription.productDetails,
+    wishList: state.productDescription.wishList
   };
 };
 
