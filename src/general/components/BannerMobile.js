@@ -3,23 +3,22 @@ import styles from "./BannerMobile.css";
 export default class BannerMobile extends React.Component {
   constructor(props) {
     super(props);
+    const itemArray = React.Children.map(this.props.children, (child, i) => {
+      return child;
+    });
+    const lastItem = itemArray.pop();
+    itemArray.unshift(lastItem);
+    this.items = itemArray;
     this.state = {
       visibleItems: this.props.children
-        ? React.Children.map(this.props.children, (child, i) => {
-            if (i < 3) {
-              return child;
-            }
+        ? itemArray.filter((child, i) => {
+            return i < 3;
           })
         : null,
       numberOfItems: React.Children.count(this.props.children),
       position: 0,
       absolutePosition: 0
     };
-    this.items = this.props.children
-      ? React.Children.map(this.props.children, (child, i) => {
-          return child;
-        })
-      : null;
   }
   swipeStart(evt) {
     evt.stopPropagation();

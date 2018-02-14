@@ -51,6 +51,11 @@ class ProductDescriptionPage extends Component {
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
+  showEmiModal = () => {
+    if (this.props.showEmiPlans) {
+      this.props.showEmiPlans();
+    }
+  };
 
   renderAddressModal = () => {
     if (this.props.showAddress) {
@@ -62,6 +67,21 @@ class ProductDescriptionPage extends Component {
     this.props.showCouponModal(this.props.productDetails);
   };
 
+  addProductToBag = () => {
+    if (this.props.addProductToBag) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToBag(productDetails);
+    }
+  };
+  addProductToWishList = () => {
+    if (this.props.addProductToWishList) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToWishList(productDetails);
+    }
+  };
+
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -69,7 +89,10 @@ class ProductDescriptionPage extends Component {
         return val.imageType === MOBILE_PDP_VIEW;
       })[0].galleryImages;
       return (
-        <PdpFrame>
+        <PdpFrame
+          addProductToBag={() => this.addProductToBag()}
+          addProductToWishList={() => this.addProductToWishList()}
+        >
           <div className={styles.base}>
             <div className={styles.pageHeader}>
               <HollowHeader
@@ -92,6 +115,15 @@ class ProductDescriptionPage extends Component {
                 averageRating={productData.averageRating}
               />
             </div>
+            {productData.emiInfo && (
+              <div className={styles.info}>
+                {productData.emiInfo.emiText}
+                <span className={styles.link} onClick={this.showEmiModal}>
+                  View Plans
+                </span>
+              </div>
+            )}
+
             {productData.variantOptions &&
               productData.variantOptions.showColor && (
                 <div>

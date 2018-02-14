@@ -15,7 +15,8 @@ import {
   showModal,
   ADDRESS,
   PRODUCT_COUPONS,
-  SIZE_GUIDE
+  SIZE_GUIDE,
+  EMI_MODAL
 } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
@@ -50,8 +51,13 @@ const mapDispatchToProps = dispatch => {
     showSizeGuide: () => {
       dispatch(showModal(SIZE_GUIDE));
     },
+
     getProductWishList: () => {
       dispatch(getProductWishList());
+    },
+    showEmiPlans: () => {
+      dispatch(showModal(EMI_MODAL));
+
     }
   };
 };
