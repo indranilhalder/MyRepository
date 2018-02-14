@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -28,6 +29,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -72,6 +74,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
@@ -601,20 +604,55 @@ public class PaymentServicesController extends BaseController
 		final double payableWalletAmount = cart.getPayableWalletAmount().doubleValue();
 		double bankCouponDiscount = 0.0D;
 		double couponDiscount = 0.0D;
-		if (!cart.getDiscounts().isEmpty())
+		double productDiscount = 0.0D;
+		double userCouponDiscount = 0.0D;
+		double otherDiscount = 0.0D;
+		double totalDiscount = 0.0D;
+		final List<DiscountValue> discountList = cart.getGlobalDiscountValues(); // discounts on the cart itself
+		final List<DiscountModel> voucherList = cart.getDiscounts();
+		
+		for (final AbstractOrderEntryModel entry : cart.getEntries())
 		{
-			for (final DiscountModel discount : cart.getDiscounts())
+			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
 			{
-				if (discount instanceof MplCartOfferVoucherModel)
-				{
-					bankCouponDiscount += discount.getValue().doubleValue();
-				}
-				else
-				{
-					couponDiscount += discount.getValue().doubleValue();
-				}
+				 productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc()
+						.doubleValue() > 0) ? entry.getTotalProductLevelDisc().doubleValue() : 0;
 			}
 		}
+		if (CollectionUtils.isNotEmpty(discountList))
+		{
+			for (final DiscountValue discount : discountList)
+			{
+				totalDiscount += discount.getAppliedValue();
+				for (final DiscountModel voucher : voucherList)
+				{
+					if (discount.getCode().equalsIgnoreCase(voucher.getCode()))
+					{
+
+						final double value = discount.getAppliedValue();
+						if ((voucher instanceof PromotionVoucherModel) && !(voucher instanceof MplCartOfferVoucherModel))
+						{
+							if (value > 0.0d)
+							{
+								userCouponDiscount += value;
+							}
+						}
+						else if (voucher instanceof MplCartOfferVoucherModel)
+						{
+							if (value > 0.0d)
+							{
+								bankCouponDiscount += value;
+							}
+						}
+
+
+					}
+				}
+
+			}
+		}
+		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
+
 
 		BigDecimal total = new BigDecimal(0.0D);
 		final double remainingWalletAmount = cart.getTotalWalletAmount().doubleValue() - payableWalletAmount;
@@ -634,7 +672,7 @@ public class PaymentServicesController extends BaseController
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setDeliveryCharges(deliveryChargesPriceData);
 		}
-		total = new BigDecimal(bankCouponDiscount);
+		total = new BigDecimal(otherDiscount);
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setOtherDiscount(otherDiscountPriceData);
@@ -1448,7 +1486,7 @@ public class PaymentServicesController extends BaseController
 
 			try
 			{
-				orderData = getEGVOrderStatus(cartGuid);
+				orderData = getEGVOrderStatus(cartGuid,paymentMode,juspayOrderID);
 				if(null != orderData) {
 					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
 					updateTransactionDetail.setOrderId(orderData.getCode());
@@ -1683,13 +1721,15 @@ public class PaymentServicesController extends BaseController
 		return amountDeducted;
 	}
 	// Buying Of EGV  Changes START 
-	private OrderData getEGVOrderStatus(final String guid)
+	private OrderData getEGVOrderStatus(final String guid,String paymentMode,String juspayOrderID)
 			throws InvalidCartException, CalculationException
 	{
 		 OrderData orderData = new OrderData();
 		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
 		String orderStatusResponse = null;
-		orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
+		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+		paymentInfo.put(paymentMode, Double.valueOf(orderToBeUpdated.getTotalPriceWithConv().doubleValue()));
+		orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, paymentInfo, orderToBeUpdated, juspayOrderID);
 		//Redirection when transaction is successful i.e. CHARGED
 		if (null != orderStatusResponse)
 		{
@@ -1838,12 +1878,28 @@ public class PaymentServicesController extends BaseController
 					modelService.refresh(orderModel);
 			}
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+			boolean isWalletOtpVerified = false;
 			if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
 			{
 				paymentModesData.setIsWalletCreated(true);
 				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
 				{
+					isWalletOtpVerified = true;
 					paymentModesData.setIsWalletOtpVerified(true);
+				}
+			}
+			if(!isWalletOtpVerified) {
+				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+				if(null != walletCreateData) {
+					if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+						paymentModesData.setFirstName(walletCreateData.getQcVerifyFirstName());
+					}
+					if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+						paymentModesData.setLastName(walletCreateData.getQcVerifyLastName());
+					}
+					if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+						paymentModesData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+					}
 				}
 			}
 			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
@@ -1941,9 +1997,9 @@ public class PaymentServicesController extends BaseController
 								paymentModesData.setCliqCash(cliqCash);
 							}
 						}else {
-							paymentModesData.setFirstName(customer.getQcVerifyFirstName());
-							paymentModesData.setLastName(customer.getQcVerifyLastName());
-							paymentModesData.setMobileNumber(customer.getMobileNumber());
+//							paymentModesData.setFirstName(customer.getQcVerifyFirstName());
+//							paymentModesData.setLastName(customer.getQcVerifyLastName());
+//							paymentModesData.setMobileNumber(customer.getMobileNumber());
 							final BigDecimal walletAmount = new BigDecimal(0.0D);
 							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
 									MarketplacecommerceservicesConstants.INR);

@@ -66,8 +66,6 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -87,9 +85,11 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
@@ -200,6 +200,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
 	/**
 	 * @throws CMSItemNotFoundException
 	 * @desc This service fetches all the details of A+ content based on product code
@@ -3171,20 +3174,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					egvProductData.setIsWalletOtpVerified(true);
 				}else {
-					if(null != customer.getQcVerifyFirstName() && StringUtils.isNotEmpty(customer.getQcVerifyFirstName())) {
-						egvProductData.setFirstName(customer.getQcVerifyFirstName());
-					}else {
-						egvProductData.setFirstName(customer.getFirstName());
-					}
-					if(null != customer.getQcVerifyLastName() && StringUtils.isNotEmpty(customer.getQcVerifyLastName())) {
-						egvProductData.setLastName(customer.getQcVerifyLastName());
-					}else {
-						egvProductData.setLastName(customer.getLastName());
-					}
-					if(null != customer.getQcVerifyMobileNo() && StringUtil.isNotEmpty(customer.getQcVerifyMobileNo())) {
-						egvProductData.setMobileNumber(customer.getQcVerifyMobileNo());
-					}else {
-						egvProductData.setMobileNumber(customer.getMobileNumber());
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					if(null != walletCreateData) {
+						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+							egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
+						}
+						if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+							egvProductData.setLastName(walletCreateData.getQcVerifyLastName());
+						}
+						if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+							egvProductData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+						}
 					}
 				}
 					

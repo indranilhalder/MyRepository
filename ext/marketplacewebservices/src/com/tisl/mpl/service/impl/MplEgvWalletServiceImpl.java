@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -274,55 +275,60 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	public UserCliqCashWsDto getUserCliqCashDetails(CustomerModel currentCustomer)
 	{
 		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
-		UserCliqCashWsDto responce = null;
+		UserCliqCashWsDto responce = new UserCliqCashWsDto();
+		boolean isWalletOtpVerified = false;
+		boolean isWalletCreated = false;
+
 		if (null != currentCustomer)
 		{
 			if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
 			{
-
-				customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-
-				if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode()
-						&& customerWalletDetailData.getResponseCode().intValue() == 0)
-				{
-					responce = getCustomerWalletAmount(customerWalletDetailData);
-					responce.setIsWalletCreated(true);
-					responce.setTotalCliqCashBalance(responce.getTotalCliqCashBalance());
-					responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
-					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}
-				else if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode())
-				{
-					throw new EtailBusinessExceptions(customerWalletDetailData.getResponseCode().toString());
-				}
-				if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
-				{
-					responce.setIsWalletOtpVerified(true);
-				}
+				isWalletCreated = true;
 			}
-			else
+			if (null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue())
 			{
-				try
-				{
-					responce = new UserCliqCashWsDto();
-					responce.setIsWalletCreated(false);
-					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
-					if (null != walletCreateData)
-					{
-						responce.setFirstName(walletCreateData.getQcVerifyFirstName());
-						responce.setLastName(walletCreateData.getQcVerifyLastName());
-						responce.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
-					}
-					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}
-				catch (Exception e)
-				{
-					LOG.error("Exception occurred while gettig  cliqCash details");
-				}
+				isWalletOtpVerified = true;
 			}
-		}
-		return responce;
+			 if (isWalletCreated)
+				{
 
+					customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail()
+							.getWalletId());
+
+					if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode()
+							&& customerWalletDetailData.getResponseCode().intValue() == 0)
+					{
+						responce = getCustomerWalletAmount(customerWalletDetailData);
+						responce.setIsWalletCreated(true);
+						responce.setTotalCliqCashBalance(responce.getTotalCliqCashBalance());
+						responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
+						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else if (null != customerWalletDetailData && null != customerWalletDetailData.getResponseCode())
+					{
+						throw new EtailBusinessExceptions(customerWalletDetailData.getResponseCode().toString());
+					}
+				}
+			 
+			   if(isWalletOtpVerified) {
+			   	responce.setIsWalletOtpVerified(true);
+			   }else {
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					if(null != walletCreateData) {
+						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+							responce.setFirstName(walletCreateData.getQcVerifyFirstName());
+						}
+						if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+							responce.setLastName(walletCreateData.getQcVerifyLastName());
+						}
+						if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+							responce.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+						}
+					}
+				
+			   }
+			}
+			return responce;
 	}
 
 	/* (non-Javadoc)
@@ -560,8 +566,19 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		double userCouponDiscount = 0.0D;
 		double otherDiscount = 0.0D;
 		double totalDiscount = 0.0D;
+		double productDiscount = 0.0D;
 		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
+		
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
+			{
+				 productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc()
+						.doubleValue() > 0) ? entry.getTotalProductLevelDisc().doubleValue() : 0;
+			}
+		}
+		
 		if (CollectionUtils.isNotEmpty(discountList))
 		{
 			for (final DiscountValue discount : discountList)
@@ -594,7 +611,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 
 			}
 		}
-		otherDiscount = totalDiscount - userCouponDiscount;
+		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
 		BigDecimal total = new BigDecimal(0.0D);
 		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
 		if (null != cartModel.getSubtotal())
@@ -768,8 +785,17 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 		double userCouponDiscount = 0.0D;
 		double otherDiscount = 0.0D;
 		double totalDiscount = 0.0D;
+		double productDiscount = 0.0D;
 		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
+			{
+				 productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc()
+						.doubleValue() > 0) ? entry.getTotalProductLevelDisc().doubleValue() : 0;
+			}
+		}
 		if (CollectionUtils.isNotEmpty(discountList))
 		{
 			for (final DiscountValue discount : discountList)
@@ -802,7 +828,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 
 			}
 		}
-		otherDiscount = totalDiscount - userCouponDiscount;
+		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
 
 		BigDecimal total = new BigDecimal(0.0D);
 		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
@@ -906,8 +932,17 @@ public ApplyCartCouponsDTO setTotalPrice(ApplyCartCouponsDTO applycouponDto, Abs
 	double userCouponDiscount = 0.0D;
 	double otherDiscount = 0.0D;
 	double totalDiscount = 0.0D;
+	double productDiscount = 0.0D;
 	final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
 	final List<DiscountModel> voucherList = cartModel.getDiscounts();
+	for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+	{
+		if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
+		{
+			 productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc()
+					.doubleValue() > 0) ? entry.getTotalProductLevelDisc().doubleValue() : 0;
+		}
+	}
 	if (CollectionUtils.isNotEmpty(discountList))
 	{
 		for (final DiscountValue discount : discountList)
@@ -940,7 +975,7 @@ public ApplyCartCouponsDTO setTotalPrice(ApplyCartCouponsDTO applycouponDto, Abs
 
 		}
 	}
-	otherDiscount = totalDiscount - userCouponDiscount;
+	otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
 
 	BigDecimal total = new BigDecimal(0.0D);
 	final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;

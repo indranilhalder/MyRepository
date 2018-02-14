@@ -4743,6 +4743,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			value6.add(mplZoneDeliveryModeValueModel);
 			modelService.saveAll(mplZoneDeliveryModeValueModel);
 			abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
+			abstractOrderEntryModel.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
 			abstractOrderEntryModel.setDeliveryMode(deliaveryMode);
 		}
 		catch (Exception exception)
