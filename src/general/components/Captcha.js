@@ -10,7 +10,7 @@ class Captcha extends Component {
     return (
       <div>
         <Recaptcha
-          sitekey={Config.reCAPTCHASiteKey}
+          sitekey={Config.reCaptChaSiteKey}
           callback={verifyCallback}
           expiredCallback={expiredCallback}
           locale={LOCALE}
