@@ -35,11 +35,13 @@ export default class AddressCarousel extends React.Component {
 }
 AddressCarousel.propTypes = {
   text: PropTypes.string,
-  data: PropTypes.shape({
-    heading: PropTypes.string,
-    address: PropTypes.string,
-    value: PropTypes.string
-  })
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      heading: PropTypes.string,
+      address: PropTypes.string,
+      value: PropTypes.string
+    })
+  )
 };
 AddressCarousel.defaultProps = {
   text: "Select from your saved list."

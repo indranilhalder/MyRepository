@@ -58,7 +58,7 @@ class ProductDescriptionPage extends Component {
 
   renderAddressModal = () => {
     if (this.props.showAddress) {
-      this.props.showAddress(this.props.productDetails);
+      this.props.showAddress();
     }
   };
 
