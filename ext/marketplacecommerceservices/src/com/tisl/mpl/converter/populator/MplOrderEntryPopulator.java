@@ -205,7 +205,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		{
 			for (final SellerInformationData seller : target.getProduct().getSeller())
 			{
-				if (target.getProduct().getRootCategory().equalsIgnoreCase(FINEJEWELLERY))
+				if (StringUtils.isNotEmpty(target.getProduct().getRootCategory()) && target.getProduct().getRootCategory().equalsIgnoreCase(FINEJEWELLERY))
 				{
 					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 							.getSelectedUSSID());
