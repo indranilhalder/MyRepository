@@ -61,6 +61,21 @@ class ProductDescriptionPage extends Component {
     this.props.showCouponModal(this.props.productDetails);
   };
 
+  addProductToBag = () => {
+    if (this.props.addProductToBag) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToBag(productDetails);
+    }
+  };
+  addProductToWishList = () => {
+    if (this.props.addProductToWishList) {
+      let productDetails = {};
+      productDetails.listingId = this.props.productDetails.productListingId;
+      this.props.addProductToWishList(productDetails);
+    }
+  };
+
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -69,8 +84,8 @@ class ProductDescriptionPage extends Component {
       })[0].galleryImages;
       return (
         <PdpFrame
-          addProductToBag={this.props.addProductToBag}
-          addProductToWishList={this.props.addProductToWishList}
+          addProductToBag={() => this.addProductToBag()}
+          addProductToWishList={() => this.addProductToWishList()}
         >
           <div className={styles.base}>
             <div className={styles.pageHeader}>

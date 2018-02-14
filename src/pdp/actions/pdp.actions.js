@@ -237,9 +237,7 @@ export function addProductToBag(products) {
       }
       // TODO: dispatch a modal here
       dispatch(addProductToBagSuccess());
-      console.log(resultJson);
     } catch (e) {
-      console.log(e.message);
       dispatch(addProductToBagFailure(e.message));
     }
   };

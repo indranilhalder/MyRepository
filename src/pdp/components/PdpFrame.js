@@ -1,6 +1,5 @@
 import React from "react";
 import PdpFooter from "./PdpFooter";
-import PropTypes from "prop-types";
 import styles from "./PdpFrame.css";
 export default class PdpFrame extends React.Component {
   onSave() {
