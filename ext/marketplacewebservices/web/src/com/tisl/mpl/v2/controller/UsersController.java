@@ -10271,29 +10271,31 @@ public class UsersController extends BaseCommerceController
 
 			//TO DO REGEX MATCH
 			customerModel = extUserService.getUserForUid(userId);
-
-			if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
+			if (userId.matches((MarketplacecommerceservicesConstants.MOBILE_REGEX)))
 			{
-				//
-				if (StringUtils.isEmpty(otp))
+				if (null == customerModel.getOtpVerified() || !customerModel.getOtpVerified().booleanValue())
 				{
-					final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.REG.getCode(), userId);
-					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
-									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), userId);
-					userResult.setStatus("OTP VERIFICATION REQUIRED");
-					userResult.setErrorCode("NU0002");
-					return userResult;
-				}
-				else
-				{
-					final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG);
-					if (validOtpFlag)
+					//
+					if (StringUtils.isEmpty(otp))
 					{
-						customerModel.setOtpVerified(Boolean.TRUE);
-						modelService.save(customerModel);
+						final String otpassword = otpGenericService.generateOTPForRegister(userId, OTPTypeEnum.REG.getCode(), userId);
+						sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+								MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otpassword), userId);
+						userResult.setStatus("OTP VERIFICATION REQUIRED");
+						userResult.setErrorCode("NU0002");
+						return userResult;
 					}
+					else
+					{
+						final boolean validOtpFlag = mobileUserService.validateOtp(userId, otp, OTPTypeEnum.REG);
+						if (validOtpFlag)
+						{
+							customerModel.setOtpVerified(Boolean.TRUE);
+							modelService.save(customerModel);
+						}
 
+					}
 				}
 			}
 
@@ -10315,7 +10317,10 @@ public class UsersController extends BaseCommerceController
 					customerInfo.setGender(customerModel.getGender().toString());
 				}
 				customerInfo.setMobileNumber(customerModel.getMobileNumber());
-				customerInfo.setEmailId(customerModel.getOriginalUid());
+				if (!customerModel.getOriginalUid().matches((MarketplacecommerceservicesConstants.MOBILE_REGEX)))
+				{
+					customerInfo.setEmailId(customerModel.getOriginalUid());
+				}
 				userResult.setCustomerInfo(customerInfo);
 				userResult.setCustomerId(result.getCustomerId());
 				userResult.setIsTemporaryPassword(result.getIsTemporaryPassword());
@@ -10902,8 +10907,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = true) final boolean isPwa)
 	{
 		final GetCustomerDetailDto customer = new GetCustomerDetailDto();
-		MplCustomerProfileData customerData = new MplCustomerProfileData();
-
+		//	MplCustomerProfileData customerData = new MplCustomerProfileData();
+		CustomerModel customerData = new CustomerModel();
 		if (null == emailid && StringUtils.isEmpty(emailid))
 		{
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -10913,7 +10918,8 @@ public class UsersController extends BaseCommerceController
 			try
 			{
 				final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
-				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
+				customerData = extUserService.getUserForUid(emailIdLwCase);
+				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
 				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
 				if (null != customerData)
 				{
@@ -10940,13 +10946,13 @@ public class UsersController extends BaseCommerceController
 
 						customer.setLastName(customerData.getLastName());
 					}
-					if (StringUtils.isNotEmpty(customerData.getDateOfBirth()))
+					if (null != customerData.getDateOfBirth())
 					{
-						customer.setDateOfBirth(customerData.getDateOfBirth());
+						customer.setDateOfBirth(customerData.getDateOfBirth().toString());
 					}
-					if (StringUtils.isNotEmpty(customerData.getGender()))
+					if (null != customerData.getGender())
 					{
-						customer.setGender(customerData.getGender());
+						customer.setGender(customerData.getGender().toString());
 					}
 					if (StringUtils.isNotEmpty(customerData.getMobileNumber()))
 					{
