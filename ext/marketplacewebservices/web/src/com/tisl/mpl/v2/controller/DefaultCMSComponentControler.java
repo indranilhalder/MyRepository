@@ -27,8 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
+import com.tisl.mpl.model.cms.components.ContentWidgetComponentModel;
+import com.tisl.mpl.model.cms.components.ContentWidgetElementModel;
 import com.tisl.mpl.model.cms.components.HeroBannerComponentModel;
 import com.tisl.mpl.model.cms.components.HeroBannerElementModel;
+import com.tisl.mpl.wsdto.ContentWidgetCompWsDTO;
+import com.tisl.mpl.wsdto.ContentWidgetElementWsDTO;
 import com.tisl.mpl.wsdto.HeroBannerCompListWsDTO;
 import com.tisl.mpl.wsdto.HeroBannerCompWsDTO;
 import com.tisl.mpl.wsdto.UICompPageWiseListWsDTO;
@@ -94,6 +98,32 @@ public class DefaultCMSComponentControler
 							heroBannerCompWsDTO.setType(heroBannerCompObj.getType());
 
 							uiCompPageWiseList.add(heroBannerCompWsDTO);
+						}
+
+						if (abstractCMSComponentModel instanceof ContentWidgetComponentModel)
+						{
+							final ContentWidgetCompWsDTO contentWidgetCompWsDTO = new ContentWidgetCompWsDTO();
+
+							final List<ContentWidgetElementWsDTO> contentWidgetElementList = new ArrayList<ContentWidgetElementWsDTO>();
+
+							final ContentWidgetComponentModel contentWidgetComponentModel = (ContentWidgetComponentModel) abstractCMSComponentModel;
+							for (final ContentWidgetElementModel contentWidgetElementModel : contentWidgetComponentModel.getItems())
+							{
+								final ContentWidgetElementWsDTO contentWidgetElementWsDTO = new ContentWidgetElementWsDTO();
+
+								contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL());
+								contentWidgetElementWsDTO.setDescription(contentWidgetElementModel.getDescription());
+								contentWidgetElementWsDTO.setAppURL(contentWidgetElementModel.getAppURL());
+								contentWidgetElementWsDTO.setTitle(contentWidgetElementModel.getTitle());
+								contentWidgetElementWsDTO.setWebURL(contentWidgetElementModel.getWebURL());
+								contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
+
+								contentWidgetElementList.add(contentWidgetElementWsDTO);
+							}
+							contentWidgetCompWsDTO.setItems(contentWidgetElementList);
+							contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
+
+							uiCompPageWiseList.add(contentWidgetCompWsDTO);
 						}
 
 					}
