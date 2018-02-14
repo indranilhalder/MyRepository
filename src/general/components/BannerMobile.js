@@ -12,14 +12,13 @@ export default class BannerMobile extends React.Component {
           })
         : null,
       numberOfItems: React.Children.count(this.props.children),
-      position: 0,
-      absolutePosition: 0
+      position: 1,
+      absolutePosition: 1
     };
-    this.items = this.props.children
-      ? React.Children.map(this.props.children, (child, i) => {
-          return child;
-        })
-      : null;
+    const itemArray = React.Children.map(this.props.children, (child, i) => {
+      return child;
+    });
+    this.items = this.props.children ? itemArray.push(itemArray.shift()) : null;
   }
   swipeStart(evt) {
     evt.stopPropagation();
