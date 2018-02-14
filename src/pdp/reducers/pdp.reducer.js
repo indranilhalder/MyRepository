@@ -6,7 +6,8 @@ const productDescription = (
     loading: false,
     productDetails: null,
     sizeGuide: null,
-    emiResult: null
+    emiResult: null,
+    wishList: null
   },
   action
 ) => {
@@ -60,7 +61,6 @@ const productDescription = (
     case pdpActions.ADD_PRODUCT_TO_WISH_LIST_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        productDetails: action.productDescription,
         loading: false
       });
 
@@ -80,7 +80,6 @@ const productDescription = (
     case pdpActions.REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        productDetails: action.productDescription,
         loading: false
       });
 
@@ -100,7 +99,6 @@ const productDescription = (
     case pdpActions.ADD_PRODUCT_TO_BAG_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        productDetails: action.productDescription,
         loading: false
       });
 
@@ -150,6 +148,27 @@ const productDescription = (
         error: action.error,
         loading: false
       });
+
+    case pdpActions.PRODUCT_WISH_LIST_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_WISH_LIST_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        wishList: action.wishList,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_WISH_LIST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
     default:
       return state;
   }
