@@ -1,0 +1,29 @@
+.base {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+}
+.row {
+  composes: base;
+  margin-bottom: 15px;
+}
+.label {
+  width: 70%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.info {
+  width: 30%;
+  display: inline-block;
+  text-align: right;
+  vertical-align: middle;
+}
+.amount {
+  composes: info;
+  font-family: semibold;
+}
+.selectBox {
+  display: inline-block;
+  width: 60px;
+}
