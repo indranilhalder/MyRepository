@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Recaptcha from "react-grecaptcha";
 import Config from "../../lib/config";
-const verifyCallback = response => console.log(response);
+const verifyCallback = response => {};
 const expiredCallback = () => {};
 const LOCALE = "en";
 const THEME = "light";
