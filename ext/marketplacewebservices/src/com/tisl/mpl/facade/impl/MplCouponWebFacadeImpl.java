@@ -60,6 +60,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
 
+	private static final String FAILED = "Failed to apply Voucher with Code >>>";
+
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
 	 */
@@ -146,8 +148,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{
 						//Price data new calculation for 2 decimal values
-						applycouponDto.setCouponDiscount(
-								String.valueOf(data.getCouponDiscount().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setCouponDiscount(String.valueOf(data.getCouponDiscount().getValue()
+								.setScale(2, BigDecimal.ROUND_HALF_UP)));
 
 					}
 
@@ -333,8 +335,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					if (data != null && data.getMbDiscountAftrCVoucher() != null
 							&& data.getMbDiscountAftrCVoucher().getValue() != null)
 					{
-						applycouponDto.setDiscount(
-								String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+						applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
+								.setScale(2, BigDecimal.ROUND_HALF_UP)));
 					}
 
 					applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
@@ -379,8 +381,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 				if (data != null && data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					applycouponDto.setDiscount(
-							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
+							.setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				applycouponDto.setTotal(String.valueOf(mplCheckoutFacade.createPrice(orderModel, orderModel.getTotalPriceWithConv())
@@ -512,7 +514,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					}
 					catch (final VoucherOperationException e)
 					{
-						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+						LOG.debug(FAILED + cartCouponCode);
 					}
 					catch (final Exception e)
 					{
@@ -562,8 +564,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					try
 					{
 						final boolean applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, null, orderModel);
-						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus, true,
-								couponCode);
+						final VoucherDiscountData newData = mplCouponFacade.populateCartVoucherData(orderModel, null, applyStatus,
+								true, couponCode);
 
 						data = newData;
 						//data.setTotalDiscount(newData.getTotalDiscount());
@@ -572,7 +574,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 					}
 					catch (final VoucherOperationException e)
 					{
-						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+						LOG.debug(FAILED + cartCouponCode);
 					}
 					catch (final Exception e)
 					{
@@ -691,7 +693,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+			LOG.debug(FAILED + cartCouponCode);
 		}
 		catch (final Exception e)
 		{
@@ -725,7 +727,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+			LOG.debug(FAILED + cartCouponCode);
 		}
 		catch (final Exception e)
 		{
@@ -786,8 +788,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				if (data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					releaseCouponsDTO.setDiscount(
-							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					releaseCouponsDTO.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
+							.setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
@@ -824,8 +826,8 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 
 				if (data.getMbDiscountAftrCVoucher() != null && data.getMbDiscountAftrCVoucher().getValue() != null)
 				{
-					releaseCouponsDTO.setDiscount(
-							String.valueOf(data.getMbDiscountAftrCVoucher().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					releaseCouponsDTO.setDiscount(String.valueOf(data.getMbDiscountAftrCVoucher().getValue()
+							.setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
 
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);

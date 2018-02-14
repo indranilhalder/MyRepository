@@ -54,6 +54,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,6 +63,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringUtils;
@@ -87,8 +89,11 @@ import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.model.CustomSkuComponentModel;
 import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.core.model.SeoContentModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
+import com.tisl.mpl.facade.cms.MplCmsFacade;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.brand.impl.DefaultBrandService;
@@ -164,6 +169,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
+	@Resource(name = "mplCmsFacade")
+	private MplCmsFacade mplCmsFacade;
 
 	private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
 	private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
@@ -247,6 +254,23 @@ public class CategoryPageController extends AbstractCategoryPageController
 	public void setPageSiseCount(final int pageSiseCount)
 	{
 		this.pageSiseCount = pageSiseCount;
+	}
+
+	/**
+	 * @return the mplCmsFacade
+	 */
+	public MplCmsFacade getMplCmsFacade()
+	{
+		return mplCmsFacade;
+	}
+
+	/**
+	 * @param mplCmsFacade
+	 *           the mplCmsFacade to set
+	 */
+	public void setMplCmsFacade(final MplCmsFacade mplCmsFacade)
+	{
+		this.mplCmsFacade = mplCmsFacade;
 	}
 
 	/**
@@ -949,6 +973,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
+		getFooterContent("FooterSlot", model);
 		String returnStatement = null;
 		//EQA review comments added
 		try
@@ -1365,6 +1390,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
+		getFooterContent("FooterSlot", model);
 		String returnStatement = null;
 		//EQA review comments added
 		try
@@ -2350,6 +2376,47 @@ public class CategoryPageController extends AbstractCategoryPageController
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 *
+	 * @param slotId
+	 * @param model
+	 * @return
+	 */
+	public void getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
+	{
+		try
+		{
+
+			// For TPR-5733
+			final Map<Integer, Map<Integer, FooterLinkData>> mplFooterLinkRowList = mplCmsFacade.getFooterLinkData();
+			if (MapUtils.isNotEmpty(mplFooterLinkRowList))
+			{
+				model.addAttribute(ModelAttributetConstants.FOOTER_LINK_LIST, mplFooterLinkRowList);
+			}
+			else
+			{
+				LOG.debug("##########################   Returned empty list for footer link ####################################");
+			}
+
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
 	}
 
 }

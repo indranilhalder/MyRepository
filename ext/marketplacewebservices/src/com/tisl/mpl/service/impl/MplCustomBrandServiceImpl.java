@@ -31,6 +31,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.brand.impl.DefaultBrandS
 import com.tisl.mpl.service.MplCustomBrandService;
 import com.tisl.mpl.wsdto.BrandHierarchyData;
 import com.tisl.mpl.wsdto.BrandListHierarchyData;
+import com.tisl.mpl.wsdto.BrandListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.BrandSubHierarchyData;
 
 
@@ -51,13 +52,14 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 
 	private static final String SELLER = "seller";
 	private static final String BRAND = "brand";
+	private static final String C = "/c-";
 
 	//private static final String MICROSITE = "microsite";
 
 	/*
 	 * This method initially gets Shop by brand component for the component id and then fetches the corresponding fields
 	 * Sets latest modified time for mobile caching
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCustomBrandService#getShopByBrand()
 	 */
 	@Override
@@ -155,7 +157,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							}
 							//							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
 
-							final String subBrandUrl = "/Categories/" + oModel.getName() + "/c-" + oModel.getCode();
+							final String subBrandUrl = "/Categories/" + oModel.getName() + C + oModel.getCode();
 							if (StringUtils.isNotEmpty(subBrandUrl))
 							{
 
@@ -180,6 +182,145 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 			if (!brandDataList.isEmpty())
 			{
 				shopByBrandData.setShopbybrand(brandDataList);
+			}
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+
+		}
+		return shopByBrandData;
+	}
+
+	@Override
+	public BrandListHierarchyDataAmp getShopByBrandAmp() throws EtailNonBusinessExceptions
+	{
+
+		final BrandListHierarchyDataAmp shopByBrandData = new BrandListHierarchyDataAmp();
+		final List<BrandHierarchyData> brandDataList = new ArrayList<BrandHierarchyData>();
+		List<BrandSubHierarchyData> subBrandDataList = null;
+		BrandHierarchyData brandData = null;
+		Date modifiedTime = null;
+		Collection<CategoryModel> sub_brand_list = null;
+		try
+		{
+			final BrandCollectionComponentModel shopByBrandComponent = getShopByBrandComponent();
+			if (null != shopByBrandComponent)
+			{
+				modifiedTime = getModifiedTime();
+			}
+			if (null != shopByBrandComponent.getBrandCollection() && !shopByBrandComponent.getBrandCollection().isEmpty())
+			{
+
+				for (final BrandComponentModel brand : shopByBrandComponent.getBrandCollection())
+				{
+					if (null != brand.getModifiedtime() && brand.getModifiedtime().compareTo(modifiedTime) > 0)
+					{
+						modifiedTime = brand.getModifiedtime();
+					}
+					subBrandDataList = new ArrayList<BrandSubHierarchyData>();
+					brandData = new BrandHierarchyData();
+					if (null != brand.getMasterBrandName() && StringUtils.isNotEmpty(brand.getMasterBrandName()))
+					{
+						brandData.setMenu_brand_name(brand.getMasterBrandName());
+					}
+					if (null != brand.getMasterBrandURL() && StringUtils.isNotEmpty(brand.getMasterBrandURL()))
+					{
+						brandData.setMenu_brand_logo(brand.getMasterBrandURL());
+					}
+					if (null != brand.getLayout())
+					{
+						brandData.setLayoutStructure(brand.getLayout().toString());
+					}
+					sub_brand_list = new ArrayList<CategoryModel>();
+
+
+					Map<Character, List<CategoryModel>> sortedMap;
+
+					if (null != brand.getUid() && brand.getUid().equalsIgnoreCase("AToZBrandsComponent"))
+					{
+
+						sortedMap = defaultBrandService.getAllBrandsInAplhabeticalOrder(CODE);
+						for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
+						{
+							for (final CategoryModel subBrand : entry.getValue())
+							{
+								sub_brand_list.add(subBrand);
+
+							}
+						}
+
+
+					}
+					else if (null != brand.getLayout() && brand.getLayout().equals(LayoutStructure.FIVEBRANDIMAGES))
+					{
+						subBrandDataList.addAll(getMultiBrandStoreData(brand));
+					}
+					else
+					{
+						if (brand.getSubBrands() != null)
+						{
+							for (final CategoryModel subbrand : brand.getSubBrands())
+							{
+								sub_brand_list.add(subbrand);
+							}
+						}
+					}
+					if (null != brand.getLayout() && !brand.getLayout().equals(LayoutStructure.FIVEBRANDIMAGES))
+					{
+						for (final CategoryModel oModel : sub_brand_list)
+						{
+							if (null != oModel.getModifiedtime() && oModel.getModifiedtime().compareTo(modifiedTime) > 0)
+							{
+								modifiedTime = oModel.getModifiedtime();
+							}
+
+							final BrandSubHierarchyData subbranddata = new BrandSubHierarchyData();
+							if (null != oModel.getCode() && StringUtils.isNotEmpty(oModel.getCode()))
+							{
+								subbranddata.setSub_brand_code(oModel.getCode());
+							}
+
+							if (null != oModel.getName() && StringUtils.isNotEmpty(oModel.getName()))
+							{
+								subbranddata.setSub_brand_name(oModel.getName());
+							}
+							//							final String subBrandUrl = "/Categories/" + oModel.getName() + "c/" + oModel.getCode();
+
+							final String subBrandUrl = "/Categories/" + oModel.getName() + C + oModel.getCode();
+							if (StringUtils.isNotEmpty(subBrandUrl))
+							{
+
+								subbranddata.setSub_brand_url(subBrandUrl);
+							}
+							subBrandDataList.add(subbranddata);
+
+
+						}
+					}
+					if (!subBrandDataList.isEmpty())
+					{
+						brandData.setSubBrands(subBrandDataList);
+					}
+					brandDataList.add(brandData);
+				}
+			}
+			if (null != modifiedTime)
+			{
+				shopByBrandData.setModifiedTime(modifiedTime.toString());
+			}
+			if (!brandDataList.isEmpty())
+			{
+				shopByBrandData.setItems(brandDataList);
 			}
 		}
 		catch (final CMSItemNotFoundException e)
@@ -233,7 +374,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 							subbranddata.setSub_brand_code(subBrandCode);
 						}
 					}
-					else if (subrand.getSubBrandUrl().contains("/c/") || subrand.getSubBrandUrl().contains("/c-"))
+					else if (subrand.getSubBrandUrl().contains("/c/") || subrand.getSubBrandUrl().contains(C))
 					{
 						subbranddata.setSub_brand_type(BRAND);
 						subbranddata.setSub_brand_url(subrand.getSubBrandUrl().substring(3));
@@ -243,7 +384,7 @@ public class MplCustomBrandServiceImpl implements MplCustomBrandService
 						{
 							subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('/') + 1);
 						}
-						else if (subrand.getSubBrandUrl().contains("/c-"))
+						else if (subrand.getSubBrandUrl().contains(C))
 						{
 							subBrandCode = subBrandurl.substring(subBrandurl.lastIndexOf('-') + 1);
 						}

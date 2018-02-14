@@ -474,56 +474,69 @@ public class CartsController extends BaseCommerceController
 	public WebSerResponseWsDTO getCarts(@RequestParam(required = false, defaultValue = "false") final boolean savedCartsOnly,
 			@RequestParam(required = false, defaultValue = DEFAULT_CURRENT_PAGE) final int currentPage,
 			@RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) final int pageSize,
-			@RequestParam(required = false) final String sort)
+			@RequestParam(required = false) final String sort, @RequestParam(required = false) final boolean isPwa)
 	{
-		int count = 0;
-		if (userFacade.isAnonymousUser())
-		{
-			throw new AccessDeniedException("Access is denied");
-		}
 		final WebSerResponseWsDTO response = new WebSerResponseWsDTO();
-		final CartDataList cartDataList = new CartDataList();
-		List<CartData> cartsList = null;
-		if (savedCartsOnly)
+		try
 		{
-			final PageableData pageableData = new PageableData();
-			pageableData.setCurrentPage(currentPage);
-			pageableData.setPageSize(pageSize);
-			pageableData.setSort(sort);
-			cartDataList.setCarts(saveCartFacade.getSavedCartsForCurrentUser(pageableData, null).getResults());
-		}
-		else
-		{
-			cartDataList.setCarts(cartFacade.getCartsForCurrentUser());
-		}
-		if (null != cartDataList.getCarts())
-		{
-			cartsList = cartDataList.getCarts();
-		}
-		for (final CartData cartData : cartsList)
-		{
-			if (null != cartData)
+			int count = 0;
+			if (userFacade.isAnonymousUser())
 			{
-				if (StringUtils.isNotEmpty(cartData.getCode()))
-				{
-					response.setCode(cartData.getCode());
-				}
-				if (StringUtils.isNotEmpty(cartData.getGuid()))
-				{
-					response.setGuid(cartData.getGuid());
-				}
-				for (final OrderEntryData entry : cartData.getEntries())
-				{
-					if (!entry.isGiveAway())
-					{
-						count++;
-					}
-				}
-				response.setCount(String.valueOf(count));
+				throw new AccessDeniedException("Access is denied");
 			}
-			break;
-		}
 
+			final CartDataList cartDataList = new CartDataList();
+			List<CartData> cartsList = null;
+			if (savedCartsOnly)
+			{
+				final PageableData pageableData = new PageableData();
+				pageableData.setCurrentPage(currentPage);
+				pageableData.setPageSize(pageSize);
+				pageableData.setSort(sort);
+				cartDataList.setCarts(saveCartFacade.getSavedCartsForCurrentUser(pageableData, null).getResults());
+			}
+			else
+			{
+				cartDataList.setCarts(cartFacade.getCartsForCurrentUser());
+			}
+			if (null != cartDataList.getCarts())
+			{
+				cartsList = cartDataList.getCarts();
+			}
+			for (final CartData cartData : cartsList)
+			{
+				if (null != cartData)
+				{
+					if (StringUtils.isNotEmpty(cartData.getCode()))
+					{
+						response.setCode(cartData.getCode());
+					}
+					if (StringUtils.isNotEmpty(cartData.getGuid()))
+					{
+						response.setGuid(cartData.getGuid());
+					}
+					for (final OrderEntryData entry : cartData.getEntries())
+					{
+						if (!entry.isGiveAway())
+						{
+							count++;
+						}
+					}
+					response.setCount(String.valueOf(count));
+				}
+				break;
+			}
+			if (isPwa)
+			{
+				response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+		}
+		catch (final Exception e)
+		{
+			response.setErrorCode(MarketplacecommerceservicesConstants.B001122);
+			response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			response.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B001122));
+		}
 		return response;
 	}
 
@@ -2264,7 +2277,7 @@ public class CartsController extends BaseCommerceController
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 				List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
 				GetWishListProductWsDTO gwlp = null;
-				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
 				{
 					if (null != abstractOrderEntry)
@@ -2273,6 +2286,19 @@ public class CartsController extends BaseCommerceController
 
 						if (StringUtils.isNotEmpty((abstractOrderEntry.getQuantity().toString())))
 						{
+							//SDI-4069 Unable to Buy More Than 1 qty for Same Size Ring starts
+							if ((entryNumber == abstractOrderEntry.getEntryNumber().longValue())
+									&& (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(abstractOrderEntry.getProduct()
+											.getProductCategoryType())))
+							{
+								maximum_configured_quantiy = siteConfigService.getInt(
+										MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+							}
+							else
+							{
+								maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+							}
+							//SDI-4069 ends
 							/////////// TISSAM-14
 							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 							{
@@ -2737,7 +2763,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */

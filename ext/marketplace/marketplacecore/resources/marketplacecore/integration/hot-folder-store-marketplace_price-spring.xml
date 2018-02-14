@@ -71,14 +71,14 @@
  
  <int:service-activator input-channel="batchFilesTranPrice" output-channel="batchFilesImp" ref="batchPriceRunnerTask"
 		method="execute" />
-	<bean id="batchPriceRunnerTask" class="com.tisl.mpl.priceTask.PriceRunnerTask">
+	<bean id="batchPriceRunnerTask" class="com.tisl.mpl.pricetask.PriceRunnerTask">
 		<property name="sessionService" ref="sessionService" />
 		<property name="importService" ref="importService" />
 		<property name="failedPriceImpexCreator" ref="failedImpexCreator" />
 		<lookup-method name="getImportConfig" bean="importConfigprice" /> 
 	</bean>
  
-    <bean id="failedImpexCreator" class="com.tisl.mpl.priceTask.FailedPriceImpexCreator" />
+    <bean id="failedImpexCreator" class="com.tisl.mpl.pricetask.FailedPriceImpexCreator" />
 		
 	
    <bean id="importConfigprice" class="de.hybris.platform.servicelayer.impex.ImportConfig" scope="prototype">

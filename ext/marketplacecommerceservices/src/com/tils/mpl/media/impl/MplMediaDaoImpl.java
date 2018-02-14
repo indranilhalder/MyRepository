@@ -58,10 +58,11 @@ public class MplMediaDaoImpl implements MplMediaDao
 		{
 			final StringBuffer queryString = new StringBuffer(500);
 
-			queryString.append("select {media.PK} from {Media as media JOIN "
-					+ "MediaFormat as mf ON {media.MEDIAFORMAT}={mf.PK} JOIN CatalogVersion as cat ON {media.CATALOGVERSION }={cat.PK}}"
-					+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
-					+ "and {mf.QUALIFIER} in (");
+			queryString
+					.append("select {media.PK} from {Media as media JOIN "
+							+ "MediaFormat as mf ON {media.MEDIAFORMAT}={mf.PK} JOIN CatalogVersion as cat ON {media.CATALOGVERSION }={cat.PK}}"
+							+ "where {media.MEDIACONTAINER}= ?containerPK " + "and {cat.VERSION } = ?catalogVersion "
+							+ "and {mf.QUALIFIER} in (");
 			queryString.append(mediaFormatList);
 			queryString.append(')');
 
@@ -94,20 +95,21 @@ public class MplMediaDaoImpl implements MplMediaDao
 
 		int count = 1;
 		final StringBuilder galImgPK = new StringBuilder();
+		MediaModel media = null; //SONR FIX-A method should have only one exit point, and that should be the last statement in the method
 
 		for (final MediaContainerModel mcList : galleryImages)
 		{
 
 			if (galleryImages.size() != count)
 			{
-				//galImgPK.append(mcList.getPk() + ","); Sonar fixes
+				galImgPK.append(mcList.getPk()); //Sonr Fix
+                                galImgPK.append(',');
 
-				galImgPK.append(mcList.getPk());
-				galImgPK.append(',');
 			}
 			else
 			{
 				galImgPK.append(mcList.getPk());
+				
 			}
 			count = count + 1;
 		}
@@ -131,15 +133,12 @@ public class MplMediaDaoImpl implements MplMediaDao
 
 			final SearchResult<MediaModel> searchResult = flexibleSearchService.search(query);
 
-			MediaModel media = null;
+
 
 			media = searchResult.getResult().get(0);
 
 
-			if (media != null)
-			{
-				return media;
-			}
+
 		}
 
 		catch (final ModelNotFoundException localModelNotFoundException)
@@ -154,6 +153,25 @@ public class MplMediaDaoImpl implements MplMediaDao
 			LOG.debug("Exception in finding Media" + e);
 			return null;
 		}
-		return null;
+		return media;
+	}
+
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
 	}
 }

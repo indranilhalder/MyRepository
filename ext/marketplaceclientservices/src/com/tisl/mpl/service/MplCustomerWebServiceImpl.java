@@ -12,6 +12,7 @@ import de.hybris.platform.core.enums.Gender;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -58,6 +59,8 @@ public class MplCustomerWebServiceImpl implements MplCustomerWebService
 	private CategoryService categoryService;
 	@Autowired
 	private CatalogVersionService catalogVersionService;
+	@Autowired
+	ModelService modelService;
 	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(MarketplacecclientservicesConstants.DMY_DATE_FORMAT);
 
 	/**
@@ -256,6 +259,8 @@ public class MplCustomerWebServiceImpl implements MplCustomerWebService
 			LOG.debug("**********data added in customer create update list************");
 
 			customerDataToCRM(customer);
+			//SDI-4309
+			modelService.save(customerModel);
 		}
 		catch (
 

@@ -1121,20 +1121,36 @@
 							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
 							                           		<span class="error-message" id="lastNameErrorEmi"></span>
 						                           		</div>
+						                           		<!-- added for SDI 3691 starts -->
+														<div class="full">
+														<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+															<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
+														<textarea class="full-address" id="address1Emi" maxlength="120" onKeyUp="return taCount(this,'myCounter1')" required="required"></textarea>
+														Remaining characters :
+														<span id='myCounter1'></span>
+														<span class="error-message" id="address1ErrorEmi"></span>
+														</div>
+														<!-- added for SDI 3691 ends -->
+														<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline1"/></label>
 							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
 							                           		<span class="error-message" id="address1ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.addressline2"/></label>
 							                           		<input type="text" id="address2Emi" maxlength="40">
 							                           		<span class="error-message" id="address2ErrorEmi"></span>
 						                           		</div>
+						                           		</div>
+						                           		<div class="hide"> <!-- added for SDI 3691 -->
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.landmark"/> </label>
 							                           		<input type="text" id="address3Emi" maxlength="40">
 							                           		<span class="error-message" id="address3ErrorEmi"></span>
+						                           		</div>
 						                           		</div>
 						                           		<div class="full">
 							                           		<label><spring:theme code="text.city"/></label>
@@ -1538,6 +1554,13 @@ span#juspayErrorMsg {
 		$(this).parents("#card").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
+		/* start add for TISPRDT-8297 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for TISPRDT-8297 */
 	});
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1561,5 +1584,12 @@ span#juspayErrorMsg {
 		$(this).parents("#cardDebit").find(".terms").last().show();
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
+		/* start add for TISPRDT-8297 */
+		$(".name_on_card.name-card").val("");
+		$(".card_exp_month").val($(".card_exp_month option:first").val());
+		$(".card_exp_year").val($(".card_exp_year option:first").val());
+		$(".card_exp_month,.card_exp_year").css("color","#c1c1c1");
+		$(".security_code.span1").val("");
+		/* end add for TISPRDT-8297 */
 	});
 	</script>

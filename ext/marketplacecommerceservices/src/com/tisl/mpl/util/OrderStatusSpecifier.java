@@ -39,8 +39,8 @@ public class OrderStatusSpecifier
 		boolean flag = false;
 		LOG.debug("Order id is " + order.getCode());
 
-		boolean statusChangeEligible = checkStatusChangeEligibility(order, orderStatus);
-		
+		final boolean statusChangeEligible = checkStatusChangeEligibility(order, orderStatus);
+
 		final List<OrderModel> subOrderList = order.getChildOrders();
 		if (CollectionUtils.isNotEmpty(subOrderList))
 		{
@@ -198,24 +198,37 @@ public class OrderStatusSpecifier
 
 		return quantity;
 	}
-	
+
 	private boolean checkStatusChangeEligibility(final OrderModel order, final OrderStatus orderStatus)
 	{
-		if (order.getType().equals(MarketplacecommerceservicesConstants.SUBORDER))
-		{
-			return true;
-		}
-		else if (orderStatus.equals(OrderStatus.PAYMENT_SUCCESSFUL) || orderStatus.equals(OrderStatus.PAYMENT_PENDING)
+		//SONR-FIX
+		boolean eligible = false;
+
+		if (order.getType().equals(MarketplacecommerceservicesConstants.SUBORDER)
+				|| orderStatus.equals(OrderStatus.PAYMENT_SUCCESSFUL) || orderStatus.equals(OrderStatus.PAYMENT_PENDING)
 				|| orderStatus.equals(OrderStatus.PAYMENT_FAILED) || orderStatus.equals(OrderStatus.PAYMENT_TIMEOUT)
 				|| orderStatus.equals(OrderStatus.CHECKED_INVALID) || orderStatus.equals(OrderStatus.RMS_VERIFICATION_PENDING)
 				|| orderStatus.equals(OrderStatus.RMS_VERIFICATION_FAILED))
 		{
-			return true;
+			eligible = true;
 		}
-		else
-		{
-			return false;
-		}
+
+		return eligible;
+		//		if (order.getType().equals(MarketplacecommerceservicesConstants.SUBORDER))
+		//		{
+		//			return true;
+		//		}
+		//		else if (orderStatus.equals(OrderStatus.PAYMENT_SUCCESSFUL) || orderStatus.equals(OrderStatus.PAYMENT_PENDING)
+		//				|| orderStatus.equals(OrderStatus.PAYMENT_FAILED) || orderStatus.equals(OrderStatus.PAYMENT_TIMEOUT)
+		//				|| orderStatus.equals(OrderStatus.CHECKED_INVALID) || orderStatus.equals(OrderStatus.RMS_VERIFICATION_PENDING)
+		//				|| orderStatus.equals(OrderStatus.RMS_VERIFICATION_FAILED))
+		//		{
+		//			return true;
+		//		}
+		//		else
+		//		{
+		//			return false;
+		//		}
 	}
 
 	/**
