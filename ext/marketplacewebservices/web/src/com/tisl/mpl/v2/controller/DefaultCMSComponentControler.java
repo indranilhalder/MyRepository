@@ -14,6 +14,8 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.cms.components.BannerProdCarouselElementCompModel;
 import com.tisl.mpl.model.cms.components.BannerProductCarouselComponentModel;
@@ -33,7 +36,10 @@ import com.tisl.mpl.model.cms.components.ContentWidgetComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetElementModel;
 import com.tisl.mpl.model.cms.components.HeroBannerComponentModel;
 import com.tisl.mpl.model.cms.components.HeroBannerElementModel;
+import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.wsdto.BannerProCarouselElementWsDTO;
+import com.tisl.mpl.wsdto.BannerProDiscountPriceWsDTO;
+import com.tisl.mpl.wsdto.BannerProMRPPriceWsDTO;
 import com.tisl.mpl.wsdto.BannerProductCarouselWsDTO;
 import com.tisl.mpl.wsdto.ContentWidgetCompWsDTO;
 import com.tisl.mpl.wsdto.ContentWidgetElementWsDTO;
@@ -55,6 +61,12 @@ public class DefaultCMSComponentControler
 
 	@Autowired
 	private CMSRestrictionService cmsRestrictionService;
+
+	@Autowired
+	private ProductFacade productFacade;
+
+	@Autowired
+	private BuyBoxFacade buyBoxFacade;
 
 
 	@RequestMapping(value = "/defaultpage", method = RequestMethod.GET)
@@ -140,14 +152,46 @@ public class DefaultCMSComponentControler
 							for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
 							{
 								final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
-								//final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO();
-								//final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
 
-								//	bannerProDiscountPriceWsDTO.setCurrencyIso(productObj.getProductCode().get);
+								final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+								//final DecimalFormat df = new DecimalFormat("0.00");
+								String productUnitPrice = "";
+								String productPrice = "";
+
+								if (buyboxdata != null)
+								{
+									final PriceData specialPrice = buyboxdata.getSpecialPrice();
+									final PriceData mrp = buyboxdata.getMrp();
+									final PriceData mop = buyboxdata.getPrice();
+
+									if (mrp != null)
+									{
+										productUnitPrice = mrp.getValue().toPlainString();
+									}
+									if (specialPrice != null)
+									{
+										productPrice = specialPrice.getValue().toPlainString();
+									}
+									else if (null != mop && null != mop.getValue())
+									{
+										productPrice = mop.getValue().toPlainString();
+									}
+								}
+
+								final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO();
+								final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
+
+								bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+								bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
+								bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
+
+								bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+								bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+								bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 								bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-								//bannerProCarouselElementWsDTO.setMrpPrice(mrpPrice);
-								//bannerProCarouselElementWsDTO.setDiscountedPrice(discountedPrice);
+								bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
+								bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
 								bannerProCarouselElementWsDTO.setAppURL(productObj.getAppURL());
 								bannerProCarouselElementWsDTO.setTitle(productObj.getTitle());
 								bannerProCarouselElementWsDTO.setWebURL(productObj.getWebURL());
