@@ -30,7 +30,7 @@ export function getProductCart() {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductCartRequest());
     try {
-      const result = await api.getMock2(PRODUCT_CART_PATH);
+      const result = await api.getMockFromMyJson(PRODUCT_CART_PATH);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
