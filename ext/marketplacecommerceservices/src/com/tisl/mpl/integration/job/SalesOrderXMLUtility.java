@@ -64,6 +64,8 @@ import com.tisl.mpl.util.ExceptionUtil;
 public class SalesOrderXMLUtility
 {
 
+	private static final String PAYMENT_FICO_EGV_SECONDARY_CATEGORY = "payment.fico.egv.secondaryCategory";
+	private static final String PAYMENT_FICO_EGV_PRIMARY_CATEGORY = "payment.fico.egv.primaryCategory";
 	/**
 	 * 
 	 */
@@ -584,7 +586,7 @@ public class SalesOrderXMLUtility
 					double tAmount=0;
 					tAmount = getTotalAmount(merchantInfoList, tAmount);
 					//setting Total amount of product
-					xmlData.setAmount(tAmount);
+					xmlData.setAmount(getDecimalFormateValue(tAmount));
 					LOG.debug(">>>>>>> before prodcatlist");
 					List<CategoryModel> productCategoryList = new ArrayList<>();
 					if (xmlToFico)
@@ -592,7 +594,12 @@ public class SalesOrderXMLUtility
 						productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(product);
 					}
 					LOG.debug(">>>>>>> after prodcatlist");
-
+              if(chaildModel.getIsEGVCart() !=null && chaildModel.getIsEGVCart().booleanValue()){
+            	  
+            	    //Static value define category for egv order   
+            	     xmlData.setPrimaryCategory(getConfigurationService().getConfiguration().getString(PAYMENT_FICO_EGV_PRIMARY_CATEGORY));
+						  xmlData.setSecondaryCategory(getConfigurationService().getConfiguration().getString(PAYMENT_FICO_EGV_SECONDARY_CATEGORY));
+              }else{
 					if (null != productCategoryList && productCategoryList.size() > 0)
 					{
 						LOG.debug("prodcatlist" + productCategoryList.size());
@@ -643,6 +650,7 @@ public class SalesOrderXMLUtility
 
 						}
 
+					}
 					}
 
 					xmlData.setOrderTag("NOR");

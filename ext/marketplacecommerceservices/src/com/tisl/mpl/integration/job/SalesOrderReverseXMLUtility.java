@@ -86,6 +86,9 @@ public class SalesOrderReverseXMLUtility
 	/**
 	 *
 	 */
+	
+	private static final String PAYMENT_FICO_EGV_SECONDARY_CATEGORY = "payment.fico.egv.secondaryCategory";
+	private static final String PAYMENT_FICO_EGV_PRIMARY_CATEGORY = "payment.fico.egv.primaryCategory";
 	private static final String PAYMENT_JUSPAY_MERCHANT_TYPE = "payment.juspay.merchantType";
 	private static final String PAYMENT_QC_MERCHANT_TYPE = "payment.qc.merchantType";
 	private static final String PAYMENT_QC_MERCHANT_ID = "payment.qc.merchantID";
@@ -735,6 +738,13 @@ public class SalesOrderReverseXMLUtility
 						//							}
 						//						}
 						LOG.info(">>>>>>> before prodcatlist");
+						
+						if(chaildModel.getIsEGVCart() !=null && chaildModel.getIsEGVCart().booleanValue()){
+							//Static value define category for egv order   
+	            	     xmlData.setPrimaryCategory(getConfigurationService().getConfiguration().getString(PAYMENT_FICO_EGV_PRIMARY_CATEGORY));
+							  xmlData.setSecondaryCategory(getConfigurationService().getConfiguration().getString(PAYMENT_FICO_EGV_SECONDARY_CATEGORY));
+						}else{
+		            	  
 						final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(product);
 
 						//if (null != productCategoryList && productCategoryList.size() > 0)
@@ -788,6 +798,7 @@ public class SalesOrderReverseXMLUtility
 							}
 
 						}
+					}
 
 						if (null != (entry.getOrderLineId()) || null != (entry.getTransactionID()) && xmlToFico)
 						{
@@ -1195,7 +1206,7 @@ public class SalesOrderReverseXMLUtility
 						//add total amount
 						double tAmount=0;
 						tAmount = getTotalAmount(merchantInfoList, tAmount);
-						xmlData.setAmount(tAmount);
+						xmlData.setAmount(getDecimalFormateValue(tAmount));
 						
 						
 
