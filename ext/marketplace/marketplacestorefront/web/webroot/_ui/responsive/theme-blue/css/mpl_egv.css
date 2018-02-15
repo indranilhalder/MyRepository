@@ -654,7 +654,7 @@
 .showStatementModel {
  display: none;
  position: fixed;
- z-index: 1;
+ z-index: 3;
  padding-top: 100px;
  left: 0;
  top: 0;
@@ -670,12 +670,12 @@
  margin: auto;
  padding: 20px;
  border: 1px solid #888;
- width: 90%;
+ width: 40%;
 }
 
-@media(min-width: 767px) {
+@media(max-width: 768px) {
 	.showStatementModel-content {
-		width: 40%;
+		width: 90%;
 	}
 }
 

@@ -82,7 +82,7 @@
 		<c:choose>
 			<c:when test="${juspayMode eq true}">
 				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} : <span class="totalOrderPrice">&#8377;${juspayAmount}</span></h4>
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayAmount}</span></h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 							<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -116,7 +116,7 @@
 				
 				<c:if test="${not empty juspayAmount}">
 					<div class="orderStatMainBody">
-						<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} : <span class="totalOrderPrice">&#8377;${juspayAmount}</span></h4>
+						<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayAmount}</span></h4>
 						<div class="orderStatementL1Body">
 							<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 								<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -145,7 +145,7 @@
 					</div>
 				</c:if>
 				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> CliQ Cash : <span class="totalOrderPrice">&#8377;${cliqCashAmount}</span></h4>
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> CliQ Cash <span class="totalOrderPrice">&#8377;${cliqCashAmount}</span></h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 							<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -186,7 +186,7 @@
 		<c:choose>
 			<c:when test="${juspayMode eq true}">
 				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> From Juspay</h4>
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> To ${orderDetail.mplPaymentInfo.paymentOption}</h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="returnOrder" varStatus="status">
 							<c:forEach items="${returnOrder.entries}" var="entry"
@@ -219,13 +219,11 @@
 				
 				<c:if test="${not empty juspayAmount}">
 					<div class="orderStatMainBody">
-						<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> From Juspay</h4>
+						<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> To ${orderDetail.mplPaymentInfo.paymentOption}</h4>
 						<div class="orderStatementL1Body">
 							<c:forEach items="${orderDetail.sellerOrderList}" var="returnOrder" varStatus="status">
 								<c:forEach items="${returnOrder.entries}" var="entry"
 								varStatus="entryStatus">
-								
-								<c:if test="${entry.isCanAndReturn eq true}">
 									<div class="orderStatChildBody">
 										<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
 										<span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspayApportionValue + entry.walletApportionforReverseData.juspayDeliveryValue
@@ -239,7 +237,6 @@
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 											</div>
 									</div>
-								</c:if>
 								</c:forEach>
 							</c:forEach>
 							<br />&nbsp;
@@ -253,9 +250,7 @@
 							<c:forEach items="${returnOrder.entries}" var="entry"
 							varStatus="entryStatus">
 							
-							<c:if test="${entry.isCanAndReturn eq true}">
 								<c:if test="${not empty entry.walletApportionforReverseData.walletCardApportionDataList}">
-	
 									<c:set var="qcApportionValue" value="0" />
 									<c:set var="qcDeliveryValue" value="0" />
 									<c:set var="qcShippingValue" value="0" />
@@ -295,7 +290,6 @@
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 											</div>
 									</div>
-									</c:if>
 								</c:if>
 							</c:forEach>
 						</c:forEach>
