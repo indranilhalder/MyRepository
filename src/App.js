@@ -11,6 +11,7 @@ import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
+import CartContainer from "./cart/containers/CartContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import {
@@ -22,7 +23,8 @@ import {
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_FILTER_ROUTER,
-  PRODUCT_SELLER_ROUTER
+  PRODUCT_SELLER_ROUTER,
+  PRODUCT_CART_ROUTER
 } from "../src/lib/constants";
 import {
   GLOBAL_ACCESS_TOKEN,
@@ -130,6 +132,7 @@ class App extends Component {
             path={PRODUCT_SELLER_ROUTER}
             component={ProductSellerContainer}
           />
+          <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
         </Switch>
         <ModalContainer />
       </div>
