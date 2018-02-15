@@ -527,6 +527,13 @@ public class MplCouponController
 				//Recalculate cart after releasing coupon
 				getMplCouponFacade().recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
+				double totalAmount  = cartModel.getTotalPrice().doubleValue();
+				double payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
+				double nonPayableWalletAmount = totalAmount - payableWalletAmount;
+				cartModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
+				modelService.save(cartModel);
+				modelService.refresh(cartModel);
+
 				if (StringUtils.isNotEmpty(cartCouponCode))
 				{
 					try
@@ -554,6 +561,15 @@ public class MplCouponController
 					data = getMplCouponFacade().calculateValues(null, cartModel, true, redeem);
 					getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
 				}
+				
+				 totalAmount  = cartModel.getTotalPrice().doubleValue();
+				 payableWalletAmount = cartModel.getTotalWalletAmount().doubleValue();
+				 nonPayableWalletAmount = totalAmount - payableWalletAmount;
+				cartModel.setPayableNonWalletAmount(Double.valueOf(nonPayableWalletAmount));
+				modelService.save(cartModel);
+				modelService.refresh(cartModel);
+				
+				
 
 
 
