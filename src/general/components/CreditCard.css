@@ -41,7 +41,6 @@
 .cardFooterInput {
   width: 100%;
   height: auto;
-  transition: 300ms;
   display: inline-block;
 }
 .buttonHolder {
@@ -55,7 +54,6 @@
 .saveCardText {
   width: 100%;
   height: auto;
-  transition: 300ms;
   display: inline-block;
   margin-top: 15px;
   position: relative;
@@ -71,7 +69,6 @@
 .saveText {
   width: calc(100% - 25px);
   height: auto;
-  transition: 300ms;
   display: inline-block;
   right: 0;
   margin: auto;
