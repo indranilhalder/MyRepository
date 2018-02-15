@@ -47,14 +47,23 @@
 			autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="FlashSalesElement" code="FlashSalesCollection"
 			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="ThemeOffersItemsElement" code="ThemeOffersItemsCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="ThemeProductWidgetElement" code="ThemeProductWidgetCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="FlashSalesItemElement" code="FlashSalesItemCollection"
+			autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="HeroBannerElement"
 			code="HeroBannerCollection" autocreate="true" generate="true"
 			type="list" />
-			<collectiontype elementtype="ContentWidgetElement"
+		<collectiontype elementtype="ContentWidgetElement"
 			code="ContentWidgetCollection" autocreate="true" generate="true"
 			type="list" />
 		<collectiontype elementtype="ProductCapsulesElement"
 			code="ProductCapsulesCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="AutomatedBrandProductCarElement"
+			code="AutomatedBrandProductCarCollection" autocreate="true" generate="true"
 			type="list" />
 		<collectiontype elementtype="MonoBLPBannerElement"
 			code="MonoBLPBannerCollection" autocreate="true" generate="true"
@@ -64,6 +73,9 @@
 			type="list" />
 		<collectiontype elementtype="TopCategoriesWidgetElement"
 			code="TopCategoriesWidgetCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="CuratedProductsWidgetElement"
+			code="CuratedProductsWidgetCollection" autocreate="true" generate="true"
 			type="list" />
 		<collectiontype elementtype="SmartFilterWidgetElement"
 			code="SmartFilterWidgetCollection" type="list" autocreate="true"
@@ -82,6 +94,8 @@
 			elementtype="Product" autocreate="true" generate="false" type="list" /> 
 	    <collectiontype code="BannerProdCarEleCompCollectionType"
 			elementtype="BannerProdCarouselElementComp" autocreate="true" generate="false" type="list" />
+		<collectiontype code="VideoProductCarouselCollection"
+			elementtype="VideoProductCarouselElement" autocreate="true" generate="false" type="list" />
 		<collectiontype code="ImeiNoCollection" elementtype="java.lang.String"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="ConsignmentList" elementtype="Consignment"
@@ -5037,27 +5051,27 @@
 				<attributes>
 					<attribute type="java.lang.String" qualifier="title">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute type="media" qualifier="imageURL">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -5070,61 +5084,61 @@
 					<attribute type="java.lang.String" qualifier="subType"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="iconImageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="backgroundImageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="startHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="endHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5137,13 +5151,13 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="OffersWidgetCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5188,67 +5202,67 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="backgroundHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="backgroundImageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.util.Date" qualifier="startDate"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.util.Date" qualifier="endDate"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="FlashSalesCollection" qualifier="offers"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="FlashSalesItemCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5285,6 +5299,38 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="FlashSalesItemElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.FlashSalesItemElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 			<itemtype code="HeroBannerComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.HeroBannerComponent">
@@ -5292,7 +5338,7 @@
 					<attribute type="HeroBannerCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 
@@ -5305,31 +5351,31 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="brandLogo"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5341,7 +5387,7 @@
 					<attribute type="ContentWidgetCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 
@@ -5355,37 +5401,37 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5399,43 +5445,43 @@
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="BannerProdCarEleCompCollectionType" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5448,25 +5494,25 @@
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="Product" qualifier="ProductCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5480,60 +5526,90 @@
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="videoURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="brandLogo" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="VideoProductCarouselCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
 			</itemtype>
 
+			<itemtype code="VideoProductCarouselElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.VideoProductCarouselElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
 
 			<itemtype code="ThemeOffersComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
@@ -5542,49 +5618,80 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="backgroundHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="backgroundImageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="FlashSalesCollection" qualifier="offers"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="ThemeOffersItemsCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="ThemeOffersItemsElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeOffersItemsElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5597,31 +5704,62 @@
 					<attribute type="media" qualifier="backgroundImageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="brandLogo" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="ThemeProductWidgetCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="ThemeProductWidgetElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeProductWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5634,37 +5772,37 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="ProductCapsulesCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5677,19 +5815,19 @@
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5702,31 +5840,31 @@
 					<attribute type="media" qualifier="iconImageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="startHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="endHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5739,43 +5877,74 @@
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="brandLogo" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="description"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="AutomatedBrandProductCarCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="AutomatedBrandProductCarElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.AutomatedBrandProductCarElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5788,25 +5957,25 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="startHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5819,13 +5988,13 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="MonoBLPBannerCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5838,38 +6007,38 @@
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="hexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5882,13 +6051,13 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="SubBrandBannerBLPCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5901,25 +6070,25 @@
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="brandLogo" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5932,13 +6101,13 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="TopCategoriesWidgetCollection"
 						qualifier="items" autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5951,25 +6120,25 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
@@ -5982,31 +6151,62 @@
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="CuratedProductsWidgetCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
-							optional="false" />
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="CuratedProductsWidgetElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.CuratedProductsWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
 						<persistence type='property' />
 					</attribute>
 				</attributes>
