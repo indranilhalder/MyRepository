@@ -7,7 +7,9 @@ import {
   addProductToBag,
   getProductSizeGuide,
   getPdpEmi,
+  getProductSpecification,
   getProductWishList
+
 } from "../actions/pdp.actions";
 import ProductDescriptionPage from "../components/ProductDescriptionPage";
 import { withRouter } from "react-router-dom";
@@ -57,7 +59,9 @@ const mapDispatchToProps = dispatch => {
     },
     showEmiPlans: () => {
       dispatch(showModal(EMI_MODAL));
-
+    },
+    getProductSpecification: productId => {
+      dispatch(getProductSpecification(productId));
     }
   };
 };
