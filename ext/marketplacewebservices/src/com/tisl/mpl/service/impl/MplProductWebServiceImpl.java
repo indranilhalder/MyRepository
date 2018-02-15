@@ -33,16 +33,23 @@ import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
+import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.PK;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -102,6 +109,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplCustomerReviewService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
@@ -168,7 +176,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplProductFacade mplProductFacade;
 
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
-
+	private MplCustomerReviewService customerReviewService;
 
 
 
@@ -189,6 +197,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Resource
 	private SiteConfigService siteConfigService;
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+
+	private Converter<CustomerReviewModel, ReviewData> customerReviewConverter;
+
 
 	//sonar fix
 	/*
@@ -412,7 +423,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER,
+						ProductOption.REVIEW));
+
 
 				//Added for TPR-6869
 
@@ -1157,6 +1170,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			//TPR-978
 
+			setRatingAndReview(productDetailMobile, productData);
 
 		}
 
@@ -1177,6 +1191,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return productDetailMobile;
+	}
+
+	/**
+	 * @param productDetailMobile
+	 * @param productData
+	 */
+	private void setRatingAndReview(final ProductDetailMobileWsData productDetailMobile, final ProductData productData)
+	{
+		productDetailMobile.setAverageRating(productData.getAverageRating());
+		productDetailMobile.setNumberOfReviews(productData.getNumberOfReviews());
 	}
 
 	/**
@@ -4383,5 +4407,85 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setClassificationService(final ClassificationService classificationService)
 	{
 		this.classificationService = classificationService;
+	}
+
+	@Override
+	public List<ReviewData> getReviews(final String productCode, final Integer numberOfReviews)
+	{
+		final ProductModel product = getProductService().getProductForCode(productCode);
+		final List<CustomerReviewModel> reviews = getCustomerReviewService().getReviewsForProductAndLanguage(product,
+				getCommonI18NService().getCurrentLanguage());
+
+		if (numberOfReviews == null)
+		{
+			return Converters.convertAll(reviews, getCustomerReviewConverter());
+		}
+		else if (numberOfReviews.intValue() < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		else
+		{
+			return Converters.convertAll(reviews.subList(0, Math.min(numberOfReviews.intValue(), reviews.size())),
+					getCustomerReviewConverter());
+		}
+	}
+
+	@Override
+	public Tuple3<List<ReviewData>, Long, Integer> getReviews(final String productCode, final PageableData pageableData,
+			final String orderBy)
+	{
+		final ProductModel product = getProductService().getProductForCode(productCode);
+		final SearchPageData<CustomerReviewModel> reviews = getCustomerReviewService().getReviewsForProductAndLanguage(product,
+				getCommonI18NService().getCurrentLanguage(), pageableData, orderBy);
+
+		List<ReviewData> reviewDataList = null;
+		Tuple3<List<ReviewData>, Long, Integer> tuple3 = null;
+		if (reviews != null && CollectionUtils.isNotEmpty(reviews.getResults()))
+		{
+			reviewDataList = Converters.convertAll(reviews.getResults(), getCustomerReviewConverter());
+			tuple3 = new Tuple3(reviewDataList, Long.valueOf(reviews.getPagination().getTotalNumberOfResults()),
+					Integer.valueOf(reviews.getPagination().getNumberOfPages()));
+		}
+		else
+		{
+			reviewDataList = new ArrayList<ReviewData>();
+			tuple3 = new Tuple3(reviewDataList, Long.valueOf(0), Integer.valueOf(0));
+		}
+		return tuple3;
+	}
+
+	/**
+	 * @return the customerReviewConverter
+	 */
+	public Converter<CustomerReviewModel, ReviewData> getCustomerReviewConverter()
+	{
+		return customerReviewConverter;
+	}
+
+	/**
+	 * @param customerReviewConverter
+	 *           the customerReviewConverter to set
+	 */
+	public void setCustomerReviewConverter(final Converter<CustomerReviewModel, ReviewData> customerReviewConverter)
+	{
+		this.customerReviewConverter = customerReviewConverter;
+	}
+
+	/**
+	 * @return the customerReviewService
+	 */
+	public MplCustomerReviewService getCustomerReviewService()
+	{
+		return customerReviewService;
+	}
+
+	/**
+	 * @param customerReviewService
+	 *           the customerReviewService to set
+	 */
+	public void setCustomerReviewService(final MplCustomerReviewService customerReviewService)
+	{
+		this.customerReviewService = customerReviewService;
 	}
 }
