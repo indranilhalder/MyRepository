@@ -214,11 +214,11 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 					{
 						if (CUSTOMER2.equalsIgnoreCase(cardSplitValue.getBucketType()))
 						{
-							String totalAmt = mplQCProgramDao.getCardTotalAmount(cardSplitValue.getCardNumber());
-							int totalAmount = Integer.parseInt(totalAmt);
-							int redeemedTotalAmount = Integer.parseInt(cardSplitValue.getCardAmount());
-							int remainingAmount = totalAmount - redeemedTotalAmount;
-							sendNotificationForRedeemedAmountFromWallet(customer, cardSplitValue.getCardNumber(),
+							    String totalAmt = mplQCProgramDao.getCardTotalAmount(cardSplitValue.getCardNumber());
+						       int totalAmount = Double.valueOf(totalAmt).intValue();
+						       int redeemedTotalAmount = Double.valueOf(cardSplitValue.getCardAmount()).intValue();
+							    int remainingAmount = totalAmount - redeemedTotalAmount;
+							    sendNotificationForRedeemedAmountFromWallet(customer, cardSplitValue.getCardNumber(),
 									cardSplitValue.getCardAmount(), Integer.toString(remainingAmount));
 						}
 					}
