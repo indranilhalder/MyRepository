@@ -61,35 +61,38 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			}
 
 			boolean cliqCashValidation = true;
-			String splitModeInfo = null; 
+			String splitModeInfo = null;
 			boolean checkForBankVoucher = false;
-			if(null != anOrder.getAttribute("splitModeInfo")) 
+			if (null != anOrder.getAttribute("splitModeInfo"))
 			{
-				splitModeInfo =(String) anOrder.getAttribute("splitModeInfo");
+				splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
 			}
-			if(null != anOrder.getAttribute("checkForBankVoucher")) 
+			if (null != anOrder.getAttribute("checkForBankVoucher"))
 			{
-				checkForBankVoucher=Boolean.valueOf((String)anOrder.getAttribute("checkForBankVoucher")).booleanValue();
+				checkForBankVoucher = Boolean.valueOf((String) anOrder.getAttribute("checkForBankVoucher")).booleanValue();
 			}
 			if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") && checkForBankVoucher)
 			{
 				cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder);
-				if (isPositiveAsPrimitive() && cliqCashValidation ) {
+				if (isPositiveAsPrimitive() && cliqCashValidation)
+				{
 					return true;
-				}else {
+				}
+				else
+				{
 					return false;
 				}
 			}
 
 			// Coupon Evaluation
-			if (isPositiveAsPrimitive() ) {
-					return (currentTotal >= minimumTotal);
-			}
-
-			/*if (isPositiveAsPrimitive() && cliqCashValidation)
+			if (isPositiveAsPrimitive())
 			{
 				return (currentTotal >= minimumTotal);
-			}*/
+			}
+
+			/*
+			 * if (isPositiveAsPrimitive() && cliqCashValidation) { return (currentTotal >= minimumTotal); }
+			 */
 
 
 		}
@@ -109,11 +112,23 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 
 		LOG.debug("Inside Order Retriction checkCliqCashValue");
 		final Double totalPayableAmount = (Double) anOrder.getAttribute("payableNonWalletAmount");
-       LOG.debug("Payable Juspay Amount "+totalPayableAmount);
-       LOG.debug("minimumTotal  "+minimumTotal);
-		if (totalPayableAmount.doubleValue() >= minimumTotal)
+		Double delCost = Double.valueOf(0.0d);
+		double payableAmtExcludeDelCost = totalPayableAmount.doubleValue();
+		if (null != anOrder.getAttribute("deliveryCost"))
 		{
-			return true;
+			delCost = (Double) anOrder.getAttribute("deliveryCost");
+			payableAmtExcludeDelCost -= delCost.doubleValue();
+			if (payableAmtExcludeDelCost > 0 && payableAmtExcludeDelCost >= minimumTotal)
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (totalPayableAmount.doubleValue() >= minimumTotal)
+			{
+				return true;
+			}
 		}
 		return false;
 	}
