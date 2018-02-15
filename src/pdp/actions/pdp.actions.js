@@ -354,13 +354,13 @@ export function getProductWishList() {
   };
 }
 
-export function getProductSpecificationRequest() {
+export function ProductSpecificationRequest() {
   return {
     type: PRODUCT_SPECIFICATION_REQUEST,
     status: REQUESTING
   };
 }
-export function getProductSpecificationSuccess(productDetails) {
+export function ProductSpecificationSuccess(productDetails) {
   return {
     type: PRODUCT_SPECIFICATION_SUCCESS,
     status: SUCCESS,
@@ -368,7 +368,7 @@ export function getProductSpecificationSuccess(productDetails) {
   };
 }
 
-export function getProductSpecificationFailure(error) {
+export function ProductSpecificationFailure(error) {
   return {
     type: PRODUCT_SPECIFICATION_FAILURE,
     status: ERROR,
@@ -377,7 +377,7 @@ export function getProductSpecificationFailure(error) {
 }
 export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductSpecificationRequest());
+    dispatch(ProductSpecificationRequest());
     try {
       const result = await api.getMock(
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
@@ -386,9 +386,9 @@ export function getProductSpecification(productId) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getProductSpecificationSuccess(resultJson));
+      dispatch(ProductSpecificationSuccess(resultJson));
     } catch (e) {
-      dispatch(getProductSpecificationFailure(e.message));
+      dispatch(ProductSpecificationFailure(e.message));
     }
   };
 }
