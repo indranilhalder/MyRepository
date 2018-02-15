@@ -3,6 +3,7 @@ export const API_URL_ROOT =
   "https://fierce-bastion-16980.herokuapp.com/marketplacewebservices";
 
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
+export const API_URL_ROOT_MOCK2 = "https://api.myjson.com/bins";
 
 export async function post(path) {
   return await fetch(`${API_URL_ROOT}/${path}`, {
@@ -69,4 +70,8 @@ export async function putMock(url, payload) {
       access_token: localStorage.getItem("authorizationKey")
     }
   });
+}
+
+export async function getMock2(url) {
+  return await fetch(`${API_URL_ROOT_MOCK2}/${url}`, {});
 }

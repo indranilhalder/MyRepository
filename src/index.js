@@ -14,6 +14,7 @@ import search from "../src/search/reducers/search.reducer";
 import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
+import cart from "./cart/reducers/cart.reducer";
 
 const rootReducer = combineReducers({
   user,
@@ -21,8 +22,8 @@ const rootReducer = combineReducers({
   home,
   productListings,
   productDescription,
-  search
-
+  search,
+  cart
 });
 
 let store = createStore(
