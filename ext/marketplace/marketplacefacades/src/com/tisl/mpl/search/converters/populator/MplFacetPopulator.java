@@ -21,6 +21,7 @@ public class MplFacetPopulator extends FacetPopulator
 		super.populate(source, target);
 
 		target.setGenericFilter(source.isGenericFilter());
+		target.setSelectedFilterCount(source.getSelectedFilterCount());
 
 	}
 

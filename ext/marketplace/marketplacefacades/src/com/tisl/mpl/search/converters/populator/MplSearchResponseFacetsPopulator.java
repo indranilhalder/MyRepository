@@ -7,6 +7,7 @@ import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.populators.SearchResponseFacetsPopulator;
+import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.TopValuesProvider;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.IndexedType;
 import de.hybris.platform.solrfacetsearch.search.Facet;
@@ -49,7 +50,7 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 			facetData.setGenericFilter(indexedProperty.isGenericFacet());
 			if (!"categoryNameCodeMapping".equalsIgnoreCase(facet.getName()))
 			{
-				buildFacetValues(facetData, facet, indexedProperty, solrSearchResult, searchQueryData);
+				buildFacetValuesNew(facetData, facet, indexedProperty, solrSearchResult, searchQueryData);
 
 				if ((facetData.getValues() == null) || (facetData.getValues().isEmpty()))
 				{
@@ -110,5 +111,113 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 
 
 		return target;
+	}
+
+	protected void buildFacetValuesNew(final FacetData<SolrSearchQueryData> facetData, final Facet facet,
+			final IndexedProperty indexedProperty, final SearchResult solrSearchResult, final SolrSearchQueryData searchQueryData)
+	{
+		final List<FacetValue> facetValues = facet.getFacetValues();
+		if ((facetValues == null) || (facetValues.isEmpty()))
+		{
+			return;
+		}
+		final List<FacetValueData<SolrSearchQueryData>> allFacetValues = new ArrayList(facetValues.size());
+
+		int count = 0;
+		for (final FacetValue facetValue : facetValues)
+		{
+			final FacetValueData<SolrSearchQueryData> facetValueData = buildFacetValueNew(facetData, facet, facetValue,
+					solrSearchResult, searchQueryData);
+			if (facetValueData == null)
+			{
+				continue;
+			}
+			if (facetValueData.isSelected())
+			{
+				count++;
+			}
+			allFacetValues.add(facetValueData);
+
+		}
+		facetData.setSelectedFilterCount(count);
+		facetData.setValues(allFacetValues);
+
+		final TopValuesProvider topValuesProvider = getTopValuesProvider(indexedProperty);
+		if ((isRanged(indexedProperty)) || (topValuesProvider == null))
+		{
+			return;
+		}
+		final List<FacetValue> topFacetValues = topValuesProvider.getTopValues(indexedProperty, facetValues);
+		if (topFacetValues == null)
+		{
+			return;
+		}
+		final List<FacetValueData<SolrSearchQueryData>> topFacetValuesData = new ArrayList();
+
+		for (final FacetValue facetValue : topFacetValues)
+		{
+			final FacetValueData<SolrSearchQueryData> topFacetValueData = buildFacetValueNew(facetData, facet, facetValue,
+					solrSearchResult, searchQueryData);
+			if (topFacetValueData == null)
+			{
+				continue;
+			}
+			topFacetValuesData.add(topFacetValueData);
+		}
+
+		facetData.setTopValues(topFacetValuesData);
+	}
+
+	protected FacetValueData<SolrSearchQueryData> buildFacetValueNew(final FacetData<SolrSearchQueryData> facetData,
+			final Facet facet, final FacetValue facetValue, final SearchResult solrSearchResult,
+			final SolrSearchQueryData searchQueryData)
+	{
+		if (facetData.isMultiSelect())
+		{
+			final FacetValueData facetValueData = createFacetValueData();
+			facetValueData.setCode(facetValue.getName());
+			facetValueData.setName(facetValue.getDisplayName());
+			facetValueData.setCount(facetValue.getCount());
+
+
+			facetValueData.setSelected(isFacetSelected(searchQueryData, facet.getName(), facetValue.getName()));
+
+			if (facetValueData.isSelected())
+
+			{
+				facetValueData.setQuery(refineQueryRemoveFacet(searchQueryData, facet.getName(), facetValue.getName()));
+
+			}
+			else
+			{
+				facetValueData.setQuery(refineQueryAddFacet(searchQueryData, facet.getName(), facetValue.getName()));
+			}
+
+			return facetValueData;
+
+
+		}
+
+		if (facetValue.getCount() < solrSearchResult.getTotalNumberOfResults())
+		{
+			final FacetValueData facetValueData = createFacetValueData();
+			facetValueData.setCode(facetValue.getName());
+			facetValueData.setName(facetValue.getDisplayName());
+			facetValueData.setCount(facetValue.getCount());
+
+			if (facetValueData.isSelected())
+
+			{
+				facetValueData.setQuery(refineQueryRemoveFacet(searchQueryData, facet.getName(), facetValue.getName()));
+
+			}
+			else
+			{
+				facetValueData.setQuery(refineQueryAddFacet(searchQueryData, facet.getName(), facetValue.getName()));
+			}
+
+			return facetValueData;
+		}
+		return null;
 	}
 }

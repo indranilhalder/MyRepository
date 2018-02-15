@@ -25,7 +25,8 @@
   </c:otherwise>
 </c:choose>
 <!-- TPR-6655  end-->
-<div id="ReviewSecion" class="reviews">
+
+<%-- <div id="ReviewSecion" class="reviews">
 <div class="header">
       <h3>Ratings and Reviews</h3>		<!-- UF-57 -->
 </div>
@@ -190,7 +191,7 @@
 		<input type="hidden" name="user_logged">
 			<ul id="commentsDiv" class="review-list"></ul>
 		</div>
-</div>
+</div> --%>
 <input type="hidden" name="gigya_product_root_category" value="${product.rootCategory}"/>
  <input type="hidden" name="gigya_product_code" value="${product.code}"/>
  <input type="hidden" name="gigya_api_key" value="${gigyaAPIKey}"/>

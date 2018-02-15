@@ -51,6 +51,9 @@ ACC.product = {
 	enableAddToCartButton: function ()
 	{
 		$('.js-add-to-cart').removeAttr("disabled");
+		if($("#addToCartButton-wrong").attr("disable")) {
+			$("#buyNowButton").attr("disabled",true);
+		}
 	},
 	
 	enableVariantSelectors: function ()
@@ -860,6 +863,9 @@ sendAddToBagQuick:function(formId){
 		},
 		complete: function(){
 	        //$('#ajax-loader').hide();//mismatch issue
+			//SDI-1585:My bag counter shows zero after a product is added from a PLP page quick view
+			forceUpdateHeader();
+			//SDI-1585 end
 			$("#bag-clickSpin,.bagspinner").remove();
 	    },
 		error : function(resp) {

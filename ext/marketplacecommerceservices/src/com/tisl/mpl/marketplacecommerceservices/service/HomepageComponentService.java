@@ -26,6 +26,8 @@ public interface HomepageComponentService
 
 	JSONObject getJsonBanner(ContentSlotModel contentSlot, String compType) throws EtailNonBusinessExceptions;
 
+	JSONObject getJsonBannerAmp(ContentSlotModel contentSlot, String compType) throws EtailNonBusinessExceptions;
+
 	List<CategoryModel> getCategoryPath(CategoryModel categoryModel);
 
 	//TPR-558 Scheduling of banners

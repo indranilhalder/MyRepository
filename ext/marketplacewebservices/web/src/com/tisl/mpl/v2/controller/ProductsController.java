@@ -46,6 +46,7 @@ import de.hybris.platform.commercewebservicescommons.dto.product.StockWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.product.SuggestionListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.queues.ProductExpressUpdateElementListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.search.facetdata.ProductSearchPageWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderStockSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.StockSystemException;
@@ -55,7 +56,10 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.promotions.util.Tuple3;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
@@ -95,6 +99,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -104,6 +109,7 @@ import com.tisl.mpl.facade.compare.MplProductCompareFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.ProductCompareData;
 import com.tisl.mpl.formatters.WsDateFormatter;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
 import com.tisl.mpl.product.data.ReviewDataList;
 import com.tisl.mpl.product.data.SuggestionDataList;
 import com.tisl.mpl.queues.data.ProductExpressUpdateElementData;
@@ -199,6 +205,37 @@ public class ProductsController extends BaseController
 	private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "mplCategoryFacade")
 	private MplCategoryFacade mplCategoryFacade;
+
+	@Resource(name = "productService")
+	private MplProductService productService;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
+
+
+	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
+	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
+	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
+
+	@Resource
+	private UserService userService;
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
 
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
@@ -501,6 +538,37 @@ public class ProductsController extends BaseController
 	 *
 	 * @return product's review list
 	 */
+	@RequestMapping(value = "/{productCode}/users/{userId}/reviews", method = RequestMethod.GET)
+	@ResponseBody
+	public ReviewListWsDTO getPaginatedProductReviews(
+			@PathVariable final String productCode,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false, defaultValue = "0") final int page,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false, defaultValue = MarketplacecommerceservicesConstants.BY_DATE) final String sort,
+			@RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false, defaultValue = "desc") final String orderBy)
+	{
+		final ReviewDataList reviewDataList = new ReviewDataList();
+		if (pageSize == null)
+		{
+			pageSize = Integer.valueOf(configurationService.getConfiguration().getString(
+					"ratingAndReview.webservice.getReviews.pageSize", "10"));
+		}
+		final PageableData pageableData = createPageableData(page, pageSize.intValue(), sort, ShowMode.Page);
+		final Tuple3<List<ReviewData>, Long, Integer> tuple3 = mplProductWebService.getReviews(productCode, pageableData, orderBy);
+		reviewDataList.setReviews(tuple3.getFirst());
+		reviewDataList.setPageNumber(Integer.valueOf(page));
+		reviewDataList.setPageSize(pageSize);
+		reviewDataList.setTotalNoOfReviews(tuple3.getSecond());
+		reviewDataList.setTotalNoOfPages(tuple3.getThird());
+		return dataMapper.map(reviewDataList, ReviewListWsDTO.class, fields);
+	}
+
+	/**
+	 * Returns the reviews for a product with a given product code.
+	 *
+	 * @return product's review list
+	 */
 	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.GET)
 	@ResponseBody
 	public ReviewListWsDTO getProductReviews(@PathVariable final String productCode,
@@ -508,7 +576,7 @@ public class ProductsController extends BaseController
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final ReviewDataList reviewDataList = new ReviewDataList();
-		reviewDataList.setReviews(productFacade.getReviews(productCode, maxCount));
+		reviewDataList.setReviews(mplProductWebService.getReviews(productCode, maxCount));
 		return dataMapper.map(reviewDataList, ReviewListWsDTO.class, fields);
 	}
 
@@ -524,19 +592,54 @@ public class ProductsController extends BaseController
 	 * @throws WebserviceValidationException
 	 *            When given parameters are incorrect
 	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	public ReviewWsDTO createReview(@PathVariable final String productCode,
+	public ReviewWsDTO createEditReview(@PathVariable final String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
 			throws WebserviceValidationException
 	{
 		final ReviewData reviewData = new ReviewData();
 		httpRequestReviewDataPopulator.populate(request, reviewData);
+		final String reviewId = request.getParameter("id");
 		validate(reviewData, "reviewData", reviewValidator);
-		final ReviewData reviewDataRet = productFacade.postReview(productCode, reviewData);
+		ReviewData reviewDataRet = null;
+		if (StringUtils.isNotBlank(reviewId))
+		{
+			reviewDataRet = productService.editDeleteReviewEntry(getUserService().getCurrentUser(),
+					productService.getProductForCode(productCode), reviewId, true, reviewData);
+		}
+		else
+		{
+			reviewDataRet = productFacade.postReview(productCode, reviewData);
+		}
 		final ReviewWsDTO dto = dataMapper.map(reviewDataRet, ReviewWsDTO.class, fields);
 		return dto;
+	}
+
+	/**
+	 * Delete's a Review for a logged in Customer
+	 *
+	 *
+	 * @return void
+	 * @throws WebserviceValidationException
+	 *            When given parameters are incorrect
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{productCode}/{reviewId}/deleteReview", method = RequestMethod.GET)
+	@ResponseBody
+	public void deleteReview(@PathVariable final String productCode, @PathVariable final String reviewId,
+			final HttpServletRequest request) throws WebserviceValidationException
+	{
+		if (StringUtils.isNotBlank(reviewId))
+		{
+			productService.editDeleteReviewEntry(getUserService().getCurrentUser(), productService.getProductForCode(productCode),
+					reviewId, false, null);
+		}
+
 	}
 
 	/**
@@ -1734,4 +1837,130 @@ public class ProductsController extends BaseController
 	{
 		this.i18nService = i18nService;
 	}
+
+	//NU-38 start
+	@RequestMapping(value = "/searchProducts", method =
+	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ProductSearchPageWsDto searchProducts(@RequestParam(required = false) final String searchText,
+			@RequestParam(required = false) final int page, @RequestParam(required = false) final int pageSize,
+			@RequestParam(required = false) final String sortCode, @RequestParam(required = false) final boolean isFilter,
+			@RequestParam(required = false) final boolean isPwa, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		final ProductSearchPageWsDto productSearchPage = new ProductSearchPageWsDto();
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
+		try
+		{
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, ShowMode.Page);
+			final SearchStateData searchState = new SearchStateData();
+			final SearchQueryData searchQueryData = new SearchQueryData();
+			searchQueryData.setValue(searchText);
+			searchState.setQuery(searchQueryData);
+			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+					.textSearch(searchState, pageableData);
+			//PR-23 start
+			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			{
+				if (StringUtils.isNotEmpty(searchText))
+				{
+					final String[] elements = searchText.trim().split(BACKSLASH_S);
+
+					if (elements.length >= 2)
+					{
+						searchState.setNextSearch(true);
+
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+								.textSearch(searchState, pageableData);
+
+					}
+				}
+			}
+			//PR-23 end
+			if (null != searchPageData.getSpellingSuggestion()
+					&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+			{
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+				final SearchStateData searchStateAll = new SearchStateData();
+				final SearchQueryData searchQueryDataAll = new SearchQueryData();
+				searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
+				searchStateAll.setQuery(searchQueryDataAll);
+
+				searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade.textSearch(
+						searchStateAll, pageableData);
+			}
+
+			if (isFilter)
+			{
+				searchSuggestUtilityMethods.setFilterWsData(productSearchPage, searchPageData);
+			}
+			else
+			{
+				searchSuggestUtilityMethods.setSearchPageWsData(productSearchPage, searchPageData);
+			}
+			final ProductSearchPageWsDto sortingvalues = dataMapper.map(searchPageData, ProductSearchPageWsDto.class, fields);
+			if (null != sortingvalues)
+			{
+				if (null != sortingvalues.getPagination())
+				{
+					final PaginationWsDTO pagination = sortingvalues.getPagination();
+
+					final PaginationWsDTO paginationWsDTO = new PaginationWsDTO();
+
+					paginationWsDTO.setCurrentPage(pagination.getCurrentPage());
+					paginationWsDTO.setPageSize(pagination.getPageSize());
+					paginationWsDTO.setTotalPages(pagination.getTotalPages());
+					paginationWsDTO.setTotalResults(pagination.getTotalResults());
+
+					productSearchPage.setPagination(paginationWsDTO);
+
+				}
+				if (null != sortingvalues.getSorts())
+				{
+					productSearchPage.setSorts(sortingvalues.getSorts());
+				}
+				if (null != sortingvalues.getCurrentQuery())
+				{
+					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
+				}
+
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			if (null != e.getErrorMessage())
+			{
+				productSearchPage.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				productSearchPage.setErrorCode(e.getErrorCode());
+			}
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			productSearchPage.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			productSearchPage.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return productSearchPage;
+	}
+	//NU-38 end
 }

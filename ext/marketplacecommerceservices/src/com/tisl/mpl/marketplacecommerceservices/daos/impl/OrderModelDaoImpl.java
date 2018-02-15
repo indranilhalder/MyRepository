@@ -159,7 +159,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -207,7 +207,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -329,6 +329,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 			if (orderId != null)
 			{
 				orderModel.setCode(orderId);
+
 				orderModel = flexibleSearchService.getModelByExample(orderModel);
 			}
 		}

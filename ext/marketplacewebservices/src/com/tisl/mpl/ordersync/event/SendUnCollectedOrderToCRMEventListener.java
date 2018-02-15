@@ -77,9 +77,9 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
 						paymentRefundType = MarketplaceomsordersConstants.REFUND_TYPE_CODE;
 					}
 					if (null != sendUnColletedToCRMEvent.getShipment().getSsb()
-							&& Boolean.valueOf(sendUnColletedToCRMEvent.getShipment().getSsb()).booleanValue())
+							&& Boolean.parseBoolean(sendUnColletedToCRMEvent.getShipment().getSsb()))
 					{
-						isSsb = Boolean.valueOf(sendUnColletedToCRMEvent.getShipment().getSsb()).booleanValue();
+						isSsb = Boolean.parseBoolean(sendUnColletedToCRMEvent.getShipment().getSsb());
 						sendUnColletedToCRMEvent.getConsignmentModel().setSsb(Boolean.TRUE);
 						sendUnColletedToCRMEvent.getConsignmentModel().setSsbCheck(Boolean.TRUE);
 						modelService.save(sendUnColletedToCRMEvent.getConsignmentModel());
@@ -90,17 +90,17 @@ public class SendUnCollectedOrderToCRMEventListener extends AbstractEventListene
 
 					}
 					else if (null != sendUnColletedToCRMEvent.getShipment().getSdb()
-							&& Boolean.valueOf(sendUnColletedToCRMEvent.getShipment().getSdb()).booleanValue())
+							&& Boolean.parseBoolean(sendUnColletedToCRMEvent.getShipment().getSdb()))
 					{
-						isSdb = Boolean.valueOf(sendUnColletedToCRMEvent.getShipment().getSdb()).booleanValue();
+						isSdb = Boolean.parseBoolean(sendUnColletedToCRMEvent.getShipment().getSdb());
 						customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 								sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY, paymentRefundType,
 								sendUnColletedToCRMEvent.getOrderModel(), isSsb, isSdb, isEdtoHd);
 					}
 					else if (null != sendUnColletedToCRMEvent.getShipment().getIsEDtoHD()
-							&& Boolean.valueOf(sendUnColletedToCRMEvent.getShipment().getIsEDtoHD()).booleanValue())
+							&& Boolean.parseBoolean(sendUnColletedToCRMEvent.getShipment().getIsEDtoHD()))
 					{
-						isEdtoHd = Boolean.valueOf(sendUnColletedToCRMEvent.getShipment().getIsEDtoHD()).booleanValue();
+						isEdtoHd = Boolean.parseBoolean(sendUnColletedToCRMEvent.getShipment().getIsEDtoHD());
 						customOmsCancelAdapter.createTicketInCRM(orderEntryModel.getTransactionID(),
 								sendUnColletedToCRMEvent.getTicketType(), MarketplaceomsordersConstants.EMPTY, paymentRefundType,
 								sendUnColletedToCRMEvent.getOrderModel(), isSsb, isSdb, isEdtoHd);

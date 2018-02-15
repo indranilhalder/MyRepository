@@ -185,19 +185,19 @@ tr.d0 td {
 			<!-- end change for INC144314454 -->
 		</div>
 		
-		<div class="wishAddSucess">
-			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+		<div class="wishAddSucess">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishRemoveSucess">
-			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+		<div class="wishRemoveSucess">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 		</div>
 		
-		<div class="wishAddLogin">
-			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+		<div class="wishAddLogin">	<!-- add style for TISCSS-166 -->
+			<span  style="display: none;"><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 		</div>
-		<div class="wishAlreadyAdded">
-			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		<div class="wishAlreadyAdded">	<!-- add style for TISCSS-166 -->
+			<span style="display: none;"><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 
 		<div class="product-detail ${product.rootCategory}">
@@ -219,11 +219,11 @@ tr.d0 td {
 				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
 				<c:choose>
-					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
-				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
-				</c:when>
+					<c:when test="${not empty pdpBrandURL}">
+						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="${pdpBrandURL}">${product.brand.brandname}</a></span></h3>
+					</c:when>
 					<c:otherwise>
-				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
+						<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name">${product.brand.brandname}</span></h3>
 					</c:otherwise>
 				</c:choose>
 				<!-- CKD:TPR-250-End-->

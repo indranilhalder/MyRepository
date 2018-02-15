@@ -200,6 +200,7 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 		{
 			final CustomerModel oCustomerModel = new CustomerModel();
 			oCustomerModel.setOriginalUid(emailId);
+
 			//	calling DAO to fetch Customer Profile Detail
 			final List<CustomerModel> customerProfileDetail = mplCustomerProfileDao.getCustomerProfileDetail(oCustomerModel);
 
@@ -212,6 +213,32 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 					oMplCustomerProfileData = setModelToData(customerModelData);
 					break;
 				}
+			}
+			return oMplCustomerProfileData;
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	@Override
+	public MplCustomerProfileData getCustomerProfileDetailMobile(final String mobileNum)
+	{
+		try
+		{
+			CustomerModel customerProfileDetail = null;
+			//	oCustomerModel.setOriginalUid(emailId);
+			customerProfileDetail = extUserService.getUserForUid(mobileNum);
+			//	calling DAO to fetch Customer Profile Detail
+			//	final List<CustomerModel> customerProfileDetail = mplCustomerProfileDao.getCustomerProfileDetail(oCustomerModel);
+
+			MplCustomerProfileData oMplCustomerProfileData = new MplCustomerProfileData();
+			//if (null != customerProfileDetail && customerProfileDetail.size() > 0)
+			if (null != customerProfileDetail)
+			{
+
+				oMplCustomerProfileData = setModelToData(customerProfileDetail);
 			}
 			return oMplCustomerProfileData;
 		}

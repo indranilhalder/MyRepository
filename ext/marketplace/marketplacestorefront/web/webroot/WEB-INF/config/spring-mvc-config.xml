@@ -441,4 +441,12 @@
 <mvc:interceptors>
        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
 </mvc:interceptors>
+
+<bean id="ampDeviceDetectionFacade" class="de.hybris.platform.acceleratorfacades.device.impl.DefaultDeviceDetectionFacade">
+		<property name="sessionService" ref="sessionService"/>
+		<property name="uiExperienceService" ref="uiExperienceService"/>
+		<property name="requestDeviceDataConverter" ref="defaultSpringMobileRequestDeviceDataConverter"/>
+		<property name="deviceDataUiExperienceDataConverter" ref="deviceDataUiExperienceDataConverter"/>
+		<property name="siteConfigService" ref="siteConfigService"/>
+	</bean>
 </beans>

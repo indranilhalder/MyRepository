@@ -13,7 +13,10 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
+import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
@@ -38,6 +41,8 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -45,6 +50,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,11 +81,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.data.ShopByBrandData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -167,6 +176,18 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
 
+	//SONR FIX
+	//	//TPR-6740
+	//	@Resource(name = "mplProductFacade")
+	//	private MplProductFacade mplProductFacade;
+	//
+	//	@Resource(name = "uiExperienceService")
+	//	private UiExperienceService uiExperienceService;
+
+
+	@Resource(name = "ampDeviceDetectionFacade")
+	private DeviceDetectionFacade ampDeviceDetectionFacade;
+
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
 	private static final String STRIKE_PRICE = "strikePrice";
@@ -235,6 +256,10 @@ public class HomePageController extends AbstractPageController
 	private static final String EXCEPTION_MESSAGE_NEWEXCLUSIVE = "Exception in getNewAndExclusive";
 
 	private static final String userFirstName = "userFirstName";
+
+	//	private static final String footerSlotName = "FooterSlot";
+
+
 
 	/**
 	 * @description this is called to load home page
@@ -362,6 +387,7 @@ public class HomePageController extends AbstractPageController
 		final JSONObject singleBanner = getHomePageBanners("Online", "yes");
 		model.addAttribute("mobileBanner", singleBanner.get("moblileBanners"));
 		model.addAttribute("desktopBanner", singleBanner.get("desktopBanners"));
+		getFooterContent("FooterSlot", model);
 		//}
 		//		catch (final EtailBusinessExceptions e)
 		//		{
@@ -378,8 +404,120 @@ public class HomePageController extends AbstractPageController
 		//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 		//					MarketplacecommerceservicesConstants.E0000));
 		//		}
-		return getViewForPage(model);
+
+		final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+		ampDeviceDetectionFacade.initializeRequest(request);
+		if (ampDeviceDetectionFacade.getCurrentDetectedDevice().getMobileBrowser()
+				&& !(getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+		{
+			//UF-484
+			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
+			getFooterContent(slotUid, model);
+			//Shop by navigation
+			final ContentSlotModel contentSlotModel = contentSlotService
+					.getContentSlotForId(ModelAttributetConstants.NAVIGATIONBARSLOT);
+			final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+			for (final AbstractCMSComponentModel cmsmodel : componentLists)
+			{
+				if (cmsmodel instanceof NavigationBarCollectionComponentModel)
+				{
+					final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
+					model.addAttribute(ModelAttributetConstants.COMPONENT, deptModel);
+				}
+			}
+
+
+			//Shop by brand
+			final List<BrandComponentModel> brands = cmsPageService.getBrandsForShopByBrand();
+			final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
+			BrandComponentModel brandComponent = null;
+			for (final BrandComponentModel brand : brands)
+			{
+				final String component = brand.getUid();
+				//AtoZ brands starts
+				if (component.equals(ModelAttributetConstants.ATOZBRANDSCOMPONENT))
+				{
+					Map<Character, List<CategoryModel>> sortedMap = null;
+
+					sortedMap = brandFacade.getAllBrandsFromCmsCockpit(component);
+
+					Map<Character, List<CategoryModel>> GroupBrandsAToE = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsFToJ = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsKToO = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsPToT = new TreeMap<Character, List<CategoryModel>>();
+					Map<Character, List<CategoryModel>> GroupBrandsUToZ = new TreeMap<Character, List<CategoryModel>>();
+
+					GroupBrandsAToE = getBrandsForRange('A', 'E', sortedMap);
+					GroupBrandsFToJ = getBrandsForRange('F', 'J', sortedMap);
+					GroupBrandsKToO = getBrandsForRange('K', 'O', sortedMap);
+					GroupBrandsPToT = getBrandsForRange('P', 'T', sortedMap);
+					GroupBrandsUToZ = getBrandsForRange('U', 'Z', sortedMap);
+
+
+					model.addAttribute(ModelAttributetConstants.A_E_Brands, GroupBrandsAToE);
+					model.addAttribute(ModelAttributetConstants.F_J_Brands, GroupBrandsFToJ);
+					model.addAttribute(ModelAttributetConstants.K_O_Brands, GroupBrandsKToO);
+					model.addAttribute(ModelAttributetConstants.P_T_Brands, GroupBrandsPToT);
+					model.addAttribute(ModelAttributetConstants.U_Z_Brands, GroupBrandsUToZ);
+				}
+				//AtoZ brands ends
+
+				final ShopByBrandData shopByBrandData = new ShopByBrandData();
+				if (StringUtils.isNotEmpty(component))
+				{
+					brandComponent = (BrandComponentModel) cmsComponentService.getSimpleCMSComponent(component);
+				}
+				shopByBrandData.setLayout(brandComponent.getLayout());
+				shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
+				shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
+				shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
+				shopByBrandData.setSubBrands(brandComponent.getSubBrands());
+				shopByBrandDataList.add(shopByBrandData);
+				model.addAttribute(ModelAttributetConstants.SHOPBYBRANDDATALIST, shopByBrandDataList);
+				for (final CategoryModel category : brandComponent.getSubBrands())
+				{
+					String categoryPath = GenericUtilityMethods.urlSafe(category.getName());
+					if (StringUtils.isNotEmpty(categoryPath))
+					{
+						try
+						{
+							categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+						}
+						catch (final UnsupportedEncodingException e)
+						{
+							LOG.error(e.getMessage());
+						}
+						categoryPath = categoryPath.toLowerCase();
+						categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+					}
+					category.setName(category.getName() + "||" + categoryPath);
+				}
+			}
+
+			return "/pages/pwamp/home";
+		}
+		else
+		{
+			return getViewForPage(model);
+		}
+
 	}
+
+	/**
+	 * New AMP home page mapping for cannoical find out
+	 *
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param redirectModel
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 */
+	/*
+	 * @RequestMapping(name = "/amp", method = RequestMethod.GET) public String ampHome(final HttpServletRequest request,
+	 * final HttpServletResponse response, final Model model, final RedirectAttributes redirectModel) throws
+	 * CMSItemNotFoundException { return home(false, model, redirectModel, request); }
+	 */
 
 	@Override
 	protected ContentPageModel getContentPageForLabelOrId(final String labelOrId) throws CMSItemNotFoundException
@@ -413,38 +551,38 @@ public class HomePageController extends AbstractPageController
 		return super.getContentPageForLabelOrId(labelOrId);
 	}
 
-	//	/**
-	//	 * @param AtoZ
-	//	 *           brands range
-	//	 * @param endCharacter
-	//	 * @param sortedMap
-	//	 * @return map
-	//	 */
-	//	@SuppressWarnings(
-	//	{ "boxing", "javadoc" })
-	//	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
-	//			final Map<Character, List<CategoryModel>> sortedMap)
-	//	{
-	//		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
-	//
-	//		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
-	//		{ //ASCII Value of entry key
-	//			final int entryKeyCharacterASCII = entry.getKey();
-	//
-	//			//ASCII value of startCharacter
-	//			final int startCharacterASCII = startCharacter;
-	//
-	//			//ASCII value of endCharacter
-	//			final int endCharacterASCII = endCharacter;
-	//
-	//			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
-	//			{
-	//				brandsByRange.put(entry.getKey(), entry.getValue());
-	//			}
-	//
-	//		}
-	//		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
-	//	}
+	/**
+	 * @param AtoZ
+	 *           brands range
+	 * @param endCharacter
+	 * @param sortedMap
+	 * @return map
+	 */
+	@SuppressWarnings(
+	{ "boxing", "javadoc" })
+	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
+			final Map<Character, List<CategoryModel>> sortedMap)
+	{
+		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
+
+		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
+		{ //ASCII Value of entry key
+			final int entryKeyCharacterASCII = entry.getKey();
+
+			//ASCII value of startCharacter
+			final int startCharacterASCII = startCharacter;
+
+			//ASCII value of endCharacter
+			final int endCharacterASCII = endCharacter;
+
+			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
+			{
+				brandsByRange.put(entry.getKey(), entry.getValue());
+			}
+
+		}
+		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
+	}
 
 	/**
 	 * @description this is called to update the page title
@@ -1562,10 +1700,15 @@ public class HomePageController extends AbstractPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
-	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId,
+	public String saveNewsletterSubscriptionEmail(
+			@RequestParam(value = "email") String emailId,
 			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) final String gender,
-			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury)
+			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury,
+			final HttpServletResponse response)
 	{
+		final String ampAnalyticsHost = configurationService.getConfiguration().getString("amp.analytics.source.origin",
+				"*.tatacliq.com");
+		response.setHeader("AMP-Access-Control-Allow-Source-Origin", ampAnalyticsHost);
 		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
 		emailId = emailId.toLowerCase();
 		if (!validateEmailAddress(emailId))
@@ -1595,9 +1738,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1701,7 +1844,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
@@ -1797,6 +1940,7 @@ public class HomePageController extends AbstractPageController
 
 			model.addAttribute("footerSocialIconList", fData.getFooterSocialIconList());
 			model.addAttribute("footerText", fData.getFooterText());
+			model.addAttribute("footerTextMobile", fData.getFooterTextMobile());
 			model.addAttribute("notice", fData.getNotice());
 			model.addAttribute("footerAppImageList", fData.getFooterAppImageList());
 			model.addAttribute("navigationNodes", fData.getNavigationNodes());

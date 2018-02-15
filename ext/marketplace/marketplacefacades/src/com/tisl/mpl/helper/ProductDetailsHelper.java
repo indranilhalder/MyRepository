@@ -102,6 +102,7 @@ public class ProductDetailsHelper
 	private static final String N = "N";
 	public static final String EMPTY = "";
 	private final static String COMMACONSTANT = ",";
+	private static final String SEPERATOR_X = " X ";
 	/**
 	 *
 	 */
@@ -1705,17 +1706,19 @@ public class ProductDetailsHelper
 										if (setInfoFlag && !featureData.getName().equalsIgnoreCase(MarketplaceFacadesConstants.SET)
 												&& !isetInfoComputed)
 										{
-
-											productFeatureDataList.addAll(Arrays.asList(groupSetInfoHF(
-													configurableAttributData,
-													configurationService
-															.getConfiguration()
-															.getInteger(
-																	MarketplaceFacadesConstants.CONFIGURABLE_ATTRIBUTE
-																			+ MarketplaceFacadesConstants.HOME_FURNISHING
-																			+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI + "."
-																			+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI_SPACE,
-																	new Integer(10)).intValue()).split(MarketplaceFacadesConstants.PIPE_REGEX)));
+											//SONR Fix Avoid instantiating Integer objects. Call Integer.valueOf() instead.
+											productFeatureDataList.addAll(Arrays
+													.asList(groupSetInfoHF(
+															configurableAttributData,
+															configurationService
+																	.getConfiguration()
+																	.getInteger(
+																			MarketplaceFacadesConstants.CONFIGURABLE_ATTRIBUTE
+																					+ MarketplaceFacadesConstants.HOME_FURNISHING
+																					+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI + "."
+																					+ MarketplaceFacadesConstants.CLASSIFICATION_ATTR_SI_SPACE,
+																			Integer.valueOf(10)).intValue()).split(
+															MarketplaceFacadesConstants.PIPE_REGEX)));
 											isetInfoComputed = true;
 
 										}
@@ -1810,7 +1813,7 @@ public class ProductDetailsHelper
 						{
 							if (islengthAvailable && iswidthAvailable && isheightAvailable)
 							{
-								prodDimensionValue = length + " X " + width + " X " + height;
+								prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 										+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 										+ prodDimensionValue);
@@ -1818,7 +1821,7 @@ public class ProductDetailsHelper
 							}
 							else if (islengthAvailable && iswidthAvailable)
 							{
-								prodDimensionValue = length + " X " + width;
+								prodDimensionValue = length + SEPERATOR_X + width;
 								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 										+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 										+ prodDimensionValue);
@@ -1856,7 +1859,7 @@ public class ProductDetailsHelper
 							{
 								if (islengthAvailable && iswidthAvailable && isheightAvailable)
 								{
-									prodDimensionValue = length + " X " + width + " X " + height;
+									prodDimensionValue = length + SEPERATOR_X + width + SEPERATOR_X + height;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -1864,7 +1867,7 @@ public class ProductDetailsHelper
 								}
 								else if (islengthAvailable && iswidthAvailable)
 								{
-									prodDimensionValue = length + " X " + width;
+									prodDimensionValue = length + SEPERATOR_X + width;
 									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
 											+ MarketplaceFacadesConstants.COLON + MarketplacecommerceservicesConstants.SPACE
 											+ prodDimensionValue);
@@ -1935,7 +1938,6 @@ public class ProductDetailsHelper
 
 		return groupedString.toString().substring(0, groupedString.toString().lastIndexOf('|') - 1);
 	}
-
 
 	/**
 	 * @param mapConfigurableAttributes

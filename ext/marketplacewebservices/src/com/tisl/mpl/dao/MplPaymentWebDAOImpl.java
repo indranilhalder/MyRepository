@@ -323,7 +323,15 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 
 			//forming the flexible search query
 			final FlexibleSearchQuery customerQuery = new FlexibleSearchQuery(queryString);
-			customerQuery.addQueryParameter(MarketplacewebservicesConstants.ORIGINALUID, userId);
+
+			if (userId.contains("@"))
+			{
+				customerQuery.addQueryParameter(MarketplacewebservicesConstants.ORIGINALUID, userId);
+			}
+			else
+			{
+				customerQuery.addQueryParameter(CustomerModel.MOBILENUMBER, userId);
+			}
 
 			LOG.info("**************** getCustomer Query ******************** : customerQuery : " + customerQuery);
 

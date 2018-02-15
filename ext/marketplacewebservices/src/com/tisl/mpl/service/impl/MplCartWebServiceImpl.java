@@ -628,7 +628,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					productModel = pr.getProduct();
 					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
 					{
-						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							maximum_configured_quantiy = siteConfigService.getInt(
+									MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+						}
+						//SDI-4069 ends
 
 						//TPR-6117  start
 
@@ -1057,7 +1064,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 */
 				//TISJEW-3517
 				boolean isExchangeApplicable = false;
-				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+
+				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+				if (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+				{
+					maximum_configured_quantiy = siteConfigService.getInt(
+							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+				}
+				//SDI-4069 ends
+
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				//TPR-1083
 				if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
@@ -1846,11 +1862,18 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 
 				/* Added in R2.3 TISRLUAT-812 start */
-				if (null != abstractOrderEntry.getEdScheduledDate())
+				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				if (null != abstractOrderEntry.getEdScheduledDate()
+						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
+								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryDate(abstractOrderEntry.getEdScheduledDate());
 				}
-				if (null != abstractOrderEntry.getTimeSlotTo() && null != abstractOrderEntry.getTimeSlotFrom())
+				//SDI-3159 Condition added if CLICK N COLLECT is not there
+				if (null != abstractOrderEntry.getTimeSlotTo()
+						&& null != abstractOrderEntry.getTimeSlotFrom()
+						&& (null != abstractOrderEntry.getMplDeliveryMode() && !MarketplacecommerceservicesConstants.CLICK_COLLECT
+								.equalsIgnoreCase(abstractOrderEntry.getMplDeliveryMode().getDeliveryMode().getCode())))
 				{
 					gwlp.setScheduleDeliveryTime(abstractOrderEntry.getTimeSlotFrom()
 							.concat(" " + MarketplacewebservicesConstants.TO + " ").concat(abstractOrderEntry.getTimeSlotTo()));
@@ -1911,23 +1934,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		{
 			for (final DeliveryDetailsData delData : pinCodeReslist)
 			{
-				if ((MarketplacecommerceservicesConstants.ED.equalsIgnoreCase(delData.getType()))
-						&& (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+				//SDI-5027
+				if (!delDataPriorityList.contains(delData))
 				{
-					delDataPriorityList.add(delData);
-					break;
-				}
-				else if ((MarketplacecommerceservicesConstants.HD.equalsIgnoreCase(delData.getType()))
-						&& (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
-				{
-					delDataPriorityList.add(delData);
-					break;
-				}
-				else if ((MarketplacecommerceservicesConstants.CnC.equalsIgnoreCase(delData.getType()))
-						&& (MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(delivModel.getCode())))
-				{
-					delDataPriorityList.add(delData);
-					break;
+					//Adding the data in the list only if it is not present
+					if ((MarketplacecommerceservicesConstants.ED.equalsIgnoreCase(delData.getType()))
+							&& (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+					{
+						delDataPriorityList.add(delData);
+						break;
+					}
+					else if ((MarketplacecommerceservicesConstants.HD.equalsIgnoreCase(delData.getType()))
+							&& (MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(delivModel.getCode())))
+					{
+						delDataPriorityList.add(delData);
+						break;
+					}
+					else if ((MarketplacecommerceservicesConstants.CnC.equalsIgnoreCase(delData.getType()))
+							&& (MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(delivModel.getCode())))
+					{
+						delDataPriorityList.add(delData);
+						break;
+					}
 				}
 			}
 		}
@@ -3286,8 +3314,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3325,7 +3353,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					productModel = pr.getProduct();
 					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
 					{
-						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							maximum_configured_quantiy = siteConfigService.getInt(
+									MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+						}
+						//SDI-4069 ends
 						if (StringUtils.isNotEmpty(pr.getExchangeId()))
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9305);
