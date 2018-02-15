@@ -35,8 +35,6 @@ export function getProductCart() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(resultJson);
-      // TODO: dispatch a modal here
       dispatch(getProductCartSuccess(resultJson));
     } catch (e) {
       dispatch(getProductCartFailure(e.message));
