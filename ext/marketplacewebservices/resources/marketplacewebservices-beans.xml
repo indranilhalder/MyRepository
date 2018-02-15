@@ -3823,6 +3823,43 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ContentWidgetElementWsDTO>" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.BannerProMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BannerProDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BannerProCarouselElementWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="webURL" type="String"/>
+	<property name="appURL" type="String"/>
+	<property name="imageURL" type="String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.BannerProMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.BannerProDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BannerProductCarouselWsDTO">
+	<property name="type" type="String"/>
+	<property name="btnText" type="String"/>
+	<property name="webURL" type="String"/>
+	<property name="appURL" type="String"/>
+	<property name="title" type="String"/>
+	<property name="imageURL" type="String"/>
+	<property name="description" type="String"/>
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerProCarouselElementWsDTO>" />
+	</bean>
+	
+	
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseListWsDTO">
 		<property name="Components"
 			type="java.util.List&lt;java.lang.Object>" />

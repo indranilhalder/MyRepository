@@ -27,10 +27,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
+import com.tisl.mpl.model.cms.components.BannerProdCarouselElementCompModel;
+import com.tisl.mpl.model.cms.components.BannerProductCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetElementModel;
 import com.tisl.mpl.model.cms.components.HeroBannerComponentModel;
 import com.tisl.mpl.model.cms.components.HeroBannerElementModel;
+import com.tisl.mpl.wsdto.BannerProCarouselElementWsDTO;
+import com.tisl.mpl.wsdto.BannerProductCarouselWsDTO;
 import com.tisl.mpl.wsdto.ContentWidgetCompWsDTO;
 import com.tisl.mpl.wsdto.ContentWidgetElementWsDTO;
 import com.tisl.mpl.wsdto.HeroBannerCompListWsDTO;
@@ -124,6 +128,46 @@ public class DefaultCMSComponentControler
 							contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
 
 							uiCompPageWiseList.add(contentWidgetCompWsDTO);
+						}
+
+						if (abstractCMSComponentModel instanceof BannerProductCarouselComponentModel)
+						{
+							final BannerProductCarouselWsDTO bannerProductCarouselWsDTO = new BannerProductCarouselWsDTO();
+
+							final List<BannerProCarouselElementWsDTO> bannerProCarouselList = new ArrayList<BannerProCarouselElementWsDTO>();
+
+							final BannerProductCarouselComponentModel bannerProComponentModel = (BannerProductCarouselComponentModel) abstractCMSComponentModel;
+							for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
+							{
+								final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
+								//final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO();
+								//final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
+
+								//	bannerProDiscountPriceWsDTO.setCurrencyIso(productObj.getProductCode().get);
+
+								bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+								//bannerProCarouselElementWsDTO.setMrpPrice(mrpPrice);
+								//bannerProCarouselElementWsDTO.setDiscountedPrice(discountedPrice);
+								bannerProCarouselElementWsDTO.setAppURL(productObj.getAppURL());
+								bannerProCarouselElementWsDTO.setTitle(productObj.getTitle());
+								bannerProCarouselElementWsDTO.setWebURL(productObj.getWebURL());
+								bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
+
+
+
+
+								bannerProCarouselList.add(bannerProCarouselElementWsDTO);
+							}
+							bannerProductCarouselWsDTO.setAppURL(bannerProComponentModel.getAppURL());
+							bannerProductCarouselWsDTO.setBtnText(bannerProComponentModel.getBtnText());
+							bannerProductCarouselWsDTO.setImageURL(bannerProComponentModel.getImageURL().getUrl());
+							bannerProductCarouselWsDTO.setItems(bannerProCarouselList);
+							bannerProductCarouselWsDTO.setType(bannerProComponentModel.getType());
+							bannerProductCarouselWsDTO.setDescription(bannerProComponentModel.getDescription());
+							bannerProductCarouselWsDTO.setTitle(bannerProComponentModel.getTitle());
+							bannerProductCarouselWsDTO.setWebURL(bannerProComponentModel.getWebURL());
+
+							uiCompPageWiseList.add(bannerProductCarouselWsDTO);
 						}
 
 					}

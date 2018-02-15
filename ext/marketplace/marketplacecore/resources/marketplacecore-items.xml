@@ -79,8 +79,9 @@
 		<collectiontype code="AssociatedItemsList" elementtype="java.lang.String"
 			autocreate="true" generate="true" type="list" />
 		<collectiontype code="ProductCollectionType"
-			elementtype="Product" autocreate="true" generate="false" type="list" />
-
+			elementtype="Product" autocreate="true" generate="false" type="list" /> 
+	    <collectiontype code="BannerProdCarEleCompCollectionType"
+			elementtype="BannerProdCarouselElementComp" autocreate="true" generate="false" type="list" />
 		<collectiontype code="ImeiNoCollection" elementtype="java.lang.String"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="ConsignmentList" elementtype="Consignment"
@@ -5431,13 +5432,43 @@
 							optional="false" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="ProductCollectionType" qualifier="items"
+					<attribute type="BannerProdCarEleCompCollectionType" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 						<persistence type='property' />
 					</attribute>
-
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="BannerProdCarouselElementComp" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.BannerProdCarouselElementComp">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="appURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 
