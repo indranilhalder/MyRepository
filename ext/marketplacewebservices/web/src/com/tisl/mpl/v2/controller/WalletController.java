@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -640,7 +641,12 @@ public class WalletController
 		if (null != requestData)
 		{
 			CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-			egvDetailsData.setProductCode(requestData.getProductID());
+			String productId = configurationService.getConfiguration().getString("marketplace.header.egvProductCode");
+			if(null != productId && StringUtils.isNotBlank(productId)) {
+				egvDetailsData.setProductCode(productId);
+			}else {
+				egvDetailsData.setProductCode(requestData.getProductID());
+			}
 			if (null != requestData.getPriceSelectedByUserPerQuantity()
 					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
 			{

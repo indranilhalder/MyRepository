@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.integration.job;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
@@ -178,8 +179,10 @@ public class SalesOrderReverseXMLUtility
 
 			for (final OrderHistoryEntryModel orderHistoryEntryModel : orderHistory)
 			{
-				final String retRef = MarketplacecommerceservicesConstants.RETURN_COMPLETED;
-				final String orderCancel = MarketplacecommerceservicesConstants.ORDER_CANCELLED;
+//				final String retRef = MarketplacecommerceservicesConstants.RETURN_COMPLETED;
+//				final String orderCancel = MarketplacecommerceservicesConstants.ORDER_CANCELLED;
+				final String retRef = ConsignmentStatus.RETURN_CLOSED.getCode();
+				final String orderCancel =ConsignmentStatus.CANCELLATION_INITIATED.getCode();
 				LOG.debug("Inside order history entry model");
 				LOG.warn("Inside order history entry model" + orderHistoryEntryModel.getOrder());
 				//	if (checkOrderHistoryEntryDate(orderHistoryEntryModel.getCreationtime().toString()))
@@ -867,7 +870,7 @@ public class SalesOrderReverseXMLUtility
 								
 								LOG.info("Split merchantInfoXMlData and QC merchantInfoXMlData");
 								if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null 
-										&& entry.getWalletApportionReturnInfo().getStatus()!=null && SUCCESS.equalsIgnoreCase(entry.getWalletApportionReturnInfo().getStatus())  && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
+										&& entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
 									for(WalletCardApportionDetailModel walletCardApportionDetailModel:entry.getWalletApportionReturnInfo().getWalletCardList()){
 										MerchantInfoXMlData splitMerchantInfoXMlDataQC=new MerchantInfoXMlData();
 										splitMerchantInfoXMlDataQC
@@ -923,9 +926,6 @@ public class SalesOrderReverseXMLUtility
 										splitMerchantInfoXMlDataQC.setProductAmount(getDecimalFormateValue(totalAmount));
 										merchantInfoList.add(splitMerchantInfoXMlDataQC);
 									}
-								}else{
-									LOG.debug("XmltoFixo flag false setting ... split order information ");
-									xmlToFico=false;
 								}
 								
 								if(xmlToFico){
@@ -1005,13 +1005,9 @@ public class SalesOrderReverseXMLUtility
 								{
 									if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null   && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
 									LOG.info("QC merchantInfoXMlData");
-									MerchantInfoXMlData merchantInfoXMlDataQC=new MerchantInfoXMlData();
-									merchantInfoXMlDataQC
-									.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
-									merchantInfoXMlDataQC
-									.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
-									if(entry.getWalletApportionReturnInfo()!=null && entry.getWalletApportionReturnInfo().getWalletCardList()!=null && StringUtils.isNotEmpty(entry.getWalletApportionReturnInfo().getStatus()) &&
-											entry.getWalletApportionReturnInfo().getStatus().equalsIgnoreCase(SUCCESS) ){
+								if(entry.getWalletApportionReturnInfo()!=null && entry.getWalletApportionReturnInfo().getWalletCardList()!=null ){
+										MerchantInfoXMlData merchantInfoXMlDataQC=new MerchantInfoXMlData();
+
 										LOG.info("entry.getWalletApportionReturnInfo().getStatus().equalsIgnoreCase(SUCCESS)"+entry.getWalletApportionReturnInfo().getStatus());
 										for(WalletCardApportionDetailModel walletCardApportionDetailQcData:entry.getWalletApportionReturnInfo().getWalletCardList()){
 											LOG.info("walletCardApportionDetailQcData.getBucketType()"+walletCardApportionDetailQcData.getBucketType());
@@ -1019,6 +1015,11 @@ public class SalesOrderReverseXMLUtility
 									String cardExpDate = getCardExpDate(walletCardApportionDetailQcData);
 									merchantInfoXMlDataQC.setCardExpiryDate(cardExpDate);
 									merchantInfoXMlDataQC.setCardNumber(walletCardApportionDetailQcData.getCardNumber());
+									merchantInfoXMlDataQC
+									.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
+									merchantInfoXMlDataQC
+									.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
+									
 									for (final PaymentTransactionModel oModel : list)
 									{
 										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)

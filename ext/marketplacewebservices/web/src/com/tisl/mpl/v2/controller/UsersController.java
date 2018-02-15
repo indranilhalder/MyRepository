@@ -4019,7 +4019,7 @@ public class UsersController extends BaseCommerceController
 							!customer.getQcVerifyMobileNo().trim().equalsIgnoreCase(mobilenumber.trim())) {
 						IsMobileNumberChanged = true;
 					}
-					if(IsMobileNumberChanged) {
+					if(isWalletCreated && IsMobileNumberChanged) {
 						if(null == otp || StringUtils.isEmpty(otp)) {
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5025);
 						}
