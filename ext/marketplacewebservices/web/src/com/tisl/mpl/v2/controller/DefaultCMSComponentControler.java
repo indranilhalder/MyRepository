@@ -104,17 +104,35 @@ public class DefaultCMSComponentControler
 								for (final HeroBannerElementModel heroBannerElementModel : heroBannerCompObj.getItems())
 								{
 									final HeroBannerCompListWsDTO heroBannerCompListObj = new HeroBannerCompListWsDTO();
-
-									heroBannerCompListObj.setImageURL(heroBannerElementModel.getImageURL().getURL());
-									heroBannerCompListObj.setBrandLogo(heroBannerElementModel.getBrandLogo().getURL());
-									heroBannerCompListObj.setAppURL(heroBannerElementModel.getAppURL());
-									heroBannerCompListObj.setTitle(heroBannerElementModel.getTitle());
-									heroBannerCompListObj.setWebURL(heroBannerElementModel.getWebURL());
+									if (null != heroBannerElementModel.getImageURL()
+											&& null != heroBannerElementModel.getImageURL().getURL())
+									{
+										heroBannerCompListObj.setImageURL(heroBannerElementModel.getImageURL().getURL());
+									}
+									else
+									{
+										heroBannerCompListObj.setImageURL("");
+									}
+									if (null != heroBannerElementModel.getBrandLogo()
+											&& null != heroBannerElementModel.getBrandLogo().getURL())
+									{
+										heroBannerCompListObj.setBrandLogo(heroBannerElementModel.getBrandLogo().getURL());
+									}
+									else
+									{
+										heroBannerCompListObj.setBrandLogo("");
+									}
+									heroBannerCompListObj
+											.setAppURL(null != heroBannerElementModel.getAppURL() ? heroBannerElementModel.getAppURL() : "");
+									heroBannerCompListObj
+											.setTitle(null != heroBannerElementModel.getTitle() ? heroBannerElementModel.getTitle() : "");
+									heroBannerCompListObj
+											.setWebURL(null != heroBannerElementModel.getWebURL() ? heroBannerElementModel.getWebURL() : "");
 									heroBannerCompListWsDTO.add(heroBannerCompListObj);
 								}
 							}
 							heroBannerCompWsDTO.setItems(heroBannerCompListWsDTO);
-							heroBannerCompWsDTO.setType(heroBannerCompObj.getType());
+							heroBannerCompWsDTO.setType(null != heroBannerCompObj.getType() ? heroBannerCompObj.getType() : "");
 
 							uiCompPageWiseList.add(heroBannerCompWsDTO);
 						}
@@ -132,11 +150,23 @@ public class DefaultCMSComponentControler
 								{
 									final ContentWidgetElementWsDTO contentWidgetElementWsDTO = new ContentWidgetElementWsDTO();
 
-									contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL());
-									contentWidgetElementWsDTO.setDescription(contentWidgetElementModel.getDescription());
-									contentWidgetElementWsDTO.setAppURL(contentWidgetElementModel.getAppURL());
-									contentWidgetElementWsDTO.setTitle(contentWidgetElementModel.getTitle());
-									contentWidgetElementWsDTO.setWebURL(contentWidgetElementModel.getWebURL());
+									if (null != contentWidgetElementModel.getImageURL()
+											&& null != contentWidgetElementModel.getImageURL().getURL())
+									{
+										contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL());
+									}
+									else
+									{
+										contentWidgetElementWsDTO.setImageURL("");
+									}
+									contentWidgetElementWsDTO.setDescription(null != contentWidgetElementModel.getDescription()
+											? contentWidgetElementModel.getDescription() : "");
+									contentWidgetElementWsDTO.setAppURL(
+											null != contentWidgetElementModel.getAppURL() ? contentWidgetElementModel.getAppURL() : "");
+									contentWidgetElementWsDTO.setTitle(
+											null != contentWidgetElementModel.getTitle() ? contentWidgetElementModel.getTitle() : "");
+									contentWidgetElementWsDTO.setWebURL(
+											null != contentWidgetElementModel.getWebURL() ? contentWidgetElementModel.getWebURL() : "");
 									contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
 
 									contentWidgetElementList.add(contentWidgetElementWsDTO);
@@ -211,7 +241,6 @@ public class DefaultCMSComponentControler
 									bannerProCarouselList.add(bannerProCarouselElementWsDTO);
 								}
 							}
-
 							bannerProductCarouselWsDTO.setAppURL(bannerProComponentModel.getAppURL());
 							bannerProductCarouselWsDTO.setBtnText(bannerProComponentModel.getBtnText());
 							bannerProductCarouselWsDTO.setImageURL(bannerProComponentModel.getImageURL().getUrl());
@@ -226,13 +255,10 @@ public class DefaultCMSComponentControler
 
 					}
 				}
-
 			}
 			uiCompPageWiseListWsDTO.setComponents(uiCompPageWiseList);
 			return uiCompPageWiseListWsDTO;
 		}
 		return uiCompPageWiseListWsDTO;
 	}
-
-
 }
