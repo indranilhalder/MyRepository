@@ -12,4 +12,6 @@ import com.tisl.mpl.core.model.MplQCProgramConfigModel;
 public interface MplQCProgramDao
 {
 	public MplQCProgramConfigModel getProgramIdConfigValueById(final String id);
+	
+	public String  getCardTotalAmount(final String cardNumber);
 }
