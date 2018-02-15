@@ -8,6 +8,8 @@ export const PRODUCT_COUPONS = "Coupons";
 export const SIZE_GUIDE = "SizeGuide";
 export const SORT = "Sort";
 export const ADDRESS = "Address";
+export const EMI_MODAL = "EmiModal";
+
 export function showModal(type, ownProps) {
   return {
     type: SHOW_MODAL,
