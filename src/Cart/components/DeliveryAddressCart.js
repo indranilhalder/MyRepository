@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./DeliveryAddressCopy.css";
+import styles from "./DeliveryAddressCart.css";
 import CheckBox from "../../general/components/CheckBox.js";
 import PropTypes from "prop-types";
 export default class DeliveryAddressCopy extends React.Component {
