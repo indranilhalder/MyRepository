@@ -41,6 +41,10 @@ export const PRODUCT_WISH_LIST_SUCCESS = "PRODUCT_WISH_LIST_SUCCESS";
 export const PRODUCT_WISH_LIST_FAILURE = "PRODUCT_WISH_LIST_FAILURE";
 export const PRODUCT_WISH_LIST_PATH = "wishList";
 
+export const PRODUCT_SPECIFICATION_REQUEST = "PRODUCT_SPECIFICATION_REQUEST";
+export const PRODUCT_SPECIFICATION_SUCCESS = "PRODUCT_SPECIFICATION_SUCCESS";
+export const PRODUCT_SPECIFICATION_FAILURE = "PRODUCT_SPECIFICATION_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_DESCRIPTION_PATH = "pdp";
@@ -52,6 +56,7 @@ const CLIENT_ID = "gauravj@dewsolutions.in";
 const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
+const PRODUCT_SPECIFICATION_PATH = "marketplacewebservices/v2/mpl/products";
 
 export function getProductDescriptionRequest() {
   return {
@@ -83,7 +88,6 @@ export function getProductDescription() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductDescriptionSuccess(resultJson));
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
@@ -159,8 +163,6 @@ export function addProductToWishList(productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
-      // TODO: dispatch a modal here
       dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
@@ -198,7 +200,6 @@ export function removeProductFromWishList(productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       dispatch(removeProductFromWishListFailure(e.message));
@@ -235,7 +236,6 @@ export function addProductToBag(products) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(addProductToBagSuccess());
     } catch (e) {
       dispatch(addProductToBagFailure(e.message));
@@ -273,7 +273,6 @@ export function getProductSizeGuide() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductSizeGuideSuccess(resultJson));
     } catch (e) {
       dispatch(getProductSizeGuideFailure(e.message));
@@ -311,7 +310,6 @@ export function getPdpEmi() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getPdpEmiSuccess(resultJson));
     } catch (e) {
       dispatch(getPdpEmiFailure(e.message));
@@ -349,10 +347,48 @@ export function getProductWishList() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductWishListSuccess(resultJson));
     } catch (e) {
       dispatch(getProductWishListFailure(e.message));
+    }
+  };
+}
+
+export function ProductSpecificationRequest() {
+  return {
+    type: PRODUCT_SPECIFICATION_REQUEST,
+    status: REQUESTING
+  };
+}
+export function ProductSpecificationSuccess(productDetails) {
+  return {
+    type: PRODUCT_SPECIFICATION_SUCCESS,
+    status: SUCCESS,
+    productDetails
+  };
+}
+
+export function ProductSpecificationFailure(error) {
+  return {
+    type: PRODUCT_SPECIFICATION_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getProductSpecification(productId) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(ProductSpecificationRequest());
+    try {
+      const result = await api.getMock(
+        `${PRODUCT_SPECIFICATION_PATH}/${productId}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(ProductSpecificationSuccess(resultJson));
+    } catch (e) {
+      dispatch(ProductSpecificationFailure(e.message));
     }
   };
 }
