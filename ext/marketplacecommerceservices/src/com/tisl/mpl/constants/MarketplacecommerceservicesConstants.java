@@ -2447,4 +2447,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 	public static final String NU005 = "NU005";
+
+	public static final String SORT = "sort";
+	public static final String BY_RATING = "byRating";
 }

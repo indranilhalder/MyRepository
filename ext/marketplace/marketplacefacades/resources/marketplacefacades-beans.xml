@@ -1374,5 +1374,23 @@
 	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
 		<property name="currencySymbol" type="String" />				
 	</bean>
+<bean class="de.hybris.platform.commercefacades.product.data.ReviewData">
+		<property name="canEditDelete" type="boolean"/>
+	</bean>
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.product.ReviewWsDTO">
+		<property name="canEditDelete" type="boolean"/>
+	</bean>
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.product.ReviewListWsDTO">
+		<property name="totalNoOfReviews" type="Long"/>
+		<property name="totalNoOfPages" type="Integer"/>
+		<property name="pageSize" type="Integer"/>
+		<property name="pageNumber" type="Integer"/>
+	</bean>
+	<bean class="com.tisl.mpl.product.data.ReviewDataList">
+		<property name="totalNoOfReviews" type="Long"/>
+		<property name="totalNoOfPages" type="Integer"/>
+		<property name="pageSize" type="Integer"/>
+		<property name="pageNumber" type="Integer"/>
+	</bean>
 	
 </beans>
