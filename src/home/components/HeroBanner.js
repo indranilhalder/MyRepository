@@ -30,7 +30,7 @@ export default class HeroBanner extends React.Component {
     return <div className={styles.base}>{this.renderBanner()}</div>;
   }
 }
-HeroBanner.PropTypes = {
+HeroBanner.propTypes = {
   loading: PropTypes.bool,
   feedComponentData: PropTypes.shape({
     data: PropTypes.shape({

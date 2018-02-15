@@ -26,6 +26,7 @@ class ProductDescriptionPage extends Component {
     this.props.getProductDescription();
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
+    this.props.getProductWishList();
   }
   onSave() {
     if (this.props.onSave) {
@@ -58,7 +59,7 @@ class ProductDescriptionPage extends Component {
 
   renderAddressModal = () => {
     if (this.props.showAddress) {
-      this.props.showAddress(this.props.productDetails);
+      this.props.showAddress();
     }
   };
 
@@ -157,13 +158,19 @@ class ProductDescriptionPage extends Component {
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />
-            <DeliveryInformation
-              header={productData.eligibleDeliveryModes[0].name}
-              placedTime={productData.eligibleDeliveryModes[0].timeline}
-              onClick={() => this.renderAddressModal()}
-              deliveryOptions={DELIVERY_TEXT}
-              label={PIN_CODE}
-            />
+            {productData.eligibleDeliveryModes &&
+              productData.eligibleDeliveryModes.map(val => {
+                return (
+                  <DeliveryInformation
+                    header={val.name}
+                    placedTime={val.timeline}
+                    type={val.code}
+                    onClick={() => this.renderAddressModal()}
+                    deliveryOptions={DELIVERY_TEXT}
+                    label={PIN_CODE}
+                  />
+                );
+              })}
             <div className={styles.separator}>
               <RatingAndTextLink
                 onClick={this.goToReviewPage}
