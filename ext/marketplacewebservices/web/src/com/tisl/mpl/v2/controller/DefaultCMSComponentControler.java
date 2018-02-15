@@ -99,16 +99,19 @@ public class DefaultCMSComponentControler
 							final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
 
 							final HeroBannerComponentModel heroBannerCompObj = (HeroBannerComponentModel) abstractCMSComponentModel;
-							for (final HeroBannerElementModel heroBannerElementModel : heroBannerCompObj.getItems())
+							if (null != heroBannerCompObj.getItems() && heroBannerCompObj.getItems().size() > 0)
 							{
-								final HeroBannerCompListWsDTO heroBannerCompListObj = new HeroBannerCompListWsDTO();
+								for (final HeroBannerElementModel heroBannerElementModel : heroBannerCompObj.getItems())
+								{
+									final HeroBannerCompListWsDTO heroBannerCompListObj = new HeroBannerCompListWsDTO();
 
-								heroBannerCompListObj.setImageURL(heroBannerElementModel.getImageURL().getURL());
-								heroBannerCompListObj.setBrandLogo(heroBannerElementModel.getBrandLogo().getURL());
-								heroBannerCompListObj.setAppURL(heroBannerElementModel.getAppURL());
-								heroBannerCompListObj.setTitle(heroBannerElementModel.getTitle());
-								heroBannerCompListObj.setWebURL(heroBannerElementModel.getWebURL());
-								heroBannerCompListWsDTO.add(heroBannerCompListObj);
+									heroBannerCompListObj.setImageURL(heroBannerElementModel.getImageURL().getURL());
+									heroBannerCompListObj.setBrandLogo(heroBannerElementModel.getBrandLogo().getURL());
+									heroBannerCompListObj.setAppURL(heroBannerElementModel.getAppURL());
+									heroBannerCompListObj.setTitle(heroBannerElementModel.getTitle());
+									heroBannerCompListObj.setWebURL(heroBannerElementModel.getWebURL());
+									heroBannerCompListWsDTO.add(heroBannerCompListObj);
+								}
 							}
 							heroBannerCompWsDTO.setItems(heroBannerCompListWsDTO);
 							heroBannerCompWsDTO.setType(heroBannerCompObj.getType());
@@ -123,18 +126,21 @@ public class DefaultCMSComponentControler
 							final List<ContentWidgetElementWsDTO> contentWidgetElementList = new ArrayList<ContentWidgetElementWsDTO>();
 
 							final ContentWidgetComponentModel contentWidgetComponentModel = (ContentWidgetComponentModel) abstractCMSComponentModel;
-							for (final ContentWidgetElementModel contentWidgetElementModel : contentWidgetComponentModel.getItems())
+							if (null != contentWidgetComponentModel.getItems() && contentWidgetComponentModel.getItems().size() > 0)
 							{
-								final ContentWidgetElementWsDTO contentWidgetElementWsDTO = new ContentWidgetElementWsDTO();
+								for (final ContentWidgetElementModel contentWidgetElementModel : contentWidgetComponentModel.getItems())
+								{
+									final ContentWidgetElementWsDTO contentWidgetElementWsDTO = new ContentWidgetElementWsDTO();
 
-								contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL());
-								contentWidgetElementWsDTO.setDescription(contentWidgetElementModel.getDescription());
-								contentWidgetElementWsDTO.setAppURL(contentWidgetElementModel.getAppURL());
-								contentWidgetElementWsDTO.setTitle(contentWidgetElementModel.getTitle());
-								contentWidgetElementWsDTO.setWebURL(contentWidgetElementModel.getWebURL());
-								contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
+									contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL());
+									contentWidgetElementWsDTO.setDescription(contentWidgetElementModel.getDescription());
+									contentWidgetElementWsDTO.setAppURL(contentWidgetElementModel.getAppURL());
+									contentWidgetElementWsDTO.setTitle(contentWidgetElementModel.getTitle());
+									contentWidgetElementWsDTO.setWebURL(contentWidgetElementModel.getWebURL());
+									contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
 
-								contentWidgetElementList.add(contentWidgetElementWsDTO);
+									contentWidgetElementList.add(contentWidgetElementWsDTO);
+								}
 							}
 							contentWidgetCompWsDTO.setItems(contentWidgetElementList);
 							contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
@@ -149,59 +155,63 @@ public class DefaultCMSComponentControler
 							final List<BannerProCarouselElementWsDTO> bannerProCarouselList = new ArrayList<BannerProCarouselElementWsDTO>();
 
 							final BannerProductCarouselComponentModel bannerProComponentModel = (BannerProductCarouselComponentModel) abstractCMSComponentModel;
-							for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
+
+							if (null != bannerProComponentModel.getItems() && bannerProComponentModel.getItems().size() > 0)
 							{
-								final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
-
-								final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-								//final DecimalFormat df = new DecimalFormat("0.00");
-								String productUnitPrice = "";
-								String productPrice = "";
-
-								if (buyboxdata != null)
+								for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
 								{
-									final PriceData specialPrice = buyboxdata.getSpecialPrice();
-									final PriceData mrp = buyboxdata.getMrp();
-									final PriceData mop = buyboxdata.getPrice();
+									final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
+									if (null != productObj && null != productObj.getProductCode()
+											&& null != productObj.getProductCode().getCode())
+									{
+										final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
+										//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
+										String productUnitPrice = "";
+										String productPrice = "";
 
-									if (mrp != null)
-									{
-										productUnitPrice = mrp.getValue().toPlainString();
+										if (buyboxdata != null)
+										{
+											final PriceData specialPrice = buyboxdata.getSpecialPrice();
+											final PriceData mrp = buyboxdata.getMrp();
+											final PriceData mop = buyboxdata.getPrice();
+
+											if (mrp != null)
+											{
+												productUnitPrice = mrp.getValue().toPlainString();
+											}
+											if (specialPrice != null)
+											{
+												productPrice = specialPrice.getValue().toPlainString();
+											}
+											else if (null != mop && null != mop.getValue())
+											{
+												productPrice = mop.getValue().toPlainString();
+											}
+										}
+
+										final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO();
+										final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
+
+										bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+										bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
+										bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
+
+										bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+										bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+										bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
+
+										bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+										bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
+										bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
+										bannerProCarouselElementWsDTO.setAppURL(productObj.getAppURL());
+										bannerProCarouselElementWsDTO.setTitle(productObj.getTitle());
+										bannerProCarouselElementWsDTO.setWebURL(productObj.getWebURL());
+										bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
 									}
-									if (specialPrice != null)
-									{
-										productPrice = specialPrice.getValue().toPlainString();
-									}
-									else if (null != mop && null != mop.getValue())
-									{
-										productPrice = mop.getValue().toPlainString();
-									}
+									bannerProCarouselList.add(bannerProCarouselElementWsDTO);
 								}
-
-								final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO();
-								final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
-
-								bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-								bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-								bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
-
-								bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-								bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
-								bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
-
-								bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-								bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
-								bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
-								bannerProCarouselElementWsDTO.setAppURL(productObj.getAppURL());
-								bannerProCarouselElementWsDTO.setTitle(productObj.getTitle());
-								bannerProCarouselElementWsDTO.setWebURL(productObj.getWebURL());
-								bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-
-
-
-
-								bannerProCarouselList.add(bannerProCarouselElementWsDTO);
 							}
+
 							bannerProductCarouselWsDTO.setAppURL(bannerProComponentModel.getAppURL());
 							bannerProductCarouselWsDTO.setBtnText(bannerProComponentModel.getBtnText());
 							bannerProductCarouselWsDTO.setImageURL(bannerProComponentModel.getImageURL().getUrl());
