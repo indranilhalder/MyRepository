@@ -6834,7 +6834,7 @@ function useWalletForPaymentAjax(){
 				$("#offer_section_responsive_error_msgDiv").css("display","none");
 			}
 
-			if(value.checked && $('input:radio[name=offer_name]:checked').val()) {
+			/*if(value.checked && $('input:radio[name=offer_name]:checked').val()) {
 				var guid = $('#guid').val();
 				var offerId = $('input:radio[name=offer_name]:checked').val();
 				checkVoucherForEGV(guid, offerId);
@@ -6842,12 +6842,25 @@ function useWalletForPaymentAjax(){
 				var guid = $('#guid').val();
 				var offerId = $('input:radio[name=offer_name_more]:checked').val();
 				checkVoucherForEGV(guid, offerId);
+			}*/
+			
+			if(value.checked && !data.responseJSON.bankCheckBox && data.responseJSON.isCartVoucherPresent) {
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
+				
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+	        		document.getElementById("offer_section_responsive_error_msg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+					$("#offer_section_responsive_error_msgDiv").css("display","block");
+	 			} else {
+	        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+	 			}
 			}
 		}
 	});
 }
 
-function checkVoucherForEGV(id, value) {
+/*function checkVoucherForEGV(id, value) {
 	var data= {manuallyselectedvoucher:value,guid:id};
 	
 	$.ajax({
@@ -6875,7 +6888,7 @@ function checkVoucherForEGV(id, value) {
 			}
 		}
 	});
-}
+}*/
 
 ////Function to reCheck Bank Promotion With Cliqcash combination
 //function chooseBankOfferAjaxCall(offerID,radioId){
