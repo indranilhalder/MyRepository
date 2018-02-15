@@ -723,6 +723,11 @@
 		<!-- TPR-6117 -->
 		<property name="maxQuantityAllowed" type="String" />
 		<!--<property name="priceDisclaimerTextJwlry" type="String" /> -->
+		
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="priceValue" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="availableStockCount" type="Integer" />
+		<property name="isOutOfStock" type="Boolean" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -733,6 +738,8 @@
 		<!-- SDI-4197-->
 		<property name="priority" type="int" />
 		<!-- SDI-4197-->
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="charge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.WebSerResponseWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="code" type="String" />
@@ -862,6 +869,8 @@
 		<!-- TPR-3893 ends here -->
 		<!-- TPR-6980 -->
 		<property name="priceDisclaimerTextJwlry" type="String" />
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -891,7 +900,7 @@
 
 
 
-		<!-- PotentialPromotions -->
+		<!-- PotentialPromotions -->		
 	</bean>
 	<!--End of Get Cart details -->
 	<!-- Registration Mobile web service -->
@@ -3761,5 +3770,17 @@
 	
 	
 	<!-- added for pdp new ui end -->
+	
+	<!-- added for get user cart details api -->
+	<bean class="com.tisl.mpl.wsdto.PriceWsPwaDTO">
+		<property name="mrpPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="sellingPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="bagTotal"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="paybleAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
 	
 </beans>

@@ -4308,6 +4308,81 @@ public class CartsController extends BaseCommerceController
 
 
 	/**
+	 * Returns cart entries for mobile for pwa:NU-46.
+	 *
+	 * @PathVariable cartId
+	 * @PathVariable userId
+	 * @param fields
+	 * @param isPwa
+	 * @return CartDataDetailsWsDTO
+	 */
+	@RequestMapping(value = "/{cartId}/cartDetails", params = "isPwa", method = RequestMethod.GET)
+	@ResponseBody
+	public CartDataDetailsWsDTO getCartDetailsPwa(@PathVariable final String cartId,
+			@RequestParam(required = false) final String pincode,
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false) final String channel, @RequestParam(required = false) final boolean isPwa)
+	{
+		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
+		try
+		{
+			if (null != cartId)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("************ get cart details mobile web service *********" + cartId);
+				}
+				cartDataDetails = mplCartWebService.getCartDetailsPwa(cartId, pincode, channel);
+				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				cartDataDetails.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setErrorCode(e.getErrorCode());
+			}
+			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorCode() && e.getErrorCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.B9038))
+			{
+				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			if (null != e.getErrorCode())
+			{
+				cartDataDetails.setErrorCode(e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				cartDataDetails.setError(e.getErrorMessage());
+			}
+
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			cartDataDetails.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			cartDataDetails.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return cartDataDetails;
+	}
+
+
+	/**
 	 * @return the baseSiteService
 	 */
 	public BaseSiteService getBaseSiteService()
