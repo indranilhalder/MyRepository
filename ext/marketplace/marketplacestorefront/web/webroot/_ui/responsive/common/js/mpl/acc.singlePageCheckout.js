@@ -3688,7 +3688,8 @@ ACC.singlePageCheckout = {
 $(document).ready(function(){
 	
 	var pageType=$("#pageType").val();
-	if(pageType=="multistepcheckoutsummary")
+	var static_host = $("#staticHost").val();
+	if(pageType=="multistepcheckoutsummary" && static_host.indexOf('lux') < 0)
 	{
 		//Updating need help number ACC.singlePageCheckout.needHelpContactNumber is set in 'needhelpcomponent.jsp' file.
 		var needHelpNumber=ACC.singlePageCheckout.needHelpContactNumber;
