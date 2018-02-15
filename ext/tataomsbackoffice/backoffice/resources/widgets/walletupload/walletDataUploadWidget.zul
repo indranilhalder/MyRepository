@@ -22,9 +22,9 @@
 					<textbox id="textbox" placeholder="" disabled="true"/>
 				</div>
 				<div class="walletUploadLineTop">
-				 <button sclass="uploadTxtbox" label="Load Amount" upload="true,maxsize=302400,accept=.csv" id="upload_button"></button> 
-				 <button sclass="cancleTxtbox" label="Cancel Load" upload="true,maxsize=302400,accept=.csv" id="cancle_upload_button"></button> 
-				 <button sclass="activeAndDeactiveTxtbox" label="Activate And Deactivate QC Accounts" upload="true,maxsize=302400,accept=.csv" id="upload_button_for_activate_and_deactivate"></button> 
+				 <button sclass="uploadTxtbox" label="Load Amount" upload="true,native,maxsize=302400,accept=.csv" id="upload_button"></button> 
+				 <button sclass="cancleTxtbox" label="Cancel Load" upload="true,native,maxsize=302400,accept=.csv" id="cancle_upload_button"></button> 
+				 <button sclass="activeAndDeactiveTxtbox" label="Activate And Deactivate QC Accounts" upload="true,native,maxsize=302400,accept=.csv" id="upload_button_for_activate_and_deactivate"></button> 
 				</div>
 			</div>
 		</hbox>
