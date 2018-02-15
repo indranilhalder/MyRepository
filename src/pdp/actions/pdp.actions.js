@@ -88,7 +88,6 @@ export function getProductDescription() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductDescriptionSuccess(resultJson));
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
@@ -164,8 +163,6 @@ export function addProductToWishList(productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
-      // TODO: dispatch a modal here
       dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
@@ -203,7 +200,6 @@ export function removeProductFromWishList(productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(removeProductFromWishListSuccess());
     } catch (e) {
       dispatch(removeProductFromWishListFailure(e.message));
@@ -240,7 +236,6 @@ export function addProductToBag(products) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(addProductToBagSuccess());
     } catch (e) {
       dispatch(addProductToBagFailure(e.message));
@@ -278,7 +273,6 @@ export function getProductSizeGuide() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductSizeGuideSuccess(resultJson));
     } catch (e) {
       dispatch(getProductSizeGuideFailure(e.message));
@@ -316,7 +310,6 @@ export function getPdpEmi() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getPdpEmiSuccess(resultJson));
     } catch (e) {
       dispatch(getPdpEmiFailure(e.message));
@@ -354,7 +347,6 @@ export function getProductWishList() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductWishListSuccess(resultJson));
     } catch (e) {
       dispatch(getProductWishListFailure(e.message));
@@ -383,18 +375,17 @@ export function getProductSpecificationFailure(error) {
     error
   };
 }
-export function getProductSpecification(ProductId) {
+export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductSpecificationRequest());
     try {
       const result = await api.getMock(
-        `${PRODUCT_SPECIFICATION_PATH}/${ProductId}`
+        `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
       dispatch(getProductSpecificationSuccess(resultJson));
     } catch (e) {
       dispatch(getProductSpecificationFailure(e.message));
