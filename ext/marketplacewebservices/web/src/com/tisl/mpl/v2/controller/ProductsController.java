@@ -888,12 +888,12 @@ public class ProductsController extends BaseController
 	 */
 	@RequestMapping(value = "/{productCode}/sizeGuide", method = RequestMethod.GET)
 	@ResponseBody
-	public SizeGuideWsDTO getSizeGuide(@PathVariable final String productCode)
+	public SizeGuideWsDTO getSizeGuide(@PathVariable final String productCode, @RequestParam(required = false) final Boolean isPwa)
 	{
 		SizeGuideWsDTO sizeGuideDataList = new SizeGuideWsDTO();
 		try
 		{
-			sizeGuideDataList = sizeGuideFacade.getWSProductSizeguide(productCode);
+			sizeGuideDataList = sizeGuideFacade.getWSProductSizeguide(productCode, isPwa);
 			if (!(sizeGuideDataList != null))
 			{
 				throw new RequestParameterException(MarketplacecommerceservicesConstants.B9205);
