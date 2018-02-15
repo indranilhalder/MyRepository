@@ -1,7 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 25px;
   border-bottom: 1px solid #ccc;
 }
 .titleAddress {
@@ -22,36 +21,11 @@
   position: relative;
   padding-right: 70px;
 }
-.confirm {
-  width: 100%;
-  height: auto;
-  font-size: 16px;
-  font-family: semibold;
-  line-height: 25px;
-  margin-bottom: 15px;
-  position: relative;
-  padding-left: 35px;
-}
-.titleContainer {
-  width: 100%;
-  height: auto;
-}
+
 .checkCircle {
   position: absolute;
   width: 25px;
   height: 25px;
   right: 0px;
   top: 0px;
-}
-.circle {
-  width: 25px;
-  height: 25px;
-  background-color: #fff;
-  border: 2px solid black;
-  border-radius: 50%;
-  text-align: center;
-  font-size: 14px;
-  position: absolute;
-  left: 0;
-  top: 0;
 }

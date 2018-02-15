@@ -5,17 +5,11 @@ export default class DeliveryAddressCopy extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.confirm}>
-          {this.props.confirmTitle}
-          <div className={styles.circle}> 1</div>
-        </div>
-        <div className={styles.titleContainer}>
-          <div className={styles.titleAddress}>{this.props.addressTitle}</div>
-          <div className={styles.titleDescription}>
-            {this.props.addressDescription}
-            <div className={styles.checkCircle}>
-              <CheckBox selected={this.props.selected} />
-            </div>
+        <div className={styles.titleAddress}>{this.props.addressTitle}</div>
+        <div className={styles.titleDescription}>
+          {this.props.addressDescription}
+          <div className={styles.checkCircle}>
+            <CheckBox selected={this.props.selected} />
           </div>
         </div>
       </div>
