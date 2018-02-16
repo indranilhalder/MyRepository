@@ -3,16 +3,16 @@ import Grid from "../../general/components/Grid";
 import ExperienceRate from "./ExperienceRate";
 import PropTypes from "prop-types";
 import styles from "./ExperienceRateGrid.css";
-import ExperienceRatingone from "./bad.svg";
-import ExperienceRatingTwo from "./Bad_Red.svg";
-import ExperienceRatingThree from "./Ok.svg";
-import ExperienceRatingFour from "./Good_Red.svg";
-import ExperienceRatingFive from "./Review.svg";
-import ExperienceRatingSix from "./Review_Red.svg";
-import ExperienceRatingSaven from "./good.svg";
-import ExperienceRatingEight from "./Ok_red.svg";
-import ExperienceRatingNine from "./love_Red.svg";
-import ExperienceRatingTen from "./love.svg";
+import ExperienceRatingone from "./img/bad.svg";
+import ExperienceRatingTwo from "./img/Bad_Red.svg";
+import ExperienceRatingThree from "./img/Ok.svg";
+import ExperienceRatingFour from "./img/Good_Red.svg";
+import ExperienceRatingFive from "./img/Review.svg";
+import ExperienceRatingSix from "./img/Review_Red.svg";
+import ExperienceRatingSaven from "./img/good.svg";
+import ExperienceRatingEight from "./img/Ok_red.svg";
+import ExperienceRatingNine from "./img/love_Red.svg";
+import ExperienceRatingTen from "./img/love.svg";
 export default class ExperienceRateGrid extends React.Component {
   render() {
     console.log(this.props.value);
