@@ -6,21 +6,21 @@
   display:inline-block;
   border-bottom:1px solid #ececec
 }
-.productImageHolder{
+.productImag{
   width:20%;
   height:auto;
   position:absolute;
   right:15px;
   top:15px;
 }
-.productDescriptionHolder{
+.productDescription{
   width:100%;
   height:auto;
   display:inline-block;
   vertical-align:middle;
   padding-top: 10px;
 }
-.descriptionInformation{
+.informationText{
   width:100%;
   height:auto;
   color:#000;
