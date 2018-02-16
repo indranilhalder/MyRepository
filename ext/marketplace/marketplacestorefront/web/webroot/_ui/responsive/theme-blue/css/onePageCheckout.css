@@ -1165,6 +1165,7 @@ li#savedCard ~ #newCardCC + li, li#savedCard ~ #newCardCC {
     font-size: 14px;
     float: none;
 }
+.checkout-order-summary ul.totals #CliqCashId span {font-size: 14px; color: #000;}
 #chckoutadrs .proceed-button, .cart.wrapper .button.proceed-button, 
 #selectDeliveryMethodForm .button#deliveryMethodSubmitUp, #deliveryAddressSubmitUp{
     bottom: 7.2px;
@@ -4333,6 +4334,13 @@ div.radio {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.cart.wrapper.checkout-payment .card-sec .card-num .card_image {
+    float: left;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    height: 35px;
+    width: 42px;
+}
 .cart.wrapper.checkout-payment .card-sec .card-num .visa {
     margin-right: 8px;
 }
@@ -5392,6 +5400,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-top: none;
     border-bottom: solid 1px #e8e8e8;
 }
+.cart.wrapper.checkout-payment .blocks {
+    padding: 0px 16px 63px 16px;
+}
 .cart.wrapper.checkout-payment .blocks h3 {
     display: none;
 }
@@ -5439,6 +5450,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     z-index: 99;
     text-transform: none;
     visibility: visible;
+    font-weight: normal;
+    margin: 0;
 }
 .totals.outstanding-totalss {
     padding: 18px 8px !important;
@@ -6214,3 +6227,9 @@ span#offer_section_responsive_error_msg {
 #paymentoffersPopup .offerui li {
 	height: 300px;
 }
+
+
+/*Total Label Css*/
+#totalPayableLabel, #totalPayableLabelBottom {font-weight: 500;}
+.cliqCashInfoSection {display: table;}
+

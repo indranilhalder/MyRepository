@@ -532,9 +532,9 @@ public class SalesOrderXMLUtility
 
 
 								double total = 0;
-								if (apporationWalllet.getCardAmount() != null)
+								if (apporationWalllet.getQcApportionValue() != null)
 								{
-									total = Double.parseDouble(apporationWalllet.getCardAmount());
+									total = Double.parseDouble(apporationWalllet.getQcApportionValue());
 								}
 								if(StringUtils.isNotBlank(apporationWalllet.getBucketType())){
 									merchantInfoXMlData.setBucketId(apporationWalllet.getBucketType());
@@ -563,10 +563,9 @@ public class SalesOrderXMLUtility
 								merchantInfoXMlData.setBucketId("");
 								//need to be check
 								merchantInfoXMlData.setProductAmount(getDecimalFormateValue(Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
-						
 								merchantInfoXMlData.setExpressDelCharge(getDecimalFormateValue(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue())));
 								merchantInfoXMlData.setScheduleDelCharge(getDecimalFormateValue(Double.parseDouble(paymentInfoModel.getJuspaySchedulingValue())));
-								merchantInfoXMlData.setShipmentCharge(getDecimalFormateValue(Double.parseDouble(paymentInfoModel.getJuspayShippingValue())));
+								merchantInfoXMlData.setShipmentCharge(getDecimalFormateValue(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue())));
 								getMerchantCode(chaildModel, merchantInfoXMlData);
 								merchantInfoList.add(merchantInfoXMlData);
 

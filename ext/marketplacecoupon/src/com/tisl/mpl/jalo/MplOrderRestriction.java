@@ -51,6 +51,8 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		//SDI-5493 Customization
 		final Currency minimumOrderValueCurrency = getCurrency();
 		final Currency currentOrderCurrency = anOrder.getCurrency();
+
+		double currentTotal = 0;
 		final double minimumTotal = minimumOrderValueCurrency.convert(currentOrderCurrency, getTotalAsPrimitive());
 
 		final Set<Restriction> restrictions = getVoucher().getRestrictions();
@@ -189,7 +191,25 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 								: (productVal.doubleValue());
 					}
 				}
+				boolean cliqCashValidation = true;
+				String splitModeInfo = null;
+				if (null != anOrder.getAttribute("splitModeInfo"))
+				{
+					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+				}
 
+				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+				{
+					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+					if (isPositiveAsPrimitive() && cliqCashValidation)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
 				if (currentTotal >= minimumTotal)
 				{
 					checkFlag = true;
@@ -447,6 +467,21 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		}
 
 		return checkFlag;
+	}
+	
+	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder, double currentTotal)
+			throws JaloInvalidParameterException, JaloSecurityException
+	{
+		LOG.debug("Inside Order Retriction checkCliqCashValue");
+		double totalPayableAmount = currentTotal;
+		final Double walletAmount = (Double) anOrder.getAttribute("totalWalletAmount");
+		totalPayableAmount -= null !=walletAmount? walletAmount.doubleValue() :0.0d;
+
+		if (totalPayableAmount >= minimumTotal)
+		{
+			return true;
+		}
+		return false;
 	}
 
 }
