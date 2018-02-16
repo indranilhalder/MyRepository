@@ -8,12 +8,8 @@ export default class ExperienceRate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: false
+      selected: true
     };
-  }
-  onSelectReting() {
-    console.log(this.props.val);
-    this.setState({ selected: !this.state.selected });
   }
   render() {
     let activeIcon = styles.hiddenIcon;
@@ -25,10 +21,7 @@ export default class ExperienceRate extends React.Component {
       <div className={styles.base}>
         <div className={styles.retingIconHolder}>
           <div className={styles.experienceRateingHolder}>
-            <div
-              className={styles.iconHolder}
-              onClick={() => this.onSelectReting()}
-            >
+            <div className={styles.iconHolder} selected={true}>
               <div className={hiddenIconM}>
                 <Icon image={badIcon} size={36} />
               </div>
