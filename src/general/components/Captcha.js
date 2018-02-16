@@ -12,20 +12,17 @@ class Captcha extends Component {
   };
   render() {
     return (
-      <div>
-        <Recaptcha
-          sitekey={Config.reCaptChaSiteKey}
-          callback={this.verifyCallback}
-          locale={LOCALE_ENGLISH}
-          data-theme={THEME}
-        />
-      </div>
+      <Recaptcha
+        sitekey={Config.reCaptChaSiteKey}
+        callback={this.verifyCallback}
+        locale={LOCALE_ENGLISH}
+        data-theme={THEME}
+      />
     );
   }
 }
 
 Captcha.propTypes = {
-  verifyCallback: PropTypes.func,
   getCaptcha: PropTypes.func
 };
 
