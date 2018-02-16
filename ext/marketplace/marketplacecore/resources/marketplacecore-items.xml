@@ -5346,7 +5346,7 @@
 			</itemtype>
 			<itemtype code="HeroBannerElement" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.jalo.cms.components.ContentWidgetElement">
+				jaloclass="com.tisl.mpl.jalo.cms.components.HeroBannerElement">
 				<attributes>
 					<attribute type="java.lang.String" qualifier="title"
 						autocreate="true" generate="true">
