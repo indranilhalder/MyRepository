@@ -2,6 +2,11 @@ import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import { CUSTOMER_ACCESS_TOKEN, FAILURE } from "../../lib/constants";
 
+export const PRODUCT_CART_DETAILS_REQUEST = "PRODUCT_CART_DETAILS_REQUEST";
+export const PRODUCT_CART_DETAILS_SUCCESS = "PRODUCT_CART_DETAILS_SUCCESS";
+export const PRODUCT_CART_DETAILS_FAILURE = "PRODUCT_CART_DETAILS_FAILURE";
+export const PRODUCT_CART_DETAILS_PATH = "cartDetails";
+
 export const PRODUCT_CART_REQUEST = "PRODUCT_CART_REQUEST";
 export const PRODUCT_CART_SUCCESS = "PRODUCT_CART_SUCCESS";
 export const PRODUCT_CART_FAILURE = "PRODUCT_CART_FAILURE";
@@ -31,6 +36,44 @@ export const NET_BANKING_DETAILS_FAILURE = "NET_BANKING_DETAILS_FAILURE";
 export const EMI_BANKING_DETAILS_REQUEST = "EMI_BANKING_DETAILS_REQUEST";
 export const EMI_BANKING_DETAILS_SUCCESS = "EMI_BANKING_DETAILS_SUCCESS";
 export const EMI_BANKING_DETAILS_FAILURE = "EMI_BANKING_DETAILS_FAILURE";
+
+export function cartDetailsRequest() {
+  return {
+    type: PRODUCT_CART_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cartDetailsSuccess(cartDetails) {
+  return {
+    type: PRODUCT_CART_DETAILS_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function cartDetailsFailure(error) {
+  return {
+    type: PRODUCT_CART_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getCartDetails() {
+  return async (dispatch, getState, { api }) => {
+    dispatch(cartDetailsRequest());
+
+    try {
+      const result = await api.getMock(PRODUCT_CART_DETAILS_PATH);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(cartDetailsSuccess(resultJson));
+    } catch (e) {
+      dispatch(cartDetailsFailure(e.message));
+    }
+  };
+}
 
 export function userCartRequest() {
   return {
@@ -104,7 +147,7 @@ export function getProductCart(code) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductCartRequest());
     try {
-      const result = await api.getUta(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/carts/${code}/cartDetailsCNC?access_token=${
@@ -147,7 +190,7 @@ export function applyCoupon(cartGuide) {
   return async (dispatch, getState, { api }) => {
     dispatch(applyCouponRequest());
     try {
-      const result = await api.getUta(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/carts/applyCoupons?access_token=${
@@ -194,7 +237,7 @@ export function getUserAddress() {
   return async (dispatch, getState, { api }) => {
     dispatch(userAddressRequest());
     try {
-      const result = await api.getUta(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/addresses?channel=mobile&emailId=${
@@ -286,7 +329,7 @@ export function getNetBankDetails() {
   return async (dispatch, getState, { api }) => {
     dispatch(netBankingDetailsRequest());
     try {
-      const result = await api.getUta(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/netbankingDetails?channel=mobile&access_token=${
@@ -331,7 +374,7 @@ export function getEmiBankDetails(cartValues) {
   return async (dispatch, getState, { api }) => {
     dispatch(emiBankingDetailsRequest());
     try {
-      const result = await api.getUta(
+      const result = await api.get(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/emibankingDetails?channel=mobile&cartValue=${

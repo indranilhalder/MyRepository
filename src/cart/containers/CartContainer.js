@@ -5,7 +5,8 @@ import {
   getUserAddress,
   selectDeliveryModes,
   getEmiBankDetails,
-  getNetBankDetails
+  getNetBankDetails,
+  getCartDetails
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -28,6 +29,9 @@ const mapDispatchToProps = dispatch => {
     },
     getEmiBankDetails: cartDetails => {
       dispatch(getEmiBankDetails(cartDetails));
+    },
+    getCartDetails: () => {
+      dispatch(getCartDetails());
     }
   };
 };

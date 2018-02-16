@@ -14,6 +14,26 @@ const cart = (
   action
 ) => {
   switch (action.type) {
+    case cartActions.PRODUCT_CART_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.PRODUCT_CART_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        cartDetails: action.cartDetails,
+        loading: false
+      });
+
+    case cartActions.PRODUCT_CART_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
     case cartActions.USER_CART_REQUEST:
       return Object.assign({}, state, {
         status: action.status,

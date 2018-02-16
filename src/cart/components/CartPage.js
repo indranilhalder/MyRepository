@@ -2,10 +2,9 @@ import React, { Component } from "react";
 
 class CartPage extends Component {
   componentWillMount() {
-    this.props.getUserCart();
-    this.props.getEmiBankDetails();
-    this.props.getNetBankDetails();
+    this.props.getCartDetails();
   }
+
   render() {
     return <div />;
   }

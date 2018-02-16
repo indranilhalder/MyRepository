@@ -1,8 +1,6 @@
 import "isomorphic-fetch";
 export const API_URL_ROOT =
   "https://fierce-bastion-16980.herokuapp.com/marketplacewebservices";
-export const API_URL_ROOT_UTA =
-  "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 
 export async function post(path) {
@@ -73,19 +71,5 @@ export async function putMock(url, payload) {
     headers: {
       access_token: localStorage.getItem("authorizationKey")
     }
-  });
-}
-
-export async function getUta(url) {
-  return await fetch(`${API_URL_ROOT_UTA}/${url}`, {
-    method: "GET",
-    headers: {
-      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
-      "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/json"
-    },
-    withCredentials: true,
-    credentials: "same-origin",
-    mode: "no-cors"
   });
 }
