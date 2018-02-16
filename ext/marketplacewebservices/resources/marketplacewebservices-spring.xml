@@ -334,6 +334,8 @@
 	<property name="solrFacetSearchKeywordDao" ref="solrFacetSearchKeywordDao" />
 	<property name="keywordRedirectSorter" ref="keywordRedirectSorter" />
 	<property name="commonI18NService" ref="commonI18NService" />
+	<property name="customerReviewService" ref="mplCustomerReviewService"/>
+	<property name="customerReviewConverter" ref="customerReviewConverter"/>
 	<property name="redirectHandlers">
 		<util:map key-type="de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType" map-class="java.util.HashMap">
 			<entry key="CONTAINS" value-ref="containsKeywordRedirectHandler" />
