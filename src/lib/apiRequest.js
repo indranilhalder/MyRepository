@@ -1,9 +1,9 @@
 import "isomorphic-fetch";
 export const API_URL_ROOT =
   "https://fierce-bastion-16980.herokuapp.com/marketplacewebservices";
-
+export const API_URL_ROOT_UTA =
+  "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
-export const API_URL_ROOT_MOCK_MY_JSON = "https://api.myjson.com/bins";
 
 export async function post(path) {
   return await fetch(`${API_URL_ROOT}/${path}`, {
@@ -72,6 +72,15 @@ export async function putMock(url, payload) {
   });
 }
 
-export async function getMockFromMyJson(url) {
-  return await fetch(`${API_URL_ROOT_MOCK_MY_JSON}/${url}`, {});
+export async function postUta(path) {
+  return await fetch(`${API_URL_ROOT_UTA}/${path}`, {
+    method: "POST",
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
+  });
+}
+
+export async function getUta(url) {
+  return await fetch(`${API_URL_ROOT_UTA}/${url}`, {});
 }

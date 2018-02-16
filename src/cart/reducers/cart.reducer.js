@@ -4,11 +4,35 @@ const cart = (
     status: null,
     error: null,
     loading: false,
-    cartDetails: null
+    userCart: null,
+    cartDetails: null,
+    deliveryModes: null,
+    userAddress: null,
+    netBankDetails: null,
+    emiBankDetails: null
   },
   action
 ) => {
   switch (action.type) {
+    case cartActions.USER_CART_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.USER_CART_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        userCart: action.userCart,
+        loading: false
+      });
+
+    case cartActions.USER_CART_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
     case cartActions.PRODUCT_CART_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -28,6 +52,106 @@ const cart = (
         error: action.error,
         loading: false
       });
+
+    case cartActions.APPLY_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.APPLY_COUPON_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false
+      });
+
+    case cartActions.APPLY_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case cartActions.SELECT_DELIVERY_MODES_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.SELECT_DELIVERY_MODES_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        deliveryModes: action.deliveryModes,
+        loading: false
+      });
+
+    case cartActions.SELECT_DELIVERY_MODES_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case cartActions.GET_USER_ADDRESS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_USER_ADDRESS_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        userAddress: action.userDeliveryAddress,
+        loading: false
+      });
+
+    case cartActions.GET_USER_ADDRESS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case cartActions.NET_BANKING_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.NET_BANKING_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        netBankDetails: action.netBankDetails,
+        loading: false
+      });
+
+    case cartActions.NET_BANKING_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case cartActions.EMI_BANKING_DETAILS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.EMI_BANKING_DETAILS_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        emiBankDetails: action.emiBankDetails,
+        loading: false
+      });
+
+    case cartActions.EMI_BANKING_DETAILS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
     default:
       return state;
   }
