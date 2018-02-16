@@ -12026,7 +12026,9 @@ function recalculateCart(loadOffer,chooseOfferId,offerradioID) {
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 				if(document.getElementById("outstanding-amount")!=null)
 					document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
-				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+				if(!isEGVOrder){
+					document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+				}
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
 				//TISTRT-1605 //TISBBC-35

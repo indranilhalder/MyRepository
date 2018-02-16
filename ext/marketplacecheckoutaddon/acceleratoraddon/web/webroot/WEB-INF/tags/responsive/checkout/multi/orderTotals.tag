@@ -81,12 +81,14 @@
 	</li> --%>
 	
      
-    <li id="couponApplied" >
-	<button class="remove-coupon-button" onclick="removeAppliedVoucher();"></button>
-		<span class="couponSpan"><spring:theme code="basket.page.totals.coupons"/></span>
-		<span id="couponValue" style="float: right"> </span>
-		<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
-	</li>
+    <c:if test="${isEGVCart ne true}">
+     	<li id="couponApplied" >
+			<button class="remove-coupon-button" onclick="removeAppliedVoucher();"></button>
+			<span class="couponSpan"><spring:theme code="basket.page.totals.coupons"/></span>
+			<span id="couponValue" style="float: right"> </span>
+			<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
+		</li>
+     </c:if>
 	
    <%--  <c:if test="${not empty cartData.deliverySlotCharge}">
     <li class="total" id="edtotal">
