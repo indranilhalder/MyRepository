@@ -2,9 +2,10 @@ import React from "react";
 import Countdown from "react-countdown-now";
 import PropTypes from "prop-types";
 const renderTimer = ({ days, hours, minutes, seconds }) => {
+  const finalHour = days * 24 + parseInt(hours, 10);
   return (
     <span>
-      {days}:{hours}:{minutes}:{seconds}
+      {finalHour}:{minutes}:{seconds}
     </span>
   );
 };
@@ -21,7 +22,9 @@ export default class Counter extends React.Component {
     let minutes = getMinutes * 60000;
     let seconds = new Date(endTime).getSeconds();
     let calculatedSeconds = seconds * 1000;
-    let finalEndDate = finalHour + minutes + dateObj + calculatedSeconds;
+    let finalEndDate = finalHour + dateObj + minutes + calculatedSeconds;
+    console.log(calculatedSeconds);
+
     return (
       <Countdown date={Date.now() + finalEndDate} renderer={renderTimer} />
     );
