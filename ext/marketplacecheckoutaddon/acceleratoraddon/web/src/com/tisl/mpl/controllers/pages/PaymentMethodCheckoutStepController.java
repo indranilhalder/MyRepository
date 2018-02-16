@@ -7521,8 +7521,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("apportionMode", "CliqCash");
 						jsonObject.put("cliqCashAmt", WalletAmt);
 						jsonObject.put("totalCartAmt", totalCartAmt);
+						jsonObject.put("bankCheckBox", false);
 						jsonObject.put("cartCouponCode", cartCouponCode);
-						jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
+						jsonObject.put("isCartVoucherPresent", false);
 						jsonObject.put("totalDiscount", data1.getTotalDiscount().getFormattedValue());
 						cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 						getModelService().save(cart);
@@ -7552,13 +7553,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							{
 								ex.printStackTrace();
 								cart.setCheckForBankVoucher("false");
+								isCartVoucherPresent = false;
 							}
 							finally
 							{
 								if(!applyStatus){
 									cart.setCheckForBankVoucher("false");
+									isCartVoucherPresent = false;
 								}else{
 									cart.setCheckForBankVoucher("true");
+									isCartVoucherPresent = true;
 								}
 								
 								VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values

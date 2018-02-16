@@ -6658,7 +6658,7 @@ function useWalletForPaymentAjax(){
 
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
-				$(".cliqCashApplyAlert").text('CLiQ Cash applied successfully. EMI and Cash on Delivery are not available by using CliQ Cash.');
+				$(".cliqCashApplyAlert").text('CLiQ Cash applied successfully. EMI and Cash on Delivery are not available while using CLiQ Cash.');
 				$(".cliqCashApplyAlert").show();
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
@@ -6753,7 +6753,7 @@ function useWalletForPaymentAjax(){
 					}
 					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+data.juspayAmt;
 
-					if(data.totalDiscount !=0 && data.bankCheckBox === true){
+					if(data.totalDiscount !=0){
 						document.getElementById('promotion').innerHTML ="";
 						document.getElementById('promotion').innerHTML = data.totalDiscount;
 					}
@@ -6827,6 +6827,22 @@ function useWalletForPaymentAjax(){
 			$("#no-click,.loaderDiv").remove();
 		},
 		complete : function(data){
+			if(value.checked && !data.responseJSON.bankCheckBox && !data.responseJSON.isCartVoucherPresent) {
+				if($('input:radio[name=offer_name]:checked').val() || $('input:radio[name=offer_name_more]:checked').val()) {
+					if(ACC.singlePageCheckout.getIsResponsive()) {
+		        		document.getElementById("offer_section_responsive_error_msg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+						$("#offer_section_responsive_error_msgDiv").css("display","block");
+		 			} else {
+		        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+						$("#juspayconnErrorDiv").css("display","block");
+		 			}
+				}
+				
+				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
+				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
+				
+			}
+			
 			if(value.checked && data.responseJSON.disableJsMode){
 				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
 				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
@@ -6834,29 +6850,6 @@ function useWalletForPaymentAjax(){
 			if(!value.checked && !data.responseJSON.disableJsMode){
 				$("#juspayconnErrorDiv").css("display","none");
 				$("#offer_section_responsive_error_msgDiv").css("display","none");
-			}
-
-			/*if(value.checked && $('input:radio[name=offer_name]:checked').val()) {
-				var guid = $('#guid').val();
-				var offerId = $('input:radio[name=offer_name]:checked').val();
-				checkVoucherForEGV(guid, offerId);
-			} else if(value.checked && $('input:radio[name=offer_name_more]:checked').val()) {
-				var guid = $('#guid').val();
-				var offerId = $('input:radio[name=offer_name_more]:checked').val();
-				checkVoucherForEGV(guid, offerId);
-			}*/
-			
-			if(value.checked && !data.responseJSON.bankCheckBox && data.responseJSON.isCartVoucherPresent) {
-				$('input:radio[name=offer_name]').each(function () { $(this).prop('checked', false); $(this).removeClass("promoapplied"); });
-				$('input:radio[name=offer_name_more]').each(function () { $(this).prop('checked', false);  $(this).removeClass("promoapplied"); });
-				
-				if(ACC.singlePageCheckout.getIsResponsive()) {
-	        		document.getElementById("offer_section_responsive_error_msg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
-					$("#offer_section_responsive_error_msgDiv").css("display","block");
-	 			} else {
-	        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
-					$("#juspayconnErrorDiv").css("display","block");
-	 			}
 			}
 		}
 	});
