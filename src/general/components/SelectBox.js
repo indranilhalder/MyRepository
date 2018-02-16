@@ -10,8 +10,15 @@ export default class SelectBox extends React.Component {
     }
   }
   render() {
+    let className = "SelectBoxBase";
+    if (this.props.borderNone) {
+      className = `${className} borderNone`;
+    }
+    if (this.props.borderBlack) {
+      className = `${className} borderBlack`;
+    }
     return (
-      <div className={styles.selectBox}>
+      <div className={className}>
         <Select
           options={this.props.options}
           value={this.props.selected && this.props.selected}
@@ -32,6 +39,8 @@ SelectBox.propTypes = {
   disabled: PropTypes.bool,
   searchable: PropTypes.bool,
   clearable: PropTypes.bool,
+  borderNone: PropTypes.bool,
+  borderBlack: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

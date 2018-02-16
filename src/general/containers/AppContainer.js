@@ -31,8 +31,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    modalStatus: state.modal.modalDisplayed,
-    user: state.user
+    modalStatus: state.modal.modalDisplayed
   };
 };
 
