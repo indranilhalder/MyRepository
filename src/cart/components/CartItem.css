@@ -50,8 +50,7 @@
   top:0;
   margin:auto
 }
-.dropdown::before{
-  content:"Qty :";
+.dropdownLabel{
   width:auto;
   height:33px;
   color:#000;

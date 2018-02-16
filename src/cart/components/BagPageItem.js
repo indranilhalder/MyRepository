@@ -23,7 +23,7 @@ export default class BagPageItem extends React.Component {
             </div>
           )}
         </div>
-        <div className={styles.productImag}>
+        <div className={styles.productImage}>
           <ProductImage image={this.props.productImage} />
         </div>
       </div>

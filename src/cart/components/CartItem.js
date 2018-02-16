@@ -1,16 +1,16 @@
 import React from "react";
-import styles from "./ShippingProcess.css";
+import styles from "./CartItem.css";
 import BagPageItem from "./BagPageItem.js";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import BagPageFooter from "../../general/components/BagPageFooter";
 import SelectBox from "../../general/components/SelectBox.js";
 import PropTypes from "prop-types";
-export default class ShippingProcess extends React.Component {
+export default class CartItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hide: false,
+      showDelivery: false,
       selectedValue: "",
       label: "See all"
     };
@@ -26,16 +26,19 @@ export default class ShippingProcess extends React.Component {
     }
   }
   onHide() {
-    this.setState({ hide: !this.state.hide });
-    if (!this.state.hide) {
-      this.setState({ label: "Hide" });
-    } else {
-      this.setState({ label: "See all" });
-    }
+    this.setState({ showDelivery: !this.state.showDelivery }, () => {
+      if (this.state.label === "See all") {
+        this.setState({ label: "Hide" });
+      } else {
+        this.setState({ label: "See all" });
+      }
+    });
   }
   handleChange(changedValue) {
     this.setState({ selectedValue: changedValue }, () => {
-      this.setState({ selectedValue: changedValue });
+      if (this.props.onQuantityChange) {
+        this.props.onQuantityChange(this.state.selectedValue);
+      }
     });
   }
   render() {
@@ -63,7 +66,7 @@ export default class ShippingProcess extends React.Component {
             Express : Delivers in <span>{this.props.deliverTime}</span>
           </span>
         </div>
-        {this.state.hide && (
+        {this.state.showDelivery && (
           <div className={styles.shippingStep}>
             {this.props.DeliveryInformation.map((datum, i) => {
               return (
@@ -84,12 +87,15 @@ export default class ShippingProcess extends React.Component {
             onRemove={() => this.onRemove()}
           />
           <div className={styles.dropdown}>
+            <div className={styles.dropdownLabel}>
+              {this.props.dropdownLabel}
+            </div>
             <SelectBox
               borderNone={true}
               placeholder="1"
               options={this.props.option}
               selected={this.state.selectedValue}
-              onChange={Value => this.handleChange(Value)}
+              onChange={val => this.handleChange(val)}
             />
           </div>
         </div>
@@ -97,7 +103,7 @@ export default class ShippingProcess extends React.Component {
     );
   }
 }
-ShippingProcess.propTypes = {
+CartItem.propTypes = {
   onSave: PropTypes.func,
   onRemove: PropTypes.func,
   productImage: PropTypes.string,
@@ -105,6 +111,8 @@ ShippingProcess.propTypes = {
   productDetails: PropTypes.string,
   price: PropTypes.string,
   deliverTime: PropTypes.string,
+  dropdownLabel: PropTypes.string,
+  onQuantityChange: PropTypes.func,
   DeliveryInformation: PropTypes.arrayOf(
     PropTypes.shape({
       type: PropTypes.string,
