@@ -24,7 +24,6 @@ export default class Counter extends React.Component {
     let calculatedSeconds = seconds * 1000;
     let finalEndDate = finalHour + dateObj + minutes + calculatedSeconds;
     console.log(calculatedSeconds);
-
     return (
       <Countdown date={Date.now() + finalEndDate} renderer={renderTimer} />
     );
