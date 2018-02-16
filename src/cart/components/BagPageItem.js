@@ -6,9 +6,6 @@ export default class BagPageItem extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.productImag}>
-          <ProductImage image={this.props.productImage} />
-        </div>
         <div className={styles.productDescription}>
           {this.props.productName && (
             <div className={styles.informationText}>
@@ -25,6 +22,9 @@ export default class BagPageItem extends React.Component {
               {`Rs. ${this.props.price}`}
             </div>
           )}
+        </div>
+        <div className={styles.productImag}>
+          <ProductImage image={this.props.productImage} />
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
 .base{
   width:100%;
   height:auto;
-  padding:15px 80px 20px 15px;
+  padding:15px 15px 15px 15px;
   position:relative;
   display:inline-block;
   border-bottom:1px solid #ececec
@@ -9,16 +9,15 @@
 .productImag{
   width:20%;
   height:auto;
-  position:absolute;
-  right:15px;
-  top:15px;
+  display: inline-block;
+  vertical-align:top;
 }
 .productDescription{
-  width:100%;
+  width:80%;
   height:auto;
   display:inline-block;
-  vertical-align:middle;
   padding-top: 10px;
+  vertical-align:top;
 }
 .informationText{
   width:100%;
