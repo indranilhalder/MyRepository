@@ -8,7 +8,7 @@ export default class IconWithHeader extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.iconHolder}>
-          <Icon image={this.props.image} />
+          <Icon image={this.props.image} size={30} />
         </div>
         <div className={styles.textHolder}>{this.props.header}</div>
         {this.props.children}

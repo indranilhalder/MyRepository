@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+<g id="Symbols">
+	<g id="PLP_x2F_-Product-Tile" transform="translate(-268.000000, -379.000000)">
+		<g id="PLP_x2F_-Save" transform="translate(268.000000, 379.000000)">
+			<g id="Page-1-Copy-3">
+				<path id="Fill-1" d="M25,27.888c-0.417,0-0.845-0.135-1.181-0.401l-6.902-5.458c-0.797-0.63-0.912-1.76-0.252-2.523
+					c0.65-0.765,1.829-0.879,2.625-0.249L25,23.771l5.882-4.662c0.795-0.619,1.982-0.517,2.624,0.249
+					c0.661,0.764,0.555,1.893-0.242,2.523l-7.081,5.605C25.844,27.753,25.417,27.888,25,27.888"/>
+				<path id="Fill-3" d="M25,25.915c-1.03,0-1.873-0.799-1.873-1.793V9.774c0-0.993,0.843-1.793,1.873-1.793
+					c1.029,0,1.863,0.8,1.863,1.793v14.348C26.862,25.115,26.028,25.915,25,25.915"/>
+				<g id="Group-7" transform="translate(0.000000, 0.685818)">
+					<g id="Clip-6">
+					</g>
+					<defs>
+						<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="8" y="-0.507" width="34" height="39.863">
+							<feColorMatrix  type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+						</filter>
+					</defs>
+					<mask maskUnits="userSpaceOnUse" x="8" y="-0.507" width="34" height="39.863" id="mask-2_2_">
+						<g filter="url(#Adobe_OpacityMaskFilter)">
+							<polygon id="path-1_2_" fill="#FFFFFF" points="42,19.42 42,-0.506 8,-0.506 8,19.42 8,39.356 42,39.356 							"/>
+						</g>
+					</mask>
+					<path id="Fill-5" mask="url(#mask-2_2_)" d="M11.734,24.761L25,35.241l13.277-10.48V3.08H11.734V24.761z M25,39.356
+						c-0.417,0-0.845-0.133-1.181-0.401L8.681,26.999C8.25,26.644,8,26.14,8,25.607V1.286c0-0.994,0.833-1.793,1.862-1.793h30.277
+						c1.028,0,1.861,0.8,1.861,1.793v24.321c0,0.533-0.261,1.037-0.692,1.392L26.183,38.955C25.844,39.223,25.417,39.356,25,39.356
+						L25,39.356z"/>
+				</g>
+				<path id="Fill-8" d="M40.138,49.831H10.044c-1.03,0-1.862-0.82-1.862-1.794c0-0.993,0.833-1.793,1.862-1.793h30.094
+					c1.029,0,1.861,0.8,1.861,1.793C41.999,49.011,41.167,49.831,40.138,49.831"/>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>
