@@ -52,7 +52,6 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		final Currency minimumOrderValueCurrency = getCurrency();
 		final Currency currentOrderCurrency = anOrder.getCurrency();
 
-		double currentTotal = 0;
 		final double minimumTotal = minimumOrderValueCurrency.convert(currentOrderCurrency, getTotalAsPrimitive());
 
 		final Set<Restriction> restrictions = getVoucher().getRestrictions();
