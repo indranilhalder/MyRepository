@@ -3873,7 +3873,7 @@
 	<property name="endHexCode" type="java.lang.String"/>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.OffersWidgetCompListWsDTO">
+	<bean class="com.tisl.mpl.wsdto.OffersWidgetElementWsDTO">
 		<property name="webURL" type="java.lang.String"/>
 		<property name="appURL" type="java.lang.String"/>   
 		<property name="imageURL" type="java.lang.String"/>
@@ -3885,10 +3885,177 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.OffersWidgetCompListWsDTO>" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.OffersWidgetElementWsDTO>" />
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.ProductCapsulesCompListWsDTO">
+	<bean class="com.tisl.mpl.wsdto.FlashSalesWsDTO">
+	<property name="type" type="java.lang.String" />
+	<property name="title" type="java.lang.String"/>
+	<property name="description" type="java.lang.String"/>
+	<property name="backgroundHexCode" type="java.lang.String"/>
+	<property name="backgroundImageURL" type="java.lang.String"/>
+	<property name="startDate" type="java.util.Date"/>
+	<property name="endDate" type="java.util.Date"/>
+	<property name="btnText" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/> 
+	<property name="offers"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.FlashSalesOffersWsDTO>" />
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.FlashSalesElementWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.FlashSalesOffersWsDTO">
+	<property name="title" type="java.lang.String"/>
+	<property name="description" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/> 
+	<property name="imageURL" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.FlashSalesElementWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="webURL" type="String"/>
+	<property name="appURL" type="String"/>
+	<property name="imageURL" type="String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.FlashSalesMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.FlashSalesDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.FlashSalesMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.FlashSalesDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeOffersWsDTO">
+	<property name="type" type="java.lang.String" />
+	<property name="title" type="java.lang.String"/>
+	<property name="backgroundHexCode" type="java.lang.String"/>
+	<property name="backgroundImageURL" type="java.lang.String"/>
+	<property name="btnText" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/> 
+	<property name="offers"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeOffersCompOfferWsDTO>" />
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeOffersElementWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeOffersCompOfferWsDTO">
+	<property name="title" type="java.lang.String"/>
+	<property name="description" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/> 
+	<property name="imageURL" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeOffersElementWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="imageURL" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.ThemeOffersMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.ThemeOffersDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeOffersMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeOffersDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.videoProductCarouselWsDTO">
+	<property name="type" type="java.lang.String" />
+	<property name="title" type="java.lang.String"/>
+	<property name="description" type="java.lang.String"/>
+	<property name="imageURL" type="java.lang.String"/>
+	<property name="btnText" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/> 
+	<property name="videoURL" type="java.lang.String"/> 
+	<property name="brandLogo" type="java.lang.String"/> 
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.VideoProductCarElementWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.VideoProductCarElementWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="imageURL" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.VideoProductCarMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.VideoProductCarDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.VideoProductCarMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.VideoProductCarDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeProductWidgetWsDTO">
+	<property name="type" type="java.lang.String" />
+	<property name="title" type="java.lang.String"/>
+	<property name="btnText" type="java.lang.String"/>
+	<property name="backgroundImageURL" type="java.lang.String"/>
+	<property name="brandLogo" type="java.lang.String"/> 
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeProWidElementWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeProWidElementWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="imageURL" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.ThemeProWidMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.ThemeProWidDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeProWidMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ThemeProWidDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO">
 		<property name="webURL" type="java.lang.String"/>
 		<property name="appURL" type="java.lang.String"/>   
 		<property name="imageURL" type="java.lang.String"/>
@@ -3902,7 +4069,7 @@
 	<property name="webURL" type="java.lang.String"/>
 	<property name="appURL" type="java.lang.String"/>
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesCompListWsDTO>" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO>" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.BannerSeparatorWsDTO">
@@ -3914,6 +4081,42 @@
 	<property name="endHexCode" type="java.lang.String"/>
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProCarWsDTO">
+	<property name="type" type="java.lang.String" />
+	<property name="btnText" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="brandLogo" type="java.lang.String"/>
+	<property name="description" type="java.lang.String"/>
+	<property name="imageURL" type="java.lang.String"/> 
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.AutomatedBrandProCarEleWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProCarEleWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="imageURL" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.AutoBrandProCarEleMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.AutoBrandProCarEleDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.AutoBrandProCarEleMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.AutoBrandProCarEleDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.CuratedListingStripWsDTO">
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
@@ -3922,7 +4125,41 @@
 	<property name="startHexCode" type="java.lang.String"/>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.MonoBLPBannerCompListWsDTO">
+	<bean class="com.tisl.mpl.wsdto.CuratedProductsWidgetWsDTO">
+	<property name="type" type="java.lang.String" />
+	<property name="title" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="btnText" type="java.lang.String"/>
+	<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CuratedProWidgetElementWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CuratedProWidgetElementWsDTO">
+	<property name="prdId" type="String"/>
+	<property name="title" type="String"/>
+	<property name="imageURL" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
+	<property name="appURL" type="java.lang.String"/>
+	<property name="mrpPrice" type="com.tisl.mpl.wsdto.CuratedProWidgetEleMRPPriceWsDTO"/>
+	<property name="discountedPrice" type="com.tisl.mpl.wsdto.CuratedProWidgetEleDiscountPriceWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CuratedProWidgetEleMRPPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CuratedProWidgetEleDiscountPriceWsDTO">
+	<property name="currencyIso" type="String"/>
+	<property name="doubleValue" type="String"/>
+	<property name="formattedValue" type="String"/>
+	<property name="currencySymbol" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MonoBLPBannerElementWsDTO">
 		<property name="webURL" type="java.lang.String"/>
 		<property name="appURL" type="java.lang.String"/>   
 		<property name="title" type="java.lang.String"/>
@@ -3935,10 +4172,10 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.MonoBLPBannerCompListWsDTO>" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MonoBLPBannerElementWsDTO>" />
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.SubBrandBannerBLPCompListWsDTO">
+	<bean class="com.tisl.mpl.wsdto.SubBrandBannerBLPElementWsDTO">
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="brandLogo" type="java.lang.String"/>   
 		<property name="webURL" type="java.lang.String"/>
@@ -3949,10 +4186,10 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.SubBrandBannerBLPCompListWsDTO>" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.SubBrandBannerBLPElementWsDTO>" />
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.TopCategoriesWidgetCompListWsDTO">
+	<bean class="com.tisl.mpl.wsdto.TopCategoriesWidgetElementWsDTO">
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="title" type="java.lang.String"/>   
 		<property name="webURL" type="java.lang.String"/>
@@ -3963,10 +4200,10 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.TopCategoriesWidgetCompListWsDTO>" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.TopCategoriesWidgetElementWsDTO>" />
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.SmartFilterWidgetCompListWsDTO">
+	<bean class="com.tisl.mpl.wsdto.SmartFilterWidgetElementWsDTO">
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="title" type="java.lang.String"/>   
 		<property name="webURL" type="java.lang.String"/>
@@ -3978,7 +4215,7 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.SmartFilterWidgetCompListWsDTO>" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.SmartFilterWidgetElementWsDTO>" />
 	</bean>
 	
 	
