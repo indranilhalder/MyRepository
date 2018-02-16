@@ -3859,6 +3859,128 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerProCarouselElementWsDTO>" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.ConnectBannerWsDTO">
+	<property name="type" type="String" />
+	<property name="subType" type="String"/>
+	<property name="title" type="String"/>
+	<property name="description" type="String"/>
+	<property name="btnText" type="String"/>
+	<property name="iconImageURL" type="String"/>
+	<property name="backgroundImageURL" type="String"/>
+	<property name="webURL" type="String"/>
+	<property name="appURL" type="String"/>
+	<property name="startHexCode" type="String"/>
+	<property name="endHexCode" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.OffersWidgetCompListWsDTO">
+		<property name="webURL" type="java.lang.String"/>
+		<property name="appURL" type="java.lang.String"/>   
+		<property name="imageURL" type="java.lang.String"/>
+		<property name="btnText" type="java.lang.String"/>
+		<property name="discountText" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.OffersWidgetWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.OffersWidgetCompListWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ProductCapsulesCompListWsDTO">
+		<property name="webURL" type="java.lang.String"/>
+		<property name="appURL" type="java.lang.String"/>   
+		<property name="imageURL" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ProductCapsulesWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+	<property name="description" type="String"/>
+	<property name="btnText" type="String"/>
+	<property name="webURL" type="String"/>
+	<property name="appURL" type="String"/>
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesCompListWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BannerSeparatorWsDTO">
+	<property name="type" type="String" />
+	<property name="iconImageURL" type="String"/>
+	<property name="title" type="String"/>
+	<property name="description" type="String"/>
+	<property name="startHexCode" type="String"/>
+	<property name="endHexCode" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CuratedListingStripWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+	<property name="webURL" type="String"/>
+	<property name="appURL" type="String"/>
+	<property name="startHexCode" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MonoBLPBannerCompListWsDTO">
+		<property name="webURL" type="java.lang.String"/>
+		<property name="appURL" type="java.lang.String"/>   
+		<property name="title" type="java.lang.String"/>
+		<property name="btnText" type="java.lang.String"/>
+		<property name="imageURL" type="java.lang.String"/>
+		<property name="hexCode" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MonoBLPBannerWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.MonoBLPBannerCompListWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.SubBrandBannerBLPCompListWsDTO">
+		<property name="imageURL" type="java.lang.String"/>
+		<property name="brandLogo" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/>
+		<property name="appURL" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.SubBrandBannerBLPWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.SubBrandBannerBLPCompListWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.TopCategoriesWidgetCompListWsDTO">
+		<property name="imageURL" type="java.lang.String"/>
+		<property name="title" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/>
+		<property name="appURL" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.TopCategoriesWidgetWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.TopCategoriesWidgetCompListWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.SmartFilterWidgetCompListWsDTO">
+		<property name="imageURL" type="java.lang.String"/>
+		<property name="title" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/>
+		<property name="appURL" type="java.lang.String"/>
+		<property name="description" type="java.lang.String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.SmartFilterWidgetWsDTO">
+	<property name="type" type="String" />
+	<property name="title" type="String"/>
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.SmartFilterWidgetCompListWsDTO>" />
+	</bean>
+	
 	
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseListWsDTO">
 		<property name="Components"
