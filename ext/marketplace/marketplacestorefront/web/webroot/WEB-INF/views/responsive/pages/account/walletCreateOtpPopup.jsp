@@ -89,7 +89,7 @@
 								</div>
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
-										<form:input path="qcVerifyMobileNo" class="giftCard_input" id="otpPhonenumber" readonly="${qcMobileDisableStatus}"
+										<form:input path="qcVerifyMobileNo" class="giftCard_input" onkeypress="return isNumber(event)" id="otpPhonenumber" readonly="${qcMobileDisableStatus}"
 									value="${walletForm.qcVerifyMobileNo}" placeholder="Mobile Number"
 									maxlength="10" />
 									<div class="input-group-btn">
