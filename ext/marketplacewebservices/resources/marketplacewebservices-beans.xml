@@ -368,6 +368,7 @@
 		<property name="mobileNumber" type="String" />
 		<property name="nickName" type="String" />
 		<property name="InvitationDetails" type="com.tisl.mpl.data.InvitationDetails" />
+		<property name="fav_ProductCount" type="int" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyMobileWsDTO"

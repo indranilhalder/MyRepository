@@ -11394,6 +11394,7 @@ public class UsersController extends BaseCommerceController
 		final GetCustomerDetailDto customer = new GetCustomerDetailDto();
 		//	MplCustomerProfileData customerData = new MplCustomerProfileData();
 		CustomerModel customerData = new CustomerModel();
+		int fav_ProductCount = 0;
 		if (null == emailid && StringUtils.isEmpty(emailid))
 		{
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
@@ -11445,6 +11446,34 @@ public class UsersController extends BaseCommerceController
 					}
 					customer.setInvitationDetails(invite);
 					customer.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					final List<Wishlist2Model> wishlistForCustomer = wishlistFacade.getAllWishlists();
+					if (CollectionUtils.isNotEmpty(wishlistForCustomer))
+					{
+						for (final Wishlist2Model w : wishlistForCustomer)
+						{
+
+							if (CollectionUtils.isNotEmpty(w.getEntries()))
+							{
+
+								for (final Wishlist2EntryModel entry : w.getEntries())
+
+								{
+									final boolean flag = entry.getIsDeleted().booleanValue();
+									if (!flag)
+									{
+										fav_ProductCount++;
+									}
+								}
+							}
+						}
+						customer.setFav_ProductCount(fav_ProductCount);
+					}
+
+					else if (CollectionUtils.isEmpty(wishlistForCustomer))
+					{
+						fav_ProductCount = 0;
+						customer.setFav_ProductCount(fav_ProductCount);
+					}
 				}
 				else
 				{
