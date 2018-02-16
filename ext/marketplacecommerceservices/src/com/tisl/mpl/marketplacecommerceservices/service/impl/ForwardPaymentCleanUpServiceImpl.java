@@ -159,13 +159,13 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 									refundEntry.setRefundType(FPCRefundType.DUPLICATE_PAYMENT);
 									refundEntry.setIsExpired(Boolean.FALSE);
 									modelService.save(refundEntry);
-									LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+									LOG.debug(MarketplacecommerceservicesConstants.REFUNDCREATEDFORAUDIT + paymentAudit.getAuditId());
 								}
 							}
 						}
 						catch (final Exception e)
 						{
-							LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
+							LOG.error(MarketplacecommerceservicesConstants.ERRORCREATINGREFUNDENTRYFORAUDIT + paymentAudit.getAuditId());
 							LOG.error(e.getMessage(), e);
 						}
 					}
@@ -218,11 +218,11 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 									refundEntry.setRefundType(FPCRefundType.PAYMENT_TIMEOUT);
 									refundEntry.setIsExpired(Boolean.FALSE);
 									modelService.save(refundEntry);
-									LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+									LOG.debug(MarketplacecommerceservicesConstants.REFUNDCREATEDFORAUDIT + paymentAudit.getAuditId());
 								}
 								else
 								{
-									LOG.error("Refund entry already exists for audit :" + paymentAudit.getAuditId());
+									LOG.error(MarketplacecommerceservicesConstants.REFUNDENTRYEXISTSFORAUDIT + paymentAudit.getAuditId());
 								}
 							}
 							else if (orderStatus.equals(OrderStatus.PAYMENT_FAILED))
@@ -238,18 +238,18 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 									refundEntry.setRefundType(FPCRefundType.PAYMENT_FAILED);
 									refundEntry.setIsExpired(Boolean.FALSE);
 									modelService.save(refundEntry);
-									LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+									LOG.debug(MarketplacecommerceservicesConstants.REFUNDCREATEDFORAUDIT + paymentAudit.getAuditId());
 								}
 								else
 								{
-									LOG.error("Refund entry already exists for audit :" + paymentAudit.getAuditId());
+									LOG.error(MarketplacecommerceservicesConstants.REFUNDENTRYEXISTSFORAUDIT + paymentAudit.getAuditId());
 								}
 							}
 						}
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
+						LOG.error(MarketplacecommerceservicesConstants.ERRORCREATINGREFUNDENTRYFORAUDIT + paymentAudit.getAuditId());
 						LOG.error(e.getMessage(), e);
 					}
 				}
@@ -284,17 +284,17 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 								refundEntry.setRefundType(FPCRefundType.RMS_VERIFICATION_FAILED);
 								refundEntry.setIsExpired(Boolean.FALSE);
 								modelService.save(refundEntry);
-								LOG.debug("RefundEntry created for the audit :" + paymentAudit.getAuditId());
+								LOG.debug(MarketplacecommerceservicesConstants.REFUNDCREATEDFORAUDIT + paymentAudit.getAuditId());
 							}
 							else
 							{
-								LOG.error("Refund entry already exists for audit :" + paymentAudit.getAuditId());
+								LOG.error(MarketplacecommerceservicesConstants.REFUNDENTRYEXISTSFORAUDIT + paymentAudit.getAuditId());
 							}
 						}
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Error while creating refund entry for audit: " + paymentAudit.getAuditId());
+						LOG.error(MarketplacecommerceservicesConstants.ERRORCREATINGREFUNDENTRYFORAUDIT + paymentAudit.getAuditId());
 						LOG.error(e.getMessage(), e);
 					}
 				}
@@ -317,16 +317,16 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 				refundEntry.setRefundType(FPCRefundType.ORDER_NOT_GENERATED);
 				refundEntry.setIsExpired(Boolean.FALSE);
 				modelService.save(refundEntry);
-				LOG.debug("RefundEntry created for the audit :" + auditModel.getAuditId());
+				LOG.debug(MarketplacecommerceservicesConstants.REFUNDCREATEDFORAUDIT + auditModel.getAuditId());
 			}
 			else
 			{
-				LOG.error("Refund entry already exists for audit :" + auditModel.getAuditId());
+				LOG.error(MarketplacecommerceservicesConstants.REFUNDENTRYEXISTSFORAUDIT + auditModel.getAuditId());
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error while creating refund entry for audit: " + auditModel.getAuditId());
+			LOG.error(MarketplacecommerceservicesConstants.ERRORCREATINGREFUNDENTRYFORAUDIT + auditModel.getAuditId());
 			LOG.error(e.getMessage(), e);
 		}
 	}
@@ -604,14 +604,17 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 	private boolean refundEntryExists(final String auditId)
 	{
 		final FPCRefundEntryModel refundEntry = forwardPaymentCleanUpDao.fetchRefundEntryForAuditId(auditId);
-		if (null != refundEntry)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		//		if (null != refundEntry)
+		//		{
+		//			return true;
+		//		}
+		//		else
+		//		{
+		//			return false;
+		//		}
+
+		//SONAR FIX
+		return null != refundEntry;
 	}
 
 	private String checkRefundStatus(final GetOrderStatusResponse orderStatusResponse)
@@ -658,7 +661,7 @@ public class ForwardPaymentCleanUpServiceImpl implements ForwardPaymentCleanUpSe
 				if (null != refundResponse.getStatus()
 						&& refundResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
-					if (StringUtils.equals(refundResponse.getUniqueRequestId(),orderStatusResponse.getOrderId()))
+					if (StringUtils.equals(refundResponse.getUniqueRequestId(), orderStatusResponse.getOrderId()))
 					{
 						return MarketplacecommerceservicesConstants.AUTOMATIC;
 					}
