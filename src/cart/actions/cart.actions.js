@@ -59,7 +59,7 @@ export function getUserCart() {
     dispatch(userCartRequest());
 
     try {
-      const result = await api.postUta(
+      const result = await api.post(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/carts?access_token=${JSON.parse(customerCookie).access_token}`
@@ -68,8 +68,9 @@ export function getUserCart() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(userCartSuccess(resultJson));
+
       dispatch(getProductCart(resultJson.code));
+      dispatch(userCartSuccess(resultJson));
     } catch (e) {
       dispatch(userCartFailure(e.message));
     }
@@ -114,7 +115,6 @@ export function getProductCart(code) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
       dispatch(getProductCartSuccess(resultJson));
     } catch (e) {
       dispatch(getProductCartFailure(e.message));
@@ -240,7 +240,7 @@ export function selectDeliveryModes(deliverModes) {
   return async (dispatch, getState, { api }) => {
     dispatch(selectDeliveryModeRequest());
     try {
-      const result = await api.postUta(
+      const result = await api.post(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/carts/15481123719086096-00652012/selectDeliveryMode?access_token=${
@@ -286,7 +286,7 @@ export function getNetBankDetails() {
   return async (dispatch, getState, { api }) => {
     dispatch(netBankingDetailsRequest());
     try {
-      const result = await api.postUta(
+      const result = await api.getUta(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/netbankingDetails?channel=mobile&access_token=${
@@ -331,7 +331,7 @@ export function getEmiBankDetails(cartValues) {
   return async (dispatch, getState, { api }) => {
     dispatch(emiBankingDetailsRequest());
     try {
-      const result = await api.postUta(
+      const result = await api.getUta(
         `${USER_CART_PATH}/${
           getState().user.user.customerInfo.mobileNumber
         }/emibankingDetails?channel=mobile&cartValue=${

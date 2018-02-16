@@ -15,7 +15,11 @@ export async function post(path) {
 }
 
 export async function get(url) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {});
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
+  });
 }
 
 export async function patch(url, payload) {
@@ -72,15 +76,16 @@ export async function putMock(url, payload) {
   });
 }
 
-export async function postUta(path) {
-  return await fetch(`${API_URL_ROOT_UTA}/${path}`, {
-    method: "POST",
-    headers: {
-      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
-    }
-  });
-}
-
 export async function getUta(url) {
-  return await fetch(`${API_URL_ROOT_UTA}/${url}`, {});
+  return await fetch(`${API_URL_ROOT_UTA}/${url}`, {
+    method: "GET",
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json"
+    },
+    withCredentials: true,
+    credentials: "same-origin",
+    mode: "no-cors"
+  });
 }
