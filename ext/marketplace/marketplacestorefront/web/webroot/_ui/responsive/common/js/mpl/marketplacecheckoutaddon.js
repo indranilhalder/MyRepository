@@ -6656,7 +6656,7 @@ function useWalletForPaymentAjax(){
 
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
-				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully. EMI and Cash on Delivery are not available by using CliQ Cash.');
+				$(".cliqCashApplyAlert").text('CLiQ Cash applied successfully. EMI and Cash on Delivery are not available by using CliQ Cash.');
 				$(".cliqCashApplyAlert").show();
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
@@ -6701,11 +6701,7 @@ function useWalletForPaymentAjax(){
 					document.getElementById('outstanding-amount-mobile').innerHTML = "&#8377;"+0;
 					if(data.totalDiscount !=0){
 						document.getElementById('promotion').innerHTML ="";
-						if((Number(data.totalDiscount) && data.totalDiscount % 1 === 0) || (Number(data.totalDiscount) && data.totalDiscount % 1 !== 0)) {
-							document.getElementById('promotion').innerHTML ="&#8377;"+ data.totalDiscount; 
-						} else {
-							document.getElementById('promotion').innerHTML = data.totalDiscount;
-						}
+						document.getElementById('promotion').innerHTML = data.totalDiscount;
 					}
 				}else{
 
@@ -6757,11 +6753,7 @@ function useWalletForPaymentAjax(){
 
 					if(data.totalDiscount !=0 && data.bankCheckBox === true){
 						document.getElementById('promotion').innerHTML ="";
-						if((Number(data.totalDiscount) && data.totalDiscount % 1 === 0) || (Number(data.totalDiscount) && data.totalDiscount % 1 !== 0)) {
-							document.getElementById('promotion').innerHTML ="&#8377;"+ data.totalDiscount; 
-						} else {
-							document.getElementById('promotion').innerHTML = data.totalDiscount;
-						}
+						document.getElementById('promotion').innerHTML = data.totalDiscount;
 					}
 
 					if(!value.checked){
@@ -6824,11 +6816,7 @@ function useWalletForPaymentAjax(){
 				
 				if(data.totalDiscount !=0){
 					document.getElementById('promotion').innerHTML ="";
-					if((Number(data.totalDiscount) && data.totalDiscount % 1 === 0) || (Number(data.totalDiscount) && data.totalDiscount % 1 !== 0)) {
-						document.getElementById('promotion').innerHTML ="&#8377;"+ data.totalDiscount; 
-					} else {
-						document.getElementById('promotion').innerHTML = data.totalDiscount;
-					}
+					document.getElementById('promotion').innerHTML = data.totalDiscount;
 				}
 			}
 			$("#no-click,.loaderDiv").remove();
