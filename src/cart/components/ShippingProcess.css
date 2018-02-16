@@ -1,0 +1,66 @@
+.base{
+  width:100%;
+  height:auto;
+  background:#fff;
+  display:inline-block;
+  overflow-y: scroll
+}
+.productInformation{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}
+.deliverTimeAndButton{
+  width:100%;
+  height:auto;
+  padding:15px 55px 10px 15px;
+  position:relative;
+  display:inline-block;
+  line-height: 22px;
+  color:#000000;
+  font-size:14px;
+  text-align:left;
+  font-family:regular;
+}
+.hideButton{
+  width:auto;
+  height:22px;
+  position: absolute;
+  right:15px;
+  top:15px;
+}
+.shippingStep{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}
+.footer{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  position: relative;
+  padding-right:110px;
+}
+.dropdown{
+  width:65px;
+  height:33px;
+  position: absolute;
+  right:10px;
+  bottom:0;
+  top:0;
+  margin:auto
+}
+.dropdown::before{
+  content:"Qty :";
+  width:auto;
+  height:33px;
+  color:#000;
+  font-size:14px;
+  line-height:33px;
+  position: absolute;;
+  left:-28px;
+  top:0;
+  font-family:regular;
+
+}
+
