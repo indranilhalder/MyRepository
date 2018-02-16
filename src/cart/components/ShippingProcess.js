@@ -60,7 +60,7 @@ export default class ShippingProcess extends React.Component {
             />
           </div>
           <span>
-            Express : Delivers in <span>{this.props.deliverTime}</span> hours
+            Express : Delivers in <span>{this.props.deliverTime}</span>
           </span>
         </div>
         {this.state.hide && (
@@ -97,3 +97,19 @@ export default class ShippingProcess extends React.Component {
     );
   }
 }
+ShippingProcess.propTypes = {
+  onSave: PropTypes.func,
+  onRemove: PropTypes.func,
+  productImage: PropTypes.string,
+  productName: PropTypes.string,
+  productDetails: PropTypes.string,
+  price: PropTypes.string,
+  deliverTime: PropTypes.string,
+  DeliveryInformation: PropTypes.arrayOf(
+    PropTypes.shape({
+      type: PropTypes.string,
+      header: PropTypes.string,
+      placedTime: PropTypes.string
+    })
+  )
+};
