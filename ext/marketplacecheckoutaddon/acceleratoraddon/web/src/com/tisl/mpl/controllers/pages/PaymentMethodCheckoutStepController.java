@@ -7538,7 +7538,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							// Split Mode with Bank voucher check
 
 							final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
-
 							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
 							cart.setSplitModeInfo("Split");
 							getModelService().save(cart);
@@ -7547,17 +7546,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							try
 							{
 								applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Cart/Bank Voucher
+						
 							}
 							catch (final VoucherOperationException ex)
 							{
 								ex.printStackTrace();
+								cart.setCheckForBankVoucher("false");
 							}
 							finally
 							{
+								if(!applyStatus){
+									cart.setCheckForBankVoucher("false");
+								}else{
+									cart.setCheckForBankVoucher("true");
+								}
+								
 								VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
 								totalCartAmt = cart.getTotalPrice().doubleValue();
 								double juspayTotalAmt2 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 								juspayTotalAmt2 = Double.parseDouble(df.format(juspayTotalAmt2));
+								cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));								
 								getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
 								getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt2);
 								getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
@@ -7571,7 +7579,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								jsonObject.put("bankCheckBox", applyStatus);
 								cart.setSplitModeInfo("Split");
 								jsonObject.put("apportionMode", "Split");
-								cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));
+							//	cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));
 								getModelService().save(cart);
 								getModelService().refresh(cart);
 								return jsonObject;

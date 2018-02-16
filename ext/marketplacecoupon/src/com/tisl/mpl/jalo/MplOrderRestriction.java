@@ -59,21 +59,16 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 							: (productVal.doubleValue());
 				}
 			}
-
 			boolean cliqCashValidation = true;
 			String splitModeInfo = null;
-			boolean checkForBankVoucher = false;
 			if (null != anOrder.getAttribute("splitModeInfo"))
 			{
 				splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
 			}
-			if (null != anOrder.getAttribute("checkForBankVoucher"))
+
+			if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
 			{
-				checkForBankVoucher = Boolean.valueOf((String) anOrder.getAttribute("checkForBankVoucher")).booleanValue();
-			}
-			if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") && checkForBankVoucher)
-			{
-				cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder);
+				cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
 				if (isPositiveAsPrimitive() && cliqCashValidation)
 				{
 					return true;
@@ -89,12 +84,6 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			{
 				return (currentTotal >= minimumTotal);
 			}
-
-			/*
-			 * if (isPositiveAsPrimitive() && cliqCashValidation) { return (currentTotal >= minimumTotal); }
-			 */
-
-
 		}
 		catch (final Exception exception)
 		{
@@ -102,33 +91,19 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		}
 
 		return (currentTotal <= minimumTotal);
-
-
 	}
 
-	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder)
+	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder, double currentTotal)
 			throws JaloInvalidParameterException, JaloSecurityException
 	{
-
 		LOG.debug("Inside Order Retriction checkCliqCashValue");
-		final Double totalPayableAmount = (Double) anOrder.getAttribute("payableNonWalletAmount");
-		Double delCost = Double.valueOf(0.0d);
-		double payableAmtExcludeDelCost = totalPayableAmount.doubleValue();
-		if (null != anOrder.getAttribute("deliveryCost"))
+		double totalPayableAmount = currentTotal;
+		final Double walletAmount = (Double) anOrder.getAttribute("totalWalletAmount");
+		totalPayableAmount -= null !=walletAmount? walletAmount.doubleValue() :0.0d;
+
+		if (totalPayableAmount >= minimumTotal)
 		{
-			delCost = (Double) anOrder.getAttribute("deliveryCost");
-			payableAmtExcludeDelCost -= delCost.doubleValue();
-			if (payableAmtExcludeDelCost > 0 && payableAmtExcludeDelCost >= minimumTotal)
-			{
-				return true;
-			}
-		}
-		else
-		{
-			if (totalPayableAmount.doubleValue() >= minimumTotal)
-			{
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
