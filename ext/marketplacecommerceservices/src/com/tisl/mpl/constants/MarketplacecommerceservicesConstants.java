@@ -2485,7 +2485,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERRORCREATINGREFUNDENTRYFORAUDIT = "Error while creating refund entry for audit: ".intern();
 	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
 	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
-
+	public static final String SPLIT = "split".intern();
 
 	//Report for bulk cancellation
 	/*
