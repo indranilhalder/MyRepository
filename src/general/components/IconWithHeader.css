@@ -2,22 +2,25 @@
   width: 100%;
   height: auto;
   background-color: #ffff;
-  padding: 20px 20px 20px 70px;
+  padding: 15px 15px 15px 70px;
   display: inline-block;
   position: relative;
+  border-bottom: 1px solid #ececec;
 }
 .textHolder {
   width: 100%;
   height: auto;
   font-family: semibold;
   font-size: 14px;
-  line-height: 30px;
+  line-height: 25px;
   display: inline-block;
 }
 .iconHolder {
-  width: 10%;
-  height: auto;
+  width: 30px;
+  height:30px;
   position: absolute;
   left: 20px;
-  top: 20px;
+  top: 0px;
+  bottom:0px;
+  margin:auto;
 }

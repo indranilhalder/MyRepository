@@ -147,6 +147,8 @@ class ProductDescriptionPage extends Component {
                         return value.color;
                       })}
                     updateColour={val => {}}
+                    getProductSpecification={this.props.getProductSpecification}
+                    history={this.props.history}
                   />
                 </div>
               )}
