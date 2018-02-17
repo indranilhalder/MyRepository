@@ -381,6 +381,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//OrderIssues:-  multiple Payment Response from juspay restriction
 
 		//redirecting to previous page for anonymous user
+		
+		CartModel cartModel = null;
 		if (getUserFacade().isAnonymousUser())
 		{
 			return getCheckoutStep().previousStep();
@@ -527,7 +529,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 
-				final CartModel cartModel = getCartService().getSessionCart();
+				  cartModel = getCartService().getSessionCart();
 				//Moved to single method in facade TPR-629
 				getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
 
@@ -618,11 +620,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 			//Condition for Split - START
-			if ("Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+			if (null != orderModel)
 			{
-				model.addAttribute("isSplit", Boolean.TRUE);
-				model.addAttribute("juspayAmount", orderModel.getPayableNonWalletAmount());
-				model.addAttribute("cliqCashAmount", orderModel.getTotalWalletAmount());
+				if ("Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+				{
+					model.addAttribute("isSplit", Boolean.TRUE);
+					model.addAttribute("juspayAmount", orderModel.getPayableNonWalletAmount());
+					model.addAttribute("cliqCashAmount", orderModel.getTotalWalletAmount());
+				}
+			}
+			else
+			{
+				if ("Split".equalsIgnoreCase(cartModel.getSplitModeInfo()))
+				{
+					model.addAttribute("isSplit", Boolean.TRUE);
+					model.addAttribute("juspayAmount", cartModel.getPayableNonWalletAmount());
+					model.addAttribute("cliqCashAmount", cartModel.getTotalWalletAmount());
+				}
 			}
 			//Egv Changes
 			model.addAttribute("isEGVCart", Boolean.FALSE);
