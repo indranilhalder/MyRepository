@@ -1555,10 +1555,18 @@ public class PaymentServicesController extends BaseController
 									LOG.debug(" Paying Amount From QC ");
 									if(null != orderToBeUpdated.getSplitModeInfo() && 
 											orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT) ){
-									double amountDeducted = payAmountThroughWallet(orderToBeUpdated);
-									if( amountDeducted>0.0D) {
+								//	double amountDeducted = payAmountThroughWallet(orderToBeUpdated);
+									double amountDeducted = orderToBeUpdated.getPayableWalletAmount().doubleValue();
+										boolean qcFlag =	payAmountThroughWallet(orderToBeUpdated);
+
+									if( qcFlag && amountDeducted>0.0D) {
 									  updateTransactionDetail.setCliqCashAmountDeducted(Double.valueOf(amountDeducted));
 										updateTransactionDetail.setCliqCashApplied(true);
+									}
+									if(!qcFlag) {
+										updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+										updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+										return updateTransactionDetail;
 									}
 									}
 								}catch (Exception e) {
@@ -1674,11 +1682,10 @@ public class PaymentServicesController extends BaseController
 
 	
 	
-	public double payAmountThroughWallet(OrderModel order)
+	public boolean payAmountThroughWallet(OrderModel order)
 	{
-   
+       boolean qcFlag = true;
 		LOG.info("paying amount from EGV Wallet");
-		double amountDeducted = 0.0D;
 		//final OrderData orderData;
 		//final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
 		QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
@@ -1690,35 +1697,31 @@ public class PaymentServicesController extends BaseController
 			final double WalletAmt = order.getPayableWalletAmount().doubleValue();
 			final double totalAmt = order.getTotalPrice().doubleValue();
 			final double juspayAmount = totalAmt - WalletAmt;
-			amountDeducted = WalletAmt;
 
 			qcResponse = mplPaymentFacade.createQCOrderRequest(order.getGuid(), order,
 					currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
 					qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE, WalletAmt, juspayAmount);
-			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 			{
-				order.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-				modelService.save(order);
-			}
-
-			else if (null == qcResponse || null == qcResponse.getResponseCode())
+				qcFlag = true;
+			}else
 			{
-
-				order.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+				qcFlag = false;
+				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
 				modelService.save(order);
 			}
 
 		}
 		catch (final Exception ex)
 		{
-
+			qcFlag = false;
 			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 			{
 				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 				modelService.save(order);
 			}
 		}
-		return amountDeducted;
+		return qcFlag;
 	}
 	// Buying Of EGV  Changes START 
 	private OrderData getEGVOrderStatus(final String guid,String paymentMode,String juspayOrderID)
