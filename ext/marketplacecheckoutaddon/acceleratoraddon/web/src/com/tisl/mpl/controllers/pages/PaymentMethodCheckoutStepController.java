@@ -4861,13 +4861,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
 				{
-					if(null !=cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
+					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
 					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					}
 					
-					if(null !=cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("EMI")){
+					if(cart.getModeOfPayment().equalsIgnoreCase("EMI")){
 						LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
 						final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -6270,7 +6270,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 				{
-					if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
+					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
 					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -7920,13 +7920,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
-				if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
+				if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
 				LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				
-				if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("EMI")){
+				if(cart.getModeOfPayment().equalsIgnoreCase("EMI")){
 					LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
