@@ -17,6 +17,62 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
+<style>
+
+.close{
+	float: right;
+}
+
+.mobileVerificationModal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.mobileOtp-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 35%;
+}
+.otp-button {
+    border: 1px solid #a9143c;
+    display: inline;
+    background-color: #a9143c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    height: 36px;
+    padding: 10px 20px;}
+   
+.otp-button-profile {
+	min-width: 0 !important;
+}
+
+.otp-resend-section {
+	text-align: center;
+}
+
+.close-profile-otp-popup {float: right;}
+
+@media(max-width: 480px) {
+	.mobileOtp-content {
+		width: 90%;
+	}
+}
+@media(min-width: 481px) {
+	.enter_otp_profile_label {line-height: 40px;}
+}
+</style>
 
 <template:page pageTitle="${pageTitle}">
 	<c:url var="mainUrl" value="/my-account/update-profile"></c:url>
@@ -62,9 +118,11 @@
 					</p>
 					<%-- <form> --%>
 					<fieldset>
-						<form:form action="update-parsonal-detail" method="post"
+						<form:form id="update_personal_details" action="update-parsonal-detail" method="post"
 							commandName="mplCustomerProfileForm"
 							name="mplCustomerProfileForm" onSubmit="return validateForm();">
+							
+							<input type="hidden" id="egvWalletActivvated" value="${isWalletActivated}" />
 							<input type="hidden" name="isLux" value="${param.isLux}" />
 
 							<div class="half quarter titleName">
@@ -256,6 +314,41 @@
 					<a href="<c:url value='/logout'/>" class="blue changePass">SIGN OUT</a>
 					
 				</div>
+				
+				<div class="mobileVerificationModal" id="mobileVerificationOtpPopup">
+				 <span class="accountPopupClose close">&times;</span> 
+					<div class="mobileOtp-content">
+						<div>
+							<span class="glyphicon glyphicon-remove-circle close-profile-otp-popup" onclick="closepop()"></span>
+						</div>
+						<div id="createMobileVerifyPopup">
+							<div class="clearfix">
+								<div class="col-sm-3">
+									<span class="h4 enter_otp_profile_label pull-right">Enter OTP:</span>
+								</div>
+								<div class="col-sm-6">
+									<input type="text" id="profile_number_otp_verify" maxLength="6" class="giftCard_input" onkeypress="isNumberKey(event)" />
+									<span id="profile_otp_error"></span>
+								</div>
+								<div class="col-sm-3">
+									<button type="button" onclick="resendQCOTP()"
+									class="otp-button otp-button-profile">
+									RESEND
+									</button>
+								</div>
+							</div>
+							<br />
+							<hr />
+							<div class="clearfix otp-resend-section">
+								<button type="button" onclick="submitNumberOtp()"
+									class="otp-button otp-button-profile">
+									VERIFY
+									</button>
+							</div>
+						</div>
+					</div>
+			
+				</div>
 			</div>
 		</div>
 	</div>	
@@ -290,6 +383,17 @@
 
 		});
 	   
+		//Allowing only numbers
+		function isNumberKey(evt){
+		    var charCode = (evt.which) ? evt.which : event.keyCode
+		    if (charCode > 31 && (charCode < 48 || charCode > 57))
+		        return false;
+		    return true;
+		}
+		
+		$(".accountPopupClose").on('click', function () {
+			mobileVerificationModal.style.display = "none";
+		});
 	</script>
 </template:page>
 

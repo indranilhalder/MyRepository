@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -487,6 +488,42 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
 				model.addAttribute("checkoutPageName", selectAddress);
+
+				/**
+				 * Wallet Changes
+				 */
+				boolean checkUserWalletStatus = true;
+				
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+				/*if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+						&& !currentCustomer.getIsWalletActivated().booleanValue() && null != currentCustomer.getCustomerWalletDetail())
+				{
+					checkUserWalletStatus = false;
+				}*/
+				if (currentCustomer.getIsWalletActivated() != null)
+				{
+					if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+					{
+						checkUserWalletStatus=true;
+					}
+					else
+					{
+						checkUserWalletStatus=false;
+					}
+				}
+				else
+				{
+					checkUserWalletStatus=false;
+				}
+
+				model.addAttribute("isCustomerWalletActive", checkUserWalletStatus);
+				cartModel.setSplitModeInfo("juspay");
+
+				/**
+				 * Wallet Changes End
+				 */
+
 				if (isResponsive)
 				{
 					model.addAttribute("deviceType", "mobile");
@@ -3815,6 +3852,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		//Getting Payment modes
 		paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 		prepareDataForPage(model);
+
+		getSessionService().setAttribute("disableCODandWAllet", "false");
+
 		model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODES, paymentModeMap);
 		model.addAttribute(MarketplacecheckoutaddonConstants.TRANERRORMSG, "");
 		//timeOutSet(model);
@@ -4178,7 +4218,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
-				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData,false);
 
 
 				//TISSQAUAT-536 fixes
