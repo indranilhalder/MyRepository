@@ -6268,6 +6268,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
 					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 				}
+				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					}
+				}
 				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
