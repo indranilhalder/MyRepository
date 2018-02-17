@@ -4859,7 +4859,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
 
-
+				if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+				{
+					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					}
+					
+					if(cart.getModeOfPayment().equalsIgnoreCase("EMI")){
+						LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
+						final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+						}
+				}
+			
 				//added for CAR:127
 				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 				//added for CAR:127
@@ -7896,6 +7910,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//				LOG.error("Address details entered >>>" + sb.toString());
 			//Address log code moved to facade to handle both web and mobile
 
+			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			{
+				if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+				LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+				
+				if(cart.getModeOfPayment().equalsIgnoreCase("EMI")){
+					LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					}
+			}
+			
 			LOG.debug(" TIS-414  : Checking - onclick of pay now button pincode servicabilty and promotion");
 			if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
 			{
