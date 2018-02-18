@@ -838,6 +838,8 @@ p {margin: 0;}
 	width: 300px; height: 400px; margin: 0px; padding: 0 5px;
 }
 
+.whatToBuyNowText {position: absolute; top: 75%; font-weight: 600; color: #fff; text-align: center; width: 100%;}
+
 .whatToBuyItem:first-child {padding-left: 0;}
 
 .whatToBuyItemImg, .whatToBuyItemImg a {height: inherit;}
