@@ -4873,15 +4873,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
 
-				if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+				if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase("Split"))
 				{
-					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+					if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
 					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					}
 					
-					if(cart.getModeOfPayment().equalsIgnoreCase("EMI")){
+					if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("EMI")){
 						LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
 						final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -6282,14 +6282,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
 					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 				}
-				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-				{
-					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
-					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
-					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-					}
-				}
+//				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+//				{
+//					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+//					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+//					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+//					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+//					}
+//				}
 				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
@@ -7932,15 +7932,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//				LOG.error("Address details entered >>>" + sb.toString());
 			//Address log code moved to facade to handle both web and mobile
 
-			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
-				if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+				if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
 				LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				
-				if(cart.getModeOfPayment().equalsIgnoreCase("EMI")){
+				if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("EMI")){
 					LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
