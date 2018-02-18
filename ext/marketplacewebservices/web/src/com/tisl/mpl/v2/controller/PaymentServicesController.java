@@ -1707,7 +1707,7 @@ public class PaymentServicesController extends BaseController
 			}else
 			{
 				qcFlag = false;
-				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
+				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 				modelService.save(order);
 			}
 
@@ -1715,11 +1715,8 @@ public class PaymentServicesController extends BaseController
 		catch (final Exception ex)
 		{
 			qcFlag = false;
-			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
-			{
-				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+			order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 				modelService.save(order);
-			}
 		}
 		return qcFlag;
 	}
