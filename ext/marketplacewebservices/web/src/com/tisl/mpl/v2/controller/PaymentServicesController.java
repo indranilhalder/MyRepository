@@ -1885,11 +1885,11 @@ public class PaymentServicesController extends BaseController
 			if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
 			{
 				paymentModesData.setIsWalletCreated(true);
-				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
-				{
-					isWalletOtpVerified = true;
-					paymentModesData.setIsWalletOtpVerified(true);
-				}
+			}
+			if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+			{
+				isWalletOtpVerified = true;
+				paymentModesData.setIsWalletOtpVerified(true);
 			}
 			if(!isWalletOtpVerified) {
 				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
@@ -1961,8 +1961,7 @@ public class PaymentServicesController extends BaseController
 						LOG.debug("Getting saved Clish Cash Details");
 						CliqCashWsDto cliqCash = new CliqCashWsDto();
 						TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
-						if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
-								&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
+						if (null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
 						{
 							
 							CustomerWalletDetailResponse responce = mplWalletFacade
