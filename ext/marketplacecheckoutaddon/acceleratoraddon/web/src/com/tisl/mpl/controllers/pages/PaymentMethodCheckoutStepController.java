@@ -381,7 +381,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//OrderIssues:-  multiple Payment Response from juspay restriction
 
 		//redirecting to previous page for anonymous user
-		
+
 		CartModel cartModel = null;
 		if (getUserFacade().isAnonymousUser())
 		{
@@ -529,7 +529,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 
-				  cartModel = getCartService().getSessionCart();
+				cartModel = getCartService().getSessionCart();
 				//Moved to single method in facade TPR-629
 				getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
 
@@ -4876,18 +4876,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase("Split"))
 				{
 					if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
-					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
-					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+						LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+						final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					}
-					
+
 					if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("EMI")){
 						LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
 						final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-						}
+					}
 				}
-			
+
 				//added for CAR:127
 				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 				//added for CAR:127
@@ -6282,14 +6282,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
 					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 				}
-//				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-//				{
-//					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
-//					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
-//					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
-//					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-//					}
-//				}
+				//				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				//				{
+				//					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
+				//					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+				//					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+				//					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				//					}
+				//				}
 				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
@@ -7523,7 +7523,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			totalCartAmt = cart.getTotalPrice().doubleValue();
-			
+
 			final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cart.getDiscounts());
 
 			isCartVoucherPresent = cartCouponObj.getFirst();
@@ -7532,7 +7532,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				cartCouponCode = cartCouponObj.getSecond();
 			}
-			
+
 			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
 				if (null != cart.getTotalWalletAmount())
@@ -7542,12 +7542,51 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
 					}
 
+					// check CliqCash as Payment mode for Marketing Voucher with Payment restriction
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+							getVoucherService().getAppliedVouchers(cart));
+
+					if (CollectionUtils.isNotEmpty(voucherList))
+					{
+						totalCartAmt = cart.getTotalPrice().doubleValue();
+						final Double WalletAmt1 = cart.getTotalWalletAmount();
+
+						if (Double.parseDouble("" + WalletAmt1) >= Double.parseDouble("" + totalCartAmt))
+						{
+							for (final DiscountModel discount : voucherList)
+							{
+								if (discount != null && discount instanceof VoucherModel)//null check added for discount as per IQA review
+								{
+									if (discount instanceof PromotionVoucherModel)
+									{
+										PromotionVoucherModel voucherObj =(PromotionVoucherModel) discount;
+
+										final Set<RestrictionModel> restrictions = voucherObj.getRestrictions();
+										for (final RestrictionModel restriction : restrictions)
+										{
+											if (restriction instanceof PaymentModeRestrictionModel)
+											{
+												//Release the coupon
+												mplCouponFacade.releaseVoucher(voucherObj.getVoucherCode(), cart, null);
+												//Recalculate cart after releasing coupon
+												mplCouponFacade.recalculateCartForCoupon(cart, null);
+												jsonObject.put("errorMessageForVoucher", voucherObj.getVoucherCode()+" Coupon Code is not applicable with only CLiQ Cash as Payment Mode");
+												break;
+											}
+
+										}
+									}
+								}
+							}
+						}
+					}
+
+					// CliqCash as Payment mode
 					totalCartAmt = cart.getTotalPrice().doubleValue();
 					final Double WalletAmt = cart.getTotalWalletAmount();
 
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
 					{
-						// CliqCash as Payment mode
 						VoucherDiscountData data1 = mplCouponFacade.populateCartVoucherData(null, cart, false, true, "");
 						getSessionService().setAttribute("WalletTotal", "" + totalCartAmt);
 						getSessionService().setAttribute("getCliqCashMode", value);
@@ -7560,6 +7599,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("bankCheckBox", false);
 						jsonObject.put("cartCouponCode", cartCouponCode);
 						jsonObject.put("isCartVoucherPresent", false);
+						//jsonObject.put("errorMessageForVoucher", "NA");
 						jsonObject.put("totalDiscount", data1.getTotalDiscount().getFormattedValue());
 						cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 						getModelService().save(cart);
@@ -7583,7 +7623,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							try
 							{
 								applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Cart/Bank Voucher
-						
+
 							}
 							catch (final VoucherOperationException ex)
 							{
@@ -7600,7 +7640,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									cart.setCheckForBankVoucher("true");
 									isCartVoucherPresent = true;
 								}
-								
+
 								VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
 								totalCartAmt = cart.getTotalPrice().doubleValue();
 								double juspayTotalAmt2 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
@@ -7619,7 +7659,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								jsonObject.put("bankCheckBox", applyStatus);
 								cart.setSplitModeInfo("Split");
 								jsonObject.put("apportionMode", "Split");
-							//	cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));
+								//	cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));
 								getModelService().save(cart);
 								getModelService().refresh(cart);
 								return jsonObject;
@@ -7668,14 +7708,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (isCartVoucherPresent.booleanValue())
 				{
-				// De-select CliqCash, payment mode Juspay check for Bank voucher					
+					// De-select CliqCash, payment mode Juspay check for Bank voucher					
 					mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
 					mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Cart/Bank Voucher
 					VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
 					jsonObject.put("totalDiscount", data.getTotalDiscount().getFormattedValue());	
 					jsonObject.put("juspayAmt", data.getTotalPrice().getDoubleValue());
 				}
-				
+
 				return jsonObject;
 			}
 		}
@@ -7935,18 +7975,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
 				if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("COD")){
-				LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
-				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
-				
+
 				if(null != cart.getModeOfPayment() && cart.getModeOfPayment().equalsIgnoreCase("EMI")){
 					LOG.debug("EMI payment is not allwoed if an user selects CLiQCash as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-					}
+				}
 			}
-			
+
 			LOG.debug(" TIS-414  : Checking - onclick of pay now button pincode servicabilty and promotion");
 			if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
 			{
