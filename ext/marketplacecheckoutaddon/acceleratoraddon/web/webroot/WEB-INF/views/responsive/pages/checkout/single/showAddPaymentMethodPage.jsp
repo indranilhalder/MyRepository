@@ -42,7 +42,9 @@
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')"
 		var="walletEnable" />
-	<!-- Added for Wallet -->
+	
+	<div class="checkout-content checkout-payment cart checkout wrapper">
+		<!-- Added for Wallet -->
 	<c:if test="${walletEnable}">
 		<div class="giftCheckoutContainer">
 			<div id="walletContainerId" class="giftCheckoutContainerTable">
@@ -154,8 +156,6 @@
 		<br />&nbsp; <br />
 	</c:if>
 	<!-- End for Wallet -->
-	
-	<div class="checkout-content checkout-payment cart checkout wrapper">
 	  <div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
 				<script>
 				//Moving dom ready code to a function for one page checkout as payment page loads when single page loads hence this call should be made when the user selects payment accordion

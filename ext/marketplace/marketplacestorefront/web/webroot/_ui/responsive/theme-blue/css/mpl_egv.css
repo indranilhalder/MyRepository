@@ -1,10 +1,13 @@
 /* Wallet css*/
 
-.giftCheckoutContainer {
+	.giftCheckoutContainer {
 		border: solid 1px #dddddd;
 		padding: 10px;
 		padding-top: 6px;
+		width: 67%;
 	}
+	
+	.cliqCashApplyAlert {width: 67% !important;}
 	
 	.giftCheckoutContainer p {margin-bottom: 0;}
 	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
@@ -44,6 +47,8 @@
 	@media(max-width: 768px){
 		.cliqCashPlaceOrderBtnMobile {bottom: 7.2px;left: auto;right: 8px !important;width: 50%;height: 33.5px !important;font-weight: normal;background-color: #a5173c;line-height: 1 !important;font-size: 12px !important;position: fixed;z-index: 100; color: white;}
 		.emiTopOrderPlaceButton {display: none !important;}
+		.giftCheckoutContainer {width: 100%;}
+		.cliqCashApplyAlert {width: 100% !important;}
 	}
 	
 	@media(min-width: 768px){
@@ -66,8 +71,10 @@
 	.giftCheckoutContainer button {height: 18px !important;}
 	.giftCheckoutContainer {border-radius: 4px; font-size: 10px; background-color: white; padding: 0;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
-	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important;}
+	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important; float: left;}
     .cliqCashApplyAlert {border-radius: 4px;}
+    .giftCheckoutInfoMiddle .giftCheckoutSectionSize:last-child {padding-right: 0;}
+    .giftCheckoutInfoMiddle {width: 100% !important;}
 	}
 	
 	#paytm_logo_img {width: 100px;}
