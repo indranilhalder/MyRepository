@@ -791,7 +791,7 @@ public class SalesOrderXMLUtility
 	private double getTotalAmount(List<MerchantInfoXMlData> merchantInfoList, double tAmount)
 	{try{
 		for(MerchantInfoXMlData merchantInfoXMlTotal:merchantInfoList){
-			tAmount +=merchantInfoXMlTotal.getScheduleDelCharge()+merchantInfoXMlTotal.getShipmentCharge()+merchantInfoXMlTotal.getExpressDelCharge()+merchantInfoXMlTotal.getProductAmount();	
+			tAmount +=merchantInfoXMlTotal.getProductAmount();	
 		}
 		return tAmount;
 	}catch(Exception exception){
