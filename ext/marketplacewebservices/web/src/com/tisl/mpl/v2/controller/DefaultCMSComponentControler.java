@@ -45,6 +45,7 @@ import com.tisl.mpl.wsdto.ContentWidgetCompWsDTO;
 import com.tisl.mpl.wsdto.ContentWidgetElementWsDTO;
 import com.tisl.mpl.wsdto.HeroBannerCompListWsDTO;
 import com.tisl.mpl.wsdto.HeroBannerCompWsDTO;
+import com.tisl.mpl.wsdto.UICompPageElementWsDTO;
 import com.tisl.mpl.wsdto.UICompPageWiseListWsDTO;
 
 
@@ -76,7 +77,7 @@ public class DefaultCMSComponentControler
 	{
 		final ContentPageModel contentPage = mplCMSPageService.getPageByLabelOrId(pageId);
 		final UICompPageWiseListWsDTO uiCompPageWiseListWsDTO = new UICompPageWiseListWsDTO();
-		final List<Object> uiCompPageWiseList = new ArrayList<Object>();
+		final UICompPageElementWsDTO uiCompPageWiseList = new UICompPageElementWsDTO();
 
 		if (contentPage != null)
 		{
@@ -89,12 +90,18 @@ public class DefaultCMSComponentControler
 				if (null != abstractCMSComponentModelList)
 				{
 
+					final List<HeroBannerCompWsDTO> heroBannerCompList = new ArrayList<HeroBannerCompWsDTO>();
+					final List<BannerProductCarouselWsDTO> bannerProductCarouselList = new ArrayList<BannerProductCarouselWsDTO>();
+					final List<ContentWidgetCompWsDTO> contentWidgetList = new ArrayList<ContentWidgetCompWsDTO>();
+
 					for (final AbstractCMSComponentModel abstractCMSComponentModel : abstractCMSComponentModelList)
 					{
 
 						if (abstractCMSComponentModel instanceof HeroBannerComponentModel)
 						{
 							final HeroBannerCompWsDTO heroBannerCompWsDTO = new HeroBannerCompWsDTO();
+
+
 
 							final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
 
@@ -132,9 +139,10 @@ public class DefaultCMSComponentControler
 								}
 							}
 							heroBannerCompWsDTO.setItems(heroBannerCompListWsDTO);
-							heroBannerCompWsDTO.setType(null != heroBannerCompObj.getType() ? heroBannerCompObj.getType() : "");
-
-							uiCompPageWiseList.add(heroBannerCompWsDTO);
+							heroBannerCompWsDTO.setType(
+									null != heroBannerCompObj.getType() ? heroBannerCompObj.getType() : "HeroBannerComponentModel");
+							heroBannerCompList.add(heroBannerCompWsDTO);
+							uiCompPageWiseList.setHeroBanner(heroBannerCompList);
 						}
 
 						if (abstractCMSComponentModel instanceof ContentWidgetComponentModel)
@@ -174,8 +182,8 @@ public class DefaultCMSComponentControler
 							}
 							contentWidgetCompWsDTO.setItems(contentWidgetElementList);
 							contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
-
-							uiCompPageWiseList.add(contentWidgetCompWsDTO);
+							contentWidgetList.add(contentWidgetCompWsDTO);
+							uiCompPageWiseList.setContentWidget(contentWidgetList);
 						}
 
 						if (abstractCMSComponentModel instanceof BannerProductCarouselComponentModel)
@@ -249,10 +257,9 @@ public class DefaultCMSComponentControler
 							bannerProductCarouselWsDTO.setDescription(bannerProComponentModel.getDescription());
 							bannerProductCarouselWsDTO.setTitle(bannerProComponentModel.getTitle());
 							bannerProductCarouselWsDTO.setWebURL(bannerProComponentModel.getWebURL());
-
-							uiCompPageWiseList.add(bannerProductCarouselWsDTO);
+							bannerProductCarouselList.add(bannerProductCarouselWsDTO);
+							uiCompPageWiseList.setBannerProductCarousel(bannerProductCarouselList);
 						}
-
 					}
 				}
 			}

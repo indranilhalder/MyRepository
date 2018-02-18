@@ -3794,6 +3794,10 @@
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
 	</bean>
 	
+	<!-- added for pdp new ui end -->
+	
+	<!-- Start bean Section for UI/UX default Page -->
+	
 	<bean class="com.tisl.mpl.wsdto.HeroBannerCompListWsDTO">
 		<property name="title" type="java.lang.String"/>
 		<property name="webURL" type="java.lang.String"/>
@@ -4218,13 +4222,20 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.SmartFilterWidgetElementWsDTO>" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
+		<property name="HeroBanner"
+			type="java.util.List&lt;HeroBannerCompWsDTO>"/>
+		<property name="ContentWidget"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ContentWidgetCompWsDTO>"/>
+		<property name="BannerProductCarousel"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerProductCarouselWsDTO>"/>
+	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseListWsDTO">
 		<property name="Components"
-			type="java.util.List&lt;java.lang.Object>" />
+			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
 	</bean>
 	
-	
-	<!-- added for pdp new ui end -->
+	<!-- End  bean Section for UI/UX default Page -->
 	
 </beans>
