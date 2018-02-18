@@ -284,14 +284,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue())
 			{
 				isWalletCreated = true;
+				 responce.setIsWalletCreated(true);
 			}
 			if (null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue())
 			{
 				isWalletOtpVerified = true;
+		   	responce.setIsWalletOtpVerified(true);
 			}
 			 if (isWalletCreated)
 				{
-				 responce.setIsWalletCreated(true);
 					customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail()
 							.getWalletId());
 
@@ -299,6 +300,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 							&& customerWalletDetailData.getResponseCode().intValue() == 0)
 					{
 						responce = getCustomerWalletAmount(customerWalletDetailData);
+						responce.setIsWalletCreated(true);
 						responce.setTotalCliqCashBalance(responce.getTotalCliqCashBalance());
 						responce.setBalanceClearedAsOf(customerWalletDetailData.getApiWebProperties().getDateAtClient());
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
