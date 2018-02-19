@@ -402,8 +402,19 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 							if (null != paymentEntry && null != paymentEntry.getPaymentProvider() && !paymentEntry.getPaymentProvider()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
 							{
-								processJuspayRefund(orderModel, paymentEntry.getRequestId(), true);
-								break;
+								if(paymentEntry.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS)) {
+									double refundAmount = 0.0D;
+
+									if(null != paymentEntry.getPlannedAmount()) {
+										refundAmount = paymentEntry.getPlannedAmount().doubleValue();
+									}
+									if(refundAmount > 0.0D) {
+										processJuspayRefund(orderModel, paymentEntry.getRequestId(), refundAmount);
+										break;
+
+									}
+								}
+								
 							}
 
 						}
@@ -422,28 +433,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 
 					if (paymentSplitMode.trim().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT.trim()))
 					{
-						try
-						{
-							if (null != orderModel.getPaymentTransactions())
-							{
-								for (PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions())
-								{
-									if (null != paymentEntry && null != paymentEntry.getPaymentProvider()
-											&& paymentEntry.getPaymentProvider()
-													.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
-									{
-										processQcRefund(orderModel);
-										break;
-									}
-
-								}
-							}
-
-						}
-						catch (Exception e)
-						{
-							LOG.error("Exception occurred while while Refunding Qc AMount" + e.getMessage());
-						}
+						
 						try
 						{
 							for (PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions())
@@ -452,9 +442,10 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 										&& ( paymentEntry.getPaymentProvider()
 												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())
 												|| paymentEntry.getPaymentProvider()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())))
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH.trim())))
 								{
-									processJuspayRefund(orderModel, paymentEntry.getRequestId(), false);
+									processQcRefund(orderModel);
+
 									break;
 								}
 
@@ -465,6 +456,42 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 						{
 							LOG.error("Exception occurred while while Refunding Juspay AMount" + e.getMessage());
 						}
+						
+						try
+						{
+							if (null != orderModel.getPaymentTransactions())
+							{
+								for (PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions())
+								{
+									if (null != paymentEntry && null != paymentEntry.getPaymentProvider()
+											&& ( !paymentEntry.getPaymentProvider()
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())
+											&& !paymentEntry.getPaymentProvider()
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH.trim())))
+									{
+										if(paymentEntry.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS)) {
+											double refundAmount = 0.0D;
+
+											if(null != paymentEntry.getPlannedAmount()) {
+												refundAmount = paymentEntry.getPlannedAmount().doubleValue();
+											}
+											if(refundAmount > 0.0D) {
+												processJuspayRefund(orderModel, paymentEntry.getRequestId(), refundAmount);
+												break;
+
+											}
+										}
+									}
+
+								}
+							}
+
+						}
+						catch (Exception e)
+						{
+							LOG.error("Exception occurred while while Refunding Qc AMount" + e.getMessage());
+						}
+					
 
 
 					}
@@ -520,6 +547,13 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 							}
 						}
 					
+					}
+				}else {
+					if(null != orderModel.getEntries() && CollectionUtils.isNotEmpty(orderModel.getEntries()))
+					{
+						for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
+							qcRefundService.processQcRefundEntryWise(orderEntry);
+						}
 					}
 				}
 			}catch(Exception e) {
@@ -705,7 +739,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 	/**
 	 * @param orderModel
 	 */
-	private void processJuspayRefund(OrderModel orderModel,String juspayRequestId,boolean isEgvOrder)
+	private void processJuspayRefund(OrderModel orderModel,String juspayRequestId,double totalJuspayRefundAmount)
 	{
 		if (null != orderModel.getGuid())
 		{
@@ -728,19 +762,18 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 				if (null != orderStatusResponse && orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 
 				{
-					double totalJuspayRefundAmount = 0.0D;
-					if(isEgvOrder){
-						totalJuspayRefundAmount = orderModel.getTotalPrice().doubleValue();
-					}else {
-						if(null != orderModel.getChildOrders()) {
-							for (OrderModel childOrder : orderModel.getChildOrders()) {
-								for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
-									totalJuspayRefundAmount += calculateSplitJuspayRefundAmount(orderEntry);
-								}
-							}
-							
-						}
-					}
+//					if(isEgvOrder){
+//						totalJuspayRefundAmount = orderModel.getTotalPrice().doubleValue();
+//					}else {
+//						if(null != orderModel.getChildOrders()) {
+//							for (OrderModel childOrder : orderModel.getChildOrders()) {
+//								for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
+//									totalJuspayRefundAmount += calculateSplitJuspayRefundAmount(orderEntry);
+//								}
+//							}
+//							
+//						}
+//					}
 					
 					
 					
@@ -749,6 +782,10 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 						//Initiating refund
 						final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel, totalJuspayRefundAmount);
 						//Creating cancel order ticket
+						boolean isEgvOrder = false; 
+						if(null != orderModel.getIsEGVCart()){
+							isEgvOrder = orderModel.getIsEGVCart().booleanValue();
+						}
 						if(!isEgvOrder){
 							final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
 							if (ticketstatus)
@@ -765,6 +802,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 							if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
 							{
 								orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
+								
 							}
 							else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("FAILURE"))
 							{
@@ -775,11 +813,14 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 								orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
 								mplCancelOrderTicketImpl.refundMapping(paymentTransactionModel.getCode(), orderModel);
 							}
+
 						}
 						else
 						{
 							orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
 						}
+						orderModel.setStatus(OrderStatus.ORDER_CANCELLED);
+                  modelService.save(orderModel);
 
 					}
 					catch (final Exception e)
