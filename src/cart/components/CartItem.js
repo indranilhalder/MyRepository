@@ -5,6 +5,7 @@ import DeliveryInformation from "../../general/components/DeliveryInformations.j
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 import BagPageFooter from "../../general/components/BagPageFooter";
 import SelectBox from "../../general/components/SelectBox.js";
+
 import PropTypes from "prop-types";
 export default class CartItem extends React.Component {
   constructor(props) {
@@ -52,35 +53,38 @@ export default class CartItem extends React.Component {
             price={this.props.price}
           />
         </div>
-        <div className={styles.deliverTimeAndButton}>
-          <div className={styles.hideButton}>
-            <UnderLinedButton
-              size="14px"
-              fontFamily="regular"
-              color="#000"
-              label={this.state.label}
-              onClick={() => this.onHide()}
-            />
-          </div>
-          <span>
-            Express : Delivers in <span>{this.props.deliverTime}</span>
-          </span>
-        </div>
-        {this.state.showDelivery && (
-          <div className={styles.shippingStep}>
-            {this.props.DeliveryInformation.map((datum, i) => {
-              return (
-                <DeliveryInformation
-                  key={i}
-                  type={datum.type}
-                  header={datum.header}
-                  placedTime={datum.placedTime}
-                  label={datum.label}
-                />
-              );
-            })}
+        {this.props.deliveryInformation && (
+          <div className={styles.deliverTimeAndButton}>
+            <div className={styles.hideButton}>
+              <UnderLinedButton
+                size="14px"
+                fontFamily="regular"
+                color="#000"
+                label={this.state.label}
+                onClick={() => this.onHide()}
+              />
+            </div>
+            <span>
+              Express : <span>{this.props.deliverTime}</span>
+            </span>
           </div>
         )}
+        {this.state.showDelivery &&
+          this.props.deliveryInformation && (
+            <div className={styles.shippingStep}>
+              {this.props.deliveryInformation.map((datum, i) => {
+                return (
+                  <DeliveryInformation
+                    key={i}
+                    type={datum.code}
+                    header={datum.name}
+                    placedTime={datum.desc}
+                    label={datum.desc}
+                  />
+                );
+              })}
+            </div>
+          )}
         <div className={styles.footer}>
           <BagPageFooter
             onSave={() => this.onSave()}
@@ -113,7 +117,7 @@ CartItem.propTypes = {
   deliverTime: PropTypes.string,
   dropdownLabel: PropTypes.string,
   onQuantityChange: PropTypes.func,
-  DeliveryInformation: PropTypes.arrayOf(
+  deliveryInformation: PropTypes.arrayOf(
     PropTypes.shape({
       type: PropTypes.string,
       header: PropTypes.string,
