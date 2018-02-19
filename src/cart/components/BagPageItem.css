@@ -1,0 +1,31 @@
+.base{
+  width:100%;
+  height:auto;
+  padding:15px 15px 15px 15px;
+  position:relative;
+  display:inline-block;
+  border-bottom:1px solid #ececec
+}
+.productImage{
+  width:30%;
+  height:auto;
+  display: inline-block;
+  vertical-align:top;
+}
+.productDescription{
+  width:70%;
+  height:auto;
+  display:inline-block;
+  padding-top: 15px;
+  vertical-align:top;
+}
+.informationText{
+  width:100%;
+  height:auto;
+  color:#000;
+  font-size:14px;
+  line-height:20px;
+  margin-bottom:3px;
+  display:inline-block;
+  font-family:regular;
+}

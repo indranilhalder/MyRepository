@@ -25,22 +25,29 @@ export default class DeliveryInformation extends React.Component {
     return (
       <div className={styles.base}>
         <IconWithHeader image={iconImage} header={this.props.header}>
-          <div className={styles.placeTime}>{this.props.placedTime}</div>
-          <div className={styles.placeTime}>
-            {this.props.deliverText}
-            <span className={styles.text}>{this.props.textHeading}</span>
-          </div>
-          <div className={styles.placeTime}>
-            <span>{this.props.deliveryOptions}</span>
-            <span className={styles.buttonHolder}>
-              <UnderLinedButton
-                label={this.props.label}
-                onClick={() => {
-                  this.handleClick();
-                }}
-              />
-            </span>
-          </div>
+          {this.props.placedTime && (
+            <div className={styles.placeTime}>{this.props.placedTime}</div>
+          )}
+          {this.props.deliverText && (
+            <div className={styles.placeTime}>
+              {this.props.deliverText}
+              <span className={styles.text}>{this.props.textHeading}</span>
+            </div>
+          )}
+          {this.props.deliveryOptions ||
+            (this.props.label && (
+              <div className={styles.placeTime}>
+                <span>{this.props.deliveryOptions}</span>
+                <span className={styles.buttonHolder}>
+                  <UnderLinedButton
+                    label={this.props.label}
+                    onClick={() => {
+                      this.handleClick();
+                    }}
+                  />
+                </span>
+              </div>
+            ))}
         </IconWithHeader>
       </div>
     );

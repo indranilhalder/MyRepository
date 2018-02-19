@@ -1,9 +1,7 @@
 import "isomorphic-fetch";
 export const API_URL_ROOT =
   "https://fierce-bastion-16980.herokuapp.com/marketplacewebservices";
-
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
-export const API_URL_ROOT_MOCK_MY_JSON = "https://api.myjson.com/bins";
 
 export async function post(path) {
   return await fetch(`${API_URL_ROOT}/${path}`, {
@@ -15,7 +13,11 @@ export async function post(path) {
 }
 
 export async function get(url) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {});
+  return await fetch(`${API_URL_ROOT}/${url}`, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
+  });
 }
 
 export async function patch(url, payload) {
@@ -70,8 +72,4 @@ export async function putMock(url, payload) {
       access_token: localStorage.getItem("authorizationKey")
     }
   });
-}
-
-export async function getMockFromMyJson(url) {
-  return await fetch(`${API_URL_ROOT_MOCK_MY_JSON}/${url}`, {});
 }
