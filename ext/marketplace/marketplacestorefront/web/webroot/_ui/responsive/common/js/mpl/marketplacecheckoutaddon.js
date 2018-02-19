@@ -6662,6 +6662,7 @@ function useWalletForPaymentAjax(){
 				$(".cliqCashApplyAlert").show();
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
+				$("#walletContainerId .addNewCard").hide();
 
 				//Changing the Total Label
 				if(document.getElementById('totalPayableLabel')!=null)
@@ -6781,6 +6782,8 @@ function useWalletForPaymentAjax(){
 				}	
 			}			
 			else{
+				
+				$("#walletContainerId .addNewCard").show();
 				// Remove CliqCash Select mode Section
 				globalCliqCashMode = false;
 				//Changing the Total Label

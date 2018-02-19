@@ -19,6 +19,9 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 
+<style>
+	h1, h2, h3, h4, h5, h6 {margin: 0;}
+</style>
 
 <%-- <c:choose><:when test="${walletForm.qcVerifyFirstName not empty}"><c:set var="qcFnameDisable" value="disabled"></c:set></:when>
 									<:otherwise><c:set var="qcFnameDisable" value=""></c:set></:otherwise></c:choose>
@@ -114,7 +117,7 @@
 					<div class="col-md-12">
 						<div class="clearfix">
 							<div class="row">
-									<div class="clearfix col-sm-3 text-right">
+									<div class="clearfix col-sm-3 text-left">
 										<label for="otpValue">Enter OTP</label>
 									</div>
 									<div class="clearfix col-sm-6">
