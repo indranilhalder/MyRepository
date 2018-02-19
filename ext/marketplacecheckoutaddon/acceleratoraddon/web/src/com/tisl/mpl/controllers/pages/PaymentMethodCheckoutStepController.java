@@ -954,6 +954,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//TISPRD-361
 		try
 		{
+			
 			setupAddPaymentPage(model);
 
 			//COD is submitted based on cart or order(after first failure payment) TPR-629
@@ -969,6 +970,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Existing code based on cartModel during first payment try
 				//getting CartModel
 				final CartModel cartModel = cartService.getSessionCart();
+				
+				
+				if (null != cartModel.getSplitModeInfo() && cartModel.getSplitModeInfo().equalsIgnoreCase("Split") || cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					if(null != cartModel.getModeOfPayment() && cartModel.getModeOfPayment().equalsIgnoreCase("COD")){
+						LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
+						final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					}
+				}
+				
 				//getting Cartdata
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 

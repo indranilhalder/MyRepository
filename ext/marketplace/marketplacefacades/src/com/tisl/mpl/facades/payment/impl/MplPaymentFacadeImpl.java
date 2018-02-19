@@ -2198,7 +2198,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData, boolean isSplit)
+	public Map<String, Boolean> getPaymentModes(final String store, final OrderData orderData, final boolean isSplit)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		//Declare variable
@@ -3615,7 +3615,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			qcRedeemRequest.setAmount("" + walletTotal);
 			qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
 			qcRedeemRequest.setNotes("Redeem Wallet Amount " + walletTotal);
-			qcRedeemRequest.setInvoiceNumber(qcOrderId);
+			qcRedeemRequest.setInvoiceNumber(orderToBeUpdated.getCode());
 
 			qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
 
@@ -3704,7 +3704,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 				productprice -= abstractOrderEntryModel.getCartLevelDisc().doubleValue();
 			}
-			if(null != abstractOrderEntryModel.getCartCouponValue() && abstractOrderEntryModel.getCartCouponValue().doubleValue() > 0){
+			if (null != abstractOrderEntryModel.getCartCouponValue()
+					&& abstractOrderEntryModel.getCartCouponValue().doubleValue() > 0)
+			{
 				productprice -= abstractOrderEntryModel.getCartCouponValue().doubleValue();
 			}
 			//			if (null != abstractOrderEntryModel.getCartLevelPercentageDisc()
