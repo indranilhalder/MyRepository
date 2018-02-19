@@ -4,14 +4,23 @@ import Checkout from "./Checkout";
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
+import MDSpinner from "react-md-spinner";
+import { SUCCESS } from "../../lib/constants";
 class CartPage extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.getCartDetails();
   }
 
+  renderLoader = () => {
+    return (
+      <div>
+        <MDSpinner />
+      </div>
+    );
+  };
+
   render() {
-    if (this.props.cart.cartDetails) {
-      console.log(this.props.cart.cartDetails);
+    if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
       return (
         <div className={styles.base}>
@@ -57,7 +66,7 @@ class CartPage extends React.Component {
         </div>
       );
     } else {
-      return null;
+      return this.renderLoader();
     }
   }
 }
