@@ -899,4 +899,46 @@ public class OTPGenericServiceImpl implements OTPGenericService
 		return otp;
 	}
 
+	/**
+	 * NU-51
+	 */
+	@Override
+	public OTPResponseData otpValidationWithoutExpiryTime(final String userIdOrEmail, final String mobileNo,
+			final String enteredOTPNumber, final OTPTypeEnum OTPType)
+	{
+		OTPModel otpModel = null;
+		final OTPResponseData otpResponse = new OTPResponseData();
+		if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
+		{
+			otpModel = otpDao.getOtpWithoutValidation(userIdOrEmail, mobileNo, OTPType);
+			LOG.debug("userIdOrEmail" + userIdOrEmail);
+		}
+		else
+		{
+			otpResponse.setOTPValid(Boolean.TRUE);
+			otpResponse.setInvalidErrorMessage(VALID);
+			return otpResponse;
+		}
+		if (null != otpModel)
+		{
+			if (otpModel.getOTPNumber().equals(enteredOTPNumber))
+			{
+				otpResponse.setOTPValid(Boolean.TRUE);
+				otpResponse.setInvalidErrorMessage(VALID);
+			}
+			else
+			{
+				otpResponse.setOTPValid(Boolean.FALSE);
+				otpResponse.setInvalidErrorMessage(INVALID);
+			}
+		}
+		else
+		{
+			otpResponse.setOTPValid(Boolean.FALSE);
+			otpResponse.setInvalidErrorMessage(INVALID);
+		}
+		return otpResponse;
+	}
+
+
 }

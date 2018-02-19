@@ -2465,4 +2465,6 @@ public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled"
 
 	public static final String SORT = "sort";
 	public static final String BY_RATING = "byRating";
+	public static final String LATESTOTPMOBILEQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPEMAILQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType  order by {creationtime} desc fetch first 1 rows only";
 }
