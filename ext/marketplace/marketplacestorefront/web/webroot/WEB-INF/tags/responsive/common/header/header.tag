@@ -154,7 +154,7 @@
 								
 								<c:if test="${egvUrlEnable}">
 								    <li class=""><a href="/wallet/getcliqcashPage" >
-										<spring:theme code="trackorder.header.cliqcash" text="CliQ Cash"/></a>		
+										<spring:theme code="trackorder.header.cliqcash" text="CLiQ Cash"/></a>		
 							       </li>
 							       <c:set var="myVar" value="/giftCard-" />
 							       <c:set var ="egvProduct"  value="${myVar}${productCode}"/> 
