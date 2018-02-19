@@ -667,7 +667,7 @@
 .showStatementModel {
  display: none;
  position: fixed;
- z-index: 3;
+ z-index: 99999;
  padding-top: 100px;
  left: 0;
  top: 0;
@@ -881,3 +881,65 @@
 	.enter_otp_profile_label {line-height: 40px;}
 }
 /*Account Profile Edit - END*/
+
+/*Account Statement New - START*/
+.orderStatementMainItemHead {
+		padding: 10px;
+	    background-color: #a9133d;
+	    color: #fff;
+	    border: 1px solid #a9133d;
+	}
+	
+	.orderStatementMainItemBody {
+		padding: 10px;
+		border: 1px solid #a9133d;
+	}
+	
+	.orderStatementMainItemBody .totalOrderPrice, .orderStatementMainItemHead .totalOrderPrice {
+		float: right;
+	}
+	
+	.toggleStatementL1Info {
+		background-color: green;
+	    color: #fff;
+	    width: 18px;
+	    text-align: center;
+	    font-weight: 600;
+	    height: 18px;
+	    display: inline-block;
+	    border-radius: 50%;
+	    cursor: pointer;
+	}
+	.toggleStatementL2Info {
+		background-color: green;
+	    color: #fff;
+	    width: 12px;
+	    text-align: center;
+	    font-weight: 600;
+	    height: 12px;
+	    display: inline-block;
+	    border-radius: 50%;
+	    cursor: pointer;
+	}
+	
+	.orderStatementL1Body {
+		padding: 0 10px;
+	}
+	
+	.orderStatementL2Body {
+		padding: 10px 20px;
+	}
+	
+	.orderStatementL1Body > .orderStatChildBody {
+		padding: 5px;
+	}
+	
+	.orderStatementL2Body > p {
+		padding: 5px 30px 5px 5px;
+	}
+	
+	.orderStatementL1Body, .orderStatementL2Body {
+		display: none;
+	}
+	
+/*Account Statement New - END*/
