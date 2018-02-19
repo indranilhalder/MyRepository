@@ -1,8 +1,9 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 12px;
+  padding: 30px 12px;
   background-color: #ffff;
+  border-radius:4px;
 }
 .giftInnerBox {
   width: 100%;

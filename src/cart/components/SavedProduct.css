@@ -1,0 +1,30 @@
+.base{
+  width:100%;
+  height:auto;
+  display: inline-block;
+}
+.buttonHolder{
+  width:100%;
+  height:auto;
+  margin-bottom:25px;
+  display:inline-block;
+  text-align:center;
+}
+.button{
+  width:auto;
+  height:auto;
+  display:inline-block;
+  vertical-align:middle;
+}
+.applyCoupon{
+  width:100%;
+  height:auto;
+  margin-bottom: 20px;
+  display:inline-block;
+}
+.giftCard{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  margin-bottom:20px;
+}

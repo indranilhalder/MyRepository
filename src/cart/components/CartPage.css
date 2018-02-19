@@ -1,0 +1,43 @@
+.base {
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  background: #ececec;
+}
+.cartItem {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.search {
+  composes: cartItem;
+  padding: 20px;
+}
+.content {
+  width: 100%;
+  height: auto;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.offer {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.offerName {
+  font-family: semibold;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  color: #212121;
+}
+.offerText {
+  font-family: regular;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  color: #212121;
+}
