@@ -28,7 +28,6 @@ export default class Counter extends React.Component {
     );
   }
 }
-
 Counter.propTypes = {
   endTime: PropTypes.string
 };
