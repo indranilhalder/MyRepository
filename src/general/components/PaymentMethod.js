@@ -1,15 +1,21 @@
 import React from "react";
 import styles from "./PaymentMethod.css";
 import PropTypes from "prop-types";
-import ManueDetails from "./ManueDetails.js";
+import MenuDetails from "./MenuDetails.js";
+import CreditCard from "./CreditCard.js";
 
+CreditCard;
 export default class PaymentMethod extends React.Component {
   render() {
     const data = this.props.data;
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {
-          return <ManueDetails data={data} key={i} text={datum.title} />;
+          return (
+            <MenuDetails data={data} key={i} text={datum.title}>
+              <CreditCard />
+            </MenuDetails>
+          );
         })}
       </div>
     );

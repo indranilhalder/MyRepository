@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./ManueDetails.css";
+import styles from "./MenuDetails.css";
 import PropTypes from "prop-types";
 import { Collapse } from "react-collapse";
 import { Icon } from "xelpmoc-core";
@@ -12,7 +12,6 @@ export default class ManueDetails extends React.Component {
       isOpen: false
     };
   }
-
   openMenu() {
     this.setState(prevState => ({
       isOpen: !prevState.isOpen

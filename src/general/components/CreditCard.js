@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Input2 from "./Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
 import SelectBox from "./SelectBox.js";
-import informationIcon from "./img/Info.svg";
+import informationIcon from "./img/Info-grey.svg";
 import Button from "../../general/components/Button";
 import CheckBox from "./CheckBox.js";
 export default class CreditCard extends React.Component {
@@ -103,7 +103,6 @@ export default class CreditCard extends React.Component {
               onChange={val => this.onChangeCardNumber(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
-              rightChildSize={33}
             />
           </div>
 
@@ -119,7 +118,6 @@ export default class CreditCard extends React.Component {
               onChange={val => this.onChangeCardName(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
-              rightChildSize={33}
             />
           </div>
           <div className={styles.dropDownHolder}>
@@ -170,7 +168,7 @@ export default class CreditCard extends React.Component {
                     rightChildSize={33}
                     rightChild={
                       <CircleButton
-                        size={35}
+                        size={33}
                         color={"transparent"}
                         icon={<Icon image={informationIcon} size={16} />}
                       />
