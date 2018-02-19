@@ -53,3 +53,8 @@ SavedProduct.propTypes = {
   giftCardHeading: PropTypes.string,
   giftCardLabel: PropTypes.string
 };
+SavedProduct.defaultProps = {
+  cuponHeading: "Have a Coupon ?",
+  giftCardHeading: "Surprise for a special one ?",
+  giftCardLabel: "Gift wrap for free"
+};
