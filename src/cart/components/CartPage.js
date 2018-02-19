@@ -2,8 +2,9 @@ import React, { Component } from "react";
 
 class CartPage extends Component {
   componentWillMount() {
-    this.props.getProductCart();
+    this.props.getCartDetails();
   }
+
   render() {
     return <div />;
   }

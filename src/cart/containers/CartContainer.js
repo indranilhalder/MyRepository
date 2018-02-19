@@ -1,18 +1,45 @@
 import { connect } from "react-redux";
-import { getProductCart } from "../actions/cart.actions.js";
+import {
+  getUserCart,
+  applyCoupon,
+  getUserAddress,
+  selectDeliveryModes,
+  getEmiBankDetails,
+  getNetBankDetails,
+  getCartDetails
+} from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductCart: () => {
-      dispatch(getProductCart());
+    getUserCart: () => {
+      dispatch(getUserCart());
+    },
+    applyCoupon: couponDetails => {
+      dispatch(applyCoupon(couponDetails));
+    },
+    getUserAddress: () => {
+      dispatch(getUserAddress());
+    },
+    selectDeliveryModes: deliverModes => {
+      dispatch(selectDeliveryModes(deliverModes));
+    },
+    getNetBankDetails: () => {
+      dispatch(getNetBankDetails());
+    },
+    getEmiBankDetails: cartDetails => {
+      dispatch(getEmiBankDetails(cartDetails));
+    },
+    getCartDetails: () => {
+      dispatch(getCartDetails());
     }
   };
 };
 
 const mapStateToProps = state => {
   return {
-    cart: state.cart
+    cart: state.cart,
+    user: state.user
   };
 };
 
