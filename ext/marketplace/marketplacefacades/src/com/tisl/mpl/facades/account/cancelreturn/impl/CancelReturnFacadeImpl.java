@@ -2338,7 +2338,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	
 	private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(
 			final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final String transactionId,
-			final OrderModel subOrderModel)
+			final OrderModel subOrderModel,final OrderEntryModel orderEntry)
 	{
 
 		final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
@@ -2391,6 +2391,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			walletApportionReturnModel.setStatus("SUCCESS");
 		}
+		
+		modelService.save(walletApportionReturnModel);
+		System.out.println("After Saving Juspay Response is :");
+		
+		orderEntry.setWalletApportionReturnInfo(walletApportionReturnModel);
+		System.out.println("Before setting  Order Entry Response is :");
+		modelService.save(orderEntry);
+		modelService.refresh(walletApportionReturnModel);
+		
+		System.out.println("After setting  Order Entry Response is :");
+     LOG.error("abstractOrderEntryModel QC Model  Saved Successfully..............");
 		return walletApportionReturnModel;
 	}
 
@@ -2480,7 +2491,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 										&& subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
 								{
 									returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList,
-											transactionId, subOrderModel);
+											transactionId, subOrderModel,orderEntry);
 									saveQCandJuspayResponse(orderEntry, paymentTransactionModel, returnModel);
 								}
 

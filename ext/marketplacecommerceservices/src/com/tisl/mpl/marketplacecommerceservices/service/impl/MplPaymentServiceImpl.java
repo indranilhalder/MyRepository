@@ -5868,6 +5868,18 @@ private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(fi
        subOrderModel.setPaymentTransactions(paymentTransactions);
 			modelService.saveAll(paymentTransactions);
 			modelService.saveAll(subOrderModel);
+			System.out.println("Before Saving Juspay Response is :");
+			modelService.save(walletApportionReturnModel);
+			System.out.println("After Saving Juspay Response is :");
+			
+			orderEntry.setWalletApportionReturnInfo(walletApportionReturnModel);
+			System.out.println("Before setting  Order Entry Response is :");
+			modelService.save(orderEntry);
+			modelService.refresh(walletApportionReturnModel);
+			
+			System.out.println("After setting  Order Entry Response is :");
+	     LOG.error("abstractOrderEntryModel QC Model  Saved Successfully..............");
+	
 		return walletApportionReturnModel;
 	}
 	
