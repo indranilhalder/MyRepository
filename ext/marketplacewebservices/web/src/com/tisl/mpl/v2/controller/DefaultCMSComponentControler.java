@@ -73,7 +73,7 @@ public class DefaultCMSComponentControler
 	@Autowired
 	private MplCMSComponentService mplCmsComponentService;
 
-	@RequestMapping(value = "/component")
+	@RequestMapping(value = "/component", method = RequestMethod.GET)
 	public UICompPageWiseListWsDTO getComponentsForId(@RequestParam final String pageId, @RequestParam final String componentId)
 			throws CMSItemNotFoundException
 	{
@@ -83,20 +83,21 @@ public class DefaultCMSComponentControler
 		{
 
 			final List<HeroBannerCompWsDTO> heroBannerCompList = new ArrayList<HeroBannerCompWsDTO>();
-			final List<ContentWidgetCompWsDTO> contentWidgetList = new ArrayList<ContentWidgetCompWsDTO>();
-			final List<BannerProductCarouselWsDTO> bannerProductCarouselList = new ArrayList<BannerProductCarouselWsDTO>();
+			//final List<ContentWidgetCompWsDTO> contentWidgetList = new ArrayList<ContentWidgetCompWsDTO>();
+			//final List<BannerProductCarouselWsDTO> bannerProductCarouselList = new ArrayList<BannerProductCarouselWsDTO>();
 
 
 			final AbstractCMSComponentModel abstractCMSComponentModel = mplCmsComponentService.getPagewiseComponent(pageId,
 					componentId);
 
-			if (abstractCMSComponentModel != null && abstractCMSComponentModel instanceof HeroBannerComponentModel)
+			if (null != abstractCMSComponentModel && abstractCMSComponentModel instanceof HeroBannerComponentModel)
 			{
 				final HeroBannerCompWsDTO heroBannerCompWsDTO = new HeroBannerCompWsDTO();
 
 				final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
 
 				final HeroBannerComponentModel heroBannerCompObj = (HeroBannerComponentModel) abstractCMSComponentModel;
+
 				if (null != heroBannerCompObj.getItems() && heroBannerCompObj.getItems().size() > 0)
 				{
 					for (final HeroBannerElementModel heroBannerElementModel : heroBannerCompObj.getItems())
@@ -132,132 +133,104 @@ public class DefaultCMSComponentControler
 						.setType(null != heroBannerCompObj.getType() ? heroBannerCompObj.getType() : "HeroBannerComponentModel");
 				heroBannerCompList.add(heroBannerCompWsDTO);
 				uiCompPageWiseList.setHeroBanner(heroBannerCompList);
+				uiCompPageWiseListWsDTO.setComponents(uiCompPageWiseList);
+				return uiCompPageWiseListWsDTO;
 			}
 
+			/*
+			 *
+			 *
+			 * if (abstractCMSComponentModel != null && abstractCMSComponentModel instanceof ContentWidgetComponentModel) {
+			 * final ContentWidgetCompWsDTO contentWidgetCompWsDTO = new ContentWidgetCompWsDTO();
+			 *
+			 * final List<ContentWidgetElementWsDTO> contentWidgetElementList = new ArrayList<ContentWidgetElementWsDTO>();
+			 *
+			 * final ContentWidgetComponentModel contentWidgetComponentModel = (ContentWidgetComponentModel)
+			 * abstractCMSComponentModel; if (null != contentWidgetComponentModel.getItems() &&
+			 * contentWidgetComponentModel.getItems().size() > 0) { for (final ContentWidgetElementModel
+			 * contentWidgetElementModel : contentWidgetComponentModel.getItems()) { final ContentWidgetElementWsDTO
+			 * contentWidgetElementWsDTO = new ContentWidgetElementWsDTO();
+			 *
+			 * if (null != contentWidgetElementModel.getImageURL() && null !=
+			 * contentWidgetElementModel.getImageURL().getURL()) {
+			 * contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL()); } else {
+			 * contentWidgetElementWsDTO.setImageURL(""); } contentWidgetElementWsDTO.setDescription( null !=
+			 * contentWidgetElementModel.getDescription() ? contentWidgetElementModel.getDescription() : "");
+			 * contentWidgetElementWsDTO .setAppURL(null != contentWidgetElementModel.getAppURL() ?
+			 * contentWidgetElementModel.getAppURL() : ""); contentWidgetElementWsDTO .setTitle(null !=
+			 * contentWidgetElementModel.getTitle() ? contentWidgetElementModel.getTitle() : ""); contentWidgetElementWsDTO
+			 * .setWebURL(null != contentWidgetElementModel.getWebURL() ? contentWidgetElementModel.getWebURL() : "");
+			 * contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
+			 *
+			 * contentWidgetElementList.add(contentWidgetElementWsDTO); } }
+			 * contentWidgetCompWsDTO.setItems(contentWidgetElementList);
+			 * contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
+			 * contentWidgetList.add(contentWidgetCompWsDTO); uiCompPageWiseList.setContentWidget(contentWidgetList);
+			 *
+			 * }
+			 *
+			 *
+			 *
+			 * if (abstractCMSComponentModel != null && abstractCMSComponentModel instanceof
+			 * BannerProductCarouselComponentModel) {
+			 *
+			 * final BannerProductCarouselWsDTO bannerProductCarouselWsDTO = new BannerProductCarouselWsDTO();
+			 *
+			 * final List<BannerProCarouselElementWsDTO> bannerProCarouselList = new
+			 * ArrayList<BannerProCarouselElementWsDTO>();
+			 *
+			 * final BannerProductCarouselComponentModel bannerProComponentModel = (BannerProductCarouselComponentModel)
+			 * abstractCMSComponentModel;
+			 *
+			 * if (null != bannerProComponentModel.getItems() && bannerProComponentModel.getItems().size() > 0) { for
+			 * (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems()) { final
+			 * BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO(); if (null
+			 * != productObj && null != productObj.getProductCode() && null != productObj.getProductCode().getCode()) {
+			 * final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode()); //f]i;nal
+			 * DecimalFormat df = new DecimalFormat("0.00"); String productUnitPrice = ""; String productPrice = "";
+			 *
+			 * if (buyboxdata != null) { final PriceData specialPrice = buyboxdata.getSpecialPrice(); final PriceData mrp =
+			 * buyboxdata.getMrp(); final PriceData mop = buyboxdata.getPrice();
+			 *
+			 * if (mrp != null) { productUnitPrice = mrp.getValue().toPlainString(); } if (specialPrice != null) {
+			 * productPrice = specialPrice.getValue().toPlainString(); } else if (null != mop && null != mop.getValue()) {
+			 * productPrice = mop.getValue().toPlainString(); } }
+			 *
+			 * final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO(); final
+			 * BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
+			 *
+			 * bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+			 * bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
+			 * bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
+			 *
+			 * bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+			 * bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice); bannerProMRPPriceWsDTO.setFormattedValue("" +
+			 * Integer.parseInt(productUnitPrice));
+			 *
+			 * bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
+			 * bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
+			 * bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
+			 * bannerProCarouselElementWsDTO.setAppURL(productObj.getAppURL());
+			 * bannerProCarouselElementWsDTO.setTitle(productObj.getTitle());
+			 * bannerProCarouselElementWsDTO.setWebURL(productObj.getWebURL());
+			 * bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL()); }
+			 * bannerProCarouselList.add(bannerProCarouselElementWsDTO); } }
+			 * bannerProductCarouselWsDTO.setAppURL(bannerProComponentModel.getAppURL());
+			 * bannerProductCarouselWsDTO.setBtnText(bannerProComponentModel.getBtnText());
+			 * bannerProductCarouselWsDTO.setImageURL(bannerProComponentModel.getImageURL().getUrl());
+			 * bannerProductCarouselWsDTO.setItems(bannerProCarouselList);
+			 * bannerProductCarouselWsDTO.setType(bannerProComponentModel.getType());
+			 * bannerProductCarouselWsDTO.setDescription(bannerProComponentModel.getDescription());
+			 * bannerProductCarouselWsDTO.setTitle(bannerProComponentModel.getTitle());
+			 * bannerProductCarouselWsDTO.setWebURL(bannerProComponentModel.getWebURL());
+			 * bannerProductCarouselList.add(bannerProductCarouselWsDTO);
+			 * uiCompPageWiseList.setBannerProductCarousel(bannerProductCarouselList);
+			 *
+			 * }
+			 */
 
-
-
-			if (abstractCMSComponentModel != null && abstractCMSComponentModel instanceof ContentWidgetComponentModel)
-			{
-				final ContentWidgetCompWsDTO contentWidgetCompWsDTO = new ContentWidgetCompWsDTO();
-
-				final List<ContentWidgetElementWsDTO> contentWidgetElementList = new ArrayList<ContentWidgetElementWsDTO>();
-
-				final ContentWidgetComponentModel contentWidgetComponentModel = (ContentWidgetComponentModel) abstractCMSComponentModel;
-				if (null != contentWidgetComponentModel.getItems() && contentWidgetComponentModel.getItems().size() > 0)
-				{
-					for (final ContentWidgetElementModel contentWidgetElementModel : contentWidgetComponentModel.getItems())
-					{
-						final ContentWidgetElementWsDTO contentWidgetElementWsDTO = new ContentWidgetElementWsDTO();
-
-						if (null != contentWidgetElementModel.getImageURL() && null != contentWidgetElementModel.getImageURL().getURL())
-						{
-							contentWidgetElementWsDTO.setImageURL(contentWidgetElementModel.getImageURL().getURL());
-						}
-						else
-						{
-							contentWidgetElementWsDTO.setImageURL("");
-						}
-						contentWidgetElementWsDTO.setDescription(
-								null != contentWidgetElementModel.getDescription() ? contentWidgetElementModel.getDescription() : "");
-						contentWidgetElementWsDTO
-								.setAppURL(null != contentWidgetElementModel.getAppURL() ? contentWidgetElementModel.getAppURL() : "");
-						contentWidgetElementWsDTO
-								.setTitle(null != contentWidgetElementModel.getTitle() ? contentWidgetElementModel.getTitle() : "");
-						contentWidgetElementWsDTO
-								.setWebURL(null != contentWidgetElementModel.getWebURL() ? contentWidgetElementModel.getWebURL() : "");
-						contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
-
-						contentWidgetElementList.add(contentWidgetElementWsDTO);
-					}
-				}
-				contentWidgetCompWsDTO.setItems(contentWidgetElementList);
-				contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
-				contentWidgetList.add(contentWidgetCompWsDTO);
-				uiCompPageWiseList.setContentWidget(contentWidgetList);
-
-			}
-
-
-
-			if (abstractCMSComponentModel != null && abstractCMSComponentModel instanceof BannerProductCarouselComponentModel)
-			{
-
-				final BannerProductCarouselWsDTO bannerProductCarouselWsDTO = new BannerProductCarouselWsDTO();
-
-				final List<BannerProCarouselElementWsDTO> bannerProCarouselList = new ArrayList<BannerProCarouselElementWsDTO>();
-
-				final BannerProductCarouselComponentModel bannerProComponentModel = (BannerProductCarouselComponentModel) abstractCMSComponentModel;
-
-				if (null != bannerProComponentModel.getItems() && bannerProComponentModel.getItems().size() > 0)
-				{
-					for (final BannerProdCarouselElementCompModel productObj : bannerProComponentModel.getItems())
-					{
-						final BannerProCarouselElementWsDTO bannerProCarouselElementWsDTO = new BannerProCarouselElementWsDTO();
-						if (null != productObj && null != productObj.getProductCode() && null != productObj.getProductCode().getCode())
-						{
-							final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productObj.getProductCode().getCode());
-							//f]i;nal DecimalFormat df = new DecimalFormat("0.00");
-							String productUnitPrice = "";
-							String productPrice = "";
-
-							if (buyboxdata != null)
-							{
-								final PriceData specialPrice = buyboxdata.getSpecialPrice();
-								final PriceData mrp = buyboxdata.getMrp();
-								final PriceData mop = buyboxdata.getPrice();
-
-								if (mrp != null)
-								{
-									productUnitPrice = mrp.getValue().toPlainString();
-								}
-								if (specialPrice != null)
-								{
-									productPrice = specialPrice.getValue().toPlainString();
-								}
-								else if (null != mop && null != mop.getValue())
-								{
-									productPrice = mop.getValue().toPlainString();
-								}
-							}
-
-							final BannerProDiscountPriceWsDTO bannerProDiscountPriceWsDTO = new BannerProDiscountPriceWsDTO();
-							final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
-
-							bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-							bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-							bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
-
-							bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-							bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
-							bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
-
-							bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
-							bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
-							bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
-							bannerProCarouselElementWsDTO.setAppURL(productObj.getAppURL());
-							bannerProCarouselElementWsDTO.setTitle(productObj.getTitle());
-							bannerProCarouselElementWsDTO.setWebURL(productObj.getWebURL());
-							bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
-						}
-						bannerProCarouselList.add(bannerProCarouselElementWsDTO);
-					}
-				}
-				bannerProductCarouselWsDTO.setAppURL(bannerProComponentModel.getAppURL());
-				bannerProductCarouselWsDTO.setBtnText(bannerProComponentModel.getBtnText());
-				bannerProductCarouselWsDTO.setImageURL(bannerProComponentModel.getImageURL().getUrl());
-				bannerProductCarouselWsDTO.setItems(bannerProCarouselList);
-				bannerProductCarouselWsDTO.setType(bannerProComponentModel.getType());
-				bannerProductCarouselWsDTO.setDescription(bannerProComponentModel.getDescription());
-				bannerProductCarouselWsDTO.setTitle(bannerProComponentModel.getTitle());
-				bannerProductCarouselWsDTO.setWebURL(bannerProComponentModel.getWebURL());
-				bannerProductCarouselList.add(bannerProductCarouselWsDTO);
-				uiCompPageWiseList.setBannerProductCarousel(bannerProductCarouselList);
-
-			}
-
-			uiCompPageWiseListWsDTO.setComponents(uiCompPageWiseList);
-			return uiCompPageWiseListWsDTO;
+			//			uiCompPageWiseListWsDTO.setComponents(uiCompPageWiseList);
+			//			return uiCompPageWiseListWsDTO;
 		}
 		return uiCompPageWiseListWsDTO;
 	}
@@ -375,7 +348,7 @@ public class DefaultCMSComponentControler
 							contentWidgetCompWsDTO.setItems(contentWidgetElementList);
 							contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
 							contentWidgetList.add(contentWidgetCompWsDTO);
-							uiCompPageWiseList.setContentWidget(contentWidgetList);
+							//uiCompPageWiseList.setContentWidget(contentWidgetList);
 						}
 
 						if (abstractCMSComponentModel instanceof BannerProductCarouselComponentModel)
@@ -450,7 +423,7 @@ public class DefaultCMSComponentControler
 							bannerProductCarouselWsDTO.setTitle(bannerProComponentModel.getTitle());
 							bannerProductCarouselWsDTO.setWebURL(bannerProComponentModel.getWebURL());
 							bannerProductCarouselList.add(bannerProductCarouselWsDTO);
-							uiCompPageWiseList.setBannerProductCarousel(bannerProductCarouselList);
+							//uiCompPageWiseList.setBannerProductCarousel(bannerProductCarouselList);
 						}
 					}
 				}
