@@ -121,6 +121,7 @@
 													code="text.cliq.cash.payment.addcard.label" /></a></span>
 									</c:when>
 									<c:otherwise>
+										<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 										<span class="addNewCard" onclick="createWallet();"><a
 											href="#"><spring:theme
 													code="text.cliq.cash.payment.addcard.label" /></a></span>
@@ -131,6 +132,9 @@
 								<span class="viewCardTerms"><a href="#"><spring:theme
 											code="text.cliq.cash.payment.term.label" /> </a></span> 
 							</div>
+							<c:if test="${isCustomerWalletActive}">
+								<br />
+							</c:if>
 							<spring:theme code="text.cliq.cash.payment.addcash.label"
 								var="addCliqCash" />
 							<spring:theme code="text.cliq.cash.usecash.label"
@@ -2018,12 +2022,7 @@
 		 $('ul.accepted-cards li').removeClass('active-card');
 	 });
 	</script>
-		<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
 <script type="text/javascript">
 var createWalletModel = document.getElementById('createWalletPopup');
 var createWalletData = document.getElementById('createWalletData');
