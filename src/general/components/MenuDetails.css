@@ -14,13 +14,10 @@
 .textBox {
   height: auto;
   width: 100%;
-  color: #212121;
+  color: #000000;
   font-family: regular;
   margin: auto;
   font-size: 16px;
-  left: 0;
-  right: 0;
-  padding-left: -38px;
   text-align: left;
   line-height: 50px;
 }
