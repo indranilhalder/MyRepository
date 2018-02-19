@@ -228,6 +228,13 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 			}
 			data.setBucketName(MarketplacecommerceservicesConstants.BUCKET_NAME_PROMOTON);
 			cliqCashList.add(data);
+			
+			try {
+				walletInfo.setStatusForQc("SUCCESS");
+				modelService.save(walletInfo);
+			}catch(Exception e) {
+				LOG.error("Exception occurred while saving details"+e.getMessage(),e);
+			}
 		}
 		return cliqCashList;
 	}

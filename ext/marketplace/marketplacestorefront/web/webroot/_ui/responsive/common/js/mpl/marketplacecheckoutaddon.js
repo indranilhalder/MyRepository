@@ -6705,6 +6705,18 @@ function useWalletForPaymentAjax(){
 						document.getElementById('promotion').innerHTML ="";
 						document.getElementById('promotion').innerHTML = data.totalDiscount;
 					}
+					
+					if(null!= data.errorMessageForVoucher && undefined!= data.errorMessageForVoucher){
+					resetAppliedCouponFormOnRemoval();
+					//$(".couponApplied").hide();
+					$("#couponMessage").html(data.errorMessageForVoucher);
+									$('#couponMessage').show();
+									$('#couponMessage').delay(4000).fadeOut('slow');
+									setTimeout(function(){ $("#couponMessage").html(""); }, 4500);
+					//$("#couponPaymentRestrictionMessage").html("");				
+					//$("#couponPaymentRestrictionMessage").html(data.errorMessageForVoucher);		
+				}
+					
 				}else{
 
 					// Split Payment Mode Section

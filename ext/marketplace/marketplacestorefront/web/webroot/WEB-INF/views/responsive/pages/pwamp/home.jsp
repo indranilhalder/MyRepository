@@ -566,7 +566,9 @@
 				<div class="whatToBuyItem">
 					<div class="whatToBuyItemImg">
 						<a href="{{imageURL}}"><amp-img class="responsive-img"
-								layout="fill" src="{{mediaURL}}" alt="{{imageName}}"></amp-img></a>
+								layout="fill" src="{{mediaURL}}" alt="{{imageName}}"></amp-img>
+								<span class="whatToBuyNowText">{{categoryName}}</span>
+								</a>
 					</div>
 				</div>
 				{{/categories}} 
