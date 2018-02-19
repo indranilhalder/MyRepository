@@ -1,30 +1,21 @@
-.base{
-  width:100%;
-  height:auto;
-  display: inline-block;
+.base {
+  width: 100%;
+  padding: 20px;
 }
-.buttonHolder{
-  width:100%;
-  height:auto;
-  margin-bottom:25px;
-  display:inline-block;
-  text-align:center;
+.buttonHolder {
+  width: 100%;
+  margin-bottom: 25px;
+  text-align: center;
 }
-.button{
-  width:auto;
-  height:auto;
-  display:inline-block;
-  vertical-align:middle;
+.button {
+  display: flex;
+  justify-content: center;
 }
-.applyCoupon{
-  width:100%;
-  height:auto;
+.applyCoupon {
+  width: 100%;
   margin-bottom: 20px;
-  display:inline-block;
 }
-.giftCard{
-  width:100%;
-  height:auto;
-  display:inline-block;
-  margin-bottom:20px;
+.giftCard {
+  width: 100%;
+  margin-bottom: 20px;
 }
