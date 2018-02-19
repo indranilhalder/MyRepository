@@ -387,55 +387,115 @@ $(document).ready(function(){
 		}
 
 		if($('#checkoutPageName').val()=='Choose Your Delivery Options'){
+			
+			//var product = $('#product_id').val();
+			//var category = $('#product_category').val();
+			
+			var product ='';
+			var productCategory ='';
+			if($("#product_id").val()!= ''){
+				product = JSON.parse($("#product_id").val().toLowerCase());
+			}
+			if($("#product_category").val()!= ''){
+				productCategory =  $("#product_category").val().toLowerCase().split(",");	
+			}
+			if(typeof(digitalData.cpj) != "undefined"){
+				 if(typeof(digitalData.cpj.product) != "undefined"){
+				     digitalData.cpj.product.id = product;
+				     digitalData.cpj.product.category = productCategory;
+	            }		
+               else {
+	                digitalData.cpj.product = {
+	                		      id  : product,
+	        				 category : productCategory
+		              }
+                   }
+			}
+			else{
+				  digitalData.cpj = {
+						 product  : {
+							id : product,
+							category : productCategory
+						  }  
+				        }
+			        }
+			
 			if(typeof _satellite != "undefined"){
 				_satellite.track('cpj_checkout_delivery_option');
 			}
-			var product = $('#product_id').val();
-			   if(typeof(digitalData.cpj.product) != "undefined"){
-				     digitalData.cpj.product.id = product;
-				     digitalData.cpj.product.category = category;
-	            }		
-               else {
-	                digitalData.cpj.product = {
-	                		      id  : productId,
-	        				 category : category
-		              }
-                   }
-
-	    	}
+			
+		}
 		
 		if($('#checkoutPageName').val()=='Select Address'){
-			if(typeof _satellite != "undefined"){
-				 _satellite.track('cpj_checkout_proceed_to_address');
+			
+			var product ='';
+			var productCategory ='';
+			if($("#product_id").val()!= ''){
+				product = JSON.parse($("#product_id").val().toLowerCase());
 			}
-			var product = $('#product_id').val();
-			   if(typeof(digitalData.cpj.product) != "undefined"){
+			if($("#product_category").val()!= ''){
+				productCategory =  $("#product_category").val().toLowerCase().split(",");	
+			}
+			if(typeof(digitalData.cpj) != "undefined"){
+				 if(typeof(digitalData.cpj.product) != "undefined"){
 				     digitalData.cpj.product.id = product;
-				     digitalData.cpj.product.category = category;
+				     digitalData.cpj.product.category = productCategory;
 	            }		
                else {
 	                digitalData.cpj.product = {
-	                		      id  : productId,
-	        				 category : category
+	                		      id  : product,
+	        				 category : productCategory
 		              }
                    }
+			}
+			else{
+				  digitalData.cpj = {
+						 product  : {
+							id : product,
+							category : productCategory
+						  }  
+				        }
+			        }
+			   
+			   if(typeof _satellite != "undefined"){
+					 _satellite.track('cpj_checkout_proceed_to_address');
+				}
 		     }
 		
 		if($('#checkoutPageName').val()=='Payment Options'){
-			if(typeof _satellite != "undefined"){
-				_satellite.track('cpj_checkout_proceed_to_payment');
+			
+			var product ='';
+			var productCategory ='';
+			if($("#product_id").val()!= ''){
+				product = JSON.parse($("#product_id").val().toLowerCase());
 			}
-			var product = $('#product_id').val();
-			   if(typeof(digitalData.cpj.product) != "undefined"){
+			if($("#product_category").val()!= ''){
+				productCategory =  $("#product_category").val().toLowerCase().split(",");	
+			}
+			if(typeof(digitalData.cpj) != "undefined"){
+				 if(typeof(digitalData.cpj.product) != "undefined"){
 				     digitalData.cpj.product.id = product;
-				     digitalData.cpj.product.category = category;
+				     digitalData.cpj.product.category = productCategory;
 	            }		
                else {
 	                digitalData.cpj.product = {
-	                		      id  : productId,
-	        				 category : category
+	                		      id  : product,
+	        				 category : productCategory
 		              }
                    }
+			}
+			else{
+				  digitalData.cpj = {
+						 product  : {
+							id : product,
+							category : productCategory
+						  }  
+				        }
+			        }
+			   
+			   if(typeof _satellite != "undefined"){
+					_satellite.track('cpj_checkout_proceed_to_payment');
+				}
 		     }
 		//campaigns track
 		var icid2Param = getIcid2FromUrl();
@@ -677,7 +737,7 @@ function dtmLuxAddWL(pagetype,productId,category){
 	}
 	catch(e){
 		console.log("error fn:dtmAddToWishlist"+e.message);
-	}  
+	       }  
 	}
 
 function dtmLuxRemoveWL(pagetype,productId,category){
@@ -1129,5 +1189,9 @@ $(document).on('click','.facetList .facetValues .le-checkbox',function(){
     }
 })
 
-
+$(document).on('mouseup','.right.mb-10 a',function(){
+	if (typeof _satellite != "undefined") {
+	   _satellite.track('continue_shopping');
+	}
+})
 

@@ -34,7 +34,7 @@
 	   </c:choose>	
    </title>
 	<%-- Meta Content --%>
-	   <meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095â€/>
+	   <meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095â"€/>
               <meta name="google-play-app" content="com.tataunistore.luxury">
 
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
@@ -367,7 +367,7 @@
 	
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-<!-- injecting satellite obj  for DTM -->	
+<!-- injecting satellite obj  for DTM  luxury addon tag-->	
 <script type="text/javascript">_satellite.pageBottom();</script>
 	
 </body>
