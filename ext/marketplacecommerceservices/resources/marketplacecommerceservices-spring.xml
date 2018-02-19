@@ -2501,6 +2501,15 @@
 	
 	<!-- gigya data pulling job ends -->
 
+	<bean id="mplCmsComponentDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultMplCMSComponentDao">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="mplCmsComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplCMSComponentService" >
+		<property name="mplCmsComponentDao" ref="mplCmsComponentDao" />
+		<property name="catalogService" ref="catalogService" />
+	</bean>
+
     
 </beans>
 
