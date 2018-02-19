@@ -50,7 +50,6 @@ public class HomePageComponentsController
 		{
 			homepageComponetsDTO = homePageAppFacade.gethomepageComponentsDTO(homepageComponentRequestDTO);
 		}
-		//System.out.println("Theme offers dto" + homepageComponetsDTO);
 
 		catch (final EtailNonBusinessExceptions e)
 		{
