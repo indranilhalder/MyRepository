@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentM
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
+import de.hybris.platform.category.impl.DefaultCategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.classification.ClassificationService;
 import de.hybris.platform.classification.features.Feature;
@@ -40,7 +41,6 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
-import de.hybris.platform.core.PK;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
@@ -87,7 +87,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -104,6 +103,7 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
@@ -128,7 +128,6 @@ import com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.GiftProductMobileData;
 import com.tisl.mpl.wsdto.KnowMoreDTO;
-import com.tisl.mpl.wsdto.MplBrandInfoData;
 import com.tisl.mpl.wsdto.MplCategoryHierarchydata;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.MplNewSellerInformationMobileData;
@@ -239,6 +238,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String MPL_EXCHANGE_HIERARCHY_SEPERATOR = ",";
 	private static final String Home_Delivery = "Home Delivery";
 	private static final String Standard_Delivery = "Standard Delivery";
+
+	@Resource(name = "defaultCategoryModelUrlResolver")
+	private ExtDefaultCategoryModelUrlResolver defaultCategoryModelUrlResolver;
+
+	private DefaultCategoryService categoryService;
 
 	//added for pdp new ui end
 	/**
@@ -372,7 +376,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -2145,12 +2149,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -2531,6 +2535,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
+					if (StringUtils.isNotEmpty(variantData.getCode())
+							&& StringUtils.equalsIgnoreCase(productData.getCode(), variantData.getCode()))
+					{
+						colorLinkData.setSelected(true);
+					}
 					variantMobileData.setColorlink(colorLinkData);
 					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
@@ -2567,6 +2576,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								{
 									sizeLinkData.setIsAvailable(false);
 								}
+							}
+							if (StringUtils.isNotEmpty(variantData.getCode()))
+							{
+								sizeLinkData.setProductCode(variantData.getCode());
 							}
 
 						}
@@ -3392,7 +3405,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3685,11 +3698,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				final List<MplCategoryHierarchydata> list = getcategoryHierarchyForPwa(productModel);
 				productDetailMobileNew.setCategoryHierarchy(list);
 
-				final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
-				if (null != mplBrandInfo)
-				{
-					productDetailMobileNew.setBrandInfo(mplBrandInfo);
-				}
+				//final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
+				//				if (null != mplBrandInfo)
+				//				{
+				//					productDetailMobileNew.setBrandInfo(mplBrandInfo);
+				//				}
 				final boolean showSizeGuide = showSizeGuidePwa(productModel);
 				productDetailMobileNew.setShowSizeGuide(Boolean.valueOf(showSizeGuide));
 
@@ -3907,6 +3920,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setOtherSellers(framedOtherSellerDataList);
 				}
+				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
+				{
+					productDetailMobileNew.setBrandName(productData.getBrand().getBrandname());
+				}
+
+				final String webUrl = prepareBrandWebUrlDataPwa(productData);
+
+				if (StringUtils.isNotEmpty(webUrl))
+				{
+					productDetailMobileNew.setWebURL(webUrl);
+				}
 			}
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
@@ -3929,6 +3953,27 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return productDetailMobileNew;
+	}
+
+	/**
+	 * @param productData
+	 * @return
+	 */
+	private String prepareBrandWebUrlDataPwa(final ProductData productData)
+	{
+		// YTODO Auto-generated method stub
+		String webUrl = null;
+		if (CollectionUtils.isNotEmpty(productData.getCategories()))
+		{
+			for (final CategoryData category : productData.getCategories())
+			{
+				if (category.getCode().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+				{
+					webUrl = category.getUrl();
+				}
+			}
+		}
+		return webUrl;
 	}
 
 	/**
@@ -4218,53 +4263,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	}
 
 	/**
-	 * @param code
-	 * @return
-	 */
-	private MplBrandInfoData getBrandInfoPwa(final ProductModel productModel)
-	{
-		// YTODO Auto-generated method stub
-		final MplBrandInfoData mplBrandInfo = new MplBrandInfoData();
-		try
-		{
-			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
-
-			if (CollectionUtils.isNotEmpty(superCategoryDetails))
-			{
-				for (final CategoryModel category : superCategoryDetails)
-				{
-					if (category.getCode().startsWith("MBH"))
-					{
-						mplBrandInfo.setBrandId(category.getCode());
-						break;
-					}
-				}
-			}
-
-			setBrandDetails(mplBrandInfo, productModel.getPk());
-
-		}
-		catch (final Exception exception)
-		{
-			LOG.error("Error during population of BrandInfo >> for Product >>" + productModel.getCode() + "Error>>" + exception);
-		}
-		return mplBrandInfo;
-	}
-
-	/**
-	 * @param mplBrandInfo
-	 * @param pk
-	 */
-	private void setBrandDetails(final MplBrandInfoData mplBrandInfo, final PK pk)
-	{
-		// YTODO Auto-generated method stub
-		//	final BrandModel brandModel = brandDao.brandInfoPwa(mplBrandInfo.getBrandId().replaceFirst("MBH", "").trim());
-		final BrandModel brandModel = brandDao.brandInfoPwa(pk);
-		mplBrandInfo.setBrandDetails(brandModel.getDescription());
-		mplBrandInfo.setBrandName(brandModel.getName());
-	}
-
-	/**
 	 * @param formattedValue
 	 * @return
 	 */
@@ -4492,5 +4490,22 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setCustomerReviewService(final MplCustomerReviewService customerReviewService)
 	{
 		this.customerReviewService = customerReviewService;
+	}
+
+	/**
+	 * @return the categoryService
+	 */
+	public DefaultCategoryService getCategoryService()
+	{
+		return categoryService;
+	}
+
+	/**
+	 * @param categoryService
+	 *           the categoryService to set
+	 */
+	public void setCategoryService(final DefaultCategoryService categoryService)
+	{
+		this.categoryService = categoryService;
 	}
 }
