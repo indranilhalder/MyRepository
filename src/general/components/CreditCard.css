@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding: 20px;
+  padding: 0 20px;
 }
 .cardDetails {
   width: 100%;
@@ -15,7 +15,7 @@
   line-height: 24px;
   font-size: 14px;
   font-family: regular;
-  padding-bottom: 15px;
+  padding-bottom: 20px;
   display: inline-block;
 }
 .payCardHolder {
@@ -52,12 +52,11 @@
   bottom: 0;
 }
 .saveCardText {
-  width: 100%;
+  width: auto;
   height: auto;
   display: inline-block;
-  margin-top: 15px;
+  margin: 20px 0px;
   position: relative;
-  padding: 5px;
 }
 .checkCircle {
   width: 25px;
