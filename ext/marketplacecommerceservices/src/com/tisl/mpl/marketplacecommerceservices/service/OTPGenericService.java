@@ -157,4 +157,10 @@ public interface OTPGenericService
 	 */
 	public String generateOTPForRegister(final String userIdOrEmail, final String OTPType, final String mobileNumber)
 			throws InvalidKeyException, NoSuchAlgorithmException;
+
+	/**
+	 * NU-51
+	 */
+	public OTPResponseData otpValidationWithoutExpiryTime(String userIdOrEmail, String mobileNo, String enteredOTPNumber,
+			OTPTypeEnum OTPType);
 }
