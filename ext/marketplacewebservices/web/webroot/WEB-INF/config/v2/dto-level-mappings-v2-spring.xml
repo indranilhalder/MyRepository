@@ -752,7 +752,7 @@
 			<map>
 				<entry key="BASIC" value="id,headline,principal,alias,rating,date,comment"/>
 				<entry key="DEFAULT"
-				       value="id,headline,principal(DEFAULT),alias,rating,date,comment"/>
+				       value="id,headline,principal(DEFAULT),alias,rating,date,comment,canEditDelete"/>
 				<entry key="FULL"
 				       value="id,headline,principal(FULL),alias,rating,date,comment"/>
 			</map>
@@ -765,7 +765,7 @@
 		<property name="levelMapping">
 			<map>
 				<entry key="BASIC" value="reviews"/>
-				<entry key="DEFAULT" value="reviews(DEFAULT)"/>
+				<entry key="DEFAULT" value="reviews(DEFAULT),totalNoOfReviews,pageSize,pageNumber,totalNoOfPages"/>
 				<entry key="FULL" value="reviews(FULL)"/>
 			</map>
 		</property>

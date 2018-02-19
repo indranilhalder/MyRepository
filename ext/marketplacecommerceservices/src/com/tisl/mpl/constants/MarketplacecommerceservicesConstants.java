@@ -398,7 +398,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CURRENTDELIVERYCHARGE = "currDelCharge".intern();
 
 	public static final String SUCCESS_FLAG = "Success";
+
+	public static final String MESSAGE1_FLAG = "Address attached to order successfully";
+
 	public static final String ERROR_FLAG = "Failure";
+
+	public static final String ERROR_Message = "Unable to attach address with order. Please try again";
+
+
+	public static final String B00019 = "B00019";
+
 	public static final String BAD_CREDENTIALS = "Bad credentials";
 	public static final String CREDENTIALS_EXP = "User credentials have expired";
 	public static final String uusid = "uusid";
@@ -2428,7 +2437,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NU003 = "NU003";
 	public static final String NU004 = "NU004";
 
-	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+	// Adding for AddAddressNew
+	public static final String SUCCESS_MSG_Add_Address = "Address added successfuly";
+	public static final String ERROR_MSG_Add_Address = "Incorrect input. Address not saved";
+	public static final String B0099008 = "B0099008";
+	public static final String B0099009 = "B0099009";
+
+public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
 	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
 
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
@@ -2450,4 +2465,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SORT = "sort";
 	public static final String BY_RATING = "byRating";
+	public static final String LATESTOTPMOBILEQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
+	public static final String LATESTOTPEMAILQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType  order by {creationtime} desc fetch first 1 rows only";
 }
