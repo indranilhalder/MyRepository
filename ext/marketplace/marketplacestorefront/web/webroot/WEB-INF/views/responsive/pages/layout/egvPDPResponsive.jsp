@@ -819,6 +819,9 @@ function submitWalletData(){
 				else if(response=='OTPERROR'){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
+				}else if(response='EXPIRED'){
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+					$(".wcOTPError").show();
 				}
 				else if(response=='qcDown'){
 					$(".wcOTPError").text("Unable to verify mobile number due to server error. Please try after sometime");

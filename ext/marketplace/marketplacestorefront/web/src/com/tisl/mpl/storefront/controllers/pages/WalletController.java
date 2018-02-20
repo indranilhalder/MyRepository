@@ -526,7 +526,11 @@ public class WalletController extends AbstractPageController
 			}
 			else
 			{
+				if("EXPIRED".equalsIgnoreCase(response.getInvalidErrorMessage())){
+					return "EXPIRED";	
+				}else{
 				return "OTPERROR";
+				}
 			}
 		}
 		else
