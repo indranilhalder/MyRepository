@@ -12,13 +12,13 @@
   position: relative;
   text-align: center;
 }
-.orderHeadong {
+.orderHeading {
   width: 100%;
   height: auto;
   color: #fff;
   font-size: 16px;
   line-height: 20px;
-  font-weight: bold;
+  font-family: semibold;
 }
 .orderLabel {
   width: 100%;
