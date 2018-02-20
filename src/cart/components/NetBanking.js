@@ -1,29 +1,35 @@
 import React from "react";
 import GridSelect from "../../general/components/GridSelect";
 import BankSelect from "./BankSelect";
+import PropTypes from "prop-types";
 
 export default class NetBanking extends React.Component {
+  handleSelect(val) {
+    if (this.props.onSelect) {
+      this.props.onSelect(val);
+    }
+  }
   render() {
-    console.log(this.props);
     return (
-      <GridSelect limit={1} offset={30} gridWidthMobile={33.3333}>
-        <BankSelect
-          image="https://competitiondigest.com/wp-content/uploads/2014/12/bank-of-1.gif"
-          value="1"
-        />
-        <BankSelect
-          image="https://competitiondigest.com/wp-content/uploads/2014/12/CBicons_03.png"
-          value="2"
-        />
-        <BankSelect
-          image="https://competitiondigest.com/wp-content/uploads/2014/12/UNITED.png"
-          value="3"
-        />
-        <BankSelect
-          image="https://competitiondigest.com/wp-content/uploads/2014/12/UNION.png"
-          value="4"
-        />
+      <GridSelect
+        limit={1}
+        offset={30}
+        elementWidthMobile={33.3333}
+        onSelect={val => this.handleSelect(val)}
+        selected={this.props.selected}
+      >
+        {this.props.bankList &&
+          this.props.bankList.map((val, i) => {
+            return <BankSelect image={val.image} value={val.value} key={i} />;
+          })}
       </GridSelect>
     );
   }
 }
+NetBanking.propTypes = {
+  bankList: PropTypes.arrayOf(
+    PropTypes.shape({ image: PropTypes.string, value: PropTypes.string })
+  ),
+  onSelect: PropTypes.func,
+  selected: PropTypes.arrayOf(PropTypes.string)
+};
