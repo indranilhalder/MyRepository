@@ -80,6 +80,7 @@ public class SalesOrderReverseXMLUtility
 	 * 
 	 */
 	private static final String CLIQ_CASH = "Cliq Cash";
+	private static final String CLIQCASH = "CliCash";
 	/**
 	 * 
 	 */
@@ -880,14 +881,14 @@ public class SalesOrderReverseXMLUtility
 										if(list!=null){
 										for (final PaymentTransactionModel oModel : list)
 										{
-											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-													&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+										  || oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH))			&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 											{
 												
 								
 												if (null != oModel.getCode())
 												{
-													payemntrefid = oModel.getCode();
+													payemntrefid = oModel.getRequestId();
 												
 												}
 											}
@@ -939,8 +940,8 @@ public class SalesOrderReverseXMLUtility
 									for (final PaymentTransactionModel oModel : list)
 									{
 
-										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() &&  !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-												&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() &&  (!oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+										&& !oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH) )&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 										{
 											if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
 											{
@@ -951,9 +952,9 @@ public class SalesOrderReverseXMLUtility
 											{
 												splitMerchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
 											}
-											if (null != oModel.getCode())
+											if (null != oModel.getRequestId())
 											{
-												payemntrefid = oModel.getCode();
+												payemntrefid = oModel.getRequestId();
 												LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
 											}
 										}
@@ -1022,13 +1023,13 @@ public class SalesOrderReverseXMLUtility
 									
 									for (final PaymentTransactionModel oModel : list)
 									{
-										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-												&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+											|| oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH))	&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 										{
 											
-											if (null != oModel.getCode())
+											if (null != oModel.getRequestId())
 											{
-												payemntrefid = oModel.getCode();
+												payemntrefid = oModel.getRequestId();
 											}
 										}
 									}
@@ -1083,7 +1084,8 @@ public class SalesOrderReverseXMLUtility
 										for (final PaymentTransactionModel oModel : list)
 										{
 											LOG.debug("DeliveryMode oModel"+oModel);
-											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && 
+													( !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH) && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH) )
 													&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 											{
 												
@@ -1098,9 +1100,9 @@ public class SalesOrderReverseXMLUtility
 												{
 													merchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
 												}
-												if (null != oModel.getCode())
+												if (null != oModel.getRequestId())
 												{
-													payemntrefid = oModel.getCode();
+													payemntrefid = oModel.getRequestId();
 													LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
 												}
 											}
@@ -1580,8 +1582,7 @@ public class SalesOrderReverseXMLUtility
 		{
 			for (MerchantInfoXMlData merchantInfoXMlTotal : merchantInfoList)
 			{
-				tAmount += merchantInfoXMlTotal.getScheduleDelCharge() + merchantInfoXMlTotal.getShipmentCharge()
-						+ merchantInfoXMlTotal.getExpressDelCharge() + merchantInfoXMlTotal.getProductAmount();
+				tAmount += merchantInfoXMlTotal.getProductAmount();
 			}
 			return tAmount;
 		}

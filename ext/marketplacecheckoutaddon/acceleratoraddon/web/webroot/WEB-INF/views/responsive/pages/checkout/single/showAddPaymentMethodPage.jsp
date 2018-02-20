@@ -42,6 +42,7 @@
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')"
 		var="walletEnable" />
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="addGiftCardEnable"/>
 	
 	<div class="checkout-content checkout-payment cart checkout wrapper">
 		<!-- Added for Wallet -->
@@ -114,23 +115,26 @@
 									</div>
 									<div class="overlay" data-dismiss="modal"></div>
 								</div>
-								<c:choose>
-									<c:when test="${isCustomerWalletActive}">
-										<span class="addNewCard" onclick="showAddEGV();"><a
-											href="#"><spring:theme
-													code="text.cliq.cash.payment.addcard.label" /></a></span>
-									</c:when>
-									<c:otherwise>
-										<span class="addNewCard" onclick="createWallet();"><a
-											href="#"><spring:theme
-													code="text.cliq.cash.payment.addcard.label" /></a></span>
-									</c:otherwise>
-								</c:choose>
-
+								
+								<c:if test="${addGiftCardEnable}">
+									<c:choose>
+										<c:when test="${isCustomerWalletActive}">
+											<span class="addNewCard" onclick="showAddEGV();"><a
+												href="#"><spring:theme
+														code="text.cliq.cash.payment.addcard.label" /></a></span>
+										</c:when>
+										<c:otherwise>
+											<span class="addNewCard" onclick="createWallet();"><a
+												href="#"><spring:theme
+														code="text.cliq.cash.payment.addcard.label" /></a></span>
+										</c:otherwise>
+									</c:choose>
+								</c:if>
 
 								<span class="viewCardTerms"><a href="#"><spring:theme
 											code="text.cliq.cash.payment.term.label" /> </a></span> 
 							</div>
+							<br />
 							<spring:theme code="text.cliq.cash.payment.addcash.label"
 								var="addCliqCash" />
 							<spring:theme code="text.cliq.cash.usecash.label"
@@ -2018,23 +2022,22 @@
 		 $('ul.accepted-cards li').removeClass('active-card');
 	 });
 	</script>
-		<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
 <script type="text/javascript">
 var createWalletModel = document.getElementById('createWalletPopup');
 var createWalletData = document.getElementById('createWalletData');
 var createWalletPopup = document.getElementById('createWalletPopup');
+
+var createWalletPopupHtml = '';
 function createWallet() {
 		$.ajax({
 			type : "GET",
 			url : ACC.config.encodedContextPath+ "/wallet/walletOTPPopup",
 			contentType : "html/text",
 			success : function(response){
-				createWalletData.innerHTML=response;
+				createWalletPopupHtml = response;
+				createWalletData.innerHTML='<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">';
+				createWalletData.innerHTML+=createWalletPopupHtml;
 				createWalletModel.style.display = "block";   
 					  },	
 					failure : function(data) {
@@ -2044,6 +2047,7 @@ function createWallet() {
 }
 
 function closepop(){
+	createWalletData.innerHTML=createWalletPopupHtml;
 	createWalletModel.style.display = "none";
 }
 

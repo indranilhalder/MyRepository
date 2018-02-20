@@ -7,11 +7,11 @@
 		width: 67%;
 	}
 	
-	.cliqCashApplyAlert {width: 67% !important;}
+	.cliqCashApplyAlert {width: 67% !important; color: #155724; background-color: #d4edda; border-color: #c3e6cb !important;}
 	
-	.giftCheckoutContainer p {margin-bottom: 0;}
+	.giftCheckoutContainer p {margin-bottom: 5px;}
 	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
-	.cliqTotalBalance p {padding: 2px;}
+	.cliqTotalBalance p {padding: 0;}
 	.cliqTotalBalanceLabel {font-size: 12px;}
 	.giftCheckoutContainer input[type="checkbox"] {display: block;}
 	
@@ -72,7 +72,7 @@
 	.giftCheckoutContainer {border-radius: 4px; font-size: 10px; background-color: white; padding: 0;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
 	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important; float: left;}
-    .cliqCashApplyAlert {border-radius: 4px;}
+    .cliqCashApplyAlert {border-radius: 4px !important;}
     .giftCheckoutInfoMiddle .giftCheckoutSectionSize:last-child {padding-right: 0;}
     .giftCheckoutInfoMiddle {width: 100% !important;}
 	}
@@ -667,7 +667,7 @@
 .showStatementModel {
  display: none;
  position: fixed;
- z-index: 3;
+ z-index: 99999;
  padding-top: 100px;
  left: 0;
  top: 0;
@@ -760,6 +760,7 @@
 @media(max-width: 480px) {
 	.createWalletModel-content {
 		width: 90%;
+		margin-bottom: 80px;
 	}
 }
 
@@ -769,7 +770,6 @@
 	
 }
 #createWalletData {
-	display: inline-block;
 	width: 100%;
 }
 
@@ -881,3 +881,65 @@
 	.enter_otp_profile_label {line-height: 40px;}
 }
 /*Account Profile Edit - END*/
+
+/*Account Statement New - START*/
+.orderStatementMainItemHead {
+		padding: 10px;
+	    background-color: #a9133d;
+	    color: #fff;
+	    border: 1px solid #a9133d;
+	}
+	
+	.orderStatementMainItemBody {
+		padding: 10px;
+		border: 1px solid #a9133d;
+	}
+	
+	.orderStatementMainItemBody .totalOrderPrice, .orderStatementMainItemHead .totalOrderPrice {
+		float: right;
+	}
+	
+	.toggleStatementL1Info {
+		background-color: green;
+	    color: #fff;
+	    width: 18px;
+	    text-align: center;
+	    font-weight: 600;
+	    height: 18px;
+	    display: inline-block;
+	    border-radius: 50%;
+	    cursor: pointer;
+	}
+	.toggleStatementL2Info {
+		background-color: green;
+	    color: #fff;
+	    width: 12px;
+	    text-align: center;
+	    font-weight: 600;
+	    height: 12px;
+	    display: inline-block;
+	    border-radius: 50%;
+	    cursor: pointer;
+	}
+	
+	.orderStatementL1Body {
+		padding: 0 10px;
+	}
+	
+	.orderStatementL2Body {
+		padding: 10px 20px;
+	}
+	
+	.orderStatementL1Body > .orderStatChildBody {
+		padding: 5px;
+	}
+	
+	.orderStatementL2Body > p {
+		padding: 5px 30px 5px 5px;
+	}
+	
+	.orderStatementL1Body, .orderStatementL2Body {
+		display: none;
+	}
+	
+/*Account Statement New - END*/

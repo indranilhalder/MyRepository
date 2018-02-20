@@ -916,13 +916,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 					mplEGVCartService.removeOldEGVCartCurrentCustomer();
 					final String response = getPurchaseEGVRequestPopulate(orderModel);
-					if (response.equalsIgnoreCase(SUCCESS))
+					if (null != response && response.equalsIgnoreCase(SUCCESS))
 					{
 						sendNotifiactionForEGVOrder(orderModel);
 			}
 			else
 			{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						modelService.save(orderModel);
 						LOG.error(CLIQ_CASH_DOWN);
 					}
 				}

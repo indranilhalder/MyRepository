@@ -358,9 +358,21 @@
 
 					<p class="company"></p>
 					<ycommerce:testId code="orderDetails_productName_link">
-						<h3 class="product-name">
-							<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
-						</h3>
+					
+					<!-- EGV Changes Start-->
+					   <c:choose>
+				   		<c:when test="${orderData.isEGVOrder eq  true}">
+							<h3 class="product-name">
+								<a href="${productUrl}">${entry.product.name}</a>
+							</h3>
+				   		</c:when>
+				   		<c:otherwise>
+					   	    <h3 class="product-name">
+								<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
+							</h3>
+				   		</c:otherwise>
+				   		</c:choose>
+                     <!-- EGV Changes END-->
 					</ycommerce:testId>
 
 					<c:forEach items="${entry.product.baseOptions}" var="option">
@@ -451,6 +463,7 @@
 					<!-- <ul class="item-details"></ul> -->
 				</div>
 			</li>
+			<c:if test="${orderData.isEGVOrder ne true}">
 			<li class="shipping">
 				<p>
 					<spring:theme code="text.deliveryMethod"
@@ -487,6 +500,7 @@
 					<%-- <li class="deliver">${entry.mplDeliveryMode.description}</li> --%>
 				</ul>
 			</li>
+			</c:if>
 		</ul>
 	</li>
 </c:forEach>

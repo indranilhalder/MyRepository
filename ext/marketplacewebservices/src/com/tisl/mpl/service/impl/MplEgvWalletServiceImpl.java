@@ -193,7 +193,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						}
 						else 
 						{
-							responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 						}
 				  }
 				
@@ -208,10 +208,10 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
 						}
 					}
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
 			}else {
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5014);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 
 			}
 		return responce;

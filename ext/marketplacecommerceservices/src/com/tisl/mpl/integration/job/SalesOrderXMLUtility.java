@@ -74,6 +74,7 @@ public class SalesOrderXMLUtility
 	 * 
 	 */
 	private static final String CLIQ_CASH = "Cliq Cash";
+	private static final String CLIQCASH = "CliqCash";
 	private static final String PAYMENT_JUSPAY_MERCHANT_TYPE = "payment.juspay.merchantType";
 	private static final String PAYMENT_QC_MERCHANT_TYPE = "payment.qc.merchantType";
 	private static final String PAYMENT_QC_MERCHANT_ID = "payment.qc.merchantID";
@@ -545,9 +546,20 @@ public class SalesOrderXMLUtility
 								
 								merchantInfoXMlData.setProductAmount(getDecimalFormateValue(total));
 								merchantInfoXMlData.setCardNumber(apporationWalllet.getCardNumber());
-								if (chaildModel.getParentReference() != null)
+								String paymentRefId = null;
+								for (final PaymentTransactionModel oModel : chaildModel.getPaymentTransactions())
 								{
-									merchantInfoXMlData.setPaymentRefID(chaildModel.getParentReference().getCode());
+									if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+											&& (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)  || oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH)
+											)&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+									{
+										paymentRefId = oModel.getRequestId();
+									}
+
+								}
+								if (paymentRefId != null)
+								{
+									merchantInfoXMlData.setPaymentRefID(paymentRefId);
 								}
 								String cardExpDate = getCardExpDate(apporationWalllet);
 								merchantInfoXMlData.setCardExpiryDate(cardExpDate);
@@ -670,7 +682,7 @@ public class SalesOrderXMLUtility
 			for (final PaymentTransactionModel oModel : list)
 			{
 				if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-						&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+					&& !oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH)	&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
 					
 					if (MarketplacecommerceservicesConstants.MRUPEE_CODE
@@ -683,9 +695,9 @@ public class SalesOrderXMLUtility
 					{
 						merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
 					}
-					if (null != oModel.getCode())
+					if (null != oModel.getRequestId())
 					{
-						payemntrefid = oModel.getCode();
+						payemntrefid = oModel.getRequestId();
 					}
 				}
 			}

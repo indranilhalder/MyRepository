@@ -6662,6 +6662,7 @@ function useWalletForPaymentAjax(){
 				$(".cliqCashApplyAlert").show();
 				$("#viewPaymentCOD").hide();
 				$("#paytmId").hide();
+				$("#walletContainerId .addNewCard").hide();
 
 				//Changing the Total Label
 				if(document.getElementById('totalPayableLabel')!=null)
@@ -6769,6 +6770,10 @@ function useWalletForPaymentAjax(){
 						document.getElementById('promotion').innerHTML ="";
 						document.getElementById('promotion').innerHTML = data.totalDiscount;
 					}
+					
+					if(null !=data.globalCliqCash && undefined != data.globalCliqCash && !data.globalCliqCash){
+						globalCliqCashMode = false;
+					}
 
 					if(!value.checked){
 						$("#addCliqCashId").text("");
@@ -6777,8 +6782,10 @@ function useWalletForPaymentAjax(){
 				}	
 			}			
 			else{
-				// Remove CliqCash Select mode Section
 				
+				$("#walletContainerId .addNewCard").show();
+				// Remove CliqCash Select mode Section
+				globalCliqCashMode = false;
 				//Changing the Total Label
 				if(document.getElementById('totalPayableLabel')!=null)
 					document.getElementById('totalPayableLabel').innerHTML ="Total";
@@ -6826,7 +6833,7 @@ function useWalletForPaymentAjax(){
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
-				globalCliqCashMode = false;
+				
 				
 				if(data.totalDiscount !=0){
 					document.getElementById('promotion').innerHTML ="";
@@ -6839,6 +6846,7 @@ function useWalletForPaymentAjax(){
 			$("#no-click,.loaderDiv").remove();
 		},
 		complete : function(data){
+
 			if(value.checked && !data.responseJSON.bankCheckBox && !data.responseJSON.isCartVoucherPresent) {
 				if($('input:radio[name=offer_name]:checked').val() || $('input:radio[name=offer_name_more]:checked').val()) {
 					if(ACC.singlePageCheckout.getIsResponsive()) {

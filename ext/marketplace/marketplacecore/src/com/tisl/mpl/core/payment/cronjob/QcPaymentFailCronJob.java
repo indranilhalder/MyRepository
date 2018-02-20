@@ -77,7 +77,7 @@ public class QcPaymentFailCronJob extends AbstractJobPerformable<CronJobModel>
 	}
 
 	/**
-	 * Generate File Data for Bin Error
+	 * Generate File Data
 	 */
 	private void generateFileData()
 	{

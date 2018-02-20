@@ -4,67 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 
-<style>
-	.orderStatementMainItemHead {
-		padding: 10px;
-	    background-color: #a9133d;
-	    color: #fff;
-	    border: 1px solid #a9133d;
-	}
-	
-	.orderStatementMainItemBody {
-		padding: 10px;
-		border: 1px solid #a9133d;
-	}
-	
-	.orderStatementMainItemBody .totalOrderPrice, .orderStatementMainItemHead .totalOrderPrice {
-		float: right;
-	}
-	
-	.toggleStatementL1Info {
-		background-color: green;
-	    color: #fff;
-	    width: 18px;
-	    text-align: center;
-	    font-weight: 600;
-	    height: 18px;
-	    display: inline-block;
-	    border-radius: 50%;
-	    cursor: pointer;
-	}
-	.toggleStatementL2Info {
-		background-color: green;
-	    color: #fff;
-	    width: 12px;
-	    text-align: center;
-	    font-weight: 600;
-	    height: 12px;
-	    display: inline-block;
-	    border-radius: 50%;
-	    cursor: pointer;
-	}
-	
-	.orderStatementL1Body {
-		padding: 0 10px;
-	}
-	
-	.orderStatementL2Body {
-		padding: 10px 20px;
-	}
-	
-	.orderStatementL1Body > .orderStatChildBody {
-		padding: 5px;
-	}
-	
-	.orderStatementL2Body > p {
-		padding: 5px 30px 5px 5px;
-	}
-	
-	.orderStatementL1Body, .orderStatementL2Body {
-		display: none;
-	}
-	
-</style>
 <div>
 	<c:set var="cancelAndRetun" value="false" />
 	<div class="orderStatementOrderId">
@@ -145,7 +84,7 @@
 					</div>
 				</c:if>
 				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> CliQ Cash <span class="totalOrderPrice">&#8377;${cliqCashAmount}</span></h4>
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> CLiQ Cash <span class="totalOrderPrice">&#8377;${cliqCashAmount}</span></h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 							<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -244,7 +183,7 @@
 					</div>
 				</c:if>
 				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> To CliQ Cash</h4>
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> To CLiQ Cash</h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="returnOrder" varStatus="status">
 							<c:forEach items="${returnOrder.entries}" var="entry"
