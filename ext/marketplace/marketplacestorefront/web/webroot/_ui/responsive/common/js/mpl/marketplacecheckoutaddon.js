@@ -6785,6 +6785,15 @@ function useWalletForPaymentAjax(){
 						$("#addCliqCashId").text("");
 						document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 					}
+					
+					if(null!= data.errorMessageForVoucher && undefined!= data.errorMessageForVoucher){
+						resetAppliedCouponFormOnRemoval();
+						//$(".couponApplied").hide();
+						$("#couponMessage").html(data.errorMessageForVoucher);
+										$('#couponMessage').show();
+										$('#couponMessage').delay(4000).fadeOut('slow');
+										setTimeout(function(){ $("#couponMessage").html(""); }, 4500);
+					}
 				}	
 			}			
 			else{

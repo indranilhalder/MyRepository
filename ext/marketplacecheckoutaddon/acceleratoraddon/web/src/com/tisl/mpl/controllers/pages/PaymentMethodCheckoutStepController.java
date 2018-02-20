@@ -7622,6 +7622,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								//}
 							}
 						}
+						totalCartAmt = cart.getTotalPrice().doubleValue();
+						 WalletAmt = cart.getTotalWalletAmount();
+							
+						 //marketing coupon with payment restriction check Start 
+						 
+					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt)){
 						VoucherDiscountData data1 = mplCouponFacade.populateCartVoucherData(null, cart, false, true, "");
 						getSessionService().setAttribute("WalletTotal", "" + totalCartAmt);
 						getSessionService().setAttribute("getCliqCashMode", value);
@@ -7640,6 +7646,131 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getModelService().save(cart);
 						getModelService().refresh(cart);
 						return jsonObject;
+
+						}
+						
+						else
+						{
+							// Split Mode for Payment
+							boolean applyStatus = false;
+							if (isCartVoucherPresent.booleanValue())
+							{
+								// Split Mode with Bank voucher check
+
+								final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
+								cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
+								cart.setSplitModeInfo("Split");
+								getModelService().save(cart);
+								getModelService().refresh(cart);
+
+								try
+								{
+									applyStatus = mplCouponFacade.applyCartVoucher(cartCouponCode, cart, null); // reApply Cart/Bank Voucher
+
+								}
+								catch (final VoucherOperationException ex)
+								{
+									ex.printStackTrace();
+									cart.setCheckForBankVoucher("false");
+									isCartVoucherPresent = false;
+								}
+								finally
+								{
+									if(!applyStatus){
+										cart.setCheckForBankVoucher("false");
+										isCartVoucherPresent = false;
+									}else{
+										cart.setCheckForBankVoucher("true");
+										isCartVoucherPresent = true;
+									}
+
+									VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
+									totalCartAmt = cart.getTotalPrice().doubleValue();
+									double juspayTotalAmt2 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
+
+									if(juspayTotalAmt2 > 0){
+										juspayTotalAmt2 = Double.parseDouble(df.format(juspayTotalAmt2));
+										cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));								
+										getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+										getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt2);
+										getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
+										jsonObject.put("disableJsMode", false);
+										jsonObject.put("juspayAmt", juspayTotalAmt2);
+										jsonObject.put("cliqCashAmt", WalletAmt);
+										jsonObject.put("totalCartAmt", totalCartAmt);
+										jsonObject.put("cartCouponCode", cartCouponCode);
+										jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
+										jsonObject.put("totalDiscount", data.getTotalDiscount().getFormattedValue());
+										jsonObject.put("bankCheckBox", applyStatus);
+										cart.setSplitModeInfo("Split");
+										jsonObject.put("apportionMode", "Split");
+										jsonObject.put("globalCliqCash", false);
+										//	cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));
+										getModelService().save(cart);
+										getModelService().refresh(cart);
+										return jsonObject;
+									}
+									else{
+
+										// Check for Negative Total when bank coupon is applied
+										if (isCartVoucherPresent.booleanValue())
+										{
+											mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
+											data = mplCouponFacade.populateCartVoucherData(null, cart, true, true, ""); // Calculate Values
+											totalCartAmt = cart.getTotalPrice().doubleValue();
+											juspayTotalAmt2 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
+											juspayTotalAmt2 = Double.parseDouble(df.format(juspayTotalAmt2));
+											cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));								
+											getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+											getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt2);
+											getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
+											jsonObject.put("disableJsMode", false);
+											jsonObject.put("juspayAmt", juspayTotalAmt2);
+											jsonObject.put("cliqCashAmt", WalletAmt);
+											jsonObject.put("totalCartAmt", totalCartAmt);
+											jsonObject.put("cartCouponCode", cartCouponCode);
+											jsonObject.put("isCartVoucherPresent", false);
+											//jsonObject.put("globalCliqCash", false);
+											jsonObject.put("totalDiscount", data.getTotalDiscount().getFormattedValue());
+											jsonObject.put("bankCheckBox", false);
+											cart.setSplitModeInfo("Split");
+											jsonObject.put("apportionMode", "Split");
+											//	cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));
+											getModelService().save(cart);
+											getModelService().refresh(cart);
+											return jsonObject;
+										}								
+									}
+								}
+							}
+							else
+							{
+								double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
+								juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
+								getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+								getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
+								getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
+								jsonObject.put("disableJsMode", false);
+								jsonObject.put("juspayAmt", juspayTotalAmt);
+								jsonObject.put("cliqCashAmt", WalletAmt);
+								jsonObject.put("totalCartAmt", totalCartAmt);
+								jsonObject.put("cartCouponCode", cartCouponCode);
+								jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
+								jsonObject.put("totalDiscount", 0);
+								jsonObject.put("bankCheckBox", applyStatus);
+								cart.setSplitModeInfo("Split");
+								jsonObject.put("globalCliqCash", false);
+								jsonObject.put("apportionMode", "Split");
+								cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt));
+								getModelService().save(cart);
+								getModelService().refresh(cart);
+								return jsonObject;
+							}
+						}
+						
+						//marketing coupon with payment restriction check end
+						
+						
 					}
 					else
 					{
