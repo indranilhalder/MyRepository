@@ -17,46 +17,23 @@ export default class ExperienceRateGrid extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <ExperienceRate
-          value="1"
-          defaultImage={ExperienceRatingone}
-          selected
-          onClick={() => {
-            this.selectedItem();
-          }}
-        />
+        <ExperienceRate value="1" defaultImage={ExperienceRatingone} selected />
         <ExperienceRate
           value="2"
           defaultImage={ExperienceRatingThree}
           selected
-          onClick={() => {
-            this.selectedItem();
-          }}
         />
         <ExperienceRate
           value="3"
           defaultImage={ExperienceRatingFive}
           selected
-          onClick={() => {
-            this.selectedItem();
-          }}
         />
         <ExperienceRate
           value="4"
           defaultImage={ExperienceRatingSaven}
           selected
-          onClick={() => {
-            this.selectedItem();
-          }}
         />
-        <ExperienceRate
-          value="5"
-          selected
-          activeImage={ExperienceRatingNine}
-          onClick={() => {
-            this.selectedItem();
-          }}
-        />
+        <ExperienceRate value="5" selected activeImage={ExperienceRatingNine} />
       </div>
     );
   }
