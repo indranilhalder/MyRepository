@@ -20,12 +20,12 @@ export default class ExperienceRate extends React.Component {
       <div className={styles.base}>
         <div className={styles.retingIconHolder}>
           <div className={styles.experienceRateingHolder}>
-            <div className={styles.iconHolder} onClick={this.handleClick}>
+            <div className={styles.iconHolder}>
               <div className={hiddenIconM}>
-                <Icon image={badIcon} size={36} />
+                <Icon image={this.props.defaultImage} size={36} />
               </div>
               <div className={activeIcon}>
-                <Icon image={activeBadIcon} size={36} />
+                <Icon image={this.props.activeImage} size={36} />
               </div>
             </div>
           </div>
@@ -38,10 +38,7 @@ ExperienceRate.propTypes = {
   value: PropTypes.string,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
-  selectedItem: PropTypes.string
-};
-ExperienceRate.defaultProps = {
-  selected: true,
-  value: "bad",
-  selectedItem: "one"
+  selectedItem: PropTypes.func,
+  defaultImage: PropTypes.string,
+  activeImage: PropTypes.string
 };

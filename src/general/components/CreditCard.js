@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Input2 from "./Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
 import SelectBox from "./SelectBox.js";
-import informationIcon from "./img/Info.svg";
+import informationIcon from "./img/Info-grey.svg";
 import Button from "../../general/components/Button";
 import CheckBox from "./CheckBox.js";
 export default class CreditCard extends React.Component {
@@ -60,34 +60,6 @@ export default class CreditCard extends React.Component {
   }
 
   render() {
-    const options = [
-      { value: "January", label: "January" },
-      { value: "February", label: "February" },
-      { value: "March", label: "March" },
-      { value: "April", label: "April" },
-      { value: "May", label: "May" },
-      { value: "June", label: "June" },
-      { value: "July", label: "July" },
-      { value: "August", label: "August" },
-      { value: "September", label: "September" },
-      { value: "October", label: "October" },
-      { value: "November", label: "November" },
-      { value: "December", label: "December" }
-    ];
-    const optionsYear = [
-      { value: "2018", label: "2018" },
-      { value: "2019", label: "2019" },
-      { value: "2020", label: "2020" },
-      { value: "2021", label: "2021" },
-      { value: "2022", label: "2022" },
-      { value: "2023", label: "2023" },
-      { value: "2024", label: "2024" },
-      { value: "2025", label: "2025" },
-      { value: "2026", label: "2026" },
-      { value: "2027", label: "2027" },
-      { value: "2028", label: "2028" },
-      { value: "2029", label: "2029" }
-    ];
     return (
       <div className={styles.base}>
         <div className={styles.cardDetails}>
@@ -103,7 +75,6 @@ export default class CreditCard extends React.Component {
               onChange={val => this.onChangeCardNumber(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
-              rightChildSize={33}
             />
           </div>
 
@@ -119,14 +90,13 @@ export default class CreditCard extends React.Component {
               onChange={val => this.onChangeCardName(val)}
               textStyle={{ fontSize: 14 }}
               height={33}
-              rightChildSize={33}
             />
           </div>
           <div className={styles.dropDownHolder}>
             <div className={styles.dropDownBox}>
               <SelectBox
                 borderNone={true}
-                options={options}
+                options={this.props.options}
                 placeholder="Expiry month"
                 onChange={changedValue => this.monthChange(changedValue)}
                 selected={
@@ -140,7 +110,7 @@ export default class CreditCard extends React.Component {
             <div className={styles.dropDownBox}>
               <SelectBox
                 borderNone={true}
-                options={optionsYear}
+                options={this.props.optionsYear}
                 placeholder="Expiry year"
                 onChange={changedValue => this.onYearChange(changedValue)}
                 selected={
@@ -170,7 +140,7 @@ export default class CreditCard extends React.Component {
                     rightChildSize={33}
                     rightChild={
                       <CircleButton
-                        size={35}
+                        size={33}
                         color={"transparent"}
                         icon={<Icon image={informationIcon} size={16} />}
                       />
@@ -211,5 +181,7 @@ CreditCard.propTypes = {
   buttonText: PropTypes.string,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
-  onSaveData: PropTypes.func
+  onSaveData: PropTypes.func,
+  optionsYear: PropTypes.string,
+  options: PropTypes.string
 };
