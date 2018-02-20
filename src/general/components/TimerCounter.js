@@ -2,11 +2,10 @@ import React from "react";
 import Countdown from "react-countdown-now";
 import PropTypes from "prop-types";
 const renderTimer = ({ days, hours, minutes, seconds }) => {
-  // const finalHour = days * 24 + parseInt(hours, 10);
+  const finalHour = days * 24 + parseInt(hours, 10);
   return (
     <span>
-      {days ? `${days} : ` : null}
-      {hours}:{minutes}:{seconds}
+      {finalHour}:{minutes}:{seconds}
     </span>
   );
 };
