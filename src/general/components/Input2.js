@@ -51,7 +51,7 @@ export default class Input2 extends React.Component {
             }}
           >
             <input
-              type="text"
+              type={this.props.type}
               placeholder={this.props.placeholder}
               className={styles.inputBox}
               onFocus={event => this.handleFocus(event)}
@@ -84,6 +84,7 @@ export default class Input2 extends React.Component {
 Input2.propTypes = {
   hollow: PropTypes.bool,
   boxy: PropTypes.bool,
+  type: PropTypes.string,
   leftChild: PropTypes.element,
   rightChild: PropTypes.element,
   isWhite: PropTypes.bool,
@@ -98,6 +99,7 @@ Input2.propTypes = {
 };
 Input2.defaultProps = {
   height: 40,
+  type: "text",
   textStyle: {
     fontSize: 14
   }
