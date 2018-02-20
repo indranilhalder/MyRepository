@@ -500,16 +500,6 @@ public class SalesOrderXMLUtility
 							{
 
 								MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-								if(chaildModel.getIsEGVCart() !=null && chaildModel.getIsEGVCart().booleanValue()){
-									merchantInfoXMlData
-									.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-								 	getMerchantCode(chaildModel, merchantInfoXMlData);
-								}else{
-									merchantInfoXMlData
-									.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
-						      	merchantInfoXMlData
-									.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
-								}
 								double qcDelivery = 0;
 								if (apporationWalllet.getQcDeliveryValue() != null)
 								{
@@ -530,14 +520,28 @@ public class SalesOrderXMLUtility
 								merchantInfoXMlData.setExpressDelCharge(getDecimalFormateValue(shippingValue));
 
 								//merchantInfoXMlData.setReversePaymentRefId(payemntrefid); 
-
-
 								double total = 0;
-								if (apporationWalllet.getQcApportionValue() != null)
-								{
-									total = Double.parseDouble(apporationWalllet.getQcApportionValue());
+								if(chaildModel.getIsEGVCart() !=null && chaildModel.getIsEGVCart().booleanValue()){
+									merchantInfoXMlData
+									.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
+								 	getMerchantCode(chaildModel, merchantInfoXMlData);
+								 	if (apporationWalllet.getCardAmount() != null)
+									{
+								 	  total = Double.parseDouble(apporationWalllet.getCardAmount());
+									}
+								}else{
+									merchantInfoXMlData
+									.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
+						      	merchantInfoXMlData
+									.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
+						      	//for egv order changes
+						      	if (apporationWalllet.getQcApportionValue() != null)
+									{
+										total = Double.parseDouble(apporationWalllet.getQcApportionValue());
+									}
 								}
-								if(StringUtils.isNotBlank(apporationWalllet.getBucketType())){
+								
+								if(StringUtils.isNotEmpty(apporationWalllet.getBucketType())){
 									merchantInfoXMlData.setBucketId(apporationWalllet.getBucketType());
 								}else{
 									merchantInfoXMlData.setBucketId("");

@@ -97,7 +97,7 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 	private String getCardExpDate(String cardExpDate) 
 	{
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 		if(StringUtils.isNotEmpty(cardExpDate)){
 		Date date = null;
 		try {

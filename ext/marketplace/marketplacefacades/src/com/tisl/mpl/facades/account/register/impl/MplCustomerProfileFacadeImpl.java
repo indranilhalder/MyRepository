@@ -347,6 +347,10 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 					&& !MarketplacecommerceservicesConstants.EMPTY.equals(mplCustomerProfileData.getFirstName()))
 			{
 				oCustomerModel.setFirstName(mplCustomerProfileData.getFirstName());
+				if(null != oCustomerModel.getQcVerifyFirstName() && StringUtils.isNotBlank(oCustomerModel.getQcVerifyFirstName())) 
+				{
+					oCustomerModel.setQcVerifyFirstName(mplCustomerProfileData.getFirstName());
+				}
 			}
 			else
 			{
@@ -358,6 +362,10 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 					&& !MarketplacecommerceservicesConstants.EMPTY.equals(mplCustomerProfileData.getLastName()))
 			{
 				oCustomerModel.setLastName(mplCustomerProfileData.getLastName());
+				if(null != oCustomerModel.getQcVerifyLastName() && StringUtils.isNotBlank(oCustomerModel.getQcVerifyLastName())) 
+				{
+					oCustomerModel.setQcVerifyLastName(mplCustomerProfileData.getLastName());
+				}
 			}
 			else
 			{
@@ -391,6 +399,10 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 					&& !MarketplacecommerceservicesConstants.EMPTY.equals(mplCustomerProfileData.getMobileNumber()))
 			{
 				oCustomerModel.setMobileNumber(mplCustomerProfileData.getMobileNumber());
+				if(null != oCustomerModel.getQcVerifyMobileNo()&& StringUtils.isNotBlank(oCustomerModel.getQcVerifyMobileNo())) 
+				{
+					oCustomerModel.setQcVerifyMobileNo(mplCustomerProfileData.getMobileNumber());
+				}
 			}
 			else
 			{
