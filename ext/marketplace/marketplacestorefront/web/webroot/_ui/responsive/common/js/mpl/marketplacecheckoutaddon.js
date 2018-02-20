@@ -6170,7 +6170,13 @@ function submitNBForm(paymentInfo){
 		//TPR-4461 set for setting the bank name for NetBanking starts here
 		var netBankName=selectedHiddenValue;
 		//TPR-4461 set for setting the bank name for NetBanking ends here.bank name for netbanking is sent to create juspay order method of payment method checkout step controller 'netBankName' : netBankName
-
+        //Egv Changes
+		var isEGVOrder=$("#isEGVOrder").val();
+		if(isEGVOrder == ''){
+			isEGVOrder=false;
+		}else if(isEGVOrder == "undefined"){
+			isEGVOrder=false;
+		}
 
 		var cardSaved=false;
 		var guid=$("#guid").val();
@@ -6178,7 +6184,7 @@ function submitNBForm(paymentInfo){
 		//ACC.singlePageCheckout.showAjaxLoader();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'paymentinfo':paymentInfo},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'paymentinfo':paymentInfo,'isEGVOrder':isEGVOrder},
 			type: "POST",
 			cache: false,
 			success : function(response) {

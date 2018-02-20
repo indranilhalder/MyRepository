@@ -376,11 +376,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.PAYMENT_METHOD)
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid,
-			@RequestParam(value = "dispMsg", required = false) final String dispMsg) throws CMSItemNotFoundException
+			@RequestParam(value = "dispMsg", required = false) final String dispMsg,
+			@RequestParam(value = "isEGVOrder", required = false, defaultValue = "false") final boolean isEGVOrder) throws CMSItemNotFoundException
 	{
 		//OrderIssues:-  multiple Payment Response from juspay restriction
 
 		//redirecting to previous page for anonymous user
+		
+		//Added code for Egv changes 
+		 if (isEGVOrder)
+		  {
+		   return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+		     + getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE)+ "/?egvErrorMsg=" + "paymentError";
+		  }
 
 		CartModel cartModel = null;
 		if (getUserFacade().isAnonymousUser())
@@ -7457,10 +7465,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						MarketplacecheckoutaddonConstants.TRANERRORMSG);
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
-						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+				mplEGVCartService.removeOldEGVCartCurrentCustomer();
+			    return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+			      + MarketplacecheckoutaddonConstants.PAYVALUE + "?isEGVOrder=" + true;
 			}
 		}
 		else
