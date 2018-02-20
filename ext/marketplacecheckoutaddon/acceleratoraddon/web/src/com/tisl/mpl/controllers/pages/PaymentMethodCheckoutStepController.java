@@ -5612,10 +5612,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				LOG.error("Issue with update order...redirecting to payment page only");
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-				return getCheckoutStep().currentStep();
+
+				if (orderToBeUpdated != null && orderToBeUpdated.getIsEGVCart() != null
+						&& orderToBeUpdated.getIsEGVCart().booleanValue())
+				{
+					mplEGVCartService.removeOldEGVCartCurrentCustomer();
+				    return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+				      + MarketplacecheckoutaddonConstants.PAYVALUE + "?isEGVOrder=" + true;
+				}
+				else
+				{
+					LOG.error("Issue with update order...redirecting to payment page only");
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+					return getCheckoutStep().currentStep();
+				}
 			}
 		}
 		catch (final ModelSavingException e)
