@@ -6,6 +6,7 @@ import styles from "./CartPage.css";
 import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS } from "../../lib/constants";
+import SavedProduct from "./SavedProduct";
 class CartPage extends React.Component {
   componentDidMount() {
     this.props.getCartDetails();
@@ -17,6 +18,10 @@ class CartPage extends React.Component {
         <MDSpinner />
       </div>
     );
+  };
+
+  goToCouponPage = () => {
+    this.props.showCouponModal(this.props.productDetails);
   };
 
   render() {
@@ -55,6 +60,7 @@ class CartPage extends React.Component {
               );
             })}
           </div>
+          <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
           <Checkout
             amount={cartDetails.cartAmount.bagTotal.formattedValue}
             bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}

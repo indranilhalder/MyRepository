@@ -10,6 +10,7 @@ import {
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
+import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getUserCart: () => {
@@ -32,6 +33,9 @@ const mapDispatchToProps = dispatch => {
     },
     getCartDetails: () => {
       dispatch(getCartDetails());
+    },
+    showCouponModal: data => {
+      dispatch(showModal(PRODUCT_COUPONS, data));
     }
   };
 };
