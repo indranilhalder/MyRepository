@@ -1,21 +1,8 @@
 .base {
-  width: 100%;
-  height: auto;
+  width: 36px;
+  height: 36px;
   display: inline-block;
-  margin-right: 5px;
-}
-.retingIconHolder {
-  width: 100%;
-  height: 100%;
-  display: inline-block;
-  padding: 5px;
-  text-align: center;
-}
-.experienceRateingHolder {
-  width: 100%;
-  margin: auto;
-  position: relative;
-  height: 40px;
+  margin-right: 20px;
 }
 .iconHolder {
   width: 36px;
@@ -31,10 +18,7 @@
   left: 0;
   opacity: 0;
 }
-.showIcon {
-  composes: hiddenIcon;
-  opacity: 1;
-}
+
 .active {
   composes: hiddenIcon;
   opacity: 1;
