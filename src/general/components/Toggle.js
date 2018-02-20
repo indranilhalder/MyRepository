@@ -8,7 +8,7 @@ export default class Toggle extends React.Component {
       active: this.props.active
     };
   }
-  toggle() {
+  handleToggle() {
     if (!this.props.disabled) {
       this.setState({ active: !this.state.active }, () => {
         if (this.props.onToggle) {
@@ -24,10 +24,10 @@ export default class Toggle extends React.Component {
       className = styles.toggleActive;
     }
     if (this.props.disabled) {
-      base = styles.toggleDissabled;
+      base = styles.toggleDisabled;
     }
     return (
-      <div className={base} onClick={() => this.toggle()}>
+      <div className={base} onClick={() => this.handleToggle()}>
         <div className={className} />
       </div>
     );

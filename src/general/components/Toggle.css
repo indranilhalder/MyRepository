@@ -22,7 +22,7 @@
   right:calc(100% - 21px);
   background:#bbbbbb;
 }
-.toggleDissabled{
+.toggleDisabled{
   composes:base;
   pointer-events:none;
   opacity:0.5
