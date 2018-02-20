@@ -6647,6 +6647,9 @@ function useWalletForPaymentAjax(){
 
 	$("#make_cc_payment").show();
 	var value = document.getElementById('useGiftCardCheckbox');	
+	if(value.checked == "undefined") {
+		value.checked = false;
+	}
 	$("#viewPaymentCOD").show();
 	$("#paytmId").show();
 	var staticHost = $('#staticHost').val();
