@@ -5640,11 +5640,11 @@ public class ProductPageController extends MidPageController
 			 if(egvErrorMsg.equalsIgnoreCase("formValidation")){
 			     model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
 			 }else if(egvErrorMsg.equalsIgnoreCase("paymentError")){
-				 GlobalMessages.addMessage(model, GlobalMessages.CONF_MESSAGES_HOLDER, "mpl.gift.error.paymentMessage",
+				 GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.paymentMessage",
 							new Object[] {});
 			 }
 			 else if(egvErrorMsg.equalsIgnoreCase("EGVOderError")){
-				 GlobalMessages.addMessage(model, GlobalMessages.CONF_MESSAGES_HOLDER, "mpl.gift.error.message",
+				 GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.message",
 							new Object[] {});
 			 }
 		}
