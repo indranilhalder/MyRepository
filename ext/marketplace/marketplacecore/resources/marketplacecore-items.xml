@@ -47,6 +47,8 @@
 			autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="FlashSalesElement" code="FlashSalesCollection"
 			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="ThemeOffersCompOfferElement" code="ThemeOffersCompOfferCollection"
+   			autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="ThemeOffersItemsElement" code="ThemeOffersItemsCollection"
 			autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="ThemeProductWidgetElement" code="ThemeProductWidgetCollection"
@@ -5651,7 +5653,7 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="FlashSalesCollection" qualifier="offers"
+					<attribute type="ThemeOffersCompOfferCollection" qualifier="offers"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -5665,6 +5667,38 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="ThemeOffersCompOfferElement" extends="SimpleCMSComponent"
+		    autocreate="true" generate="true"
+		    jaloclass="com.tisl.mpl.jalo.cms.components.ThemeOffersCompOfferElement">
+			    <attributes>
+				     <attribute qualifier="title" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="description" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="imageURL" type="media" generate="true"
+				      autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="webURL" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="appURL" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+			    </attributes>
+		   </itemtype>
 
 			<itemtype code="ThemeOffersItemsElement" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
