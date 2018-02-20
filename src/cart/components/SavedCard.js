@@ -10,24 +10,23 @@ export default class SavedCard extends React.Component {
     }
   }
   render() {
-    let classCircle = styles.circleDesign;
     return (
       <div className={styles.base}>
         <div className={styles.cardNumber}>
-          <div className={classCircle} />
-          <div className={classCircle} />
-          <div className={classCircle} />
-          <div className={classCircle} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
           <div className={styles.circleTransparent} />
-          <div className={classCircle} />
-          <div className={classCircle} />
-          <div className={classCircle} />
-          <div className={classCircle} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
           <div className={styles.circleTransparent} />
-          <div className={classCircle} />
-          <div className={classCircle} />
-          <div className={classCircle} />
-          <div className={classCircle} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
+          <div className={styles.circleDesign} />
           <div className={styles.cardDigits}>{this.props.cardNumber}</div>
         </div>
         <div className={styles.cardCvvHolder}>
