@@ -2599,7 +2599,8 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/displayOrderSummary", method = RequestMethod.GET)
 	@ResponseBody
 	public CartDataDetailsWsDTO displayOrderSummary(@PathVariable final String userId, @PathVariable final String cartId,
-			@RequestParam final String pincode, @RequestParam(required = false) final String cartGuid)
+			@RequestParam final String pincode, @RequestParam(required = false) final String cartGuid,
+			@RequestParam(required = false) final boolean isPwa)
 	{
 		CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
 		if (LOG.isDebugEnabled())
@@ -2608,7 +2609,7 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
-			cartDetailsData = mplPaymentWebFacade.displayOrderSummary(userId, cartId, cartGuid, pincode);
+			cartDetailsData = mplPaymentWebFacade.displayOrderSummary(userId, cartId, cartGuid, pincode, isPwa);
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
@@ -3887,7 +3888,7 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/cartDetailsCNC", method = RequestMethod.GET)
 	@ResponseBody
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(@PathVariable final String cartId,
-			@RequestParam(required = false) final String pincode,
+			@RequestParam(required = false) final String pincode, @RequestParam(required = false) final boolean isPwa,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final AddressListWsDTO addressListDTO = addressList(fields);
@@ -3897,7 +3898,8 @@ public class CartsController extends BaseCommerceController
 			if (null != cartId)
 			{
 				LOG.debug("************ get cart details with POS mobile web service *********" + cartId);
-				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode);
+				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode, isPwa);
+
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3988,7 +3990,7 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
 					final AddressListWsDTO addressListDTO = addressList(fields);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, false);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					return cartDataDetails;
 				}
@@ -4087,7 +4089,7 @@ public class CartsController extends BaseCommerceController
 
 					LOG.debug("************ in addPickupPersonDetails :get cart details mobile web service *********" + cartId);
 					final AddressListWsDTO addressListDTO = addressList(fields);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null, false);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 				}
 			}

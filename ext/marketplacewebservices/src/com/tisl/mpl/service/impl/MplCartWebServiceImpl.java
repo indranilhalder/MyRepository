@@ -941,11 +941,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 */
 	@Override
 	public CartDataDetailsWsDTO getCartDetailsWithPOS(final String cartId, final AddressListWsDTO addressListDTO,
-			final String pincode)
+			final String pincode, final boolean isPwa)
 	{
 
 		CartModel cart = null;
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
+		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		try
 		{
@@ -961,6 +962,20 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				cartDataDetails = cartDetailsWithPos(cart, addressListDTO, pincode, cartId);
 
+				if (isPwa)
+				{
+					final Double mrp = calculateCartTotalMrp(cart);
+					//
+					final PriceData totalMrp = createPriceCharge(mrp.toString());
+					pricePwa.setBagTotal(totalMrp);
+					final PriceData payableAmount = createPriceCharge(cartDataDetails.getTotalPrice());
+					pricePwa.setPaybleAmount(payableAmount);
+					final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					cartDataDetails.setCartAmount(pricePwa);
+
+				}
 				if (deListedStatus)
 				{
 					delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
@@ -2712,6 +2727,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		CartData cartDataOrdered = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
 		boolean deListedStatus = false;
+		double totalafterpromotion = 0.0;
+
 		List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		//CAR-57
@@ -2805,7 +2822,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					&& null != cartDataOrdered.getTotalDiscounts() && null != cartDataOrdered.getTotalDiscounts().getValue()
 					&& null != cartDataOrdered.getTotalDiscounts().getValue().toString())
 			{
-				final double totalafterpromotion = cartModel.getSubtotal().doubleValue() + cartModel.getDeliveryCost().doubleValue()
+				totalafterpromotion = cartModel.getSubtotal().doubleValue() + cartModel.getDeliveryCost().doubleValue()
 						- Double.parseDouble(cartDataOrdered.getTotalDiscounts().getValue().toString());
 				final PriceData totalPrice = discountUtility.createPrice(cartModel, Double.valueOf(totalafterpromotion));
 				if (null != totalPrice && null != totalPrice.getValue())
@@ -3314,8 +3331,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3584,7 +3601,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -4475,7 +4492,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	 * @param abstractOrderModel
 	 * @return cartTotalMrp
 	 */
-	private Double calculateCartTotalMrp(final AbstractOrderModel abstractOrderModel)
+	@Override
+	public Double calculateCartTotalMrp(final AbstractOrderModel abstractOrderModel)
 	{
 		// YTODO Auto-generated method stub
 		Double cartTotalMrp = Double.valueOf(0);

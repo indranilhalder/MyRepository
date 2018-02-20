@@ -121,15 +121,18 @@ public interface MplCartWebService
 
 	public PriceData calculateTotalDiscount(final CartModel cart);
 
+	public Double calculateCartTotalMrp(final AbstractOrderModel abstractOrderModel);
+
 	/**
 	 * Service to get cart details with POS
 	 *
 	 * @param cartId
 	 * @param addressListDTO
 	 * @param pincode
+	 * @param isPwa
 	 * @return CartDataDetailsWsDTO
 	 */
-	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode, boolean isPwa);
 
 	/**
 	 * Service to get cart details with with all summary using cartModel

@@ -3827,6 +3827,8 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="paybleAmount"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalDiscountAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ColorLinkData">
