@@ -276,7 +276,7 @@ function refresh(){
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").prop("disabled",false);
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity","1");
 	$(".pay .spinner").remove();
-	$("#no-click,.spinner").remove();
+	$("#no-click,.spinner,.loaderDiv").remove();
 
 	// $(".checkout-content.checkout-payment
 	// .left-block").css("margin-top","0px");
