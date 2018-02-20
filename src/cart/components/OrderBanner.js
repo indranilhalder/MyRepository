@@ -31,5 +31,6 @@ export default class OrderBanner extends React.Component {
 OrderBanner.propTypes = {
   headingText: PropTypes.string,
   label: PropTypes.string,
-  buttonText: PropTypes.string
+  buttonText: PropTypes.string,
+  onClick: PropTypes.func
 };
