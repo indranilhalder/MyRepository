@@ -38,7 +38,3 @@ ExperienceRate.propTypes = {
   defaultImage: PropTypes.string,
   activeImage: PropTypes.string
 };
-// ExperienceRate.defaultProps = {
-//   defaultImage: badIcon,
-//   activeImage: activeBadIcon
-// };
