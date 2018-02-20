@@ -1,0 +1,29 @@
+.base{
+  width:auto;
+  height:22px;
+  border-radius:10px;
+  border:1px solid #bbbbbb;
+  position:relative;
+}
+.toggleActive{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:#15d69e;
+  position:absolute;
+  right:0%;
+  top:-1px;
+  -webkit-transition: 300ms;
+  -moz-transition: 300ms;
+  transition:300ms;
+}
+.toggleInActive{
+  composes:toggleActive;
+  right:calc(100% - 21px);
+  background:#bbbbbb;
+}
+.toggleDisabled{
+  composes:base;
+  pointer-events:none;
+  opacity:0.5
+}
