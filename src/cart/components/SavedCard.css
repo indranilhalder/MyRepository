@@ -26,7 +26,7 @@
   background:#fff;
   margin-right:0px;
 }
-.cardLastFourDigit{
+.cardDigits{
   width:auto;
   height:auto;
   font-size:14px;
@@ -37,7 +37,7 @@
   padding-left:10px;
   vertical-align:initial
 }
-.cardNameAndCvv{
+.cardCvvHolder{
   width:100%;
   height:auto;
   display:inline-block;

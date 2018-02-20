@@ -28,11 +28,9 @@ export default class SavedCard extends React.Component {
           <div className={classCircle} />
           <div className={classCircle} />
           <div className={classCircle} />
-          <div className={styles.cardLastFourDigit}>
-            {this.props.cardNumber}
-          </div>
+          <div className={styles.cardDigits}>{this.props.cardNumber}</div>
         </div>
-        <div className={styles.cardNameAndCvv}>
+        <div className={styles.cardCvvHolder}>
           <div className={styles.cardsSection}>
             <div className={styles.cardIconHolder}>
               <Icon image={this.props.cardImage} size={40} />
