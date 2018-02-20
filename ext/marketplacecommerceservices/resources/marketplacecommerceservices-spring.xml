@@ -2500,7 +2500,16 @@
 	<bean id="gigyaDataPullUtility" class="com.tisl.mpl.core.cronjobs.gigya.GigyaDataPullUtility" />
 	
 	<!-- gigya data pulling job ends -->
-
-    
+	<!--NU-50 start  -->
+	
+<alias name="mplFollowedBrandService" alias="mplFollowedBrandService"/>
+	<bean id="mplFollowedBrandService" class="com.tisl.mpl.marketplacecommerceservices.service.brand.impl.MplFollowedBrandServiceImpl" >
+     	<property name="mplFollowedBrandDao" ref="mplFollowedBrandDao" />
+    </bean>
+	
+	<alias name="mplFollowedBrandDao" alias="mplFollowedBrandDao"/>
+	<bean id="mplFollowedBrandDao" class="com.tisl.mpl.marketplacecommerceservices.daos.brand.impl.MplFollowedBrandDaoImpl" >
+    </bean>
+   <!--  NU-50 end -->
 </beans>
 

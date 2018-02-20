@@ -96,10 +96,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.brand.MplFollowedBrandFacade;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facade.compare.MplProductCompareFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
@@ -119,7 +121,9 @@ import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
+import com.tisl.mpl.wsdto.FollowedBrandWsDto;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
+import com.tisl.mpl.wsdto.MplFollowedBrandsWsDto;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
@@ -206,6 +210,10 @@ public class ProductsController extends BaseController
 	//critical sonar fix
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
+
+
+	@Resource(name = "mplFollowedBrandFacade")
+	private MplFollowedBrandFacade mplFollowedBrandFacade;
 
 	static
 	{
@@ -1860,5 +1868,71 @@ public class ProductsController extends BaseController
 		}
 		return productSearchPage;
 	}
+
 	//NU-38 end
+
+	@RequestMapping(value = "/getFollowedBrands", method = RequestMethod.GET, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public MplFollowedBrandsWsDto getFollowedBrands(final String fields, @RequestParam(required = true) final String gender,
+			@RequestParam(required = false) final boolean isPwa)
+
+
+	{
+		final MplFollowedBrandsWsDto mplFollowedBrandsWsDto = new MplFollowedBrandsWsDto();
+
+		try
+		{
+			List<FollowedBrandWsDto> followedBrandList = new ArrayList<FollowedBrandWsDto>();
+
+			followedBrandList = mplFollowedBrandFacade.getFollowedBrands(gender);
+
+			if (CollectionUtils.isNotEmpty(followedBrandList))
+			{
+				mplFollowedBrandsWsDto.setFollowedBrandList(followedBrandList);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			if (null != e.getErrorMessage())
+			{
+				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplFollowedBrandsWsDto.setErrorCode(e.getErrorCode());
+			}
+			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			mplFollowedBrandsWsDto.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
+			mplFollowedBrandsWsDto.setErrorCode(MarketplacewebservicesConstants.H9002);
+			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+
+		}
+		return mplFollowedBrandsWsDto;
+
+
+	}
+
+	/**
+	 * @return the mplFollowedBrandFacade
+	 */
+	public MplFollowedBrandFacade getMplFollowedBrandFacade()
+	{
+		return mplFollowedBrandFacade;
+	}
+
+	/**
+	 * @param mplFollowedBrandFacade
+	 *           the mplFollowedBrandFacade to set
+	 */
+	public void setMplFollowedBrandFacade(final MplFollowedBrandFacade mplFollowedBrandFacade)
+	{
+		this.mplFollowedBrandFacade = mplFollowedBrandFacade;
+	}
 }
