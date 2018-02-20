@@ -220,8 +220,7 @@ public class MarketPlaceDefaultCancellationController extends
 			OrderCancelRecordEntryModel orderCancelRecord = (OrderCancelRecordEntryModel) typedObject
 					.getObject();
 			PaymentTransactionModel paymentTransactionModel = null;
-			if ((orderCancelRecord.getRefundableAmount() != null&& orderCancelRecord.getRefundableAmount() > NumberUtils.DOUBLE_ZERO) || 
-					(orderCancelRecord.getAmountForQc() != null && orderCancelRecord.getAmountForQc() > NumberUtils.DOUBLE_ZERO))  {
+			if ((orderCancelRecord.getRefundableAmount() != null&& orderCancelRecord.getRefundableAmount() > NumberUtils.DOUBLE_ZERO))  {
 
 
 //				Mrupee implementation 
@@ -235,10 +234,8 @@ public class MarketPlaceDefaultCancellationController extends
 					OrderModel order = orderCancelRecord.getOriginalVersion().getOrder();
                     String splitModeinfo = order.getSplitModeInfo();
                
-				if(splitModeinfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH)){
+				if(null != splitModeinfo && splitModeinfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)){
 					String walletId = null;
-					final DecimalFormat decimalFormat = new DecimalFormat("#.00");
-					
 						final CustomerModel customerModel = (CustomerModel) order.getUser();
 						if (null != customerModel && null != customerModel.getCustomerWalletDetail()){
 							walletId = customerModel.getCustomerWalletDetail().getWalletId();
@@ -265,16 +262,115 @@ public class MarketPlaceDefaultCancellationController extends
 										LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
 												+ newStatus.getCode());
 										mplJusPayRefundService.makeRefundOMSCall(orderEntry, null,
-												Double.valueOf(decimalFormat.format(orderCancelRecord.getAmountForQc())), newStatus, null);
+												Double.valueOf(orderCancelRecord.getRefundableAmount()), newStatus, null);
 									}
 								}
 							}
 							}catch(Exception e){
 								e.getMessage();
 								LOG.error("Quck Cilver giving  Order Id :"+ order.getCode());
-								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,Double.valueOf(decimalFormat.format(orderCancelRecord.getAmountForQc())), newStatus,null);
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,Double.valueOf(orderCancelRecord.getRefundableAmount()), newStatus,null);
 							}
 						}
+				}else if(null != splitModeinfo && splitModeinfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT)){
+					String walletId = null;
+					double juspayTotalAmount =0.0D;
+					WalletApportionReturnInfoModel returnModel = null;
+					final CustomerModel customerModel = (CustomerModel) order.getUser();
+					if (null != customerModel && null != customerModel.getCustomerWalletDetail()){
+						walletId = customerModel.getCustomerWalletDetail().getWalletId();
+					 }
+					for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord.getOrderEntriesModificationEntries()) {
+						OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+						try{
+							final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = cancelOrderEntryForQcPaymentMode( orderEntry.getTransactionID(), walletId);
+							returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList,orderEntry.getTransactionID(), order,orderEntry);
+						}catch(Exception e){
+							LOG.error("Refund updation data failed");
+						}
+					}
+					//Juspay Amount calculation ....
+					for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord.getOrderEntriesModificationEntries()) {
+						OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+						juspayTotalAmount +=calculateSplitJuspayRefundAmount(orderEntry);
+					}
+					try{
+						paymentTransactionModel = mplJusPayRefundService.doRefund(
+								orderCancelRecord.getOriginalVersion().getOrder(),
+								juspayTotalAmount,
+								PaymentTransactionType.CANCEL,uniqueRequestId);
+						if (null != paymentTransactionModel) {
+							mplJusPayRefundService.attachPaymentTransactionModel(
+									orderCancelRecord.getOriginalVersion()
+											.getOrder(), paymentTransactionModel);
+							if (CollectionUtils.isNotEmpty(orderCancelRecord
+									.getOrderEntriesModificationEntries())) {
+
+								for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
+										.getOrderEntriesModificationEntries()) {
+									OrderEntryModel orderEntry = modificationEntry
+											.getOrderEntry();
+									if(null != orderEntry && null != orderEntry.getWalletApportionReturnInfo()){
+										saveQCandJuspayResponse(orderEntry, paymentTransactionModel, orderEntry.getWalletApportionReturnInfo());	
+									}
+									
+									ConsignmentStatus newStatus = null;
+									if (orderEntry != null) {
+										try{
+											if(CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries())){	
+												ConsignmentModel consignmentModel = orderEntry.getConsignmentEntries().iterator().next().getConsignment();
+												consignmentModel.setRefundDetails(RefundFomType.AUTOMATIC);
+												getModelService().save(consignmentModel);
+											}
+											
+										}catch(Exception e ){
+											LOG.error("Refund updation data failed");
+										}
+										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),"SUCCESS")) {
+											newStatus = ConsignmentStatus.ORDER_CANCELLED;
+										} else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),"PENDING")) {
+											newStatus = ConsignmentStatus.REFUND_INITIATED;
+											RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
+													.create(RefundTransactionMappingModel.class);
+											refundTransactionMappingModel
+													.setRefundedOrderEntry(orderEntry);
+											refundTransactionMappingModel
+													.setJuspayRefundId(paymentTransactionModel
+															.getCode());
+											refundTransactionMappingModel
+													.setCreationtime(new Date());
+											refundTransactionMappingModel
+													.setRefundType(JuspayRefundType.CANCELLED);
+											refundTransactionMappingModel
+													.setRefundAmount(juspayTotalAmount);
+											getModelService().save(
+													refundTransactionMappingModel);
+										} else {
+											newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+										}
+									}
+									//Start TISPRD-871
+									if(newStatus.equals(ConsignmentStatus.ORDER_CANCELLED)){
+										orderEntry.setJuspayRequestId(uniqueRequestId);
+									}
+									//End TISPRD-871
+									
+									getModelService().save(orderEntry);
+									mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,juspayTotalAmount, newStatus,null);
+								}
+							}
+						}else {
+							LOG.error("Refund Failed");
+							//TISSIT-1790 Code addition started
+							mplJusPayRefundService.createCancelRefundPgErrorEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
+									JuspayRefundType.CANCELLED, uniqueRequestId);
+						}
+						
+					}catch(Exception e){
+						LOG.error("Refund updation data failed");
+						mplJusPayRefundService.createCancelRefundExceptionEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
+								JuspayRefundType.CANCELLED, uniqueRequestId);
+					}
 				}else{
 				   try {
 					paymentTransactionModel = mplJusPayRefundService.doRefund(
@@ -282,11 +378,6 @@ public class MarketPlaceDefaultCancellationController extends
 							orderCancelRecord.getRefundableAmount(),
 							PaymentTransactionType.CANCEL,uniqueRequestId);
 					if (null != paymentTransactionModel) {
-						String walletId = null;
-						final CustomerModel customerModel = (CustomerModel) order.getUser();
-						if (null != customerModel && null != customerModel.getCustomerWalletDetail()){
-							walletId = customerModel.getCustomerWalletDetail().getWalletId();
-						 }
 						mplJusPayRefundService.attachPaymentTransactionModel(
 								orderCancelRecord.getOriginalVersion()
 										.getOrder(), paymentTransactionModel);
@@ -297,12 +388,7 @@ public class MarketPlaceDefaultCancellationController extends
 									.getOrderEntriesModificationEntries()) {
 								OrderEntryModel orderEntry = modificationEntry
 										.getOrderEntry();
-								if(splitModeinfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT)){
-								WalletApportionReturnInfoModel returnModel = null;
-								final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = cancelOrderEntryForQcPaymentMode( orderEntry.getTransactionID(), walletId);
-								returnModel = constructQuickCilverOrderEntryForSplit(walletCardApportionDetailModelList,orderEntry.getTransactionID(), order);
-								saveQCandJuspayResponse(orderEntry, paymentTransactionModel, returnModel);
-								}
+								
 								double currDeliveryCharges = orderEntry
 										.getCurrDelCharge() != null ? orderEntry
 										.getCurrDelCharge()
@@ -793,8 +879,13 @@ public class MarketPlaceDefaultCancellationController extends
 						{
 							if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
 							{
-								qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue());
-
+								qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue())
+								+ Double.parseDouble(null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail
+										.getQcDeliveryValue() : "" + 0)
+								+ Double.parseDouble(null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail
+										.getQcSchedulingValue() : "" + 0)
+								+ Double.parseDouble(null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail
+										.getQcShippingValue() : "" + 0);
 								final QCCreditRequest qcCreditRequest = new QCCreditRequest();
 								qcCreditRequest.setAmount(decimalFormat.format(qcCliqCashAmt));
 								qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
@@ -961,13 +1052,14 @@ public class MarketPlaceDefaultCancellationController extends
 			entries.add(paymentTransactionEntryModel);
 			paymentTransactionModel.setEntries(entries);
 			modelService.save(paymentTransactionModel);
+		
 			LOG.debug("Payment Transaction created SuccessFully......:");
 
 		}
 		
 		private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(
 				final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final String transactionId,
-				final OrderModel subOrderModel)
+				final OrderModel subOrderModel,final OrderEntryModel orderEntry)
 		{
 
 			final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
@@ -988,6 +1080,12 @@ public class MarketPlaceDefaultCancellationController extends
 						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
 						{
 							totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
+							totalQcDeliveryValue  +=Double.parseDouble(null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail
+									.getQcDeliveryValue() : "" + 0);
+							totalQcSchedulingValue += Double.parseDouble(null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail
+									.getQcSchedulingValue() : "" + 0);
+							totalQcShippingValue += Double.parseDouble(null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail
+											.getQcShippingValue() : "" + 0);
 						}
 					}
 				}
@@ -1013,6 +1111,17 @@ public class MarketPlaceDefaultCancellationController extends
 			{
 				walletApportionReturnModel.setStatus("SUCCESS");
 			}
+			modelService.save(walletApportionReturnModel);
+			System.out.println("After Saving Juspay Response is :");
+			
+			orderEntry.setWalletApportionReturnInfo(walletApportionReturnModel);
+			System.out.println("Before setting  Order Entry Response is :");
+			modelService.save(orderEntry);
+			modelService.refresh(walletApportionReturnModel);
+			
+			System.out.println("After setting  Order Entry Response is :");
+	     LOG.error("abstractOrderEntryModel QC Model  Saved Successfully..............");
+			
 			return walletApportionReturnModel;
 		}
 		
@@ -1066,5 +1175,31 @@ public class MarketPlaceDefaultCancellationController extends
 			modelService.save(orderEntry);
 			System.out.println("After setting  Order Entry Response is :" + returnModel.getJuspayApportionValue());
 			LOG.debug("abstractOrderEntryModel Saved Successfully..............");
+		}
+		
+		private double calculateSplitJuspayRefundAmount(final AbstractOrderEntryModel orderEntry)
+		{
+			double refundAmount = 0.0D;
+			if (null != orderEntry.getWalletApportionPaymentInfo()
+					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue())
+			{
+				refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()).doubleValue();
+			}
+			if (null != orderEntry.getWalletApportionPaymentInfo()
+					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
+			{
+				refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()).doubleValue();
+			}
+			if (null != orderEntry.getWalletApportionPaymentInfo()
+					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
+			{
+				refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()).doubleValue();
+			}
+			if (null != orderEntry.getWalletApportionPaymentInfo()
+					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue())
+			{
+				refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue()).doubleValue();
+			}
+			return refundAmount;
 		}
 }
