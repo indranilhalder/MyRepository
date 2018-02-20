@@ -40,7 +40,7 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<spring:eval
-		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')"
+		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.payment.wallet')"
 		var="walletEnable" />
 		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="addGiftCardEnable"/>
 	
