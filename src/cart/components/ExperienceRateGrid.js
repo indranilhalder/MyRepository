@@ -1,7 +1,5 @@
 import React from "react";
-import Grid from "../../general/components/Grid";
 import ExperienceRate from "./ExperienceRate";
-import PropTypes from "prop-types";
 import styles from "./ExperienceRateGrid.css";
 import ExperienceRatingone from "./img/bad.svg";
 import ExperienceRatingTwo from "./img/Bad_Red.svg";
