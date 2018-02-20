@@ -5,6 +5,11 @@ import ExperienceRateGrid from "./ExperienceRateGrid.js";
 import Button from "../../general/components/Button.js";
 
 export default class RateyourExperienceCard extends React.Component {
+  handleClick() {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -22,6 +27,7 @@ export default class RateyourExperienceCard extends React.Component {
               label={this.props.buttonText}
               width={211}
               textStyle={{ color: "#FFF", fontSize: 50 }}
+              onClick={() => this.handleClick()}
             />
           </div>
         </div>
@@ -32,5 +38,6 @@ export default class RateyourExperienceCard extends React.Component {
 RateyourExperienceCard.propTypes = {
   heading: PropTypes.string,
   label: PropTypes.string,
-  buttonText: PropTypes.string
+  buttonText: PropTypes.string,
+  onCheckout: PropTypes.func
 };
