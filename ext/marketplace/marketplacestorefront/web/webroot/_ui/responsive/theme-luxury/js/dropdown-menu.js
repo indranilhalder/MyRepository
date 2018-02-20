@@ -241,14 +241,15 @@ $(document).ready(function() {
 
     //show enter pincode msg on checkout page
     function checkoutDisabledBtnClickDesktop() {
-        console.log('desk');
         $('body.page-cartPage #checkout-id a').mouseenter(function(){
             var default_pincode = $("#defaultPinCodeIds").val();
             if(!default_pincode){
                 $('.tooltiptext').css("visibility","visible");
+                $('.right-block .cartBottomCheck').css("border","1px solid red");
             }
         }).mouseleave(function(){
             $('.tooltiptext').css("visibility","hidden");
+            $('.right-block .cartBottomCheck').css("border","1px solid #ccc");
         });
     }
 
@@ -258,7 +259,11 @@ $(document).ready(function() {
             var default_pincode = $("#defaultPinCodeIds").val();
             if(!default_pincode){
                 $('.tooltiptext').css("visibility","visible");
-                setTimeout(function(){$('.tooltiptext').css("visibility","hidden");},4000);
+                $('.right-block .cartBottomCheck').css("border","1px solid red");
+                setTimeout(function(){
+                    $('.tooltiptext').css("visibility","hidden");
+                    $('.right-block .cartBottomCheck').css("border","1px solid #ccc");
+                },4000);
             }
         });
     }

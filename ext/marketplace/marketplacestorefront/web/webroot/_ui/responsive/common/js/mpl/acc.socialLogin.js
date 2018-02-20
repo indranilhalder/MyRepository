@@ -171,5 +171,13 @@ $(document).ready(function () {
 		var element = document.getElementById(id);
 		ACC.socialLogin.attachSignin(element);
 	});*/
+	
+	//attach click handler for google sign in
+	$('.luxury-login').on("click",function(){	
+		setTimeout(function(){
+			var element = document.getElementById("customBtndrop");
+			ACC.socialLogin.attachSignin(element);
+		},1000);	
+	});
 });
 
