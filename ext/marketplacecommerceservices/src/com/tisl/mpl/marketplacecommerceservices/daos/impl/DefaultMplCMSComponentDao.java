@@ -39,7 +39,7 @@ public class DefaultMplCMSComponentDao extends AbstractItemDao implements MplCMS
 	 * java.lang.String)
 	 */
 	@Override
-	public AbstractCMSComponentModel getPagewiseComponent(final String pageId, final String componentId,
+	public List<AbstractCMSComponentModel> getPagewiseComponent(final String pageId, final String componentId,
 			final Collection<CatalogVersionModel> catalogVersions)
 	{
 		if (LOG.isDebugEnabled())
@@ -57,17 +57,12 @@ public class DefaultMplCMSComponentDao extends AbstractItemDao implements MplCMS
 		queryParameters.put("pageId", pageId);
 		queryParameters.put("componentId", componentId);
 
-		final List<AbstractCMSComponentModel> abstractCMSComponentModels = flexibleSearchService
+		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = flexibleSearchService
 				.<AbstractCMSComponentModel> search(queryBuilder.toString(), queryParameters).getResult();
 		//final SearchResult result = search(queryBuilder.toString(), queryParameters);
-		if (abstractCMSComponentModels.size() > 0)
-		{
-			return abstractCMSComponentModels.get(0);
-		}
-		else
-		{
-			return null;
-		}
+
+		return abstractCMSComponentModelList;
+
 
 	}
 

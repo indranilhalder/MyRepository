@@ -6,6 +6,8 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -80,13 +82,13 @@ public class DefaultMplCMSComponentService implements MplCMSComponentService
 	 * java.lang.String)
 	 */
 	@Override
-	public AbstractCMSComponentModel getPagewiseComponent(final String pageId, final String componentId)
+	public List<AbstractCMSComponentModel> getPagewiseComponent(final String pageId, final String componentId)
 	{
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("inside getPagewiseComponent()");
 		}
-		final AbstractCMSComponentModel abstractCMSComponentModel = getMplCmsComponentDao().getPagewiseComponent(pageId,
+		final List<AbstractCMSComponentModel> abstractCMSComponentModel = getMplCmsComponentDao().getPagewiseComponent(pageId,
 				componentId, this.catalogService.getSessionCatalogVersions());
 		return abstractCMSComponentModel;
 	}
