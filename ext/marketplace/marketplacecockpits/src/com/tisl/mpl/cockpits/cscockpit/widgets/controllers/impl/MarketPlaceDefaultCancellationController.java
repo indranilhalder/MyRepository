@@ -269,7 +269,9 @@ public class MarketPlaceDefaultCancellationController extends
 							}catch(Exception e){
 								e.getMessage();
 								LOG.error("Quck Cilver giving  Order Id :"+ order.getCode());
-								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,Double.valueOf(orderCancelRecord.getRefundableAmount()), newStatus,null);
+								/*mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,Double.valueOf(orderCancelRecord.getRefundableAmount()), newStatus,null);*/
+								mplJusPayRefundService.createCancelRefundExceptionEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
+										JuspayRefundType.CANCELLED, uniqueRequestId);
 							}
 						}
 				}else if(null != splitModeinfo && splitModeinfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT)){
