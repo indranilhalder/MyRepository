@@ -276,7 +276,7 @@ function refresh(){
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").prop("disabled",false);
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity","1");
 	$(".pay .spinner").remove();
-	$("#no-click,.spinner").remove();
+	$("#no-click,.spinner,.loaderDiv").remove();
 
 	// $(".checkout-content.checkout-payment
 	// .left-block").css("margin-top","0px");
@@ -6647,6 +6647,9 @@ function useWalletForPaymentAjax(){
 
 	$("#make_cc_payment").show();
 	var value = document.getElementById('useGiftCardCheckbox');	
+	if(value.checked == "undefined") {
+		value.checked = false;
+	}
 	$("#viewPaymentCOD").show();
 	$("#paytmId").show();
 	var staticHost = $('#staticHost').val();
@@ -6686,7 +6689,7 @@ function useWalletForPaymentAjax(){
 					//$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 					$(".topPlaceOrderBtn").show();//
 					if($(window).width() < 768){
-						$('.topPlaceOrderCodBtn').hide();
+						$('.topPlaceOrderBtn').hide();
 					}
 					globalCliqCashMode = true;
 					$(".choose-payment").find('*').prop('disabled',true);
