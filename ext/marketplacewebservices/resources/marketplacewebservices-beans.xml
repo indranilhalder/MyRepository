@@ -4262,7 +4262,9 @@
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseListWsDTO">
-		<property name="Components"
+	<property name="status" type="java.lang.String"/>   
+	<property name="message" type="java.lang.String"/>   
+		<property name="items"
 			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
 	</bean>
 	
