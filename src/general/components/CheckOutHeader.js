@@ -6,14 +6,13 @@ export default class CheckOutHeader extends React.Component {
       <div className={styles.base}>
         <div className={styles.confirm}>
           {this.props.confirmTitle}
-          <div className={styles.circle}>1</div>
+          <div className={styles.circle}>{this.props.orderNumber}</div>
         </div>
-        {/* <DeliveryAddressCopy
-          addressTitle={this.props.addressTitle}
-          addressDescription={this.props.addressDescription}
-          selected={this.props.selected}
-        /> */}
       </div>
     );
   }
 }
+
+CheckOutHeader.defaultProps = {
+  orderNumber: "1"
+};
