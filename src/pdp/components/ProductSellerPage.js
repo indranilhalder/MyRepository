@@ -5,22 +5,44 @@ import SellerWithMultiSelect from "./SellerWithMultiSelect";
 import SellerCard from "./SellerCard";
 import PdpFrame from "./PdpFrame";
 import HollowHeader from "./HollowHeader.js";
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN
+} from "../../lib/constants";
 import {
   MOBILE_PDP_VIEW,
   PRICE_TEXT,
   OFFER_AVAILABLE,
   DELIVERY_INFORMATION_TEXT,
   DELIVERY_RATES,
-  CASH_TEXT
+  CASH_TEXT,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ANONYMOUS_USER
 } from "../../lib/constants";
 
 class ProductSellerPage extends Component {
   addProductToBag = () => {
-    if (this.props.addProductToBag) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToBag(productDetails);
+    let productDetails = {};
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
+      productDetails.accessToken = JSON.parse(customerCookie).access_token;
+      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
+    } else {
+      productDetails.userId = ANONYMOUS_USER;
+      productDetails.accessToken = JSON.parse(globalCookie).access_token;
+      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
     }
+    this.props.addProductToCart(productDetails);
   };
   addProductToWishList = () => {
     if (this.props.addProductToWishList) {

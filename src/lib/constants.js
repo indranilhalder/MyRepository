@@ -14,8 +14,10 @@ export const MOBILE_PDP_VIEW = "mobilePdpView";
 export const MAIN_ROUTER = "/";
 export const CUSTOMER_ACCESS_TOKEN = "customerAccessToken";
 export const GLOBAL_ACCESS_TOKEN = "globalAccessToken";
+
 export const REFRESH_TOKEN = "refresh_token";
 export const PRODUCT_LISTINGS = "/productListings";
+
 export const HOME_ROUTER = "/home";
 export const PRODUCT_DESCRIPTION_ROUTER = "/productDescription";
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
@@ -33,3 +35,7 @@ export const DELIVERY_RATES = "Delivery Rates & Return Policy";
 export const CASH_TEXT = "Cash on Delivery Available!";
 export const SOCIAL_LOG_IN = "logIn";
 export const SOCIAL_SIGN_UP = "signUp";
+export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
+export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
+export const LOGGED_IN_USER_DETAILS = "userDetails";
+export const ANONYMOUS_USER = "anonymous";

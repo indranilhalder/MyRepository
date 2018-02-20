@@ -13,11 +13,17 @@ import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
-
+import * as Cookie from "../../lib/Cookie";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
-  PRODUCT_SELLER_ROUTER
+  PRODUCT_SELLER_ROUTER,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ANONYMOUS_USER
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -68,11 +74,26 @@ class ProductDescriptionPage extends Component {
   };
 
   addProductToBag = () => {
-    if (this.props.addProductToBag) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToBag(productDetails);
+    let productDetails = {};
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+
+    if (userDetails) {
+      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
+      productDetails.accessToken = JSON.parse(customerCookie).access_token;
+      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
+    } else {
+      productDetails.userId = ANONYMOUS_USER;
+      productDetails.accessToken = JSON.parse(globalCookie).access_token;
+      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
     }
+
+    this.props.addProductToCart(productDetails);
   };
   addProductToWishList = () => {
     if (this.props.addProductToWishList) {

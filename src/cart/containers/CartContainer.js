@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import {
-  getUserCart,
   applyCoupon,
   getUserAddress,
   selectDeliveryModes,
@@ -13,9 +12,6 @@ import CartPage from "../components/CartPage";
 import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getUserCart: () => {
-      dispatch(getUserCart());
-    },
     applyCoupon: couponDetails => {
       dispatch(applyCoupon(couponDetails));
     },
@@ -31,8 +27,8 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartDetails => {
       dispatch(getEmiBankDetails(cartDetails));
     },
-    getCartDetails: () => {
-      dispatch(getCartDetails());
+    getCartDetails: (cartId, userID, accessToken) => {
+      dispatch(getCartDetails(cartId, userID, accessToken));
     },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));
