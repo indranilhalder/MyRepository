@@ -1131,6 +1131,13 @@ TATA.Pages = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
+                    var inputArrayB="";
+                    inputArrayB=$(filtered).find('input[name=inputArray]').val();
+                    inputArrayB=inputArrayB.replace('["', "");
+                    inputArrayB=inputArrayB.replace('"]', "");
+                    inputArrayB=inputArrayB.replace('","', ',');
+                    console.log(inputArrayB);
+                    		
                     $(filtered).has("h4.categor-name") && $(".plp-wrapper h4").html($(filtered).find("h4.categor-name"));
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")),
                         TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());
@@ -1146,6 +1153,10 @@ TATA.Pages = {
                         }
                     }
                     TATA.Pages.PLP.productHover();
+                   
+                    console.log(inputArrayB.split(","));
+                    constructDepartmentHierarchy(inputArrayB.split(","));
+
                 },
                 complete: function(){
                     $('body').removeClass('loader');
@@ -1159,11 +1170,8 @@ TATA.Pages = {
                 }
             });
             
-            //Update URL without Refresh
-            console.log("replace the current URL with parameters");
+                       //Update URL without Refresh
             var currentURL=window.location.href.split('?')[0];
-            console.log(requestUrl.split('?')[1]);
-            console.log("current URL is "+currentURL);
             history.pushState(null, null, currentURL+"?"+requestUrl.split('?')[1]);
         },
 

@@ -11,7 +11,9 @@
         }
     });
 </script>
-
+	<div class="class-inputArray">
+		<input type="hidden" name="inputArray" class="inputArray" value='${departmentHierarchyData.hierarchyList}' />
+	</div>
 	<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 	<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />
 	

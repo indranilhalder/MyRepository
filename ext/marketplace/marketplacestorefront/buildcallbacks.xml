@@ -356,7 +356,7 @@
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.refinements.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.returns.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.reviewrating.js"/>
-						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.search.js"/>
+						<arg line="--js ${luxstorefront.js.dir}/acc.search.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.sellerDetails.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.signinflyout.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.singlePageCheckout.js"/>
