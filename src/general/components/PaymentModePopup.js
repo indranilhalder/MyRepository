@@ -8,7 +8,6 @@ import PropTypes from "prop-types";
 export default class PaymentModePopup extends React.Component {
   changePaymentMethod() {
     if (this.props.changePaymentMethod) {
-      console.log("AbhishekSingh");
       this.props.changePaymentMethod();
     }
   }
