@@ -2776,7 +2776,7 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{userId}/addAddressNew", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public UserResultWsDto addAddressNew(@RequestParam final String emailId, @RequestParam final String firstName,
+	public UserResultWsDto addAddressNew(@PathVariable final String userId, @RequestParam final String firstName,
 			@RequestParam final String lastName, @RequestParam final String line1, @RequestParam final String town,
 			@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,
 			@RequestParam final String phone, @RequestParam final String addressType, @RequestParam final boolean defaultFlag,
@@ -3048,14 +3048,9 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final String firstName, @RequestParam final String lastName, @RequestParam final String line1,
 			@RequestParam final String line2, @RequestParam final String line3,
 			@RequestParam(required = false) final String landmark, @RequestParam final String town,
-
-
 			@RequestParam final String state, @RequestParam final String countryIso, @RequestParam final String postalCode,
-			@RequestParam final String phone, @RequestParam final String addressType, @RequestParam final boolean defaultFlag)
-			throws RequestParameterException
-
-
-
+			@RequestParam final String phone, @RequestParam final String addressType, @RequestParam final boolean defaultFlag,
+			@RequestParam(required = false) final String title) throws RequestParameterException
 	{
 
 		String errorMsg = null;
@@ -3064,11 +3059,6 @@ public class UsersController extends BaseCommerceController
 		boolean successFlag = false;
 		try
 		{
-			//CAR-76
-			//MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-			//mplCustData = mplCustomerProfileService.getCustomerProfileDetail(emailId);
-			//LOG.debug(CUSTOMER_MESSAGE + mplCustData.getUid());
-			//final UserModel user = userService.getUserForUID(mplCustData.getUid());
 			final UserModel user = userService.getCurrentUser();
 			LOG.debug(CUSTOMER_MESSAGE + user.getUid());
 
@@ -3099,8 +3089,6 @@ public class UsersController extends BaseCommerceController
 			validation(errorMsg);
 			errorMsg = validateStringField(phone, AddressField.MOBILE, MAX_POSTCODE_LENGTH);
 			validation(errorMsg);
-
-
 			if (null == errorMsg)
 			{
 				newAddress.setId(addressId);
@@ -3120,12 +3108,18 @@ public class UsersController extends BaseCommerceController
 				LOG.debug("addrestype=" + newAddress.getAddressType());
 				newAddress.setPhone(phone);
 				newAddress.setState(state);
+				//NU-52
+				if (StringUtils.isNotEmpty(title))
+				{
+					newAddress.setTitle(title);
+				}
 				newAddress.setDefaultAddress(defaultFlag);
 				//CAR-76
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer)
 				{
+
 					final AddressModel addressModel = customerAccountService.getAddressForCode(currentCustomer, newAddress.getId());
 					LOG.debug("AddresId" + newAddress.getId());
 					addressModel.setRegion(null);
@@ -3135,6 +3129,13 @@ public class UsersController extends BaseCommerceController
 					addressModel.setAddressType(newAddress.getAddressType());
 					addressModel.setLocality(newAddress.getLocality());
 					addressModel.setAddressLine3(newAddress.getLine3());
+					//NU-52
+					if (StringUtils.isNotEmpty(title))
+					{
+						final TitleModel titleModel = new TitleModel();
+						titleModel.setCode(title.toLowerCase());
+						addressModel.setTitle(titleModel);
+					}
 					customerAccountService.saveAddressEntry(currentCustomer, addressModel);
 					successFlag = true;
 					if (newAddress.isDefaultAddress())
@@ -10779,7 +10780,6 @@ public class UsersController extends BaseCommerceController
 							customerModel.setOtpVerified(Boolean.TRUE);
 							modelService.save(customerModel);
 						}
-
 					}
 				}
 			}
@@ -11181,10 +11181,12 @@ public class UsersController extends BaseCommerceController
 								return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
 							}
 						}
-					}
-					else
-					{
-						customerToSave.setMobileNumber(null);
+						else
+						{
+							updateCustomerDetailError.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							updateCustomerDetailDto.setMessage("Mobile Number already exists");
+							return dataMapper.map(updateCustomerDetailError, UpdateCustomerDetailDto.class, fields);
+						}
 					}
 					if (null != gender)
 					{
@@ -11443,6 +11445,10 @@ public class UsersController extends BaseCommerceController
 					if (StringUtils.isNotEmpty(customerData.getMobileNumber()))
 					{
 						customer.setMobileNumber(customerData.getMobileNumber());
+					}
+					if (StringUtils.isNotEmpty(customerData.getOriginalUid()) && customerData.getOriginalUid().contains("@"))
+					{
+						customer.setEmailID(customerData.getOriginalUid());
 					}
 					customer.setInvitationDetails(invite);
 					customer.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
