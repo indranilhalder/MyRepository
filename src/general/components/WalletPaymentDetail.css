@@ -1,0 +1,27 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+}
+.paymentDetail {
+  width: 60%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  line-height: 20px;
+  display: inline-block;
+}
+.walletPrice {
+  width: 40%;
+  height: auto;
+  font-size: 14px;
+  font-family: semibold;
+  line-height: 20px;
+  display: inline-block;
+  text-align: right;
+}
+.walletContainer {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+}

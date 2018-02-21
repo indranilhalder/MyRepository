@@ -2,9 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import CheckOutHeader from "./CheckOutHeader.js";
 import SavedCard from "./SavedCard.js";
+import NetBanking from "./NetBanking.js";
+import CreditCardForm from "./CreditCardForm.js";
 import Toggle from "../../general/components/Toggle";
 import ManueDetails from "../../general/components/MenuDetails.js";
 import savedCardIcon from "./img/saved-card.svg";
+import netBankingIcon from "./img/netBanking.svg";
+import creditCardIcon from "./img/credit-card.svg";
+import debitCardIcon from "./img/debit-card.svg";
 import styles from "./PaymentMethodCard.css";
 
 export default class PaymentMethodCard extends React.Component {
@@ -54,7 +59,7 @@ export default class PaymentMethodCard extends React.Component {
           )}
         </div>
         <div className={styles.dropdownHolder}>
-          <ManueDetails text="Saved card" icon={savedCardIcon}>
+          <ManueDetails text="Saved Cards" icon={savedCardIcon}>
             {this.props.saveCardDetails &&
               this.props.saveCardDetails.map((data, i) => {
                 return (
@@ -66,6 +71,50 @@ export default class PaymentMethodCard extends React.Component {
                   />
                 );
               })}
+          </ManueDetails>
+          <ManueDetails text="Credit Card" icon={creditCardIcon}>
+            <CreditCardForm />
+          </ManueDetails>
+          <ManueDetails text="Debit Card" icon={debitCardIcon}>
+            <CreditCardForm />
+          </ManueDetails>
+          <ManueDetails text="Net banking" icon={netBankingIcon}>
+            <NetBanking
+              onSelect={val => console.log(val)}
+              selected={["1"]}
+              bankList={[
+                {
+                  image:
+                    "https://competitiondigest.com/wp-content/uploads/2014/12/bank-of-1.gif",
+                  value: "1"
+                },
+                {
+                  image:
+                    "https://competitiondigest.com/wp-content/uploads/2014/12/CBicons_03.png",
+                  value: "2"
+                },
+                {
+                  image:
+                    "https://competitiondigest.com/wp-content/uploads/2014/12/UNITED.png",
+                  value: "3"
+                },
+                {
+                  image:
+                    "https://competitiondigest.com/wp-content/uploads/2014/12/UNION.png",
+                  value: "4"
+                },
+                {
+                  image:
+                    "https://competitiondigest.com/wp-content/uploads/2014/12/UNION.png",
+                  value: "6"
+                },
+                {
+                  image:
+                    "https://competitiondigest.com/wp-content/uploads/2014/12/UNITED.png",
+                  value: "7"
+                }
+              ]}
+            />
           </ManueDetails>
         </div>
       </div>
