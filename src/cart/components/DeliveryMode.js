@@ -10,22 +10,20 @@ export default class DeliveryMode extends React.Component {
   }
   render() {
     return (
-      <div className={styles.base}>
-        <DeliveryCard
-          onClick={() => this.handleClick()}
-          confirmTitle="Delivery Mode"
-          indexNumber="2"
-        >
-          {this.props.productDelivery.map((data, i) => {
-            return (
-              <div className={styles.deliveryModeTextHolder} key={i}>
-                <div className={styles.productName}>{data.productName}</div>
-                <div className={styles.deliveryWay}>{data.deliveryWay}</div>
-              </div>
-            );
-          })}
-        </DeliveryCard>
-      </div>
+      <DeliveryCard
+        onClick={() => this.handleClick()}
+        confirmTitle="Delivery Mode"
+        indexNumber="2"
+      >
+        {this.props.productDelivery.map((data, i) => {
+          return (
+            <div className={styles.base} key={i}>
+              <div className={styles.productName}>{data.productName}</div>
+              <div className={styles.deliveryWay}>{data.deliveryWay}</div>
+            </div>
+          );
+        })}
+      </DeliveryCard>
     );
   }
 }

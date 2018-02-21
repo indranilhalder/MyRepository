@@ -1,15 +1,11 @@
+
 .base{
-  width:100%;
-  height:auto;
-  display:inline-block;
-}
-.deliveryModeTextHolder{
   width:100%;
   height:auto;
   display:inline-block;
   margin-bottom:15px;
 }
-.deliveryModeTextHolder:last-child{
+.base:last-child{
   margin-bottom: 0px;
 }
 .productName{
