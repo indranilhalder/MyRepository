@@ -4268,10 +4268,4 @@
 			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
 	</bean>
 	
-	       <bean class="com.tisl.mpl.wsdto.UICompWiseListWsDTO">
-           <property name="Components"
-               type="java.util.List" />
-           </bean>
-	
-	
 </beans>
