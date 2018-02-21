@@ -989,7 +989,16 @@ public final class ModelAttributetConstants
 	// TPR-3878 END
 	public static final String SUB_REASON = "subReason";
 	public static final String NEW_COMMENTS = "newComments";
-	
+
 	//SDI-2112
 	public static final String RETURN_ALREADY_INITIATED = "Your return is already initiated".intern();
+
+	//TPR-7741, TPR-7750
+	public static final String USER_LOGIN_TYPE = "user_login_type".intern();
+	public static final String USER_TYPE = "user_type".intern();
+	public static final String USER_ID = "user_id".intern();
+	public static final String SESSION_ID = "session_id".intern();
+	public static final String VISITOR_IP = "visitor_ip".intern();
+	public static final String CID = "cid".intern();
+	public static final String ITEMS = "items".intern();
 }
