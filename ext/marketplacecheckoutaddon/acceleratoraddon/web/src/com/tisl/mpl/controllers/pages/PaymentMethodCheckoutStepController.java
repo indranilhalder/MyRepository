@@ -572,7 +572,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				// TPR-429 END
 				//Getting Payment modes
 				//Condition for split order - START
-				if ("Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+				if (null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
 				{
 					paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData,
 							true);
@@ -622,7 +622,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Condition for Split - START
 			if (null != orderModel)
 			{
-				if ("Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
+				if (null != orderModel.getSplitModeInfo() && "Split".equalsIgnoreCase(orderModel.getSplitModeInfo()))
 				{
 					model.addAttribute("isSplit", Boolean.TRUE);
 					model.addAttribute("juspayAmount", orderModel.getPayableNonWalletAmount());
@@ -631,7 +631,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				if ("Split".equalsIgnoreCase(cartModel.getSplitModeInfo()))
+				if (null != cartModel.getSplitModeInfo() && "Split".equalsIgnoreCase(cartModel.getSplitModeInfo()))
 				{
 					model.addAttribute("isSplit", Boolean.TRUE);
 					model.addAttribute("juspayAmount", cartModel.getPayableNonWalletAmount());
@@ -6303,14 +6303,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
 					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 				}
-				//				if (cart.getSplitModeInfo().equalsIgnoreCase("Split") || cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-				//				{
-				//					if(cart.getModeOfPayment().equalsIgnoreCase("COD")){
-				//					LOG.debug("COD payment is not allwoed if an user selects CLiQCash as payment mode");
-				//					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
-				//					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-				//					}
-				//				}
 				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
@@ -7554,6 +7546,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				cartCouponCode = cartCouponObj.getSecond();
 			}
 
+			//if cliqcash check box selected
 			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
 				if (null != cart.getTotalWalletAmount())
@@ -7563,7 +7556,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
 					}
 
-					// CliqCash as Payment mode
+					// CliqCash only as Payment mode
 					totalCartAmt = cart.getTotalPrice().doubleValue();
 					Double WalletAmt = cart.getTotalWalletAmount();
 
@@ -8159,7 +8152,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 
 
-			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			if (null !=cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
 				final OrderData orderData;
 				final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
