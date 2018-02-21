@@ -15,4 +15,6 @@ import com.tisl.mpl.core.model.BrandMasterModel;
 public interface MplFollowedBrandService
 {
 	public List<BrandMasterModel> getFollowedBrands(final String gender);
+
+	public boolean updateFollowedBrands(final String mcvId, final String brands, final boolean follow);
 }

@@ -65,7 +65,7 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.brand.MplFollowedBrandFacade#getFollowedBrands(java.lang.String)
 	 */
 	@Override
@@ -79,6 +79,21 @@ public class MplFollowedBrandFacadeImpl implements MplFollowedBrandFacade
 		followedBrandWsDtoList = Converters.convertAll(followedBrandList, getMplFollowedBrandConverter());
 
 		return followedBrandWsDtoList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.brand.MplFollowedBrandFacade#updateFollowedBrands(java.lang.String, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public boolean updateFollowedBrands(final String mcvId, final String brands, final boolean follow)
+	{
+
+		// YTODO Auto-generated method stub
+		return mplFollowedBrandService.updateFollowedBrands(mcvId, brands, follow);
+
 	}
 
 }

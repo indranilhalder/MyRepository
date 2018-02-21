@@ -1919,6 +1919,55 @@ public class ProductsController extends BaseController
 
 	}
 
+
+	@RequestMapping(value = "{mcvId}/updateFollowedBrands", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public MplFollowedBrandsWsDto updateFollowedBrands(@PathVariable final String mcvId, final String fields,
+			@RequestParam(required = true) final String brands, @RequestParam(required = true) final boolean follow,
+			@RequestParam(required = false) final boolean isPwa)
+
+
+	{
+		final MplFollowedBrandsWsDto mplFollowedBrandsWsDto = new MplFollowedBrandsWsDto();
+		try
+		{
+			final boolean status = mplFollowedBrandFacade.updateFollowedBrands(mcvId, brands, follow);
+
+			if (status)
+			{
+				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.SUCCESS);
+			}
+			else
+			{
+				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			if (null != e.getErrorMessage())
+			{
+				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplFollowedBrandsWsDto.setErrorCode(e.getErrorCode());
+			}
+			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			mplFollowedBrandsWsDto.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
+			mplFollowedBrandsWsDto.setErrorCode(MarketplacewebservicesConstants.H9002);
+			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+
+		}
+		return mplFollowedBrandsWsDto;
+	}
+
 	/**
 	 * @return the mplFollowedBrandFacade
 	 */
