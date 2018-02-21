@@ -1,0 +1,22 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  background: #fff;
+}
+.header {
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  position: relative;
+  padding-right: 25px;
+  font-size: 14px;
+  font-family: regular;
+}
+.baseSelected {
+  composes: base;
+  background: #f8f8f8;
+}
+.baseSelected .header {
+  font-family: semibold;
+}

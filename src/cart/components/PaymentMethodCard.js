@@ -4,6 +4,7 @@ import CheckOutHeader from "./CheckOutHeader.js";
 import SavedCard from "./SavedCard.js";
 import NetBanking from "./NetBanking.js";
 import CreditCardForm from "./CreditCardForm.js";
+import EmiAccordian from "./EmiAccordian";
 import Toggle from "../../general/components/Toggle";
 import ManueDetails from "../../general/components/MenuDetails.js";
 import savedCardIcon from "./img/saved-card.svg";
@@ -115,6 +116,9 @@ export default class PaymentMethodCard extends React.Component {
                 }
               ]}
             />
+          </ManueDetails>
+          <ManueDetails>
+            <EmiAccordian />
           </ManueDetails>
         </div>
       </div>
