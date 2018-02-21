@@ -1595,6 +1595,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			//Apply voucher for cartModel
 			if (null != cartModel)
 			{
+				if (cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					return checkFlag;
+				}
+
 				applicabilityFlag = mplCouponService.validateCartEligilityForCartCoupons(cartModel.getDiscounts());
 
 				if (applicabilityFlag)
@@ -1705,6 +1710,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			//Apply voucher for orderModel
 			else if (null != orderModel)
 			{
+				if (orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				{
+					return checkFlag;
+				}
+
 				applicabilityFlag = mplCouponService.validateCartEligilityForCartCoupons(orderModel.getDiscounts());
 				if (applicabilityFlag)
 				{

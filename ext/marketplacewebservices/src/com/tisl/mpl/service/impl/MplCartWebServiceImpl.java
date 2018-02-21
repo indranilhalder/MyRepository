@@ -108,6 +108,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.jalo.BundlingPromotionWithPercentageSlab;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -117,10 +118,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.CartOfferDetailsWsDTO;
@@ -128,6 +132,8 @@ import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
+import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
+import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -218,6 +224,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
+	
+	@Autowired
+	private MplEgvWalletService mplEgvWalletService;
+	
 
 	/**
 	 * Service to create cart
@@ -3569,7 +3582,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 
+	
 
+	
 
 
 

@@ -115,6 +115,9 @@ import net.sourceforge.pmd.util.StringUtil;
 public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplCheckoutFacade
 {
 
+	private static final String GETTING_EXCEPTION_FOR_EGV_DATA_POPULATE = "Getting Exception for EGV Data Populate ";
+	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
+
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
 
@@ -793,6 +796,18 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					sellerOrderList.add(sellerOrderData);
 				}
 				orderData.setSellerOrderList(sellerOrderList);
+				//EGV Changes  start 
+				try {
+					LOG.debug("Populating EGV Data For Order"+orderModel.getCode());
+					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+						orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+						getEGVData(orderData, orderModel);
+					}
+				}catch (Exception e) {
+					LOG.error("Exception ocurred while populating EGV Data for Order id "+orderModel.getCode()+ " "+e.getMessage());
+				}
+				//EGV Changes  END 
+				
 			}
 			return orderData;
 		}
@@ -1368,13 +1383,23 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 			try
 			{
+				String url;
+				if (null != order.getIsEGVCart() && order.getIsEGVCart().booleanValue())
+				{
+					url = "My Account";
+				}
+				else
+				{
+					url = null != shortTrackingUrl ? shortTrackingUrl : trackingUrl;
+				}
+				
 				getSendSMSFacade().sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 
 						MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
-										null == shortTrackingUrl ? trackingUrl : shortTrackingUrl),
+										url),
 						mobileNumber);
 
 			}
@@ -1515,6 +1540,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				sellerOrderList.add(sellerOrderData);
 			}
 			orderData.setSellerOrderList(sellerOrderList);
+			//EGV Changes  start 
+			try {
+				LOG.debug("Populating EGV Data For Order"+orderModel.getCode());
+				if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+					orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+					getEGVData(orderData, orderModel);
+				}
+			}catch (Exception e) {
+				LOG.error("Exception ocurred while populating EGV Data for Order id "+orderModel.getCode()+ " "+e.getMessage());
+			}
+			//EGV Changes  END 
 			return orderData;
 		}
 		catch (final IllegalArgumentException ex)
@@ -1607,6 +1643,28 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 */
 	@Override
 	public OrderModel placeOrder(final CartModel cartModel) throws InvalidCartException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setCart(cartModel);
+		// For TPR-5667 : setting salesapplication
+		if (cartModel.getChannel() != null)
+		{
+			parameter.setSalesApplication(cartModel.getChannel());
+		}
+		else
+		{
+			parameter.setSalesApplication(SalesApplication.WEB);
+		}
+
+		final CommerceOrderResult commerceOrderResult = getCommerceCheckoutService().placeOrder(parameter);
+		return commerceOrderResult.getOrder();
+	}
+
+	
+	
+	@Override
+	public OrderModel placeEGVOrder(final CartModel cartModel) throws InvalidCartException
 	{
 		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
 		parameter.setEnableHooks(true);
@@ -2362,4 +2420,71 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		}
 	}
 
+	@SuppressWarnings("javadoc")
+	private String getCardExpDate(String cardExpDate) 
+	{
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(StringUtils.isNotEmpty(cardExpDate)){
+		Date date = null;
+		try {
+			date = format1.parse(cardExpDate);
+			LOG.info("Card Exp converting");
+			return format2.format(date);
+		} catch (ParseException e) {
+			LOG.error(ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT);
+		}
+		}
+		return null;
+	}
+
+	
+	
+	
+	/**
+	 * @param orderData
+	 * @param orderModel
+	 */
+	private void getEGVData(OrderData orderData, final OrderModel orderModel)
+	{
+		try
+		{
+			if(CollectionUtils.isNotEmpty(orderModel.getEntries()) &&
+					orderModel.getEntries().get(0).getWalletApportionPaymentInfo()!=null &&
+					CollectionUtils.isNotEmpty(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList())){
+				orderData.setEgvCardNumber(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
+				
+				String date=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry();
+				orderData.setEgvCardExpDate(getCardExpDate(date));
+				
+			
+				String resendEmailValue = getConfigurationServiceDetails().getConfiguration().getString(
+						MarketplaceFacadesConstants.EGV_RESEND_EMAILAVAILABLE);
+				if(null != resendEmailValue ) {
+					boolean resendEmailAvalilble = Boolean.valueOf(resendEmailValue).booleanValue();
+					boolean isOrderRedeemed = false; 
+					if(null != orderModel.getStatus() && orderModel.getStatus().equals(OrderStatus.REDEEMED)){
+						isOrderRedeemed = true;
+					}
+					if(resendEmailAvalilble && !isOrderRedeemed) {
+						orderData.setResendEgvMailAvailable(true);
+					}else{
+						orderData.setResendEgvMailAvailable(false);
+					}
+				}else {
+					orderData.setResendEgvMailAvailable(false);
+				}
+				
+				if(null != orderModel.getStatus()){
+					orderData.setStatus(orderModel.getStatus());
+				}
+				
+			//	orderData.setre
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.info(GETTING_EXCEPTION_FOR_EGV_DATA_POPULATE);
+		}
+	}
 }

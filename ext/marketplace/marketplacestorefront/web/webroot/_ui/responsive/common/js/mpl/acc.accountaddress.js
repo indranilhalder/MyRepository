@@ -831,6 +831,7 @@ function validateEmailInvite(email) {
 /*---------------- Invite Friends -------------------*/
 
 // Update Profile *********************************************
+var validateFlag = false;
 function validateForm() {
 	$("#errdoaDay,#errdobDay").empty();
 	// var regexCharSpace = /^[a-zA-Z ]*$/;
@@ -840,6 +841,36 @@ function validateForm() {
 	var regexDate = /^(?=\d{2}([-.,\/])\d{2}\1\d{4}$)(?:0[1-9]|1\d|[2][0-8]|29(?!.02.(?!(?!(?:[02468][1-35-79]|[13579][0-13-57-9])00)\d{2}(?:[02468][048]|[13579][26])))|30(?!.02)|31(?=.(?:0[13578]|10|12))).(?:0[1-9]|1[012]).\d{4}$/;
 	var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	var proceed = true;
+	var walletCreated = $('#egvWalletActivvated').val();
+	var profileFirstName = document.getElementById("profilefirstName").value;
+	var profileLastName = document.getElementById("profilelastName").value;
+	var profileMobileNo = document.getElementById("profileMobileNumber").value;
+	if(walletCreated == 'true') {
+		if(profileFirstName == "" || profileLastName == "" || profileMobileNo == "") {
+			if(profileFirstName == "") {
+				$("#errfn").css({
+				"display" : "block",
+				"margin-top" : "10px"
+				});
+				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name cannot be empty</font>";
+			}
+			if(profileLastName == "") {
+				$("#errln").css({
+				"display" : "block",
+				"margin-top" : "10px"
+				});
+				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name cannot be empty</font>";
+			}
+			if(profileMobileNo == "") {
+				$("#errMob").css({
+				"display" : "block",
+				"margin-top" : "10px"
+				});
+				document.getElementById("errMob").innerHTML = "<font color='red' size='2'>Mobile number cannot be empty</font>";
+			}
+			return false;
+		}
+	}
 	// First Name and Last Name Validation
 	if ((document.getElementById("profilefirstName").value) != "") {
 		if (!regexCharSpace
@@ -1050,6 +1081,15 @@ function validateForm() {
 		$('html, body').animate({
 	        scrollTop: $(".breadcrumbs").offset().top
 	    }, 1000);
+	}
+	//Mobile Verification Check
+	if(!validateFlag) {
+		if(proceed){
+			proceed = false;
+			verifyMobileOtp(proceed);
+		}
+	} else {
+		proceed = true;
 	}
 	return proceed;
 }
@@ -1481,3 +1521,132 @@ $('body.template-pages-account-accountOrderHistoryPage .account .right-account .
     $(".track-order-modal").modal();
 });
 //TPR-6013 track order modal end
+
+//Mobile Verification Method
+var mobileVerifyOtpPopup = document.getElementById('mobileVerificationOtpPopup');
+function verifyMobileOtp(proceed) {
+	var mobileNo=$("#profileMobileNumber").val();
+	var firstName=$("#profilefirstName").val();
+	var lastName=$("#profilelastName").val();
+	
+	var staticHost = $('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+		$.ajax({
+			type : "POST",
+			data :"mobileNo="+mobileNo+ "&firstName=" + firstName+ "&lastName="+lastName,
+			url : ACC.config.encodedContextPath+ "/my-account/qcMobileValidation",
+			success : function(response){
+				$("#no-click,.loaderDiv").remove();
+				if (response == "FIRSTNAMEERROR") {
+					$("#errfn").css({
+						"display" : "block",
+						"padding-top" : "10px"
+					});
+					document.getElementById("errfn").innerHTML = "<font color='#ff1c47' size='2'>First name cannot be empty.</font>";
+				}
+				else if (response == "LASTNAMEERROR") {
+					$("#errln").css({
+						"display" : "block",
+						"padding-top" : "10px"
+					});
+					document.getElementById("errln").innerHTML = "<font color='#ff1c47' size='2'>Last name cannot be empty.</font>";
+				}
+				
+				else if(response=="OTPCREATED") {
+					mobileVerifyOtpPopup.style.display = "block"; 
+				} else if (response == "MOBILEERROR") {
+					$("#errMob").css({
+						"display" : "block",
+						"padding-top" : "10px"
+					});
+					document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number cannot be empty as your CLiQ cash wallet is enabled.</font>";
+				} else if (response == "USED") {
+					$("#errMob").css({
+						"display" : "block",
+						"padding-top" : "10px"
+					});
+					document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number is already used for CLiQ cash wallet. Please try another number.</font>";
+				} else {
+					validateFlag = true;
+					$('#update_personal_details').submit();
+				}
+				
+					  },	
+					failure : function(data) {
+						$("#no-click,.loaderDiv").remove();
+					},
+					
+					complete : function () {
+						$("#no-click,.loaderDiv").remove();
+						return proceed;
+					}
+				}); 
+}
+
+function submitNumberOtp() {
+	var OTPNumber = $('#profile_number_otp_verify').val();
+	var staticHost = $('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+	$.ajax({
+		type : "POST",
+		data : "OTPNumber="+OTPNumber,
+		url : ACC.config.encodedContextPath+ "/my-account/qcOTPValidation",
+		success : function (response) {
+			$("#no-click,.loaderDiv").remove();
+			if(response=="OTPERROR") {
+				$('#profile_otp_error').text('Invalid OTP. Please try again.');
+			} else if (response=="SUCCESS") {
+				validateFlag = true;
+				$('#update_personal_details').submit();
+			}
+		},
+		failure: function (data) {
+			$("#no-click,.loaderDiv").remove();
+		},
+		complete : function () {
+			$("#no-click,.loaderDiv").remove();
+		}
+	});
+}
+
+
+
+var otpAttempts=0;
+function resendQCOTP() {
+	otpAttempts++;
+	if(otpAttempts <= 5){
+		var mobileNo=$("#profileMobileNumber").val();
+		var firstName=$("#profilefirstName").val();
+		var lastName=$("#profilelastName").val();
+	var staticHost = $('#staticHost').val();
+	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+	$.ajax({
+		type : "POST",
+		data : "mobileNo="+mobileNo+ "&firstName=" + firstName+ "&lastName="+lastName,
+		url : ACC.config.encodedContextPath+ "/my-account/qcMobileValidation",
+		success : function (response) {
+			$("#no-click,.loaderDiv").remove();
+			if(response==true){
+				$("#profile_otp_error").show();
+				$("#profile_otp_error").text("Resend OTP limit remaining "+(5-otpAttempts));
+				
+			}else{
+				$("#profile_otp_error").show();
+				$("#profile_otp_error").text("OTP sending fail try again ");
+			}
+		},
+		failure: function (data) {
+			$("#no-click,.loaderDiv").remove();
+		},
+		complete : function () {
+			$("#no-click,.loaderDiv").remove();
+		}
+	});
+	}else{
+		$("#profile_otp_error").show();
+		$("#profile_otp_error").text("OTP limt exceeded 5 times, pleae try again");
+	}
+}

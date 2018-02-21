@@ -35,6 +35,8 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 	private static final String FIND_CUSTOMER_BY_ORIGINALUID = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.originalUid} = ?originalUID )";
 	private static final String FIND_CUSTOMER_BY_UID = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.UID} = ?uid )";
 	private static final String FIND_CUSTOMER_BY_OLDORIGINALUID = "SELECT {cd.pk} FROM {CustomerOldEmailDetails as cd} WHERE ({cd.oldOriginalUid} = ?oldOriginalUid )";
+	private static final String FIND_CUSTOMER_BY_WALLET_MOBILE_NUMBER = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.qcVerifyMobileNo} = ?mobileNumber )";
+
 
 	/**
 	 * Instantiates a new extended user dao impl.
@@ -72,6 +74,15 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 			throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
 					+ " users with the unique uid '" + uid + "'");
 		}
+		return resList.isEmpty() ? null : resList.get(0);
+	}
+	
+	@Override
+	public CustomerModel findUserByWalletMobileNumber(final String mobileNumber)
+	{
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(FIND_CUSTOMER_BY_WALLET_MOBILE_NUMBER);
+		query.addQueryParameter("mobileNumber", mobileNumber);
+		final List<CustomerModel> resList = getFlexibleSearchService().<CustomerModel> search(query).getResult();
 		return resList.isEmpty() ? null : resList.get(0);
 	}
 
