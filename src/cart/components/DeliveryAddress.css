@@ -1,0 +1,26 @@
+.base{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  margin-bottom:15px
+}
+.deliveryAddressHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  margin-bottom:5px;
+}
+.deliveryAddressText{
+  width:100%;
+  height:auto;
+  color:#000;
+  font-size:14px;
+  display:inline-block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.home{
+  font-family:semibold;
+  padding-right:5px;
+}
