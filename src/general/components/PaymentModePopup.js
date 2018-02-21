@@ -60,4 +60,3 @@ PaymentModePopup.propTypes = {
   walletDetail: PropTypes.string,
   walletDescription: PropTypes.string
 };
-PaymentModePopup.defaultProps = {};
