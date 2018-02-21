@@ -56,7 +56,8 @@ export default class PaymentModePopup extends React.Component {
   }
 }
 PaymentModePopup.propTypes = {
-  onClick: PropTypes.func,
+  changePaymentMethod: PropTypes.func,
+  continueWithoutCoupon: PropTypes.func,
   walletDetail: PropTypes.string,
   walletDescription: PropTypes.string
 };
