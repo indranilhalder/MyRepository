@@ -52,27 +52,28 @@
   bottom: 0;
 }
 .saveCardText {
-  width: auto;
+  width: 100%;
   height: auto;
   display: inline-block;
   margin: 20px 0px;
+  padding-left: 25px;
   position: relative;
 }
 .checkCircle {
   width: 25px;
   height: auto;
-  right: 25px;
-  top: 25px;
-  display: inline-block;
+  left: 0;
+  top: 0;
+  position: absolute;
 }
 .saveText {
-  width: calc(100% - 25px);
+  width: 100%;
   height: auto;
   display: inline-block;
-  right: 0;
   margin: auto;
-  position: absolute;
-  left: 35px;
+  position: relative;
+  font-size: 14px;
+  color: #8d8d8d;
 }
 .dropDownHolder {
   width: 100%;

@@ -16,7 +16,9 @@ export default class SelectBoxMobile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.value ? this.props.value : this.props.options[0].value
+      value: this.props.value
+        ? this.props.value
+        : this.props.options ? this.props.options[0].value : ""
     };
   }
   handleChange(event) {
@@ -57,17 +59,18 @@ export default class SelectBoxMobile extends React.Component {
           className={styles.hideSelect}
           onChange={event => this.handleChange(event)}
         >
-          {this.props.options.map((item, i) => {
-            return (
-              <option key={i} value={item.value}>
-                {item.value}
-              </option>
-            );
-          })}
+          {this.props.options &&
+            this.props.options.map((item, i) => {
+              return (
+                <option key={i} value={item.value}>
+                  {item.value}
+                </option>
+              );
+            })}
         </select>
         <div className={styles.visibleBox}>{this.state.value}</div>
         <div className={styles.arrow}>
-          <Icon image={arrow} size={15} />
+          <Icon image={arrow} size={12} />
         </div>
       </div>
     );
@@ -79,7 +82,7 @@ SelectBoxMobile.propTypes = {
   arrowColour: PropTypes.oneOf([BLACK, GREY, WHITE]),
   theme: PropTypes.oneOf([HOLLOW_BOX, BLACK_BOX, GREY_BOX])
 };
-SelectBoxMobile.propTypes = {
+SelectBoxMobile.defaultProps = {
   height: 35,
   arrowColour: GREY
 };
