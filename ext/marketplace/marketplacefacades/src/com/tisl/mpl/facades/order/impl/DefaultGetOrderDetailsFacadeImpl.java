@@ -13,6 +13,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -339,6 +340,35 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
 				orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
 				//add pickup person details
+				
+				/*Added For EGV Functionality Start*/ 
+				if (StringUtils.isNotEmpty(orderDetails.getEgvCardNumber()))
+				{
+					orderTrackingWsDTO.setEgvCardNumber(orderDetails.getEgvCardNumber());
+				}
+				if (StringUtils.isNotEmpty(orderDetails.getEgvCardExpDate()))
+				{
+					orderTrackingWsDTO.setCartExpiryDate(orderDetails.getEgvCardExpDate());
+				}
+				if (orderDetails.isResendEgvMailAvailable())
+				{
+					orderTrackingWsDTO.setResendAvailable(true);
+				}
+				
+				if (orderDetails.isIsEGVOrder())
+				{
+					orderTrackingWsDTO.setIsEgvOrder(true);
+					if(null != orderDetails.getMplPaymentInfo() && null != orderDetails.getStatus()) {
+						if(OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetails.getStatus().getCode())){
+							orderTrackingWsDTO.setGiftCardStatus(orderDetails.getStatus().getCode());
+						}else {
+							orderTrackingWsDTO.setGiftCardStatus(OrderStatus.CONFIRMED.getCode());
+						}
+						
+					}
+				}
+				
+				/*Added For EGV Functionality End*/ 
 				if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
 				{
 					orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
@@ -1873,6 +1903,41 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			}
 			else
 			{
+				
+				/*Added For EGV Functionality Start */
+				if (null != orderDetail.getEgvCardExpDate())
+				{
+					orderTrackingWsDTO.setCartExpiryDate(orderDetail.getEgvCardExpDate());
+				}
+				if(orderDetail.isResendEgvMailAvailable()) {
+					orderTrackingWsDTO.setResendAvailable(true);
+				}else {
+					orderTrackingWsDTO.setResendAvailable(false);
+				}
+				if(null != orderDetail.getEgvCardNumber()){
+					orderTrackingWsDTO.setEgvCardNumber(orderDetail.getEgvCardNumber());
+				}
+				if(orderDetail.isIsEGVOrder() ){
+					orderTrackingWsDTO.setIsEgvOrder(true);
+					if(null != orderDetail.getMplPaymentInfo() && null != orderDetail.getStatus()) {
+						if(OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetail.getStatus().getCode())){
+							orderTrackingWsDTO.setGiftCardStatus(orderDetail.getStatus().getCode());
+						}else {
+							orderTrackingWsDTO.setGiftCardStatus(OrderStatus.CONFIRMED.getCode());
+						}
+						
+					}
+					
+				}
+				if(null !=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplaceFacadesConstants.CLIQ_CASH.trim()) && null != orderModel.getModeOfOrderPayment()){
+					orderTrackingWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
+				}
+				
+				
+			//	setUpStatementData(orderTrackingWsDTO,orderDetail);
+				
+				/*Added For EGV Functionality End */
+				//orderTrackingWsDTO.setRecipientname(recipientname);
 				if (null != orderDetail.getDeliveryAddress())
 				{
 					orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetail, 2));
@@ -2009,6 +2074,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							else
 							{
 								orderproductdto = new OrderProductWsDTO();
+								if(null !=entry.getWalletApportionPaymentData() ){
+									orderproductdto.setWalletApportionPaymentData(entry.getWalletApportionPaymentData());
+								}
+								if(null !=entry.getWalletApportionforReverseData() ){
+									orderproductdto.setWalletApportionforReverseData(entry.getWalletApportionforReverseData());
+								}
 								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 								//								if (!entry.isGiveAway())
 								//								{
@@ -2613,8 +2684,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						{
 							//getting the product code
 							final ProductModel productModel = mplOrderFacade.getProductForCode(product.getCode());
-
+							if(null !=orderEntry.getWalletApportionPaymentData() ){
+								orderproductdto.setWalletApportionPaymentData(orderEntry.getWalletApportionPaymentData());
+							}
+							if(null !=orderEntry.getWalletApportionforReverseData() ){
+								orderproductdto.setWalletApportionforReverseData(orderEntry.getWalletApportionforReverseData());
+							}
 							orderproductdto = new OrderProductWsDTO();
+							
 							ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 							//set image
 							orderproductdto.setImageURL(setImageURL(product));
@@ -2942,6 +3019,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 		}
+		
+	 
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
@@ -2960,6 +3039,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 		return orderTrackingWsDTO;
 	}
+
 
 	/**
 	 * @param entry

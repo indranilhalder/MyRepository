@@ -83,4 +83,6 @@ public interface ExtendedUserDao
 	 */
 	UserModel getUserByUid(String uid);
 
+	CustomerModel findUserByWalletMobileNumber(String mobileNumber);
+
 }

@@ -481,6 +481,9 @@
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+	
+		<bean id="mplEgvWalletService" class="com.tisl.mpl.service.impl.MplEgvWalletServiceImpl"/>	
+	
 				
 </beans>
 

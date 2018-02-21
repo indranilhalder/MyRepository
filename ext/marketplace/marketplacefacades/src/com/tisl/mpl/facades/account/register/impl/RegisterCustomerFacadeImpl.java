@@ -365,6 +365,24 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	/**
+	 * @description this method is used to check uniqueness of MobileNumber For Wallet
+	 * @param data
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkUniquenessOfMobileForWallet(final String mobileNumber)
+	{
+		boolean flag = false;
+		flag = extUserService.isMobileUniqueForWallet(mobileNumber);
+		//		if (!flag)
+		//		{
+		//			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+		//		}
+		return flag;
+
+	}
+
+	/**
 	 * @description this is called to set uid for registration process
 	 * @param registerData
 	 * @param customer
@@ -770,5 +788,17 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 		this.orderModelService = orderModelService;
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.register.RegisterCustomerFacade#registerWalletMobileNumber(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void registerWalletMobileNumber(final String firstName, final String lastName, final String mobileNumber)
+	{
+		extDefaultCustomerService.registerWalletMobileNumber(firstName, lastName, mobileNumber);
+	}
 
 }

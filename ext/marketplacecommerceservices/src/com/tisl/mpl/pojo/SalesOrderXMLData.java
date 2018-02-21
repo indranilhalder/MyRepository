@@ -15,15 +15,17 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlRootElement(name = "SalesOrderPaymentInformationData")
+/*@XmlType(propOrder =
+{ "orderId", "orderDate", "merchantCode", "orderType", "subOrderList" })*/
 @XmlType(propOrder =
-{ "orderId", "orderDate", "merchantCode", "orderType", "subOrderList" })
+{ "orderId", "orderDate", "orderType", "subOrderList" })
 public class SalesOrderXMLData
 {
 
 	private String orderId;
 	//private String paymentRefID;
 	private String orderDate;
-	private String merchantCode;
+	//private String merchantCode;
 	private String orderType;
 	private List<SubOrderXMLData> subOrderList;
 
@@ -79,20 +81,20 @@ public class SalesOrderXMLData
 	/**
 	 * @return the merchantCode
 	 */
-	@XmlElement(name = "MerchantCode")
+/*	@XmlElement(name = "MerchantCode")
 	public String getMerchantCode()
 	{
 		return merchantCode;
 	}
-
+*/
 	/**
 	 * @param merchantCode
 	 *           the merchantCode to set
 	 */
-	public void setMerchantCode(final String merchantCode)
+	/*public void setMerchantCode(final String merchantCode)
 	{
 		this.merchantCode = merchantCode;
-	}
+	}*/
 
 	/**
 	 * @return the orderType
