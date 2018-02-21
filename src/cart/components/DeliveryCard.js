@@ -6,7 +6,7 @@ import checkIcon from "./img/check.svg";
 import CheckOutHeader from "./CheckOutHeader.js";
 import styles from "./DeliveryCard.css";
 export default class DeliveryCard extends React.Component {
-  onHandleClick() {
+  handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
     }
@@ -20,14 +20,17 @@ export default class DeliveryCard extends React.Component {
             fontFamily="regular"
             color="#000"
             label="Change"
-            onClick={() => this.onHandleClick()}
+            onClick={() => this.handleClick()}
           />
         </div>
         <div className={styles.checkIconHolder}>
           <Image image={checkIcon} fit="cover" />
         </div>
         <div className={styles.headerTextHolder}>
-          <CheckOutHeader confirmTitle="Delivery address" indexNumber="1" />
+          <CheckOutHeader
+            confirmTitle={this.props.confirmTitle}
+            indexNumber={this.props.indexNumber}
+          />
         </div>
         <div className={styles.productShippingTextHolder}>
           {this.props.children}
@@ -37,5 +40,7 @@ export default class DeliveryCard extends React.Component {
   }
 }
 DeliveryCard.propTypes = {
+  confirmTitle: PropTypes.string,
+  indexNumber: PropTypes.string,
   onClick: PropTypes.func
 };
