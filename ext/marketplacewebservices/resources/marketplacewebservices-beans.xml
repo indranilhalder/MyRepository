@@ -4268,6 +4268,10 @@
 			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
 	</bean>
 	
-	<!-- End  bean Section for UI/UX default Page -->
+	       <bean class="com.tisl.mpl.wsdto.UICompWiseListWsDTO">
+           <property name="Components"
+               type="java.util.List" />
+           </bean>
+	
 	
 </beans>
