@@ -1,8 +1,6 @@
 .base {
   width: 100%;
   height: auto;
-  padding: 25px;
-  border-bottom: 1px solid #ccc;
 }
 .confirm {
   width: 100%;
@@ -14,8 +12,8 @@
   padding-left: 35px;
 }
 .circle {
-  width: 25px;
-  height: 25px;
+  width: 23px;
+  height: 23px;
   background-color: #fff;
   border: 2px solid black;
   border-radius: 50%;
@@ -24,4 +22,8 @@
   position: absolute;
   left: 0;
   top: 0;
+  color:#000000;
+  font-size:14px;
+  font-family:semibold;
+  line-height:23px;
 }
