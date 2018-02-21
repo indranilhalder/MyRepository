@@ -20,3 +20,8 @@
   display: inline-block;
   text-align: right;
 }
+.walletContainer {
+  width: auto;
+  height: auto;
+  margin-top: 20px;
+}
