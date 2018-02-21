@@ -13,7 +13,7 @@ export default class EmiDisplay extends React.Component {
           <span className={styles.month}>/ {this.props.emiRate}</span>
         </div>
         <div className={styles.checkBoxHolder}>
-          <Icon image={image} />
+          <Icon image={image} size={28} />
         </div>
       </div>
     );
