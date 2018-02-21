@@ -10,7 +10,6 @@ export default class WalletPaymentDetail extends React.Component {
         <div className={styles.walletPrice}>{this.props.walletPrice}</div>
         {this.props.walletPrice && (
           <div className={styles.walletContainer}>
-            {" "}
             <WalletDetail />
           </div>
         )}
