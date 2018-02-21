@@ -4,7 +4,18 @@ import WalletDetail from "./WalletDetails";
 import Button from "./Button";
 import image from "./img/citigroup.jpg";
 import { Icon } from "xelpmoc-core";
+import PropTypes from "prop-types";
 export default class PaymentModePopup extends React.Component {
+  changePaymentMethod() {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
+  continueWithoutCoupon() {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -23,6 +34,7 @@ export default class PaymentModePopup extends React.Component {
               label={this.props.btnLabel}
               width={211}
               color="#b2b2b2"
+              onClick={() => this.changePaymentMethod()}
             />
           </div>
           <div className={styles.buttonHolder}>
@@ -31,6 +43,7 @@ export default class PaymentModePopup extends React.Component {
               label={this.props.btnLabel}
               width={211}
               color=" #4a4a4a"
+              onClick={() => this.continueWithoutCoupon()}
             />
           </div>
         </div>
@@ -38,6 +51,9 @@ export default class PaymentModePopup extends React.Component {
     );
   }
 }
+PaymentModePopup.propTypes = {
+  onClick: PropTypes.func
+};
 PaymentModePopup.defaultProps = {
   label: "FESTIVE20",
   btnLabel: "Change Payment Mode"
