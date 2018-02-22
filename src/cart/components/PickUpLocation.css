@@ -1,0 +1,86 @@
+.base {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background-color: #ffffff;
+  padding: 20px;
+}
+.holder {
+  width: 100%;
+  height: auto;
+  position: relative;
+  display: inline-block;
+}
+.headingText {
+  height: auto;
+  color: #212121;
+  font-size: 14px;
+  font-family: semibold;
+  display: inline-block;
+  width: 100%;
+}
+.textIcon {
+  width: 25px;
+  height: 25px;
+  font-family: semibold;
+  line-height: 5px;
+  font-size: 14px;
+  right: 15px;
+  text-align: center;
+  color: #ffffff;
+  background-color: black;
+  position: absolute;
+  border-radius: 50%;
+  line-height: 25px;
+  top: 0px;
+}
+.addressText {
+  height: auto;
+  width: 100%;
+  font-family: regular;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  color: #000000;
+  display: inline-block;
+  margin: auto;
+  margin-top: 10px;
+}
+.pickUpBox {
+  width: 100%;
+  height: auto;
+  color: #212121;
+  font-size: 14px;
+  font-family: semibold;
+  display: inline-block;
+  margin-top: 10px;
+}
+.pickUpText {
+  width: 32%;
+  height: auto;
+  font-size: 14px;
+  font-family: semibold;
+  display: inline-block;
+  vertical-align: middle;
+}
+.pickUpDay {
+  width: 68%;
+  height: auto;
+  font-size: 13px;
+  font-family: regular;
+  display: inline-block;
+  vertical-align: middle;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  display: inline-block;
+  margin-top: 10px;
+}
+.buttonContainer {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+}

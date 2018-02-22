@@ -1,0 +1,26 @@
+.base {
+  width: 22px;
+  height: 22px;
+  background-color: #212121;
+  position: relative;
+  border-radius: 50%;
+  font-size: 14px;
+  color: #fff;
+  line-height: 22px;
+  text-align: center;
+  font-family: semibold;
+}
+.base::after {
+  content: "";
+  width: 2px;
+  height: 10px;
+  background-color: #212121;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+}
+.image {
+  padding-top: 8px;
+}
