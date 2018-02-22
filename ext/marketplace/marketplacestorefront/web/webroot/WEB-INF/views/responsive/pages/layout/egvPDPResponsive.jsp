@@ -23,6 +23,8 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <template:page pageTitle="${pageTitle}">
+<input type="hidden" id="minPrice" value="${minPrice}"/>
+<input type="hidden" id="maxPrice" value="${maxPrice}"/>
 	<div>
 		<br />
 		<div class="clearfix">
@@ -498,12 +500,14 @@ function validateEgvForm() {
 	var toEmail = $(".giftCard_toEmail").val();
 	var letters = new RegExp(/^[A-z]*$/);
 	var emailValidExpression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	var minPrice = $("#minPrice").val();
+	var maxPrice = $("#maxPrice").val();
 	
-	if(document.getElementById('customAmount').value >= 15 && document.getElementById('customAmount').value < 15001) {
+	if(parseInt(document.getElementById('customAmount').value) >= minPrice && parseInt(document.getElementById('customAmount').value) <= maxPrice) {
 		$("#customAmountError").hide();
 	} else {
 		$("#customAmountError").show();
-		$("#customAmountError").text('Please enter amount from 15 to 15000.');
+		$("#customAmountError").text('Please enter amount from '+minPrice+' to '+maxPrice+'.');
 		formValid = false;
 	}
 	
@@ -820,7 +824,7 @@ function submitWalletData(){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
 				}else if(response='EXPIRED'){
-					$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only.");
 					$(".wcOTPError").show();
 				}
 				else if(response=='qcDown'){

@@ -1255,6 +1255,7 @@
 								</c:forEach>
 								
 				<!-- div for COD -->
+				<c:if test="${isEGVCart ne true && isSplit ne true}">
 								<li id="COD">
 
 								<ul class="product-block net-bank blocks">
@@ -1357,7 +1358,7 @@
 									</ul>	
 									
 								</li>
-														
+									</c:if>					
 
 
 				<!-- End of COD -->					
@@ -1610,4 +1611,15 @@ span#juspayErrorMsg {
 		$(".security_code.span1").val("");
 		/* end add for TISPRDT-8297 */
 	});
+	
+	/*CHKOUT-1444*/
+	var isEGVCart = '${isEGVCart}';
+	var isSplit = '${isSplit}';
+	
+	if(isEGVCart || isSplit) {
+		if($(window).width()> 791) {
+			$('.checkout-list-right').css('position','relative');
+		}
+	}
+	/*CHKOUT-1444*/
 	</script>

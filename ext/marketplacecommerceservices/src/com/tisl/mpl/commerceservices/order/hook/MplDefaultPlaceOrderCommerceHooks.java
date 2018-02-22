@@ -988,7 +988,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				final Customer customer = new Customer();
 				final PurchaseEGVRequest purchaseEGVRequest = new PurchaseEGVRequest();
 				purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
-				purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
+				purchaseEGVRequest.setCardProgramGroupName(getConfigurationService().getConfiguration().getString("ProgramName"));
 				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
 				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
 				customer.setEmail(orderModel.getUser().getUid());

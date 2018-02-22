@@ -32,7 +32,7 @@ public interface MplWalletFacade
 
 	public QCCustomerRegisterResponse createWalletContainer(final QCCustomerRegisterRequest registerCustomerRequest);
 
-	public void addEGVToWallet();
+	/*public void addEGVToWallet();*/
 
 	public BalanceBucketWise getQCBucketBalance(final String customerWalletId);
 

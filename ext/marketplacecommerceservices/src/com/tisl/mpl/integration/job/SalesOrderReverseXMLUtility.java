@@ -398,8 +398,12 @@ public class SalesOrderReverseXMLUtility
 						//TISSIT-1780
 						if (salesXMLData != null && xmlToFico)
 						{
-							bulkSalesDataList.add(salesXMLData);
-							LOG.debug("xml order:" + salesXMLData.getOrderId());
+							if (salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))//SDI-85 Fix
+							{
+								bulkSalesDataList.add(salesXMLData);
+								LOG.debug("xml order:" + salesXMLData.getOrderId());
+							}
+
 						}
 						LOG.debug("bulkSalesDataList Size" + bulkSalesDataList.size());
 					}
