@@ -388,17 +388,24 @@ public class SalesOrderXMLUtility
 					{
 						List<SellerInformationModel> productSellerData = null;
 						xmlData.setUSSID(entry.getSelectedUSSID());
+						//SDI-6025
+						String sellerCode = null;
 						productSellerData = getSellerBasedPromotionService().fetchSellerInformation(entry.getSelectedUSSID(),
-								getDefaultPromotionsManager().catalogData());
+								product.getCatalogVersion());
 						LOG.debug("after product seller data call ");
 						if (null != productSellerData && !productSellerData.isEmpty())
 						{
 							for (final SellerInformationModel seller : productSellerData)
 							{
-
+								//SDI-6025
+								if(null != sellerCode)
+								{
+									break;
+								}
 								if (null != seller.getSellerID())
 								{
-									xmlData.setSellerCode(seller.getSellerID());
+									//SDI-6025
+									sellerCode = seller.getSellerID();
 									LOG.debug("seller id set ");
 								}
 								else
@@ -407,6 +414,12 @@ public class SalesOrderXMLUtility
 								}
 							}
 						}
+						//SDI-6025
+						if(null == sellerCode)
+						{
+							sellerCode = getSellerIdFromUssid(entry.getSelectedUSSID());
+						}
+						xmlData.setSellerCode(sellerCode);
 					}
 					else
 					{
@@ -940,6 +953,14 @@ public class SalesOrderXMLUtility
 	
 	private double getDecimalFormateValue(double value){
 		return Double.parseDouble(new DecimalFormat(".##").format(value));
+	}
+	
+	private String getSellerIdFromUssid(String ussid)
+	{
+		if(null != ussid && ussid.length() >= 6){
+			return StringUtils.substring(ussid, 0, 6);
+		}
+		return null;
 	}
 
 }
