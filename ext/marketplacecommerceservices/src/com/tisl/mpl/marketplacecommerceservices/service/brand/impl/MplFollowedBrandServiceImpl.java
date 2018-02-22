@@ -6,7 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.brand.impl;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,7 +62,7 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.brand.MplFollowedBrandService#getFollowedBrands(java.lang.String)
 	 */
@@ -77,7 +77,7 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.brand.MplFollowedBrandService#updateFollowedBrands(java.lang.
 	 * String, java.lang.String, java.lang.String)
@@ -86,83 +86,80 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 	public boolean updateFollowedBrands(final String mcvId, final String brands, final boolean follow)
 	{
 		// YTODO Auto-generated method stub
-		List<BrandMasterModel> brandList = new ArrayList<BrandMasterModel>();
+		List<BrandMasterModel> brandList = null;
+		Set<BrandMasterModel> brandSetModify = null;
 		FollowedBrandMcvidModel followedBrandModel = new FollowedBrandMcvidModel();
 		boolean status = false;
+
 		try
 		{
 			if (StringUtils.isNotEmpty(brands))
 			{
 				brandList = mplFollowedBrandDao.getBrands(brands);
 			}
-			//follow brands
+
 			if (CollectionUtils.isNotEmpty(brandList) && StringUtils.isNotEmpty(mcvId))
 			{
 				final List<FollowedBrandMcvidModel> listOfMcvIDbrands = mplFollowedBrandDao.getMcvIdBrands(mcvId);
-				Set<BrandMasterModel> brandSet = null;
 
-				if (follow)
+				if (CollectionUtils.isNotEmpty(listOfMcvIDbrands))
 				{
-					//check mcvid already exist or not
+					followedBrandModel = listOfMcvIDbrands.get(0);
 
-					if (CollectionUtils.isNotEmpty(listOfMcvIDbrands))
+					if (null != followedBrandModel && CollectionUtils.isNotEmpty(followedBrandModel.getBrandList()))
 					{
-						followedBrandModel = listOfMcvIDbrands.get(0);
 
-						brandSet = followedBrandModel.getBrandList();
-
-						brandSet.addAll(brandList.stream().collect(Collectors.toSet()));
-
-						followedBrandModel.setBrandList(brandSet);
-
-						modelService.save(followedBrandModel);
-						status = true;
+						brandSetModify = new HashSet<BrandMasterModel>(followedBrandModel.getBrandList());
 
 					}
+					if (CollectionUtils.isNotEmpty(brandSetModify))
+					{
+						//follow brands
+						if (follow)
+						{
 
-					//New mcvId entry
+							brandSetModify.addAll(brandList.stream().collect(Collectors.toSet()));
+
+							followedBrandModel.setBrandList(brandSetModify);
+
+							modelService.save(followedBrandModel);
+							status = true;
+
+						}
+
+						//unfollow brands
+						else
+						{
+							brandSetModify.removeAll(brandList.stream().collect(Collectors.toSet()));
+
+							followedBrandModel.setBrandList(brandSetModify);
+							modelService.save(followedBrandModel);
+							status = true;
+						}
+					}
+					//if mcvId with no brands in bd
 					else
 					{
-						followedBrandModel = modelService.create(FollowedBrandMcvidModel.class);
-
-						followedBrandModel.setMcvid(mcvId);
-						//	followedBrandModel.setBrandList((Set<BrandMasterModel>) brandList);
-
-						//Set<Integer> myset = mylist.stream().collect(Collectors.toSet()));
-
 						followedBrandModel.setBrandList(brandList.stream().collect(Collectors.toSet()));
-
 						modelService.save(followedBrandModel);
 						status = true;
+
 					}
 
 				}
 
-				//unfollow brands
+				//New mcvId entry
 				else
 				{
-					//	final List<FollowedBrandMcvidModel> listOfMcvIDbrands = mplFollowedBrandDao.getMcvIdBrands(mcvId);
-					//Set<BrandMasterModel> brandSet = null;
 
-					if (CollectionUtils.isNotEmpty(listOfMcvIDbrands))
-					{
-						followedBrandModel = listOfMcvIDbrands.get(0);
+					followedBrandModel = modelService.create(FollowedBrandMcvidModel.class);
 
-						if (CollectionUtils.isNotEmpty(followedBrandModel.getBrandList()))
-						{
-							//brandList = (List<BrandMasterModel>) followedBrandModel.getBrandList();
-							//brandList.removeAll(brandList);
+					followedBrandModel.setMcvid(mcvId);
 
-							brandSet = followedBrandModel.getBrandList();
+					followedBrandModel.setBrandList(brandList.stream().collect(Collectors.toSet()));
 
-							brandSet.removeAll(brandList.stream().collect(Collectors.toSet()));
-
-							followedBrandModel.setBrandList(brandSet);
-							modelService.save(followedBrandModel);
-							status = true;
-						}
-
-					}
+					modelService.save(followedBrandModel);
+					status = true;
 
 				}
 			}

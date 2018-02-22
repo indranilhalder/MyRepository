@@ -1430,13 +1430,12 @@
 			generate="true" autocreate="true">
 			<sourceElement type="Customer" qualifier="customer"
 				cardinality="one">
-				<modifiers read="true" write="false" optional="true"
-					partof="true" />
+				<modifiers read="true" write="true" optional="true" />
 			</sourceElement>
 			<targetElement type="FollowedBrandMcvid" qualifier="followedBrandMcvid"
 				cardinality="many" collectiontype="set" ordered="true">
 				<modifiers read="true" write="true" optional="true"
-					partof="true" />
+					partof="false" />
 			</targetElement>
 		</relation>
 		
@@ -14434,13 +14433,13 @@
                  <attribute qualifier='name' type="java.lang.String">
 						<description>Represents the Brand name of the product</description>
 						<persistence type="property"/>
-						<modifiers read="true" write="true" optional="false" search="false"
+						<modifiers read="true" write="true" optional="false" search="true"
 							unique="false" removable="true" />
 					</attribute>
 					<attribute qualifier="logoImageUrl" type="java.lang.String">
 						<description>Brand LOGO Image URL</description>
 						<persistence type="property" />
-						<modifiers read="true" write="true" optional="false" search="false"
+						<modifiers read="true" write="true" optional="false" search="true"
 							unique="false" removable="true" />
 					</attribute>
                 </attributes>
@@ -14465,7 +14464,7 @@
                  <attribute qualifier='gender' type="java.lang.String">
 						<description>Represents the Gender of the customer</description>
 						<persistence type="property"/>
-						<modifiers read="true" write="true" optional="false" search="false"
+						<modifiers read="true" write="true" optional="false" search="true"
 							unique="false" removable="true" />
 				</attribute>			
           </attributes>
@@ -14485,8 +14484,8 @@
 						type="BrandCollectionType">
 						<description>List of followed brands against mcvid</description>
 						<persistence type="property" />
-						<modifiers read="true" write="true" search="false"
-							initial="false" optional="true" partof="true" />
+						<modifiers read="true" write="true" search="true"
+							 optional="true" partof="false" />
 					</attribute>			
            </attributes>
 	   </itemtype>
