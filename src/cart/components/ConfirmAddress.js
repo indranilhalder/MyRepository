@@ -3,7 +3,7 @@ import GridSelect from "../../general/components/GridSelect";
 import CheckOutHeader from "./CheckOutHeader.js";
 import styles from "./ConfirmAddress.css";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
-import DeliveryAddressCopy from "./DeliveryAddressCart.js";
+import DeliveryAddressCart from "./DeliveryAddressCart.js";
 import PropTypes from "prop-types";
 export default class ConfirmAddress extends React.Component {
   constructor(props) {
@@ -42,26 +42,28 @@ export default class ConfirmAddress extends React.Component {
                 })
                 .map((val, i) => {
                   return (
-                    <DeliveryAddressCopy
+                    <DeliveryAddressCart
                       addressTitle={val.addressTitle}
                       addressDescription={val.addressDescription}
-                      value={i}
+                      key={i}
+                      value={val.addressTitle}
                     />
                   );
                 })}
           </GridSelect>
           <div className={styles.buttonHolder}>
-            {this.props.address.length > 3 && (
-              <div className={styles.moreButtonHolder}>
-                <UnderLinedButton
-                  size="14px"
-                  fontFamily="regular"
-                  color="#000"
-                  label={this.state.label}
-                  onClick={() => this.showMore()}
-                />
-              </div>
-            )}
+            {this.props.address &&
+              this.props.address.length > 3 && (
+                <div className={styles.moreButtonHolder}>
+                  <UnderLinedButton
+                    size="14px"
+                    fontFamily="regular"
+                    color="#000"
+                    label={this.state.label}
+                    onClick={() => this.showMore()}
+                  />
+                </div>
+              )}
 
             <div className={styles.newAddress}>
               <UnderLinedButton
