@@ -503,7 +503,7 @@ function validateEgvForm() {
 	var minPrice = $("#minPrice").val();
 	var maxPrice = $("#maxPrice").val();
 	
-	if(document.getElementById('customAmount').value >= minPrice && document.getElementById('customAmount').value <= maxPrice) {
+	if(parseInt(document.getElementById('customAmount').value) >= minPrice && parseInt(document.getElementById('customAmount').value) <= maxPrice) {
 		$("#customAmountError").hide();
 	} else {
 		$("#customAmountError").show();
