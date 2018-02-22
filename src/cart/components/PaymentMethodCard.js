@@ -123,7 +123,7 @@ export default class PaymentMethodCard extends React.Component {
               emiList={[
                 {
                   value: 1,
-                  title: "KOTAK MAHINDRA BANK, LTD.",
+                  title: "Kotak Mahindra",
                   options: [
                     {
                       interestRate: "15.0",
@@ -183,7 +183,7 @@ export default class PaymentMethodCard extends React.Component {
                 },
                 {
                   value: 3,
-                  title: "KOTAK MAHINDRA BANK, LTD.",
+                  title: "SBI",
                   options: [
                     {
                       interestRate: "15.0",
@@ -213,7 +213,7 @@ export default class PaymentMethodCard extends React.Component {
                 },
                 {
                   value: 4,
-                  title: "KOTAK MAHINDRA BANK, LTD.",
+                  title: "ICICI Bank",
                   options: [
                     {
                       interestRate: "15.0",

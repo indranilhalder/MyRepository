@@ -9,6 +9,16 @@ export default class EmiAccordian extends React.Component {
       this.props.selectItem();
     }
   }
+  handlePlanSelect(val) {
+    if (this.props.selectPlan) {
+      this.props.selectPlan(val);
+    }
+  }
+  handleConfirmPlan() {
+    if (this.props.confirmPlan) {
+      this.props.confirmPlan();
+    }
+  }
   render() {
     return (
       <div className={this.props.selected ? styles.baseSelected : styles.base}>
@@ -21,10 +31,17 @@ export default class EmiAccordian extends React.Component {
         {this.props.selected && (
           <React.Fragment>
             <div className={styles.options}>
-              <EmiCard options={this.props.options} />
+              <EmiCard
+                options={this.props.options}
+                onChange={val => this.handlePlanSelect(val)}
+              />
             </div>
             <div className={styles.button}>
-              <Button type="secondary" label="Select this plan" />
+              <Button
+                type="secondary"
+                label="Select this plan"
+                onClick={() => this.handleConfirmPlan()}
+              />
             </div>
           </React.Fragment>
         )}
