@@ -1,13 +1,13 @@
 import React from "react";
-import styles from "./CreditCard.css";
+import styles from "./CreditCardForm.css";
 import PropTypes from "prop-types";
-import Input2 from "./Input2.js";
+import Input2 from "../../general/components/Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
-import SelectBox from "./SelectBox.js";
-import informationIcon from "./img/Info-grey.svg";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile.js";
+import informationIcon from "../../general/components/img/Info-grey.svg";
 import Button from "../../general/components/Button";
-import CheckBox from "./CheckBox.js";
-export default class CreditCard extends React.Component {
+import CheckBox from "../../general/components/CheckBox.js";
+export default class CreditCardForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -94,31 +94,19 @@ export default class CreditCard extends React.Component {
           </div>
           <div className={styles.dropDownHolder}>
             <div className={styles.dropDownBox}>
-              <SelectBox
-                borderNone={true}
+              <SelectBoxMobile
+                theme="hollowBox"
                 options={this.props.options}
-                placeholder="Expiry month"
+                value="Expiry month"
                 onChange={changedValue => this.monthChange(changedValue)}
-                selected={
-                  this.state.monthValue && {
-                    label: this.state.monthValue,
-                    value: this.state.monthValue
-                  }
-                }
               />
             </div>
             <div className={styles.dropDownBox}>
-              <SelectBox
-                borderNone={true}
+              <SelectBoxMobile
+                theme="hollowBox"
                 options={this.props.optionsYear}
-                placeholder="Expiry year"
+                value="Expiry year"
                 onChange={changedValue => this.onYearChange(changedValue)}
-                selected={
-                  this.state.yearValue && {
-                    label: this.state.yearValue,
-                    value: this.state.yearValue
-                  }
-                }
               />
             </div>
           </div>
@@ -129,6 +117,7 @@ export default class CreditCard extends React.Component {
                   <Input2
                     boxy={true}
                     placeholder="Cvv"
+                    type="number"
                     onChange={val => this.getCardCvvValue(val)}
                     textStyle={{ fontSize: 14 }}
                     height={33}
@@ -154,7 +143,7 @@ export default class CreditCard extends React.Component {
                 <Button
                   type="primary"
                   color="#fff"
-                  label={this.props.buttonText}
+                  label="Pay now"
                   width={120}
                   onClick={val => this.onSaveCardDetails(val)}
                 />
@@ -168,17 +157,18 @@ export default class CreditCard extends React.Component {
             <div className={styles.checkCircle}>
               <CheckBox selected={this.state.selected} />
             </div>
-            <div className={styles.saveText}>{this.props.saveTextItem}</div>
+            <div className={styles.saveText}>
+              Save this card for future payments
+            </div>
           </div>
         </div>
       </div>
     );
   }
 }
-CreditCard.propTypes = {
+CreditCardForm.propTypes = {
   placeholder: PropTypes.string,
   placeHolderCardName: PropTypes.string,
-  buttonText: PropTypes.string,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
   onSaveData: PropTypes.func,

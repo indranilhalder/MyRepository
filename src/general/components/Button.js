@@ -24,7 +24,7 @@ export default class Button extends React.Component {
         return (
           <CoreButton
             {...other}
-            backgroundColor={"#ffffff"}
+            backgroundColor={"transparent"}
             borderRadius={this.props.height / 2}
             borderColor={"#212121"}
             textStyle={{
