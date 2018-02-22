@@ -4,12 +4,14 @@ import CheckOutHeader from "./CheckOutHeader.js";
 import SavedCard from "./SavedCard.js";
 import NetBanking from "./NetBanking.js";
 import CreditCardForm from "./CreditCardForm.js";
+import EmiAccordian from "./EmiAccordian";
 import Toggle from "../../general/components/Toggle";
 import ManueDetails from "../../general/components/MenuDetails.js";
 import savedCardIcon from "./img/saved-card.svg";
 import netBankingIcon from "./img/netBanking.svg";
 import creditCardIcon from "./img/credit-card.svg";
 import debitCardIcon from "./img/debit-card.svg";
+import emiIcon from "./img/emi.svg";
 import styles from "./PaymentMethodCard.css";
 
 export default class PaymentMethodCard extends React.Component {
@@ -112,6 +114,132 @@ export default class PaymentMethodCard extends React.Component {
                   image:
                     "https://competitiondigest.com/wp-content/uploads/2014/12/UNITED.png",
                   value: "7"
+                }
+              ]}
+            />
+          </ManueDetails>
+          <ManueDetails text="Easy monthly installments" icon={emiIcon}>
+            <EmiAccordian
+              emiList={[
+                {
+                  value: 1,
+                  title: "Kotak Mahindra",
+                  options: [
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹23966.24",
+                      term: "3",
+                      interestPayable: "₹1760.71"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹12206.38",
+                      term: "6",
+                      interestPayable: "₹3100.30"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹8288.25",
+                      term: "9",
+                      interestPayable: "₹4456.22"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹6330.54",
+                      term: "12",
+                      interestPayable: "₹5828.45"
+                    }
+                  ]
+                },
+                {
+                  value: 2,
+                  title: "Axis",
+                  options: [
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹23966.24",
+                      term: "3",
+                      interestPayable: "₹1760.71"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹12206.38",
+                      term: "6",
+                      interestPayable: "₹3100.30"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹8288.25",
+                      term: "9",
+                      interestPayable: "₹4456.22"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹6330.54",
+                      term: "12",
+                      interestPayable: "₹5828.45"
+                    }
+                  ]
+                },
+                {
+                  value: 3,
+                  title: "SBI",
+                  options: [
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹23966.24",
+                      term: "3",
+                      interestPayable: "₹1760.71"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹12206.38",
+                      term: "6",
+                      interestPayable: "₹3100.30"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹8288.25",
+                      term: "9",
+                      interestPayable: "₹4456.22"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹6330.54",
+                      term: "12",
+                      interestPayable: "₹5828.45"
+                    }
+                  ]
+                },
+                {
+                  value: 4,
+                  title: "ICICI Bank",
+                  options: [
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹23966.24",
+                      term: "3",
+                      interestPayable: "₹1760.71"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹12206.38",
+                      term: "6",
+                      interestPayable: "₹3100.30"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹8288.25",
+                      term: "9",
+                      interestPayable: "₹4456.22"
+                    },
+                    {
+                      interestRate: "15.0",
+                      monthlyInstallment: "₹6330.54",
+                      term: "12",
+                      interestPayable: "₹5828.45"
+                    }
+                  ]
                 }
               ]}
             />
