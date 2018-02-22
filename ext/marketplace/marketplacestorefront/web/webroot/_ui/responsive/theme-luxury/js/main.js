@@ -190,7 +190,7 @@ TATA.CommonFunctions = {
                 }
             },
             submitHandler: function(form) {
-                const url = "/login/pw/request/confirmEmail?forgotPassword_email="+$("#forgotPassword_email").val();
+                var url = "/login/pw/request/confirmEmail?forgotPassword_email="+$("#forgotPassword_email").val();
                 $.ajax({
                     url: url,
                     type:"GET",
@@ -214,7 +214,7 @@ TATA.CommonFunctions = {
     },
 
     loadSignInForm: function(element){
-        const loginURL = element.attr("data-href");
+        var loginURL = element.attr("data-href");
         $.ajax({
             url: loginURL,
             beforeSend: function(){
@@ -228,7 +228,7 @@ TATA.CommonFunctions = {
     },
     
     loadRegisterForm: function(element){
-        const luxRegister = element.attr("href");
+        var luxRegister = element.attr("href");
         $.ajax({
             url: luxRegister,
             beforeSend: function(){
@@ -241,7 +241,7 @@ TATA.CommonFunctions = {
     },
     
     loadForgotPasswordForm: function(element){
-        const pwsRequest = element.attr("href");
+        var pwsRequest = element.attr("href");
         $.ajax({
             url: pwsRequest,
             beforeSend: function(){
@@ -1136,7 +1136,6 @@ TATA.Pages = {
                     inputArrayB=inputArrayB.replace('["', "");
                     inputArrayB=inputArrayB.replace('"]', "");
                     inputArrayB=inputArrayB.replace('","', ',');
-                    console.log(inputArrayB);
                     		
                     $(filtered).has("h4.categor-name") && $(".plp-wrapper h4").html($(filtered).find("h4.categor-name"));
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")),
@@ -1154,7 +1153,6 @@ TATA.Pages = {
                     }
                     TATA.Pages.PLP.productHover();
                    
-                    console.log(inputArrayB.split(","));
                     constructDepartmentHierarchy(inputArrayB.split(","));
 
                 },
