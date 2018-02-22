@@ -1,1 +1,1 @@
-You have been gifted a Tata CLiQ voucher by <span style="color: #aa1d3d;">${ctx.senderName}</span>!
+You have been gifted a Tata CLiQ voucher by ${ctx.senderName}!
