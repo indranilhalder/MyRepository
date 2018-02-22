@@ -7561,7 +7561,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					if (isCartVoucherPresent.booleanValue())
 					{
-						mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
+						//Removing any Cart/Bank Voucher before checking Split And Cliqcash mode
+						mplCouponFacade.removeLastCartCoupon(cart); 
 					}
 
 					// CliqCash only as Payment mode--bank voucher will not apply
@@ -7626,6 +7627,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						boolean applyStatus = false;
 						if (isCartVoucherPresent.booleanValue())
 						{
+							//check for delivery cost present before re-apply bank coupon 
+							double delCharges= null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0.0d;
+							double bankCoupenwithoutDelCharges = totalCartAmt -delCharges;
+							double juspayTotal = bankCoupenwithoutDelCharges - WalletAmt.doubleValue();
+							
+							if(juspayTotal > 0.0d){
 							//Re-apply bank voucher
 							final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
@@ -7713,9 +7720,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								}
 							}
 						}
+						}
 						else
 						{
 							//Split case when cart dose not contain vouchers.
+							VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, false, false, ""); // Calculate Values
+							totalCartAmt = cart.getTotalPrice().doubleValue();
+							WalletAmt = cart.getTotalWalletAmount();
 							double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 							juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
 							getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
@@ -7727,7 +7738,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							jsonObject.put("totalCartAmt", totalCartAmt);
 							jsonObject.put("cartCouponCode", cartCouponCode);
 							jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
-							jsonObject.put("totalDiscount", 0);
+							jsonObject.put("totalDiscount",data.getTotalDiscount().getFormattedValue());
 							jsonObject.put("bankCheckBox", applyStatus);
 							cart.setSplitModeInfo("Split");
 							jsonObject.put("globalCliqCash", false);
