@@ -9,6 +9,7 @@ var totalPageCountToShow = 10;
 //////SDI-4008//////
 var directPaginatedLoad = true;
 var recordsLoadedCount = 0;
+var departmentHierarchyDataHierarchyList;
 if($(window).width() <= 410){
 totalPageCountToShow = 2;
 }
@@ -471,6 +472,11 @@ function innerLazyLoad(options) {
     if (initPageLoad) { //TODO: duplicate loading prevention
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
+	    //SDI-4619
+ +        if(!$.isEmptyObject(departmentHierarchyDataHierarchyList)){
+ +        	constructDepartmentHierarchy(departmentHierarchyDataHierarchyList);
+ +        	} 
+ +        //SDI Ends
         //TISSPTXI-21
         $("img.lazy").lazyload();
     } else {
