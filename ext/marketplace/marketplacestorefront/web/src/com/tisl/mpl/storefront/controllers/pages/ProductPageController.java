@@ -5603,9 +5603,13 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
 			try{
+				 String minPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.minPrice");	
+				 String maxPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.maxPrice");	
 			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
 			 String [] amountList = productPrice.split(",");
 			 model.addAttribute("amountList", amountList);
+			 model.addAttribute("minPrice", minPrice);
+			 model.addAttribute("maxPrice", maxPrice);
 			}catch(Exception exception){
 				LOG.error("Exception Occur while getting product price  ");
 			}
