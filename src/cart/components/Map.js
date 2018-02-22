@@ -7,10 +7,14 @@ import PropTypes from "prop-types";
 import PickUpLocation from "./PickUpLocation";
 import BannerMobile from "../../general/components/BannerMobile";
 export default class SimpleMap extends React.Component {
-  state = {
-    center: [20.5937, 78.9629],
-    zoom: 9
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      center: [this.props.lat, this.props.lng],
+      zoom: 9
+    };
+  }
+
   _onChange = ({ center, zoom }) => {
     this.setState({
       center: center,
@@ -86,7 +90,5 @@ export default class SimpleMap extends React.Component {
 SimpleMap.propTypes = {
   lat: PropTypes.number,
   lng: PropTypes.number,
-  image: PropTypes.string,
-  center: PropTypes.array,
-  zoom: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  image: PropTypes.string
 };
