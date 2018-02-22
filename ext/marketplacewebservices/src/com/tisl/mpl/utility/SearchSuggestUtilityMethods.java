@@ -456,7 +456,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping") //CAR -245-Luxury
+				                && !facate.getCode().equalsIgnoreCase("collectionIds")) //SDI-4415
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -1437,8 +1438,8 @@ public class SearchSuggestUtilityMethods
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
 						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
 						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
-
+						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping") //CAR -245-Luxury
+				                && !facate.getCode().equalsIgnoreCase("collectionIds")) //SDI-4415
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 					facetValueWsDTOList = new ArrayList<>();
