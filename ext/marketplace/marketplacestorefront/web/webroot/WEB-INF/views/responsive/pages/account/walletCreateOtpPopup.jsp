@@ -47,7 +47,7 @@
 			</c:choose>
 			<div class="row text-center egv-otp-container">
 				<div>
-					<span class="h4"><strong>Please enter below information to verify your mobile number.</strong></span>
+					<span class="h4"><strong><spring:theme code="mpl.otp.popup.heading" /></strong></span>
 				</div>
 			<hr />
 				<div class="col-md-12">

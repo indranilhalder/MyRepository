@@ -2162,7 +2162,7 @@ function submitWalletData(){
 					$(".wcOTPError").show();
 				}
 				else if(response='EXPIRED'){
-					$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only.");
 					$(".wcOTPError").show();
 				}
 				else if(response=='success'){

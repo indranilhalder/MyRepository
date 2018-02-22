@@ -820,7 +820,7 @@ function submitWalletData(){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
 				}else if(response='EXPIRED'){
-					$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only.");
 					$(".wcOTPError").show();
 				}
 				else if(response=='qcDown'){
