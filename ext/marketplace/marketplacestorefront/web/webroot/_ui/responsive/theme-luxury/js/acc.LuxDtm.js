@@ -62,7 +62,6 @@ $(document).ready(function(){
 		
 		}
 		if(pageType =='productsearch'){
-			alert("lux serp call");
 			if(typeof _satellite !="undefined"){
 				_satellite.track('cpj_search_pages');
 			}
@@ -574,7 +573,6 @@ function dtmLuxProductImpressionsSerp(){
 					productID=productIDlist[0].toLowerCase();
 				}
 				productArray.push(productID);
-				alert("serp>>>>"+productArray);
 			   	count++;
 	   }) 
 	     var impressions = productArray.join("|");
@@ -1158,9 +1156,10 @@ $(document).on('mouseup','#header-account .h4 a',function(){
 	document.cookie = "luxDtmRegistrationJourney=Started; path=/;";
 })
 
+//filterTracking start
+var restrictionFlag='false';
+
 $(document).on('click','.facetList .facetValues .le-checkbox',function(){
-	//alert("facetValue >> "+$(this).find('label').text())
-	//alert("facet type>>>"+$(this).parents('.facet').find('.facetHead > h4').text())
 	var filterType = $(this).parents('.facet').find('.facetHead > h4').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var filterValue = 	$(this).find('label').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
 	if(typeof digitalData.filter != "undefined"){
@@ -1187,7 +1186,82 @@ $(document).on('click','.facetList .facetValues .le-checkbox',function(){
 	if (typeof _satellite != "undefined") {
 		_satellite.track('filter_temp');
     }
+	restrictionFlag='true';
 })
+
+function setupSessionValuesLuxDtm(){
+		try{
+			if($('.filter-box .remove-filter').length > 0){
+				var filterTypeList=[];
+				var filterTypeFinalList=[];
+				var filterValueList=[];
+				var finalFilterCombination='';
+				
+				$(".filter-box .remove-filter").each(function(k,v){
+					var filterType = $(v).find(".filter-heading").text();
+					filterTypeList.push(filterType);
+					var filterValue = 	$(v).find(".filter-name").text();
+					filterValueList.push(filterValue);
+					if(finalFilterCombination == ''){
+						finalFilterCombination = filterType +":"+ filterValue;
+					}
+					else{
+						finalFilterCombination = finalFilterCombination +"|"+ filterType +":"+ filterValue;
+					}
+				}) 
+				
+				$.each(filterTypeList, function(i, el){
+					if($.inArray(el, filterTypeFinalList) === -1){
+						filterTypeFinalList.push(el)
+					};
+				});
+				if(filterValueList.length > 0 && filterTypeList.length > 0){
+					if(typeof digitalData.filter != "undefined"){
+						if(typeof digitalData.filter.final != "undefined"){
+							digitalData.filter.final.type = filterTypeFinalList.toString();
+							digitalData.filter.final.value = filterValueList.toString();
+							digitalData.filter.final.combination = finalFilterCombination;
+						}
+						else{
+							digitalData.filter.final = {
+								type : filterTypeFinalList.toString(),
+								value : filterValueList.toString(),
+								combination : finalFilterCombination
+							}
+						}
+					}
+					else{
+						digitalData.filter = {
+							final :  {
+								type : filterTypeFinalList.toString(),
+								value : filterValueList.toString(),
+								combination : finalFilterCombination
+							}
+				     	}
+					}
+				}
+				
+				if (typeof _satellite != "undefined") {
+					_satellite.track('filter_final');
+			    }
+			}
+			
+		}
+		catch(e){
+	             console.log("error fn:setupSessionValuesDtm"+e.message);
+	            } 
+	}
+	
+	
+	$(window).unload(function(event) {
+		var pageType = $('#pageType').val();
+		if(pageType == 'category' || pageType == 'productsearch'){
+			if(restrictionFlag != 'true'){
+				setupSessionValuesLuxDtm();
+			}
+		}
+	});
+	//filter tracking end
 
 $(document).on('mouseup','.right.mb-10 a',function(){
 	if (typeof _satellite != "undefined") {
