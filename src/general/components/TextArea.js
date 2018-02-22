@@ -19,8 +19,8 @@ export default class TextArea extends React.Component {
       <div className={styles.container}>
         <textarea
           className={styles.textAreaBox}
-          placeholder="Write your comments"
-          value={this.props.value ? this.props.value : this.state.value}
+          placeholder={this.props.placeholder}
+          value={this.props.value && this.props.value}
           onChange={event => {
             this.handleChange(event);
           }}
@@ -33,9 +33,11 @@ export default class TextArea extends React.Component {
 TextArea.propTypes = {
   onChange: PropTypes.func,
   height: PropTypes.number,
-  value: PropTypes.string
+  value: PropTypes.string,
+  placeholder: PropTypes.string
 };
 TextArea.defaultProps = {
   height: 100,
-  value: ""
+  value: "",
+  placeholder: "Write your comment"
 };
