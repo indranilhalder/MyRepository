@@ -210,6 +210,7 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
      			currentCustomer.setFirstName(walletObj.getCustomerFirstName());
 				currentCustomer.setLastName(walletObj.getCustomerLastName());
 				currentCustomer.setIsWalletActivated(Boolean.TRUE);
+				 currentCustomer.setIsqcOtpVerify(Boolean.TRUE);
 				currentCustomer.setQcVerifyFirstName(walletObj.getCustomerFirstName());
 				currentCustomer.setQcVerifyLastName(walletObj.getCustomerLastName());
 				modelService.save(currentCustomer);
@@ -217,7 +218,7 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
      			  commentMsg = qcErrorMasseges(response.getResponseCode());
      			}
      	  }else if(null != currentCustomer.getCustomerWalletDetail() && null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()==false){
-     		  try{
+     		/*  try{
      		     response = addAmountToQCWallet(currentCustomer,walletObj);
      		   currentCustomer.setFirstName(walletObj.getCustomerFirstName());
 				currentCustomer.setLastName(walletObj.getCustomerLastName());
@@ -232,7 +233,8 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
       			}
     			}catch (final Exception ex){
     				ex.printStackTrace();
-    			}
+    			}*/
+     		 commentMsg = "Currently User is DeActivated Please activate ";
      	  }else if(currentCustomer.getCustomerWalletDetail() == null && null !=currentCustomer.getIsWalletActivated()  && !currentCustomer.getIsWalletActivated()){
      		try{
      			final String customerRegisterResponse = createQCWalletForCustomer(currentCustomer,walletObj);
@@ -576,6 +578,7 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
    	 for(CilqCashWalletPojo walletObj:cilqCashWalletPojoList){
      	  CustomerModel currentCustomer =  extendedUserService.getUserForOriginalUid(walletObj.getCustomerEmailId());
      	  if(null!= currentCustomer  ){
+     		  
      		  LOG.debug("First Name :"+currentCustomer.getDisplayName());
         	  if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()){
         		  if(walletObj.getRemarks().equalsIgnoreCase("Deactivate")){
@@ -584,10 +587,13 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
         		  if(response.getResponseCode()== 0){
         			 commentMsg =SUCCESS_MSG;
         			 currentCustomer.setIsWalletActivated(Boolean.FALSE);
+        			 currentCustomer.setIsqcOtpVerify(Boolean.FALSE);
         			modelService.save(currentCustomer);
         		  }else{
         			 commentMsg = qcErrorMasseges(response.getResponseCode());
         		  }
+        		  }else{
+        			commentMsg = "User Already Activated."; 
         		  }
      	  }else if(null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().equals(Boolean.FALSE)){
      		LOG.debug("Customer Have Deactive wallet account Id :"+currentCustomer.getCustomerWalletDetail().getWalletId());
@@ -596,25 +602,30 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
    		  if(response.getResponseCode()== 0){
    			  commentMsg =SUCCESS_MSG;
    			  currentCustomer.setIsWalletActivated(Boolean.TRUE);
+   			  currentCustomer.setIsqcOtpVerify(Boolean.TRUE);
        			modelService.save(currentCustomer);
    			  
    		  }else{
    			  commentMsg = qcErrorMasseges(response.getResponseCode());
    		  }  
-     	   }
+     	   }else{
+     			commentMsg = "User Already Deactive."; 
+   		  }
+     	  }
+        	  
      	  }else{
      		  commentMsg= USER_DOES_NOT_MSG;
      		  responseCheck=true;
      		  
      	  }
+     	String columnNamesList =null;
+     	if(!headerCheck){
+ 		  columnNamesList = "Wallet Id,Email ID,Remarks,Comments";
+ 		  builder.append(columnNamesList +"\n");
+ 		  headerCheck=true;
+ 	  }
         if(null != response){
-        	if(!responseCheck){
-        		String columnNamesList =null;
-        		if(!headerCheck){
-         		  columnNamesList = "Wallet Id,Email ID,Remarks,Comments";
-         		  builder.append(columnNamesList +"\n");
-         		  headerCheck=true;
-         	  }
+        	if(!responseCheck){	
       		  if(null != response &&  null != response.getWallet() && null!= response.getWallet().getWalletNumber()){
  			         builder.append(response.getWallet().getWalletNumber()+",");
       		  }else{
@@ -629,7 +640,12 @@ private String createQCWalletForCustomer(final  CustomerModel currentCustomer,fi
        	  }
  		  builder.append(commentMsg);
  		  builder.append('\n');
-         }
+     	  }else{
+     		builder.append(walletObj.getWalletId() +",");  
+     		builder.append(walletObj.getCustomerEmailId() +",");
+     	   builder.append(walletObj.getRemarks() +",");
+     	   builder.append(commentMsg);
+         builder.append('\n');
      	  }
    	}
    	 return builder;

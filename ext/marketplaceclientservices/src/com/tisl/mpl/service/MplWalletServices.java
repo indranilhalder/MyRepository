@@ -29,7 +29,7 @@ import com.tisl.mpl.pojo.response.WalletTransacationsList;
 public interface MplWalletServices
 {
 
-	public QCInitializationResponse walletInitilization();
+	public QCInitializationResponse walletInitilization(String transactionId);
 
 
 	public QCCustomerRegisterResponse registerCustomerWallet(final QCCustomerRegisterRequest registerCustomerRequest,
@@ -37,7 +37,7 @@ public interface MplWalletServices
 
 	public PurchaseEGVResponse purchaseEgv(final PurchaseEGVRequest purchaseEGVRequest, final String transactionId);
 
-	public void addEgvToWallet();
+	/*public void addEgvToWallet();*/
 
 	public BalanceBucketWise getQCBucketBalance(String customerWalletId, String transactionId);
 

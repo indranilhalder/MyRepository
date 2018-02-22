@@ -126,7 +126,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	public void getWalletInitilization()
 	{
 
-		getMplWalletServices().walletInitilization();
+		getMplWalletServices().walletInitilization(generateQCTransactionId());
 	}
 
 
@@ -148,12 +148,12 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 *
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#addEGVToWallet()
 	 */
-	@Override
+	/*@Override
 	public void addEGVToWallet()
 	{
 
 		getMplWalletServices().addEgvToWallet();
-	}
+	}*/
 
 
 
