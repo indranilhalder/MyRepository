@@ -1,0 +1,47 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.bankName {
+  width: auto;
+  height: auto;
+  font-family: semibold;
+  font-size: 14px;
+  color: #000;
+  display: inline-block;
+  line-height: 20px;
+}
+.offerText {
+  width: auto;
+  height: auto;
+  line-height: 20px;
+  font-family: regular;
+  position: relative;
+  font-size: 14px;
+  padding-left: 3px;
+  color: #000000;
+}
+.checkBoxHolder {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  top: 10px;
+}
+.buttonHolder {
+  width: auto;
+  position: relative;
+  margin-top: 20px;
+  height: 25px;
+}
+.container {
+  width: auto;
+  height: auto;
+  padding-right: 25px;
+}
+.button {
+  width: auto;
+  height: auto;
+  position: absolute;
+}
