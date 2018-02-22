@@ -3291,8 +3291,9 @@ public class UsersController extends BaseCommerceController
 
 								}
 								LOG.debug("Step6-************************Wishlist");
-								if (StringUtils.isNotEmpty(entryModel.getProduct().getCode()))
-
+								//Condition for SDI-4502 as there was no product for Wishlist
+								//if (StringUtils.isNotEmpty(entryModel.getProduct().getCode()))
+								if (null != productData1 && StringUtils.isNotEmpty(productData1.getCode()))
 								{
 									wldpDTO.setProductcode(entryModel.getProduct().getCode());
 
@@ -3482,7 +3483,12 @@ public class UsersController extends BaseCommerceController
 
 								//	final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
 								LOG.debug("Step9-************************Wishlist");
-								final ProductModel productModel = productService.getProductForCode(entryModel.getProduct().getCode());
+								ProductModel productModel = null;
+								//SDI-4502 Condition for when there is no product in wishlist mistakenly
+								if (null != entryModel.getProduct())
+								{
+									productModel = productService.getProductForCode(entryModel.getProduct().getCode());
+								}
 								LOG.debug("Step10-************************Wishlist");
 								if (null != productModel.getSellerInformationRelator())
 								{
