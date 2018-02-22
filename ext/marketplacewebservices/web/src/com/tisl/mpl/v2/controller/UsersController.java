@@ -10283,9 +10283,12 @@ public class UsersController extends BaseCommerceController
 		{
 			final int pageSizeConFig = configurationService.getConfiguration().getInt(
 					MarketplacecommerceservicesConstants.WEBFORM_ORDER_HISTORY_PAGESIZE, 5);
-
-			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
-					pageSizeConFig, sort, showMode);
+//SDI-5991
+                        final PageableData pageableData = createPageableData(currentPage, pageSizeConFig, sort, showMode);
+			final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade()
+ 					.getPagedFilteredParentOrderHistoryWebForm(pageableData);
+			/*final SearchPageData<OrderHistoryData> searchPageDataParentOrder = ordersHelper.getParentOrders(currentPage,
+					pageSizeConFig, sort, showMode);*/
 
 			if (null == searchPageDataParentOrder.getResults())
 			{
@@ -10303,7 +10306,11 @@ public class UsersController extends BaseCommerceController
 						continue;
 					}
 					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderhistorydetails(orderDetails);
+					//SDI-5991
+					if (null != order && StringUtils.isNotEmpty(order.getOrderId()))
+					{
 					orderTrackingListWsDTO.add(order);
+					}
 				}
 				if (searchPageDataParentOrder.getPagination() != null
 						&& searchPageDataParentOrder.getPagination().getTotalNumberOfResults() > 0)
@@ -10313,7 +10320,9 @@ public class UsersController extends BaseCommerceController
 					orderHistoryListData.setTotalNoOfOrders(totalNum);
 
 					//CAR Project performance issue fixed ---Pagination implemented for getOrders of Mobile webservices
-					orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
+					//orderHistoryListData.setOrderData(orderTrackingListWsDTO.subList(start, end));
+					//SDI-5991
+					orderHistoryListData.setOrderData(orderTrackingListWsDTO);
 					orderHistoryListData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
 				else
