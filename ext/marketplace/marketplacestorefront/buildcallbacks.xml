@@ -317,6 +317,14 @@
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/jquery-2.1.1.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/jquery-ui-1.11.2.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/jquery.selectBoxIt.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/slick.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/jquery.elevatezoom.js" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/bootstrap.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/lib/jquery.validate.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/main.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/_autoload.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.accountpagination.js"/>
