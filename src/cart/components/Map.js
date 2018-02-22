@@ -23,6 +23,7 @@ export default class SimpleMap extends React.Component {
       zoom: 6
     });
   };
+
   render() {
     return (
       <div className={styles.base}>

@@ -13,6 +13,7 @@ export default class MarkerStore extends React.Component {
     );
   }
 }
+
 MarkerStore.propTypes = {
   lat: PropTypes.number,
   lng: PropTypes.number,
