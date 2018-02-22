@@ -11,7 +11,9 @@
 	<div class="left-block">
        <script>
 		$(function() {
+			//departmentHierarchyDataHierarchyList is global var
 			var inputArray = ${departmentHierarchyData.hierarchyList};
+			departmentHierarchyDataHierarchyList = ${departmentHierarchyData.hierarchyList}
 			if(inputArray!=""||inputArray!=[]){
 			constructDepartmentHierarchy(inputArray);
 			}
