@@ -2353,6 +2353,7 @@
 		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isRemainingAmount" type="boolean" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->

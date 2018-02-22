@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -15,6 +16,7 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
@@ -36,8 +38,11 @@ import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
@@ -45,6 +50,7 @@ import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
@@ -53,6 +59,7 @@ import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
+import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 
@@ -83,6 +90,14 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
    
    @Autowired
    private ConfigurationService configurationService;
+   @Autowired
+   private MplPaymentWebFacade mplPaymentWebFacade;
+   @Autowired
+   private MplPaymentFacade mplPaymentFacade;
+   @Autowired
+   private MplEgvWalletService mplEgvWalletService;
+   @Autowired
+   private CommonI18NService commonI18NService;
 
 	private static final Logger LOG = Logger.getLogger(MplEgvWalletServiceImpl.class);
 
@@ -141,7 +156,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	 * @see com.tisl.mpl.service.MplEgvWalletService#verifyOtpAndCreateWallet(de.hybris.platform.core.model.user.CustomerModel, java.lang.String)
 	 */
 	@Override
-	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer, String otp)
+	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer,String otp,String firstName,String lastName,String mobileNumber)
 	{
 		EgvWalletCreateResponceWsDTO responce = new EgvWalletCreateResponceWsDTO();
 			if (null != otp && !otp.isEmpty())
@@ -157,9 +172,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				if (response.getOTPValid().booleanValue())
 				{
 				  if(customerWalletCreated) {
+
 					  CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 								.getCustomerWalletDetail().getWalletId());
 						UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
+						registerCustomerFacade.registerWalletMobileNumber(firstName,lastName,mobileNumber);//TPR-6272 parameter platformNumber passed
+
 						responce.setIsWalletCreated(true);
 						if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
 						{
@@ -172,7 +190,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						modelService.save(currentCustomer);
 						responce.setIsWalletOtpVerified(true);
 				  }else {
-					  
+						registerCustomerFacade.registerWalletMobileNumber(firstName,lastName,mobileNumber);//TPR-6272 parameter platformNumber passed
 						final QCCustomerRegisterResponse customerRegisterResponse = createWalletContainer(currentCustomer);
 						if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
 								&& customerRegisterResponse.getResponseCode().intValue() == 0)
@@ -726,15 +744,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
 					return responce;
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
 			}else {
 				validateRequest(request);
 			}
 			if(null != customer) {
 				boolean isWalletOtpVerified = false ;
-				boolean isMobileNumberChanged = true;
-				boolean isNameChanged = true;
-			
+				boolean isMobileNumberChanged = true;			
 				if( null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					isWalletOtpVerified = true;
@@ -745,20 +763,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					isMobileNumberChanged = false;
 				}
 				
-				if( ( null != customer.getQcVerifyFirstName() && 
-						(customer.getQcVerifyFirstName().trim().equalsIgnoreCase(request.getFirstName())) )|| 
-						(  null != customer.getQcVerifyLastName() && 
-						(customer.getQcVerifyLastName().trim().equalsIgnoreCase(request.getLastName())) ))
-			{
-					isNameChanged = false;
-			}
-				
 				if( !isWalletCreated || !isWalletOtpVerified ) {
 					
 					if(isMobileNumberChanged) {
 						if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
 						{
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+						//	registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
 							mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 							//Set success flag
 							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -770,9 +780,6 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
 						}
 					}else {
-						if(isNameChanged){
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
-						}
 						mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 						//Set success flag
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -1172,6 +1179,128 @@ public boolean updateCustomerWallet(MplCustomerProfileData customerToSave,Custom
 		}
 		return false;
 	}
+
+/* (non-Javadoc)
+ * @see com.tisl.mpl.service.MplEgvWalletService#redeemCliqVoucher(java.lang.String, java.lang.String, java.lang.String)
+ */
+@Override
+public RedeemCliqVoucherWsDTO redeemCliqVoucher(String couponCode, String passKey, String cartGuid)
+{
+	LOG.info("Redeeming CLiq Cash Voucher Card Number " + couponCode);
+	RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
+	OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+	CartModel cart = null;
+	ApplyCliqCashWsDto applyCliqCashWsDto = null;
+	try
+		{
+			boolean isWalletOtpVerified = false;
+			boolean isWalletCreated = false;
+
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			if (null != currentCustomer)
+			{
+				if ((null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()))
+				{
+					isWalletCreated = true;
+					redeemCliqVoucherWsDTO.setIsWalletCreated(true);
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5026);
+				}
+				if (null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue())
+				{
+					isWalletOtpVerified = true;
+					redeemCliqVoucherWsDTO.setIsWalletOtpVerified(true);
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5027);
+				}
+			}
+			if(isWalletOtpVerified && isWalletCreated )
+			{
+				LOG.debug("Calling To QC For Adding money to Wallet");
+				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
+				if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
+				{
+					final TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
+					if (null != response.getWallet() && null != response.getWallet().getBalance())
+					{
+						final BigDecimal walletAmount = new BigDecimal(response.getWallet().getBalance().doubleValue());
+						final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+						final long valueLong = walletAmount.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+						final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+						StringBuilder stbND = new StringBuilder(20);
+						if (null != currency && null != currency.getSymbol())
+						{
+							stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
+						}
+						redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
+						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
+								MarketplacecommerceservicesConstants.INR);
+						if (null != priceData)
+						{
+							totalCliqCashBalance.setCurrencyIso(priceData.getCurrencyIso());
+							totalCliqCashBalance.setDoubleValue(priceData.getDoubleValue());
+							totalCliqCashBalance.setFormattedValue(priceData.getFormattedValue());
+							totalCliqCashBalance.setPriceType(priceData.getPriceType());
+							totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+							totalCliqCashBalance.setValue(priceData.getValue());
+							redeemCliqVoucherWsDTO.setTotalCliqCashBalance(totalCliqCashBalance);
+							redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
+							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
+							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							if (null == orderModel)
+							{
+								cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
+
+							}
+							else if (null != cartGuid)
+							{
+								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+							}
+							if (null != applyCliqCashWsDto)
+							{
+								redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
+							}
+						}
+						else
+						{
+							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+							redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+						}
+
+
+					}
+					else
+					{
+						redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+					}
+				}
+				else
+				{
+					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+					if (null != response)
+					{
+						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+					}
+				}
+			}
+		}
+	catch (final EtailNonBusinessExceptions ex)
+	{
+		redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+		redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
+		redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
+		LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
+	}
+	catch (final Exception ex)
+	{
+		redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+		redeemCliqVoucherWsDTO.setError(ex.getMessage());
+		LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
+	}
+	return redeemCliqVoucherWsDTO;
+}
 
 	
 }

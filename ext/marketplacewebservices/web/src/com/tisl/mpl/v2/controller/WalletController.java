@@ -819,7 +819,8 @@ public class WalletController
 		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 		@RequestMapping(value = MarketplacewebservicesConstants.VERIFY_WALLET_OTP, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 		@ResponseBody
-		public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam final String otp)
+		public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam(required = true) final String otp , @RequestParam(required = false) final String firstName,
+				@RequestParam(required = false) final String lastName,@RequestParam(required = false) final String mobileNumber)
 				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 	{
@@ -830,7 +831,7 @@ public class WalletController
 			if (null != otp && !otp.isEmpty())
 			{
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp);
+					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp,firstName,lastName,mobileNumber);
 					if(null != responce) {
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						responce.setMessage(MarketplacecommerceservicesConstants.WALLET_ACTIVATED_MESSAGE);

@@ -599,19 +599,18 @@ public class PaymentServicesController extends BaseController
 	 * @param promoPriceData
 	 * @param cart
 	 */
-	private void setTotalPrice(MplPromoPriceWsDTO promoPriceData, AbstractOrderModel cart)
+	private void setTotalPrice(MplPromoPriceWsDTO promoPriceData, AbstractOrderModel cartModel)
 	{
-		final double payableWalletAmount = cart.getPayableWalletAmount().doubleValue();
+		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
 		double bankCouponDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-		double productDiscount = 0.0D;
 		double userCouponDiscount = 0.0D;
 		double otherDiscount = 0.0D;
 		double totalDiscount = 0.0D;
-		final List<DiscountValue> discountList = cart.getGlobalDiscountValues(); // discounts on the cart itself
-		final List<DiscountModel> voucherList = cart.getDiscounts();
+		double productDiscount = 0.0D;
+		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
+		final List<DiscountModel> voucherList = cartModel.getDiscounts();
 		
-		for (final AbstractOrderEntryModel entry : cart.getEntries())
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
 			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
 			{
@@ -652,22 +651,20 @@ public class PaymentServicesController extends BaseController
 			}
 		}
 		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
-
-
 		BigDecimal total = new BigDecimal(0.0D);
-		final double remainingWalletAmount = cart.getTotalWalletAmount().doubleValue() - payableWalletAmount;
-		if (null != cart.getSubtotal())
+		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
+		if (null != cartModel.getSubtotal())
 		{
-			total = new BigDecimal(cart.getSubtotal().doubleValue());
+			total = new BigDecimal(cartModel.getSubtotal().doubleValue());
 			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setSubTotalPrice(subTotalPriceData);
 
 		}
 
-		if (null != cart.getDeliveryCost())
+		if (null != cartModel.getDeliveryCost())
 		{
-			total = new BigDecimal(cart.getDeliveryCost().doubleValue());
+			total = new BigDecimal(cartModel.getDeliveryCost().doubleValue());
 			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setDeliveryCharges(deliveryChargesPriceData);
@@ -676,13 +673,14 @@ public class PaymentServicesController extends BaseController
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setOtherDiscount(otherDiscountPriceData);
-		if(bankCouponDiscount > 0.0D) {
-			promoPriceData.setIsBankPromotionApplied(true);
-	    }
-		total = new BigDecimal(couponDiscount);
+      if(bankCouponDiscount > 0.0D) {
+      	promoPriceData.setIsBankPromotionApplied(true);
+      }
+		total = new BigDecimal(userCouponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setCouponDiscount(total.toString());
+
 		promoPriceData.setAppliedCouponDiscount(couponPriceData);
 
 		if (payableWalletAmount > 0.0D)
@@ -701,12 +699,17 @@ public class PaymentServicesController extends BaseController
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setCliqCashBalance(remainingWalletAmountPriceData);
 
-		if (null != cart.getTotalPrice())
+		if (null != cartModel.getTotalPrice())
 		{
-			total = new BigDecimal(cart.getTotalPrice().doubleValue() - payableWalletAmount);
+			total = new BigDecimal(cartModel.getTotalPrice().doubleValue() - payableWalletAmount);
 			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setTotalPrice(cartTotalPriceData);
+			
+			if((cartModel.getTotalPrice().doubleValue() - payableWalletAmount) > 0.0D) 
+			{
+				promoPriceData.setIsRemainingAmount(true);
+			}
 		}
 	}
 
