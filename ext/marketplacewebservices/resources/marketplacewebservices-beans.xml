@@ -4272,7 +4272,7 @@
 	<property name="status" type="java.lang.String"/>   
 	<property name="message" type="java.lang.String"/>   
 		<property name="items"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
+			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
 	</bean>
 	
 </beans>
