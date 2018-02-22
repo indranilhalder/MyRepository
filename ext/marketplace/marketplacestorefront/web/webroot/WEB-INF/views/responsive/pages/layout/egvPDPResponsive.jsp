@@ -40,7 +40,7 @@
 										code="egv.product.msg.default" /></i></span>
 						</div>
 						<div class="giftFinalTempBottom">
-							<span>&#8377;0<span id="updatedCustomGiftValue"></span></span>
+							<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
 						</div>
 					</div>
 				</div>
