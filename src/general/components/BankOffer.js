@@ -2,8 +2,14 @@ import React from "react";
 import styles from "./BankOffer.css";
 import CheckBox from "./CheckBox.js";
 import UnderLinedButton from "./UnderLinedButton";
+import PropTypes from "prop-types";
 
 export default class BankOffer extends React.Component {
+  handleClick() {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -28,3 +34,10 @@ export default class BankOffer extends React.Component {
     );
   }
 }
+
+BankOffer.propTypes = {
+  bankName: PropTypes.string,
+  offerText: PropTypes.string,
+  label: PropTypes.string,
+  onClick: PropTypes.func
+};
