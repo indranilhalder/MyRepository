@@ -25,6 +25,11 @@
   height: auto;
   margin-top: 20px;
 }
+.button {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
 .baseSelected {
   composes: base;
   background: #f8f8f8;
