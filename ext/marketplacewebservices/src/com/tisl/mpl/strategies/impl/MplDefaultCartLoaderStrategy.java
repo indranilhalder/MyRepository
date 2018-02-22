@@ -28,6 +28,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -47,6 +48,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 	private BaseSiteService baseSiteService;
 	private CommerceCommonI18NService commerceCommonI18NService;
 	private ModelService modelService;
+	private final static Logger LOG = Logger.getLogger(MplDefaultCartLoaderStrategy.class);
 
 	@Override
 	public void loadCart(final String cartId)
