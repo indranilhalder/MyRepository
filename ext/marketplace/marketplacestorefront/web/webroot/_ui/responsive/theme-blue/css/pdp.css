@@ -13165,3 +13165,8 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td {
     margin-top: 12px;
 }
 /* end change of TISPRDT-8311 */
+.homefurnishing-overview{     /*added for SDI-6202*/
+	float:left;
+	width:25%;
+	margin-right:20px;
+} 
