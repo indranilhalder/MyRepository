@@ -52,7 +52,10 @@ export default class SelectBoxMobile extends React.Component {
     return (
       <div
         className={themeClass}
-        style={{ height: this.props.height, lineHeight: this.props.height }}
+        style={{
+          height: this.props.height,
+          lineHeight: `${this.props.height}px`
+        }}
       >
         <select
           name={this.props.name}

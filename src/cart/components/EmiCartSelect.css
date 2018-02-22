@@ -1,0 +1,39 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  background: #fff;
+}
+.checkHolder {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.header {
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  position: relative;
+  padding-right: 25px;
+  font-size: 14px;
+  font-family: regular;
+}
+.options {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+.button {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+.baseSelected {
+  composes: base;
+  background: #f8f8f8;
+}
+.baseSelected .header {
+  font-family: semibold;
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import SelectBox from "../../general/components/SelectBox";
+import SelectBoxMobile from "../../general/components/SelectBoxMobile";
 import PropTypes from "prop-types";
 import styles from "./EmiCard.css";
 export default class EmiCard extends React.Component {
@@ -42,8 +42,8 @@ export default class EmiCard extends React.Component {
           <div className={styles.row}>
             <div className={styles.label}>Tenure(Months)</div>
             <div className={styles.info}>
-              <div className={styles.selectBox}>
-                <SelectBox
+              <div className={styles.selectBoxMobile}>
+                <SelectBoxMobile
                   options={this.props.options.map(val => {
                     return { label: val.term, value: val.term };
                   })}

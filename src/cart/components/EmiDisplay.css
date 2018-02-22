@@ -1,6 +1,7 @@
 .base {
   width: 100%;
   height: auto;
+  padding: 20px;
   position: relative;
 }
 .emiText {
@@ -10,6 +11,20 @@
   color: #000;
   display: inline-block;
   line-height: 30px;
+}
+.header {
+  width: 100%;
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-family: semibold;
+  position: relative;
+  padding-right: 80px;
+}
+.button {
+  width: 80px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 .price {
   width: auto;
@@ -22,12 +37,12 @@
   line-height: 30px;
 }
 .checkBoxHolder {
-  width: 28px;
-  height: 28px;
+  width: 35px;
+  height: 35px;
   position: absolute;
   display: inline-block;
-  right: 0;
-  top: 2px;
+  right: 20px;
+  bottom: 20px;
 }
 .month {
   font-family: regular;
