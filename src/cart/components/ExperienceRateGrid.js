@@ -1,7 +1,5 @@
 import React from "react";
-import Grid from "../../general/components/Grid";
 import ExperienceRate from "./ExperienceRate";
-import PropTypes from "prop-types";
 import styles from "./ExperienceRateGrid.css";
 import ExperienceRatingone from "./img/bad.svg";
 import ExperienceRatingTwo from "./img/Bad_Red.svg";
@@ -15,51 +13,13 @@ import ExperienceRatingNine from "./img/love_Red.svg";
 import ExperienceRatingTen from "./img/love.svg";
 export default class ExperienceRateGrid extends React.Component {
   render() {
-    console.log(this.props.value);
     return (
       <div className={styles.base}>
-        <Grid elementWidthMobile={20} offset={20}>
-          <ExperienceRate
-            value="1"
-            defaultImage={ExperienceRatingone}
-            selected
-            onClick={() => {
-              this.selectedItem();
-            }}
-          />
-          <ExperienceRate
-            value="2"
-            defaultImage={ExperienceRatingThree}
-            selected
-            onClick={() => {
-              this.selectedItem();
-            }}
-          />
-          <ExperienceRate
-            value="3"
-            defaultImage={ExperienceRatingFive}
-            selected
-            onClick={() => {
-              this.selectedItem();
-            }}
-          />
-          <ExperienceRate
-            value="4"
-            defaultImage={ExperienceRatingSaven}
-            selected
-            onClick={() => {
-              this.selectedItem();
-            }}
-          />
-          <ExperienceRate
-            value="5"
-            selected
-            activeImage={ExperienceRatingNine}
-            onClick={() => {
-              this.selectedItem();
-            }}
-          />
-        </Grid>
+        <ExperienceRate value="1" defaultImage={ExperienceRatingone} />
+        <ExperienceRate value="2" defaultImage={ExperienceRatingThree} />
+        <ExperienceRate value="3" defaultImage={ExperienceRatingFive} />
+        <ExperienceRate value="4" defaultImage={ExperienceRatingSaven} />
+        <ExperienceRate value="5" activeImage={ExperienceRatingNine} />
       </div>
     );
   }
