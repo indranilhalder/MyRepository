@@ -3797,7 +3797,7 @@
 	<!-- added for pdp new ui end -->
 	
 	<!-- Start bean Section for UI/UX default Page -->
-	
+
 	<bean class="com.tisl.mpl.wsdto.HeroBannerCompListWsDTO">
 		<property name="title" type="java.lang.String"/>
 		<property name="webURL" type="java.lang.String"/>
@@ -4224,48 +4224,55 @@
 	
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
 		<property name="HeroBanner"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.HeroBannerCompWsDTO>"/>
+			type="com.tisl.mpl.wsdto.HeroBannerCompWsDTO"/>
 		<property name="ConnectBanner"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.ConnectBannerWsDTO>"/>
+			type="com.tisl.mpl.wsdto.ConnectBannerWsDTO"/>
 		<property name="OffersWidget"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.OffersWidgetWsDTO>"/>
+			type="com.tisl.mpl.wsdto.OffersWidgetWsDTO"/>
 		<property name="FlashSales"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.FlashSalesWsDTO>"/>
+			type="com.tisl.mpl.wsdto.FlashSalesWsDTO"/>
 		<property name="ContentWidget"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.ContentWidgetCompWsDTO>"/>
+			type="com.tisl.mpl.wsdto.ContentWidgetCompWsDTO"/>
 		<property name="BannerProductCarousel"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerProductCarouselWsDTO>"/>
+			type="com.tisl.mpl.wsdto.BannerProductCarouselWsDTO"/>
 		<property name="VideoProductCarousel"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.VideoProductCarouselWsDTO>"/>
+			type="com.tisl.mpl.wsdto.VideoProductCarouselWsDTO"/>
 		<property name="ThemeOffers"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeOffersWsDTO>"/>
+			type="com.tisl.mpl.wsdto.ThemeOffersWsDTO"/>
 		<property name="ThemeProductWidget"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeProductWidgetWsDTO>"/>
+			type="com.tisl.mpl.wsdto.ThemeProductWidgetWsDTO"/>
 		<property name="ProductCapsules"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesWsDTO>"/>
+			type="com.tisl.mpl.wsdto.ProductCapsulesWsDTO"/>
 		<property name="BannerSeparator"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.BannerSeparatorWsDTO>"/>
+			type="com.tisl.mpl.wsdto.BannerSeparatorWsDTO"/>
 		<property name="AutomatedBrandProCar"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.AutomatedBrandProCarWsDTO>"/>	
+			type="com.tisl.mpl.wsdto.AutomatedBrandProCarWsDTO"/>	
 		<property name="CuratedListingStrip"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.CuratedListingStripWsDTO>"/>	
+			type="com.tisl.mpl.wsdto.CuratedListingStripWsDTO"/>	
 		<property name="MonoBLPBanner"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.MonoBLPBannerWsDTO>"/>
+			type="com.tisl.mpl.wsdto.MonoBLPBannerWsDTO"/>
 		<property name="SubBrandBannerBLP"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.SubBrandBannerBLPWsDTO>"/>
+			type="com.tisl.mpl.wsdto.SubBrandBannerBLPWsDTO"/>
 		<property name="TopCategoriesWidget"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.TopCategoriesWidgetWsDTO>"/>
+			type="com.tisl.mpl.wsdto.TopCategoriesWidgetWsDTO"/>
 		<property name="CuratedProductsWidget"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.CuratedProductsWidgetWsDTO>"/>	
+			type="com.tisl.mpl.wsdto.CuratedProductsWidgetWsDTO"/>	
 		<property name="SmartFilterWidget"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.SmartFilterWidgetWsDTO>"/>
+			type="com.tisl.mpl.wsdto.SmartFilterWidgetWsDTO"/>
 	</bean>
-	
-	<bean class="com.tisl.mpl.wsdto.UICompPageWiseListWsDTO">
+
+	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">
 	<property name="status" type="java.lang.String"/>   
 	<property name="message" type="java.lang.String"/>   
 		<property name="items"
-			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
+			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.UIComponentWiseWsDTO">
+	<property name="status" type="java.lang.String"/>   
+	<property name="message" type="java.lang.String"/>   
+		<property name="items"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
 	</bean>
 	
 </beans>
