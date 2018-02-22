@@ -21,7 +21,7 @@ export default class SimpleMap extends React.Component {
       zoom: zoom
     });
   };
-  onClick = (lat, lng) => {
+  onMoveToCoOrdinate = (lat, lng) => {
     this.setState({
       center: [lat, lng],
       zoom: 6
@@ -34,6 +34,7 @@ export default class SimpleMap extends React.Component {
           onChange={this._onChange}
           center={this.state.center}
           zoom={this.state.zoom}
+          zoomControl={false}
         >
           <MarkerStore
             lat={this.props.lat}
@@ -56,7 +57,6 @@ export default class SimpleMap extends React.Component {
                 iconText="C"
                 headingText="Westside South Extension"
                 buttonText="Select "
-                onClick={() => this.onClick(this.props.lat, this.props.lng)}
               />
             </div>
             <div className={styles.PickUpLocation}>
@@ -67,7 +67,6 @@ export default class SimpleMap extends React.Component {
                 iconText="C"
                 headingText="Westside South Extension"
                 buttonText="Select "
-                onClick={() => this.onClick(this.props.lat1, this.props.lng1)}
               />
             </div>
             <div className={styles.PickUpLocation}>
@@ -78,7 +77,6 @@ export default class SimpleMap extends React.Component {
                 iconText="C"
                 headingText="Westside South Extension"
                 buttonText="Select "
-                onClick={() => this.onClick(this.props.lat, this.props.lng)}
               />
             </div>
           </BannerMobile>
