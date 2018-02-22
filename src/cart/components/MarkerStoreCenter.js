@@ -14,7 +14,6 @@ export default class MarkerStoreCenter extends React.Component {
     );
   }
 }
-
 MarkerStoreCenter.propTypes = {
   lat: PropTypes.number,
   lng: PropTypes.number,

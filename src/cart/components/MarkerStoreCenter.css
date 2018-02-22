@@ -10,7 +10,6 @@
   text-align: center;
   font-family: semibold;
 }
-
 .base::after {
   content: "";
   width: 2px;
@@ -22,7 +21,6 @@
   right: 0;
   bottom: -10px;
 }
-
 .image {
   padding-top: 8px;
 }

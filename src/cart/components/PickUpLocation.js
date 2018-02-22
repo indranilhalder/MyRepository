@@ -45,7 +45,6 @@ export default class PickUpLocation extends React.Component {
     );
   }
 }
-
 PickUpLocation.propTypes = {
   headingText: PropTypes.string,
   address: PropTypes.string,
