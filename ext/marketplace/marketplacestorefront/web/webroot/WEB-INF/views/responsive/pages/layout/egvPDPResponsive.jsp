@@ -823,8 +823,8 @@ function submitWalletData(){
 				else if(response=='OTPERROR'){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
-				}else if(response='EXPIRED'){
-					$(".wcOTPError").text("Your OTP is valid for 2 minutes only.");
+				}else if(response=='EXPIRED'){
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only, please generate again.");
 					$(".wcOTPError").show();
 				}
 				else if(response=='qcDown'){
@@ -841,5 +841,13 @@ function submitWalletData(){
 			}
 		}); 
 } 
+
+window.addEventListener( "pageshow", function ( event ) {
+   var historyTraversal = event.persisted || ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 );
+   if ( historyTraversal ) {
+     // Handle page restore.
+     window.location.reload();
+   }
+ });
 
 </script>

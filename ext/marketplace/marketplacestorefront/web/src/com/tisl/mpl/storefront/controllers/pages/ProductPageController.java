@@ -5578,21 +5578,16 @@ public class ProductPageController extends MidPageController
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			populateProductDetailForDisplay(productModel, model, request);
-			if (currentCustomer.getIsWalletActivated() != null)
+			
+			if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
 			{
-				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
-				{
-					model.addAttribute("isOTPValidtion", Boolean.TRUE);
-				}
-				else
-				{
-					model.addAttribute("isOTPValidtion", Boolean.FALSE);
-				}
+				model.addAttribute("isOTPValidtion", Boolean.TRUE);
 			}
 			else
 			{
 				model.addAttribute("isOTPValidtion", Boolean.FALSE);
 			}
+			
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
 			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
