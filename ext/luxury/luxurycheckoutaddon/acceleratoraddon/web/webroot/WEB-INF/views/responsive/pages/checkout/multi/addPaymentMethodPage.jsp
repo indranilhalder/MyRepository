@@ -1342,7 +1342,7 @@
 		 <%-- <multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/> --%>
 		<div class="orderSummary">
 		<div class="order-summary-header"><h2>Summary</h2></div>
-		<multiCheckout:orderTotals cartData="${cartData}" showTaxEstimate="true" showTax="true" isCart="true" orderData="${orderData}"/>
+		<multiCheckout:orderTotals cartData="${cartData}" showTaxEstimate="true" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		
         </div>
         <div class="coupon-code  mt-20">

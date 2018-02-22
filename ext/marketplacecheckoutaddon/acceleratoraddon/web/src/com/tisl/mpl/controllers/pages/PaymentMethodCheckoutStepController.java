@@ -4720,6 +4720,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					VoucherModel appliedVoucher = null;
 					boolean mplCartVoucher = false;
 					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
+					final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode//SDI-5839
 
 					for (final DiscountModel discount : voucherList)
 					{
@@ -4746,7 +4747,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								{
 									boolean willApply = false;
 
-									final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
+									//final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode//SDI-5839
 
 									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
 											.getPaymentTypeData(); //Voucher Payment mode
@@ -4847,50 +4848,54 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 
 
-					//TPR-7448 Starts here
-					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
+					//SDI-5839 fix starts here
+					if (StringUtils.isNotEmpty(paymentModeCard)
+							&& !paymentModeCard.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
 					{
-						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved,
-								cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_WEB);
-						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+						//TPR-7448 Starts here
+						if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 						{
-							final String failureCode = (String) tuple3.getSecond();
-							final Double priceDiff = (Double) tuple3.getThird();
-							double totalDiscount = 0.0;
-							for (final AbstractOrderEntryModel oModel : cart.getEntries())
+							final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved,
+									cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_WEB);
+							if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 							{
-								final Double mrp = oModel.getMrp();
-								final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
-										: oModel.getNetAmountAfterAllDisc());
-								final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
+								final String failureCode = (String) tuple3.getSecond();
+								final Double priceDiff = (Double) tuple3.getThird();
+								double totalDiscount = 0.0;
+								for (final AbstractOrderEntryModel oModel : cart.getEntries())
+								{
+									final Double mrp = oModel.getMrp();
+									final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+											: oModel.getNetAmountAfterAllDisc());
+									final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-								final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-										: entryPrice.doubleValue();
+									final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc
+											.doubleValue() : entryPrice.doubleValue();
 
-								totalDiscount += (mrp.doubleValue() - value);
+									totalDiscount += (mrp.doubleValue() - value);
+								}
+								final PriceData totalDisc = getMplCheckoutFacade().createPrice(cart, Double.valueOf(totalDiscount));
+								final PriceData totalPrice = getMplCheckoutFacade().createPrice(cart, cart.getTotalPriceWithConv());
+
+								final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(cart, priceDiff);
+								return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
+										+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
 							}
-							final PriceData totalDisc = getMplCheckoutFacade().createPrice(cart, Double.valueOf(totalDiscount));
-							final PriceData totalPrice = getMplCheckoutFacade().createPrice(cart, cart.getTotalPriceWithConv());
-
-							final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(cart, priceDiff);
-							return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
-							+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
-						}
-					}
-					else
-					{
-						if (!utils.isLuxurySite())
-						{
-							LOG.error("Both token and cardFingerPrint cannot be empty for marketplace");
-							return "stayInPayment";
 						}
 						else
 						{
-							LOG.debug("Both token and cardFingerPrint are empty");
+							if (!utils.isLuxurySite())
+							{
+								LOG.error("Both token and cardFingerPrint cannot be empty for marketplace");
+								return "stayInPayment";
+							}
+							else
+							{
+								LOG.debug("Both token and cardFingerPrint are empty");
+							}
 						}
-					}
-					//TPR-7448 Ends here
-
+						//TPR-7448 Ends here
+					}//SDI-5839
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
 
@@ -5112,6 +5117,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					VoucherModel appliedVoucher = null;
 					boolean mplCartVoucher = false;
 					final Map<String, Boolean> voucherMap = new HashMap<String, Boolean>();
+					final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode//SDI-5839
 
 					for (final DiscountModel discount : voucherList)
 					{
@@ -5138,7 +5144,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								{
 									boolean willApply = false;
 
-									final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
+									//final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode//SDI-5839
 
 									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
 											.getPaymentTypeData(); //Voucher Payment mode
@@ -5230,50 +5236,56 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
 					}
 
-					//TPR-7448 Starts here
-					if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
+					//SDI-5839 fix starts here
+					if (StringUtils.isNotEmpty(paymentModeCard)
+							&& !paymentModeCard.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
 					{
-						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(orderModel, token, cardSaved,
-								cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_WEB);
-						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
+
+						//TPR-7448 Starts here
+						if ((StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 						{
-							final String failureCode = (String) tuple3.getSecond();
-							final Double priceDiff = (Double) tuple3.getThird();
-							double totalDiscount = 0.0;
-							for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
+							final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(orderModel, token, cardSaved,
+									cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_WEB);
+							if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 							{
-								final Double mrp = oModel.getMrp();
-								final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
-										: oModel.getNetAmountAfterAllDisc());
-								final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
+								final String failureCode = (String) tuple3.getSecond();
+								final Double priceDiff = (Double) tuple3.getThird();
+								double totalDiscount = 0.0;
+								for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
+								{
+									final Double mrp = oModel.getMrp();
+									final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+											: oModel.getNetAmountAfterAllDisc());
+									final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-								final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
-										: entryPrice.doubleValue();
+									final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc
+											.doubleValue() : entryPrice.doubleValue();
 
-								totalDiscount += (mrp.doubleValue() - value);
+									totalDiscount += (mrp.doubleValue() - value);
+								}
+								final PriceData totalDisc = getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount));
+								final PriceData totalPrice = getMplCheckoutFacade().createPrice(orderModel,
+										orderModel.getTotalPriceWithConv());
+
+								final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(orderModel, priceDiff);
+								return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
+										+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
 							}
-							final PriceData totalDisc = getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount));
-							final PriceData totalPrice = getMplCheckoutFacade().createPrice(orderModel,
-									orderModel.getTotalPriceWithConv());
-
-							final PriceData voucherDiscount = getMplCheckoutFacade().createPrice(orderModel, priceDiff);
-							return "one_card_per_offer_failed|" + failureCode + "|" + totalPrice.getFormattedValue() + "|"
-							+ voucherDiscount.getFormattedValue() + "|" + totalDisc.getFormattedValue();
-						}
-					}
-					else
-					{
-						if (!utils.isLuxurySite())
-						{
-							LOG.error("Both token and cardFingerPrint cannot be empty for marketplace");
-							return "stayInPayment";
 						}
 						else
 						{
-							LOG.debug("Both token and cardFingerPrint are empty");
+							if (!utils.isLuxurySite())
+							{
+								LOG.error("Both token and cardFingerPrint cannot be empty for marketplace");
+								return "stayInPayment";
+							}
+							else
+							{
+								LOG.debug("Both token and cardFingerPrint are empty");
+							}
 						}
-					}
-					//TPR-7448 Ends here
+						//TPR-7448 Ends here
+					}//SDI-5839 ends here
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
 
