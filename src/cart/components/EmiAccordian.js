@@ -3,7 +3,6 @@ import GridSelect from "../../general/components/GridSelect";
 import EmiCartSelect from "./EmiCartSelect";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
-// import styles from "./EmiAccordian.css";
 export default class EmiAccordian extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +15,6 @@ export default class EmiAccordian extends React.Component {
     };
   }
   handleSelectPlan(val) {
-    console.log(val);
     if (val) {
       this.setState({
         selectedEmiRate: val.interestRate,
@@ -26,17 +24,25 @@ export default class EmiAccordian extends React.Component {
     }
   }
   handleSelectBank(val) {
+    const option = this.props.emiList.filter(data => {
+      return data.value === val[0];
+    })[0].options[0];
     this.setState({
       selectedBank: this.props.emiList.filter(data => {
         return data.value === val[0];
-      })[0].title
+      })[0].title,
+      selectedEmiRate: option.interestRate,
+      selectedEmi: option.term,
+      selectedPrice: option.monthlyInstallment
     });
   }
-  handleConfirmPlan(val) {
+  handleConfirmPlan() {
     this.setState({ planSelected: true });
   }
+  handleChangePlan() {
+    this.setState({ planSelected: false });
+  }
   render() {
-    console.log(this.state);
     return (
       <React.Fragment>
         {!this.state.planSelected && (
@@ -70,6 +76,7 @@ export default class EmiAccordian extends React.Component {
               term={this.state.selectedEmi}
               emiRate={this.state.selectedEmiRate}
               price={this.state.selectedPrice}
+              changePlan={() => this.handleChangePlan()}
             />
             <CreditCardForm />
           </React.Fragment>
