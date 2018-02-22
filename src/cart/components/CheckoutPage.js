@@ -1,10 +1,41 @@
 import React from "react";
 import PaymentMethodCard from "./PaymentMethodCard";
+import ConfirmAddress from "./ConfirmAddress";
+
 import styles from "./CheckoutPage.css";
 export default class CheckoutPage extends React.Component {
   render() {
     return (
       <div className={styles.base}>
+        <ConfirmAddress
+          address={[
+            {
+              addressTitle: "Home",
+              addressDescription:
+                "Lal Bahadur Shastri Marg, Chandan Nagar, Vikhori West"
+            },
+            {
+              addressTitle: "Office",
+              addressDescription:
+                "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
+            },
+            {
+              addressTitle: "Other1",
+              addressDescription:
+                "Tagore Nagar, Vikhroli East, Mumbai, Maharashtra 400012"
+            },
+            {
+              addressTitle: "Other2",
+              addressDescription:
+                "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
+            },
+            {
+              addressTitle: "Other3",
+              addressDescription:
+                "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
+            }
+          ]}
+        />
         <PaymentMethodCard
           cashText="Use My CLiQ Cash Balance"
           price="400"
