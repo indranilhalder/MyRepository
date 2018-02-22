@@ -3829,14 +3829,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.BannerProMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.BannerProDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
@@ -3929,14 +3929,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.FlashSalesMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.FlashSalesDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
@@ -3975,14 +3975,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.ThemeOffersMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ThemeOffersDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
@@ -4013,14 +4013,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.VideoProductCarMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.VideoProductCarDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
@@ -4047,14 +4047,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.ThemeProWidMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ThemeProWidDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
@@ -4109,14 +4109,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.AutoBrandProCarEleMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.AutoBrandProCarEleDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
@@ -4151,14 +4151,14 @@
 	
 	<bean class="com.tisl.mpl.wsdto.CuratedProWidgetEleMRPPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.CuratedProWidgetEleDiscountPriceWsDTO">
 	<property name="currencyIso" type="String"/>
-	<property name="doubleValue" type="String"/>
+	<property name="doubleValue" type="java.lang.Double"/>
 	<property name="formattedValue" type="String"/>
 	<property name="currencySymbol" type="String"/>
 	</bean>

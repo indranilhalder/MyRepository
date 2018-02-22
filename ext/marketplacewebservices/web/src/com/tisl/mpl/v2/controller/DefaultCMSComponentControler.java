@@ -99,7 +99,7 @@ public class DefaultCMSComponentControler
 
 		final List<UICompPageElementWsDTO> genericUICompPageWsDTO = new ArrayList<UICompPageElementWsDTO>();
 
-		UICompPageWiseWsDTO uiCompPageObj = new UICompPageWiseWsDTO();
+		final UICompPageWiseWsDTO uiCompPageObj = new UICompPageWiseWsDTO();
 
 		if (contentPage != null)
 		{
@@ -327,10 +327,10 @@ public class DefaultCMSComponentControler
 
 										flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										flashSalesDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										flashSalesDiscountPriceWsDTO.setDoubleValue(productPrice);
+										flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 
 										flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-										flashSalesMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+										flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										flashSalesMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 										flashSalesElementWsDTO.setPrdId(flashSalesElementModel.getProductCode().getCode());
@@ -383,7 +383,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof ContentWidgetComponentModel)
 						{
 							final ContentWidgetCompWsDTO contentWidgetCompWsDTO = new ContentWidgetCompWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							final List<ContentWidgetElementWsDTO> contentWidgetElementList = new ArrayList<ContentWidgetElementWsDTO>();
 
 							final ContentWidgetComponentModel contentWidgetComponentModel = (ContentWidgetComponentModel) abstractCMSComponentModel;
@@ -425,7 +425,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof BannerProductCarouselComponentModel)
 						{
 							final BannerProductCarouselWsDTO bannerProductCarouselWsDTO = new BannerProductCarouselWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 							final List<BannerProCarouselElementWsDTO> bannerProCarouselList = new ArrayList<BannerProCarouselElementWsDTO>();
 
@@ -468,13 +468,13 @@ public class DefaultCMSComponentControler
 										final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
 
 										bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
+										bannerProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 										{
 											bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
-										bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+										bannerProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 										bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -512,7 +512,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof VideoProductCarouselComponentModel)
 						{
 							final VideoProductCarouselWsDTO videoProductCarouselWsDTO = new VideoProductCarouselWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							final List<VideoProductCarElementWsDTO> videoProCarouselList = new ArrayList<VideoProductCarElementWsDTO>();
 
 							final VideoProductCarouselComponentModel videoProComponentModel = (VideoProductCarouselComponentModel) abstractCMSComponentModel;
@@ -554,13 +554,13 @@ public class DefaultCMSComponentControler
 										final VideoProductCarMRPPriceWsDTO videoProMRPPriceWsDTO = new VideoProductCarMRPPriceWsDTO();
 
 										videoProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										videoProDiscountPriceWsDTO.setDoubleValue(productPrice);
+										videoProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 										{
 											videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
-										videoProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+										videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										videoProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
 										{
@@ -624,7 +624,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof ThemeOffersComponentModel)
 						{
 							final ThemeOffersWsDTO themeOffersWsDTO = new ThemeOffersWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							final List<ThemeOffersElementWsDTO> themeOffersElementList = new ArrayList<ThemeOffersElementWsDTO>();
 							final List<ThemeOffersCompOfferWsDTO> themeOffersCompOfferList = new ArrayList<ThemeOffersCompOfferWsDTO>();
 
@@ -695,13 +695,13 @@ public class DefaultCMSComponentControler
 										final ThemeOffersMRPPriceWsDTO thMrpPriceWsDTO = new ThemeOffersMRPPriceWsDTO();
 
 										thDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										thDiscountPriceWsDTO.setDoubleValue(productPrice);
+										thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 										{
 											thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
-										thMrpPriceWsDTO.setDoubleValue(productUnitPrice);
+										thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
 										themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
@@ -751,7 +751,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof ThemeProductWidgetComponentModel)
 						{
 							final ThemeProductWidgetWsDTO themeProductWidgetWsDTO = new ThemeProductWidgetWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							final ThemeProductWidgetComponentModel themeProductWidgetComponentModel = (ThemeProductWidgetComponentModel) abstractCMSComponentModel;
 							final List<ThemeProWidElementWsDTO> themeProWidElementList = new ArrayList<ThemeProWidElementWsDTO>();
 
@@ -795,13 +795,13 @@ public class DefaultCMSComponentControler
 										final ThemeProWidMRPPriceWsDTO thMrpPriceWsDTO = new ThemeProWidMRPPriceWsDTO();
 
 										thDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										thDiscountPriceWsDTO.setDoubleValue(productPrice);
+										thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 										{
 											thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
-										thMrpPriceWsDTO.setDoubleValue(productUnitPrice);
+										thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
 										themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
@@ -855,7 +855,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof ProductCapsulesComponentModel)
 						{
 							final ProductCapsulesComponentModel productCapsulesComponentModel = (ProductCapsulesComponentModel) abstractCMSComponentModel;
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							final List<ProductCapsulesElementWsDTO> productCapsulesElementList = new ArrayList<ProductCapsulesElementWsDTO>();
 							final ProductCapsulesWsDTO productCapsulesWsDTO = new ProductCapsulesWsDTO();
 
@@ -901,7 +901,7 @@ public class DefaultCMSComponentControler
 						if (abstractCMSComponentModel instanceof BannerSeparatorComponentModel)
 						{
 							final BannerSeparatorWsDTO bannerSeperatorWsDTO = new BannerSeparatorWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 							final BannerSeparatorComponentModel bannerSeparatorComponentModel = (BannerSeparatorComponentModel) abstractCMSComponentModel;
 
@@ -931,7 +931,7 @@ public class DefaultCMSComponentControler
 						{
 							final AutomatedBrandProductCarouselComponentModel automatedBrandProCarCompModel = (AutomatedBrandProductCarouselComponentModel) abstractCMSComponentModel;
 							final List<AutomatedBrandProCarEleWsDTO> automatedBrandProCarEleList = new ArrayList<AutomatedBrandProCarEleWsDTO>();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							final AutomatedBrandProCarWsDTO automatedBrandProCarWsDTO = new AutomatedBrandProCarWsDTO();
 							if (automatedBrandProCarCompModel.getItems() != null && automatedBrandProCarCompModel.getItems().size() > 0)
 							{
@@ -972,13 +972,13 @@ public class DefaultCMSComponentControler
 										final AutoBrandProCarEleMRPPriceWsDTO autoMrpPriceWsDTO = new AutoBrandProCarEleMRPPriceWsDTO();
 
 										autoDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										autoDiscountPriceWsDTO.setDoubleValue(productPrice);
+										autoDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 										{
 											autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
-										autoMrpPriceWsDTO.setDoubleValue(productUnitPrice);
+										autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										autoMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
 										automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
@@ -1039,7 +1039,7 @@ public class DefaultCMSComponentControler
 						{
 							final CuratedListingStripComponentModel curatedListStripCompModel = (CuratedListingStripComponentModel) abstractCMSComponentModel;
 							final CuratedListingStripWsDTO curatedListingStripWsDTO = new CuratedListingStripWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 							curatedListingStripWsDTO
 									.setAppURL(null != curatedListStripCompModel.getAppURL() ? curatedListStripCompModel.getAppURL() : "");
@@ -1061,7 +1061,7 @@ public class DefaultCMSComponentControler
 							final MonoBLPBannerComponentModel monoBLPBannerComponentModel = (MonoBLPBannerComponentModel) abstractCMSComponentModel;
 							final List<MonoBLPBannerElementWsDTO> monoBLPBannerElementList = new ArrayList<MonoBLPBannerElementWsDTO>();
 							final MonoBLPBannerWsDTO moBannerWsDTO = new MonoBLPBannerWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 
 							if (null != monoBLPBannerComponentModel.getItems() && monoBLPBannerComponentModel.getItems().size() > 0)
@@ -1105,7 +1105,7 @@ public class DefaultCMSComponentControler
 							final SubBrandBannerBLPComponentModel subBrandBLPBannerCompModel = (SubBrandBannerBLPComponentModel) abstractCMSComponentModel;
 							final List<SubBrandBannerBLPElementWsDTO> subBrandBannerBLPEleList = new ArrayList<SubBrandBannerBLPElementWsDTO>();
 							final SubBrandBannerBLPWsDTO subBrandBannerBLPWsDTO = new SubBrandBannerBLPWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 
 							if (null != subBrandBLPBannerCompModel.getItems() && subBrandBLPBannerCompModel.getItems().size() > 0)
@@ -1152,7 +1152,7 @@ public class DefaultCMSComponentControler
 							final TopCategoriesWidgetComponentModel topCategoriesWidgetComponentModel = (TopCategoriesWidgetComponentModel) abstractCMSComponentModel;
 							final List<TopCategoriesWidgetElementWsDTO> topCategoriesWidgetElementList = new ArrayList<TopCategoriesWidgetElementWsDTO>();
 							final TopCategoriesWidgetWsDTO topCategoriesWidgetWsDTO = new TopCategoriesWidgetWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 
 							if (null != topCategoriesWidgetComponentModel.getItems()
@@ -1194,7 +1194,7 @@ public class DefaultCMSComponentControler
 							final CuratedProductsWidgetComponentModel curatedProWidgetCompModel = (CuratedProductsWidgetComponentModel) abstractCMSComponentModel;
 							final List<CuratedProWidgetElementWsDTO> curatedProWidgetElementList = new ArrayList<CuratedProWidgetElementWsDTO>();
 							final CuratedProductsWidgetWsDTO curatedProductsWidgetWsDTO = new CuratedProductsWidgetWsDTO();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 							if (null != curatedProWidgetCompModel.getItems() && curatedProWidgetCompModel.getItems().size() > 0)
 							{
@@ -1233,13 +1233,13 @@ public class DefaultCMSComponentControler
 										final CuratedProWidgetEleMRPPriceWsDTO curatedProWidgetEleMRPPriceWsDTO = new CuratedProWidgetEleMRPPriceWsDTO();
 
 										curatedProWidgetEleDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-										curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(productPrice);
+										curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 										{
 											curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											curatedProWidgetEleDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
-										curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+										curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										curatedProWidgetEleMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 										curatedProWidgetElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -1275,7 +1275,7 @@ public class DefaultCMSComponentControler
 							final SmartFilterWidgetWsDTO smartFilterWsDTO = new SmartFilterWidgetWsDTO();
 							final List<SmartFilterWidgetElementWsDTO> smartFilterWidgetElementList = new ArrayList<SmartFilterWidgetElementWsDTO>();
 							final SmartFilterWidgetComponentModel smartFilterWidgetComponentModel = (SmartFilterWidgetComponentModel) abstractCMSComponentModel;
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 							if (null != smartFilterWidgetComponentModel.getItems()
 									&& smartFilterWidgetComponentModel.getItems().size() > 0)
@@ -1329,9 +1329,9 @@ public class DefaultCMSComponentControler
 			throws CMSItemNotFoundException
 	{
 		final ContentPageModel contentPage = mplCMSPageService.getPageByLabelOrId(pageId);
-		UIComponentWiseWsDTO uiComponentWiseWsDTO = new UIComponentWiseWsDTO();
+		final UIComponentWiseWsDTO uiComponentWiseWsDTO = new UIComponentWiseWsDTO();
 		final List<UICompPageElementWsDTO> genericUICompPageWsDTO = new ArrayList<UICompPageElementWsDTO>();
-		UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+		final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
 		if (contentPage != null && componentId != null)
 		{
@@ -1553,10 +1553,10 @@ public class DefaultCMSComponentControler
 
 									flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									flashSalesDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									flashSalesDiscountPriceWsDTO.setDoubleValue(productPrice);
+									flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 
 									flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
-									flashSalesMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+									flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									flashSalesMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 									flashSalesElementWsDTO.setPrdId(flashSalesElementModel.getProductCode().getCode());
@@ -1692,13 +1692,13 @@ public class DefaultCMSComponentControler
 									final BannerProMRPPriceWsDTO bannerProMRPPriceWsDTO = new BannerProMRPPriceWsDTO();
 
 									bannerProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									bannerProDiscountPriceWsDTO.setDoubleValue(productPrice);
+									bannerProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 									{
 										bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
-									bannerProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+									bannerProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 									bannerProCarouselElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -1776,13 +1776,13 @@ public class DefaultCMSComponentControler
 									final VideoProductCarMRPPriceWsDTO videoProMRPPriceWsDTO = new VideoProductCarMRPPriceWsDTO();
 
 									videoProDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									videoProDiscountPriceWsDTO.setDoubleValue(productPrice);
+									videoProDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 									{
 										videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
-									videoProMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+									videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									videoProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
 									{
@@ -1913,13 +1913,13 @@ public class DefaultCMSComponentControler
 									final ThemeOffersMRPPriceWsDTO thMrpPriceWsDTO = new ThemeOffersMRPPriceWsDTO();
 
 									thDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									thDiscountPriceWsDTO.setDoubleValue(productPrice);
+									thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 									{
 										thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
-									thMrpPriceWsDTO.setDoubleValue(productUnitPrice);
+									thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
 									themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
@@ -2012,13 +2012,13 @@ public class DefaultCMSComponentControler
 									final ThemeProWidMRPPriceWsDTO thMrpPriceWsDTO = new ThemeProWidMRPPriceWsDTO();
 
 									thDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									thDiscountPriceWsDTO.setDoubleValue(productPrice);
+									thDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 									{
 										thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
-									thMrpPriceWsDTO.setDoubleValue(productUnitPrice);
+									thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
 									themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
@@ -2186,13 +2186,13 @@ public class DefaultCMSComponentControler
 									final AutoBrandProCarEleMRPPriceWsDTO autoMrpPriceWsDTO = new AutoBrandProCarEleMRPPriceWsDTO();
 
 									autoDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									autoDiscountPriceWsDTO.setDoubleValue(productPrice);
+									autoDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 									{
 										autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
-									autoMrpPriceWsDTO.setDoubleValue(productUnitPrice);
+									autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									autoMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
 									automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
@@ -2438,13 +2438,13 @@ public class DefaultCMSComponentControler
 									final CuratedProWidgetEleMRPPriceWsDTO curatedProWidgetEleMRPPriceWsDTO = new CuratedProWidgetEleMRPPriceWsDTO();
 
 									curatedProWidgetEleDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
-									curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(productPrice);
+									curatedProWidgetEleDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
 									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
 									{
 										curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										curatedProWidgetEleDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
-									curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(productUnitPrice);
+									curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									curatedProWidgetEleMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
 									curatedProWidgetElementWsDTO.setPrdId(productObj.getProductCode().getCode());
