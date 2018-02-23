@@ -488,7 +488,6 @@ public class WalletController extends AbstractPageController
 	@ResponseBody
 	public String createOTP(@RequestParam(value = "mobileNumber") final String mobileNumber)
 	{
-		String isNewOTPCreated;
 		LOG.debug("Create  OTP For QC Verifaction");
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		final boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(mobileNumber);
@@ -496,8 +495,8 @@ public class WalletController extends AbstractPageController
 		{
 			return "isUsed";
 		}
-		isNewOTPCreated = mplWalletFacade.generateOTP(currentCustomer, mobileNumber);
-		return isNewOTPCreated;
+		mplWalletFacade.generateOTP(currentCustomer, mobileNumber);
+		return "success";
 	}
 
 
