@@ -1688,6 +1688,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<!-- TPR-1083 Start -->
 		<property name="exchangeId" type="String" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -2338,6 +2339,7 @@
 		<property name="totalDiscount"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mobileNo" type="String" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->

@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.CartRestorationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCartFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
@@ -3331,8 +3332,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3601,7 +3602,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -4539,6 +4540,29 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		return cartTotalMrp;
 	}
 
+	@Override
+	public Double calculateCartTotalMrp(final OrderData orderdata)
+	{
+		// YTODO Auto-generated method stub
+		Double cartTotalMrp = Double.valueOf(0);
+		Double cartEntryMrp = Double.valueOf(0);
+
+		if (CollectionUtils.isNotEmpty(orderdata.getEntries()))
+		{
+			for (final OrderEntryData entry : orderdata.getEntries())
+			{
+				if (!entry.isGiveAway())
+				{
+					cartEntryMrp = Double.valueOf((null == entry.getMrp() ? 0d : entry.getMrp().getDoubleValue().doubleValue())
+							* (null == entry.getQuantity() ? 0d : entry.getQuantity().doubleValue()));
+
+					cartTotalMrp = Double.valueOf(cartTotalMrp.doubleValue() + cartEntryMrp.doubleValue());
+				}
+			}
+		}
+
+		return cartTotalMrp;
+	}
 
 	/**
 	 * @param product

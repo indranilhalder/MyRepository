@@ -5,8 +5,10 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -16,6 +18,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -40,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,11 +70,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**
@@ -134,6 +140,13 @@ public class PaymentServicesController extends BaseController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
+
+	@Resource
+	private MplCartWebService mplCartWebService;
+
+	@Autowired
+	private CommonI18NService commonI18NService;
+	private static final String INR = "INR";
 
 	/**
 	 * @return the voucherService
@@ -210,8 +223,8 @@ public class PaymentServicesController extends BaseController
 
 					//INC144316663
 
-					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue())
-							&& (cart.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
+					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (cart
+							.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
 
 					final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
 
@@ -246,8 +259,8 @@ public class PaymentServicesController extends BaseController
 			{
 				final boolean mplCustomerIsBlackListed = getMplPaymentFacade().isBlackListed(ip, orderModel);
 				//SDI-5095
-				final boolean isCodLimitFailed = ((orderModel.getTotalPrice().longValue() <= codUpperLimit.longValue())
-						&& (orderModel.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
+				final boolean isCodLimitFailed = ((orderModel.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (orderModel
+						.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
 
 				//SDI-5095
 				final boolean isCodEligible = (isCodLimitFailed || !orderModel.getIsCODEligible().booleanValue()) ? false : true;
@@ -326,11 +339,13 @@ public class PaymentServicesController extends BaseController
 	@ResponseBody
 	public MplPromoPriceWsDTO binValidation(@PathVariable final String userId, @RequestParam final String paymentMode,
 			@RequestParam final String cartGuid, @RequestParam(required = false) final String binNo,
-			@RequestParam(required = false) final String bankName)
+			@RequestParam(required = false) final String bankName, @RequestParam(required = false) final boolean isPwa)
 	{
 		LOG.debug(String.format("binValidation : binNo :  %s | paymentMode : %s | cartGuid : %s | userId : %s | bankName : %s ",
 				binNo, paymentMode, cartGuid, userId, bankName));
 		MplPromoPriceWsDTO promoPriceData = new MplPromoPriceWsDTO(); //The New Returning DTO
+		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+
 		OrderModel orderModel = null;
 		CartModel cart = null;
 		try
@@ -348,13 +363,14 @@ public class PaymentServicesController extends BaseController
 				//TISPT-29
 				if (null != cart)
 				{
-					if (StringUtils.isNotEmpty(paymentMode) && (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)
-							|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
+									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD) || paymentMode
+										.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
 					{
 						if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 						{
@@ -368,6 +384,23 @@ public class PaymentServicesController extends BaseController
 						{
 							//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
 							promoPriceData = getMplPaymentWebFacade().binValidation(binNo, paymentMode, cart, userId, bankName);
+							if (isPwa)
+							{
+								final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+								final PriceData totalMrp = createPriceObj(mrp.toString());
+								pricePwa.setBagTotal(totalMrp);
+								final PriceData amountInclDelCharge = promoPriceData.getTotalPriceInclConv();
+								//	final PriceData amountInclDelCharge = createPriceObj(promoPriceData.getTotalPriceInclConv().toString());
+								pricePwa.setPaybleAmount(amountInclDelCharge);
+								final PriceData delCharge = promoPriceData.getDeliveryCost();
+								final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue()
+										- delCharge.getDoubleValue().doubleValue();
+								final double discount = mrp.doubleValue() - payableamtWdDelCharge;
+								final PriceData totalDiscount = createPriceObj(Double.valueOf(discount).toString());
+								pricePwa.setTotalDiscountAmount(totalDiscount);
+								promoPriceData.setCartAmount(pricePwa);
+							}
+
 						}
 						else
 						{
@@ -392,13 +425,14 @@ public class PaymentServicesController extends BaseController
 					getMplPaymentFacade().setBankForSavedCard(bankName);
 				}
 
-				if (StringUtils.isNotEmpty(paymentMode) && (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)
-						|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
+				if (StringUtils.isNotEmpty(paymentMode)
+						&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.EMI)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE)
+								|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD) || paymentMode
+									.equalsIgnoreCase(MarketplacewebservicesConstants.PAYTM)))
 
 				{
 					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
@@ -696,8 +730,8 @@ public class PaymentServicesController extends BaseController
 					{
 
 						//TPR-4461 COUPON FOR COD WHEN ORDER MODEL IS NULL STARTS HERE
-						final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-								getVoucherService().getAppliedVouchers(cart));
+						final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+								.getAppliedVouchers(cart));
 
 						if (CollectionUtils.isNotEmpty(voucherList))
 						{
@@ -816,7 +850,7 @@ public class PaymentServicesController extends BaseController
 							}
 							else if (!checkPromovoucher2)
 							{ //only coupon
-								  //return "coupon";
+							  //return "coupon";
 								updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
 								failFlag = true;
 								failErrorCode = MarketplacecommerceservicesConstants.B9078;
@@ -924,8 +958,8 @@ public class PaymentServicesController extends BaseController
 
 
 					//TPR-4461 COUPON FOR COD WHEN ORDER MODEL IS NOT NULL STARTS HERE
-					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-							getVoucherService().getAppliedVouchers(orderModel));
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+							orderModel));
 
 					if (CollectionUtils.isNotEmpty(voucherList))
 					{
@@ -1040,7 +1074,7 @@ public class PaymentServicesController extends BaseController
 						}
 						else if (!checkPromovoucher2)
 						{ //only coupon
-							  //return "coupon";
+						  //return "coupon";
 							updateTransactionDtls.setErrorMessage(MarketplacecommerceservicesConstants.COUPONFAILUREMESSAGE);
 							failFlag = true;
 							failErrorCode = MarketplacecommerceservicesConstants.B9078;
@@ -1412,8 +1446,8 @@ public class PaymentServicesController extends BaseController
 				{
 					//CAR-111
 					//cartData = getMplExtendedCartConverter().convert(cart);
-					final Map<String, Boolean> paymentMode = getMplPaymentFacade()
-							.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, cart);
+					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
+							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
 					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
@@ -1428,22 +1462,21 @@ public class PaymentServicesController extends BaseController
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
-				final Map<String, Boolean> paymentMode = getMplPaymentFacade()
-						.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
+				final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
+						MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 				paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 			}
 			final String juspayMerchantKey = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty()
-							? getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
-							: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+					.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
 
 			final String juspayMerchantId = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty()
-							? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-							: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
 			paymentModesData.setMerchantID(juspayMerchantId);
 			paymentModesData.setMerchantKey(juspayMerchantKey);
 		}
@@ -1739,4 +1772,17 @@ public class PaymentServicesController extends BaseController
 		this.baseStoreService = baseStoreService;
 	}
 
+	private PriceData createPriceObj(final String cost)
+	{
+		// YTODO Auto-generated method stub
+		final PriceData priceData = new PriceData();
+		priceData.setFormattedValue(cost);
+		priceData.setDoubleValue(Double.valueOf(cost));
+
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+		priceData.setCurrencyIso(currency.getIsocode());
+		priceData.setCurrencySymbol(currency.getSymbol());
+
+		return priceData;
+	}
 }
