@@ -84,13 +84,17 @@ class ProductDescriptionPage extends Component {
     );
 
     if (userDetails) {
-      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
-      productDetails.accessToken = JSON.parse(customerCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
+      Object.assign(productDetails, {
+        userId: JSON.parse(userDetails).customerInfo.mobileNumber,
+        accessToken: JSON.parse(customerCookie).access_token,
+        cartId: JSON.parse(cartDetailsLoggedInUser).code
+      });
     } else {
-      productDetails.userId = ANONYMOUS_USER;
-      productDetails.accessToken = JSON.parse(globalCookie).access_token;
-      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
+      Object.assign(productDetails, {
+        userId: ANONYMOUS_USER,
+        accessToken: JSON.parse(globalCookie).access_token,
+        cartId: JSON.parse(cartDetailsForAnonymous).guid
+      });
     }
 
     this.props.addProductToCart(productDetails);

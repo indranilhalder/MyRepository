@@ -29,7 +29,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   REFRESH_TOKEN,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS
+  CART_DETAILS_FOR_ANONYMOUS,
+  LOGGED_IN_USER_DETAILS
 } from "../src/lib/constants";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -59,20 +60,26 @@ class App extends Component {
   getAccessToken = () => {
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let guid = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let uid = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
+      if (!guid) {
+        this.props.generateCartIdForAnonymous();
+      }
     }
 
     if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      if (!uid) {
+        this.props.generateCartIdForLoggedInUser();
+      }
     }
 
-    console.log(cartDetailsForLoggedInUser);
-    console.log(cartDetailsForAnonymous);
     if (customerCookie) {
       auth.isAuthenticated = true;
       if (!cartDetailsForLoggedInUser) {

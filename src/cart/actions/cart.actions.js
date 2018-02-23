@@ -62,13 +62,13 @@ export function cartDetailsFailure(error) {
   };
 }
 
-export function getCartDetails(userID, accessToken, cartId) {
+export function getCartDetails(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsRequest());
 
     try {
       const result = await api.get(
-        `${USER_CART_PATH}/${userID}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true`
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -347,7 +347,7 @@ export function generateCartIdForLoggedInUser() {
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(resultJson.message);
       }
       dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
     } catch (e) {
@@ -377,7 +377,7 @@ export function generateCartIdForAnonymous() {
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(resultJson.message);
       }
       dispatch(generateCartIdAnonymousSuccess(resultJson));
     } catch (e) {
