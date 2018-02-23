@@ -3,13 +3,13 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.JewellerySellerDetailsModel;
-import de.hybris.platform.core.model.JwlryRevSealInfoModel;
-
 import java.util.List;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
+
+import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 
 
 /**
@@ -57,5 +57,11 @@ public interface MplJewelleryService
 	public JwlryRevSealInfoModel getSealInfo(String sellerId);
 
 	List<BuyBoxModel> getAllWeightVariantByPussid(String pUssid);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	String checkIfWeightVariantJewl(String productCode);
 
 }
