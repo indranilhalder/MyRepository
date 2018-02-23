@@ -31,7 +31,7 @@ export default class ManueDetails extends React.Component {
           }}
         >
           <div className={styles.debitCardIcon}>
-            <Icon image={couponIcon} size={25} />
+            <Icon image={this.props.icon} size={25} />
           </div>
           <div className={styles.textBox}>
             {this.props.text}
@@ -44,7 +44,10 @@ export default class ManueDetails extends React.Component {
   }
 }
 ManueDetails.propTypes = {
-  text: PropTypes.string
+  text: PropTypes.string,
+  icon: PropTypes.string
 };
 
-ManueDetails.defaultProps = {};
+ManueDetails.defaultProps = {
+  icon: couponIcon
+};

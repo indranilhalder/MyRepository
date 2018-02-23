@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import MenuDetails from "./MenuDetails.js";
 import CreditCard from "./CreditCard.js";
 
-CreditCard;
 export default class PaymentMethod extends React.Component {
   render() {
     const data = this.props.data;

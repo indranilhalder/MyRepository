@@ -79,7 +79,7 @@ export default class CartItem extends React.Component {
                     type={datum.code}
                     header={datum.name}
                     placedTime={datum.desc}
-                    label={datum.desc}
+                    selected={datum.selected}
                   />
                 );
               })}

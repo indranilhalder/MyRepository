@@ -1,9 +1,10 @@
 .base {
   width: 100%;
   height: auto;
-  border-bottom: 1px solid #ccc;
-  padding: 20px;
+  padding: 15px;
+  border-bottom: 1px solid #ececec;
 }
+
 .titleAddress {
   width: 100%;
   height: auto;
@@ -20,8 +21,7 @@
   font-family: regular;
   font-size: 14px;
   position: relative;
-  padding-right: 70px;
-  margin-bottom: 10px;
+  padding-right: 60px;
 }
 
 .checkCircle {
