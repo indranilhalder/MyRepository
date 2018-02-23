@@ -5,33 +5,24 @@ import Input2 from "./Input2.js";
 import SelectBoxMobile from "./SelectBoxMobile.js";
 
 export default class SelectBoxWithInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fullNmaeValue: props.fullNmaeValue ? props.fullNmaeValue : "",
-      titleValue: props.titleValue ? props.titleValue : ""
-    };
-  }
   getTitleValue(val) {
-    this.props.onChange(val);
-    this.setState({ titleValue: val });
+    if (this.props.onChange) {
+      this.props.onChange();
+    }
   }
   getFullNameValue(val) {
-    this.props.onChange(val);
-    this.setState({ fullNmaeValue: val });
+    if (this.props.getFullNameValue) {
+      this.props.getFullNameValue();
+    }
   }
   render() {
-    const options = [
-      { value: "Mr", label: "Mr" },
-      { value: "Mrs", label: "Mrs" }
-    ];
     return (
       <div className={styles.base}>
         <div className={styles.dropDownHolder}>
           <div className={styles.dropDownBox}>
             <SelectBoxMobile
               theme="hollowBox"
-              options={options}
+              options={this.props.option}
               selected={this.props.titleValue}
               onChange={val => this.getTitleValue(val)}
             />
@@ -42,8 +33,8 @@ export default class SelectBoxWithInput extends React.Component {
               placeholder="Full name*"
               onChange={val => this.getFullNameValue(val)}
               textStyle={{ fontSize: 14 }}
-              height={35}
-              value={this.props.value && this.props.value}
+              height={33}
+              value={this.props.fullNameValue && this.props.fullNameValue}
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
 .base {
   width: 100%;
   height: auto;
+  border-radius:4px;
 }
 .dropDownHolder {
   width: 100%;
@@ -36,24 +37,7 @@
   display: inline-block;
   margin-top: 15px;
 }
-.checkAddressContent {
-  width: 50%;
-  height: auto;
-  font-size: 14px;
-  font-family: regular;
-  display: inline-block;
-  margin-top: 20px;
-  padding-left: 10%;
-  position: relative;
-  color: #000000;
-}
-.checkboxHolder {
-  width: 10%;
-  height: auto;
-  border: none;
-  position: absolute;
-  left: 0;
-}
+
 .textHolder {
   height: auto;
   display: inline-block;
@@ -63,17 +47,11 @@
 }
 
 .defaultText {
-  margin-top: 20px;
   width: 100%;
   height: auto;
-  font-size: 14px;
-  font-family: regular;
   display: inline-block;
-  margin-top: 20px;
-  position: relative;
-  padding: 33px;
-  color: #000000;
   border-top: 1px solid #ececec;
+  padding-top: 15px;
 }
 .button {
   width: auto;
@@ -97,15 +75,4 @@
   margin: auto;
   text-align: left;
   line-height: 25px;
-}
-.buttonHolder {
-  width: auto;
-  height: auto;
-  margin-top: 18px;
-  display: inline-block;
-}
-.buttonBox {
-  width: 100%;
-  height: auto;
-  text-align: center;
 }

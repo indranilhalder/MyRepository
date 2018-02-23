@@ -5,6 +5,8 @@ import Input2 from "./Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
 import informationIcon from "./img/GPS.svg";
 import SelectBoxWithInput from "./SelectBoxWithInput.js";
+import GridSelect from "./GridSelect";
+import CheckboxAndText from "./CheckboxAndText";
 import CheckBox from "./CheckBox.js";
 import TextArea from "./TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
@@ -17,20 +19,18 @@ export default class AddDeliveryAddress extends React.Component {
       selected: false,
       address: props.address ? props.address : "",
       pinCodeValue: props.pinCodeValue ? props.pinCodeValue : "",
-      fullNmaeValue: props.fullNmaeValue ? props.fullNmaeValue : "",
+      fullNameValue: props.fullNameValue ? props.fullNameValue : "",
       phoneNumberValue: props.phoneNumberValue ? props.phoneNumberValue : "",
       stateName: props.stateName ? props.stateName : "",
       cityNameValue: props.cityNameValue ? props.cityNameValue : "",
       localityValue: props.localityValue ? props.localityValue : "",
       landmark: props.landmark ? props.landmark : "",
-      titleValue: props.titleValue ? props.titleValue : ""
+      titleValue: props.titleValue ? props.titleValue : "",
+      options: props.options ? props.titleValue : ""
     };
   }
   getPinCodeValue(val) {
     this.setState({ pinCodeValue: val });
-  }
-  getFullNameValue(val) {
-    this.setState({ fullNmaeValue: val });
   }
   onChangePhoneNumber(val) {
     this.setState({ phoneNumberValue: val });
@@ -45,25 +45,32 @@ export default class AddDeliveryAddress extends React.Component {
   onChangeLocality(val) {
     this.setState({ localityValue: val });
   }
+  getFullNameValue(val) {
+    this.setState({ fullNameValue: val });
+  }
   onChangeLandmark(val) {
     this.setState({ landmark: val });
   }
   onChangeAddress(val) {
     this.setState({ value: val });
   }
-
+  onSelect() {
+    this.setState({ selected: !this.state.selected });
+    if (this.props.onSelect) {
+      this.props.onSelect();
+    }
+  }
   clearAllValue = () => {
     this.setState({
       pinCodeValue: "",
-      fullNmaeValue: "",
+      fullNameValue: "",
       phoneNumberValue: "",
       stateName: "",
       cityNameValue: "",
       localityValue: "",
       landmark: "",
       titleValue: "",
-      value: "",
-      selected: ""
+      options: ""
     });
   };
   onSaveAddressDetails(val) {
@@ -71,18 +78,29 @@ export default class AddDeliveryAddress extends React.Component {
       let addressDetails = {};
       addressDetails.address = this.state.value;
       addressDetails.pinCodeValue = this.state.pinCodeValue;
-      addressDetails.fullNmaeValue = this.state.fullNmaeValue;
+      addressDetails.fullNameValue = this.state.fullNameValue;
       addressDetails.phoneNumberValue = this.state.phoneNumberValue;
       addressDetails.stateName = this.state.stateName;
       addressDetails.cityNameValue = this.state.cityNameValue;
       addressDetails.localityValue = this.state.localityValue;
       addressDetails.landmark = this.state.landmark;
       addressDetails.titleValue = this.state.titleValue;
-
       this.props.onSaveAddressDetails(addressDetails);
     }
   }
+
   render() {
+    const dataLabel = [
+      {
+        label: "Home"
+      },
+      {
+        label: "Office"
+      },
+      {
+        label: "Others"
+      }
+    ];
     return (
       <div className={styles.base}>
         <div className={styles.addressInnerBox}>
@@ -114,9 +132,11 @@ export default class AddDeliveryAddress extends React.Component {
         </div>
         <div className={styles.selectName}>
           <SelectBoxWithInput
-            options={this.props.options}
+            option={this.state.options}
             onChange={titleValue => this.setState({ titleValue })}
             titleValue={this.state.titleValue}
+            fullNameValue={this.state.fullNameValue}
+            getFullNameValue={val => this.getFullNameValue(val)}
           />
         </div>
 
@@ -195,45 +215,16 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <div className={styles.checkAddressContent}>
-            <div className={styles.checkboxHolder}>
-              <CheckBox selected={this.state.selected} />
-            </div>
-            <div className={styles.textHolder}>{this.props.home}</div>
-          </div>
-
-          <div className={styles.checkAddressContent}>
-            <div className={styles.checkboxHolder}>
-              <CheckBox selected={this.state.selected2} />
-            </div>
-            <div className={styles.textHolder}>{this.props.office}</div>
-          </div>
-
-          <div className={styles.checkAddressContent}>
-            <div className={styles.checkboxHolder}>
-              <CheckBox selected={this.state.selected3} />
-            </div>
-            <div className={styles.textHolder}>{this.props.other}</div>
-          </div>
+          <GridSelect limit={1} offset={0} elementWidthMobile={50}>
+            {dataLabel.map((val, i) => {
+              return <CheckboxAndText label={val.label} value={i} />;
+            })}
+          </GridSelect>
         </div>
         <div className={styles.defaultText}>
-          <div className={styles.checkboxHolder}>
-            <CheckBox selected={this.state.selected4} />
-          </div>
-          <div className={styles.textHolder}>
-            {this.props.saveDefaultTextItem}
-          </div>
-        </div>
-        <div className={styles.buttonBox}>
-          <div className={styles.buttonHolder}>
-            <Button
-              type="primary"
-              color="#fff"
-              label={this.props.buttonText}
-              width={176}
-              onClick={val => this.onSaveAddressDetails(val)}
-            />
-          </div>
+          <GridSelect limit={1} offset={0} elementWidthMobile={100}>
+            <CheckboxAndText label="Make this default address" />
+          </GridSelect>
         </div>
       </div>
     );
