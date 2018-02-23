@@ -4975,8 +4975,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						
 						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
-						 saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
-						// If CosignmentEnteries are present then update OMS with
+						try
+						{
+							saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+						}
+						catch(final Exception e)
+						{
+							LOG.error(e.getMessage(),e);
+						}						// If CosignmentEnteries are present then update OMS with
 						// the state.
 						ConsignmentStatus newStatus = null;
 						if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
@@ -5365,7 +5371,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel , final OrderModel subOrderModel){
 		 List<String> qcResponseStatus = new ArrayList<String>();
 		 
-		if( null!= orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
 			returnModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
 		}
 		returnModel.setJuspayDeliveryValue("0");
