@@ -177,4 +177,20 @@ public class MplFollowedBrandServiceImpl implements MplFollowedBrandService
 		return status;
 
 	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.brand.MplFollowedBrandService#getUserFollowedMcvIds(java.lang
+	 * .String)
+	 */
+	@Override
+	public List<FollowedBrandMcvidModel> getUserFollowedMcvIds(final String mcvId)
+	{
+		// YTODO Auto-generated method stub
+		final List<FollowedBrandMcvidModel> listOfMcvIDbrands = mplFollowedBrandDao.getMcvIdBrands(mcvId);
+		return listOfMcvIDbrands;
+	}
 }

@@ -3811,6 +3811,7 @@
 	<bean class="com.tisl.mpl.wsdto.MplFollowedBrandsWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
      <property name="followedBrandList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FollowedBrandWsDto>"></property>
+	<property name="message" type="String" />
 			
    </bean>
    

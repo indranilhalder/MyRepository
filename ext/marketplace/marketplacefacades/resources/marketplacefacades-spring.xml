@@ -2148,6 +2148,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="mplFollowedBrandFacade" class="com.tisl.mpl.facade.brand.impl.MplFollowedBrandFacadeImpl" >
      	<property name="mplFollowedBrandService" ref="mplFollowedBrandService" />
      	<property name="mplFollowedBrandConverter" ref="mplFollowedBrandConverter" />
+     	<property name="extendedUserService" ref="extendedUserService"/>
     </bean>
     
     <bean id="mplFollowedBrandConverter" parent="abstractPopulatingConverter">

@@ -1890,6 +1890,12 @@ public class ProductsController extends BaseController
 			{
 				mplFollowedBrandsWsDto.setFollowedBrandList(followedBrandList);
 			}
+			else
+			{
+				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+				mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU350));
+				mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU350);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1903,14 +1909,14 @@ public class ProductsController extends BaseController
 			{
 				mplFollowedBrandsWsDto.setErrorCode(e.getErrorCode());
 			}
-			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			LOG.error("Followed Brand Error" + e.getMessage());
-			mplFollowedBrandsWsDto.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
-			mplFollowedBrandsWsDto.setErrorCode(MarketplacewebservicesConstants.H9002);
+			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU350));
+			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU350);
 			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
 
 		}
@@ -1936,10 +1942,13 @@ public class ProductsController extends BaseController
 			if (status)
 			{
 				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.SUCCESS);
+				mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU450));
 			}
 			else
 			{
 				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+				mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU250));
+				mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU250);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -1960,9 +1969,9 @@ public class ProductsController extends BaseController
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			LOG.error("Followed Brand Error" + e.getMessage());
-			mplFollowedBrandsWsDto.setError(Localization.getLocalizedString(MarketplacewebservicesConstants.H9002));
-			mplFollowedBrandsWsDto.setErrorCode(MarketplacewebservicesConstants.H9002);
-			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU250));
+			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU250);
+			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.NU250);
 
 		}
 		return mplFollowedBrandsWsDto;

@@ -2452,4 +2452,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	 * "select {bc.pk} from {BulkCancellationProcess as bc} where {bc.loadstatus}='0'"; public static final String
 	 * bulk_cancellation_report_path = "bulk.cancellation.report.path";
 	 */
+
+	public static final String NU150 = "NU150";
+	public static final String NU250 = "NU250";
+	public static final String NU350 = "NU350";
+	public static final String NU450 = "NU450";
+	public static final String NU550 = "NU550";
 }
