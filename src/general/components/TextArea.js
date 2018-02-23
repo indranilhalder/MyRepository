@@ -20,7 +20,7 @@ export default class TextArea extends React.Component {
         <textarea
           className={styles.textAreaBox}
           placeholder={this.props.placeholder}
-          value={this.props.value && this.props.value}
+          value={this.props.value ? this.props.value : this.state.value}
           onChange={event => {
             this.handleChange(event);
           }}
