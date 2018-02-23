@@ -1,17 +1,14 @@
 import React from "react";
 import styles from "./AddDeliveryAddress.css";
 import PropTypes from "prop-types";
-import Input2 from "./Input2.js";
+import Input2 from "../../general/components/Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
-import informationIcon from "./img/GPS.svg";
-import SelectBoxWithInput from "./SelectBoxWithInput.js";
-import GridSelect from "./GridSelect";
+import informationIcon from "../../general/components/img/GPS.svg";
+import SelectBoxWithInput from "../../general/components/SelectBoxWithInput.js";
+import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
-import CheckBox from "./CheckBox.js";
-import TextArea from "./TextArea.js";
+import TextArea from "../../general/components/TextArea.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-import Button from "./Button";
-
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -130,7 +127,7 @@ export default class AddDeliveryAddress extends React.Component {
             }
           />
         </div>
-        <div className={styles.selectName}>
+        <div className={styles.content}>
           <SelectBoxWithInput
             option={this.state.options}
             onChange={titleValue => this.setState({ titleValue })}
@@ -214,6 +211,7 @@ export default class AddDeliveryAddress extends React.Component {
             height={33}
           />
         </div>
+
         <div className={styles.content}>
           <GridSelect limit={1} offset={0} elementWidthMobile={50}>
             {dataLabel.map((val, i) => {
@@ -222,9 +220,7 @@ export default class AddDeliveryAddress extends React.Component {
           </GridSelect>
         </div>
         <div className={styles.defaultText}>
-          <GridSelect limit={1} offset={0} elementWidthMobile={100}>
-            <CheckboxAndText label="Make this default address" />
-          </GridSelect>
+          <CheckboxAndText label="Make this default address" />
         </div>
       </div>
     );
@@ -232,12 +228,10 @@ export default class AddDeliveryAddress extends React.Component {
 }
 AddDeliveryAddress.propTypes = {
   onClick: PropTypes.func,
-  height: PropTypes.string,
-  placeholder: PropTypes.string,
   saveDefaultTextItem: PropTypes.string,
   selected: PropTypes.bool,
   onSaveData: PropTypes.func,
-  heading: PropTypes.func,
+  heading: PropTypes.string,
   home: PropTypes.string,
   office: PropTypes.string,
   other: PropTypes.string,
@@ -245,6 +239,8 @@ AddDeliveryAddress.propTypes = {
   clearAllValue: PropTypes.func,
   buttonText: PropTypes.string,
   options: PropTypes.string,
-  fullNmaeValue: PropTypes.string,
   titleValue: PropTypes.string
+};
+AddDeliveryAddress.defaultProps = {
+  heading: "Add address"
 };

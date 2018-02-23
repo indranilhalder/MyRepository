@@ -1,0 +1,33 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  border-bottom: 1px solid #ececec;
+}
+
+.titleAddress {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: semibold;
+  line-height: 22px;
+  text-align: left;
+}
+.titleDescription {
+  width: 100%;
+  height: auto;
+  line-height: 22px;
+  text-align: left;
+  font-family: regular;
+  font-size: 14px;
+  position: relative;
+  padding-right: 60px;
+}
+
+.checkCircle {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: 0px;
+  top: 0px;
+}

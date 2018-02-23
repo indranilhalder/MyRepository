@@ -1,5 +1,5 @@
 import React from "react";
-import CheckBox from "./CheckBox.js";
+import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./CheckboxAndText.css";
 import PropTypes from "prop-types";
 export default class CheckboxAndText extends React.Component {
