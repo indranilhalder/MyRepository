@@ -226,6 +226,7 @@ export function addProductToCartFailure(error) {
   };
 }
 export function addProductToCart(productDetails) {
+  console.log(productDetails);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToCartRequest());
     try {

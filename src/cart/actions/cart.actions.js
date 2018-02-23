@@ -150,8 +150,11 @@ export function userAddressFailure(error) {
 }
 
 export function getUserAddress() {
+  console.log("In actinos");
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
+    console.log("Comes in return ");
+    console.log(getState());
     dispatch(userAddressRequest());
     try {
       const result = await api.get(
@@ -162,12 +165,14 @@ export function getUserAddress() {
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
+      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
 
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
+      console.log(e.message);
       dispatch(userAddressFailure(e.message));
     }
   };
