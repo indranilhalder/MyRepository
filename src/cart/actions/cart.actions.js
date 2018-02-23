@@ -4,7 +4,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   GLOBAL_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  FAILURE
+  FAILURE,
+  CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
 
 export const USER_CART_PATH = "v2/mpl/users";
@@ -24,6 +25,10 @@ export const GET_USER_ADDRESS_FAILURE = "GET_USER_ADDRESS_FAILURE";
 export const ADD_USER_ADDRESS_REQUEST = "ADD_USER_ADDRESS_REQUEST";
 export const ADD_USER_ADDRESS_SUCCESS = "ADD_USER_ADDRESS_SUCCESS";
 export const ADD_USER_ADDRESS_FAILURE = "ADD_USER_ADDRESS_FAILURE";
+
+export const ADD_ADDRESS_TO_CART_REQUEST = "ADD_ADDRESS_TO_CART_REQUEST";
+export const ADD_ADDRESS_TO_CART_SUCCESS = "ADD_ADDRESS_TO_CART_SUCCESS";
+export const ADD_ADDRESS_TO_CART_FAILURE = "ADD_ADDRESS_TO_CART_FAILURE";
 
 export const NET_BANKING_DETAILS_REQUEST = "NET_BANKING_DETAILS_REQUEST";
 export const NET_BANKING_DETAILS_SUCCESS = "NET_BANKING_DETAILS_SUCCESS";
@@ -228,6 +233,56 @@ export function addUserAddress(userAddress) {
         throw new Error(`${resultJson.message}`);
       }
 
+      dispatch(userAddressSuccess(resultJson));
+    } catch (e) {
+      console.log(e.message);
+      dispatch(userAddressFailure(e.message));
+    }
+  };
+}
+
+export function addAddressToCartRequest(error) {
+  return {
+    type: ADD_ADDRESS_TO_CART_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addAddressToCartSuccess(userAddress) {
+  return {
+    type: ADD_ADDRESS_TO_CART_SUCCESS,
+    status: SUCCESS,
+    userAddress
+  };
+}
+
+export function addAddressToCartFailure(error) {
+  return {
+    type: ADD_ADDRESS_TO_CART_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function addAddressToCart(addressId) {
+  console.log(addressId);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  return async (dispatch, getState, { api }) => {
+    dispatch(userAddressRequest());
+    try {
+      let userId = getState().user.user.customerInfo.mobileNumber;
+      let access_token = JSON.parse(customerCookie).access_token;
+      let cartId = JSON.parse(cartDetails).code;
+      const result = await api.post(
+        `${USER_CART_PATH}/${userId}/addAddressToOrder?channel=mobile&access_token=${access_token}&addressId=${addressId}&cartId=${cartId}&removeExchangeFromCart=`
+      );
+      const resultJson = await result.json();
+      console.log(resultJson);
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      getCartDetails(userId, access_token, cartId);
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       console.log(e.message);

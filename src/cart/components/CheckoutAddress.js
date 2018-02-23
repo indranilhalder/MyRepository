@@ -19,7 +19,10 @@ export default class CheckoutAddress extends React.Component {
     console.log(this.state);
     this.props.addUserAddress(this.state);
   }
-
+  onSelectAddress(addressId) {
+    console.log(addressId);
+    this.props.addAddressToCart(addressId[0]);
+  }
   render() {
     console.log(this.props);
     return (
@@ -28,15 +31,16 @@ export default class CheckoutAddress extends React.Component {
           <ConfirmAddress
             address={this.props.cart.userAddress.addresses.map(address => {
               return {
-                addressTitle: address.addressType,
+                addressTitle: address.id,
                 addressDescription: `${address.line1} ${address.town} ${
                   address.city
                 }, ${address.state} ${address.postalCode}`
               };
             })}
+            onSelectAddress={addressId => this.onSelectAddress(addressId)}
           />
         )}
-        {!this.props.addressSet && (
+        {!this.props.cart.userAddress && (
           <AddDeliveryAddress
             {...this.state}
             onChange={val => this.onChange(val)}
@@ -46,7 +50,7 @@ export default class CheckoutAddress extends React.Component {
         {!this.props.deliveryModeSet && (
           <DummyTab number="2" title="Delivery Mode" />
         )}
-        {this.props.deliveryModeSet && (
+        {!this.props.deliveryModeSet && (
           <DeliveryModeSet
             productDelivery={[
               {

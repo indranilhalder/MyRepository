@@ -28,6 +28,7 @@ const cart = (
   },
   action
 ) => {
+  console.log(action);
   switch (action.type) {
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
