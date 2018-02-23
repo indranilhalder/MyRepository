@@ -3331,8 +3331,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3601,7 +3601,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3759,6 +3759,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				cartDataDetails.setCartAmount(priceWsPwaDTO);
 			}
 
+			//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
+			final String displayMsgFinal = mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
+
+			if (StringUtils.isNotEmpty(displayMsgFinal))
+			{
+				cartDataDetails.setPriceDisclaimerTextJwlry(displayMsgFinal);
+			}
 
 		}
 		catch (final Exception e)
@@ -3798,7 +3805,15 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				productData = productFacade.getProductForOptions(abstractOrderEntry.getProduct(),
 						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES));
 
-				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+
+				//SDI-4069:Unable to Buy More Than 1 qty for Same Size Ring starts
+				if (MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+				{
+					maximum_configured_quantiy = siteConfigService.getInt(
+							MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+				}
+
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 
 				if (StringUtils.isNotEmpty(abstractOrderEntry.getProduct().getName()))
@@ -4468,9 +4483,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	{
 		// YTODO Auto-generated method stub
 		final PriceWsPwaDTO priceWsPwaDTO = new PriceWsPwaDTO();
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+
 		if (null != cartModel.getSubtotal() && StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
 		{
-			final PriceData paybleAmount = createPriceCharge(cartModel.getSubtotal().toString());
+			final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
+					BigDecimal.valueOf(cartModel.getSubtotal().doubleValue()), currency);
 			if (null != paybleAmount)
 			{
 				priceWsPwaDTO.setPaybleAmount(paybleAmount);
@@ -4478,11 +4496,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		}
 
 		final Double cartTotalMrp = calculateCartTotalMrp(cartModel);
-		final PriceData bagTotal = createPriceCharge(cartTotalMrp.toString());
+		final PriceData bagTotal = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(cartTotalMrp.doubleValue()),
+				currency);
 		if (null != bagTotal)
 		{
 			priceWsPwaDTO.setBagTotal(bagTotal);
 		}
+
+		final double discount = cartTotalMrp.doubleValue() - cartModel.getSubtotal().doubleValue();
+		final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+		priceWsPwaDTO.setTotalDiscountAmount(totalDiscount);
 
 		return priceWsPwaDTO;
 	}
