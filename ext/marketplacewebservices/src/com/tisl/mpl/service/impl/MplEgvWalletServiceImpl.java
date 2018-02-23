@@ -15,6 +15,7 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
@@ -38,6 +39,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
@@ -98,7 +100,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			final Customer custInfo = new Customer();
 			custInfo.setEmail(currentCustomer.getOriginalUid());
 			custInfo.setEmployeeID(currentCustomer.getUid());
-			custInfo.setCorporateName("Tata Unistore Ltd");
+			custInfo.setCorporateName(configurationService.getConfiguration().getString("CorporateName"));
 
 			if (null != currentCustomer.getQcVerifyFirstName())
 			{
@@ -113,7 +115,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			{
 				custInfo.setPhoneNumber(currentCustomer.getQcVerifyMobileNo());
 			}
-
+			custInfo.setCorporateName("Tata Unistore Ltd");
 			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 			customerRegisterReq.setCustomer(custInfo);
 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
@@ -141,7 +143,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	 * @see com.tisl.mpl.service.MplEgvWalletService#verifyOtpAndCreateWallet(de.hybris.platform.core.model.user.CustomerModel, java.lang.String)
 	 */
 	@Override
-	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer, String otp)
+	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer,String otp,String firstName,String lastName,String mobileNumber)
 	{
 		EgvWalletCreateResponceWsDTO responce = new EgvWalletCreateResponceWsDTO();
 			if (null != otp && !otp.isEmpty())
@@ -157,9 +159,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				if (response.getOTPValid().booleanValue())
 				{
 				  if(customerWalletCreated) {
+
 					  CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 								.getCustomerWalletDetail().getWalletId());
 						UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
+						registerCustomerFacade.registerWalletMobileNumber(firstName,lastName,mobileNumber);//TPR-6272 parameter platformNumber passed
+
 						responce.setIsWalletCreated(true);
 						if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
 						{
@@ -172,11 +177,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						modelService.save(currentCustomer);
 						responce.setIsWalletOtpVerified(true);
 				  }else {
-					  
 						final QCCustomerRegisterResponse customerRegisterResponse = createWalletContainer(currentCustomer);
 						if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
 								&& customerRegisterResponse.getResponseCode().intValue() == 0)
 						{
+							registerCustomerFacade.registerWalletMobileNumber(firstName,lastName,mobileNumber);//TPR-6272 parameter platformNumber passed
+
 							CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 									.getCustomerWalletDetail().getWalletId());
 							UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
@@ -726,15 +732,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
 					return responce;
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
 			}else {
 				validateRequest(request);
 			}
 			if(null != customer) {
 				boolean isWalletOtpVerified = false ;
-				boolean isMobileNumberChanged = true;
-				boolean isNameChanged = true;
-			
+				boolean isMobileNumberChanged = true;			
 				if( null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					isWalletOtpVerified = true;
@@ -745,20 +751,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					isMobileNumberChanged = false;
 				}
 				
-				if( ( null != customer.getQcVerifyFirstName() && 
-						(customer.getQcVerifyFirstName().trim().equalsIgnoreCase(request.getFirstName())) )|| 
-						(  null != customer.getQcVerifyLastName() && 
-						(customer.getQcVerifyLastName().trim().equalsIgnoreCase(request.getLastName())) ))
-			{
-					isNameChanged = false;
-			}
-				
 				if( !isWalletCreated || !isWalletOtpVerified ) {
 					
 					if(isMobileNumberChanged) {
 						if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
 						{
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+						//	registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
 							mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 							//Set success flag
 							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -770,9 +768,6 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
 						}
 					}else {
-						if(isNameChanged){
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
-						}
 						mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 						//Set success flag
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);

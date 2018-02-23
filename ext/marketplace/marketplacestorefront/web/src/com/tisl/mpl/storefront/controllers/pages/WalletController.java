@@ -214,79 +214,9 @@ public class WalletController extends AbstractPageController
 			else
 			{
 				model.addAttribute("isOTPValidtion",Boolean.FALSE);
-				/*final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-				final Customer custInfo = new Customer();
-				custInfo.setEmail(currentCustomer.getOriginalUid());
-				custInfo.setEmployeeID(currentCustomer.getUid());
-				custInfo.setCorporateName("Tata Unistore Ltd");
-
-				if (null != currentCustomer.getFirstName())
-				{
-					custInfo.setFirstname(currentCustomer.getFirstName());
-				}
-				if (null != currentCustomer.getLastName())
-				{
-					custInfo.setLastName(currentCustomer.getLastName());
-				}
-
-				customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
-				customerRegisterReq.setCustomer(custInfo);
-				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getUid());
-				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
-						.createWalletContainer(customerRegisterReq);
-				if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
-				{
-					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-					custWalletDetail.setCustomer(currentCustomer);
-					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-
-					modelService.save(custWalletDetail);
-
-					currentCustomer.setCustomerWalletDetail(custWalletDetail);
-					currentCustomer.setIsWalletActivated(true);
-					modelService.save(currentCustomer);
-
-					GlobalMessages.addMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-							"text.cliqcash.use.wallet.active", null);
-
-					customerWalletDetailData = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-					if (null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() > 0)
-					{
-						balanceAmount = customerWalletDetailData.getWallet().getBalance();
-					}
-					final WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
-
-					if (null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 0)
-					{
-
-						walletTrasacationsListData1 = walletTrasacationsListData;
-					}
-
-				}
-				else if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 10545)
-				{
-					GlobalMessages.addErrorMessage(model, "text.cliq.cash.payment.wallet.disable.label");
-				}
-
-				else
-				{
-					
-					 * GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-					 * "text.cliqcash.use.wallet.fail", null);
-					 
-					setValidErrorCodeHandling(customerRegisterResponse.getResponseCode().intValue(), redirectAttributes);
-					System.out.println("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
-							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
-					LOG.error("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
-							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
-				}*/
 			}
 			boolean checkUserWalletStatus = true;
-			if (currentCustomer.getIsWalletActivated() != null)
-			{
+			
 				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
 				{
 					checkUserWalletStatus=true;
@@ -295,11 +225,7 @@ public class WalletController extends AbstractPageController
 				{
 			   	checkUserWalletStatus=false;
 				}
-			}
-			else
-			{
-				checkUserWalletStatus=false;
-			}
+			
 			if(!checkUserWalletStatus){
 				if(isEmailRequest){
 					model.addAttribute("orderCode", orderCode);
@@ -488,7 +414,6 @@ public class WalletController extends AbstractPageController
 	@ResponseBody
 	public String createOTP(@RequestParam(value = "mobileNumber") final String mobileNumber)
 	{
-		String isNewOTPCreated;
 		LOG.debug("Create  OTP For QC Verifaction");
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		final boolean isUsed = registerCustomerFacade.checkUniquenessOfMobileForWallet(mobileNumber);
@@ -496,8 +421,8 @@ public class WalletController extends AbstractPageController
 		{
 			return "isUsed";
 		}
-		isNewOTPCreated = mplWalletFacade.generateOTP(currentCustomer, mobileNumber);
-		return isNewOTPCreated;
+		mplWalletFacade.generateOTP(currentCustomer, mobileNumber);
+		return "success";
 	}
 
 

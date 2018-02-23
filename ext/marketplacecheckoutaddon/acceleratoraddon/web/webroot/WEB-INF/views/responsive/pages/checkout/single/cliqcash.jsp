@@ -279,7 +279,7 @@
 		
 	<script>
 	$(document).ready(function(){
-		var modelAttributeValue = '${isOTPValidtion}';
+		var modelAttributeValue = '${isCustomerWalletActive}';
 		  if(modelAttributeValue === 'false'){
 			  createWallet();
 		  }
@@ -426,8 +426,8 @@
 						$(".wcOTPError").text("OTP verification failed. Please try again");
 						$(".wcOTPError").show();
 					}
-					else if(response='EXPIRED'){
-						$(".wcOTPError").text("Your OTP is valid for 2 minutes only.");
+					else if(response=='EXPIRED'){
+						$(".wcOTPError").text("Your OTP is valid for 2 minutes only, please generate again.");
 						$(".wcOTPError").show();
 					}
 					else if(response=='success'){

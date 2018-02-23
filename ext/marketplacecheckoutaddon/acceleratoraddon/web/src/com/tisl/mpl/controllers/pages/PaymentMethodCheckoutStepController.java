@@ -7518,7 +7518,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 	}
 
-
+/**
+ * 
+ * @param value
+ * @return
+ * @throws UnsupportedEncodingException
+ * @throws JSONException
+ * 
+ * Ajax to Select/De-select CliqCash
+ */
 	@SuppressWarnings("finally")
 	@RequestMapping(value = "/useWalletForPayment", method = RequestMethod.POST)
 	@RequireHardLogIn
@@ -7553,22 +7561,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					if (isCartVoucherPresent.booleanValue())
 					{
-						mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
+						//Removing any Cart/Bank Voucher before checking Split And Cliqcash mode
+						mplCouponFacade.removeLastCartCoupon(cart); 
 					}
-
-					// CliqCash only as Payment mode
+					// CliqCash only as Payment mode--bank voucher will not apply
 					totalCartAmt = cart.getTotalPrice().doubleValue();
 					Double WalletAmt = cart.getTotalWalletAmount();
-
+					boolean marketingVoucherPaymentRest = false;
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
 					{						
-						// check CliqCash as Payment mode for Marketing Voucher with Payment restriction
+						// check CliqCash as Payment mode for Marketing Voucher with Payment restriction and removing it.
 						final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
 								getVoucherService().getAppliedVouchers(cart));
 						if (CollectionUtils.isNotEmpty(voucherList))
 						{
-							//							if (Double.parseDouble("" + WalletAmt1) >= Double.parseDouble("" + totalCartAmt))
-							//							{
 							for (final DiscountModel discount : voucherList)
 							{
 								if (discount != null && discount instanceof VoucherModel)//null check added for discount as per IQA review
@@ -7582,34 +7588,62 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										{
 											if (restriction instanceof PaymentModeRestrictionModel)
 											{
-												//Release the coupon
+												//Release marketing coupon
 												mplCouponFacade.releaseVoucher(voucherObj.getVoucherCode(), cart, null);
 												//Recalculate cart after releasing coupon
 												mplCouponFacade.recalculateCartForCoupon(cart, null);
 												jsonObject.put("errorMessageForVoucher", voucherObj.getVoucherCode()+" Coupon Code is not applicable with only CLiQ Cash as Payment Mode");
 												totalCartAmt = cart.getTotalPrice().doubleValue();
 												WalletAmt = cart.getTotalWalletAmount();
+												marketingVoucherPaymentRest = true;
 												break;
 											}
 										}
 									}
 								}
-								//}
 							}
 						}
-						VoucherDiscountData data1 = mplCouponFacade.populateCartVoucherData(null, cart, false, true, "");
-						getSessionService().setAttribute("WalletTotal", "" + totalCartAmt);
+						
+						 VoucherDiscountData data1 = mplCouponFacade.populateCartVoucherData(null, cart, false, false, ""); // Calculate Values
+						 totalCartAmt = cart.getTotalPrice().doubleValue();
+						 WalletAmt = cart.getTotalWalletAmount();
+						if (marketingVoucherPaymentRest && !(Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt)))
+						{
+							//Change to Split case when cart dose not contain vouchers.
+							double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
+							juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
+							getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+							getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
+							getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
+							jsonObject.put("disableJsMode", false);
+							jsonObject.put("juspayAmt", juspayTotalAmt);
+							jsonObject.put("cliqCashAmt", WalletAmt);
+							jsonObject.put("totalCartAmt", totalCartAmt);
+							jsonObject.put("cartCouponCode", cartCouponCode);
+							jsonObject.put("isCartVoucherPresent", false);
+							jsonObject.put("totalDiscount",data1.getTotalDiscount().getFormattedValue());
+							jsonObject.put("bankCheckBox", false);
+							cart.setSplitModeInfo("Split");
+							jsonObject.put("globalCliqCash", false);
+							jsonObject.put("apportionMode", "Split");
+							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt));
+							getModelService().save(cart);
+							getModelService().refresh(cart);
+							return jsonObject;
+						}
+						
+						//VoucherDiscountData data1 = mplCouponFacade.populateCartVoucherData(null, cart, false, true, "");
+						getSessionService().setAttribute("WalletTotal", "" + WalletAmt); //----------------- change 2
 						getSessionService().setAttribute("getCliqCashMode", value);
 						getSessionService().setAttribute("juspayTotalAmt", "" + 0);
 						jsonObject.put("disableJsMode", true);
 						cart.setSplitModeInfo("CliqCash");
 						jsonObject.put("apportionMode", "CliqCash");
 						jsonObject.put("cliqCashAmt", WalletAmt);
-						jsonObject.put("totalCartAmt", totalCartAmt);
+						jsonObject.put("totalCartAmt", totalCartAmt);  //------------------------- change 1
 						jsonObject.put("bankCheckBox", false);
 						jsonObject.put("cartCouponCode", cartCouponCode);
 						jsonObject.put("isCartVoucherPresent", false);
-						//jsonObject.put("errorMessageForVoucher", "NA");
 						jsonObject.put("totalDiscount", data1.getTotalDiscount().getFormattedValue());
 						cart.setPayableNonWalletAmount(Double.valueOf(0.0d));
 						getModelService().save(cart);
@@ -7618,12 +7652,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
-						// Split Mode for Payment
+						//final Tuple2<Boolean, String> cartCouponObjSplit = isCartVoucherPresent(cart.getDiscounts());
+						//isCartVoucherPresent = cartCouponObjSplit.getFirst();
+						//Split mode for payment
 						boolean applyStatus = false;
 						if (isCartVoucherPresent.booleanValue())
 						{
-							// Split Mode with Bank voucher check
-
+							//check for delivery cost present before re-apply bank coupon 
+							double delCharges= null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0.0d;
+							double bankCoupenwithoutDelCharges = totalCartAmt -delCharges;
+							double juspayTotal = bankCoupenwithoutDelCharges - WalletAmt.doubleValue();
+							
+							if(juspayTotal > 0.0d){
+							//Re-apply bank voucher
 							final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
 							cart.setSplitModeInfo("Split");
@@ -7655,6 +7696,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								totalCartAmt = cart.getTotalPrice().doubleValue();
 								double juspayTotalAmt2 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 
+								//check for negative value
 								if(juspayTotalAmt2 > 0){
 									juspayTotalAmt2 = Double.parseDouble(df.format(juspayTotalAmt2));
 									cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt2));								
@@ -7678,8 +7720,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									return jsonObject;
 								}
 								else{
-
-									// Check for Negative Total when bank coupon is applied
+									// remove bank coupon, Negative Total while applying bank coupon 
 									if (isCartVoucherPresent.booleanValue())
 									{
 										mplCouponFacade.removeLastCartCoupon(cart); // Removing any Cart/Bank Voucher
@@ -7709,9 +7750,40 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									}								
 								}
 							}
+						}else{
+							// Else block for handling negative value changing from cliqcash mode to split mode removing bank coupon 
+							
+							VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, false, false, ""); // Calculate Values
+							totalCartAmt = cart.getTotalPrice().doubleValue();
+							WalletAmt = cart.getTotalWalletAmount();
+							double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
+							juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
+							getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+							getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
+							getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
+							jsonObject.put("disableJsMode", false);
+							jsonObject.put("juspayAmt", juspayTotalAmt);
+							jsonObject.put("cliqCashAmt", WalletAmt);
+							jsonObject.put("totalCartAmt", totalCartAmt);
+							jsonObject.put("cartCouponCode", cartCouponCode);
+							jsonObject.put("isCartVoucherPresent", false);
+							jsonObject.put("totalDiscount",data.getTotalDiscount().getFormattedValue());
+							jsonObject.put("bankCheckBox", false);
+							cart.setSplitModeInfo("Split");
+							jsonObject.put("globalCliqCash", false);
+							jsonObject.put("apportionMode", "Split");
+							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt));
+							getModelService().save(cart);
+							getModelService().refresh(cart);
+							return jsonObject;
+						  }
 						}
 						else
 						{
+							//Split case when cart dose not contain vouchers.
+							VoucherDiscountData data = mplCouponFacade.populateCartVoucherData(null, cart, false, false, ""); // Calculate Values
+							totalCartAmt = cart.getTotalPrice().doubleValue();
+							WalletAmt = cart.getTotalWalletAmount();
 							double juspayTotalAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 							juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
 							getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
@@ -7723,7 +7795,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							jsonObject.put("totalCartAmt", totalCartAmt);
 							jsonObject.put("cartCouponCode", cartCouponCode);
 							jsonObject.put("isCartVoucherPresent", isCartVoucherPresent);
-							jsonObject.put("totalDiscount", 0);
+							jsonObject.put("totalDiscount",data.getTotalDiscount().getFormattedValue());
 							jsonObject.put("bankCheckBox", applyStatus);
 							cart.setSplitModeInfo("Split");
 							jsonObject.put("globalCliqCash", false);
@@ -7772,62 +7844,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return jsonObject;
 	}
 
-	@RequestMapping(value = "/setWalletForPayment", method = RequestMethod.POST)
-	@RequireHardLogIn
-	public @ResponseBody JSONObject setWalletForPayment(@RequestParam("walletMode") final String value)
-			throws UnsupportedEncodingException, JSONException
-	{
-		final CartModel cart = getCartService().getSessionCart();
-		final JSONObject jsonObject = new JSONObject();
-		jsonObject.put("disableJsMode", false);
-		try
-		{
-			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
-			{
-				if (null != cart.getTotalWalletAmount())
-				{
-					final Double WalletAmt = cart.getTotalWalletAmount();
-					final double totalCartAmt = cart.getTotalPrice().doubleValue();
-					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
-					{
-						cart.setPayableWalletAmount(Double.valueOf(totalCartAmt));
-						cart.setSplitModeInfo("CliqCash");
-						getModelService().save(cart);
-						getModelService().refresh(cart);
-						jsonObject.put("disableJsMode", true);
-					}
-					else
-					{
-						jsonObject.put("disableJsMode", false);
-						cart.setPayableWalletAmount(WalletAmt);
-						cart.setSplitModeInfo("Split");
-						getModelService().save(cart);
-						getModelService().refresh(cart);
-					}
-				}
-			}
-			else
-			{
-				jsonObject.put("disableJsMode", false);
-				cart.setSplitModeInfo("Juspay");
-				cart.setPayableWalletAmount(Double.valueOf(0));
-				getModelService().save(cart);
-				getModelService().refresh(cart);
-			}
-			return jsonObject;
-
-		}
-		catch (final Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		return jsonObject;
-	}
-
-
 	/**
 	 * @param request
 	 * @throws JSONException
+	 * 
+	 * Ajax to load CliqCash Info on Page Load
 	 */
 	@RequestMapping(value = "/useWalletDetail", method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -7974,6 +7995,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/**
 	 * @param model
+	 * 
+	 * Place order using only CliqCash as Payment mode
 	 */
 	@RequestMapping(value = "/createWalletOrder", method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -8174,6 +8197,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				try
 				{
+		
 					final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 					qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
@@ -8191,7 +8215,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
 						orderToBeUpdated.setSplitModeInfo("juspay");
 						getModelService().save(orderToBeUpdated);
-						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
 
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -8224,7 +8247,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						LOG.error("Some Error in QC Service");
 						System.out.println("Some Error in QC Service");
 						return "QC PAYMENT SUCCESS EXCEPTION";
-						/// Return In JS Ajax Call  And Execute Refund call refund...........
+						/// Return In JS Ajax Call  And Execute Refund call refund
 					}
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
@@ -8242,7 +8265,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			orderId = "QC_CONN_ERROR";
-			//to be check
 			//return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -8337,7 +8359,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final Customer custInfo = new Customer();
 				custInfo.setEmail(currentCustomer.getOriginalUid());
 				custInfo.setEmployeeID(currentCustomer.getUid());
-				custInfo.setCorporateName("Tata Unistore Ltd");
+				custInfo.setCorporateName(getConfigurationService().getConfiguration().getString("CorporateName"));
 
 				if (null != currentCustomer.getFirstName())
 				{

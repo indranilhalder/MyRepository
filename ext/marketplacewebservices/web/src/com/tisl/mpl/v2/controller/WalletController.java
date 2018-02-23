@@ -50,7 +50,6 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
-import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
@@ -371,103 +370,103 @@ public class WalletController
 		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
 		ApplyCliqCashWsDto applyCliqCashWsDto = null;
-//		if (null != cartGuid)
-//		{
-//			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-//		}
 		try
-		{
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			if (null != currentCustomer
-					&& (null == currentCustomer.getIsWalletActivated() || !currentCustomer.getIsWalletActivated().booleanValue()))
 			{
-				redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
-				redeemCliqVoucherWsDTO.setIsWalletCreated(false);
-				if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
-				{
-					redeemCliqVoucherWsDTO.setIsWalletOtpVerified(true);
-				}
-				WalletCreateData walletCreateData =mplWalletFacade.getWalletCreateData();
-				if(null != walletCreateData) {
-					redeemCliqVoucherWsDTO.setFirstName(walletCreateData.getQcVerifyFirstName());
-					redeemCliqVoucherWsDTO.setLastName(walletCreateData.getQcVerifyLastName());
-					redeemCliqVoucherWsDTO.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
-				}
-				redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				return redeemCliqVoucherWsDTO;
-			}
-			else
-			{
-				LOG.debug("Calling To QC For Adding money to Wallet");
-				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
-				if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
-				{
-					final TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
-					if (null != response.getWallet() && null != response.getWallet().getBalance())
-					{
-						final BigDecimal walletAmount = new BigDecimal(response.getWallet().getBalance().doubleValue());
-						final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
-						final long valueLong = walletAmount.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
-						final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
-						StringBuilder stbND = new StringBuilder(20);
-						if (null != currency && null != currency.getSymbol())
-						{
-							stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
-						}
-						redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
-						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
-								MarketplacecommerceservicesConstants.INR);
-						if (null != priceData)
-						{
-							totalCliqCashBalance.setCurrencyIso(priceData.getCurrencyIso());
-							totalCliqCashBalance.setDoubleValue(priceData.getDoubleValue());
-							totalCliqCashBalance.setFormattedValue(priceData.getFormattedValue());
-							totalCliqCashBalance.setPriceType(priceData.getPriceType());
-							totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-							totalCliqCashBalance.setValue(priceData.getValue());
-							redeemCliqVoucherWsDTO.setTotalCliqCashBalance(totalCliqCashBalance);
-							redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
-							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
-							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							if (null == orderModel)
-							{
-								cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
+				boolean isWalletOtpVerified = false;
+				boolean isWalletCreated = false;
 
-							}
-							else if (null != cartGuid)
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+				if (null != currentCustomer)
+				{
+					if ((null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()))
+					{
+						isWalletCreated = true;
+						redeemCliqVoucherWsDTO.setIsWalletCreated(true);
+					}else {
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5026);
+					}
+					if (null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue())
+					{
+						isWalletOtpVerified = true;
+						redeemCliqVoucherWsDTO.setIsWalletOtpVerified(true);
+					}else {
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5027);
+					}
+				}
+				if(isWalletOtpVerified && isWalletCreated )
+				{
+					LOG.debug("Calling To QC For Adding money to Wallet");
+					final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
+					if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
+					{
+						final TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
+						if (null != response.getWallet() && null != response.getWallet().getBalance())
+						{
+							final BigDecimal walletAmount = new BigDecimal(response.getWallet().getBalance().doubleValue());
+							final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+							final long valueLong = walletAmount.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+							final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+							StringBuilder stbND = new StringBuilder(20);
+							if (null != currency && null != currency.getSymbol())
 							{
-								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+								stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
 							}
-							if (null != applyCliqCashWsDto)
+							redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
+							final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
+									MarketplacecommerceservicesConstants.INR);
+							if (null != priceData)
 							{
-								redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
+								totalCliqCashBalance.setCurrencyIso(priceData.getCurrencyIso());
+								totalCliqCashBalance.setDoubleValue(priceData.getDoubleValue());
+								totalCliqCashBalance.setFormattedValue(priceData.getFormattedValue());
+								totalCliqCashBalance.setPriceType(priceData.getPriceType());
+								totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+								totalCliqCashBalance.setValue(priceData.getValue());
+								redeemCliqVoucherWsDTO.setTotalCliqCashBalance(totalCliqCashBalance);
+								redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
+								redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
+								redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+								if (null == orderModel)
+								{
+									cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+									applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
+
+								}
+								else if (null != cartGuid)
+								{
+									applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+								}
+								if (null != applyCliqCashWsDto)
+								{
+									redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
+								}
 							}
+							else
+							{
+								redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+								redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+							}
+
+
 						}
 						else
 						{
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 							redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
 						}
-
-
 					}
 					else
 					{
 						redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+						if (null != response)
+						{
+							redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+						}
 					}
-				}
-				else
-				{
-					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-					if (null != response)
-					{
-						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
-					}
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5026);
 				}
 			}
-		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
 			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
@@ -482,7 +481,7 @@ public class WalletController
 			LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
 		}
 		return redeemCliqVoucherWsDTO;
-	}
+}
 
 
 	@Secured(
@@ -819,7 +818,8 @@ public class WalletController
 		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 		@RequestMapping(value = MarketplacewebservicesConstants.VERIFY_WALLET_OTP, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 		@ResponseBody
-		public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam final String otp)
+		public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam(required = true) final String otp , @RequestParam(required = false) final String firstName,
+				@RequestParam(required = false) final String lastName,@RequestParam(required = false) final String mobileNumber)
 				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 	{
@@ -830,7 +830,7 @@ public class WalletController
 			if (null != otp && !otp.isEmpty())
 			{
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp);
+					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp,firstName,lastName,mobileNumber);
 					if(null != responce) {
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						responce.setMessage(MarketplacecommerceservicesConstants.WALLET_ACTIVATED_MESSAGE);

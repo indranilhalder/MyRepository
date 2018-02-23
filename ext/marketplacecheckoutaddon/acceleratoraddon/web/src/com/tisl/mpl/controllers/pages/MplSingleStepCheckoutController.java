@@ -501,16 +501,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				{
 					checkUserWalletStatus = false;
 				}*/
-				if (currentCustomer.getIsWalletActivated() != null)
+			
+				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
 				{
-					if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
-					{
-						checkUserWalletStatus=true;
-					}
-					else
-					{
-						checkUserWalletStatus=false;
-					}
+					checkUserWalletStatus=true;
 				}
 				else
 				{
