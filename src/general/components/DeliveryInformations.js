@@ -2,9 +2,12 @@ import React from "react";
 import IconWithHeader from "./IconWithHeader";
 import styles from "./DeliveryInformations.css";
 import UnderLinedButton from "./UnderLinedButton";
+import CheckBox from "./CheckBox";
 import PropTypes from "prop-types";
+import { Icon } from "xelpmoc-core";
 import ExpressImage from "./img/expressDelivery.svg";
 import HomeImage from "./img/homeDelivery.svg";
+import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 const EXPRESS = "express-delivery";
 const COLLECT = "click-and-collect";
@@ -13,6 +16,16 @@ export default class DeliveryInformation extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
+    }
+  }
+  arrowClick() {
+    if (this.props.arrowClick) {
+      this.props.arrowClick();
+    }
+  }
+  onPiq() {
+    if (this.props.onPiq) {
+      this.props.onPiq();
     }
   }
   render() {
@@ -24,6 +37,16 @@ export default class DeliveryInformation extends React.Component {
     }
     return (
       <div className={styles.base}>
+        {this.props.type !== COLLECT && (
+          <div className={styles.checkboxHolder}>
+            <CheckBox selected={this.props.selected} />
+          </div>
+        )}
+        {this.props.type === COLLECT && (
+          <div className={styles.arrowHolder} onClick={() => this.arrowClick()}>
+            <Icon image={arrowIcon} size={20} />
+          </div>
+        )}
         <IconWithHeader image={iconImage} header={this.props.header}>
           {this.props.placedTime && (
             <div className={styles.placeTime}>{this.props.placedTime}</div>
@@ -48,6 +71,19 @@ export default class DeliveryInformation extends React.Component {
                 </span>
               </div>
             ))}
+          {this.props.type === COLLECT && (
+            <div className={styles.underLineButtonHolder}>
+              <span className={styles.buttonHolderPiq}>
+                <UnderLinedButton
+                  size="14px"
+                  fontFamily="regular"
+                  color="#ff1744"
+                  label="Check CliQ n PiQ option"
+                  onClick={() => this.onPiq()}
+                />
+              </span>
+            </div>
+          )}
         </IconWithHeader>
       </div>
     );
@@ -60,5 +96,7 @@ DeliveryInformation.propTypes = {
   type: PropTypes.string,
   color: PropTypes.string,
   deliveryOptions: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  arrowClick: PropTypes.func,
+  onPiq: PropTypes.func
 };
