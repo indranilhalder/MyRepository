@@ -88,6 +88,11 @@
 	
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
+										
+							<sec:authorize ifAllGranted="ROLE_ADMIN">
+	    					   <li><a href="<c:url value="/my-account/imageUpload"/>">
+	    					   <spring:theme code="header.flyout.image-upload" /></a></li>
+      						</sec:authorize>
 	
 					<%-- 	<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
 										code="header.flyout.review" /></a></li>  --%> <!-- commented as per sprint 13 requirement -->
