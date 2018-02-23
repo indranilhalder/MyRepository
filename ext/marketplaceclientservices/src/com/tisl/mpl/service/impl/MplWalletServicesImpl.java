@@ -153,18 +153,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +  MarketplaceclientservicesConstants.QC_INITIALIZATION_URL).build());
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
-
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
@@ -211,6 +210,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		//	final Client client = Client.create();
 		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
+		//LOG.debug("Successfully ********************** .................." + registerCustomerRequest.getCustomer().getCorporateName());
 		ClientResponse response = null;
 		WebResource webResource = null;
 		QCCustomerRegisterResponse custResponse = new QCCustomerRegisterResponse();
@@ -222,17 +222,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL).build());
 			
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(registerCustomerRequest);
@@ -260,7 +260,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 			{
 				final String output = response.getEntity(String.class);
 				custResponse = objectMapper.readValue(output, QCCustomerRegisterResponse.class);
-				LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getWallet().getWalletNumber());
+				//LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getWallet().getWalletNumber());
+				LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getErrorCode());
+				LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getErrorDescription());
 				return custResponse;
 			}
 		}
@@ -296,17 +298,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.PURCHASE_EGV_CARD).build());
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(purchaseEGVRequest);
@@ -413,17 +415,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId + MarketplaceclientservicesConstants.GET_QC_BALANCE).build());
 			response = webResource.type(MediaType.APPLICATION_JSON)
@@ -486,17 +488,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId + MarketplaceclientservicesConstants.QC_WALLET_REDEMED).build());
 			final ObjectMapper objectMapper = new ObjectMapper();
@@ -555,17 +557,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_CANCEL_REDEMED).build());
 
@@ -643,17 +645,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
@@ -714,17 +716,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//TransactionId unique
 			// InvoiceNo Unique
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client.resource(
 					UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL+ walletId +MarketplaceclientservicesConstants.QC_WALLET_CANCEL_LOAD).build());
 			final ObjectMapper objectMapper = new ObjectMapper();
@@ -787,17 +789,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId).build());
 
@@ -868,17 +870,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			requestBody = objectMapper.writeValueAsString(addToCardWallet);
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+ MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId + MarketplaceclientservicesConstants.QC_WALLET_QC_CARD).build());
@@ -941,17 +943,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + cardNumber + MarketplaceclientservicesConstants.QC_WALLET_QC_BALANCE).build());
 
@@ -1020,17 +1022,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +MarketplaceclientservicesConstants.QC_WALLET_URL+ walletCardNumber + MarketplaceclientservicesConstants.QC_WALLET_LIST_TRANSACTIONS).build());
@@ -1118,17 +1120,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 		client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 		final String forwardEntityID = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+				.getString("ForwardingEntityId");
 		final String forwardEntityPassword = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+				.getString("ForwardingEntityPassword");
 		final String terminalID = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+				.getString("TerminalId");
 		final String userName = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.USERNAME);
+				.getString("Username");
 		final String password = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.PASSWORD);
+				.getString("Password");
 		final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+				.getString("IsForwardingEntityExists");
 		try
 		{
 			final String requestBody = objectMapper.writeValueAsString(request);
@@ -1188,19 +1190,18 @@ public class MplWalletServicesImpl implements MplWalletServices
 		WebResource webResource = null;
 		client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 		client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
-
 		final String forwardEntityID = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+				.getString("ForwardingEntityId");
 		final String forwardEntityPassword = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+				.getString("ForwardingEntityPassword");
 		final String terminalID = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+				.getString("TerminalId");
 		final String userName = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.USERNAME);
+				.getString("Username");
 		final String password = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.PASSWORD);
+				.getString("Password");
 		final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-				.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+				.getString("IsForwardingEntityExists");
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -1324,17 +1325,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			final String requestBody = objectMapper.writeValueAsString(creditRequest);
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_WALEET_ACTIVATE).build());
@@ -1390,19 +1391,18 @@ public class MplWalletServicesImpl implements MplWalletServices
 			final String requestBody = objectMapper.writeValueAsString(creditRequest);
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
-
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_WALLET_DEACTIVATE).build());
 
@@ -1456,17 +1456,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 			webResource = client
 					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL+walletId+MarketplaceclientservicesConstants.QC_WALLET_CUSTOMER).build());
 

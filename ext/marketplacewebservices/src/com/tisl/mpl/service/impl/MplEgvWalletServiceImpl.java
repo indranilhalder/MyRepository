@@ -98,7 +98,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			final Customer custInfo = new Customer();
 			custInfo.setEmail(currentCustomer.getOriginalUid());
 			custInfo.setEmployeeID(currentCustomer.getUid());
-			custInfo.setCorporateName("Tata Unistore Ltd");
+			custInfo.setCorporateName(configurationService.getConfiguration().getString("CorporateName"));
 
 			if (null != currentCustomer.getQcVerifyFirstName())
 			{

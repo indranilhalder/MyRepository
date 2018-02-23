@@ -279,7 +279,7 @@
 		
 	<script>
 	$(document).ready(function(){
-		var modelAttributeValue = '${isOTPValidtion}';
+		var modelAttributeValue = '${isCustomerWalletActive}';
 		  if(modelAttributeValue === 'false'){
 			  createWallet();
 		  }

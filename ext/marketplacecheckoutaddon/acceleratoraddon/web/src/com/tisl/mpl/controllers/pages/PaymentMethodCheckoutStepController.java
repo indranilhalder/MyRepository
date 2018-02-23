@@ -8359,7 +8359,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final Customer custInfo = new Customer();
 				custInfo.setEmail(currentCustomer.getOriginalUid());
 				custInfo.setEmployeeID(currentCustomer.getUid());
-				custInfo.setCorporateName("Tata Unistore Ltd");
+				custInfo.setCorporateName(getConfigurationService().getConfiguration().getString("CorporateName"));
 
 				if (null != currentCustomer.getFirstName())
 				{
