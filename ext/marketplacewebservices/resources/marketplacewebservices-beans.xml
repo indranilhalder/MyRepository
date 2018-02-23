@@ -368,6 +368,7 @@
 		<property name="mobileNumber" type="String" />
 		<property name="nickName" type="String" />
 		<property name="InvitationDetails" type="com.tisl.mpl.data.InvitationDetails" />
+		<property name="fav_ProductCount" type="int" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyMobileWsDTO"
@@ -740,6 +741,11 @@
 		<!-- TPR-6117 -->
 		<property name="maxQuantityAllowed" type="String" />
 		<!--<property name="priceDisclaimerTextJwlry" type="String" /> -->
+		
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="priceValue" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="availableStockCount" type="Integer" />
+		<property name="isOutOfStock" type="Boolean" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -750,6 +756,8 @@
 		<!-- SDI-4197-->
 		<property name="priority" type="int" />
 		<!-- SDI-4197-->
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="charge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.WebSerResponseWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="code" type="String" />
@@ -879,6 +887,8 @@
 		<!-- TPR-3893 ends here -->
 		<!-- TPR-6980 -->
 		<property name="priceDisclaimerTextJwlry" type="String" />
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -908,7 +918,7 @@
 
 
 
-		<!-- PotentialPromotions -->
+		<!-- PotentialPromotions -->		
 	</bean>
 	<!--End of Get Cart details -->
 	<!-- Registration Mobile web service -->
@@ -1114,6 +1124,8 @@
 		<!-- TPR-6869: Start & end -->
 		<property name="classificationList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ClassificationDTOLister>" />
+		<property name="averageRating" type="Double" />
+		<property name="numberOfReviews" type="Integer" />
 	</bean>
 
 	<!-- TPR-6869 : Start -->
@@ -1327,6 +1339,8 @@
 		<property name="inchesWaistSize" type="String" />
 		<property name="inchesBeltLength" type="String" />
 		<!-- This is added by SAP For Accessories END :::: -->
+		<!-- for new ui/ux sizeguide api -->
+		<property name="priority" type="String" />
 	</bean>
 
 	<!-- About Us -->
@@ -3738,11 +3752,12 @@
 		<property name="category_id" type="String"></property>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.MplBrandInfoData">
+	<!-- <bean class="com.tisl.mpl.wsdto.MplBrandInfoData">
 		<property name="brandDetails" type="String"></property>
 		<property name="brandId" type="String"></property>
 		<property name="brandName" type="String"></property>
-	</bean>
+		
+	</bean> -->
 	
 	<bean class="com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData"  extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="allOOStock" type="Boolean" />
@@ -3783,8 +3798,8 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryModeData>"></property>
 		<property name="galleryImagesList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.GalleryImageData>"></property>
-		<property name="brandInfo"
-			type="com.tisl.mpl.wsdto.MplBrandInfoData" />
+		<!-- <property name="brandInfo"
+			type="com.tisl.mpl.wsdto.MplBrandInfoData" /> -->
 		<property name="showSizeGuide" type="Boolean" />
 		<property name="details" type="java.util.Map&lt;String,String>"></property>
 		<property name="certificationMapFrJwlry" type="java.util.List&lt;String>" />
@@ -3792,6 +3807,8 @@
 		<property name="variantOptions"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.VariantOptionMobileData>"></property>
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
+		<property name="brandName" type="String"></property>
+		<property name="webURL" type="String"></property>
 	</bean>
 	
 	
@@ -3816,4 +3833,28 @@
    </bean>
    
 	<!-- NU-50 end -->
+	
+	<!-- added for get user cart details api -->
+	<bean class="com.tisl.mpl.wsdto.PriceWsPwaDTO">
+		<property name="mrpPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="sellingPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="bagTotal"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="paybleAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalDiscountAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ColorLinkData">
+		<property name = "selected" type="boolean"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.SizeLinkData">
+		<property name="productCode" type="String"></property>
+	</bean>
+	
 </beans>
+

@@ -24,6 +24,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
@@ -34,6 +35,7 @@ import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplCustomerReviewService;
 
 
 
@@ -61,6 +63,9 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
+
+	@Autowired
+	private MplCustomerReviewService mplCustomerReviewService;
 
 	/**
 	 * @return the configurationService
@@ -147,6 +152,28 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 
 		}
 
+		productData.setAverageRating(productModel.getAverageRating());
+		if (null != productModel.getAverageRating() && productModel.getAverageRating().doubleValue() > 0.0)
+		{
+			final List<List<Object>> list = mplCustomerReviewService.getGroupByRatingsForProd(productModel);
+			if (list.isEmpty())
+			{
+				LOG.debug("No reviews forund for this product hence list is empty");
+			}
+			else
+			{
+				populateGroupedRatings(productData, list);
+			}
+
+		}
+		else
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("No reviews found for this product hence average rating is 0");
+			}
+		}
+
 		if (null != productModel.getMrp())
 		{
 			productData.setProductMRP(formPriceData(productModel.getMrp()));
@@ -190,6 +217,41 @@ public class CustomProductBasicPopulator<SOURCE extends ProductModel, TARGET ext
 				.getLuxIndicator().getCode().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY)))
 		{
 			productData.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
+		}
+	}
+
+	private void populateGroupedRatings(final ProductData productData, final List<List<Object>> list)
+	{
+		for (final List<Object> row : list)
+		{
+			final Double rating = (Double) row.get(0);
+			final Integer ratingCount = (Integer) row.get(1);
+			final Float ratingPercent = (Float) row.get(2);
+			if (rating.doubleValue() == 1.0)
+			{
+				productData.setMplOneStar(ratingCount);
+				productData.setMplOneStarFill(ratingPercent);
+			}
+			else if (rating.doubleValue() == 2.0)
+			{
+				productData.setMplTwoStar(ratingCount);
+				productData.setMplTwoStarFill(ratingPercent);
+			}
+			else if (rating.doubleValue() == 3.0)
+			{
+				productData.setMplThreeStar(ratingCount);
+				productData.setMplThreeStarFill(ratingPercent);
+			}
+			else if (rating.doubleValue() == 4.0)
+			{
+				productData.setMplFourStar(ratingCount);
+				productData.setMplFourStarFill(ratingPercent);
+			}
+			else if (rating.doubleValue() == 5.0)
+			{
+				productData.setMplFiveStar(ratingCount);
+				productData.setMplFiveStarFill(ratingPercent);
+			}
 		}
 	}
 

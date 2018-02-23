@@ -77,8 +77,8 @@ public interface MplCartWebService
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions;
 
 	/**
 	 * Service to get product details
@@ -95,7 +95,7 @@ public interface MplCartWebService
 	public List<GetWishListProductWsDTO> productDetails(final AbstractOrderModel abstractOrderModel,
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetRequired, final List<PinCodeResponseData> pincodeList, final String pincode)
-					throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * pincode response from OMS at cart level
@@ -121,15 +121,18 @@ public interface MplCartWebService
 
 	public PriceData calculateTotalDiscount(final CartModel cart);
 
+	public Double calculateCartTotalMrp(final AbstractOrderModel abstractOrderModel);
+
 	/**
 	 * Service to get cart details with POS
 	 *
 	 * @param cartId
 	 * @param addressListDTO
 	 * @param pincode
+	 * @param isPwa
 	 * @return CartDataDetailsWsDTO
 	 */
-	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode, boolean isPwa);
 
 	/**
 	 * Service to get cart details with with all summary using cartModel
@@ -166,12 +169,12 @@ public interface MplCartWebService
 	 * @throws InvalidCartException
 	 */
 	WebSerResponseWsDTO addProductToCartwithExchange(final String productCode, final String cartId, final String quantity,
-			String USSID, boolean addedToCartWl, String channel, String exchangeParam)
-					throws InvalidCartException, CommerceCartModificationException;
+			String USSID, boolean addedToCartWl, String channel, String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * Service to merge carts
-	 * 
+	 *
 	 * @param fromAnonymousCartGuid
 	 * @param toUserCartGuid
 	 * @return CartRestorationData
@@ -180,5 +183,15 @@ public interface MplCartWebService
 	 */
 	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
 			throws CommerceCartRestorationException, CommerceCartMergingException;
+
+	/**
+	 * Service to get cart details for pwa:NU-46
+	 *
+	 * @param cartId
+	 * @param pincode
+	 * @param channel
+	 * @return CartDataDetailsWsDTO
+	 */
+	CartDataDetailsWsDTO getCartDetailsPwa(final String cartId, final String pincode, String channel);
 
 }

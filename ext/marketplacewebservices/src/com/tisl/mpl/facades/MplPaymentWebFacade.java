@@ -149,7 +149,8 @@ public interface MplPaymentWebFacade
 	 * @return CartDataDetailsWsDTO
 	 */
 	public CartDataDetailsWsDTO displayOrderSummary(final String userId, final String cartId, final String cartGuId,
-			final String pincode);
+			final String pincode, final boolean isPwa);
+
 
 	/**
 	 * @param order

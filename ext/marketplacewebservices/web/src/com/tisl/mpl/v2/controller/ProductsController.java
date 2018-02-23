@@ -56,7 +56,10 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.promotions.util.Tuple3;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
@@ -107,6 +110,7 @@ import com.tisl.mpl.facade.compare.MplProductCompareFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.ProductCompareData;
 import com.tisl.mpl.formatters.WsDateFormatter;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
 import com.tisl.mpl.product.data.ReviewDataList;
 import com.tisl.mpl.product.data.SuggestionDataList;
 import com.tisl.mpl.queues.data.ProductExpressUpdateElementData;
@@ -204,6 +208,37 @@ public class ProductsController extends BaseController
 	private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "mplCategoryFacade")
 	private MplCategoryFacade mplCategoryFacade;
+
+	@Resource(name = "productService")
+	private MplProductService productService;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
+
+
+	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
+	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
+	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
+
+	@Resource
+	private UserService userService;
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
 
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
@@ -510,6 +545,37 @@ public class ProductsController extends BaseController
 	 *
 	 * @return product's review list
 	 */
+	@RequestMapping(value = "/{productCode}/users/{userId}/reviews", method = RequestMethod.GET)
+	@ResponseBody
+	public ReviewListWsDTO getPaginatedProductReviews(
+			@PathVariable final String productCode,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false, defaultValue = "0") final int page,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false, defaultValue = MarketplacecommerceservicesConstants.BY_DATE) final String sort,
+			@RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false, defaultValue = "desc") final String orderBy)
+	{
+		final ReviewDataList reviewDataList = new ReviewDataList();
+		if (pageSize == null)
+		{
+			pageSize = Integer.valueOf(configurationService.getConfiguration().getString(
+					"ratingAndReview.webservice.getReviews.pageSize", "10"));
+		}
+		final PageableData pageableData = createPageableData(page, pageSize.intValue(), sort, ShowMode.Page);
+		final Tuple3<List<ReviewData>, Long, Integer> tuple3 = mplProductWebService.getReviews(productCode, pageableData, orderBy);
+		reviewDataList.setReviews(tuple3.getFirst());
+		reviewDataList.setPageNumber(Integer.valueOf(page));
+		reviewDataList.setPageSize(pageSize);
+		reviewDataList.setTotalNoOfReviews(tuple3.getSecond());
+		reviewDataList.setTotalNoOfPages(tuple3.getThird());
+		return dataMapper.map(reviewDataList, ReviewListWsDTO.class, fields);
+	}
+
+	/**
+	 * Returns the reviews for a product with a given product code.
+	 *
+	 * @return product's review list
+	 */
 	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.GET)
 	@ResponseBody
 	public ReviewListWsDTO getProductReviews(@PathVariable final String productCode,
@@ -517,7 +583,7 @@ public class ProductsController extends BaseController
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final ReviewDataList reviewDataList = new ReviewDataList();
-		reviewDataList.setReviews(productFacade.getReviews(productCode, maxCount));
+		reviewDataList.setReviews(mplProductWebService.getReviews(productCode, maxCount));
 		return dataMapper.map(reviewDataList, ReviewListWsDTO.class, fields);
 	}
 
@@ -533,19 +599,54 @@ public class ProductsController extends BaseController
 	 * @throws WebserviceValidationException
 	 *            When given parameters are incorrect
 	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	public ReviewWsDTO createReview(@PathVariable final String productCode,
+	public ReviewWsDTO createEditReview(@PathVariable final String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
 			throws WebserviceValidationException
 	{
 		final ReviewData reviewData = new ReviewData();
 		httpRequestReviewDataPopulator.populate(request, reviewData);
+		final String reviewId = request.getParameter("id");
 		validate(reviewData, "reviewData", reviewValidator);
-		final ReviewData reviewDataRet = productFacade.postReview(productCode, reviewData);
+		ReviewData reviewDataRet = null;
+		if (StringUtils.isNotBlank(reviewId))
+		{
+			reviewDataRet = productService.editDeleteReviewEntry(getUserService().getCurrentUser(),
+					productService.getProductForCode(productCode), reviewId, true, reviewData);
+		}
+		else
+		{
+			reviewDataRet = productFacade.postReview(productCode, reviewData);
+		}
 		final ReviewWsDTO dto = dataMapper.map(reviewDataRet, ReviewWsDTO.class, fields);
 		return dto;
+	}
+
+	/**
+	 * Delete's a Review for a logged in Customer
+	 *
+	 *
+	 * @return void
+	 * @throws WebserviceValidationException
+	 *            When given parameters are incorrect
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{productCode}/{reviewId}/deleteReview", method = RequestMethod.GET)
+	@ResponseBody
+	public void deleteReview(@PathVariable final String productCode, @PathVariable final String reviewId,
+			final HttpServletRequest request) throws WebserviceValidationException
+	{
+		if (StringUtils.isNotBlank(reviewId))
+		{
+			productService.editDeleteReviewEntry(getUserService().getCurrentUser(), productService.getProductForCode(productCode),
+					reviewId, false, null);
+		}
+
 	}
 
 	/**
@@ -794,12 +895,12 @@ public class ProductsController extends BaseController
 	 */
 	@RequestMapping(value = "/{productCode}/sizeGuide", method = RequestMethod.GET)
 	@ResponseBody
-	public SizeGuideWsDTO getSizeGuide(@PathVariable final String productCode)
+	public SizeGuideWsDTO getSizeGuide(@PathVariable final String productCode, @RequestParam(required = false) final Boolean isPwa)
 	{
 		SizeGuideWsDTO sizeGuideDataList = new SizeGuideWsDTO();
 		try
 		{
-			sizeGuideDataList = sizeGuideFacade.getWSProductSizeguide(productCode);
+			sizeGuideDataList = sizeGuideFacade.getWSProductSizeguide(productCode, isPwa);
 			if (!(sizeGuideDataList != null))
 			{
 				throw new RequestParameterException(MarketplacecommerceservicesConstants.B9205);

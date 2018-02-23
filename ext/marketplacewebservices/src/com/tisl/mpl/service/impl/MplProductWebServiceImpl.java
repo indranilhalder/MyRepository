@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentM
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
+import de.hybris.platform.category.impl.DefaultCategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.classification.ClassificationService;
 import de.hybris.platform.classification.features.Feature;
@@ -33,16 +34,22 @@ import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
+import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
-import de.hybris.platform.core.PK;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -80,7 +87,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -97,11 +103,13 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplCustomerReviewService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
@@ -120,7 +128,6 @@ import com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.GiftProductMobileData;
 import com.tisl.mpl.wsdto.KnowMoreDTO;
-import com.tisl.mpl.wsdto.MplBrandInfoData;
 import com.tisl.mpl.wsdto.MplCategoryHierarchydata;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.MplNewSellerInformationMobileData;
@@ -168,7 +175,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplProductFacade mplProductFacade;
 
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
-
+	private MplCustomerReviewService customerReviewService;
 
 
 
@@ -189,6 +196,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Resource
 	private SiteConfigService siteConfigService;
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+
+	private Converter<CustomerReviewModel, ReviewData> customerReviewConverter;
+
 
 	//sonar fix
 	/*
@@ -228,6 +238,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String MPL_EXCHANGE_HIERARCHY_SEPERATOR = ",";
 	private static final String Home_Delivery = "Home Delivery";
 	private static final String Standard_Delivery = "Standard Delivery";
+
+	@Resource(name = "defaultCategoryModelUrlResolver")
+	private ExtDefaultCategoryModelUrlResolver defaultCategoryModelUrlResolver;
+
+	private DefaultCategoryService categoryService;
 
 	//added for pdp new ui end
 	/**
@@ -412,7 +427,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER,
+						ProductOption.REVIEW));
+
 
 				//Added for TPR-6869
 
@@ -1157,6 +1174,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			//TPR-978
 
+			setRatingAndReview(productDetailMobile, productData);
 
 		}
 
@@ -1177,6 +1195,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return productDetailMobile;
+	}
+
+	/**
+	 * @param productDetailMobile
+	 * @param productData
+	 */
+	private void setRatingAndReview(final ProductDetailMobileWsData productDetailMobile, final ProductData productData)
+	{
+		productDetailMobile.setAverageRating(productData.getAverageRating());
+		productDetailMobile.setNumberOfReviews(productData.getNumberOfReviews());
 	}
 
 	/**
@@ -2507,6 +2535,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
+					if (StringUtils.isNotEmpty(variantData.getCode())
+							&& StringUtils.equalsIgnoreCase(productData.getCode(), variantData.getCode()))
+					{
+						colorLinkData.setSelected(true);
+					}
 					variantMobileData.setColorlink(colorLinkData);
 					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
@@ -2543,6 +2576,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								{
 									sizeLinkData.setIsAvailable(false);
 								}
+							}
+							if (StringUtils.isNotEmpty(variantData.getCode()))
+							{
+								sizeLinkData.setProductCode(variantData.getCode());
 							}
 
 						}
@@ -3661,11 +3698,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				final List<MplCategoryHierarchydata> list = getcategoryHierarchyForPwa(productModel);
 				productDetailMobileNew.setCategoryHierarchy(list);
 
-				final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
-				if (null != mplBrandInfo)
-				{
-					productDetailMobileNew.setBrandInfo(mplBrandInfo);
-				}
+				//final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
+				//				if (null != mplBrandInfo)
+				//				{
+				//					productDetailMobileNew.setBrandInfo(mplBrandInfo);
+				//				}
 				final boolean showSizeGuide = showSizeGuidePwa(productModel);
 				productDetailMobileNew.setShowSizeGuide(Boolean.valueOf(showSizeGuide));
 
@@ -3883,6 +3920,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setOtherSellers(framedOtherSellerDataList);
 				}
+				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
+				{
+					productDetailMobileNew.setBrandName(productData.getBrand().getBrandname());
+				}
+
+				final String webUrl = prepareBrandWebUrlDataPwa(productData);
+
+				if (StringUtils.isNotEmpty(webUrl))
+				{
+					productDetailMobileNew.setWebURL(webUrl);
+				}
 			}
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
@@ -3905,6 +3953,27 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return productDetailMobileNew;
+	}
+
+	/**
+	 * @param productData
+	 * @return
+	 */
+	private String prepareBrandWebUrlDataPwa(final ProductData productData)
+	{
+		// YTODO Auto-generated method stub
+		String webUrl = null;
+		if (CollectionUtils.isNotEmpty(productData.getCategories()))
+		{
+			for (final CategoryData category : productData.getCategories())
+			{
+				if (category.getCode().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+				{
+					webUrl = category.getUrl();
+				}
+			}
+		}
+		return webUrl;
 	}
 
 	/**
@@ -4194,64 +4263,22 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	}
 
 	/**
-	 * @param code
-	 * @return
-	 */
-	private MplBrandInfoData getBrandInfoPwa(final ProductModel productModel)
-	{
-		// YTODO Auto-generated method stub
-		final MplBrandInfoData mplBrandInfo = new MplBrandInfoData();
-		try
-		{
-			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
-
-			if (CollectionUtils.isNotEmpty(superCategoryDetails))
-			{
-				for (final CategoryModel category : superCategoryDetails)
-				{
-					if (category.getCode().startsWith("MBH"))
-					{
-						mplBrandInfo.setBrandId(category.getCode());
-						break;
-					}
-				}
-			}
-
-			setBrandDetails(mplBrandInfo, productModel.getPk());
-
-		}
-		catch (final Exception exception)
-		{
-			LOG.error("Error during population of BrandInfo >> for Product >>" + productModel.getCode() + "Error>>" + exception);
-		}
-		return mplBrandInfo;
-	}
-
-	/**
-	 * @param mplBrandInfo
-	 * @param pk
-	 */
-	private void setBrandDetails(final MplBrandInfoData mplBrandInfo, final PK pk)
-	{
-		// YTODO Auto-generated method stub
-		//	final BrandModel brandModel = brandDao.brandInfoPwa(mplBrandInfo.getBrandId().replaceFirst("MBH", "").trim());
-		final BrandModel brandModel = brandDao.brandInfoPwa(pk);
-		mplBrandInfo.setBrandDetails(brandModel.getDescription());
-		mplBrandInfo.setBrandName(brandModel.getName());
-	}
-
-	/**
 	 * @param formattedValue
 	 * @return
 	 */
 	private PriceData createPriceSign(final PriceData value, final CurrencyModel currency)
 	{
 		// YTODO Auto-generated method stub
+		final PriceData finalValue = new PriceData();
+
+		finalValue.setDoubleValue(value.getDoubleValue());
+		finalValue.setFormattedValue(value.getDoubleValue().toString());
 
 		final String currencySymbol = currency.getSymbol();
-		value.setCurrencySymbol(currencySymbol);
+		finalValue.setCurrencySymbol(currencySymbol);
+		finalValue.setCurrencyIso(value.getCurrencyIso());
 
-		return value;
+		return finalValue;
 	}
 
 	/**
@@ -4383,5 +4410,102 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setClassificationService(final ClassificationService classificationService)
 	{
 		this.classificationService = classificationService;
+	}
+
+	@Override
+	public List<ReviewData> getReviews(final String productCode, final Integer numberOfReviews)
+	{
+		final ProductModel product = getProductService().getProductForCode(productCode);
+		final List<CustomerReviewModel> reviews = getCustomerReviewService().getReviewsForProductAndLanguage(product,
+				getCommonI18NService().getCurrentLanguage());
+
+		if (numberOfReviews == null)
+		{
+			return Converters.convertAll(reviews, getCustomerReviewConverter());
+		}
+		else if (numberOfReviews.intValue() < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		else
+		{
+			return Converters.convertAll(reviews.subList(0, Math.min(numberOfReviews.intValue(), reviews.size())),
+					getCustomerReviewConverter());
+		}
+	}
+
+	@Override
+	public Tuple3<List<ReviewData>, Long, Integer> getReviews(final String productCode, final PageableData pageableData,
+			final String orderBy)
+	{
+		final ProductModel product = getProductService().getProductForCode(productCode);
+		final SearchPageData<CustomerReviewModel> reviews = getCustomerReviewService().getReviewsForProductAndLanguage(product,
+				getCommonI18NService().getCurrentLanguage(), pageableData, orderBy);
+
+		List<ReviewData> reviewDataList = null;
+		Tuple3<List<ReviewData>, Long, Integer> tuple3 = null;
+		if (reviews != null && CollectionUtils.isNotEmpty(reviews.getResults()))
+		{
+			reviewDataList = Converters.convertAll(reviews.getResults(), getCustomerReviewConverter());
+			tuple3 = new Tuple3(reviewDataList, Long.valueOf(reviews.getPagination().getTotalNumberOfResults()),
+					Integer.valueOf(reviews.getPagination().getNumberOfPages()));
+		}
+		else
+		{
+			reviewDataList = new ArrayList<ReviewData>();
+			tuple3 = new Tuple3(reviewDataList, Long.valueOf(0), Integer.valueOf(0));
+		}
+		return tuple3;
+	}
+
+	/**
+	 * @return the customerReviewConverter
+	 */
+	public Converter<CustomerReviewModel, ReviewData> getCustomerReviewConverter()
+	{
+		return customerReviewConverter;
+	}
+
+	/**
+	 * @param customerReviewConverter
+	 *           the customerReviewConverter to set
+	 */
+	public void setCustomerReviewConverter(final Converter<CustomerReviewModel, ReviewData> customerReviewConverter)
+	{
+		this.customerReviewConverter = customerReviewConverter;
+	}
+
+	/**
+	 * @return the customerReviewService
+	 */
+	public MplCustomerReviewService getCustomerReviewService()
+	{
+		return customerReviewService;
+	}
+
+	/**
+	 * @param customerReviewService
+	 *           the customerReviewService to set
+	 */
+	public void setCustomerReviewService(final MplCustomerReviewService customerReviewService)
+	{
+		this.customerReviewService = customerReviewService;
+	}
+
+	/**
+	 * @return the categoryService
+	 */
+	public DefaultCategoryService getCategoryService()
+	{
+		return categoryService;
+	}
+
+	/**
+	 * @param categoryService
+	 *           the categoryService to set
+	 */
+	public void setCategoryService(final DefaultCategoryService categoryService)
+	{
+		this.categoryService = categoryService;
 	}
 }

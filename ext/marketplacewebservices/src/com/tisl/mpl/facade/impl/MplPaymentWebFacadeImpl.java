@@ -6,9 +6,11 @@ package com.tisl.mpl.facade.impl;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -21,6 +23,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -62,6 +65,7 @@ import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.MplUserResultWsDto;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 
 
 /**
@@ -101,7 +105,9 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private Converter<AddressModel, AddressData> customAddressConverter;
 	private Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter;
 
-
+	@Autowired
+	private CommonI18NService commonI18NService;
+	private static final String INR = "INR";
 	@Resource
 	private MplPaymentService mplPaymentService;
 
@@ -141,13 +147,14 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(
-					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-					.withMerchantId(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
 			//Set the card Token into DeleteCardRequest
@@ -159,8 +166,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			getOrderResponse = juspayService.getOrderStatus(orderStatusRequest);
 
 			LOG.debug("Response from juspay Web::::::::::::::::::::::::::::" + getOrderResponse);
-			updateCardDetails = getMplPaymentWebService().updateCardTransactionDetails(getOrderResponse, paymentMode, cartID,
-					userId);
+			updateCardDetails = getMplPaymentWebService()
+					.updateCardTransactionDetails(getOrderResponse, paymentMode, cartID, userId);
 
 		}
 		/*
@@ -248,13 +255,14 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			//creating PaymentService of Juspay
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(
-					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-					.withMerchantId(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			final DeleteCardRequest deleteCardRequest = new DeleteCardRequest();
 			//Set the card Token into DeleteCardRequest
@@ -335,9 +343,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 					{
 						for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
 						{
-							if (cartEntryModel != null
-									&& cartEntryModel.getGiveAway() != null & !cartEntryModel.getGiveAway().booleanValue()
-									&& cartEntryModel.getSelectedUSSID() != null)
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
 							{
 								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
 								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
@@ -536,9 +543,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 					{
 						for (final AbstractOrderEntryModel cartEntryModel : order.getEntries())
 						{
-							if (cartEntryModel != null
-									&& cartEntryModel.getGiveAway() != null & !cartEntryModel.getGiveAway().booleanValue()
-									&& cartEntryModel.getSelectedUSSID() != null)
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
 							{
 								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
 								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
@@ -777,9 +783,10 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	 */
 	@Override
 	public CartDataDetailsWsDTO displayOrderSummary(final String userId, final String cartId, final String cartGuId,
-			final String pincode)
+			final String pincode, final boolean isPwa)
 	{
 		CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
+		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		OrderModel orderModel = null;
 		CartModel cartModel = null;
 		if (StringUtils.isNotEmpty(cartGuId))
@@ -795,6 +802,20 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			{
 				cartDetailsData = mplCartWebService.displayOrderSummary(pincode, cartModel, cartDetailsData);
 				cartDetailsData.setCartGuid(cartModel.getGuid());
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
+					//
+					final PriceData totalMrp = createPriceCharge(mrp.toString());
+					pricePwa.setBagTotal(totalMrp);
+					final PriceData payableAmount = createPriceCharge(cartDetailsData.getTotalPrice());
+					pricePwa.setPaybleAmount(payableAmount);
+					final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					cartDetailsData.setCartAmount(pricePwa);
+
+				}
 				cartDetailsData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 			else
@@ -806,6 +827,20 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			cartDetailsData = mplCartWebService.displayOrderSummary(pincode, orderModel, cartDetailsData);
 			cartDetailsData.setCartGuid(cartGuId);
+			if (isPwa)
+			{
+				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+				//
+				final PriceData totalMrp = createPriceCharge(mrp.toString());
+				pricePwa.setBagTotal(totalMrp);
+				final PriceData payableAmount = createPriceCharge(cartDetailsData.getTotalPrice());
+				pricePwa.setPaybleAmount(payableAmount);
+				final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+				final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
+				pricePwa.setTotalDiscountAmount(totalDiscount);
+				cartDetailsData.setCartAmount(pricePwa);
+
+			}
 			cartDetailsData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 		}
 		return cartDetailsData;
@@ -1132,5 +1167,19 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public void setNotificationFacade(final NotificationFacade notificationFacade)
 	{
 		this.notificationFacade = notificationFacade;
+	}
+
+	private PriceData createPriceCharge(final String cost)
+	{
+		// YTODO Auto-generated method stub
+		final PriceData priceData = new PriceData();
+		priceData.setFormattedValue(cost);
+		priceData.setDoubleValue(Double.valueOf(cost));
+
+		final CurrencyModel currency = commonI18NService.getCurrency(INR);
+		priceData.setCurrencyIso(currency.getIsocode());
+		priceData.setCurrencySymbol(currency.getSymbol());
+
+		return priceData;
 	}
 }

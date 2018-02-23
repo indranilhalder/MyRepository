@@ -1784,6 +1784,7 @@
 		<property name="productDao" ref="productDao"/>
 		<property name="unitDao" ref="unitDao"/>
 		<property name="priceService" ref="priceService"/>
+		<property name="customerReviewConverter" ref="customerReviewConverter"/>
 	</bean>
 	
 	<!-- TISPRD-1631 Changes End (Extending Product Service) -->
@@ -2511,5 +2512,13 @@
 	<bean id="mplFollowedBrandDao" class="com.tisl.mpl.marketplacecommerceservices.daos.brand.impl.MplFollowedBrandDaoImpl" >
     </bean>
    <!--  NU-50 end -->
+
+	<alias alias="mplCustomerReviewService" name="mplCustomerReviewService"/>
+	<bean id="mplCustomerReviewService" class="com.tisl.mpl.marketplacecommerceservices.services.product.impl.MplCustomerReviewServiceImpl" parent="customerReviewService">
+		<property name="mplCustomerReviewDao" ref="mplCustomerReviewDao"/>
+	</bean>
+		
+	<bean id="mplCustomerReviewDao" class="com.tisl.mpl.marketplacecommerceservices.daos.product.impl.MplCustomerReviewDaoImpl" parent="customerReviewDao"/>
+
 </beans>
 

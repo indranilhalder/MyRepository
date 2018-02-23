@@ -304,14 +304,19 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
 				//NU-30
 				newCustomer.setOtpVerified(Boolean.TRUE);
-				if (StringUtils.isNotEmpty(registerData.getEmailId()))
-				{
-					registerData.setLogin(registerData.getEmailId());
-				}
-				else
-				{
-					registerData.setLogin(registerData.getMobilenumber());
-				}
+				//				if (StringUtils.isNotEmpty((registerData.getLogin()))) // CHECKING IF uid ALREADY SET
+				//				{
+				//					if (StringUtils.isNotEmpty(registerData.getEmailId()) && !registerData.getLogin().contains("@"))
+				//					{
+				//						registerData.setLogin(registerData.getEmailId());
+				//					}
+				//					else if()
+				//					{
+				//						registerData.setLogin(registerData.getMobilenumber());
+				//					}
+				//				}
+
+
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
@@ -340,7 +345,10 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
 					newCustomer.setMobileNumber(registerData.getMobilenumber());
 				}
-
+				if (StringUtils.isNotEmpty(registerData.getEmailId()))
+				{
+					newCustomer.setOriginalUid(registerData.getEmailId());
+				}
 				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId(),
 						platformNumber);
 				/*
@@ -359,7 +367,6 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
 
 	/**
 	 * @description this method is used to check uniqueness og email id

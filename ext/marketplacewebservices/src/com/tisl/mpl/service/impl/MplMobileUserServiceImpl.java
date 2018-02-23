@@ -1337,4 +1337,24 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		return result;
 	}
 
+	/**
+	 * NU-51
+	 */
+	@Override
+	public boolean validateOtpWithoutExpiryTime(final String mobileNumber, final String otp, final OTPTypeEnum enumType)
+	{
+		final OTPResponseData otpResponse = otpGenericService.otpValidationWithoutExpiryTime(mobileNumber, mobileNumber, otp,
+				enumType);
+
+		if (null != otpResponse && null != otpResponse.getInvalidErrorMessage()
+				&& otpResponse.getInvalidErrorMessage().equalsIgnoreCase("VALID"))
+		{
+			LOG.debug("Otp response fetched is ::::::::::::" + otpResponse.getInvalidErrorMessage());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

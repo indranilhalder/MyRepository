@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.brand.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
-import de.hybris.platform.core.PK;
 import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -13,7 +12,6 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import java.util.List;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
@@ -179,7 +177,7 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao#checkEmailIdForluxury(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -221,29 +219,6 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		final List<PriorityBrandsModel> listOfData = flexibleSearchService.<PriorityBrandsModel> search(query).getResult();
 
 		return listOfData;
-
-	}
-
-	//added for pdp new ui start
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao#brandInfoPwa(java.lang.String)
-	 */
-	@Override
-	public BrandModel brandInfoPwa(final PK pk)
-	{
-		final String queryString = //
-		"SELECT {" + BrandModel.PK + "}" //
-				+ FROM + BrandModel._TYPECODE + "} "//
-				+ "WHERE" + "{" + BrandModel.PRODUCTSOURCE + "}=?PK";
-
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("PK", pk);
-		final BrandModel data = flexibleSearchService.<BrandModel> search(query).getResult().get(0);
-
-		return data;
 
 	}
 
