@@ -17,7 +17,7 @@ export default class DeliveryAddressSet extends React.Component {
       >
         <div className={styles.base}>
           <div className={styles.deliveryAddressSetText}>
-            <span class={styles.home}>Home</span>
+            <span class={styles.home}>{this.props.addressType}</span>
             <span>{this.props.address}</span>
           </div>
         </div>
@@ -27,5 +27,6 @@ export default class DeliveryAddressSet extends React.Component {
 }
 DeliveryAddressSet.propTypes = {
   onClick: PropTypes.func,
-  address: PropTypes.string
+  address: PropTypes.string,
+  addressType: PropTypes.string
 };

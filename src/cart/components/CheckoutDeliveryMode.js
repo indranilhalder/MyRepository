@@ -1,6 +1,8 @@
 import React from "react";
 import CheckoutFrame from "./CheckoutFrame";
-import DeliveryModeSet from "./DeliveryModeSet";
+import CartItem from "./CartItem";
+import DummyTab from "./DummyTab";
+import DeliveryAddressSet from "./DeliveryAddressSet";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -34,20 +36,36 @@ export default class extends React.Component {
     }
   }
   render() {
+    const selectedAddress = this.props.addressDetailsList.filter(val => {
+      return val.defaultAddress;
+    });
     return (
       <CheckoutFrame>
-        <DeliveryModeSet
-          productDelivery={[
-            {
-              productName: "Apple iPhone 7 upgraded vrson with gorila glass",
-              deliveryWay: " Express Shipping"
-            },
-            {
-              productName: "Apple iPhone 7 upgraded vrson with gorila glass",
-              deliveryWay: "Free home delivery"
-            }
-          ]}
+        <DeliveryAddressSet
+          selectedAddress={selectedAddress.line1}
+          addressType={selectedAddress.addressType}
         />
+        {this.props.products &&
+          this.props.products.map((val, i) => {
+            return (
+              <CartItem
+                key={i}
+                productImage={val.imageURL}
+                productDetails={val.description}
+                productName={val.productName}
+                price={val.priceValue.sellingPrice.formattedValue}
+                deliveryInformation={val.elligibleDeliveryMode}
+                deliverTime={val.elligibleDeliveryMode[0].desc}
+                option={[
+                  {
+                    value: val.qtySelectedByUser,
+                    label: val.qtySelectedByUser
+                  }
+                ]}
+              />
+            );
+          })}
+        <DummyTab title="Payment Method" indexNumber="3" />
       </CheckoutFrame>
     );
   }
