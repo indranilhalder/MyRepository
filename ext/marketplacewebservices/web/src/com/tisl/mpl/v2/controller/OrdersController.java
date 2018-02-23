@@ -152,7 +152,6 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 /**
@@ -267,8 +266,7 @@ public class OrdersController extends BaseCommerceController
 	@Autowired
 	private PriceDataFactory priceDataFactory;
 
-	@Autowired
-	private MplWalletFacade mplWalletFacade;
+
 
 	/**
 	 * @return the mplSellerInformationService
