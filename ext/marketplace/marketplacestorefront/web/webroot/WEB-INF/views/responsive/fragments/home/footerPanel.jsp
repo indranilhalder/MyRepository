@@ -133,64 +133,80 @@
 	        }); 
      }
 		
-		if(typeof _satellite !="undefined"){
-			   _satellite.track('news_letter_sign_up');
-			 }
-		<!-- TPR - 667 ends --->
+		
+	if (typeof(_satellite) != "undefined") {
+			/*  _satellite.track('news_letter_sign_up'); */
+			setTimeout(function() {
+				_satellite.track('news_letter_sign_up');
+			}, 1500);
+		}
+		<!--
+		TPR - 667
+		ends - -->
 		var mail = $("#mailtext").val();
 
 		if (mail == "") {
 
-			$("#error_message").css({"display":"block"});
-            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
+			$("#error_message").css({
+				"display" : "block"
+			});
+			document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
 			return false;
 
 		} else {
-			
-			 var regex =/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
-			 if(!regex.test(mail))
-			 {
 
-				$("#error_message").css({"display":"block"});
-	            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
-	            return false;
+			var regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+			if (!regex.test(mail)) {
+
+				$("#error_message").css({
+					"display" : "block"
+				});
+				document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
+				return false;
 			}
 
-			$.ajax({
-				url : ACC.config.encodedContextPath
-						+ "/newsLetterSubscriptionEmail?email=" + mail,
-				type : "GET",
-				dataType : "JSON",
-				success : function(data) {
+			$
+					.ajax({
+						url : ACC.config.encodedContextPath
+								+ "/newsLetterSubscriptionEmail?email=" + mail,
+						type : "GET",
+						dataType : "JSON",
+						success : function(data) {
 
-					if (data == "fail") {
-						
-						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>You are already subscribed to NewsLetter!</font>";
-						return false;
+							if (data == "fail") {
 
-					} else if (data == "success") {
-						
-						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Thanks for signing up. We'll keep you updated with our newsletters.</font>";//TISSTRT-1599 message changed
-			          //TPR-667 START
-			            /* utag.link({
-							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
-						}); */
-			          	//TPR-667 END
-						return true;
-					}
-					
-					else if(data == "mailFormatError"){
-						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
-						return false;
-					}
-				},
-				error : function(data) {
-					alert("Oops something went wrong!!!");
-				}
-			});
+								$("#error_message").css({
+									"display" : "block"
+								});
+								document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>You are already subscribed to NewsLetter!</font>";
+								return false;
+
+							} else if (data == "success") {
+
+								$("#error_message").css({
+									"display" : "block"
+								});
+								document.getElementById("error_message").innerHTML = "<font color='#60a119'>Thanks for signing up. We'll keep you updated with our newsletters.</font>";//TISSTRT-1599 message changed
+								//TPR-667 START
+								/* utag.link({
+									"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+								}); */
+								//TPR-667 END
+								return true;
+							}
+
+							else if (data == "mailFormatError") {
+								$("#error_message").css({
+									"display" : "block"
+								});
+								document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
+								return false;
+							}
+						},
+						error : function(data) {
+							alert("Oops something went wrong!!!");
+						}
+					});
 		}
 
 		//$("#success_emailid").css('display','block');
