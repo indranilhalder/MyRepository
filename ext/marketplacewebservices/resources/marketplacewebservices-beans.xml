@@ -3722,10 +3722,10 @@
 	
 	<bean class="com.tisl.mpl.wsdto.SellerInformationMobileData">
 		<property name="specialPriceSeller" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
-		<property name="MrpPriceSeller" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="MrpSeller" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.MplNewSellerInformationMobileData">
+	<!-- <bean class="com.tisl.mpl.wsdto.MplNewSellerInformationMobileData">
 		<property name="USSID" type="String"></property>
 		<property name="availableStock" type="String"></property>
 		<property name="fullfillmentType" type="String"></property>
@@ -3745,7 +3745,7 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="eligibleDeliveryModes"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryModeData>"></property>
-	</bean>
+	</bean> -->
 	
 	<bean class="com.tisl.mpl.wsdto.MplCategoryHierarchydata">
 		<property name="category_name" type="String"></property>
@@ -3782,7 +3782,7 @@
 		<property name="productListingId" type="String"></property>
 		<property name="productName" type="String"></property>
 		<property name="otherSellers"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.MplNewSellerInformationMobileData>"></property>
+			type="java.util.List&lt;com.tisl.mpl.wsdto.SellerInformationMobileData>"></property>
 		<property name="categoryHierarchy"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.MplCategoryHierarchydata>"></property>
 		<property name="sellerAssociationstatus" type="String" />
@@ -3808,7 +3808,30 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.VariantOptionMobileData>"></property>
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
 		<property name="brandName" type="String"></property>
-		<property name="webURL" type="String"></property>
+		<property name="brandURL" type="String"></property>
+		<property name="knowMore"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.KnowMoreDTO>"></property>
+		<property name="brandInfo" type="String"></property>
+		<property name="rootCategory" type="String"></property>
+		<property name="potentialPromotions" type="com.tisl.mpl.wsdto.PromotionMobileData"></property>
+		<property name="productOfferMsg" type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />
+		<property name="l3code" type="String"></property>
+		<property name="l3name" type="String"></property>
+		<property name="linkUrls"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ExchangeLinkUrl>" />
+		<property name="luxIndicator" type="String" />
+		<property name="priceBreakUpDetailsMap"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.PriceBreakUpDto>" />
+		<property name="priceDisclaimerTextPDP" type="String" />
+		<property name="showPriceBrkUpPDP" type="String" />
+		<property name="returnAndRefund"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.RefundReturnDTO>"></property>
+		<property name="isSizeOrLength" type="String" />
+		<property name="customizationInfoText" type="String" />
+		<property name="buyingGuideUrl" type="String" />
+		<property name="averageRating" type="Double" />
+		<property name="numberOfReviews" type="Integer" />
+		<property name="styleNote" type="String"></property>
 	</bean>
 	
 	

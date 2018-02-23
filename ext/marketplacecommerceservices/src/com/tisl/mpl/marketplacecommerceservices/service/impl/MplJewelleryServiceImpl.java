@@ -3,19 +3,23 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.JewellerySellerDetailsModel;
-import de.hybris.platform.core.model.JwlryRevSealInfoModel;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+
+import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 
 
 /**
@@ -28,9 +32,12 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 	@Resource(name = "mplJewelleryDao")
 	private MplJewelleryDao mplJewelleryDao;
 
+	@Resource(name = "buyBoxService")
+	private BuyBoxService buyBoxService;
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getJewelleryUssid(java.lang.String)
 	 */
 	@Override
@@ -43,7 +50,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getJewelleryInfoByUssid(java.lang.String)
 	 */
@@ -75,7 +82,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getPanCardStatus(java.lang.String)
 	 */
 	//CKD:TPR-3809
@@ -87,7 +94,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getSellerMsgForRetRefTab(java.lang.String)
 	 */
@@ -100,7 +107,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getSealInfo(java.lang.String)
 	 */
 	@Override
@@ -120,7 +127,7 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getAllWeightVariantByPussid(java.lang.String)
 	 */
@@ -132,4 +139,39 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 	}
 
 
+	@Override
+	public String checkIfWeightVariantJewl(final String productCode)
+	{
+		String jewelleryVariant = MarketplacecommerceservicesConstants.Y;
+
+		final List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+
+		if (CollectionUtils.isNotEmpty(buyboxModelList))
+		{
+			final List<BuyBoxModel> bList = new ArrayList<BuyBoxModel>();
+			if (buyboxModelList.size() == 1)
+			{
+				jewelleryVariant = MarketplacecommerceservicesConstants.N;
+			}
+			else
+			{
+				if (StringUtils.isNotEmpty(buyboxModelList.get(0).getSellerId()))
+				{
+					final String winningSeller = buyboxModelList.get(0).getSellerId();
+					for (final BuyBoxModel bModel : buyboxModelList)
+					{
+						if (winningSeller.equals(bModel.getSellerId()))
+						{
+							bList.add(bModel);
+						}
+					}
+					if (bList.size() == 1)
+					{
+						jewelleryVariant = MarketplacecommerceservicesConstants.N;
+					}
+				}
+			}
+		}
+		return jewelleryVariant;
+	}
 }
