@@ -144,6 +144,10 @@
 			autocreate="true" generate="true" type="list" />
 		<!-- <collectiontype elementtype="ShowCaseCollectionComponent" code="ShowCaseCollection" 
 			autocreate="true" generate="true" type="list" /> -->
+			<!-- NU-50 start -->
+			<collectiontype code="BrandCollectionType"
+			elementtype="BrandMaster" autocreate="true" generate="true" type="set"/>
+			<!-- NU-50 end -->
 	</collectiontypes>
 
 	<enumtypes>
@@ -1421,7 +1425,21 @@
 			<sourceElement qualifier ="gigyaResponseCapture" type="GigyaResponseCapture" cardinality="one"></sourceElement>
 			<targetElement qualifier = "gigyaGooglePlusUserInfo" type="GigyaGooglePlusUserInfo" cardinality="many"></targetElement>
 		</relation>	
-
+  <!-- NU-50 start -->
+  <relation code="CustomerMcvidBrandRelation" localized="false"
+			generate="true" autocreate="true">
+			<sourceElement type="Customer" qualifier="customer"
+				cardinality="one">
+				<modifiers read="true" write="true" optional="true" />
+			</sourceElement>
+			<targetElement type="FollowedBrandMcvid" qualifier="followedBrandMcvid"
+				cardinality="many" collectiontype="set" ordered="true">
+				<modifiers read="true" write="true" optional="true"
+					partof="false" />
+			</targetElement>
+		</relation>
+		
+	<!-- NU-50 end -->
 	</relations>
 	<itemtypes>
 	
@@ -14406,7 +14424,82 @@
 				</index>
 			</indexes>
 		</itemtype>
-	</typegroup>		
+	</typegroup>	
+	<!-- NU-50 start -->
+	<typegroup name="FollowedBrandGroup">
+	  <itemtype code="BrandMaster" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.BrandMaster">
+				<deployment table="MplBrandMaster" typecode="13016" />
+			  <attributes>
+				<attribute qualifier='brandCode' type="java.lang.String">
+						<description>Represents the Brand code of the product</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="true" removable="true" />
+                 </attribute>
+                 <attribute qualifier='name' type="java.lang.String">
+						<description>Represents the Brand name of the product</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="false" removable="true" />
+					</attribute>
+					<attribute qualifier="logoImageUrl" type="java.lang.String">
+						<description>Brand LOGO Image URL</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="false" removable="true" />
+					</attribute>
+                </attributes>
+			</itemtype>
+			
+		  <itemtype code="FollowedBrandGender" autocreate="true" generate="true"
+				   jaloclass="com.tisl.mpl.core.jalo.FollowedBrandGender">
+				  <deployment table="MplFollowedBrandGender" typecode="13014" />
+			    <attributes>
+			     <attribute qualifier="uniqueId" type="java.lang.Integer">
+						<description>Represents the unique row number</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="true" removable="true" />
+					</attribute>
+					<attribute qualifier='brandCode' type="java.lang.String">
+						<description>Represents the Brand code of the product</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="false" removable="true" />
+                 </attribute>
+                 <attribute qualifier='gender' type="java.lang.String">
+						<description>Represents the Gender of the customer</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="false" removable="true" />
+				</attribute>			
+          </attributes>
+		</itemtype>
+			
+			<itemtype code="FollowedBrandMcvid" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.FollowedBrandMcvid">
+				<deployment table="MplFollowedBrandMcvid" typecode="13015" />
+			   <attributes>				
+				<attribute qualifier='mcvid' type="java.lang.String">
+						<description>Represents the device id  of the customer</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" optional="false" search="true"
+							unique="true" removable="true" />
+                 </attribute>
+                 <attribute qualifier="brandList" autocreate="true"
+						type="BrandCollectionType">
+						<description>List of followed brands against mcvid</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							 optional="true" partof="false" />
+					</attribute>			
+           </attributes>
+	   </itemtype>
+ </typegroup>
+	<!-- NU-50 end -->
+	
+		
   </itemtypes>
 
 </items>

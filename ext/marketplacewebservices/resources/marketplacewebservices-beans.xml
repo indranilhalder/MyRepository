@@ -3839,7 +3839,24 @@
 	
 	<!-- added for pdp new ui end -->
 	
-
+	<!--NU-50 start  -->
+	
+	<bean class="com.tisl.mpl.wsdto.FollowedBrandWsDto">
+		<property name="code" type="String" />
+		<property name="brandMediaUrl" type="String" />
+		<property name="name" type="String" />
+			
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplFollowedBrandsWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+     <property name="followedBrandList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.FollowedBrandWsDto>"></property>
+	<property name="message" type="String" />
+			
+   </bean>
+   
+	<!-- NU-50 end -->
+	
 	<!-- added for get user cart details api -->
 	<bean class="com.tisl.mpl.wsdto.PriceWsPwaDTO">
 		<property name="mrpPrice"
