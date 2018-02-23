@@ -216,6 +216,15 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
+		//EGV Changes 
+	  if (orderProcessModel.getOrder().getIsEGVCart() != null && orderProcessModel.getOrder().getIsEGVCart().booleanValue())
+	  {
+	   put("isEGVOrder", Boolean.FALSE);
+	  }
+	  else
+	  {
+	   put("isEGVOrder", Boolean.TRUE);
+	  }
 
 		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
 
