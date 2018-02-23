@@ -15,5 +15,6 @@ export default class CheckOutHeader extends React.Component {
 }
 
 CheckOutHeader.propTypes = {
-  indexNumber: PropTypes.string
+  indexNumber: PropTypes.string,
+  confirmTitle: PropTypes.string
 };

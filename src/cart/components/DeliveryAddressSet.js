@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import DeliveryCard from "./DeliveryCard.js";
-import styles from "./DeliveryAddress.css";
-export default class DeliveryAddress extends React.Component {
+import styles from "./DeliveryAddressSet.css";
+export default class DeliveryAddressSet extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -16,7 +16,7 @@ export default class DeliveryAddress extends React.Component {
         indexNumber="1"
       >
         <div className={styles.base}>
-          <div className={styles.deliveryAddressText}>
+          <div className={styles.deliveryAddressSetText}>
             <span class={styles.home}>Home</span>
             <span>{this.props.address}</span>
           </div>
@@ -25,7 +25,7 @@ export default class DeliveryAddress extends React.Component {
     );
   }
 }
-DeliveryAddress.propTypes = {
+DeliveryAddressSet.propTypes = {
   onClick: PropTypes.func,
   address: PropTypes.string
 };

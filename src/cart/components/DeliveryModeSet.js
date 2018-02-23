@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import DeliveryCard from "./DeliveryCard.js";
-import styles from "./DeliveryMode.css";
-export default class DeliveryMode extends React.Component {
+import styles from "./DeliveryModeSet.css";
+export default class DeliveryModeSet extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -27,7 +27,7 @@ export default class DeliveryMode extends React.Component {
     );
   }
 }
-DeliveryMode.propTypes = {
+DeliveryModeSet.propTypes = {
   productDelivery: PropTypes.arrayOf(
     PropTypes.shape({
       productName: PropTypes.string,
