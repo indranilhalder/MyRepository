@@ -90,19 +90,19 @@ const productDescription = (
         loading: false
       });
 
-    case pdpActions.ADD_PRODUCT_TO_BAG_REQUEST:
+    case pdpActions.ADD_PRODUCT_TO_CART_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true
       });
 
-    case pdpActions.ADD_PRODUCT_TO_BAG_SUCCESS:
+    case pdpActions.ADD_PRODUCT_TO_CART_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         loading: false
       });
 
-    case pdpActions.ADD_PRODUCT_TO_BAG_FAILURE:
+    case pdpActions.ADD_PRODUCT_TO_CART_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
@@ -148,8 +148,8 @@ const productDescription = (
         error: action.error,
         loading: false
       });
-      
-       case pdpActions.PRODUCT_WISH_LIST_REQUEST:
+
+    case pdpActions.PRODUCT_WISH_LIST_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true
@@ -168,8 +168,8 @@ const productDescription = (
         error: action.error,
         loading: false
       });
-      
-   case pdpActions.PRODUCT_SPECIFICATION_REQUEST:
+
+    case pdpActions.PRODUCT_SPECIFICATION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true

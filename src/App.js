@@ -24,13 +24,14 @@ import {
   SIGN_UP_PATH,
   PRODUCT_FILTER_ROUTER,
   PRODUCT_SELLER_ROUTER,
-  PRODUCT_CART_ROUTER
-} from "../src/lib/constants";
-import {
+  PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
-  REFRESH_TOKEN
-} from "./lib/constants.js";
+  REFRESH_TOKEN,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS,
+  LOGGED_IN_USER_DETAILS
+} from "../src/lib/constants";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -58,15 +59,36 @@ class App extends Component {
 
   getAccessToken = () => {
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let guid = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let uid = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsForLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
+      if (!guid) {
+        this.props.generateCartIdForAnonymous();
+      }
     }
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      if (!uid) {
+        this.props.generateCartIdForLoggedInUser();
+      }
     }
+
     if (customerCookie) {
       auth.isAuthenticated = true;
+      if (!cartDetailsForLoggedInUser) {
+        this.props.generateCartIdForLoggedInUser();
+      }
+    } else {
+      if (!cartDetailsForAnonymous && globalCookie) {
+        this.props.generateCartIdForAnonymous();
+      }
     }
   };
 

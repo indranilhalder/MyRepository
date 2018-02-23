@@ -1,19 +1,11 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-import { CUSTOMER_ACCESS_TOKEN, FAILURE } from "../../lib/constants";
-
-export const PRODUCT_CART_DETAILS_REQUEST = "PRODUCT_CART_DETAILS_REQUEST";
-export const PRODUCT_CART_DETAILS_SUCCESS = "PRODUCT_CART_DETAILS_SUCCESS";
-export const PRODUCT_CART_DETAILS_FAILURE = "PRODUCT_CART_DETAILS_FAILURE";
-export const PRODUCT_CART_DETAILS_PATH = "cartDetails";
-
-export const PRODUCT_CART_REQUEST = "PRODUCT_CART_REQUEST";
-export const PRODUCT_CART_SUCCESS = "PRODUCT_CART_SUCCESS";
-export const PRODUCT_CART_FAILURE = "PRODUCT_CART_FAILURE";
-
-export const USER_CART_REQUEST = "USER_CART_REQUEST";
-export const USER_CART_SUCCESS = "USER_CART_SUCCESS";
-export const USER_CART_FAILURE = "USER_CART_FAILURE";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  GLOBAL_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  FAILURE
+} from "../../lib/constants";
 
 export const USER_CART_PATH = "v2/mpl/users";
 
@@ -37,15 +29,26 @@ export const EMI_BANKING_DETAILS_REQUEST = "EMI_BANKING_DETAILS_REQUEST";
 export const EMI_BANKING_DETAILS_SUCCESS = "EMI_BANKING_DETAILS_SUCCESS";
 export const EMI_BANKING_DETAILS_FAILURE = "EMI_BANKING_DETAILS_FAILURE";
 
+export const GENERATE_CART_ID_REQUEST = "GENERATE_CART_ID_REQUEST";
+export const GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS =
+  "GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS";
+export const GENERATE_CART_ID_FAILURE = "GENERATE_CART_ID_FAILURE";
+export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
+  "GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS";
+
+export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
+export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
+export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
+
 export function cartDetailsRequest() {
   return {
-    type: PRODUCT_CART_DETAILS_REQUEST,
+    type: CART_DETAILS_REQUEST,
     status: REQUESTING
   };
 }
 export function cartDetailsSuccess(cartDetails) {
   return {
-    type: PRODUCT_CART_DETAILS_SUCCESS,
+    type: CART_DETAILS_SUCCESS,
     status: SUCCESS,
     cartDetails
   };
@@ -53,17 +56,20 @@ export function cartDetailsSuccess(cartDetails) {
 
 export function cartDetailsFailure(error) {
   return {
-    type: PRODUCT_CART_DETAILS_FAILURE,
+    type: CART_DETAILS_FAILURE,
     status: ERROR,
     error
   };
 }
-export function getCartDetails() {
+
+export function getCartDetails(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsRequest());
 
     try {
-      const result = await api.getMock(PRODUCT_CART_DETAILS_PATH);
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetails?access_token=${accessToken}&isPwa=true`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -75,95 +81,6 @@ export function getCartDetails() {
   };
 }
 
-export function userCartRequest() {
-  return {
-    type: USER_CART_REQUEST,
-    status: REQUESTING
-  };
-}
-export function userCartSuccess(userCart) {
-  return {
-    type: USER_CART_SUCCESS,
-    status: SUCCESS,
-    userCart
-  };
-}
-
-export function userCartFailure(error) {
-  return {
-    type: USER_CART_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function getUserCart() {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  return async (dispatch, getState, { api }) => {
-    dispatch(userCartRequest());
-
-    try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
-        }/carts?access_token=${JSON.parse(customerCookie).access_token}`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
-      }
-
-      dispatch(getProductCart(resultJson.code));
-      dispatch(userCartSuccess(resultJson));
-    } catch (e) {
-      dispatch(userCartFailure(e.message));
-    }
-  };
-}
-
-export function getProductCartRequest() {
-  return {
-    type: PRODUCT_CART_REQUEST,
-    status: REQUESTING
-  };
-}
-export function getProductCartSuccess(cartDetails) {
-  return {
-    type: PRODUCT_CART_SUCCESS,
-    status: SUCCESS,
-    cartDetails
-  };
-}
-
-export function getProductCartFailure(error) {
-  return {
-    type: PRODUCT_CART_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function getProductCart(code) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  return async (dispatch, getState, { api }) => {
-    dispatch(getProductCartRequest());
-    try {
-      const result = await api.get(
-        `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
-        }/carts/${code}/cartDetailsCNC?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&pincode=122001`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
-      }
-      dispatch(getProductCartSuccess(resultJson));
-    } catch (e) {
-      dispatch(getProductCartFailure(e.message));
-    }
-  };
-}
 export function applyCouponRequest() {
   return {
     type: APPLY_COUPON_REQUEST,
@@ -389,6 +306,82 @@ export function getEmiBankDetails(cartValues) {
       dispatch(emiBankingDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(emiBankingDetailsFailure(e.message));
+    }
+  };
+}
+
+export function generateCartIdRequest() {
+  return {
+    type: GENERATE_CART_ID_REQUEST,
+    status: REQUESTING
+  };
+}
+export function generateCartIdForLoggedInUserSuccess(cartDetails) {
+  return {
+    type: GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function generateCartIdFailure(error) {
+  return {
+    type: GENERATE_CART_ID_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function generateCartIdForLoggedInUser() {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(generateCartIdRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(generateCartIdForLoggedInUserSuccess(resultJson));
+    } catch (e) {
+      dispatch(generateCartIdFailure(e.message));
+    }
+  };
+}
+
+export function generateCartIdAnonymousSuccess(cartDetails) {
+  return {
+    type: GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function generateCartIdForAnonymous() {
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(generateCartIdRequest());
+
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/anonymous/carts?access_token=${
+          JSON.parse(globalCookie).access_token
+        }&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(generateCartIdAnonymousSuccess(resultJson));
+    } catch (e) {
+      dispatch(generateCartIdFailure(e.message));
     }
   };
 }

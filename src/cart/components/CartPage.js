@@ -7,9 +7,38 @@ import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS,
+  ANONYMOUS_USER
+} from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
 class CartPage extends React.Component {
   componentDidMount() {
-    this.props.getCartDetails();
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
+    if (userDetails) {
+      this.props.getCartDetails(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(customerCookie).access_token,
+        JSON.parse(cartDetailsLoggedInUser).code
+      );
+    } else {
+      this.props.getCartDetails(
+        ANONYMOUS_USER,
+        JSON.parse(globalCookie).access_token,
+        JSON.parse(cartDetailsAnonymous).guid
+      );
+    }
   }
 
   renderLoader = () => {
