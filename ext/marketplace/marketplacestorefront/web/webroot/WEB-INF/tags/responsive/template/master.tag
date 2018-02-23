@@ -20,6 +20,9 @@
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
+	<c:if test="${cmsPage.name eq 'Homepage'}">
+		<link rel="amphtml" href="/pwamp/home">
+	</c:if>
 	<%-- Moved this Block for For INC_11638 --%>
 	<%-- TISPRD-8030 and INC_100385--%>	
 		<c:choose>
