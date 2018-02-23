@@ -36,9 +36,6 @@ const cart = (
       });
 
     case cartActions.CART_DETAILS_SUCCESS:
-      console.group("reducer In");
-      console.log(action);
-      console.groupEnd("END of Reducer");
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,
@@ -98,10 +95,9 @@ const cart = (
       });
 
     case cartActions.GET_USER_ADDRESS_SUCCESS:
-      console.log(action);
       return Object.assign({}, state, {
         status: action.status,
-        userAddress: action.userDeliveryAddress,
+        userAddress: action.userAddress,
         loading: false
       });
 

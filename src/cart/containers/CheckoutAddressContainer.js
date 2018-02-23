@@ -1,19 +1,22 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import CheckoutAddress from "../components/CheckoutAddress";
-import { getUserAddress } from "../actions/cart.actions";
+import { getUserAddress, addUserAddress } from "../actions/cart.actions";
 
 const mapDispatchToProps = dispatch => {
   return {
     getUserAddress: () => {
       dispatch(getUserAddress());
+    },
+    addUserAddress: userAddress => {
+      dispatch(addUserAddress(userAddress));
     }
   };
 };
 const mapStateToProps = state => {
   console.log(state);
   return {
-    user: state.user.user
+    cart: state.cart
   };
 };
 const CheckoutAddressContainer = withRouter(

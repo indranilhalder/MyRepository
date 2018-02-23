@@ -17,42 +17,25 @@ export default class CheckoutAddress extends React.Component {
   }
   onCancel() {
     console.log(this.state);
+    this.props.addUserAddress(this.state);
   }
+
   render() {
+    console.log(this.props);
     return (
       <CheckoutFrame onSubmit={() => this.onCancel()}>
-        {this.props.user &&
-          this.props.user.addressSet && (
-            <ConfirmAddress
-              address={[
-                {
-                  addressTitle: "Home",
-                  addressDescription:
-                    "Lal Bahadur Shastri Marg, Chandan Nagar, Vikhori West"
-                },
-                {
-                  addressTitle: "Office",
-                  addressDescription:
-                    "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
-                },
-                {
-                  addressTitle: "Other1",
-                  addressDescription:
-                    "Tagore Nagar, Vikhroli East, Mumbai, Maharashtra 400012"
-                },
-                {
-                  addressTitle: "Other2",
-                  addressDescription:
-                    "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
-                },
-                {
-                  addressTitle: "Other3",
-                  addressDescription:
-                    "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
-                }
-              ]}
-            />
-          )}
+        {this.props.cart.userAddress && (
+          <ConfirmAddress
+            address={this.props.cart.userAddress.addresses.map(address => {
+              return {
+                addressTitle: address.addressType,
+                addressDescription: `${address.line1} ${address.town} ${
+                  address.city
+                }, ${address.state} ${address.postalCode}`
+              };
+            })}
+          />
+        )}
         {!this.props.addressSet && (
           <AddDeliveryAddress
             {...this.state}

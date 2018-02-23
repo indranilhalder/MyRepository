@@ -172,7 +172,9 @@ export default class AddDeliveryAddress extends React.Component {
             onSelect={val => this.onChange({ addressType: val[0] })}
           >
             {dataLabel.map((val, i) => {
-              return <CheckboxAndText label={val.label} value={val.label} />;
+              return (
+                <CheckboxAndText key={i} label={val.label} value={val.label} />
+              );
             })}
           </GridSelect>
         </div>

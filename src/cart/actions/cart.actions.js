@@ -21,6 +21,10 @@ export const GET_USER_ADDRESS_REQUEST = "GET_USER_ADDRESS_REQUEST";
 export const GET_USER_ADDRESS_SUCCESS = "GET_USER_ADDRESS_SUCCESS";
 export const GET_USER_ADDRESS_FAILURE = "GET_USER_ADDRESS_FAILURE";
 
+export const ADD_USER_ADDRESS_REQUEST = "ADD_USER_ADDRESS_REQUEST";
+export const ADD_USER_ADDRESS_SUCCESS = "ADD_USER_ADDRESS_SUCCESS";
+export const ADD_USER_ADDRESS_FAILURE = "ADD_USER_ADDRESS_FAILURE";
+
 export const NET_BANKING_DETAILS_REQUEST = "NET_BANKING_DETAILS_REQUEST";
 export const NET_BANKING_DETAILS_SUCCESS = "NET_BANKING_DETAILS_SUCCESS";
 export const NET_BANKING_DETAILS_FAILURE = "NET_BANKING_DETAILS_FAILURE";
@@ -150,11 +154,8 @@ export function userAddressFailure(error) {
 }
 
 export function getUserAddress() {
-  console.log("In actinos");
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    console.log("Comes in return ");
-    console.log(getState());
     dispatch(userAddressRequest());
     try {
       const result = await api.get(
@@ -163,6 +164,63 @@ export function getUserAddress() {
         }/addresses?channel=mobile&emailId=${
           getState().user.user.customerInfo.mobileNumber
         }&access_token=${JSON.parse(customerCookie).access_token}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+
+      dispatch(userAddressSuccess(resultJson));
+    } catch (e) {
+      dispatch(userAddressFailure(e.message));
+    }
+  };
+}
+
+export function addUserAddressRequest(error) {
+  return {
+    type: ADD_USER_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addUserAddressSuccess(userAddress) {
+  return {
+    type: ADD_USER_ADDRESS_SUCCESS,
+    status: SUCCESS,
+    userAddress
+  };
+}
+
+export function addUserAddressFailure(error) {
+  return {
+    type: ADD_USER_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function addUserAddress(userAddress) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(userAddressRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          getState().user.user.customerInfo.mobileNumber
+        }/addAddress?channel=mobile&countryIso=IN&emailId=${
+          getState().user.user.customerInfo.mobileNumber
+        }&access_token=${JSON.parse(customerCookie).access_token}&addressType=${
+          userAddress.addressType
+        }&city=${userAddress.city}&defaultAddress=${
+          userAddress.defaultAddress
+        }&firstName=${userAddress.firstName}&landmark=${
+          userAddress.landmark
+        }&line1=${userAddress.line1}&phone=${userAddress.phone}&postalCode=${
+          userAddress.postalCode
+        }&state=${userAddress.state}&town=${
+          userAddress.town
+        }&line2=&line3=&lastName=&defaultFlag=0`
       );
       const resultJson = await result.json();
       console.log(resultJson);
@@ -390,3 +448,7 @@ export function generateCartIdForAnonymous() {
     }
   };
 }
+
+// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/users/8150838465/addAddress?channel=mobile&countryIso=IN&emailId=8150838465&access_token=84fdb1ac-7195-492a-b08b-76bbe491fde7&addressType=Office&city=Krishna%20tample&defaultAddress=false&firstName=Aakarsh%20Yadav&landmark=Aegis%20tower&line1=Xelpmoc%20design&phone=9456888501&postalCode=229001&state=Kr&town=Kormangala&line2=&line3=&defaultFlag=0
+
+// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/users/8150838465/addAddress?channel=mobile&emailId=8150838465&access_token=84fdb1ac-7195-492a-b08b-76bbe491fde7&addressType=Office&lastName=&city=Kormangala&defaultAddress=false&firstName=Aakarsh%20Yadav&landmark=Kormangal&line1=Xelpmoc&line2=&line3=&countryIso=IN&defaultFlag=0&phone=9456888501&postalCode=229001&state=Kr&town=Bangalore
