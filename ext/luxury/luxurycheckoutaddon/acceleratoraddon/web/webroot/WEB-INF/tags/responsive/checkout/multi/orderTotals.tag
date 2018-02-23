@@ -181,7 +181,7 @@
 					<span id="couponValue" style="float: right"> </span>
 					<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 				</li>
-
+				<span id="totalWithConvField" style="float: right" class="hide">
 
 				<%--<li class="total" id="total">
 					<div id="totalPriceConvChargeId">

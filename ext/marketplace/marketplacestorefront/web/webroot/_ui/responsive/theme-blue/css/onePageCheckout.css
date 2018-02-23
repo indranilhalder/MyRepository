@@ -3912,7 +3912,7 @@ div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .de
 	}
 .cart.wrapper.checkout-payment .card-sec .card-num .card_image{
 	margin-left: 30px;
-	height: 40px;		/* add for TISUAT-6362 */
+	height: 45px;		/* add for TISUAT-6362 *//*changed for TISUAT-6447*/
 	}
 .cart.wrapper.checkout-payment .card-sec .card-num .payment-failed-card-image{
 	margin-left: 0px;
