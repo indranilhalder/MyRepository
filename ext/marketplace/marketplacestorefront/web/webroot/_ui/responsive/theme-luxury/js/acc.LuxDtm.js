@@ -1,7 +1,7 @@
 var digitalData;
 var isImageHoverTriggered = false;		// flag to identify mouse hover action	
 $(document).ready(function(){
-	console.log("lux dtm call");
+	//console.log("lux dtm call");
 	_satellite.pageBottom();
 	var pageType= $('#pageType').val();
 	var tealiumOrderFlag = $('#tealiumOrderFlag').val();

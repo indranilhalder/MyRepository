@@ -4179,7 +4179,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		complete: function() {
 			differentiateSeller();
 			differentiateLuxSellerDtm()
-			console.log("call for differentiateLuxSellerDtm:acc.productDetails");
 		}
 		
 	});
