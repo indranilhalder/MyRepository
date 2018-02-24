@@ -128,7 +128,6 @@ export function loginUserFailure(error) {
 
 export function loginUser(userLoginDetails) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  console.log(customerCookie);
   return async (dispatch, getState, { api }) => {
     dispatch(loginUserRequest());
     try {
@@ -140,7 +139,6 @@ export function loginUser(userLoginDetails) {
         }&password=${userLoginDetails.password}&isPwa=true`
       );
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }

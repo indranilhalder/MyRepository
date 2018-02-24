@@ -545,7 +545,3 @@ export function generateCartIdForAnonymous() {
     }
   };
 }
-
-// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/users/8150838465/addAddress?channel=mobile&countryIso=IN&emailId=8150838465&access_token=84fdb1ac-7195-492a-b08b-76bbe491fde7&addressType=Office&city=Krishna%20tample&defaultAddress=false&firstName=Aakarsh%20Yadav&landmark=Aegis%20tower&line1=Xelpmoc%20design&phone=9456888501&postalCode=229001&state=Kr&town=Kormangala&line2=&line3=&defaultFlag=0
-
-// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/users/8150838465/addAddress?channel=mobile&emailId=8150838465&access_token=84fdb1ac-7195-492a-b08b-76bbe491fde7&addressType=Office&lastName=&city=Kormangala&defaultAddress=false&firstName=Aakarsh%20Yadav&landmark=Kormangal&line1=Xelpmoc&line2=&line3=&countryIso=IN&defaultFlag=0&phone=9456888501&postalCode=229001&state=Kr&town=Bangalore

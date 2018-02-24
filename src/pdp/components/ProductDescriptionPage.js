@@ -84,7 +84,6 @@ class ProductDescriptionPage extends Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     if (userDetails) {
-      console.log(userDetails, cartDetailsLoggedInUser);
       Object.assign(productDetails, {
         userId: JSON.parse(userDetails).customerInfo.mobileNumber,
         accessToken: JSON.parse(customerCookie).access_token,
