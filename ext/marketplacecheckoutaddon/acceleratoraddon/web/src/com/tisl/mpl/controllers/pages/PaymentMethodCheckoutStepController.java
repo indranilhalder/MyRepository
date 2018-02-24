@@ -7631,16 +7631,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							getModelService().refresh(cart);
 							return jsonObject;
 						}
-						
-						//VoucherDiscountData data1 = mplCouponFacade.populateCartVoucherData(null, cart, false, true, "");
-						getSessionService().setAttribute("WalletTotal", "" + WalletAmt); //----------------- change 2
+						// Use only cliqCash for payment
+						getSessionService().setAttribute("WalletTotal", "" + totalCartAmt);
 						getSessionService().setAttribute("getCliqCashMode", value);
 						getSessionService().setAttribute("juspayTotalAmt", "" + 0);
 						jsonObject.put("disableJsMode", true);
 						cart.setSplitModeInfo("CliqCash");
 						jsonObject.put("apportionMode", "CliqCash");
 						jsonObject.put("cliqCashAmt", WalletAmt);
-						jsonObject.put("totalCartAmt", totalCartAmt);  //------------------------- change 1
+						jsonObject.put("totalCartAmt", totalCartAmt);
 						jsonObject.put("bankCheckBox", false);
 						jsonObject.put("cartCouponCode", cartCouponCode);
 						jsonObject.put("isCartVoucherPresent", false);
@@ -7652,8 +7651,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
-						//final Tuple2<Boolean, String> cartCouponObjSplit = isCartVoucherPresent(cart.getDiscounts());
-						//isCartVoucherPresent = cartCouponObjSplit.getFirst();
 						//Split mode for payment
 						boolean applyStatus = false;
 						if (isCartVoucherPresent.booleanValue())
@@ -7663,7 +7660,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							double bankCoupenwithoutDelCharges = totalCartAmt -delCharges;
 							double juspayTotal = bankCoupenwithoutDelCharges - WalletAmt.doubleValue();
 							
-							if(juspayTotal > 0.0d){
+							//check if juspay amt is greater then wallet amount 
+							if(juspayTotal > 0){ 
 							//Re-apply bank voucher
 							final double juspayTotalAmt1 = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + WalletAmt);
 							cart.setPayableNonWalletAmount(Double.valueOf(juspayTotalAmt1));
