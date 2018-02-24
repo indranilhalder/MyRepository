@@ -17,7 +17,7 @@ export default class DeliveryAddressSet extends React.Component {
       >
         <div className={styles.base}>
           <div className={styles.deliveryAddressSetText}>
-            <span class={styles.home}>{this.props.addressType}</span>
+            <span className={styles.home}>{this.props.addressType}</span>
             <span>{this.props.address}</span>
           </div>
         </div>

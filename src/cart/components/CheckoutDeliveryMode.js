@@ -2,7 +2,9 @@ import React from "react";
 import CheckoutFrame from "./CheckoutFrame";
 import CartItem from "./CartItem";
 import DummyTab from "./DummyTab";
+import CheckOutHeader from "./CheckOutHeader";
 import DeliveryAddressSet from "./DeliveryAddressSet";
+import styles from "./CheckoutDeliveryMode.css";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -37,39 +39,50 @@ export default class CheckoutDeliveryMode extends React.Component {
   }
   render() {
     console.log("comes in checkout");
-    console.log(this.props);
-    const selectedAddress = this.props.addressDetailsList
-      ? this.props.addressDetailsList.filter(val => {
+    const cartDetails = this.props.cart.cart.cartDetails;
+    console.log(this.props.cart.cart);
+    console.log(cartDetails);
+    const selectedAddress = cartDetails.addressDetailsList
+      ? cartDetails.addressDetailsList.addresses.filter(val => {
           return val.defaultAddress;
-        })
+        })[0]
       : [];
+    console.log(cartDetails.addressDetailsList.addresses);
+    console.log(selectedAddress);
     return (
       <CheckoutFrame>
         <DeliveryAddressSet
-          selectedAddress={selectedAddress.line1}
+          address={selectedAddress.line1}
           addressType={selectedAddress.addressType}
         />
-        {this.props.products &&
-          this.props.products.map((val, i) => {
-            return (
-              <CartItem
-                key={i}
-                productImage={val.imageURL}
-                productDetails={val.description}
-                productName={val.productName}
-                price={val.priceValue.sellingPrice.formattedValue}
-                deliveryInformation={val.elligibleDeliveryMode}
-                deliverTime={val.elligibleDeliveryMode[0].desc}
-                option={[
-                  {
-                    value: val.qtySelectedByUser,
-                    label: val.qtySelectedByUser
-                  }
-                ]}
-              />
-            );
-          })}
-        <DummyTab title="Payment Method" indexNumber="3" />
+        <div className={styles.products}>
+          <div className={styles.header}>
+            <CheckOutHeader
+              indexNumber="2"
+              confirmTitle="Choose delivery mode"
+            />
+          </div>
+          {cartDetails.products &&
+            cartDetails.products.map((val, i) => {
+              return (
+                <div className={styles.row}>
+                  <CartItem
+                    key={i}
+                    productImage={val.imageURL}
+                    hasFooter={false}
+                    productDetails={val.description}
+                    productName={val.productName}
+                    price={val.offerPrice}
+                    deliveryInformation={val.elligibleDeliveryMode}
+                    showDelivery={true}
+                    deliveryInfoToggle={false}
+                    selectDeliveryMode={val => console.log(val)}
+                  />
+                </div>
+              );
+            })}
+        </div>
+        <DummyTab title="Payment Method" number="3" />
       </CheckoutFrame>
     );
   }

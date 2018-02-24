@@ -12,10 +12,15 @@ import CollectImage from "./img/collect.svg";
 const EXPRESS = "express-delivery";
 const COLLECT = "click-and-collect";
 
-export default class DeliveryInformation extends React.Component {
+export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
+    }
+  }
+  handleSelect() {
+    if (this.props.onSelect) {
+      this.props.onSelect(this.props.type);
     }
   }
   arrowClick() {
@@ -38,7 +43,12 @@ export default class DeliveryInformation extends React.Component {
     return (
       <div className={styles.base}>
         {this.props.type !== COLLECT && (
-          <div className={styles.checkboxHolder}>
+          <div
+            className={styles.checkboxHolder}
+            onClick={() => {
+              this.handleSelect();
+            }}
+          >
             <CheckBox selected={this.props.selected} />
           </div>
         )}
@@ -57,20 +67,7 @@ export default class DeliveryInformation extends React.Component {
               <span className={styles.text}>{this.props.textHeading}</span>
             </div>
           )}
-          {this.props.deliveryOptions ||
-            (this.props.label && (
-              <div className={styles.placeTime}>
-                <span>{this.props.deliveryOptions}</span>
-                <span className={styles.buttonHolder}>
-                  <UnderLinedButton
-                    label={this.props.label}
-                    onClick={() => {
-                      this.handleClick();
-                    }}
-                  />
-                </span>
-              </div>
-            ))}
+
           {this.props.type === COLLECT && (
             <div className={styles.underLineButtonHolder}>
               <span className={styles.buttonHolderPiq}>
@@ -89,7 +86,7 @@ export default class DeliveryInformation extends React.Component {
     );
   }
 }
-DeliveryInformation.propTypes = {
+DeliveryInformations.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string,
   heading: PropTypes.string,
