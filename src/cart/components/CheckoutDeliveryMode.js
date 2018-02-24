@@ -38,19 +38,25 @@ export default class CheckoutDeliveryMode extends React.Component {
     }
   }
   render() {
-    console.log("comes in checkout");
     const cartDetails = this.props.cart.cart.cartDetails;
-    console.log(this.props.cart.cart);
-    console.log(cartDetails);
     const selectedAddress = cartDetails.addressDetailsList
       ? cartDetails.addressDetailsList.addresses.filter(val => {
           return val.defaultAddress;
         })[0]
       : [];
-    console.log(cartDetails.addressDetailsList.addresses);
-    console.log(selectedAddress);
+
     return (
-      <CheckoutFrame>
+      <CheckoutFrame
+        amount={cartDetails.cartAmount.paybleAmount.formattedValue}
+        bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
+        tax={this.props.tax}
+        totalDiscount={
+          cartDetails.cartAmount.totalDiscountAmount.formattedValue
+        }
+        delivery={this.props.delivery}
+        payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+        onCheckout={this.handleSubmit}
+      >
         <DeliveryAddressSet
           address={selectedAddress.line1}
           addressType={selectedAddress.addressType}
