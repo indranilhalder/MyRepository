@@ -524,4 +524,54 @@ public class CatalogsController extends BaseController
 		}
 		return retValue;
 	}
+	
+	
+	@RequestMapping(value = "/getAllCategorieshierarchy", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public CategoryListHierarchyWSData fetchAllCategorieshierarchy(
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		CategoryListHierarchyData shopByDeptData = new CategoryListHierarchyData();
+		CategoryListHierarchyWSData deptListDto = new CategoryListHierarchyWSData();
+		try
+		{
+			shopByDeptData = mplCustomCategoryService.getAllCategorieshierarchy();
+			final FieldSetBuilderContext context = new FieldSetBuilderContext();
+			final Set<String> fieldSet = fieldSetBuilder.createFieldSet(CategoryListHierarchyData.class, DataMapper.FIELD_PREFIX,
+					fields, context);
+			if (null != shopByDeptData && null != fieldSet)
+			{
+				deptListDto = dataMapper.map(shopByDeptData, CategoryListHierarchyWSData.class, fieldSet);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				deptListDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				deptListDto.setErrorCode(e.getErrorCode());
+			}
+			deptListDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				deptListDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				deptListDto.setErrorCode(e.getErrorCode());
+			}
+			deptListDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return deptListDto;
+	}
+
 }
