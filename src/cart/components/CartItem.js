@@ -75,22 +75,7 @@ export default class CartItem extends React.Component {
               </span>
             </div>
           )}
-        {/* {this.state.showDelivery &&
-          this.props.deliveryInformation && (
-            <div className={styles.shippingStep}>
-              {this.props.deliveryInformation.map((datum, i) => {
-                return (
-                  <DeliveryInformation
-                    key={i}
-                    type={datum.code}
-                    header={datum.name}
-                    placedTime={datum.desc}
-                    selected={datum.selected}
-                  />
-                );
-              })}
-            </div>
-          )} */}
+
         {this.state.showDelivery &&
           this.props.deliveryInformation && (
             <DeliveryInfoSelect
