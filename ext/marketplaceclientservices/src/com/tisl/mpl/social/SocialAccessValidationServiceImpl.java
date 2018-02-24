@@ -38,7 +38,7 @@ public class SocialAccessValidationServiceImpl implements SocialAccessValidation
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.social.SocialAccessValidationService#verifyFbAccessToken(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -55,7 +55,7 @@ public class SocialAccessValidationServiceImpl implements SocialAccessValidation
 					Boolean.TRUE))
 			{
 				final StringBuilder urlQuery = new StringBuilder();
-				urlQuery.append("https://graph.facebook.com/me?access_token=");
+				urlQuery.append("https://graph.facebook.com/v2.12/me?fields=email&access_token=");
 				urlQuery.append(fbAccessToken);
 				final URL url = new URL(urlQuery.toString());
 				Proxy proxy = null;
@@ -81,7 +81,7 @@ public class SocialAccessValidationServiceImpl implements SocialAccessValidation
 				final BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 				final String message = org.apache.commons.io.IOUtils.toString(br);
 				final JSONObject json = new JSONObject(message.toString());
-				final String emailID = json.getString("id");
+				final String emailID = json.getString("email");
 				if (emailID.equalsIgnoreCase(userID))
 				{
 					output = "success";

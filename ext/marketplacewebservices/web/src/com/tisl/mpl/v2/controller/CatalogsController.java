@@ -52,6 +52,8 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.BrandListHierarchyData;
 import com.tisl.mpl.wsdto.BrandListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.BrandListHierarchyWsDTO;
+import com.tisl.mpl.wsdto.CategoryListHierarchyData;
+import com.tisl.mpl.wsdto.CategoryListHierarchyWSData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyWsDTO;
@@ -524,8 +526,8 @@ public class CatalogsController extends BaseController
 		}
 		return retValue;
 	}
-	
-	
+
+
 	@RequestMapping(value = "/getAllCategorieshierarchy", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public CategoryListHierarchyWSData fetchAllCategorieshierarchy(

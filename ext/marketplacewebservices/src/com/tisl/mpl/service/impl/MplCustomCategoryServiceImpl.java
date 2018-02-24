@@ -58,6 +58,10 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.service.MplCustomCategoryService;
 import com.tisl.mpl.wsdto.AboutUsResultWsData;
+import com.tisl.mpl.wsdto.CategoryHierarchyL1Data;
+import com.tisl.mpl.wsdto.CategoryHierarchyL2Data;
+import com.tisl.mpl.wsdto.CategoryHierarchyL3Data;
+import com.tisl.mpl.wsdto.CategoryListHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyData;
 import com.tisl.mpl.wsdto.DepartmentListHierarchyDataAmp;
@@ -287,7 +291,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 
@@ -662,7 +666,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -734,7 +738,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -1221,8 +1225,8 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 		return cmsComponentsListFinal;
 	}
-	
-	
+
+
 	@Override
 	public CategoryListHierarchyData getAllCategorieshierarchy() throws EtailNonBusinessExceptions
 	{
