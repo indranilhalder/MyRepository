@@ -12,7 +12,7 @@ import {
   ANONYMOUS_USER
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
-export default class extends React.Component {
+export default class CheckoutDeliveryMode extends React.Component {
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -22,13 +22,13 @@ export default class extends React.Component {
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (userDetails) {
-      this.props.getCartDetails(
+      this.props.getCartDetailsCNC(
         JSON.parse(userDetails).customerInfo.mobileNumber,
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code
       );
     } else {
-      this.props.getCartDetails(
+      this.props.getCartDetailsCNC(
         ANONYMOUS_USER,
         JSON.parse(globalCookie).access_token,
         JSON.parse(cartDetailsAnonymous).guid
@@ -36,9 +36,13 @@ export default class extends React.Component {
     }
   }
   render() {
-    const selectedAddress = this.props.addressDetailsList.filter(val => {
-      return val.defaultAddress;
-    });
+    console.log("comes in checkout");
+    console.log(this.props);
+    const selectedAddress = this.props.addressDetailsList
+      ? this.props.addressDetailsList.filter(val => {
+          return val.defaultAddress;
+        })
+      : [];
     return (
       <CheckoutFrame>
         <DeliveryAddressSet

@@ -1,4 +1,5 @@
 import React from "react";
+import { PRODUCT_CART_DELIVERY_MODES } from "../../lib/constants";
 import CheckoutFrame from "./CheckoutFrame";
 import ConfirmAddress from "./ConfirmAddress";
 import AddDeliveryAddress from "./AddDeliveryAddress";
@@ -15,15 +16,16 @@ export default class CheckoutAddress extends React.Component {
   onChange(val) {
     this.setState(val);
   }
-  onCancel() {
-    this.props.addUserAddress(this.state);
+  renderToCheckoutDelivery() {
+    console.log(PRODUCT_CART_DELIVERY_MODES);
+    this.props.history.push(PRODUCT_CART_DELIVERY_MODES);
   }
   onSelectAddress(addressId) {
     this.props.addAddressToCart(addressId[0]);
   }
   render() {
     return (
-      <CheckoutFrame onSubmit={() => this.onCancel()}>
+      <CheckoutFrame onSubmit={() => this.renderToCheckoutDelivery()}>
         {this.props.cart.userAddress && (
           <ConfirmAddress
             address={this.props.cart.userAddress.addresses.map(address => {

@@ -131,6 +131,7 @@ class App extends Component {
             path={PRODUCT_LISTINGS}
             component={ProductListingsContainer}
           />
+
           <Route exact path={HOME_ROUTER} component={HomeContainer} />
           <Route
             exact
@@ -163,12 +164,12 @@ class App extends Component {
             path={PRODUCT_DELIVERY_ADDRESSES}
             component={CheckoutAddressContainer}
           />
-          <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
           <Route
             exact
             path={PRODUCT_CART_DELIVERY_MODES}
-            components={DeliveryModesContainer}
+            component={DeliveryModesContainer}
           />
+          <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
         </Switch>
         <ModalContainer />
       </div>
