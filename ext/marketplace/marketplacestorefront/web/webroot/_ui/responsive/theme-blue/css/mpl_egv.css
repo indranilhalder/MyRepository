@@ -936,6 +936,7 @@
 	
 	.orderStatementL1Body > .orderStatChildBody {
 		padding: 5px;
+		display: flow-root;
 	}
 	
 	.orderStatementL2Body > p {
