@@ -38,58 +38,61 @@ export default class CheckoutDeliveryMode extends React.Component {
     }
   }
   render() {
-    const cartDetails = this.props.cart.cart.cartDetails;
-    const selectedAddress = cartDetails.addressDetailsList
-      ? cartDetails.addressDetailsList.addresses.filter(val => {
-          return val.defaultAddress;
-        })[0]
-      : [];
-
-    return (
-      <CheckoutFrame
-        amount={cartDetails.cartAmount.paybleAmount.formattedValue}
-        bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-        tax={this.props.tax}
-        totalDiscount={
-          cartDetails.cartAmount.totalDiscountAmount.formattedValue
-        }
-        delivery={this.props.delivery}
-        payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-        onCheckout={this.handleSubmit}
-      >
-        <DeliveryAddressSet
-          address={selectedAddress.line1}
-          addressType={selectedAddress.addressType}
-        />
-        <div className={styles.products}>
-          <div className={styles.header}>
-            <CheckOutHeader
-              indexNumber="2"
-              confirmTitle="Choose delivery mode"
-            />
+    if (this.props.cart) {
+      const cartDetails = this.props.cart.cart.cartDetails;
+      const selectedAddress = cartDetails.addressDetailsList
+        ? cartDetails.addressDetailsList.addresses.filter(val => {
+            return val.defaultAddress;
+          })[0]
+        : [];
+      return (
+        <CheckoutFrame
+          amount={cartDetails.cartAmount.paybleAmount.formattedValue}
+          bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
+          tax={this.props.tax}
+          totalDiscount={
+            cartDetails.cartAmount.totalDiscountAmount.formattedValue
+          }
+          delivery={this.props.delivery}
+          payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+          onCheckout={this.handleSubmit}
+        >
+          <DeliveryAddressSet
+            address={selectedAddress.line1}
+            addressType={selectedAddress.addressType}
+          />
+          <div className={styles.products}>
+            <div className={styles.header}>
+              <CheckOutHeader
+                indexNumber="2"
+                confirmTitle="Choose delivery mode"
+              />
+            </div>
+            {cartDetails.products &&
+              cartDetails.products.map((val, i) => {
+                return (
+                  <div className={styles.row}>
+                    <CartItem
+                      key={i}
+                      productImage={val.imageURL}
+                      hasFooter={false}
+                      productDetails={val.description}
+                      productName={val.productName}
+                      price={val.offerPrice}
+                      deliveryInformation={val.elligibleDeliveryMode}
+                      showDelivery={true}
+                      deliveryInfoToggle={false}
+                      selectDeliveryMode={val => console.log(val)}
+                    />
+                  </div>
+                );
+              })}
           </div>
-          {cartDetails.products &&
-            cartDetails.products.map((val, i) => {
-              return (
-                <div className={styles.row}>
-                  <CartItem
-                    key={i}
-                    productImage={val.imageURL}
-                    hasFooter={false}
-                    productDetails={val.description}
-                    productName={val.productName}
-                    price={val.offerPrice}
-                    deliveryInformation={val.elligibleDeliveryMode}
-                    showDelivery={true}
-                    deliveryInfoToggle={false}
-                    selectDeliveryMode={val => console.log(val)}
-                  />
-                </div>
-              );
-            })}
-        </div>
-        <DummyTab title="Payment Method" number="3" />
-      </CheckoutFrame>
-    );
+          <DummyTab title="Payment Method" number="3" />
+        </CheckoutFrame>
+      );
+    } else {
+      return null;
+    }
   }
 }
