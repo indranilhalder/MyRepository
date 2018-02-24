@@ -17,7 +17,6 @@ export default class CheckoutAddress extends React.Component {
     this.setState(val);
   }
   renderToCheckoutDelivery() {
-    console.log(PRODUCT_CART_DELIVERY_MODES);
     this.props.history.push(PRODUCT_CART_DELIVERY_MODES);
   }
   onSelectAddress(addressId) {
