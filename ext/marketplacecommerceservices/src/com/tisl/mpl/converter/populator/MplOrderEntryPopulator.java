@@ -754,7 +754,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	//Getting Round up value
 	 private String getRoundUpValue(String value){
 	  try{
-	   DecimalFormat df = new DecimalFormat(".##");
+	   DecimalFormat df = new DecimalFormat("#.##");
 	  return String.valueOf(df.format(Float.parseFloat(value)));
 	  }catch(Exception exception){
 	   exception.printStackTrace();

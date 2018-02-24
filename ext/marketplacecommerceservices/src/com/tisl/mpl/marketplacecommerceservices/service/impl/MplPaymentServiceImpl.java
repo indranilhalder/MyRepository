@@ -4975,7 +4975,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						
 						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
-						 saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+							saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+						}
 						// If CosignmentEnteries are present then update OMS with
 						// the state.
 						ConsignmentStatus newStatus = null;

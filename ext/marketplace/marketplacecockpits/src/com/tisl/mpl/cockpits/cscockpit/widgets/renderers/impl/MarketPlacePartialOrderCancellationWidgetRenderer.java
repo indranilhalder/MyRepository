@@ -148,17 +148,29 @@ public class MarketPlacePartialOrderCancellationWidgetRenderer extends
 					.getObject();
 			if (orderCancelRecordEntryModel.getStatus().equals(
 					OrderModificationEntryStatus.SUCCESSFULL)) {
-				Messagebox.show(LabelUtils.getLabel(
-						widget,
-						"cancellationNumber",
-						new Object[] {
-								orderCancelRecordEntryModel
-										.getTransactionCode(),
-								orderCancelRecordEntryModel
-										.getRefundableAmount() }),
-						LabelUtils.getLabel(widget,
-								"cancellationNumberTitle", new Object[0]),
-						1, "z-msgbox z-msgbox-information");
+				if(null!= orderCancelRecordEntryModel &&  !orderCancelRecordEntryModel.getTransactionCode().isEmpty()){
+					Messagebox.show(LabelUtils.getLabel(
+							widget,
+							"cancellationNumber",
+							new Object[] {
+									orderCancelRecordEntryModel
+											.getTransactionCode(),
+									orderCancelRecordEntryModel
+											.getRefundableAmount() }),
+							LabelUtils.getLabel(widget,
+									"cancellationNumberTitle", new Object[0]),
+							1, "z-msgbox z-msgbox-information");
+				}else{
+					Messagebox.show(LabelUtils.getLabel(
+							widget,
+							"cancellationQcNumber",
+							new Object[] {
+									orderCancelRecordEntryModel
+											.getRefundableAmount() }),
+							LabelUtils.getLabel(widget,
+									"cancellationNumberTitle", new Object[0]),
+							1, "z-msgbox z-msgbox-information");
+				}
 			} else {
 				// Messagebox.show(LabelUtils.getLabel(widget,
 				// "errorCreatingRequest", new Object[0]), LabelUtils
