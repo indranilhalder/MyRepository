@@ -39,8 +39,7 @@
 											<p><span>Product Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.amountAfterAllDisc}"
 											displayFreeForZero="true" /></span></p>
 											<p><span>Delivery Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.currDelCharge}" /></span></p>
-											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice"><c:choose><c:when test="${entry.scheduledDeliveryCharge eq 0}">FREE</c:when>
-												<c:otherwise>&#8377;${entry.scheduledDeliveryCharge}</c:otherwise></c:choose></span></p>
+											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.scheduledDeliveryCharge}</span></p>
 											<p><span>Seller Id:</span> <span class="totalOrderPrice">${sellerOrder.code}</span></p>
 										</div>
 								</div>
@@ -72,8 +71,8 @@
 											<div class="orderStatementL2Body">
 												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.juspayApportionValue}</span></p>
 												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.juspayDeliveryValue + entry.walletApportionPaymentData.juspayShippingValue}</span></p>
-												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice"><c:choose><c:when test="${entry.walletApportionPaymentData.juspaySchedulingValue eq 0}">FREE</c:when>
-													<c:otherwise>&#8377;${entry.walletApportionPaymentData.juspaySchedulingValue}</c:otherwise></c:choose></span></p>
+												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">
+													&#8377;${entry.walletApportionPaymentData.juspaySchedulingValue}</span></p>
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${sellerOrder.code}</span></p>
 											</div>
 									</div>
@@ -101,8 +100,7 @@
 										<div class="orderStatementL2Body">
 											<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcApportionPartValue}</span></p>
 											<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcDeliveryPartValue + entry.walletApportionPaymentData.qcShippingPartValue}</span></p>
-											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice"><c:choose><c:when test="${entry.walletApportionPaymentData.qcSchedulingPartValue eq 0}">FREE</c:when>
-												<c:otherwise>&#8377;${entry.walletApportionPaymentData.qcSchedulingPartValue}</c:otherwise></c:choose></span></p>
+											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcSchedulingPartValue}</span></p>
 											<p><span>Seller Id:</span> <span class="totalOrderPrice">${sellerOrder.code}</span></p>
 										</div>
 								</div>
@@ -141,8 +139,7 @@
 											<p><span>Product Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.amountAfterAllDisc}"
 											displayFreeForZero="true" /></span></p>
 											<p><span>Delivery Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.currDelCharge}" /></span></p>
-											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice"><c:choose><c:when test="${entry.scheduledDeliveryCharge eq 0}">FREE</c:when>
-												<c:otherwise>&#8377;${entry.scheduledDeliveryCharge}</c:otherwise></c:choose></span></p>
+											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.scheduledDeliveryCharge}</span></p>
 											<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 										</div>
 								</div>
@@ -171,8 +168,7 @@
 											<div class="orderStatementL2Body">
 												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspayApportionValue}</span></p>
 												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspayDeliveryValue + entry.walletApportionforReverseData.juspayShippingValue}</span></p>
-												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice"><c:choose><c:when test="${entry.walletApportionforReverseData.juspaySchedulingValue eq 0}">FREE</c:when>
-													<c:otherwise>&#8377;${entry.walletApportionforReverseData.juspaySchedulingValue}</c:otherwise></c:choose></span></p>
+												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspaySchedulingValue}</span></p>
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 											</div>
 									</div>
@@ -224,8 +220,7 @@
 											<div class="orderStatementL2Body">
 												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${qcApportionValue}</span></p>
 												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${qcDeliveryValue + qcShippingValue}</span></p>
-												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice"><c:choose><c:when test="${qcSchedulingValue eq 0}">FREE</c:when>
-													<c:otherwise>&#8377;${qcSchedulingValue}</c:otherwise></c:choose></span></p>
+												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${qcSchedulingValue}</span></p>
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 											</div>
 									</div>
