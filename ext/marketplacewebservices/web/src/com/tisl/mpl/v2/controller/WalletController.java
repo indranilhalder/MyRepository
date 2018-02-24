@@ -473,6 +473,12 @@ public class WalletController
 			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
 			redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
 			LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
+		}catch (final EtailBusinessExceptions ex)
+		{
+			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
+			redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
+			LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
 		}
 		catch (final Exception ex)
 		{

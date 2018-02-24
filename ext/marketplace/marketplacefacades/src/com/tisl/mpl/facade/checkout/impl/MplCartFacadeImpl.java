@@ -932,7 +932,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 			totalPrice = subtotal + delCharge + sdCharge - discountValue.doubleValue();
 
-			cartModel.setDeliveryCost(Double.valueOf(delCharge));
+			cartModel.setDeliveryCost(Double.valueOf(delCharge+sdCharge));
 			cartModel.setSubtotal(Double.valueOf(subtotal));
 			cartModel.setTotalPrice(Double.valueOf(totalPrice));
 			cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
