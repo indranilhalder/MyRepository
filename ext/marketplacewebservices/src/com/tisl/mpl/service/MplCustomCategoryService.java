@@ -38,5 +38,11 @@ public interface MplCustomCategoryService
 	public String getHTMLParsedTextContent(String description);
 
 	public DepartmentListHierarchyDataAmp getAllCategoriesAmp();
+	
+	/**
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	CategoryListHierarchyData getAllCategorieshierarchy() throws EtailNonBusinessExceptions;
 
 }
