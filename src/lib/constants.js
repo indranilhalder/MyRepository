@@ -26,8 +26,8 @@ export const SIGN_UP_PATH = "/sign_up";
 export const PRODUCT_FILTER_ROUTER = "/filter";
 export const PRODUCT_SELLER_ROUTER = "/productSeller";
 export const PRODUCT_CART_ROUTER = "/myBag";
-
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
+export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
 export const PRICE_TEXT = "Price";
 export const OFFER_AVAILABLE = "Offer Available";
 export const EMI_AVAILABLE = "EMI Available";

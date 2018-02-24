@@ -11,6 +11,7 @@ import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
+import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
 import * as Cookie from "./lib/Cookie";
@@ -23,6 +24,7 @@ import {
   PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
   SIGN_UP_PATH,
+  PRODUCT_DELIVERY_ADDRESSES,
   PRODUCT_FILTER_ROUTER,
   PRODUCT_SELLER_ROUTER,
   PRODUCT_CART_ROUTER,
@@ -62,22 +64,22 @@ class App extends Component {
   getAccessToken = () => {
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let guid = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    let uid = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let cartIdForUser = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (!globalCookie) {
       this.props.getGlobalAccessToken();
-      if (!guid) {
+      if (!cartIdForAnonymous) {
         this.props.generateCartIdForAnonymous();
       }
     }
 
     if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
-      if (!uid) {
+      if (!cartIdForUser) {
         this.props.generateCartIdForLoggedInUser();
       }
     }
@@ -155,6 +157,11 @@ class App extends Component {
             exact
             path={PRODUCT_SELLER_ROUTER}
             component={ProductSellerContainer}
+          />
+          <Route
+            exact
+            path={PRODUCT_DELIVERY_ADDRESSES}
+            component={CheckoutAddressContainer}
           />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
           <Route
