@@ -5,11 +5,23 @@ import Input2 from "./Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
 import informationIcon from "./img/Search.svg";
 export default class SearchBrand extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      barandValue: props.barandValue ? props.barandValue : ""
+    };
+  }
   handleClick = () => {
     if (this.props.onClick) {
       this.props.onClick();
     }
   };
+  onChangeBrand(val) {
+    this.setState({
+      barandValue: val
+    });
+  }
+
   render() {
     return (
       <div className={styles.base}>
@@ -19,6 +31,8 @@ export default class SearchBrand extends React.Component {
             textStyle={{ fontSize: 14 }}
             height={40}
             rightChildSize={35}
+            onChange={val => this.onChangeBrand(val)}
+            value={this.props.value}
             rightChild={
               <CircleButton
                 onClick={this.handleClick}
@@ -35,5 +49,6 @@ export default class SearchBrand extends React.Component {
 }
 SearchBrand.propTypes = {
   onClick: PropTypes.func,
-  placeHolder: PropTypes.func
+  placeHolder: PropTypes.func,
+  onChange: PropTypes.func
 };
