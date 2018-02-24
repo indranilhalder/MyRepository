@@ -131,8 +131,8 @@
 									</c:choose>
 								</c:if>
 
-								<span class="viewCardTerms"><a href="#"><spring:theme
-											code="text.cliq.cash.payment.term.label" /> </a></span> 
+								<%-- <span class="viewCardTerms"><a href="#"><spring:theme
+											code="text.cliq.cash.payment.term.label" /> </a></span>  --%>
 							</div>
 							<br />
 							<spring:theme code="text.cliq.cash.payment.addcash.label"
