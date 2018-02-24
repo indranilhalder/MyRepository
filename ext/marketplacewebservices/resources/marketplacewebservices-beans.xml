@@ -3881,5 +3881,62 @@
 		<property name="productCode" type="String"></property>
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.CategoryListHierarchyData">
+		<property name="modifiedTime" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL1Data>" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryListHierarchyWSData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="modifiedTime" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL1WSData>" />
+	</bean>
+		
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL1Data">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="categoryImageURl" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL2Data>" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL1WSData">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="categoryImageURl" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL2WSData>" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL2Data">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL3Data>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL2WSData">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL3WSData>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL3Data">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL3WSData">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+	</bean>
+
+	
 </beans>
 
