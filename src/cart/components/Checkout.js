@@ -47,6 +47,15 @@ export default class Checkout extends React.Component {
               </div>
             </div>
           )}
+          {this.props.totalDiscount && (
+            <div className={styles.informationHolder}>
+              <div className={styles.informationQuestionHolder}>Discount</div>
+              <div className={styles.informationAnswerHolder}>
+                Rs.
+                {this.props.totalDiscount}
+              </div>
+            </div>
+          )}
           {this.props.tax && (
             <div className={styles.informationHolder}>
               <div className={styles.informationQuestionHolder}>Tax</div>
