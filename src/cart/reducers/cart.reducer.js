@@ -1,4 +1,9 @@
 import * as cartActions from "../actions/cart.actions";
+import * as Cookies from "../../lib/Cookie";
+import {
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS
+} from "../../lib/constants";
 const cart = (
   state = {
     status: null,
@@ -18,65 +23,27 @@ const cart = (
 
     deliveryModes: null,
     userAddress: null,
+    setAddress: null,
     netBankDetails: null,
     emiBankDetails: null
   },
   action
 ) => {
   switch (action.type) {
-    case cartActions.PRODUCT_CART_DETAILS_REQUEST:
+    case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         loading: true
       });
 
-    case cartActions.PRODUCT_CART_DETAILS_SUCCESS:
+    case cartActions.CART_DETAILS_SUCCESS:
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetails: action.cartDetails,
         loading: false
       });
 
-    case cartActions.PRODUCT_CART_DETAILS_FAILURE:
-      return Object.assign({}, state, {
-        cartDetailsStatus: action.status,
-        cartDetailsError: action.error,
-        loading: false
-      });
-
-    case cartActions.USER_CART_REQUEST:
-      return Object.assign({}, state, {
-        userCartStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.USER_CART_SUCCESS:
-      return Object.assign({}, state, {
-        userCartStatus: action.status,
-        userCart: action.userCart,
-        loading: false
-      });
-
-    case cartActions.USER_CART_FAILURE:
-      return Object.assign({}, state, {
-        userCartStatus: action.status,
-        userCartError: action.error,
-        loading: false
-      });
-    case cartActions.PRODUCT_CART_REQUEST:
-      return Object.assign({}, state, {
-        cartDetailsStatus: action.status,
-        loading: true
-      });
-
-    case cartActions.PRODUCT_CART_SUCCESS:
-      return Object.assign({}, state, {
-        cartDetailsStatus: action.status,
-        cartDetails: action.cartDetails,
-        loading: false
-      });
-
-    case cartActions.PRODUCT_CART_FAILURE:
+    case cartActions.CART_DETAILS_FAILURE:
       return Object.assign({}, state, {
         cartDetailsStatus: action.status,
         cartDetailsError: action.error,
@@ -131,7 +98,7 @@ const cart = (
     case cartActions.GET_USER_ADDRESS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        userAddress: action.userDeliveryAddress,
+        userAddress: action.userAddress,
         loading: false
       });
 
@@ -141,7 +108,23 @@ const cart = (
         error: action.error,
         loading: false
       });
-
+    case cartActions.CART_DETAILS_CNC_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+    case cartActions.CART_DETAILS_CNC_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+    case cartActions.CART_DETAILS_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        setAddress: action.setAddress,
+        loading: false
+      });
     case cartActions.NET_BANKING_DETAILS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -180,6 +163,35 @@ const cart = (
         status: action.status,
         error: action.error,
         loading: false
+      });
+
+    case cartActions.GENERATE_CART_ID_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status
+      });
+
+    case cartActions.GENERATE_CART_ID_FOR_LOGGED_ID_SUCCESS:
+      Cookies.createCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER,
+        JSON.stringify(action.cartDetails)
+      );
+      return Object.assign({}, state, {
+        status: action.status
+      });
+
+    case cartActions.GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS:
+      Cookies.createCookie(
+        CART_DETAILS_FOR_ANONYMOUS,
+        JSON.stringify(action.cartDetails)
+      );
+      return Object.assign({}, state, {
+        status: action.status
+      });
+
+    case cartActions.GENERATE_CART_ID_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error
       });
 
     default:

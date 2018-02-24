@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
 import informationIcon from "../../general/components/img/GPS.svg";
-import SelectBoxWithInput from "../../general/components/SelectBoxWithInput.js";
 import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
@@ -12,53 +11,17 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selected: false,
-      address: props.address ? props.address : "",
-      pinCodeValue: props.pinCodeValue ? props.pinCodeValue : "",
-      fullNameValue: props.fullNameValue ? props.fullNameValue : "",
-      phoneNumberValue: props.phoneNumberValue ? props.phoneNumberValue : "",
-      stateName: props.stateName ? props.stateName : "",
-      cityNameValue: props.cityNameValue ? props.cityNameValue : "",
-      localityValue: props.localityValue ? props.localityValue : "",
-      landmark: props.landmark ? props.landmark : "",
-      titleValue: props.titleValue ? props.titleValue : "",
-      options: props.options ? props.titleValue : ""
-    };
-  }
-  getPinCodeValue(val) {
-    this.setState({ pinCodeValue: val });
-  }
-  onChangePhoneNumber(val) {
-    this.setState({ phoneNumberValue: val });
-  }
-  onChangeStateName(val) {
-    this.setState({ stateName: val });
-  }
-  onChangeCityName(val) {
-    this.setState({ cityNameValue: val });
+    this.state = {};
   }
 
-  onChangeLocality(val) {
-    this.setState({ localityValue: val });
-  }
-  getFullNameValue(val) {
-    this.setState({ fullNameValue: val });
-  }
-  onChangeLandmark(val) {
-    this.setState({ landmark: val });
-  }
-  onChangeAddress(val) {
-    this.setState({ value: val });
-  }
-  onSelect() {
-    this.setState({ selected: !this.state.selected });
-    if (this.props.onSelect) {
-      this.props.onSelect();
+  onChange(val) {
+    if (this.props.onChange) {
+      this.props.onChange(val);
     }
   }
+
   clearAllValue = () => {
-    this.setState({
+    this.onChange({
       pinCodeValue: "",
       fullNameValue: "",
       phoneNumberValue: "",
@@ -66,8 +29,7 @@ export default class AddDeliveryAddress extends React.Component {
       cityNameValue: "",
       localityValue: "",
       landmark: "",
-      titleValue: "",
-      options: ""
+      titleValue: ""
     });
   };
   onSaveAddressDetails(val) {
@@ -79,7 +41,7 @@ export default class AddDeliveryAddress extends React.Component {
       addressDetails.phoneNumberValue = this.state.phoneNumberValue;
       addressDetails.stateName = this.state.stateName;
       addressDetails.cityNameValue = this.state.cityNameValue;
-      addressDetails.localityValue = this.state.localityValue;
+
       addressDetails.landmark = this.state.landmark;
       addressDetails.titleValue = this.state.titleValue;
       this.props.onSaveAddressDetails(addressDetails);
@@ -109,13 +71,13 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="Enter a pincode/zipcode*"
-            onChange={val => this.getPinCodeValue(val)}
+            onChange={postalCode => this.onChange({ postalCode })}
             textStyle={{ fontSize: 14 }}
             height={33}
             value={
-              this.props.pinCodeValue
-                ? this.props.pinCodeValue
-                : this.state.pinCodeValue
+              this.props.postalCode
+                ? this.props.postalCode
+                : this.state.postalCode
             }
             rightChildSize={33}
             rightChild={
@@ -128,20 +90,20 @@ export default class AddDeliveryAddress extends React.Component {
           />
         </div>
         <div className={styles.content}>
-          <SelectBoxWithInput
+          <Input2
             option={this.state.options}
-            onChange={titleValue => this.setState({ titleValue })}
-            titleValue={this.state.titleValue}
-            fullNameValue={this.state.fullNameValue}
-            getFullNameValue={val => this.getFullNameValue(val)}
+            placeholder="Name*"
+            onChange={firstName => this.onChange({ firstName })}
+            textStyle={{ fontSize: 14 }}
+            height={33}
           />
         </div>
 
         <div className={styles.content}>
           <TextArea
             placeholder="Address*"
-            value={this.props.value ? this.props.value : this.state.value}
-            onChange={val => this.onChangeAddress(val)}
+            value={this.props.line1 ? this.props.line1 : this.state.line1}
+            onChange={line1 => this.onChange({ line1 })}
           />
         </div>
         <div className={styles.content}>
@@ -151,7 +113,7 @@ export default class AddDeliveryAddress extends React.Component {
             value={
               this.props.landmark ? this.props.landmark : this.state.landmark
             }
-            onChange={val => this.onChangeLandmark(val)}
+            onChange={landmark => this.onChange({ landmark })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -160,12 +122,8 @@ export default class AddDeliveryAddress extends React.Component {
           <Input2
             boxy={true}
             placeholder="Locality/town*"
-            value={
-              this.props.localityValue
-                ? this.props.localityValue
-                : this.state.localityValue
-            }
-            onChange={val => this.onChangeLocality(val)}
+            value={this.props.town ? this.props.town : this.state.town}
+            onChange={town => this.onChange({ town })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -174,12 +132,8 @@ export default class AddDeliveryAddress extends React.Component {
           <Input2
             boxy={true}
             placeholder="City/district*"
-            value={
-              this.props.cityNameValue
-                ? this.props.cityNameValue
-                : this.state.cityNameValue
-            }
-            onChange={val => this.onChangeCityName(val)}
+            value={this.props.city ? this.props.city : this.state.city}
+            onChange={city => this.onChange({ city })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -187,11 +141,9 @@ export default class AddDeliveryAddress extends React.Component {
         <div className={styles.content}>
           <Input2
             placeholder="State*"
-            value={
-              this.props.stateName ? this.props.stateName : this.state.stateName
-            }
+            value={this.props.state ? this.props.state : this.state.state}
             boxy={true}
-            onChange={val => this.onChangeStateName(val)}
+            onChange={state => this.onChange({ state })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
@@ -200,27 +152,35 @@ export default class AddDeliveryAddress extends React.Component {
           <Input2
             type="number"
             placeholder="Phone number*"
-            value={
-              this.props.phoneNumberValue
-                ? this.props.phoneNumberValue
-                : this.state.phoneNumberValue
-            }
+            value={this.props.phone ? this.props.phone : this.state.phone}
             boxy={true}
-            onChange={val => this.onChangePhoneNumber(val)}
+            onChange={phone => this.onChange({ phone })}
             textStyle={{ fontSize: 14 }}
             height={33}
           />
         </div>
 
         <div className={styles.content}>
-          <GridSelect limit={1} offset={0} elementWidthMobile={50}>
+          <GridSelect
+            limit={1}
+            offset={0}
+            elementWidthMobile={50}
+            onSelect={val => this.onChange({ addressType: val[0] })}
+          >
             {dataLabel.map((val, i) => {
-              return <CheckboxAndText label={val.label} value={i} />;
+              return (
+                <CheckboxAndText key={i} label={val.label} value={val.label} />
+              );
             })}
           </GridSelect>
         </div>
         <div className={styles.defaultText}>
-          <CheckboxAndText label="Make this default address" />
+          <CheckboxAndText
+            label="Make this default address"
+            selectItem={() =>
+              this.onChange({ defaultAddress: !this.props.defaultAddress })
+            }
+          />
         </div>
       </div>
     );

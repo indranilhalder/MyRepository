@@ -4,12 +4,11 @@ import {
   getProductPinCode,
   addProductToWishList,
   removeProductFromWishList,
-  addProductToBag,
+  addProductToCart,
   getProductSizeGuide,
   getPdpEmi,
   getProductSpecification,
   getProductWishList
-
 } from "../actions/pdp.actions";
 import ProductDescriptionPage from "../components/ProductDescriptionPage";
 import { withRouter } from "react-router-dom";
@@ -34,8 +33,8 @@ const mapDispatchToProps = dispatch => {
     removeProductFromWishList: productDetails => {
       dispatch(removeProductFromWishList(productDetails));
     },
-    addProductToBag: productDetails => {
-      dispatch(addProductToBag(productDetails));
+    addProductToCart: productDetails => {
+      dispatch(addProductToCart(productDetails));
     },
 
     showAddress: data => {

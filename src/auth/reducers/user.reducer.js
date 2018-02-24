@@ -3,7 +3,8 @@ import * as Cookies from "../../lib/Cookie";
 import {
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
-  REFRESH_TOKEN
+  REFRESH_TOKEN,
+  LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
 const user = (
   state = {
@@ -24,6 +25,7 @@ const user = (
       });
 
     case userActions.LOGIN_USER_SUCCESS:
+      Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(action.user));
       return Object.assign({}, state, {
         status: action.status,
         user: action.user,
@@ -64,6 +66,7 @@ const user = (
       });
 
     case userActions.OTP_VERIFICATION_SUCCESS:
+      Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(action.user));
       return Object.assign({}, state, {
         status: action.status,
         user: action.user,

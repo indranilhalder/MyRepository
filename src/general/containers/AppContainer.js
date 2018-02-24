@@ -6,6 +6,10 @@ import {
   getGlobalAccessToken,
   refreshToken
 } from "../../auth/actions/user.actions";
+import {
+  generateCartIdForLoggedInUser,
+  generateCartIdForAnonymous
+} from "../../cart/actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import App from "../../App.js";
 
@@ -25,6 +29,12 @@ const mapDispatchToProps = dispatch => {
     },
     refreshToken: () => {
       dispatch(refreshToken());
+    },
+    generateCartIdForLoggedInUser: () => {
+      dispatch(generateCartIdForLoggedInUser());
+    },
+    generateCartIdForAnonymous: () => {
+      dispatch(generateCartIdForAnonymous());
     }
   };
 };

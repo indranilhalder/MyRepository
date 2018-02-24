@@ -5,46 +5,49 @@ import AddDeliveryAddress from "./AddDeliveryAddress";
 import DummyTab from "./DummyTab";
 import DeliveryModeSet from "./DeliveryModeSet";
 export default class CheckoutAddress extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { defaultAddress: true };
+  }
+  componentDidMount() {
+    this.props.getUserAddress();
+  }
+  onChange(val) {
+    this.setState(val);
+  }
+  onCancel() {
+    this.props.addUserAddress(this.state);
+  }
+  onSelectAddress(addressId) {
+    this.props.addAddressToCart(addressId[0]);
+  }
   render() {
     return (
-      <CheckoutFrame>
-        {this.props.addressSet && (
+      <CheckoutFrame onSubmit={() => this.onCancel()}>
+        {this.props.cart.userAddress && (
           <ConfirmAddress
-            address={[
-              {
-                addressTitle: "Home",
-                addressDescription:
-                  "Lal Bahadur Shastri Marg, Chandan Nagar, Vikhori West"
-              },
-              {
-                addressTitle: "Office",
-                addressDescription:
-                  "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
-              },
-              {
-                addressTitle: "Other1",
-                addressDescription:
-                  "Tagore Nagar, Vikhroli East, Mumbai, Maharashtra 400012"
-              },
-              {
-                addressTitle: "Other2",
-                addressDescription:
-                  "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
-              },
-              {
-                addressTitle: "Other3",
-                addressDescription:
-                  "Homi Modi St, Kala Ghoda, Fort Mumbai, Maharashtra 400023"
-              }
-            ]}
+            address={this.props.cart.userAddress.addresses.map(address => {
+              return {
+                addressTitle: address.id,
+                addressDescription: `${address.line1} ${address.town} ${
+                  address.city
+                }, ${address.state} ${address.postalCode}`
+              };
+            })}
+            onSelectAddress={addressId => this.onSelectAddress(addressId)}
           />
         )}
-        {!this.props.addressSet && <AddDeliveryAddress />}
+        {!this.props.cart.userAddress && (
+          <AddDeliveryAddress
+            {...this.state}
+            onChange={val => this.onChange(val)}
+          />
+        )}
 
         {!this.props.deliveryModeSet && (
           <DummyTab number="2" title="Delivery Mode" />
         )}
-        {this.props.deliveryModeSet && (
+        {!this.props.deliveryModeSet && (
           <DeliveryModeSet
             productDelivery={[
               {
@@ -66,5 +69,5 @@ export default class CheckoutAddress extends React.Component {
 }
 CheckoutAddress.defaultProps = {
   addressSet: false,
-  deliveryModeSet: true
+  deliveryModeSet: false
 };

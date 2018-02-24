@@ -1,7 +1,5 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
-import * as Cookie from "../../lib/Cookie";
-
-import { CUSTOMER_ACCESS_TOKEN, FAILURE } from "../../lib/constants";
+import { FAILURE } from "../../lib/constants";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -24,9 +22,9 @@ export const REMOVE_PRODUCT_FROM_WISH_LIST_SUCCESS =
 export const REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE =
   "REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE";
 
-export const ADD_PRODUCT_TO_BAG_REQUEST = "ADD_PRODUCT_TO_BAG_REQUEST";
-export const ADD_PRODUCT_TO_BAG_SUCCESS = "ADD_PRODUCT_TO_BAG_SUCCESS";
-export const ADD_PRODUCT_TO_BAG_FAILURE = "ADD_PRODUCT_TO_BAG_FAILURE";
+export const ADD_PRODUCT_TO_CART_REQUEST = "ADD_PRODUCT_TO_CART_REQUEST";
+export const ADD_PRODUCT_TO_CART_SUCCESS = "ADD_PRODUCT_TO_CART_SUCCESS";
+export const ADD_PRODUCT_TO_CART_FAILURE = "ADD_PRODUCT_TO_CART_FAILURE";
 
 export const PRODUCT_SIZE_GUIDE_REQUEST = "PRODUCT_SIZE_GUIDE_REQUEST";
 export const PRODUCT_SIZE_GUIDE_SUCCESS = "PRODUCT_SIZE_GUIDE_SUCCESS";
@@ -207,38 +205,45 @@ export function removeProductFromWishList(productDetails) {
   };
 }
 
-export function addProductToBagRequest() {
+export function addProductToCartRequest() {
   return {
-    type: ADD_PRODUCT_TO_BAG_REQUEST,
+    type: ADD_PRODUCT_TO_CART_REQUEST,
     status: REQUESTING
   };
 }
-export function addProductToBagSuccess() {
+export function addProductToCartSuccess() {
   return {
-    type: ADD_PRODUCT_TO_BAG_SUCCESS,
+    type: ADD_PRODUCT_TO_CART_SUCCESS,
     status: SUCCESS
   };
 }
 
-export function addProductToBagFailure(error) {
+export function addProductToCartFailure(error) {
   return {
-    type: ADD_PRODUCT_TO_BAG_FAILURE,
+    type: ADD_PRODUCT_TO_CART_FAILURE,
     status: ERROR,
     error
   };
 }
-export function addProductToBag(products) {
+export function addProductToCart(productDetails) {
   return async (dispatch, getState, { api }) => {
-    dispatch(addProductToBagRequest());
+    dispatch(addProductToCartRequest());
     try {
-      const result = await api.postMock(ADD_PRODUCT_TO_CART);
+      const result = await api.post(
+        `${PRODUCT_DETAILS_PATH}/${productDetails.userId}/carts/${
+          productDetails.cartId
+        }/addProductToCart?access_token=${
+          productDetails.accessToken
+        }&isPwa=true&platformNumber=2&productCode=MP000000000113789&USSID=273570HMAIBSSZ05&quantity=2&addedToCartWl=false`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(addProductToBagSuccess());
+
+      dispatch(addProductToCartSuccess());
     } catch (e) {
-      dispatch(addProductToBagFailure(e.message));
+      dispatch(addProductToCartFailure(e.message));
     }
   };
 }

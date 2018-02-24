@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 import ProductReviewPage from "../components/ProductReviewPage";
 import { withRouter } from "react-router-dom";
-import { addProductToWishList, addProductToBag } from "../actions/pdp.actions";
+import { addProductToWishList, addProductToCart } from "../actions/pdp.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    addProductToBag: productDetails => {
-      dispatch(addProductToBag(productDetails));
+    addProductToCart: productDetails => {
+      dispatch(addProductToCart(productDetails));
     },
     addProductToWishList: productDetails => {
       dispatch(addProductToWishList(productDetails));
