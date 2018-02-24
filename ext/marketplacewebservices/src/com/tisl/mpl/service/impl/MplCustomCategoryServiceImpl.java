@@ -1221,5 +1221,126 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 		return cmsComponentsListFinal;
 	}
+	
+	
+	@Override
+	public CategoryListHierarchyData getAllCategorieshierarchy() throws EtailNonBusinessExceptions
+	{
+		final CategoryListHierarchyData shopByDeptData = new CategoryListHierarchyData();
+		final List<CategoryHierarchyL1Data> deptDataList = new ArrayList<CategoryHierarchyL1Data>();
+		//	List<DepartmentSubHierarchyData> subDeptDataList = null;
+		CategoryHierarchyL1Data deptData = null;
+		CategoryHierarchyL2Data subDeptData = null;
+		List<NavigationBarComponentModel> departmentList = new ArrayList<NavigationBarComponentModel>();
+		//final Date modifiedTime = null;
+		subDeptData = new CategoryHierarchyL2Data();
+
+		CategoryHierarchyL3Data thirdLevelCat = null;
+		thirdLevelCat = new CategoryHierarchyL3Data();
+		List<CategoryHierarchyL2Data> subDeptDataList = null;
+		List<CategoryHierarchyL3Data> superSubDeptDataList = null;
+		try
+		{
+			final NavigationBarCollectionComponentModel shopByDeptComponent = getShopByDept();
+
+			if (CollectionUtils.isNotEmpty(shopByDeptComponent.getComponents()))
+			{
+				departmentList = shopByDeptComponent.getComponents();
+
+			}
+
+			for (final NavigationBarComponentModel dept : departmentList)
+			{
+				final CMSLinkComponentModel superNode = dept.getLink();
+				final CMSNavigationNodeModel linkNode = dept.getNavigationNode();
+				//dept.getNavigationNode().getMedia().getUrl();
+				final CategoryHierarchyL1Data imageData = new CategoryHierarchyL1Data();
+
+				deptData = new CategoryHierarchyL1Data();
+
+				subDeptDataList = new ArrayList<CategoryHierarchyL2Data>();
+				//Super category
+				if (StringUtils.isNotEmpty(superNode.getUrl()))
+				{
+					deptData.setWebURL(superNode.getUrl());
+				}
+				if (StringUtils.isNotEmpty(superNode.getLinkName()))
+				{
+					deptData.setCategory_name(superNode.getLinkName());
+				}
+				if (null != linkNode.getMedia() && StringUtils.isNotEmpty(linkNode.getMedia().getUrl()))
+				{
+					imageData.setCategoryImageURl(linkNode.getMedia().getUrl());
+				}
+
+				//Sub category
+				if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
+				{
+					for (final CMSNavigationNodeModel sublink : linkNode.getChildren())
+					{
+						if (CollectionUtils.isNotEmpty(sublink.getLinks()))
+						{
+							subDeptData = new CategoryHierarchyL2Data();
+							superSubDeptDataList = new ArrayList<CategoryHierarchyL3Data>();
+
+							if (StringUtils.isNotEmpty(sublink.getTitle()))
+							{
+								subDeptData.setCategory_name(sublink.getTitle());
+							}
+							if (null != (sublink.getLinks().get(0).getUrl()))
+							{
+								subDeptData.setWebURL(sublink.getLinks().get(0).getUrl()); ///womens-clothing-ethnic-wear-sarees/c-msh1012102
+							}
+							//final int count = 0;
+							//Super sub category
+							for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
+							{
+								//if (count > 0)
+								{
+									thirdLevelCat = new CategoryHierarchyL3Data();
+								}
+								if (StringUtils.isNotEmpty(thirdLevelsublink.getLinkName()))
+								{
+									thirdLevelCat.setCategory_name(thirdLevelsublink.getLinkName());
+								}
+								if (StringUtils.isNotEmpty(thirdLevelsublink.getUrl()))
+								{
+									thirdLevelCat.setWebURL(thirdLevelsublink.getUrl());
+								}
+								superSubDeptDataList.add(thirdLevelCat);
+							}
+							//count++;
+						}
+						subDeptData.setSubCategories(superSubDeptDataList);
+						subDeptDataList.add(subDeptData);
+					}
+				}
+				if (!subDeptDataList.isEmpty())
+				{
+					deptData.setSubCategories(subDeptDataList);
+				}
+				if (null != imageData && StringUtils.isNotEmpty(imageData.getCategoryImageURl()))
+				{
+					deptData.setCategoryImageURl(imageData.getCategoryImageURl());
+				}
+				deptDataList.add(deptData);
+
+			}
+			if (!deptDataList.isEmpty())
+			{
+				shopByDeptData.setSubCategories(deptDataList);
+			}
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		return shopByDeptData;
+	}
+
 
 }
