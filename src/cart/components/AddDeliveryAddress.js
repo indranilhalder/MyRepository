@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import { Icon, CircleButton } from "xelpmoc-core";
 import informationIcon from "../../general/components/img/GPS.svg";
-import SelectBoxWithInput from "../../general/components/SelectBoxWithInput.js";
 import GridSelect from "../../general/components/GridSelect";
 import CheckboxAndText from "./CheckboxAndText";
 import TextArea from "../../general/components/TextArea.js";
@@ -12,9 +11,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      options: [{ label: "Mr.", value: "MR" }, { label: "Mrs.", value: "MRS" }]
-    };
+    this.state = {};
   }
 
   onChange(val) {
@@ -32,8 +29,7 @@ export default class AddDeliveryAddress extends React.Component {
       cityNameValue: "",
       localityValue: "",
       landmark: "",
-      titleValue: "",
-      options: ""
+      titleValue: ""
     });
   };
   onSaveAddressDetails(val) {
