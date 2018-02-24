@@ -23,7 +23,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -82,7 +83,6 @@ class ProductDescriptionPage extends Component {
     let cartDetailsLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
-
     if (userDetails) {
       Object.assign(productDetails, {
         userId: JSON.parse(userDetails).customerInfo.mobileNumber,
@@ -106,7 +106,9 @@ class ProductDescriptionPage extends Component {
       this.props.addProductToWishList(productDetails);
     }
   };
-
+  renderToMyBag() {
+    this.props.history.push(PRODUCT_CART_ROUTER);
+  }
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -121,14 +123,14 @@ class ProductDescriptionPage extends Component {
           <div className={styles.base}>
             <div className={styles.pageHeader}>
               <HollowHeader
-                addProductToBag={this.props.addProductToBag}
+                addProductToBag={() => this.renderToMyBag()}
                 addProductToWishList={this.props.addProductToWishList}
                 history={this.props.history}
               />
             </div>
             <ProductGalleryMobile>
-              {mobileGalleryImages.map(val => {
-                return <Image image={val.value} />;
+              {mobileGalleryImages.map((val, idx) => {
+                return <Image image={val.value} key={idx} />;
               })}
             </ProductGalleryMobile>
             <div className={styles.content}>
@@ -184,9 +186,10 @@ class ProductDescriptionPage extends Component {
               onClick={this.goToCouponPage}
             />
             {productData.eligibleDeliveryModes &&
-              productData.eligibleDeliveryModes.map(val => {
+              productData.eligibleDeliveryModes.map((val, idx) => {
                 return (
                   <DeliveryInformation
+                    key={idx}
                     header={val.name}
                     placedTime={val.timeline}
                     type={val.code}

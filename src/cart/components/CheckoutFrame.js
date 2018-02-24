@@ -3,9 +3,14 @@ import Checkout from "./Checkout";
 import PropTypes from "prop-types";
 import styles from "./CheckoutFrame.css";
 export default class CheckoutFrame extends React.Component {
-  hnadleCancel = () => {
+  handleCancel = () => {
     if (this.props.onCancel) {
       this.props.onCancel();
+    }
+  };
+  handleSubmit = () => {
+    if (this.props.onSubmit) {
+      this.props.onSubmit();
     }
   };
   render() {
@@ -23,6 +28,7 @@ export default class CheckoutFrame extends React.Component {
           offers={this.props.offers}
           delivery={this.props.delivery}
           payable={this.props.payable}
+          onCheckout={this.handleSubmit}
         />
       </div>
     );

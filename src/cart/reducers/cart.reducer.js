@@ -23,6 +23,7 @@ const cart = (
 
     deliveryModes: null,
     userAddress: null,
+    setAddress: null,
     netBankDetails: null,
     emiBankDetails: null
   },
@@ -97,7 +98,7 @@ const cart = (
     case cartActions.GET_USER_ADDRESS_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        userAddress: action.userDeliveryAddress,
+        userAddress: action.userAddress,
         loading: false
       });
 
@@ -107,7 +108,23 @@ const cart = (
         error: action.error,
         loading: false
       });
-
+    case cartActions.CART_DETAILS_CNC_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+    case cartActions.CART_DETAILS_CNC_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+    case cartActions.CART_DETAILS_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        setAddress: action.setAddress,
+        loading: false
+      });
     case cartActions.NET_BANKING_DETAILS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,

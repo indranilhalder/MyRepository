@@ -4,7 +4,8 @@ import {
   CUSTOMER_ACCESS_TOKEN,
   GLOBAL_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
-  FAILURE
+  FAILURE,
+  CART_DETAILS_FOR_LOGGED_IN_USER
 } from "../../lib/constants";
 
 export const USER_CART_PATH = "v2/mpl/users";
@@ -20,6 +21,18 @@ export const SELECT_DELIVERY_MODES_FAILURE = "SELECT_DELIVERY_MODES_FAILURE";
 export const GET_USER_ADDRESS_REQUEST = "GET_USER_ADDRESS_REQUEST";
 export const GET_USER_ADDRESS_SUCCESS = "GET_USER_ADDRESS_SUCCESS";
 export const GET_USER_ADDRESS_FAILURE = "GET_USER_ADDRESS_FAILURE";
+
+export const ADD_USER_ADDRESS_REQUEST = "ADD_USER_ADDRESS_REQUEST";
+export const ADD_USER_ADDRESS_SUCCESS = "ADD_USER_ADDRESS_SUCCESS";
+export const ADD_USER_ADDRESS_FAILURE = "ADD_USER_ADDRESS_FAILURE";
+
+export const ADD_ADDRESS_TO_CART_REQUEST = "ADD_ADDRESS_TO_CART_REQUEST";
+export const ADD_ADDRESS_TO_CART_SUCCESS = "ADD_ADDRESS_TO_CART_SUCCESS";
+export const ADD_ADDRESS_TO_CART_FAILURE = "ADD_ADDRESS_TO_CART_FAILURE";
+
+export const CART_DETAILS_CNC_REQUEST = "CART_DETAILS_CNC_REQUEST";
+export const CART_DETAILS_CNC_SUCCESS = "CART_DETAILS_CNC_SUCCESS";
+export const CART_DETAILS_CNC_FAILURE = "CART_DETAILS_CNC_FAILURE";
 
 export const NET_BANKING_DETAILS_REQUEST = "NET_BANKING_DETAILS_REQUEST";
 export const NET_BANKING_DETAILS_SUCCESS = "NET_BANKING_DETAILS_SUCCESS";
@@ -39,6 +52,7 @@ export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
 export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
+const pincode = 229001;
 
 export function cartDetailsRequest() {
   return {
@@ -169,6 +183,152 @@ export function getUserAddress() {
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
+    }
+  };
+}
+
+export function addUserAddressRequest(error) {
+  return {
+    type: ADD_USER_ADDRESS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addUserAddressSuccess(userAddress) {
+  return {
+    type: ADD_USER_ADDRESS_SUCCESS,
+    status: SUCCESS,
+    userAddress
+  };
+}
+
+export function addUserAddressFailure(error) {
+  return {
+    type: ADD_USER_ADDRESS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function addUserAddress(userAddress) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(userAddressRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          getState().user.user.customerInfo.mobileNumber
+        }/addAddress?channel=mobile&countryIso=IN&emailId=${
+          getState().user.user.customerInfo.mobileNumber
+        }&access_token=${JSON.parse(customerCookie).access_token}&addressType=${
+          userAddress.addressType
+        }&city=${userAddress.city}&defaultAddress=${
+          userAddress.defaultAddress
+        }&firstName=${userAddress.firstName}&landmark=${
+          userAddress.landmark
+        }&line1=${userAddress.line1}&phone=${userAddress.phone}&postalCode=${
+          userAddress.postalCode
+        }&state=${userAddress.state}&town=${
+          userAddress.town
+        }&line2=&line3=&lastName=&defaultFlag=0`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+
+      dispatch(userAddressSuccess(resultJson));
+    } catch (e) {
+      dispatch(userAddressFailure(e.message));
+    }
+  };
+}
+
+export function addAddressToCartRequest(error) {
+  return {
+    type: ADD_ADDRESS_TO_CART_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addAddressToCartSuccess(userAddress) {
+  return {
+    type: ADD_ADDRESS_TO_CART_SUCCESS,
+    status: SUCCESS,
+    userAddress
+  };
+}
+
+export function addAddressToCartFailure(error) {
+  return {
+    type: ADD_ADDRESS_TO_CART_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function addAddressToCart(addressId) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  return async (dispatch, getState, { api }) => {
+    dispatch(userAddressRequest());
+    try {
+      let userId = getState().user.user.customerInfo.mobileNumber;
+      let access_token = JSON.parse(customerCookie).access_token;
+      let cartId = JSON.parse(cartDetails).code;
+      const result = await api.post(
+        `${USER_CART_PATH}/${userId}/addAddressToOrder?channel=mobile&access_token=${access_token}&addressId=${addressId}&cartId=${cartId}&removeExchangeFromCart=`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      // this is going to be call when we will wiringup the final checkout page
+      // dispatch(getCartDetailsCNC(userId, access_token, cartId));
+      dispatch(addAddressToCartSuccess(resultJson));
+    } catch (e) {
+      dispatch(userAddressFailure(e.message));
+    }
+  };
+}
+
+export function cartDetailsCNCRequest() {
+  return {
+    type: CART_DETAILS_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cartDetailsCNCSuccess(setAddress) {
+  return {
+    type: CART_DETAILS_CNC_SUCCESS,
+    status: SUCCESS,
+    setAddress
+  };
+}
+
+export function cartDetailsCNCFailure(error) {
+  return {
+    type: CART_DETAILS_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getCartDetailsCNC(userId, accessToken, cartId) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(cartDetailsCNCRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&pincode=${pincode}&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(cartDetailsCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(cartDetailsCNCFailure(e.message));
     }
   };
 }
