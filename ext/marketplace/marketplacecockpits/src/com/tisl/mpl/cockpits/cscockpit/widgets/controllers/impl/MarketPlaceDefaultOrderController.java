@@ -611,31 +611,34 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				}
 				
 				
-				try {
-					LOG.debug("Refunding Delivery Chrges for QC  ..  Amount "+totalRefundQcScheduleDeliveryCharges);
-					QCCreditRequest qcCreditRequest =new QCCreditRequest();
-					PaymentTransactionModel	qcPaymentTransactionModel = null;
-					DecimalFormat decimalFormat =new DecimalFormat("#.00");
-		    	      	qcCreditRequest.setAmount(decimalFormat.format(totalRefundQcScheduleDeliveryCharges));
-		    	      	qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
-		    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(totalRefundQcScheduleDeliveryCharges));    	
-		    	      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
-			            if(null != response && null != response.getResponseCode() && response.getResponseCode().intValue()=='0')
-			            {
-			            		qcPaymentTransactionModel = mplJusPayRefundService
-									.createPaymentTransactionModel(orderModel, "SUCCESS", totalRefundQcScheduleDeliveryCharges,
-											PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES, "NO Response FROM PG", UUID
-											.randomUUID().toString());
-							mplJusPayRefundService.attachPaymentTransactionModel(orderModel, qcPaymentTransactionModel);
-			            }
-			        if(null != splitModeInfo && MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)  	
-				        || MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)){
-			    		return getCockpitTypeService().wrapItem(qcPaymentTransactionModel);
+				if(null != splitModeInfo && (!splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.JUSPAY))){
+					try {
+						LOG.debug("Refunding Delivery Chrges for QC  ..  Amount "+totalRefundQcScheduleDeliveryCharges);
+						QCCreditRequest qcCreditRequest =new QCCreditRequest();
+						PaymentTransactionModel	qcPaymentTransactionModel = null;
+						DecimalFormat decimalFormat =new DecimalFormat("#.00");
+			    	      	qcCreditRequest.setAmount(decimalFormat.format(totalRefundQcScheduleDeliveryCharges));
+			    	      	qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
+			    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(totalRefundQcScheduleDeliveryCharges));    	
+			    	      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
+				            if(null != response && null != response.getResponseCode() && response.getResponseCode().intValue()==0)
+				            {
+				            		qcPaymentTransactionModel = mplJusPayRefundService
+										.createPaymentTransactionModel(orderModel, "SUCCESS", totalRefundQcScheduleDeliveryCharges,
+												PaymentTransactionType.REFUND_SCHEDULE_DELIVERY_CHARGES, "SUCCESS", UUID
+												.randomUUID().toString());
+								mplJusPayRefundService.attachPaymentTransactionModel(orderModel, qcPaymentTransactionModel);
+				            }
+				        if(null != splitModeInfo && MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)  	
+					        || MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)){
+				    		return getCockpitTypeService().wrapItem(qcPaymentTransactionModel);
 
-				        }
-				}catch(Exception e) {
-					LOG.error("Exception occurred while refunding QC Delivery Charges"+e.getMessage(),e);
-				}
+					        }
+					}catch(Exception e) {
+						LOG.error("Exception occurred while refunding QC Delivery Charges"+e.getMessage(),e);
+					}
+					}
+				
 			
 				LOG.debug("Total Refund Schedule Delivery Charges :"+totalRefundScheduleDeliveryCharges);
 //				Mrupee implementation 
@@ -875,30 +878,30 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							if(null == splitModeInfo || splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.JUSPAY))
 							{
 								totalRefundDeliveryCharges = totalRefundDeliveryCharges
-										+ refundEntry.getKey().getScheduledDeliveryCharge();
+										+ refundEntry.getKey().getCurrDelCharge();
 							}else if(splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT) )
 							{
-								if(null != refundEntry.getKey().getWalletApportionPaymentInfo() && null !=refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue())
+								if(null != refundEntry.getKey().getWalletApportionPaymentInfo() && null !=refundEntry.getKey().getWalletApportionPaymentInfo().getJuspayDeliveryValue())
 								{
-									double juspayScheduleDeliveryCharges	= Double.valueOf(refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
-									totalRefundDeliveryCharges = totalRefundDeliveryCharges +juspayScheduleDeliveryCharges;
+									double juspayDeliveryCharges	= Double.valueOf(refundEntry.getKey().getWalletApportionPaymentInfo().getJuspayDeliveryValue()).doubleValue();
+									totalRefundDeliveryCharges = totalRefundDeliveryCharges +juspayDeliveryCharges;
 								}
 								if(null != refundEntry.getKey().getWalletApportionPaymentInfo() && null !=refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue())
 								{
-									double juspayScheduleDeliveryCharges	= Double.valueOf(refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
-									totalRefundDeliveryCharges = totalRefundDeliveryCharges +juspayScheduleDeliveryCharges;
+									double qcDeliveryCharges	= Double.valueOf(refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
+									totalQcRefundDeliveryCharges = totalQcRefundDeliveryCharges +qcDeliveryCharges;
 								}
 								
 							}else {
 								if(null != refundEntry.getKey().getWalletApportionPaymentInfo() && null !=refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue())
 								{
-									double juspayScheduleDeliveryCharges	= Double.valueOf(refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
-									totalRefundDeliveryCharges = totalRefundDeliveryCharges +juspayScheduleDeliveryCharges;
+									double qcDeliveryCharges	= Double.valueOf(refundEntry.getKey().getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
+									totalQcRefundDeliveryCharges = totalQcRefundDeliveryCharges +qcDeliveryCharges;
 								}
 							}
 
 							refundEntry.getKey().setRefundedDeliveryChargeAmt(
-									refundEntry.getKey().getScheduledDeliveryCharge());
+									refundEntry.getKey().getCurrDelCharge());
 							refundEntry.getKey().setCurrDelCharge(Double.valueOf(0));
 							modelService.save(refundEntry.getKey());
 
@@ -910,27 +913,32 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 //				if((null !=orderModel.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode()))||null ==orderModel.getIsWallet())
 //				{			
 				try {
-					LOG.debug("Refunding Delivery Chrges for QC");
-					QCCreditRequest qcCreditRequest =new QCCreditRequest();
-					PaymentTransactionModel	qcPaymentTransactionModel = null;
-					DecimalFormat decimalFormat =new DecimalFormat("#.00");
-		    	      	qcCreditRequest.setAmount(decimalFormat.format(totalQcRefundDeliveryCharges));
-		    	      	qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
-		    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(totalQcRefundDeliveryCharges));    	
-		    	      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
-			            if(null != response && null != response.getResponseCode() && response.getResponseCode().intValue()=='0')
-			            {
-			            		qcPaymentTransactionModel = mplJusPayRefundService
-									.createPaymentTransactionModel(orderModel, "SUCCESS", totalQcRefundDeliveryCharges,
-											paymentTransactionType, "NO Response FROM PG", UUID
-											.randomUUID().toString());
-							mplJusPayRefundService.attachPaymentTransactionModel(orderModel, qcPaymentTransactionModel);
-			            }
-			            if(null != splitModeInfo && MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)  	
-						        || MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)){
-					    		return getCockpitTypeService().wrapItem(qcPaymentTransactionModel);
+					
+					if(null != splitModeInfo && (!splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.JUSPAY)))
+					{
+						LOG.debug("Refunding Delivery Chrges for QC");
+						QCCreditRequest qcCreditRequest =new QCCreditRequest();
+						PaymentTransactionModel	qcPaymentTransactionModel = null;
+						DecimalFormat decimalFormat =new DecimalFormat("#.00");
+			    	      	qcCreditRequest.setAmount(decimalFormat.format(totalQcRefundDeliveryCharges));
+			    	      	qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
+			    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(totalQcRefundDeliveryCharges));    	
+			    	      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
+				            if(null != response && null != response.getResponseCode() && response.getResponseCode().intValue()==0)
+				            {
+				            		qcPaymentTransactionModel = mplJusPayRefundService
+										.createPaymentTransactionModel(orderModel, "SUCCESS", totalQcRefundDeliveryCharges,
+												paymentTransactionType, "SUCCESS", UUID
+												.randomUUID().toString());
+								mplJusPayRefundService.attachPaymentTransactionModel(orderModel, qcPaymentTransactionModel);
+				            }
+				            if(null != splitModeInfo && MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)  	
+							        || MarketplacecommerceservicesConstants.CLIQ_CASH.equalsIgnoreCase(splitModeInfo)){
+						    		return getCockpitTypeService().wrapItem(qcPaymentTransactionModel);
 
-						        }      	
+							        } 
+					}
+					     	
 				}catch(Exception e) {
 					LOG.error("Exception occurred while refunding QC Delivery Charges"+e.getMessage(),e);
 				}
