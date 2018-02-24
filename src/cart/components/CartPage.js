@@ -79,7 +79,10 @@ class CartPage extends React.Component {
                     productName={product.productName}
                     price={product.priceValue.sellingPrice.formattedValue}
                     deliveryInformation={product.elligibleDeliveryMode}
-                    deliverTime={product.elligibleDeliveryMode[0].desc}
+                    deliverTime={
+                      product.elligibleDeliveryMode &&
+                      product.elligibleDeliveryMode[0].desc
+                    }
                     option={[
                       {
                         value: product.qtySelectedByUser,

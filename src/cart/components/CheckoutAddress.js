@@ -16,15 +16,12 @@ export default class CheckoutAddress extends React.Component {
     this.setState(val);
   }
   onCancel() {
-    console.log(this.state);
     this.props.addUserAddress(this.state);
   }
   onSelectAddress(addressId) {
-    console.log(addressId);
     this.props.addAddressToCart(addressId[0]);
   }
   render() {
-    console.log(this.props);
     return (
       <CheckoutFrame onSubmit={() => this.onCancel()}>
         {this.props.cart.userAddress && (
