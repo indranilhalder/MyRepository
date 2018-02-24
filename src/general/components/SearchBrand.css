@@ -1,0 +1,16 @@
+.base {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: #fff;
+  /* padding: 15px 0; */
+}
+.content {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  margin-top: 15px;
+  padding: 0 15px;
+}
