@@ -27,6 +27,11 @@ export default class ConfirmAddress extends React.Component {
       this.props.onNewAddress();
     }
   }
+  onSelectAddress(addressId) {
+    if (this.props.onSelectAddress) {
+      this.props.onSelectAddress(addressId);
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -34,7 +39,12 @@ export default class ConfirmAddress extends React.Component {
           <CheckOutHeader confirmTitle="Confirm address" indexNumber="1" />
         </div>
         <div className={styles.addressHolder}>
-          <GridSelect limit={1} offset={0} elementWidthMobile={100}>
+          <GridSelect
+            limit={1}
+            offset={0}
+            elementWidthMobile={100}
+            onSelect={addressId => this.onSelectAddress(addressId)}
+          >
             {this.props.address &&
               this.props.address
                 .filter((val, i) => {

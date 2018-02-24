@@ -7,9 +7,39 @@ import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS,
+  ANONYMOUS_USER,
+  PRODUCT_DELIVERY_ADDRESSES
+} from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
 class CartPage extends React.Component {
   componentDidMount() {
-    this.props.getCartDetails();
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
+    if (userDetails) {
+      this.props.getCartDetails(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(customerCookie).access_token,
+        JSON.parse(cartDetailsLoggedInUser).code
+      );
+    } else {
+      this.props.getCartDetails(
+        ANONYMOUS_USER,
+        JSON.parse(globalCookie).access_token,
+        JSON.parse(cartDetailsAnonymous).guid
+      );
+    }
   }
 
   renderLoader = () => {
@@ -23,7 +53,9 @@ class CartPage extends React.Component {
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.productDetails);
   };
-
+  renderToDeliveryPage() {
+    this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+  }
   render() {
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
@@ -38,21 +70,23 @@ class CartPage extends React.Component {
               <div className={styles.offerName}>{this.props.cartOffer}</div>
             </div>
 
-            {cartDetails.products.map((val, i) => {
+            {cartDetails.products.map((product, i) => {
               return (
-                <div className={styles.cartItem}>
+                <div className={styles.cartItem} key={i}>
                   <CartItem
-                    key={i}
-                    productImage={val.imageURL}
-                    productDetails={val.description}
-                    productName={val.productName}
-                    price={val.priceValue.sellingPrice.formattedValue}
-                    deliveryInformation={val.elligibleDeliveryMode}
-                    deliverTime={val.elligibleDeliveryMode[0].desc}
+                    productImage={product.imageURL}
+                    productDetails={product.description}
+                    productName={product.productName}
+                    price={product.priceValue.sellingPrice.formattedValue}
+                    deliveryInformation={product.elligibleDeliveryMode}
+                    deliverTime={
+                      product.elligibleDeliveryMode &&
+                      product.elligibleDeliveryMode[0].desc
+                    }
                     option={[
                       {
-                        value: val.qtySelectedByUser,
-                        label: val.qtySelectedByUser
+                        value: product.qtySelectedByUser,
+                        label: product.qtySelectedByUser
                       }
                     ]}
                   />
@@ -68,6 +102,7 @@ class CartPage extends React.Component {
             offers={this.props.offers}
             delivery={this.props.delivery}
             payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+            onCheckout={() => this.renderToDeliveryPage()}
           />
         </div>
       );

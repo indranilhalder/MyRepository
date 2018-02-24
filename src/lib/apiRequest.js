@@ -1,6 +1,6 @@
 import "isomorphic-fetch";
 export const API_URL_ROOT =
-  "https://fierce-bastion-16980.herokuapp.com/marketplacewebservices";
+  "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 
 export async function post(path) {

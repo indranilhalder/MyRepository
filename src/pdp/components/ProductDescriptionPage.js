@@ -13,11 +13,18 @@ import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
 import styles from "./ProductDescriptionPage.css";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
-
+import * as Cookie from "../../lib/Cookie";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
-  PRODUCT_SELLER_ROUTER
+  PRODUCT_SELLER_ROUTER,
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ANONYMOUS_USER,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -68,11 +75,29 @@ class ProductDescriptionPage extends Component {
   };
 
   addProductToBag = () => {
-    if (this.props.addProductToBag) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToBag(productDetails);
+    let productDetails = {};
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    if (userDetails) {
+      Object.assign(productDetails, {
+        userId: JSON.parse(userDetails).customerInfo.mobileNumber,
+        accessToken: JSON.parse(customerCookie).access_token,
+        cartId: JSON.parse(cartDetailsLoggedInUser).code
+      });
+    } else {
+      Object.assign(productDetails, {
+        userId: ANONYMOUS_USER,
+        accessToken: JSON.parse(globalCookie).access_token,
+        cartId: JSON.parse(cartDetailsForAnonymous).guid
+      });
     }
+
+    this.props.addProductToCart(productDetails);
   };
   addProductToWishList = () => {
     if (this.props.addProductToWishList) {
@@ -81,7 +106,9 @@ class ProductDescriptionPage extends Component {
       this.props.addProductToWishList(productDetails);
     }
   };
-
+  renderToMyBag() {
+    this.props.history.push(PRODUCT_CART_ROUTER);
+  }
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
@@ -96,14 +123,14 @@ class ProductDescriptionPage extends Component {
           <div className={styles.base}>
             <div className={styles.pageHeader}>
               <HollowHeader
-                addProductToBag={this.props.addProductToBag}
+                addProductToBag={() => this.renderToMyBag()}
                 addProductToWishList={this.props.addProductToWishList}
                 history={this.props.history}
               />
             </div>
             <ProductGalleryMobile>
-              {mobileGalleryImages.map(val => {
-                return <Image image={val.value} />;
+              {mobileGalleryImages.map((val, idx) => {
+                return <Image image={val.value} key={idx} />;
               })}
             </ProductGalleryMobile>
             <div className={styles.content}>
@@ -159,9 +186,10 @@ class ProductDescriptionPage extends Component {
               onClick={this.goToCouponPage}
             />
             {productData.eligibleDeliveryModes &&
-              productData.eligibleDeliveryModes.map(val => {
+              productData.eligibleDeliveryModes.map((val, idx) => {
                 return (
                   <DeliveryInformation
+                    key={idx}
                     header={val.name}
                     placedTime={val.timeline}
                     type={val.code}
