@@ -59,7 +59,7 @@
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
 										<form:input path="qcVerifyFirstName" class="giftCard_input" id="otpFirstName" readonly="${qcFnDisableStatus}"
-									value="${walletForm.qcVerifyFirstName}" placeholder="Enter First Name"
+									value="${walletForm.qcVerifyFirstName}"
 									maxlength="140" />
 									<div class="input-group-btn">
 										<span class="otp-button otp-edit-button" id="editQcFirstName" onclick="editOtpField('otpFirstName')"><span class="glyphicon glyphicon-edit"></span></span>
@@ -76,7 +76,7 @@
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
 										<form:input path="qcVerifyLastName" id="otpLastName" class="giftCard_input" readonly="${qcLnDisableStatus}"
-									value="${walletForm.qcVerifyLastName}" placeholder="Enter Last Name" 
+									value="${walletForm.qcVerifyLastName}" 
 									maxlength="140" />
 									<div class="input-group-btn">
 										<span class="otp-button otp-edit-button" id="editQcLastName" onclick="editOtpField('otpLastName')"><span class="glyphicon glyphicon-edit"></span></span>
@@ -93,7 +93,7 @@
 								<div class="clearfix col-sm-9">
 									<div class="input-group">
 										<form:input path="qcVerifyMobileNo" class="giftCard_input" onkeypress="return isNumber(event)" id="otpPhonenumber" readonly="${qcMobileDisableStatus}"
-									value="${walletForm.qcVerifyMobileNo}" placeholder="Mobile Number"
+									value="${walletForm.qcVerifyMobileNo}"
 									maxlength="10" />
 									<div class="input-group-btn">
 										<span class="otp-button otp-edit-button" id="editQcMobileNo" onclick="editOtpField('otpPhonenumber')"><span class="glyphicon glyphicon-edit"></span></span>

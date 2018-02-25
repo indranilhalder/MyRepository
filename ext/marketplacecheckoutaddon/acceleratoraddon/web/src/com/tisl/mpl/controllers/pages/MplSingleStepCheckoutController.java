@@ -42,7 +42,6 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -117,8 +116,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import reactor.function.support.UriUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
@@ -164,6 +161,7 @@ import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -186,6 +184,8 @@ import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+
+import reactor.function.support.UriUtils;
 
 
 /**
@@ -211,6 +211,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "pdpPincodeCookieGenerator")
 	private PDPPincodeCookieGenerator pdpPincodeCookie;
+	
+	 @Autowired
+	 MplEGVCartService mplEGVCartService;
 
 	/**
 	 * @return the configurationService
@@ -432,6 +435,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					LOG.debug("type of device=" + device.isTablet());
 				}
 			}
+			//EGV Changes start
+	        removeEGVCartCurrentCustomer();
+	      //EGV Changes end
 			final CartModel cartModel = getCartService().getSessionCart();
 			LOG.debug("Device Type=" + deviceType);
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
@@ -5889,5 +5895,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return json;
 	}
 
-
+	private void removeEGVCartCurrentCustomer()
+	 {
+	  try
+	  {
+	   mplEGVCartService.removeOldEGVCartCurrentCustomer();
+	  }
+	  catch (Exception exception)
+	  {
+	   LOG.error("Error occure while remove egv old card ");
+	  }
+	 }
 }

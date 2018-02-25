@@ -657,6 +657,10 @@
 	color: green;
 }
 
+.orderFailedStatusInfo {
+	color: red !important;
+}
+
 .orderRedeemedStatusInfo span {
 	font-weight: bold;
 	padding: 2px;
@@ -932,6 +936,7 @@
 	
 	.orderStatementL1Body > .orderStatChildBody {
 		padding: 5px;
+		display: flow-root;
 	}
 	
 	.orderStatementL2Body > p {

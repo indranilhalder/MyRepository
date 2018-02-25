@@ -40,7 +40,7 @@
 										code="egv.product.msg.default" /></i></span>
 						</div>
 						<div class="giftFinalTempBottom">
-							<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
+							<span><span id="updatedCustomGiftValue"></span></span>
 						</div>
 					</div>
 				</div>
@@ -623,16 +623,31 @@ function validateEgvForm() {
 		    }); */
 		
 		//Updating Amount
+		if($("input[name=giftRange]:checked").val()) {
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+$("input[name=giftRange]:checked").val();
+			$("input[name=giftRange]:checked").closest('span').addClass('active');
+			document.getElementById('customAmount').value = $("input[name=giftRange]:checked").val();
+		} else if(document.getElementById('customGiftValue').value != '') {
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+document.getElementById('customGiftValue').value;
+			document.getElementById('customAmount').value = document.getElementById('customGiftValue').value;
+		} else {
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+0;
+		}
+		    
+		if(document.getElementById('giftCardMessageText').value != '') {
+			document.getElementById('updatedGiftCardMessageText').innerHTML = '&nbsp; &nbsp; &nbsp; &nbsp; '+document.getElementById('giftCardMessageText').value;
+		}
+		
 		$("input[name=giftRange]").on('change', function (){
 			document.getElementById('customGiftValue').value = '';
-			document.getElementById('updatedCustomGiftValue').innerHTML = $("input[name=giftRange]:checked").val();
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+$("input[name=giftRange]:checked").val();
 			document.getElementById('customAmount').value = $("input[name=giftRange]:checked").val();
 		});
 		
 		$("#customGiftValue").on('keyup blur', function(){
 			$('input[name=giftRange]:checked').parents().find('.active').removeClass('active');
 			$("input[name=giftRange]").prop('checked', false);
-	       document.getElementById('updatedCustomGiftValue').innerHTML = $(this).val();
+	       document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+$(this).val();
 	       document.getElementById('customAmount').value = $(this).val();
 	    });
 	});
