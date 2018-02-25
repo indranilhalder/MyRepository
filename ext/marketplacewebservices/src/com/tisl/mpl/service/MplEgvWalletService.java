@@ -18,6 +18,7 @@ import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
 import com.tisl.mpl.wsdto.UserCliqCashWsDto;
@@ -42,7 +43,6 @@ public interface MplEgvWalletService
 	public ApplyCouponsDTO setTotalPrice(final ApplyCouponsDTO applycouponDto, final AbstractOrderModel cartModel);
 	public ApplyCartCouponsDTO setTotalPrice(ApplyCartCouponsDTO applycouponDto, AbstractOrderModel cartModel);
 	public boolean updateWallet(CustomerModel customer , String otp ,MplCustomerProfileData customerToSave);
-
-
+	public EgvProductInfoWSDTO getEgvProductDetails();
 
 }

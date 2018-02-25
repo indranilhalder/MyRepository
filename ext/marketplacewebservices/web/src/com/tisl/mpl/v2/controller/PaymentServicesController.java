@@ -1892,7 +1892,7 @@ public class PaymentServicesController extends BaseController
 				paymentModesData.setIsWalletOtpVerified(true);
 			}
 			if(!isWalletOtpVerified) {
-				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
 				if(null != walletCreateData) {
 					if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
 						paymentModesData.setFirstName(walletCreateData.getQcVerifyFirstName());

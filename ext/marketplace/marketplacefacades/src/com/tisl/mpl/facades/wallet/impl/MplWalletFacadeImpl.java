@@ -373,9 +373,14 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	}
 	
 	@Override
-	public WalletCreateData getWalletCreateData()
+	public WalletCreateData getWalletCreateData(CustomerModel currentCustomer)
 	{
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		if(null == currentCustomer) {
+			 currentCustomer = (CustomerModel) userService.getCurrentUser();
+		}
+		LOG.error("FIrst Name "+currentCustomer.getFirstName());
+		LOG.error("QC FIrst Name "+currentCustomer.getQcVerifyFirstName());
+
 		WalletCreateData walletCreateData = new WalletCreateData();
 	   if (StringUtils.isNotEmpty(currentCustomer.getQcVerifyFirstName()))
 		{

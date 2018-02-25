@@ -62,6 +62,7 @@ import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
 import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
@@ -783,6 +784,55 @@ public class WalletController
 	}
 
 
+
+@Secured(
+		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+		@RequestMapping(value = MarketplacewebservicesConstants.EGV_PRODUCT_INFO, method = RequestMethod.GET, produces = APPLICATION_TYPE)
+		@ResponseBody
+public EgvProductInfoWSDTO getEgvProductInfo()
+	{
+		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		try
+		{
+			egvProductData = mplEgvWalletService.getEgvProductDetails();
+			if (null != egvProductData)
+			{
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				egvProductData = new EgvProductInfoWSDTO();
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			egvProductData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			egvProductData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return egvProductData;
+	}
 @Secured(
 		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 		@RequestMapping(value = MarketplacewebservicesConstants.CHECK_WALLET_MOBILE_NUMBER, method = RequestMethod.POST, produces = APPLICATION_TYPE)

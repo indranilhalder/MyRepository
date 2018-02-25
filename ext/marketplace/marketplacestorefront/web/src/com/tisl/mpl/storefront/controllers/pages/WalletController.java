@@ -402,7 +402,7 @@ public class WalletController extends AbstractPageController
 	public String getWalletCreateForm(final Model model)
 	{
 		final WalletCreateForm walletForm = new WalletCreateForm();
-		final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+		final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(null);
 		populateWalateCreateData(walletForm, walletCreateData);
 		model.addAttribute("walletForm", walletForm);
 		return "pages/account/walletCreateOtpPopup";
