@@ -675,9 +675,9 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 			}
 			walletCardApportionDetailModel.setTransactionId(response.getTransactionId().toString());
 			walletCardApportionDetailModel.setQcApportionValue(walletObject.getQcApportionValue());
-			walletCardApportionDetailModel.setQcDeliveryValue(walletObject.getQcDeliveryValue());
-			walletCardApportionDetailModel.setQcSchedulingValue(walletObject.getQcSchedulingValue());
-			walletCardApportionDetailModel.setQcShippingValue(walletObject.getQcShippingValue());
+			walletCardApportionDetailModel.setQcDeliveryValue("0");
+			walletCardApportionDetailModel.setQcSchedulingValue("0");
+			walletCardApportionDetailModel.setQcShippingValue("0");
 		}else{
 			walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
 			walletCardApportionDetailModel.setTransactionId("0");
