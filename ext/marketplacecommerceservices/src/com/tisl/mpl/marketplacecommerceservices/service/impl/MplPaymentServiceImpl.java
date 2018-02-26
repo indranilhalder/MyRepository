@@ -5367,7 +5367,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel , final OrderModel subOrderModel){
 		 List<String> qcResponseStatus = new ArrayList<String>();
 		 
-		if( null!= orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
 			returnModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
 		}
 		returnModel.setJuspayDeliveryValue("0");
