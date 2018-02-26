@@ -16,6 +16,7 @@ import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class DefaultCMSComponentControler
 	@Autowired
 	private MplCMSComponentService mplCmsComponentService;
 
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/defaultpage", method = RequestMethod.GET)
@@ -362,10 +364,10 @@ public class DefaultCMSComponentControler
 							flashSalesWsDTO.setDescription(
 									null != flashSalesComponentModel.getDescription() ? flashSalesComponentModel.getDescription() : "");
 
-							flashSalesWsDTO.setEndDate(
-									null != flashSalesComponentModel.getEndDate() ? flashSalesComponentModel.getEndDate() : "");
-							flashSalesWsDTO.setStartDate(
-									null != flashSalesComponentModel.getStartDate() ? flashSalesComponentModel.getStartDate() : "");
+							flashSalesWsDTO.setEndDate(null != flashSalesComponentModel.getEndDate()
+									? formatter.format(flashSalesComponentModel.getEndDate()) : "");
+							flashSalesWsDTO.setStartDate(null != flashSalesComponentModel.getStartDate()
+									? formatter.format(flashSalesComponentModel.getStartDate()) : "");
 
 							flashSalesWsDTO
 									.setTitle(null != flashSalesComponentModel.getTitle() ? flashSalesComponentModel.getTitle() : "");
@@ -1588,10 +1590,10 @@ public class DefaultCMSComponentControler
 						flashSalesWsDTO.setDescription(
 								null != flashSalesComponentModel.getDescription() ? flashSalesComponentModel.getDescription() : "");
 
-						flashSalesWsDTO
-								.setEndDate(null != flashSalesComponentModel.getEndDate() ? flashSalesComponentModel.getEndDate() : "");
-						flashSalesWsDTO.setStartDate(
-								null != flashSalesComponentModel.getStartDate() ? flashSalesComponentModel.getStartDate() : "");
+						flashSalesWsDTO.setEndDate(null != flashSalesComponentModel.getEndDate()
+								? formatter.format(flashSalesComponentModel.getEndDate()) : "");
+						flashSalesWsDTO.setStartDate(null != flashSalesComponentModel.getStartDate()
+								? formatter.format(flashSalesComponentModel.getStartDate()) : "");
 
 						flashSalesWsDTO
 								.setTitle(null != flashSalesComponentModel.getTitle() ? flashSalesComponentModel.getTitle() : "");

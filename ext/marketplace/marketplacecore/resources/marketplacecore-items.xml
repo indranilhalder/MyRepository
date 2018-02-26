@@ -5215,13 +5215,13 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="startDate"
+					<attribute type="java.util.Date" qualifier="startDate"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="endDate"
+					<attribute type="java.util.Date" qualifier="endDate"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
