@@ -23,8 +23,10 @@ import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.DeliveryModesData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.product.data.StockData;
 import de.hybris.platform.commercefacades.promotion.CommercePromotionRestrictionFacade;
@@ -62,6 +64,7 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.ProductLo
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.StockSystemException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -75,6 +78,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -88,6 +92,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,6 +173,7 @@ import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDInfoWsDTO;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -277,6 +283,14 @@ public class CartsController extends BaseCommerceController
 	//TPR-6971
 	@Resource(name = "exchangeGuideFacade")
 	private ExchangeGuideFacade exchangeFacade;
+
+	@Autowired
+	private CommonI18NService commonI18NService;
+	private static final String INR = "INR";
+
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 
 	/**
 	 * @return the mplCouponFacade
@@ -2764,7 +2778,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3735,10 +3749,10 @@ public class CartsController extends BaseCommerceController
 	{ "/releaseCartCoupons", "/{cartId}/releaseCartCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReleaseCouponsDTO releaseCartCoupons(@RequestParam final String couponCode,
-			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, CalculationException
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode,
+			@RequestParam(required = false) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException, CalculationException
 	{
 		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
 		CartModel cartModel = null;
@@ -3768,6 +3782,36 @@ public class CartsController extends BaseCommerceController
 					releaseCouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					if (isPwa)
+					{
+						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+						final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
+						final DecimalFormat df = new DecimalFormat("#.##");
+						final CurrencyModel currency = commonI18NService.getCurrency(INR);
+						final double amountInclDelCharge = Double.parseDouble(releaseCouponDto.getTotal());
+						double actualDelCharge = 0.0;
+						if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+						{
+							for (final AbstractOrderEntryModel cartentry : cartModel.getEntries())
+							{
+								actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+							}
+						}
+						final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+						double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+						discount = Double.parseDouble(df.format(discount));
+						final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount),
+								currency);
+						final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+								currency);
+						final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(amountInclDelCharge), currency);
+						pricePwa.setBagTotal(totalMrp);
+						pricePwa.setTotalDiscountAmount(totalDiscount);
+						pricePwa.setPaybleAmount(paybleAmount);
+						releaseCouponDto.setCartAmount(pricePwa);
+
+					}
 				}
 			}
 			else

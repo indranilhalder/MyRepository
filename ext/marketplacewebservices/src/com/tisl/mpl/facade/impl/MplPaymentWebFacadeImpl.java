@@ -762,7 +762,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -832,7 +832,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			cartDetailsData.setCartGuid(cartGuId);
 			if (isPwa)
 			{
-				final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
+				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
 				//
 				final PriceData totalMrp = createPriceCharge(mrp.toString());
 				pricePwa.setBagTotal(totalMrp);
