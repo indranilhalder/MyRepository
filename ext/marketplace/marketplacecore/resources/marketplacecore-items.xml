@@ -14496,6 +14496,49 @@
 					</attribute>			
            </attributes>
 	   </itemtype>
+	   <itemtype code="FollowedBrandUpload" generate="true" extends="GenericItem"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.FollowedBrandUpload">
+				<deployment table="mplFollowedBrandUpload" typecode="13017" />
+				<attributes>
+				
+					<attribute qualifier="identifiers" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" optional="false" unique="true"/>
+						<description>Identifier</description>
+						<persistence type="property" />
+					</attribute>
+						
+					<attribute qualifier="csvFile" type="Media" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="status" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Status</description>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
  </typegroup>
 	<!-- NU-50 end -->
 	

@@ -2511,6 +2511,12 @@
 	<alias name="mplFollowedBrandDao" alias="mplFollowedBrandDao"/>
 	<bean id="mplFollowedBrandDao" class="com.tisl.mpl.marketplacecommerceservices.daos.brand.impl.MplFollowedBrandDaoImpl" >
     </bean>
+    
+    <bean id="followedBrandUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.FollowedBrandUploadPrepareInterceptor" autowire="byName"></bean>
+<bean id="followedBrandUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+	<property name="interceptor" ref="followedBrandUploadPrepareInterceptor"></property>
+	<property name="typeCode" value="FollowedBrandUpload"></property>
+</bean>
    <!--  NU-50 end -->
 
 	<alias alias="mplCustomerReviewService" name="mplCustomerReviewService"/>
