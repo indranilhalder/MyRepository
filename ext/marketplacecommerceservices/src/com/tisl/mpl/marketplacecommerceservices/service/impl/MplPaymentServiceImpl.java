@@ -5305,7 +5305,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
    			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
    				 double qcCliqCashAmt =0.0D;
    					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
    						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue());
    					     
    						   QCCreditRequest qcCreditRequest =new QCCreditRequest();
@@ -5837,7 +5837,7 @@ private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(fi
 				{
 					if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 					{
-						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 						{
 							totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
 						}
