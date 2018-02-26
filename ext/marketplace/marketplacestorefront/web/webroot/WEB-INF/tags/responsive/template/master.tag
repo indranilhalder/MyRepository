@@ -20,6 +20,9 @@
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
+	<c:if test="${cmsPage.name eq 'Homepage'}">
+		<link rel="amphtml" href="/pwamp/home">
+	</c:if>
 	<%-- Moved this Block for For INC_11638 --%>
 	<%-- TISPRD-8030 and INC_100385--%>	
 		<c:choose>
@@ -61,10 +64,9 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+
+ <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
 <script src="${dtmUrl}"></script>
-
-
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
@@ -371,7 +373,6 @@
 <script src="${izootoScript}"></script>
 </c:if>
  <!-- Changes End  TPR-5812 -->
-
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -562,6 +563,7 @@
 			} else {
 				$(".simpleSearchToggle").hide();
 			}
+		
 	});
 	
 	$(document).on("click","#close-login",function(){
@@ -597,7 +599,10 @@
 	<%-- Load JavaScript required by the site --%>
 	<!-- SDI-1103 -->
 	<template:javaScript/>
-	<script type="text/javascript">if(typeof _satellite !="undefined"){_satellite.pageBottom();}</script>
+	<!-- commenting from here -->
+  <script type="text/javascript">
+	  _satellite.pageBottom();
+  </script> 
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 	<%-- TPR-6399 --%>

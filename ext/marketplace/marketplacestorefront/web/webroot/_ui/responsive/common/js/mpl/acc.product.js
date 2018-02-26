@@ -854,9 +854,14 @@ sendAddToBagQuick:function(formId){
 			//End MSD
 			//TPR-6029 | add to bag on quickview #42--start
 			if(!digitalDataError){
-				if(typeof(_satellite)!= "undefined"){
+				/*if(typeof(_satellite)!= "undefined"){
 					_satellite.track('cpj_qw_add_to_bag');
-				}
+				}*/
+				setTimeout(function() {
+					if(typeof(_satellite)!= "undefined"){
+						_satellite.track('cpj_qw_add_to_bag');
+					}
+				}, 1500);
 			}
 			//TPR-6029 | add to bag on quickview #42--end
 			
@@ -1008,9 +1013,14 @@ sendAddToBagQuick:function(formId){
 						});
 					}
 					//TPR-6029 | buy now on quickview #41
-					if(typeof(_satellite) != "undefined"){
+					/*if(typeof(_satellite) != "undefined"){
 						 _satellite.track('cpj_qw_buy_now');
-					 }
+					 }*/
+					setTimeout(function() {
+						if(typeof(_satellite) != "undefined"){
+							 _satellite.track('cpj_qw_buy_now');
+						 }
+					}, 1500);
 					location.href=ACC.config.encodedContextPath + '/cart';
 				}
 				//End MSD
