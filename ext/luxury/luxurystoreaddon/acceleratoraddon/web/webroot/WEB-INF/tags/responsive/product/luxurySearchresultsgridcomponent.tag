@@ -12,6 +12,6 @@
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
 	<div class="text-center">
 		<input type="hidden" id="pageQuery" value=""/>
-		<input type="button" value="Load More" class="btn btn-primary loadMore mt-20"/>
+		<input type="button" value="Load More" class="btn btn-primary loadMore mt-20" style="visibility: hidden;"/>
 	</div>
 </c:if>

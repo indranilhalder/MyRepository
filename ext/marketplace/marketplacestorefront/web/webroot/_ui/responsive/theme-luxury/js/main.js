@@ -1248,6 +1248,15 @@ TATA.Pages = {
                     }
                 });
         },
+        
+        infiniteScroll: function() {
+        	var waypoints = $('.loadMore').waypoint({
+        		  handler: function(direction) {
+        			  $('.loadMore').click();
+        		  },
+        		  offset: '75%'
+        		});
+        },
 
         // PLP Page initiate
         init: function () {
@@ -1267,6 +1276,7 @@ TATA.Pages = {
             _self.showSelectedRefinements();
             _self.sortInit();
             _self.loadMoreInit();
+            _self.infiniteScroll();
 
         }
     },
