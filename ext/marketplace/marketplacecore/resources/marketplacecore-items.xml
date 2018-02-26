@@ -5066,11 +5066,6 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type="property" />
-					</attribute>
 					<attribute type="media" qualifier="imageURL">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -5125,12 +5120,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="startHexCode"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5170,11 +5159,6 @@
 				jaloclass="com.tisl.mpl.jalo.cms.components.OffersWidgetElement">
 				<attributes>
 					<attribute qualifier="webURL" type="java.lang.String"
-						generate="true" autocreate="true">
-						<persistence type="property" />
-						<modifiers optional="true" />
-					</attribute>
-					<attribute qualifier="appURL" type="java.lang.String"
 						generate="true" autocreate="true">
 						<persistence type="property" />
 						<modifiers optional="true" />
@@ -5249,12 +5233,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5300,11 +5278,6 @@
 						<persistence type="property" />
 						<modifiers optional="true" />
 					</attribute>
-					<attribute qualifier="appURL" type="java.lang.String"
-						generate="true" autocreate="true">
-						<persistence type="property" />
-						<modifiers optional="true" />
-					</attribute>
 				</attributes>
 			</itemtype>
 			
@@ -5312,12 +5285,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.FlashSalesItemElement">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5364,12 +5331,6 @@
 					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type='property' />
@@ -5429,12 +5390,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5454,13 +5409,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.BannerProductCarouselComponent">
 				<attributes>
-
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5504,12 +5452,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.BannerProdCarouselElementComp">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5535,13 +5477,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.VideoProductCarouselComponent">
 				<attributes>
-
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5597,12 +5532,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.VideoProductCarouselElement">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5647,12 +5576,6 @@
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="btnText"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -5703,11 +5626,6 @@
 				      <persistence type="property" />
 				      <modifiers optional="true" />
 				     </attribute>
-				     <attribute qualifier="appURL" type="java.lang.String"
-				      generate="true" autocreate="true">
-				      <persistence type="property" />
-				      <modifiers optional="true" />
-				     </attribute>
 			    </attributes>
 		   </itemtype>
 
@@ -5715,12 +5633,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeOffersItemsElement">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5783,12 +5695,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeProductWidgetElement">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5838,12 +5744,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="ProductCapsulesCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5864,12 +5764,6 @@
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -5937,12 +5831,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="media" qualifier="brandLogo" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5974,12 +5862,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.AutomatedBrandProductCarElement">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -6018,12 +5900,6 @@
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -6080,12 +5956,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -6136,12 +6006,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -6180,12 +6044,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="media" qualifier="imageURL" autocreate="true"
 						generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -6217,12 +6075,6 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="CuratedProductsWidgetCollection" qualifier="items"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -6236,12 +6088,6 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.CuratedProductsWidgetElement">
 				<attributes>
-					<attribute type="java.lang.String" qualifier="appURL"
-						autocreate="true" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type='property' />
-					</attribute>
 					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"

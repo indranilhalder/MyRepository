@@ -3800,8 +3800,7 @@
 
 	<bean class="com.tisl.mpl.wsdto.HeroBannerCompListWsDTO">
 		<property name="title" type="java.lang.String"/>
-		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/>  
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="brandLogo" type="java.lang.String"/>
 	</bean>
@@ -3814,8 +3813,7 @@
 	
 	<bean class="com.tisl.mpl.wsdto.ContentWidgetElementWsDTO">
 		<property name="title" type="java.lang.String"/>
-		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/>  
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="btnText" type="java.lang.String"/>
 		<property name="description" type="java.lang.String"/>
@@ -3846,7 +3844,6 @@
 	<property name="prdId" type="String"/>
 	<property name="title" type="String"/>
 	<property name="webURL" type="String"/>
-	<property name="appURL" type="String"/>
 	<property name="imageURL" type="String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.BannerProMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.BannerProDiscountPriceWsDTO"/>
@@ -3856,7 +3853,6 @@
 	<property name="type" type="String"/>
 	<property name="btnText" type="String"/>
 	<property name="webURL" type="String"/>
-	<property name="appURL" type="String"/>
 	<property name="title" type="String"/>
 	<property name="imageURL" type="String"/>
 	<property name="description" type="String"/>
@@ -3873,14 +3869,12 @@
 	<property name="iconImageURL" type="java.lang.String"/>
 	<property name="backgroundImageURL" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="startHexCode" type="java.lang.String"/>
 	<property name="endHexCode" type="java.lang.String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.OffersWidgetElementWsDTO">
-		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/>   
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="btnText" type="java.lang.String"/>
 		<property name="discountText" type="java.lang.String"/>
@@ -3904,7 +3898,6 @@
 	<property name="endDate" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/> 
 	<property name="offers"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FlashSalesOffersWsDTO>" />
 	<property name="items"
@@ -3915,7 +3908,6 @@
 	<property name="title" type="java.lang.String"/>
 	<property name="description" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/> 
 	<property name="imageURL" type="java.lang.String"/>
 	</bean>
 	
@@ -3923,7 +3915,6 @@
 	<property name="prdId" type="String"/>
 	<property name="title" type="String"/>
 	<property name="webURL" type="String"/>
-	<property name="appURL" type="String"/>
 	<property name="imageURL" type="String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.FlashSalesMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.FlashSalesDiscountPriceWsDTO"/>
@@ -3950,7 +3941,6 @@
 	<property name="backgroundImageURL" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/> 
 	<property name="offers"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeOffersCompOfferWsDTO>" />
 	<property name="items"
@@ -3961,7 +3951,6 @@
 	<property name="title" type="java.lang.String"/>
 	<property name="description" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/> 
 	<property name="imageURL" type="java.lang.String"/>
 	</bean>
 	
@@ -3970,7 +3959,6 @@
 	<property name="title" type="String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.ThemeOffersMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.ThemeOffersDiscountPriceWsDTO"/>
 	</bean>
@@ -3996,7 +3984,6 @@
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/> 
 	<property name="videoURL" type="java.lang.String"/> 
 	<property name="brandLogo" type="java.lang.String"/> 
 	<property name="items"
@@ -4008,7 +3995,6 @@
 	<property name="title" type="String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.VideoProductCarMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.VideoProductCarDiscountPriceWsDTO"/>
 	</bean>
@@ -4042,7 +4028,6 @@
 	<property name="title" type="String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.ThemeProWidMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.ThemeProWidDiscountPriceWsDTO"/>
 	</bean>
@@ -4062,8 +4047,7 @@
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO">
-		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>   
+		<property name="webURL" type="java.lang.String"/> 
 		<property name="imageURL" type="java.lang.String"/>
 	</bean>
 	
@@ -4073,7 +4057,6 @@
 	<property name="description" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO>" />
 	</bean>
@@ -4092,7 +4075,6 @@
 	<property name="type" type="java.lang.String" />
 	<property name="btnText" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="brandLogo" type="java.lang.String"/>
 	<property name="description" type="java.lang.String"/>
 	<property name="imageURL" type="java.lang.String"/> 
@@ -4105,7 +4087,6 @@
 	<property name="title" type="String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.AutoBrandProCarEleMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.AutoBrandProCarEleDiscountPriceWsDTO"/>
 	</bean>
@@ -4128,7 +4109,6 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="startHexCode" type="java.lang.String"/>
 	</bean>
 	
@@ -4136,7 +4116,6 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
 	<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.CuratedProWidgetElementWsDTO>" />
@@ -4147,7 +4126,6 @@
 	<property name="title" type="String"/>
 	<property name="imageURL" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
-	<property name="appURL" type="java.lang.String"/>
 	<property name="mrpPrice" type="com.tisl.mpl.wsdto.CuratedProWidgetEleMRPPriceWsDTO"/>
 	<property name="discountedPrice" type="com.tisl.mpl.wsdto.CuratedProWidgetEleDiscountPriceWsDTO"/>
 	</bean>
@@ -4168,7 +4146,6 @@
 	
 	<bean class="com.tisl.mpl.wsdto.MonoBLPBannerElementWsDTO">
 		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>   
 		<property name="title" type="java.lang.String"/>
 		<property name="btnText" type="java.lang.String"/>
 		<property name="imageURL" type="java.lang.String"/>
@@ -4186,7 +4163,6 @@
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="brandLogo" type="java.lang.String"/>   
 		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.SubBrandBannerBLPWsDTO">
@@ -4200,7 +4176,6 @@
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="title" type="java.lang.String"/>   
 		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.TopCategoriesWidgetWsDTO">
@@ -4214,7 +4189,6 @@
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="title" type="java.lang.String"/>   
 		<property name="webURL" type="java.lang.String"/>
-		<property name="appURL" type="java.lang.String"/>
 		<property name="description" type="java.lang.String"/>
 	</bean>
 	
