@@ -16,8 +16,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+ul.dropdown-menu {
+	border-top: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+@media(max-width: 480px){
+	ul.dropdown-menu {
+		border: none;
+	}
+	
+	ul.dropdown-menu li a {
+		padding: 0;
+		height: 50px;
+		padding-top: 13px;
+	}
+}
+</style>
 
 <template:page pageTitle="${pageTitle}">
 

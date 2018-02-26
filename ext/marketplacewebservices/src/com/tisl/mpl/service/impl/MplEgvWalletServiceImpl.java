@@ -24,6 +24,7 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -49,10 +50,12 @@ import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.AmountOptionsWSDTO;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
@@ -320,7 +323,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			   if(isWalletOtpVerified) {
 			   	responce.setIsWalletOtpVerified(true);
 			   }else {
-					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(currentCustomer);
 					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					if(null != walletCreateData) {
 						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
@@ -1167,6 +1170,144 @@ public boolean updateCustomerWallet(MplCustomerProfileData customerToSave,Custom
 		}
 		return false;
 	}
+
+/* (non-Javadoc)
+ * @see com.tisl.mpl.service.MplEgvWalletService#getEgvProductDetails(de.hybris.platform.core.model.user.CustomerModel)
+ */
+@Override
+public EgvProductInfoWSDTO getEgvProductDetails()
+{
+	LOG.debug("Getting EGV product Details");
+	EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+	AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
+	double minPrice = 1.0D;
+	double maxPrice = 30000.0D;
+	String priceOptions = null;
+	try {
+		CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+		if(null != customer) {
+			LOG.error(" FIrst Name "+customer.getFirstName());
+			LOG.error("QC FIrst Name "+customer.getQcVerifyFirstName());
+
+			if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
+				egvProductData.setIsWalletCreated(true);
+			}
+			if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+			{
+				egvProductData.setIsWalletOtpVerified(true);
+			}else {
+				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
+				if(null != walletCreateData) {
+					if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+						egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
+					}
+					if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+						egvProductData.setLastName(walletCreateData.getQcVerifyLastName());
+					}
+					if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+						egvProductData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+					}
+				}
+			}
+				
+			
+		}
+		
+		if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
+		{
+			minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);
+			LOG.debug("Configurable Buying EGV Min Price " +minPrice);
+		}
+		if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE))
+		{
+			maxPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE);
+			LOG.debug("Configurable Buying EGV Max Price " +maxPrice);
+		}
+		if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS))
+		{
+			priceOptions = configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
+			LOG.debug("Configurable Buying EGV price options " +priceOptions);
+		}
+		if (minPrice > 0.0D)
+		{
+			TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+			final BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
+			final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
+					MarketplacecommerceservicesConstants.INR);
+			if (null != priceData)
+			{
+				minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+				minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
+				minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
+				minPriceWsDto.setPriceType(priceData.getPriceType());
+				minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+				minPriceWsDto.setValue(priceData.getValue());
+				amountOptions.setMinPrice(minPriceWsDto);
+			}
+		}
+
+		if (maxPrice > 0.0D)
+		{
+			TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+			final BigDecimal minPriceBigDecimal = new BigDecimal(maxPrice);
+			final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
+					MarketplacecommerceservicesConstants.INR);
+			if (null != priceData)
+			{
+				minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+				minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
+				minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
+				minPriceWsDto.setPriceType(priceData.getPriceType());
+				minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+				minPriceWsDto.setValue(priceData.getValue());
+				amountOptions.setMaxPrice(minPriceWsDto);
+			}
+		}
+
+		if (null != priceOptions)
+		{
+			final String[] configurablePriceOptions = priceOptions.split(",");
+			List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
+			if (null != configurablePriceOptions)
+			{
+				for (final String price : configurablePriceOptions)
+				{
+					TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
+					final BigDecimal PriceBigDecimal = new BigDecimal(Double.valueOf(price).doubleValue());
+					final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, PriceBigDecimal,
+							MarketplacecommerceservicesConstants.INR);
+					if (null != priceData)
+					{
+						PriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+						PriceWsDto.setDoubleValue(priceData.getDoubleValue());
+						PriceWsDto.setFormattedValue(priceData.getFormattedValue());
+						PriceWsDto.setPriceType(priceData.getPriceType());
+						PriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+						PriceWsDto.setValue(priceData.getValue());
+						configurablePrices.add(PriceWsDto);
+					}
+				}
+				
+				if(CollectionUtils.isNotEmpty(configurablePrices)){
+					amountOptions.setOptions(configurablePrices);
+				}
+			}
+		}
+		
+		egvProductData.setAmountOptions(amountOptions);
+		egvProductData.setIsCustomizationAvailable(true);
+		egvProductData.setIsMoreDesigns(false);
+		egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
+		egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+	//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+
+	}catch (Exception e) {
+		LOG.error("Exception occurredd while getting EGV Product Details "+e.getMessage());
+	}
+
+	return egvProductData;
+}
 
 	
 }

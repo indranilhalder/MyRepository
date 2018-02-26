@@ -60,7 +60,7 @@ public interface MplWalletFacade
 	
 	public CustomerWalletDetailResponse deactivateQCUserAccount(String walletId);
 	
-	public WalletCreateData getWalletCreateData();
+	public WalletCreateData getWalletCreateData(CustomerModel customer);
 	
 	public OTPResponseData validateOTP(final String customerID, final String enteredOTPNumber);
 	
