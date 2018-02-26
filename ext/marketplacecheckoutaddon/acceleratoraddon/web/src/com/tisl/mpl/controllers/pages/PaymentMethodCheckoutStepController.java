@@ -3174,6 +3174,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						 * Wallet Changes
 						 */
 
+						MplPaymentAuditModel mplPaymentAudit = new MplPaymentAuditModel();
 						try
 						{
 							boolean qcFlag = false;
@@ -3201,6 +3202,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 														qcFlag = false;
 														mplPaymentAuditModel.setIsExpired(Boolean.TRUE); // if EBS is risk status is yellow or red case
 														modelService.save(mplPaymentAuditModel);
+														mplPaymentAudit =mplPaymentAuditModel;
 														break;
 													}
 												}
@@ -3272,7 +3274,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												{
 
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
-													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
+													mplPaymentAudit.setIsExpired(Boolean.TRUE);
+													getModelService().saveAll(); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
 													LOG.error("For GUID:- " + guid + " order already been processed");
 													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3280,7 +3283,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												}else{
 													
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
-													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
+													mplPaymentAudit.setIsExpired(Boolean.TRUE);
+													getModelService().saveAll();
 													LOG.error("For GUID:- " + guid + " order already been processed");
 													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3293,6 +3297,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										{
 											System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
 											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); 
+											mplPaymentAudit.setIsExpired(Boolean.TRUE);
+											getModelService().saveAll();
 											LOG.error("For GUID:- " + guid + " order already been processed");
 											GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 													MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3304,6 +3310,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									{
 										System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
 										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); 
+										mplPaymentAudit.setIsExpired(Boolean.TRUE);
+										getModelService().saveAll();
 										LOG.error("For GUID:- " + guid + " order already been processed");
 										GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 												MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
