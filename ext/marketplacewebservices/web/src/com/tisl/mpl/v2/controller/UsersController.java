@@ -10612,7 +10612,7 @@ public class UsersController extends BaseCommerceController
 
 				//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NULL
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
-						cart));
+						orderModel));
 
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
@@ -10757,7 +10757,7 @@ public class UsersController extends BaseCommerceController
 					//TPR-7448 Starts here
 					if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 					{
-						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(cart, token, cardSaved,
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token, cardSaved,
 								cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
 						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
