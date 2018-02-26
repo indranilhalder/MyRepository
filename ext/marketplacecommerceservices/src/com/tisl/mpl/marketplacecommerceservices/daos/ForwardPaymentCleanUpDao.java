@@ -36,4 +36,7 @@ public interface ForwardPaymentCleanUpDao
 	List<FPCRefundEntryModel> fetchSpecificRefundEntries(String expiredFlag);
 
 	OrderModel fetchParentOrderByGUID(String orderCode);
+
+	List<OrderModel> fetchCliqCashOrdersWithMultiplePayments(Date startTime, Date endTime);
+
 }

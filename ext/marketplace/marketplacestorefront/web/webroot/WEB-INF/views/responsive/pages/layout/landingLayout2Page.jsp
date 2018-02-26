@@ -21,6 +21,7 @@
 <!-- TPR-1072 END -->
 
 <template:page pageTitle="${pageTitle}">
+
 	<div class="no-space homepage-banner">
 		<cms:pageSlot position="Section1" var="feature">
 			<cms:component component="${feature}" />

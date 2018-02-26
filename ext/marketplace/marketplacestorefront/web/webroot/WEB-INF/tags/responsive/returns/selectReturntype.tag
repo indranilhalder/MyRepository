@@ -29,8 +29,8 @@
 									<span class="returnPaymentMessage"><spring:theme code="text.order.returns.codpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}"/></span>
 									</c:when>
 									<c:otherwise>
-									<div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div>
-									<span><spring:theme code="text.order.returns.cardpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}" /> </span>
+									<div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div>  <%-- ${subOrder.mplPaymentInfo.paymentOption} --%>
+									<span><spring:theme code="text.order.returns.cardpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption eq null ? '<b>CliqCash</b>' : subOrder.mplPaymentInfo.paymentOption}" /> </span>
 									</c:otherwise>
 
 									</c:choose>
@@ -150,6 +150,10 @@
 								<b class="bankDetailsText"></b>
 								<span class="paymentText">Your <b>transaction was completed</b> using</span><br/>
 								<span class="paymentText">${subOrder.mplPaymentInfo.paymentOption}</span>
+								
+								<c:if  test="${subOrder.mplPaymentInfo.paymentOption eq null}">
+									<b>CliqCash</b>
+								</c:if>
 								
 								<c:set var="cardNumberMasked"
 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
