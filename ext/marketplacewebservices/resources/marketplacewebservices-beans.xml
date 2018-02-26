@@ -3822,7 +3822,8 @@
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.ContentWidgetCompWsDTO">
-	<property name="type" type="String" />
+		<property name="type" type="String" />
+		<property name="title" type="java.lang.String"/>
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ContentWidgetElementWsDTO>" />
 	</bean>
@@ -3883,6 +3884,7 @@
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="btnText" type="java.lang.String"/>
 		<property name="discountText" type="java.lang.String"/>
+		<property name="title" type="java.lang.String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.OffersWidgetWsDTO">
@@ -3898,8 +3900,8 @@
 	<property name="description" type="java.lang.String"/>
 	<property name="backgroundHexCode" type="java.lang.String"/>
 	<property name="backgroundImageURL" type="java.lang.String"/>
-	<property name="startDate" type="java.util.Date"/>
-	<property name="endDate" type="java.util.Date"/>
+	<property name="startDate" type="java.lang.String"/>
+	<property name="endDate" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
 	<property name="webURL" type="java.lang.String"/>
 	<property name="appURL" type="java.lang.String"/> 
@@ -4029,7 +4031,7 @@
 	<property name="type" type="java.lang.String" />
 	<property name="title" type="java.lang.String"/>
 	<property name="btnText" type="java.lang.String"/>
-	<property name="backgroundImageURL" type="java.lang.String"/>
+	<property name="imageURL" type="java.lang.String"/>
 	<property name="brandLogo" type="java.lang.String"/> 
 	<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ThemeProWidElementWsDTO>" />
@@ -4083,6 +4085,7 @@
 	<property name="description" type="java.lang.String"/>
 	<property name="startHexCode" type="java.lang.String"/>
 	<property name="endHexCode" type="java.lang.String"/>
+	<property name="webURL" type="java.lang.String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.AutomatedBrandProCarWsDTO">
@@ -4223,41 +4226,41 @@
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
-		<property name="HeroBanner"
+		<property name="heroBannerComponent"
 			type="com.tisl.mpl.wsdto.HeroBannerCompWsDTO"/>
-		<property name="ConnectBanner"
+		<property name="multiPurposeBanner"
 			type="com.tisl.mpl.wsdto.ConnectBannerWsDTO"/>
-		<property name="OffersWidget"
+		<property name="offersComponent"
 			type="com.tisl.mpl.wsdto.OffersWidgetWsDTO"/>
-		<property name="FlashSales"
+		<property name="flashSalesComponent"
 			type="com.tisl.mpl.wsdto.FlashSalesWsDTO"/>
-		<property name="ContentWidget"
+		<property name="contentComponent"
 			type="com.tisl.mpl.wsdto.ContentWidgetCompWsDTO"/>
-		<property name="BannerProductCarousel"
+		<property name="bannerProductCarouselComponent"
 			type="com.tisl.mpl.wsdto.BannerProductCarouselWsDTO"/>
-		<property name="VideoProductCarousel"
+		<property name="videoProductCarouselComponent"
 			type="com.tisl.mpl.wsdto.VideoProductCarouselWsDTO"/>
-		<property name="ThemeOffers"
+		<property name="themeOffersComponent"
 			type="com.tisl.mpl.wsdto.ThemeOffersWsDTO"/>
-		<property name="ThemeProductWidget"
+		<property name="multiClickComponent"
 			type="com.tisl.mpl.wsdto.ThemeProductWidgetWsDTO"/>
 		<property name="ProductCapsules"
 			type="com.tisl.mpl.wsdto.ProductCapsulesWsDTO"/>
-		<property name="BannerSeparator"
+		<property name="bannerSeparatorComponent"
 			type="com.tisl.mpl.wsdto.BannerSeparatorWsDTO"/>
-		<property name="AutomatedBrandProCar"
+		<property name="automatedBannerProductCarouselComponent"
 			type="com.tisl.mpl.wsdto.AutomatedBrandProCarWsDTO"/>	
-		<property name="CuratedListingStrip"
+		<property name="curatedListingStripComponent"
 			type="com.tisl.mpl.wsdto.CuratedListingStripWsDTO"/>	
-		<property name="MonoBLPBanner"
+		<property name="singleBannerComponent"
 			type="com.tisl.mpl.wsdto.MonoBLPBannerWsDTO"/>
-		<property name="SubBrandBannerBLP"
+		<property name="subBrandsBannerComponent"
 			type="com.tisl.mpl.wsdto.SubBrandBannerBLPWsDTO"/>
-		<property name="TopCategoriesWidget"
+		<property name="topCategoriesComponent"
 			type="com.tisl.mpl.wsdto.TopCategoriesWidgetWsDTO"/>
-		<property name="CuratedProductsWidget"
+		<property name="curatedProductsComponent"
 			type="com.tisl.mpl.wsdto.CuratedProductsWidgetWsDTO"/>	
-		<property name="SmartFilterWidget"
+		<property name="twoByTwoBannerComponent"
 			type="com.tisl.mpl.wsdto.SmartFilterWidgetWsDTO"/>
 	</bean>
 
@@ -4266,13 +4269,6 @@
 	<property name="message" type="java.lang.String"/>   
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
-	</bean>
-	
-	<bean class="com.tisl.mpl.wsdto.UIComponentWiseWsDTO">
-	<property name="status" type="java.lang.String"/>   
-	<property name="message" type="java.lang.String"/>   
-		<property name="items"
-			type="com.tisl.mpl.wsdto.UICompPageElementWsDTO" />
 	</bean>
 	
 </beans>

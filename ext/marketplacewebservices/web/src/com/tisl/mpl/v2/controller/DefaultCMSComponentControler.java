@@ -157,7 +157,7 @@ public class DefaultCMSComponentControler
 							heroBannerCompWsDTO.setItems(heroBannerCompListWsDTO);
 							heroBannerCompWsDTO.setType(
 									null != heroBannerCompObj.getType() ? heroBannerCompObj.getType() : "HeroBannerComponentModel");
-							uiCompPageElementObj.setHeroBanner(heroBannerCompWsDTO);
+							uiCompPageElementObj.setHeroBannerComponent(heroBannerCompWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementObj);
 						}
 
@@ -203,7 +203,7 @@ public class DefaultCMSComponentControler
 									? connectBannerComponentModel.getEndHexCode() : "");
 							connectBannerWsDTO.setType(connectBannerComponentModel.getType());
 
-							uiCompPageElementObj.setConnectBanner(connectBannerWsDTO);
+							uiCompPageElementObj.setMultiPurposeBanner(connectBannerWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementObj);
 						}
 
@@ -231,6 +231,8 @@ public class DefaultCMSComponentControler
 									{
 										offersWidgetElementWsDTO.setImageURL("");
 									}
+									offersWidgetElementWsDTO.setTitle(
+											null != offersWidgetElementModel.getTitle() ? offersWidgetComponentModel.getTitle() : "");
 									offersWidgetElementWsDTO.setAppURL(
 											null != offersWidgetElementModel.getAppURL() ? offersWidgetElementModel.getAppURL() : "");
 									offersWidgetElementWsDTO.setBtnText(
@@ -248,7 +250,7 @@ public class DefaultCMSComponentControler
 							offersWidgetWsDTO
 									.setType(null != offersWidgetComponentModel.getType() ? offersWidgetComponentModel.getType() : "");
 
-							uiCompPageElementWsDTO.setOffersWidget(offersWidgetWsDTO);
+							uiCompPageElementWsDTO.setOffersComponent(offersWidgetWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -375,7 +377,7 @@ public class DefaultCMSComponentControler
 							flashSalesWsDTO.setItems(flashSalesElementWsDTOList);
 							flashSalesWsDTO.setType(flashSalesComponentModel.getType());
 
-							uiCompPageElementWsDTO.setFlashSales(flashSalesWsDTO);
+							uiCompPageElementWsDTO.setFlashSalesComponent(flashSalesWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -410,15 +412,18 @@ public class DefaultCMSComponentControler
 											null != contentWidgetElementModel.getTitle() ? contentWidgetElementModel.getTitle() : "");
 									contentWidgetElementWsDTO.setWebURL(
 											null != contentWidgetElementModel.getWebURL() ? contentWidgetElementModel.getWebURL() : "");
-									contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
+									contentWidgetElementWsDTO.setBtnText(
+											null != contentWidgetElementModel.getBtnText() ? contentWidgetElementModel.getBtnText() : "");
 
 									contentWidgetElementList.add(contentWidgetElementWsDTO);
 								}
 							}
 							contentWidgetCompWsDTO.setItems(contentWidgetElementList);
+							contentWidgetCompWsDTO.setTitle(
+									null != contentWidgetComponentModel.getTitle() ? contentWidgetComponentModel.getTitle() : "");
 							contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
 
-							uiCompPageElementWsDTO.setContentWidget(contentWidgetCompWsDTO);
+							uiCompPageElementWsDTO.setContentComponent(contentWidgetCompWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -505,7 +510,7 @@ public class DefaultCMSComponentControler
 									.setTitle(null != bannerProComponentModel.getTitle() ? bannerProComponentModel.getTitle() : "");
 							bannerProductCarouselWsDTO
 									.setWebURL(null != bannerProComponentModel.getWebURL() ? bannerProComponentModel.getWebURL() : "");
-							uiCompPageElementWsDTO.setBannerProductCarousel(bannerProductCarouselWsDTO);
+							uiCompPageElementWsDTO.setBannerProductCarouselComponent(bannerProductCarouselWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -594,8 +599,14 @@ public class DefaultCMSComponentControler
 									.setAppURL(null != videoProComponentModel.getAppURL() ? videoProComponentModel.getAppURL() : "");
 							videoProductCarouselWsDTO
 									.setBtnText(null != videoProComponentModel.getBtnText() ? videoProComponentModel.getBtnText() : "");
-							videoProductCarouselWsDTO.setImageURL(null != videoProComponentModel.getImageURL().getURL()
-									? videoProComponentModel.getImageURL().getURL() : "");
+							if (null != videoProComponentModel.getImageURL() && null != videoProComponentModel.getImageURL().getURL())
+							{
+								videoProductCarouselWsDTO.setImageURL(videoProComponentModel.getImageURL().getURL());
+							}
+							else
+							{
+								videoProductCarouselWsDTO.setImageURL("");
+							}
 							videoProductCarouselWsDTO.setItems(videoProCarouselList);
 							videoProductCarouselWsDTO
 									.setType(null != videoProComponentModel.getType() ? videoProComponentModel.getType() : "");
@@ -615,7 +626,7 @@ public class DefaultCMSComponentControler
 							{
 								videoProductCarouselWsDTO.setBrandLogo("");
 							}
-							uiCompPageElementWsDTO.setVideoProductCarousel(videoProductCarouselWsDTO);
+							uiCompPageElementWsDTO.setVideoProductCarouselComponent(videoProductCarouselWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 
 
@@ -744,7 +755,7 @@ public class DefaultCMSComponentControler
 							themeOffersWsDTO
 									.setWebURL(null != themeOffersComponentModel.getWebURL() ? themeOffersComponentModel.getWebURL() : "");
 
-							uiCompPageElementWsDTO.setThemeOffers(themeOffersWsDTO);
+							uiCompPageElementWsDTO.setThemeOffersComponent(themeOffersWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -822,15 +833,14 @@ public class DefaultCMSComponentControler
 									themeProWidElementList.add(themeProWidElementWsDTO);
 								}
 							}
-							if (themeProductWidgetComponentModel.getBackgroundImageURL() != null
-									&& themeProductWidgetComponentModel.getBackgroundImageURL().getURL() != null)
+							if (themeProductWidgetComponentModel.getImageURL() != null
+									&& themeProductWidgetComponentModel.getImageURL().getURL() != null)
 							{
-								themeProductWidgetWsDTO
-										.setBackgroundImageURL(themeProductWidgetComponentModel.getBackgroundImageURL().getURL());
+								themeProductWidgetWsDTO.setImageURL(themeProductWidgetComponentModel.getImageURL().getURL());
 							}
 							else
 							{
-								themeProductWidgetWsDTO.setBackgroundImageURL("");
+								themeProductWidgetWsDTO.setImageURL("");
 							}
 							if (themeProductWidgetComponentModel.getBrandLogo() != null
 									&& themeProductWidgetComponentModel.getBrandLogo().getURL() != null)
@@ -848,7 +858,7 @@ public class DefaultCMSComponentControler
 									? themeProductWidgetComponentModel.getTitle() : "");
 							themeProductWidgetWsDTO.setType(
 									null != themeProductWidgetComponentModel.getType() ? themeProductWidgetComponentModel.getType() : "");
-							uiCompPageElementWsDTO.setThemeProductWidget(themeProductWidgetWsDTO);
+							uiCompPageElementWsDTO.setMultiClickComponent(themeProductWidgetWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -922,9 +932,11 @@ public class DefaultCMSComponentControler
 									? bannerSeparatorComponentModel.getDescription() : "");
 							bannerSeperatorWsDTO.setTitle(
 									null != bannerSeparatorComponentModel.getTitle() ? bannerSeparatorComponentModel.getTitle() : "");
+							bannerSeperatorWsDTO.setWebURL(
+									null != bannerSeparatorComponentModel.getWebURL() ? bannerSeparatorComponentModel.getWebURL() : "");
 							bannerSeperatorWsDTO.setType(
 									null != bannerSeparatorComponentModel.getType() ? bannerSeparatorComponentModel.getType() : "");
-							uiCompPageElementWsDTO.setBannerSeparator(bannerSeperatorWsDTO);
+							uiCompPageElementWsDTO.setBannerSeparatorComponent(bannerSeperatorWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 						if (abstractCMSComponentModel instanceof AutomatedBrandProductCarouselComponentModel)
@@ -1031,7 +1043,7 @@ public class DefaultCMSComponentControler
 									null != automatedBrandProCarCompModel.getType() ? automatedBrandProCarCompModel.getType() : "");
 							automatedBrandProCarWsDTO.setWebURL(
 									null != automatedBrandProCarCompModel.getWebURL() ? automatedBrandProCarCompModel.getWebURL() : "");
-							uiCompPageElementWsDTO.setAutomatedBrandProCar(automatedBrandProCarWsDTO);
+							uiCompPageElementWsDTO.setAutomatedBannerProductCarouselComponent(automatedBrandProCarWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -1052,7 +1064,7 @@ public class DefaultCMSComponentControler
 							curatedListingStripWsDTO
 									.setWebURL(null != curatedListStripCompModel.getWebURL() ? curatedListStripCompModel.getWebURL() : "");
 
-							uiCompPageElementWsDTO.setCuratedListingStrip(curatedListingStripWsDTO);
+							uiCompPageElementWsDTO.setCuratedListingStripComponent(curatedListingStripWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -1096,7 +1108,7 @@ public class DefaultCMSComponentControler
 							moBannerWsDTO.setItems(monoBLPBannerElementList);
 							moBannerWsDTO.setTitle(
 									null != monoBLPBannerComponentModel.getTitle() ? monoBLPBannerComponentModel.getTitle() : "");
-							uiCompPageElementWsDTO.setMonoBLPBanner(moBannerWsDTO);
+							uiCompPageElementWsDTO.setSingleBannerComponent(moBannerWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 
 						}
@@ -1143,7 +1155,7 @@ public class DefaultCMSComponentControler
 							subBrandBannerBLPWsDTO.setItems(subBrandBannerBLPEleList);
 							subBrandBannerBLPWsDTO
 									.setTitle(null != subBrandBLPBannerCompModel.getTitle() ? subBrandBLPBannerCompModel.getTitle() : "");
-							uiCompPageElementWsDTO.setSubBrandBannerBLP(subBrandBannerBLPWsDTO);
+							uiCompPageElementWsDTO.setSubBrandsBannerComponent(subBrandBannerBLPWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -1185,7 +1197,7 @@ public class DefaultCMSComponentControler
 							topCategoriesWidgetWsDTO.setItems(topCategoriesWidgetElementList);
 							topCategoriesWidgetWsDTO.setTitle(null != topCategoriesWidgetComponentModel.getTitle()
 									? topCategoriesWidgetComponentModel.getTitle() : "");
-							uiCompPageElementWsDTO.setTopCategoriesWidget(topCategoriesWidgetWsDTO);
+							uiCompPageElementWsDTO.setTopCategoriesComponent(topCategoriesWidgetWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -1266,7 +1278,7 @@ public class DefaultCMSComponentControler
 									.setType(null != curatedProWidgetCompModel.getType() ? curatedProWidgetCompModel.getType() : "");
 							curatedProductsWidgetWsDTO
 									.setWebURL(null != curatedProWidgetCompModel.getWebURL() ? curatedProWidgetCompModel.getWebURL() : "");
-							uiCompPageElementWsDTO.setCuratedProductsWidget(curatedProductsWidgetWsDTO);
+							uiCompPageElementWsDTO.setCuratedProductsComponent(curatedProductsWidgetWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 
@@ -1309,7 +1321,7 @@ public class DefaultCMSComponentControler
 									null != smartFilterWidgetComponentModel.getTitle() ? smartFilterWidgetComponentModel.getTitle() : "");
 							smartFilterWsDTO.setType(
 									null != smartFilterWidgetComponentModel.getType() ? smartFilterWidgetComponentModel.getType() : "");
-							uiCompPageElementWsDTO.setSmartFilterWidget(smartFilterWsDTO);
+							uiCompPageElementWsDTO.setTwoByTwoBannerComponent(smartFilterWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 					}
@@ -1325,12 +1337,13 @@ public class DefaultCMSComponentControler
 
 	@RequestMapping(value = "/component", method = RequestMethod.GET)
 	@ResponseBody
-	public UIComponentWiseWsDTO getComponentsForId(@RequestParam final String pageId, @RequestParam final String componentId)
+	public UICompPageWiseWsDTO getComponentsForId(@RequestParam final String pageId, @RequestParam final String componentId)
 			throws CMSItemNotFoundException
 	{
 		final ContentPageModel contentPage = mplCMSPageService.getPageByLabelOrId(pageId);
-		final UIComponentWiseWsDTO uiComponentWiseWsDTO = new UIComponentWiseWsDTO();
+		final UICompPageWiseWsDTO uiComponentWiseWsDTO = new UICompPageWiseWsDTO();
 		final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+		final List<UICompPageElementWsDTO> genericUICompPageWsDTO = new ArrayList<UICompPageElementWsDTO>();
 
 		if (contentPage != null && componentId != null)
 		{
@@ -1345,7 +1358,6 @@ public class DefaultCMSComponentControler
 					if (abstractCMSComponentModel instanceof HeroBannerComponentModel)
 					{
 						final HeroBannerCompWsDTO heroBannerCompWsDTO = new HeroBannerCompWsDTO();
-
 						final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
 
 						final HeroBannerComponentModel heroBannerCompObj = (HeroBannerComponentModel) abstractCMSComponentModel;
@@ -1384,8 +1396,9 @@ public class DefaultCMSComponentControler
 						heroBannerCompWsDTO
 								.setType(null != heroBannerCompObj.getType() ? heroBannerCompObj.getType() : "HeroBannerComponentModel");
 
-						uiCompPageElementWsDTO.setHeroBanner(heroBannerCompWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setHeroBannerComponent(heroBannerCompWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1432,8 +1445,9 @@ public class DefaultCMSComponentControler
 								null != connectBannerComponentModel.getEndHexCode() ? connectBannerComponentModel.getEndHexCode() : "");
 						connectBannerWsDTO.setType(connectBannerComponentModel.getType());
 
-						uiCompPageElementWsDTO.setConnectBanner(connectBannerWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setMultiPurposeBanner(connectBannerWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1443,7 +1457,6 @@ public class DefaultCMSComponentControler
 					if (abstractCMSComponentModel instanceof OffersWidgetComponentModel)
 					{
 						final OffersWidgetWsDTO offersWidgetWsDTO = new OffersWidgetWsDTO();
-
 						final List<OffersWidgetElementWsDTO> offersWidgetElementList = new ArrayList<OffersWidgetElementWsDTO>();
 
 						final OffersWidgetComponentModel offersWidgetComponentModel = (OffersWidgetComponentModel) abstractCMSComponentModel;
@@ -1463,6 +1476,8 @@ public class DefaultCMSComponentControler
 								{
 									offersWidgetElementWsDTO.setImageURL("");
 								}
+								offersWidgetElementWsDTO
+										.setTitle(null != offersWidgetElementModel.getTitle() ? offersWidgetComponentModel.getTitle() : "");
 								offersWidgetElementWsDTO.setAppURL(
 										null != offersWidgetElementModel.getAppURL() ? offersWidgetElementModel.getAppURL() : "");
 								offersWidgetElementWsDTO.setBtnText(
@@ -1480,8 +1495,9 @@ public class DefaultCMSComponentControler
 						offersWidgetWsDTO
 								.setType(null != offersWidgetComponentModel.getType() ? offersWidgetComponentModel.getType() : "");
 
-						uiCompPageElementWsDTO.setOffersWidget(offersWidgetWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setOffersComponent(offersWidgetWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1490,7 +1506,6 @@ public class DefaultCMSComponentControler
 					if (abstractCMSComponentModel instanceof FlashSalesComponentModel)
 					{
 						final FlashSalesWsDTO flashSalesWsDTO = new FlashSalesWsDTO();
-
 						final List<FlashSalesOffersWsDTO> flashSalesOffersWsDTOList = new ArrayList<FlashSalesOffersWsDTO>();
 						final List<FlashSalesElementWsDTO> flashSalesElementWsDTOList = new ArrayList<FlashSalesElementWsDTO>();
 
@@ -1596,11 +1611,12 @@ public class DefaultCMSComponentControler
 								.setBtnText(null != flashSalesComponentModel.getBtnText() ? flashSalesComponentModel.getBtnText() : "");
 						flashSalesWsDTO.setDescription(
 								null != flashSalesComponentModel.getDescription() ? flashSalesComponentModel.getDescription() : "");
-						/*
-						 * flashSalesWsDTO.setEndDate( null != flashSalesComponentModel.getEndDate() ?
-						 * flashSalesComponentModel.getEndDate() : ""); flashSalesWsDTO.setStartDate( null !=
-						 * flashSalesComponentModel.getStartDate() ? flashSalesComponentModel.getStartDate() : "");
-						 */
+
+						flashSalesWsDTO
+								.setEndDate(null != flashSalesComponentModel.getEndDate() ? flashSalesComponentModel.getEndDate() : "");
+						flashSalesWsDTO.setStartDate(
+								null != flashSalesComponentModel.getStartDate() ? flashSalesComponentModel.getStartDate() : "");
+
 						flashSalesWsDTO
 								.setTitle(null != flashSalesComponentModel.getTitle() ? flashSalesComponentModel.getTitle() : "");
 						flashSalesWsDTO
@@ -1609,8 +1625,9 @@ public class DefaultCMSComponentControler
 						flashSalesWsDTO.setItems(flashSalesElementWsDTOList);
 						flashSalesWsDTO.setType(flashSalesComponentModel.getType());
 
-						uiCompPageElementWsDTO.setFlashSales(flashSalesWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setFlashSalesComponent(flashSalesWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1620,7 +1637,6 @@ public class DefaultCMSComponentControler
 					if (abstractCMSComponentModel instanceof ContentWidgetComponentModel)
 					{
 						final ContentWidgetCompWsDTO contentWidgetCompWsDTO = new ContentWidgetCompWsDTO();
-
 						final List<ContentWidgetElementWsDTO> contentWidgetElementList = new ArrayList<ContentWidgetElementWsDTO>();
 
 						final ContentWidgetComponentModel contentWidgetComponentModel = (ContentWidgetComponentModel) abstractCMSComponentModel;
@@ -1647,15 +1663,19 @@ public class DefaultCMSComponentControler
 										.setTitle(null != contentWidgetElementModel.getTitle() ? contentWidgetElementModel.getTitle() : "");
 								contentWidgetElementWsDTO.setWebURL(
 										null != contentWidgetElementModel.getWebURL() ? contentWidgetElementModel.getWebURL() : "");
-								contentWidgetElementWsDTO.setBtnText(contentWidgetElementModel.getBtnText());
+								contentWidgetElementWsDTO.setBtnText(
+										null != contentWidgetElementModel.getBtnText() ? contentWidgetElementModel.getBtnText() : "");
 
 								contentWidgetElementList.add(contentWidgetElementWsDTO);
 							}
 						}
 						contentWidgetCompWsDTO.setItems(contentWidgetElementList);
+						contentWidgetCompWsDTO
+								.setTitle(null != contentWidgetComponentModel.getTitle() ? contentWidgetComponentModel.getTitle() : "");
 						contentWidgetCompWsDTO.setType(contentWidgetComponentModel.getType());
-						uiCompPageElementWsDTO.setContentWidget(contentWidgetCompWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setContentComponent(contentWidgetCompWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1664,7 +1684,6 @@ public class DefaultCMSComponentControler
 					if (abstractCMSComponentModel instanceof BannerProductCarouselComponentModel)
 					{
 						final BannerProductCarouselWsDTO bannerProductCarouselWsDTO = new BannerProductCarouselWsDTO();
-
 						final List<BannerProCarouselElementWsDTO> bannerProCarouselList = new ArrayList<BannerProCarouselElementWsDTO>();
 
 						final BannerProductCarouselComponentModel bannerProComponentModel = (BannerProductCarouselComponentModel) abstractCMSComponentModel;
@@ -1741,8 +1760,9 @@ public class DefaultCMSComponentControler
 								.setTitle(null != bannerProComponentModel.getTitle() ? bannerProComponentModel.getTitle() : "");
 						bannerProductCarouselWsDTO
 								.setWebURL(null != bannerProComponentModel.getWebURL() ? bannerProComponentModel.getWebURL() : "");
-						uiCompPageElementWsDTO.setBannerProductCarousel(bannerProductCarouselWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setBannerProductCarouselComponent(bannerProductCarouselWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1751,7 +1771,6 @@ public class DefaultCMSComponentControler
 					if (abstractCMSComponentModel instanceof VideoProductCarouselComponentModel)
 					{
 						final VideoProductCarouselWsDTO videoProductCarouselWsDTO = new VideoProductCarouselWsDTO();
-
 						final List<VideoProductCarElementWsDTO> videoProCarouselList = new ArrayList<VideoProductCarElementWsDTO>();
 
 						final VideoProductCarouselComponentModel videoProComponentModel = (VideoProductCarouselComponentModel) abstractCMSComponentModel;
@@ -1831,8 +1850,15 @@ public class DefaultCMSComponentControler
 								.setAppURL(null != videoProComponentModel.getAppURL() ? videoProComponentModel.getAppURL() : "");
 						videoProductCarouselWsDTO
 								.setBtnText(null != videoProComponentModel.getBtnText() ? videoProComponentModel.getBtnText() : "");
-						videoProductCarouselWsDTO.setImageURL(null != videoProComponentModel.getImageURL().getURL()
-								? videoProComponentModel.getImageURL().getURL() : "");
+						if (null != videoProComponentModel.getImageURL() && null != videoProComponentModel.getImageURL().getURL())
+						{
+							videoProductCarouselWsDTO.setImageURL(videoProComponentModel.getImageURL().getURL());
+						}
+						else
+						{
+							videoProductCarouselWsDTO.setImageURL("");
+						}
+
 						videoProductCarouselWsDTO.setItems(videoProCarouselList);
 						videoProductCarouselWsDTO
 								.setType(null != videoProComponentModel.getType() ? videoProComponentModel.getType() : "");
@@ -1853,8 +1879,9 @@ public class DefaultCMSComponentControler
 							videoProductCarouselWsDTO.setBrandLogo("");
 						}
 
-						uiCompPageElementWsDTO.setVideoProductCarousel(videoProductCarouselWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setVideoProductCarouselComponent(videoProductCarouselWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -1981,8 +2008,9 @@ public class DefaultCMSComponentControler
 								.setType(null != themeOffersComponentModel.getType() ? themeOffersComponentModel.getType() : "");
 						themeOffersWsDTO
 								.setWebURL(null != themeOffersComponentModel.getWebURL() ? themeOffersComponentModel.getWebURL() : "");
-						uiCompPageElementWsDTO.setThemeOffers(themeOffersWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setThemeOffersComponent(themeOffersWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2062,15 +2090,14 @@ public class DefaultCMSComponentControler
 								themeProWidElementList.add(themeProWidElementWsDTO);
 							}
 						}
-						if (themeProductWidgetComponentModel.getBackgroundImageURL() != null
-								&& themeProductWidgetComponentModel.getBackgroundImageURL().getURL() != null)
+						if (themeProductWidgetComponentModel.getImageURL() != null
+								&& themeProductWidgetComponentModel.getImageURL().getURL() != null)
 						{
-							themeProductWidgetWsDTO
-									.setBackgroundImageURL(themeProductWidgetComponentModel.getBackgroundImageURL().getURL());
+							themeProductWidgetWsDTO.setImageURL(themeProductWidgetComponentModel.getImageURL().getURL());
 						}
 						else
 						{
-							themeProductWidgetWsDTO.setBackgroundImageURL("");
+							themeProductWidgetWsDTO.setImageURL("");
 						}
 						if (themeProductWidgetComponentModel.getBrandLogo() != null
 								&& themeProductWidgetComponentModel.getBrandLogo().getURL() != null)
@@ -2088,8 +2115,9 @@ public class DefaultCMSComponentControler
 								null != themeProductWidgetComponentModel.getTitle() ? themeProductWidgetComponentModel.getTitle() : "");
 						themeProductWidgetWsDTO.setType(
 								null != themeProductWidgetComponentModel.getType() ? themeProductWidgetComponentModel.getType() : "");
-						uiCompPageElementWsDTO.setThemeProductWidget(themeProductWidgetWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setMultiClickComponent(themeProductWidgetWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2137,7 +2165,8 @@ public class DefaultCMSComponentControler
 						productCapsulesWsDTO.setWebURL(
 								null != productCapsulesComponentModel.getWebURL() ? productCapsulesComponentModel.getWebURL() : "");
 						uiCompPageElementWsDTO.setProductCapsules(productCapsulesWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2167,8 +2196,11 @@ public class DefaultCMSComponentControler
 								null != bannerSeparatorComponentModel.getTitle() ? bannerSeparatorComponentModel.getTitle() : "");
 						bannerSeperatorWsDTO
 								.setType(null != bannerSeparatorComponentModel.getType() ? bannerSeparatorComponentModel.getType() : "");
-						uiCompPageElementWsDTO.setBannerSeparator(bannerSeperatorWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						bannerSeperatorWsDTO.setWebURL(
+								null != bannerSeparatorComponentModel.getWebURL() ? bannerSeparatorComponentModel.getWebURL() : "");
+						uiCompPageElementWsDTO.setBannerSeparatorComponent(bannerSeperatorWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2275,8 +2307,9 @@ public class DefaultCMSComponentControler
 								.setType(null != automatedBrandProCarCompModel.getType() ? automatedBrandProCarCompModel.getType() : "");
 						automatedBrandProCarWsDTO.setWebURL(
 								null != automatedBrandProCarCompModel.getWebURL() ? automatedBrandProCarCompModel.getWebURL() : "");
-						uiCompPageElementWsDTO.setAutomatedBrandProCar(automatedBrandProCarWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setAutomatedBannerProductCarouselComponent(automatedBrandProCarWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2286,6 +2319,7 @@ public class DefaultCMSComponentControler
 					{
 						final CuratedListingStripComponentModel curatedListStripCompModel = (CuratedListingStripComponentModel) abstractCMSComponentModel;
 						final CuratedListingStripWsDTO curatedListingStripWsDTO = new CuratedListingStripWsDTO();
+
 						curatedListingStripWsDTO
 								.setAppURL(null != curatedListStripCompModel.getAppURL() ? curatedListStripCompModel.getAppURL() : "");
 						curatedListingStripWsDTO.setStartHexCode(
@@ -2296,8 +2330,9 @@ public class DefaultCMSComponentControler
 								.setType(null != curatedListStripCompModel.getType() ? curatedListStripCompModel.getType() : "");
 						curatedListingStripWsDTO
 								.setWebURL(null != curatedListStripCompModel.getWebURL() ? curatedListStripCompModel.getWebURL() : "");
-						uiCompPageElementWsDTO.setCuratedListingStrip(curatedListingStripWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setCuratedListingStripComponent(curatedListingStripWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2342,9 +2377,9 @@ public class DefaultCMSComponentControler
 						moBannerWsDTO.setItems(monoBLPBannerElementList);
 						moBannerWsDTO
 								.setTitle(null != monoBLPBannerComponentModel.getTitle() ? monoBLPBannerComponentModel.getTitle() : "");
-						uiCompPageElementWsDTO.setMonoBLPBanner(moBannerWsDTO);
-
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setSingleBannerComponent(moBannerWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2393,8 +2428,9 @@ public class DefaultCMSComponentControler
 						subBrandBannerBLPWsDTO
 								.setTitle(null != subBrandBLPBannerCompModel.getTitle() ? subBrandBLPBannerCompModel.getTitle() : "");
 
-						uiCompPageElementWsDTO.setSubBrandBannerBLP(subBrandBannerBLPWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setSubBrandsBannerComponent(subBrandBannerBLPWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2437,9 +2473,9 @@ public class DefaultCMSComponentControler
 						topCategoriesWidgetWsDTO.setTitle(
 								null != topCategoriesWidgetComponentModel.getTitle() ? topCategoriesWidgetComponentModel.getTitle() : "");
 
-						uiCompPageElementWsDTO.setTopCategoriesWidget(topCategoriesWidgetWsDTO);
-
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setTopCategoriesComponent(topCategoriesWidgetWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2521,8 +2557,9 @@ public class DefaultCMSComponentControler
 						curatedProductsWidgetWsDTO
 								.setWebURL(null != curatedProWidgetCompModel.getWebURL() ? curatedProWidgetCompModel.getWebURL() : "");
 
-						uiCompPageElementWsDTO.setCuratedProductsWidget(curatedProductsWidgetWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setCuratedProductsComponent(curatedProductsWidgetWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;
@@ -2566,8 +2603,9 @@ public class DefaultCMSComponentControler
 						smartFilterWsDTO.setType(
 								null != smartFilterWidgetComponentModel.getType() ? smartFilterWidgetComponentModel.getType() : "");
 
-						uiCompPageElementWsDTO.setSmartFilterWidget(smartFilterWsDTO);
-						uiComponentWiseWsDTO.setItems(uiCompPageElementWsDTO);
+						uiCompPageElementWsDTO.setTwoByTwoBannerComponent(smartFilterWsDTO);
+						genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
+						uiComponentWiseWsDTO.setItems(genericUICompPageWsDTO);
 						uiComponentWiseWsDTO.setMessage("SUCCESS");
 						uiComponentWiseWsDTO.setStatus("pageComponent");
 						return uiComponentWiseWsDTO;

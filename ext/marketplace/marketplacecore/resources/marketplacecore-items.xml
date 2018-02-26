@@ -5194,6 +5194,12 @@
 						<persistence type="property" />
 						<modifiers optional="true" />
 					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -5225,13 +5231,13 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.util.Date" qualifier="startDate"
+					<attribute type="java.lang.String" qualifier="startDate"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-					<attribute type="java.util.Date" qualifier="endDate"
+					<attribute type="java.lang.String" qualifier="endDate"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -5392,7 +5398,12 @@
 							optional="true" />
 						<persistence type='property' />
 					</attribute>
-
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -5735,7 +5746,7 @@
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeProductWidgetComponent">
 				<attributes>
-					<attribute type="media" qualifier="backgroundImageURL"
+					<attribute type="media" qualifier="imageURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
@@ -5896,6 +5907,12 @@
 						<persistence type='property' />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="endHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
