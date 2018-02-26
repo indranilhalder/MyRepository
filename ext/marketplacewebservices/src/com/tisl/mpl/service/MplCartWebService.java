@@ -5,6 +5,7 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartRestorationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -193,5 +194,11 @@ public interface MplCartWebService
 	 * @return CartDataDetailsWsDTO
 	 */
 	CartDataDetailsWsDTO getCartDetailsPwa(final String cartId, final String pincode, String channel);
+
+	/**
+	 * @param orderDetails
+	 * @return
+	 */
+	public Double calculateCartTotalMrp(OrderData orderDetails);
 
 }

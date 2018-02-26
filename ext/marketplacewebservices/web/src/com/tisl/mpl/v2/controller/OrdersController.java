@@ -20,7 +20,10 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoriesData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.ImageData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -36,6 +39,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.strategies.CartLoaderStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -45,6 +49,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -55,9 +60,11 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,7 +94,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -116,6 +122,7 @@ import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.data.StatusRecordData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
@@ -124,6 +131,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.strategies.OrderCodeIdentificationStrategy;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -138,13 +146,14 @@ import com.tisl.mpl.wsdto.OrderConfirmationWsDTO;
 import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.SelectedDeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.StatusResponseDTO;
 import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
@@ -215,9 +224,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 *
+	 * 
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -245,6 +254,19 @@ public class OrdersController extends BaseCommerceController
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
+
+	@Autowired
+	private MplPaymentFacade mplPaymentFacade;
+	@Resource
+	private MplCartWebService mplCartWebService;
+	@Autowired
+	private CommonI18NService commonI18NService;
+	private static final String INR = "INR";
+
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
+
 
 
 	/**
@@ -440,9 +462,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 *
+	 * 
 	 * @param orderNumber
-	 *
+	 * 
 	 * @param lineID
 	 */
 
@@ -1082,11 +1104,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1272,12 +1294,32 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/getSelectedOrder/{orderCode}", method = RequestMethod.GET)
 	@ResponseBody
 	public OrderTrackingWsDTO getOrdertracking(final HttpServletRequest request, @PathVariable final String orderCode,
-			@PathVariable final String userId)
+			@PathVariable final String userId, @RequestParam(required = false) final boolean isPwa)
 	{
 		OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		try
 		{
 			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request, orderCode);
+			if (isPwa)
+			{
+				final DecimalFormat df = new DecimalFormat("#.##");
+				final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+				final CurrencyModel currency = commonI18NService.getCurrency(INR);
+				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
+				df.format(mrp);
+				final PriceData mrpPrice = priceDataFactory
+						.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()), currency);
+				final double amountInclDelCharge = Double.parseDouble(orderTrackingWsDTO.getTotalOrderAmount());
+				final double delCharge = Double.parseDouble(orderTrackingWsDTO.getDeliveryCharge());
+				final double amtWdDelCharge = amountInclDelCharge - delCharge;
+				final double discount = mrp.doubleValue() - Double.parseDouble(df.format(amtWdDelCharge));
+				final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+				pricePwa.setBagTotal(mrpPrice);
+				pricePwa.setTotalDiscountAmount(totalDiscount);
+				orderTrackingWsDTO.setOrderAmount(pricePwa);
+
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1492,7 +1534,7 @@ public class OrdersController extends BaseCommerceController
 			@RequestParam final int currentPage, @RequestParam(required = false) final int pageSize,
 			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sort,
 			@PathVariable final String userId, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
-			@RequestParam(required = false) final ShowMode showMode)
+			@RequestParam(required = false) final ShowMode showMode, @RequestParam(required = false) final boolean isPwa)
 	{
 
 		final GetOrderHistoryListWsDTO getOrderHistoryListWsDTO = new GetOrderHistoryListWsDTO();
@@ -1526,6 +1568,26 @@ public class OrdersController extends BaseCommerceController
 					if (null != order)
 					{
 						orderTrackingListWsDTO.add(order);
+					}
+					if (isPwa)
+					{
+						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+						final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
+						final DecimalFormat df = new DecimalFormat("#.##");
+						df.format(mrp);
+						final CurrencyModel currency = commonI18NService.getCurrency(INR);
+						final double amountInclDelCharge = Double.parseDouble(order.getTotalOrderAmount());
+						final double delCharge = Double.parseDouble(order.getDeliveryCharge());
+						final double payableamtWdDelCharge = amountInclDelCharge - delCharge;
+						final double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+						final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount),
+								currency);
+						final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+								currency);
+						pricePwa.setBagTotal(totalMrp);
+						pricePwa.setTotalDiscountAmount(totalDiscount);
+						order.setOrderAmount(pricePwa);
+
 					}
 				}
 				if (searchPageDataParentOrder.getPagination() != null

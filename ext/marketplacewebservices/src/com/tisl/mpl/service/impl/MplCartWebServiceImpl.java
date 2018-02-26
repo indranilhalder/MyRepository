@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commercefacades.order.data.CartRestorationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.impl.DefaultCartFacade;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
@@ -965,12 +966,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (isPwa)
 				{
 					final Double mrp = calculateCartTotalMrp(cart);
-					//
 					final PriceData totalMrp = createPriceCharge(mrp.toString());
 					pricePwa.setBagTotal(totalMrp);
-					final PriceData payableAmount = createPriceCharge(cartDataDetails.getTotalPrice());
-					pricePwa.setPaybleAmount(payableAmount);
-					final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+					double actualDelCharge = 0.0;
+					if (CollectionUtils.isNotEmpty(cart.getEntries()))
+					{
+						for (final AbstractOrderEntryModel cartentry : cart.getEntries())
+						{
+							actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+						}
+					}
+					final PriceData amountInclDelCharge = createPriceCharge(cartDataDetails.getTotalPrice());
+					pricePwa.setPaybleAmount(amountInclDelCharge);
+					final double delCharge = actualDelCharge;
+					final double payableamtWdDelCharge = (Double.parseDouble(cartDataDetails.getTotalPrice()) - delCharge);
+					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
 					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
 					pricePwa.setTotalDiscountAmount(totalDiscount);
 					cartDataDetails.setCartAmount(pricePwa);
@@ -4539,6 +4549,29 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		return cartTotalMrp;
 	}
 
+	@Override
+	public Double calculateCartTotalMrp(final OrderData orderdata)
+	{
+		// YTODO Auto-generated method stub
+		Double cartTotalMrp = Double.valueOf(0);
+		Double cartEntryMrp = Double.valueOf(0);
+
+		if (CollectionUtils.isNotEmpty(orderdata.getEntries()))
+		{
+			for (final OrderEntryData entry : orderdata.getEntries())
+			{
+				if (!entry.isGiveAway())
+				{
+					cartEntryMrp = Double.valueOf((null == entry.getMrp() ? 0d : entry.getMrp().getDoubleValue().doubleValue())
+							* (null == entry.getQuantity() ? 0d : entry.getQuantity().doubleValue()));
+
+					cartTotalMrp = Double.valueOf(cartTotalMrp.doubleValue() + cartEntryMrp.doubleValue());
+				}
+			}
+		}
+
+		return cartTotalMrp;
+	}
 
 	/**
 	 * @param product

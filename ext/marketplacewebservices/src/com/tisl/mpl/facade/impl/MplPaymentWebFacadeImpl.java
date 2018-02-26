@@ -762,7 +762,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -808,14 +808,17 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 					//
 					final PriceData totalMrp = createPriceCharge(mrp.toString());
 					pricePwa.setBagTotal(totalMrp);
-					final PriceData payableAmount = createPriceCharge(cartDetailsData.getTotalPrice());
-					pricePwa.setPaybleAmount(payableAmount);
-					final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+					final PriceData amountInclDelCharge = createPriceCharge(cartDetailsData.getTotalPrice());
+					pricePwa.setPaybleAmount(amountInclDelCharge);
+					final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
+					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
 					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
 					pricePwa.setTotalDiscountAmount(totalDiscount);
 					cartDetailsData.setCartAmount(pricePwa);
 
 				}
+
 				cartDetailsData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 			else
@@ -829,13 +832,15 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			cartDetailsData.setCartGuid(cartGuId);
 			if (isPwa)
 			{
-				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+				final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
 				//
 				final PriceData totalMrp = createPriceCharge(mrp.toString());
 				pricePwa.setBagTotal(totalMrp);
-				final PriceData payableAmount = createPriceCharge(cartDetailsData.getTotalPrice());
-				pricePwa.setPaybleAmount(payableAmount);
-				final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+				final PriceData amountInclDelCharge = createPriceCharge(cartDetailsData.getTotalPrice());
+				pricePwa.setPaybleAmount(amountInclDelCharge);
+				final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
+				final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
+				final double discount = mrp.doubleValue() - payableamtWdDelCharge;
 				final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
 				pricePwa.setTotalDiscountAmount(totalDiscount);
 				cartDetailsData.setCartAmount(pricePwa);
