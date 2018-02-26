@@ -10,6 +10,11 @@ export default class SearchBrand extends React.Component {
       this.props.onClick();
     }
   };
+  getValue(val) {
+    if (this.props.getValue) {
+      this.props.getValue(val);
+    }
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -19,7 +24,7 @@ export default class SearchBrand extends React.Component {
             textStyle={{ fontSize: 14 }}
             height={40}
             rightChildSize={35}
-            onChange={this.props.onChange}
+            onChange={val => this.getValue(val)}
             value={this.props.value}
             rightChild={
               <CircleButton
