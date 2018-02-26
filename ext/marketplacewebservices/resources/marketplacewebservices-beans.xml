@@ -1195,6 +1195,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.EMIBankWsDTO>" />
 		<property name="emitermsrate"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.EMITermRateDataForMobile>" />
+			<property name="message" type="String" /> 
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.EMIBankWsDTO">
@@ -1204,6 +1205,8 @@
 		<property name="emiLowerLimit" type="String" />
 		<property name="emiUpperLimit" type="String" />
 		<property name="emiTermRates" type="String" />
+		<property name="emitermsrate"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.EMITermRateDataForMobile>" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.NetBankingWsDTO">
 		<property name="bankName" type="String" />

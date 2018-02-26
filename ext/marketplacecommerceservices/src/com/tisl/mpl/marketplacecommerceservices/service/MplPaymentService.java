@@ -39,6 +39,14 @@ import com.tisl.mpl.model.PaymentTypeModel;
  * @author TCS
  *
  */
+/**
+ * @author 395340
+ *
+ */
+/**
+ * @author 395340
+ *
+ */
 public interface MplPaymentService
 {
 	/**
@@ -453,6 +461,12 @@ public interface MplPaymentService
 	 */
 	public JuspayCardStatusModel getJuspayCardStatusForCustomer(String customerId, String guid);
 
+	/**
+	 *
+	 * @param productValue
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
 
-
+	List<EMIBankModel> getBankDetailsforEMI(Double productValue) throws EtailNonBusinessExceptions;
 }
