@@ -327,11 +327,15 @@ public class DefaultCMSComponentControler
 										final FlashSalesDiscountPriceWsDTO flashSalesDiscountPriceWsDTO = new FlashSalesDiscountPriceWsDTO();
 										final FlashSalesMRPPriceWsDTO flashSalesMRPPriceWsDTO = new FlashSalesMRPPriceWsDTO();
 
-										flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										flashSalesDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
 										flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-
-										flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+										if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+										{
+											flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+											flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+										}
+										flashSalesDiscountPriceWsDTO.setCurrencySymbol("₹");
+										flashSalesMRPPriceWsDTO.setCurrencySymbol("₹");
 										flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										flashSalesMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
@@ -364,11 +368,12 @@ public class DefaultCMSComponentControler
 									null != flashSalesComponentModel.getBtnText() ? flashSalesComponentModel.getBtnText() : "");
 							flashSalesWsDTO.setDescription(
 									null != flashSalesComponentModel.getDescription() ? flashSalesComponentModel.getDescription() : "");
-							/*
-							 * flashSalesWsDTO.setEndDate( null != flashSalesComponentModel.getEndDate() ?
-							 * flashSalesComponentModel.getEndDate() : ""); flashSalesWsDTO.setStartDate( null !=
-							 * flashSalesComponentModel.getStartDate() ? flashSalesComponentModel.getStartDate() : "");
-							 */
+
+							flashSalesWsDTO.setEndDate(
+									null != flashSalesComponentModel.getEndDate() ? flashSalesComponentModel.getEndDate() : "");
+							flashSalesWsDTO.setStartDate(
+									null != flashSalesComponentModel.getStartDate() ? flashSalesComponentModel.getStartDate() : "");
+
 							flashSalesWsDTO
 									.setTitle(null != flashSalesComponentModel.getTitle() ? flashSalesComponentModel.getTitle() : "");
 							flashSalesWsDTO
@@ -479,6 +484,8 @@ public class DefaultCMSComponentControler
 											bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
+										bannerProDiscountPriceWsDTO.setCurrencySymbol("₹");
+										bannerProMRPPriceWsDTO.setCurrencySymbol("₹");
 										bannerProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
@@ -565,6 +572,8 @@ public class DefaultCMSComponentControler
 											videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
+										videoProDiscountPriceWsDTO.setCurrencySymbol("₹");
+										videoProMRPPriceWsDTO.setCurrencySymbol("₹");
 										videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										videoProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
@@ -712,6 +721,8 @@ public class DefaultCMSComponentControler
 											thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
+										thDiscountPriceWsDTO.setCurrencySymbol("₹");
+										thMrpPriceWsDTO.setCurrencySymbol("₹");
 										thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -812,6 +823,8 @@ public class DefaultCMSComponentControler
 											thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
+										thDiscountPriceWsDTO.setCurrencySymbol("₹");
+										thMrpPriceWsDTO.setCurrencySymbol("₹");
 										thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -990,6 +1003,8 @@ public class DefaultCMSComponentControler
 											autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
+										autoDiscountPriceWsDTO.setCurrencySymbol("₹");
+										autoMrpPriceWsDTO.setCurrencySymbol("₹");
 										autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										autoMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 										automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -1251,6 +1266,8 @@ public class DefaultCMSComponentControler
 											curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 											curatedProWidgetEleDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										}
+										curatedProWidgetEleDiscountPriceWsDTO.setCurrencySymbol("₹");
+										curatedProWidgetEleMRPPriceWsDTO.setCurrencySymbol("₹");
 										curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 										curatedProWidgetEleMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
@@ -1574,11 +1591,15 @@ public class DefaultCMSComponentControler
 									final FlashSalesDiscountPriceWsDTO flashSalesDiscountPriceWsDTO = new FlashSalesDiscountPriceWsDTO();
 									final FlashSalesMRPPriceWsDTO flashSalesMRPPriceWsDTO = new FlashSalesMRPPriceWsDTO();
 
-									flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									flashSalesDiscountPriceWsDTO.setFormattedValue("" + Integer.parseInt(productPrice));
+									if (buyboxdata.getPrice() != null && buyboxdata.getPrice().getCurrencyIso() != null)
+									{
+										flashSalesDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+										flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+									}
 									flashSalesDiscountPriceWsDTO.setDoubleValue(Double.valueOf(productPrice));
-
-									flashSalesMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
+									flashSalesDiscountPriceWsDTO.setCurrencySymbol("₹");
+									flashSalesMRPPriceWsDTO.setCurrencySymbol("₹");
 									flashSalesMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									flashSalesMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
@@ -1731,6 +1752,8 @@ public class DefaultCMSComponentControler
 										bannerProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										bannerProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
+									bannerProDiscountPriceWsDTO.setCurrencySymbol("₹");
+									bannerProMRPPriceWsDTO.setCurrencySymbol("₹");
 									bannerProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									bannerProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
@@ -1818,6 +1841,8 @@ public class DefaultCMSComponentControler
 										videoProDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										videoProMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
+									videoProDiscountPriceWsDTO.setCurrencySymbol("₹");
+									videoProMRPPriceWsDTO.setCurrencySymbol("₹");
 									videoProMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									videoProMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									if (productObj.getProductCode() != null && productObj.getProductCode().getCode() != null)
@@ -1966,6 +1991,8 @@ public class DefaultCMSComponentControler
 										thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
+									thDiscountPriceWsDTO.setCurrencySymbol("₹");
+									thMrpPriceWsDTO.setCurrencySymbol("₹");
 									thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									themeOffersElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -2069,6 +2096,8 @@ public class DefaultCMSComponentControler
 										thDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										thMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
+									thMrpPriceWsDTO.setCurrencySymbol("₹");
+									thDiscountPriceWsDTO.setCurrencySymbol("₹");
 									thMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									thMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									themeProWidElementWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -2256,6 +2285,8 @@ public class DefaultCMSComponentControler
 										autoDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										autoMrpPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
+									autoDiscountPriceWsDTO.setCurrencySymbol("₹");
+									autoMrpPriceWsDTO.setCurrencySymbol("₹");
 									autoMrpPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									autoMrpPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 									automatedBrandProCarEleWsDTO.setPrdId(productObj.getProductCode().getCode());
@@ -2531,6 +2562,8 @@ public class DefaultCMSComponentControler
 										curatedProWidgetEleMRPPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 										curatedProWidgetEleDiscountPriceWsDTO.setCurrencyIso(buyboxdata.getPrice().getCurrencyIso());
 									}
+									curatedProWidgetEleDiscountPriceWsDTO.setCurrencySymbol("₹");
+									curatedProWidgetEleMRPPriceWsDTO.setCurrencySymbol("₹");
 									curatedProWidgetEleMRPPriceWsDTO.setDoubleValue(Double.valueOf(productUnitPrice));
 									curatedProWidgetEleMRPPriceWsDTO.setFormattedValue("" + Integer.parseInt(productUnitPrice));
 
