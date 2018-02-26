@@ -15,6 +15,12 @@ import {
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 export default class CheckoutDeliveryMode extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cartId: ""
+    };
+  }
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -29,15 +35,24 @@ export default class CheckoutDeliveryMode extends React.Component {
         JSON.parse(customerCookie).access_token,
         JSON.parse(cartDetailsLoggedInUser).code
       );
+      this.setState({ cartId: JSON.parse(cartDetailsLoggedInUser).code });
     } else {
       this.props.getCartDetailsCNC(
         ANONYMOUS_USER,
         JSON.parse(globalCookie).access_token,
         JSON.parse(cartDetailsAnonymous).guid
       );
+      this.setState({ cartId: JSON.parse(cartDetailsAnonymous).guid });
+    }
+  }
+  handleSelectDeliveryMode(code, id, cartId) {
+    if (this.props.selectDeliveryMode) {
+      this.props.selectDeliveryMode(code, id, cartId);
     }
   }
   render() {
+    console.log(this.props);
+    console.log(this.state);
     if (this.props.cart) {
       const cartDetails = this.props.cart.cartDetails;
       const selectedAddress = cartDetails.addressDetailsList
@@ -83,7 +98,13 @@ export default class CheckoutDeliveryMode extends React.Component {
                       deliveryInformation={val.elligibleDeliveryMode}
                       showDelivery={true}
                       deliveryInfoToggle={false}
-                      selectDeliveryMode={val => console.log(val)}
+                      selectDeliveryMode={code =>
+                        this.handleSelectDeliveryMode(
+                          code,
+                          val.USSID,
+                          this.state.cartId
+                        )
+                      }
                     />
                   </div>
                 );
