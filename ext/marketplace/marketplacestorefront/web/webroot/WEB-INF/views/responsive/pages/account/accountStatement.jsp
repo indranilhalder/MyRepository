@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -15,13 +16,15 @@
 <div class="orderStatementForward">
 	<div class="orderStatementMainItemHead">
 		Payment Information
-		<span class="totalOrderPrice">Total: &#8377;${juspayAmount + cliqCashAmount}</span>
+		<fmt:formatNumber var="totalPayment" value="${juspayAmount + cliqCashAmount}" maxFractionDigits="2" minFractionDigits="2" />
+		<span class="totalOrderPrice">Total: &#8377;${totalPayment}</span>
 	</div>
 	<div class="orderStatementMainItemBody">
 		<c:choose>
 			<c:when test="${juspayMode eq true}">
-				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayAmount}</span></h4>
+				<div class="orderStatMainBody">'
+					<fmt:formatNumber var="juspayTotal" value="${juspayAmount}" maxFractionDigits="2" minFractionDigits="2" />
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayTotal}</span></h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 							<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -31,15 +34,18 @@
 									<c:set var="cancelAndRetun" value="true" />
 								</c:if>
 								<div class="orderStatChildBody">
+									<fmt:formatNumber var="productPrice" value="${entry.amountAfterAllDisc.value + entry.currDelCharge.value + entry.scheduledDeliveryCharge}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${entry.scheduledDeliveryCharge}" maxFractionDigits="2" />
+									
 									<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
-									<span class="totalOrderPrice">&#8377;${entry.amountAfterAllDisc.value + entry.currDelCharge.value + entry.scheduledDeliveryCharge}
+									<span class="totalOrderPrice">&#8377;${productPrice}
 											</span></strong></p>
 										
 										<div class="orderStatementL2Body">
 											<p><span>Product Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.amountAfterAllDisc}"
 											displayFreeForZero="true" /></span></p>
 											<p><span>Delivery Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.currDelCharge}" /></span></p>
-											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.scheduledDeliveryCharge}</span></p>
+											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${schedulingCharges}</span></p>
 											<p><span>Seller Id:</span> <span class="totalOrderPrice">${sellerOrder.code}</span></p>
 										</div>
 								</div>
@@ -54,7 +60,8 @@
 				
 				<c:if test="${not empty juspayAmount}">
 					<div class="orderStatMainBody">
-						<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayAmount}</span></h4>
+						<fmt:formatNumber var="juspayTotal" value="${juspayAmount}" maxFractionDigits="2" minFractionDigits="2" />
+						<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayTotal}</span></h4>
 						<div class="orderStatementL1Body">
 							<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 								<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -64,15 +71,19 @@
 										<c:set var="cancelAndRetun" value="true" />
 									</c:if>
 									<div class="orderStatChildBody">
+										<fmt:formatNumber var="productPrice" value="${entry.walletApportionPaymentData.juspayApportionValue + entry.walletApportionPaymentData.juspayDeliveryValue
+											+ entry.walletApportionPaymentData.juspayShippingValue + entry.walletApportionPaymentData.juspaySchedulingValue}" maxFractionDigits="2"  minFractionDigits="2" />
+										<fmt:formatNumber var="deliveryCharges" value="${entry.walletApportionPaymentData.juspayDeliveryValue + entry.walletApportionPaymentData.juspayShippingValue}" maxFractionDigits="2" minFractionDigits="2" />
+										<fmt:formatNumber var="productCharges" value="${entry.walletApportionPaymentData.juspayApportionValue}" maxFractionDigits="2" minFractionDigits="2" />
+										<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionPaymentData.juspaySchedulingValue}" maxFractionDigits="2" />
+										
 										<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
-										<span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.juspayApportionValue + entry.walletApportionPaymentData.juspayDeliveryValue
-											+ entry.walletApportionPaymentData.juspayShippingValue + entry.walletApportionPaymentData.juspaySchedulingValue}</span></strong></p>
+										<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
 											
 											<div class="orderStatementL2Body">
-												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.juspayApportionValue}</span></p>
-												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.juspayDeliveryValue + entry.walletApportionPaymentData.juspayShippingValue}</span></p>
-												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">
-													&#8377;${entry.walletApportionPaymentData.juspaySchedulingValue}</span></p>
+												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${productCharges}</span></p>
+												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${deliveryCharges}</span></p>
+												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${schedulingCharges}</span></p>
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${sellerOrder.code}</span></p>
 											</div>
 									</div>
@@ -83,7 +94,8 @@
 					</div>
 				</c:if>
 				<div class="orderStatMainBody">
-					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> CLiQ Cash <span class="totalOrderPrice">&#8377;${cliqCashAmount}</span></h4>
+					<fmt:formatNumber var="cliqcashTotal" value="${cliqCashAmount}" maxFractionDigits="2" minFractionDigits="2" />
+					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> CLiQ Cash <span class="totalOrderPrice">&#8377;${cliqcashTotal}</span></h4>
 					<div class="orderStatementL1Body">
 						<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder" varStatus="status">
 							<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -93,14 +105,19 @@
 									<c:set var="cancelAndRetun" value="true" />
 								</c:if>
 								<div class="orderStatChildBody">
+									<fmt:formatNumber var="productPrice" value="${entry.walletApportionPaymentData.qcApportionPartValue + entry.walletApportionPaymentData.qcDeliveryPartValue
+										+ entry.walletApportionPaymentData.qcShippingPartValue + entry.walletApportionPaymentData.qcSchedulingPartValue}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="deliveryCharges" value="${entry.walletApportionPaymentData.qcDeliveryPartValue + entry.walletApportionPaymentData.qcShippingPartValue}" maxFractionDigits="2" minFractionDigits="2" />									
+									<fmt:formatNumber var="productCharges" value="${entry.walletApportionPaymentData.qcApportionPartValue}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionPaymentData.qcSchedulingPartValue}" maxFractionDigits="2" />
+									
 									<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
-									<span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcApportionPartValue + entry.walletApportionPaymentData.qcDeliveryPartValue
-										+ entry.walletApportionPaymentData.qcShippingPartValue + entry.walletApportionPaymentData.qcSchedulingPartValue}</span></strong></p>
+									<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
 										
 										<div class="orderStatementL2Body">
-											<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcApportionPartValue}</span></p>
-											<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcDeliveryPartValue + entry.walletApportionPaymentData.qcShippingPartValue}</span></p>
-											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionPaymentData.qcSchedulingPartValue}</span></p>
+											<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${productCharges}</span></p>
+											<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${deliveryCharges}</span></p>
+											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${schedulingCharges}</span></p>
 											<p><span>Seller Id:</span> <span class="totalOrderPrice">${sellerOrder.code}</span></p>
 										</div>
 								</div>
@@ -131,15 +148,18 @@
 							
 							<c:if test="${entry.isCanAndReturn eq true}">
 								<div class="orderStatChildBody">
+									<fmt:formatNumber var="productPrice" value="${entry.amountAfterAllDisc.value + entry.currDelCharge.value + entry.scheduledDeliveryCharge}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${entry.scheduledDeliveryCharge}" maxFractionDigits="2" />
+									
 									<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
-									<span class="totalOrderPrice">&#8377;${entry.amountAfterAllDisc.value + entry.currDelCharge.value + entry.scheduledDeliveryCharge}
+									<span class="totalOrderPrice">&#8377;${productPrice}
 											</span></strong></p>
 										
 										<div class="orderStatementL2Body">
 											<p><span>Product Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.amountAfterAllDisc}"
 											displayFreeForZero="true" /></span></p>
 											<p><span>Delivery Charges:</span> <span class="totalOrderPrice"><format:price priceData="${entry.currDelCharge}" /></span></p>
-											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.scheduledDeliveryCharge}</span></p>
+											<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${schedulingCharges}</span></p>
 											<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 										</div>
 								</div>
@@ -160,18 +180,25 @@
 							<c:forEach items="${orderDetail.sellerOrderList}" var="returnOrder" varStatus="status">
 								<c:forEach items="${returnOrder.entries}" var="entry"
 								varStatus="entryStatus">
-									<div class="orderStatChildBody">
-										<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
-										<span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspayApportionValue + entry.walletApportionforReverseData.juspayDeliveryValue
-											+ entry.walletApportionforReverseData.juspayShippingValue + entry.walletApportionforReverseData.juspaySchedulingValue}</span></strong></p>
+									<c:if test="${not empty entry.walletApportionforReverseData}">
+										<div class="orderStatChildBody">
+											<fmt:formatNumber var="productPrice" value="${entry.walletApportionforReverseData.juspayApportionValue + entry.walletApportionforReverseData.juspayDeliveryValue
+												+ entry.walletApportionforReverseData.juspayShippingValue + entry.walletApportionforReverseData.juspaySchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
+											<fmt:formatNumber var="deliveryCharges" value="${entry.walletApportionforReverseData.juspayDeliveryValue + entry.walletApportionforReverseData.juspayShippingValue}" maxFractionDigits="2" minFractionDigits="2" />
+											<fmt:formatNumber var="productCharges" value="${entry.walletApportionforReverseData.juspayApportionValue}" maxFractionDigits="2" minFractionDigits="2" />
+											<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionforReverseData.juspaySchedulingValue}" maxFractionDigits="2" />
 											
-											<div class="orderStatementL2Body">
-												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspayApportionValue}</span></p>
-												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspayDeliveryValue + entry.walletApportionforReverseData.juspayShippingValue}</span></p>
-												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${entry.walletApportionforReverseData.juspaySchedulingValue}</span></p>
-												<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
-											</div>
-									</div>
+											<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
+											<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
+												
+												<div class="orderStatementL2Body">
+													<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${productCharges}</span></p>
+													<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${deliveryCharges}</span></p>
+													<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${schedulingCharges}</span></p>
+													<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
+												</div>
+										</div>
+									</c:if>
 								</c:forEach>
 							</c:forEach>
 							<br />&nbsp;
@@ -211,16 +238,19 @@
 												value="${qcSchedulingValue+entryBucketObject.qcSchedulingValue}" />
 										</c:if>
 									</c:forEach>
-								
-								
+									<fmt:formatNumber var="productPrice" value="${qcApportionValue + qcDeliveryValue + qcShippingValue + qcSchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="deliveryCharges" value="${qcDeliveryValue + qcShippingValue}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="productCharges" value="${qcApportionValue}" maxFractionDigits="2" minFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${qcSchedulingValue}" maxFractionDigits="2" />
+									
 									<div class="orderStatChildBody">
 										<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
-										<span class="totalOrderPrice">&#8377;${qcApportionValue + qcDeliveryValue + qcShippingValue + qcSchedulingValue}</span></strong></p>
+										<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
 											
 											<div class="orderStatementL2Body">
-												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${qcApportionValue}</span></p>
-												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${qcDeliveryValue + qcShippingValue}</span></p>
-												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${qcSchedulingValue}</span></p>
+												<p><span>Product Charges:</span> <span class="totalOrderPrice">&#8377;${productCharges}</span></p>
+												<p><span>Delivery Charges:</span> <span class="totalOrderPrice">&#8377;${deliveryCharges}</span></p>
+												<p><span>Scheduling Charges:</span> <span class="totalOrderPrice">&#8377;${schedulingCharges}</span></p>
 												<p><span>Seller Id:</span> <span class="totalOrderPrice">${returnOrder.code}</span></p>
 											</div>
 									</div>
