@@ -3194,7 +3194,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 														.getAuditEntries())
 												{
 													if (null != mplPaymentAuditEntry.getStatus()
-															&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
+															&& (!mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED") || !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("PENDING"))) // case for EBS....
 													{
 														qcFlag = true;
 
