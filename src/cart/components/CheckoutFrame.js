@@ -23,6 +23,7 @@ export default class CheckoutFrame extends React.Component {
         <div className={styles.content}>{this.props.children}</div>
         <Checkout
           amount={this.props.amount}
+          totalDiscount={this.props.totalDiscount}
           bagTotal={this.props.bagTotal}
           tax={this.props.tax}
           offers={this.props.offers}
@@ -37,6 +38,7 @@ export default class CheckoutFrame extends React.Component {
 
 CheckoutFrame.propTypes = {
   amount: PropTypes.string,
+  totalDiscount: PropTypes.string,
   bagTotal: PropTypes.string,
   tax: PropTypes.string,
   delivery: PropTypes.string,
