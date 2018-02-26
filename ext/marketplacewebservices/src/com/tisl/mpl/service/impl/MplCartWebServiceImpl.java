@@ -966,12 +966,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (isPwa)
 				{
 					final Double mrp = calculateCartTotalMrp(cart);
-					//
 					final PriceData totalMrp = createPriceCharge(mrp.toString());
 					pricePwa.setBagTotal(totalMrp);
-					final PriceData payableAmount = createPriceCharge(cartDataDetails.getTotalPrice());
-					pricePwa.setPaybleAmount(payableAmount);
-					final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+					double actualDelCharge = 0.0;
+					if (CollectionUtils.isNotEmpty(cart.getEntries()))
+					{
+						for (final AbstractOrderEntryModel cartentry : cart.getEntries())
+						{
+							actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+						}
+					}
+					final PriceData amountInclDelCharge = createPriceCharge(cartDataDetails.getTotalPrice());
+					pricePwa.setPaybleAmount(amountInclDelCharge);
+					final double delCharge = actualDelCharge;
+					final double payableamtWdDelCharge = (Double.parseDouble(cartDataDetails.getTotalPrice()) - delCharge);
+					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
 					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
 					pricePwa.setTotalDiscountAmount(totalDiscount);
 					cartDataDetails.setCartAmount(pricePwa);
@@ -3332,8 +3341,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3602,7 +3611,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */

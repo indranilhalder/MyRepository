@@ -64,6 +64,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1293,12 +1294,32 @@ public class OrdersController extends BaseCommerceController
 	@RequestMapping(value = "/users/{userId}/getSelectedOrder/{orderCode}", method = RequestMethod.GET)
 	@ResponseBody
 	public OrderTrackingWsDTO getOrdertracking(final HttpServletRequest request, @PathVariable final String orderCode,
-			@PathVariable final String userId)
+			@PathVariable final String userId, @RequestParam(required = false) final boolean isPwa)
 	{
 		OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		try
 		{
 			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request, orderCode);
+			if (isPwa)
+			{
+				final DecimalFormat df = new DecimalFormat("#.##");
+				final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+				final CurrencyModel currency = commonI18NService.getCurrency(INR);
+				final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+				final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
+				df.format(mrp);
+				final PriceData mrpPrice = priceDataFactory
+						.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()), currency);
+				final double amountInclDelCharge = Double.parseDouble(orderTrackingWsDTO.getTotalOrderAmount());
+				final double delCharge = Double.parseDouble(orderTrackingWsDTO.getDeliveryCharge());
+				final double amtWdDelCharge = amountInclDelCharge - delCharge;
+				final double discount = mrp.doubleValue() - Double.parseDouble(df.format(amtWdDelCharge));
+				final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+				pricePwa.setBagTotal(mrpPrice);
+				pricePwa.setTotalDiscountAmount(totalDiscount);
+				orderTrackingWsDTO.setOrderAmount(pricePwa);
+
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1552,16 +1573,20 @@ public class OrdersController extends BaseCommerceController
 					{
 						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 						final Double mrp = mplCartWebService.calculateCartTotalMrp(orderDetails);
-						//
+						final DecimalFormat df = new DecimalFormat("#.##");
+						df.format(mrp);
 						final CurrencyModel currency = commonI18NService.getCurrency(INR);
 						final double amountInclDelCharge = Double.parseDouble(order.getTotalOrderAmount());
 						final double delCharge = Double.parseDouble(order.getDeliveryCharge());
 						final double payableamtWdDelCharge = amountInclDelCharge - delCharge;
-						final double discount = mrp.doubleValue() - payableamtWdDelCharge;
+						final double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
 						final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount),
 								currency);
+						final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+								currency);
+						pricePwa.setBagTotal(totalMrp);
 						pricePwa.setTotalDiscountAmount(totalDiscount);
-						order.setCartAmount(pricePwa);
+						order.setOrderAmount(pricePwa);
 
 					}
 				}
