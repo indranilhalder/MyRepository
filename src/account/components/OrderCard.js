@@ -7,7 +7,7 @@ export default class OrderCard extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.productImageHolder}>
-          <ProductImage image={this.props.productImage} />
+          <ProductImage image={this.props.imageUrl} />
         </div>
         <div className={styles.productDetails}>
           <div className={styles.productName}>{this.props.productName}</div>
