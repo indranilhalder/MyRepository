@@ -75,6 +75,27 @@ export function cartDetailsFailure(error) {
     error
   };
 }
+export function cartDetailsCNCRequest() {
+  return {
+    type: CART_DETAILS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cartDetailsCNCSuccess(cartDetails) {
+  return {
+    type: CART_DETAILS_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function cartDetailsCNCFailure(error) {
+  return {
+    type: CART_DETAILS_FAILURE,
+    status: ERROR,
+    error
+  };
+}
 
 export function getCartDetails(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
@@ -91,6 +112,24 @@ export function getCartDetails(userId, accessToken, cartId) {
       dispatch(cartDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsFailure(e.message));
+    }
+  };
+}
+export function getCartDetailsCNC(userId, accessToken, cartId) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(cartDetailsCNCRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(cartDetailsCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(cartDetailsCNCFailure(e.message));
     }
   };
 }
@@ -288,47 +327,6 @@ export function addAddressToCart(addressId) {
       dispatch(addAddressToCartSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
-    }
-  };
-}
-
-export function cartDetailsCNCRequest() {
-  return {
-    type: CART_DETAILS_CNC_REQUEST,
-    status: REQUESTING
-  };
-}
-export function cartDetailsCNCSuccess(setAddress) {
-  return {
-    type: CART_DETAILS_CNC_SUCCESS,
-    status: SUCCESS,
-    setAddress
-  };
-}
-
-export function cartDetailsCNCFailure(error) {
-  return {
-    type: CART_DETAILS_CNC_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function getCartDetailsCNC(userId, accessToken, cartId) {
-  return async (dispatch, getState, { api }) => {
-    dispatch(cartDetailsCNCRequest());
-
-    try {
-      const result = await api.get(
-        `${USER_CART_PATH}/${userId}/carts/${cartId}/cartDetailsCNC?access_token=${accessToken}&pincode=${pincode}&isPwa=true&platformNumber=2`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
-      }
-      dispatch(cartDetailsCNCSuccess(resultJson));
-    } catch (e) {
-      dispatch(cartDetailsCNCFailure(e.message));
     }
   };
 }
