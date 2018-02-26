@@ -324,7 +324,6 @@
 						<arg line="--js ${luxstorefront.js.dir}/lib/jquery.elevatezoom.js" />
 						<arg line="--js ${luxstorefront.js.dir}/lib/bootstrap.min.js" />
 						<arg line="--js ${luxstorefront.js.dir}/lib/jquery.validate.min.js" />
-						<arg line="--js ${luxstorefront.js.dir}/lib/jquery.waypoints.min.js" />
 						<arg line="--js ${luxstorefront.js.dir}/main.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/_autoload.js"/>
