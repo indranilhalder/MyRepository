@@ -1938,8 +1938,28 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				if(null !=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplaceFacadesConstants.CLIQ_CASH.trim()) && null != orderModel.getModeOfOrderPayment()){
 					orderTrackingWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
 				}
-				
-				
+				String splitModeInfo = orderModel.getSplitModeInfo();
+				Double totalAmount = Double.valueOf(0.0D);
+				Double juspayAmount = Double.valueOf(0.0D);
+				Double qcAmount = Double.valueOf(0.0D);
+
+				if(null != splitModeInfo ) {
+					if(splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.JUSPAY)) {
+						juspayAmount = orderModel.getTotalPrice();
+					}else if(splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.SPLIT)){
+						totalAmount =  orderModel.getTotalPrice();
+						qcAmount = orderModel.getPayableWalletAmount();
+						juspayAmount = Double.valueOf(totalAmount.doubleValue() - qcAmount.doubleValue());
+					}else if (splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)
+						||  splitModeInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH)){
+						qcAmount = orderModel.getTotalPrice();
+					}else {
+						juspayAmount = orderModel.getTotalPrice();
+					}
+				}
+				orderTrackingWsDTO.setCliqCashAmountDeducted(qcAmount);
+				orderTrackingWsDTO.setJuspayAmountDeducted(juspayAmount);
+
 			//	setUpStatementData(orderTrackingWsDTO,orderDetail);
 				
 				/*Added For EGV Functionality End */
