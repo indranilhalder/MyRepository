@@ -42,7 +42,6 @@ export default class SearchBrand extends React.Component {
 }
 SearchBrand.propTypes = {
   onClick: PropTypes.func,
-  onChange: PropTypes.func,
   getValue: PropTypes.func,
   placeHolder: PropTypes.string
 };
