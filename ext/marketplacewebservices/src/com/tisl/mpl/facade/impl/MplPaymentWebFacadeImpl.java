@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
@@ -27,6 +28,7 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -813,7 +815,9 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 					final double delCharge = Double.valueOf(cartDetailsData.getDeliveryCharge()).doubleValue();
 					final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue() - delCharge;
 					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
+					BigDecimal bdval = new BigDecimal(discount);
+					bdval = bdval.setScale(2, BigDecimal.ROUND_HALF_UP);
+					final PriceData totalDiscount = createPriceCharge((bdval).toString());
 					pricePwa.setTotalDiscountAmount(totalDiscount);
 					cartDetailsData.setCartAmount(pricePwa);
 
@@ -1177,14 +1181,28 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private PriceData createPriceCharge(final String cost)
 	{
 		// YTODO Auto-generated method stub
+		final BigDecimal value = new BigDecimal(cost);
 		final PriceData priceData = new PriceData();
-		priceData.setFormattedValue(cost);
+
 		priceData.setDoubleValue(Double.valueOf(cost));
+
 
 		final CurrencyModel currency = commonI18NService.getCurrency(INR);
 		priceData.setCurrencyIso(currency.getIsocode());
-		priceData.setCurrencySymbol(currency.getSymbol());
+		final String currencySymbol = currency.getSymbol();
 
+		StringBuilder stb = new StringBuilder(20);
+		stb = stb.append(currencySymbol).append(cost);
+		priceData.setFormattedValue(stb.toString());
+
+
+		final long valueLong = value.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+		final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+		StringBuilder stbND = new StringBuilder(20);
+		stbND = stbND.append(currencySymbol).append(totalPriceNoDecimalPntFormatted);
+		priceData.setFormattedValueNoDecimal(stbND.toString());
+		priceData.setValue(value);
+		priceData.setPriceType(PriceDataType.BUY);
 		return priceData;
 	}
 }
