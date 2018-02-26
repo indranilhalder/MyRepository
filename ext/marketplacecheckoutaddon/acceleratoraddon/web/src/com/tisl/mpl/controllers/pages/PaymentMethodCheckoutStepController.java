@@ -3170,8 +3170,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//Redirection when transaction is successful i.e. CHARGED
 					if (null != orderStatusResponse)
 					{
-
-
 						/**
 						 * Wallet Changes
 						 */
@@ -3202,6 +3200,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													else
 													{
 														qcFlag = false;
+														mplPaymentAuditModel.setIsExpired(Boolean.TRUE);
+														modelService.save(mplPaymentAuditModel);
 														break;
 													}
 												}
