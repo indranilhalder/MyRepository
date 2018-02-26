@@ -366,6 +366,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						}
 						
 					}
+					
+					if(null != orderDetails.getEntries() && CollectionUtils.isNotEmpty(orderDetails.getEntries())){
+						if(null == orderDetails.getEntries().get(0).getWalletApportionPaymentData()) {
+							orderTrackingWsDTO.setGiftCardStatus("FAILED");
+						}
+					}
 				}
 				
 				/*Added For EGV Functionality End*/ 
