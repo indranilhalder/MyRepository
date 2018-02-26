@@ -3191,8 +3191,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												for (final MplPaymentAuditEntryModel mplPaymentAuditEntry : mplPaymentAuditModel
 														.getAuditEntries())
 												{
-													if (null != mplPaymentAuditEntry.getStatus()
-															&& (!mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED") || !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("PENDING"))) // case for EBS....
+													 if(null != mplPaymentAuditEntry.getStatus() && !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("PENDING")) // case for EBS....
 													{
 														qcFlag = true;
 
@@ -3200,7 +3199,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													else
 													{
 														qcFlag = false;
-														mplPaymentAuditModel.setIsExpired(Boolean.TRUE);
+														mplPaymentAuditModel.setIsExpired(Boolean.TRUE); // if EBS is risk status is yellow or red case
 														modelService.save(mplPaymentAuditModel);
 														break;
 													}
@@ -3293,7 +3292,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										else
 										{
 											System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
+											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); 
 											LOG.error("For GUID:- " + guid + " order already been processed");
 											GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 													MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3304,8 +3303,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									else
 									{
 										System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
-
+										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); 
 										LOG.error("For GUID:- " + guid + " order already been processed");
 										GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 												MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
