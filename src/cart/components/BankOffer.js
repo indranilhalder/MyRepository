@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./BankOffer.css";
-import CheckBox from "./CheckBox.js";
-import UnderLinedButton from "./UnderLinedButton";
+import CheckBox from "../../general/components/CheckBox.js";
+import UnderLinedButton from "../../general/components/UnderLinedButton";
 import PropTypes from "prop-types";
 
 export default class BankOffer extends React.Component {
