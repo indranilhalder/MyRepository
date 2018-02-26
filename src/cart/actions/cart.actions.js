@@ -53,7 +53,6 @@ export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
 
-// selectDeliveryMode;
 const pincode = 229001;
 
 export function cartDetailsRequest() {

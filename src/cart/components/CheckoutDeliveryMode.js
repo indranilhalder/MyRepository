@@ -51,8 +51,6 @@ export default class CheckoutDeliveryMode extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
-    console.log(this.state);
     if (this.props.cart) {
       const cartDetails = this.props.cart.cartDetails;
       const selectedAddress = cartDetails.addressDetailsList
