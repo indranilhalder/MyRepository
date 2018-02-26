@@ -1521,6 +1521,8 @@
 		<property name="giftCardStatus" type="String" />
 		<property name="isWalletPay" type="boolean" />
 		<property name="walletTransactionId" type="String" />
+		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
+		<property name="JuspayAmountDeducted" type="java.lang.Double" />
 
 	</bean>
 
