@@ -10,6 +10,7 @@ export default class SearchBrand extends React.Component {
       this.props.onClick();
     }
   };
+
   getValue(val) {
     if (this.props.getValue) {
       this.props.getValue(val);
