@@ -64,7 +64,16 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/wallet/getcliqcashPage')}">
+<!-- CliQ Cash Container Page -->
+	<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</c:if>
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/giftCard')}">
+<!-- EGV PDP Page -->
+	<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</c:if>
  <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
 <script src="${dtmUrl}"></script>
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
