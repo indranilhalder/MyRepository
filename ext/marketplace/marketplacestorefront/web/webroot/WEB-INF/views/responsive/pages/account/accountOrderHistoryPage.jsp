@@ -29,15 +29,16 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 
-<style>
-#closePop {
-	float: right;
-}
-</style>
-<!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	<style>
+	#closePop {
+		float: right;
+	}
+	</style>
+	
 	<div class="account">
 		<h1 class="account-header">
 			<%-- <spring:theme code="text.account.headerTitle" text="My Tata CLiQ" /> --%>
