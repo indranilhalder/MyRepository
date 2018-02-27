@@ -18,8 +18,8 @@ const mapStateToProps = state => {
   };
 };
 
-const CartContainer = withRouter(
+const DisplayOrderSummaryContainer = withRouter(
   connect(mapStateToProps, mapDispatchToProps)(DisplayOrderSummary)
 );
 
-export default CartContainer;
+export default DisplayOrderSummaryContainer;
