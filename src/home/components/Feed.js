@@ -32,10 +32,12 @@ const typeComponentMapping = {
   // "Hero Banner Component": props => <HeroBanner {...props} />,
   // themeOffers: props => <ThemeOffer {...props} />,
   // productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  "Banner Product Carousel Component": props => (
-    <BannerProductCarousel {...props} />
+  // "Banner Product Carousel Component": props => (
+  //   <BannerProductCarousel {...props} />
+  // )
+  "Video Product Carousel Component": props => (
+    <VideoProductCarousel {...props} />
   )
-  // videoProductCarousel: props => <VideoProductCarousel {...props} />,
   // automatedBrandProductCarousel: props => (
   //   <AutomatedBrandProductCarousel {...props} />
   // ),

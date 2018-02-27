@@ -2,7 +2,7 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
-import { transformData, transformItem } from "./utils.js";
+import { transformData } from "./utils.js";
 import { PRODUCT_LISTINGS } from "../../lib/constants";
 export default class BannerProductCarousal extends React.Component {
   handleClick() {
