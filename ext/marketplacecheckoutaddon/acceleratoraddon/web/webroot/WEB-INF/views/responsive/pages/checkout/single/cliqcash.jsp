@@ -84,7 +84,7 @@ ul.dropdown-menu {
 					     <%-- <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
 				     	</a> --%>
-				     	<span class="addNewCard" onclick="createWallet();"><a href="#">
+				     	<span class="addNewCard" onclick="createWallet();"><a href="#" class="cliqCashBtns">
 				     	<spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
 			    </div>
 				</c:otherwise>
