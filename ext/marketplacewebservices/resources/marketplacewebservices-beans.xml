@@ -4205,8 +4205,11 @@
 	<bean class="com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO" >		
 		<property name="otpExpiryTime " type="String" />
 	</bean>
-	
-
 	<!-- Added  For Buying Of EGV Functionality End  -->
-
+	<bean class="com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO">
+		<property name="termAndConditions" type= "String"/>		
+		<property name="errorCode" type="String" />
+		<property name="message" type="String" />
+		<property name="status" type="String" />
+	</bean>
 </beans>
