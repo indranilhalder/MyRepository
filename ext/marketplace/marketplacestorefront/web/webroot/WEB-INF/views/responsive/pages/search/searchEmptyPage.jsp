@@ -6,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<template:page pageTitle="${pageTitle}">
 <!-- Tealium hidden fields -->
 <input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
 <input type="hidden" id="searchCategory" value="${searchCategory}">
@@ -13,7 +14,7 @@
 <input type="hidden" id="search_type" value="${searchType}">	<!-- For TPR-666 -->
 <%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
 <input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
-<template:page pageTitle="${pageTitle}">
+
 <script language='javascript'>
 $(document).ready(function() {
 	if('${searchPageData.freeTextSearch}'!== undefined && '${isConceirge}'!='true'){

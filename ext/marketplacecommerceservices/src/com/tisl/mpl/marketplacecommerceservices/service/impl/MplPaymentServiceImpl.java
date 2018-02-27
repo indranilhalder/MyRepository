@@ -5791,6 +5791,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 				auditEntry.setAuditId(transactionId);
 				auditEntry.setCreationtime(new Date());
+				auditEntry.setResponseDate(new Date());
 				auditEntryList.add(auditEntry);
 				auditModel.setAuditEntries(auditEntryList);
 				getModelService().save(auditModel);
@@ -5805,6 +5806,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 				auditModel.setRequestDate(new Date());
 				auditEntry.setAuditId(transactionId);
 				auditEntry.setCreationtime(new Date());
+				auditEntry.setResponseDate(new Date());
 				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
 				auditEntryList.add(auditEntry);
 				auditModel.setAuditEntries(auditEntryList);

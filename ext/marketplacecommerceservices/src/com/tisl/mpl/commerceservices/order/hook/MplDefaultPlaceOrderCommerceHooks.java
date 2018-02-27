@@ -900,6 +900,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 
 			{
