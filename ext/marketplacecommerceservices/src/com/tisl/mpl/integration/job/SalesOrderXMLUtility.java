@@ -557,7 +557,7 @@ public class SalesOrderXMLUtility
 											&& (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)  || oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH)
 											)&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 									{
-										paymentRefId = oModel.getRequestId();
+										paymentRefId = chaildModel.getParentReference().getCode();
 									}
 
 								}

@@ -394,6 +394,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			return getCheckoutStep().previousStep();
 		}
+		CartModel cart = mplEGVCartService.getEGVCartModel(guid);
+		if (cart != null && cart.getIsEGVCart().booleanValue())
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+					+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE) + "/?egvErrorMsg="
+					+ "paymentError";
+		}
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 		ValidationResults validationResult = null;
 
@@ -3318,6 +3325,28 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 									}
 
+								}else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
+								{
+									GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+											MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
+									return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+											+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+								}
+								else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+										|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+										|| MarketplacecheckoutaddonConstants.PENDING_VBV.equalsIgnoreCase(orderStatusResponse))
+								{
+									GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+											MarketplacecheckoutaddonConstants.VBVERRORMSG);
+									return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+											+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+								}
+								else
+								{
+									GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+											MarketplacecheckoutaddonConstants.TRANERRORMSG);
+									return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+											+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 								}
 							}
 						}

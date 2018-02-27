@@ -6695,8 +6695,10 @@ function useWalletForPaymentAjax(){
 					$("#continue_payment_after_validate").hide();
 					//$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 					$(".topPlaceOrderBtn").show();//
+					$('.cliqCashPlaceOrderBtnMobile').hide();
 					if($(window).width() < 768){
 						$('.topPlaceOrderBtn').hide();
+						$('.cliqCashPlaceOrderBtnMobile').show();
 					}
 					globalCliqCashMode = true;
 					$(".choose-payment").find('*').prop('disabled',true);
@@ -6761,6 +6763,7 @@ function useWalletForPaymentAjax(){
 						}
 					}
 					$(".topPlaceOrderBtn").hide();
+					$('.cliqCashPlaceOrderBtnMobile').hide();
 					$(".topPlaceOrderBtn").prop('disabled',true);
 					$(".choose-payment").find('*').prop('disabled',false);
 					$(".checkout-indent li span").css('pointer-events', 'all');

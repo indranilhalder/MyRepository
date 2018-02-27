@@ -50,12 +50,12 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String CUSTOMER2 = "Customer";
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String JUSPAY = "Juspay";
 
@@ -105,49 +105,60 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"orderConfirmationEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
 				"orderConfirmationEmailProcess");
-		final String shortTrackingUrl = googleShortUrlService
-				.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
-						.getParentReference().getCode());
+		final String shortTrackingUrl = googleShortUrlService.genearateShortURL(
+				orderModel.getParentReference() == null ? orderModel.getCode() : orderModel.getParentReference().getCode());
 		orderProcessModel.setOrder(orderModel);
 		getModelService().save(orderProcessModel);
-		if(null != shortTrackingUrl) {
+		if (null != shortTrackingUrl)
+		{
 			orderProcessModel.setOrderTrackUrl(shortTrackingUrl);
 		}
 		getBusinessProcessService().startProcess(orderProcessModel);
-		
-		
+
+
 		//send SMS
 		try
 		{
 			String mobileNumber = null;
 			String firstName = null;
-			
+
 			final OrderModel orderDetails = orderProcessModel.getOrder();
-			CustomerModel customer=null;
-			if(orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel){
-				 customer=(CustomerModel) orderModel.getUser();
+			CustomerModel customer = null;
+			if (orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel)
+			{
+				customer = (CustomerModel) orderModel.getUser();
 			}
-			if(null != orderDetails  && orderDetails.getDeliveryAddress() != null && orderDetails.getDeliveryAddress().getPhone1()!= null){
+			if (null != orderDetails && orderDetails.getDeliveryAddress() != null
+					&& orderDetails.getDeliveryAddress().getPhone1() != null)
+			{
 				mobileNumber = orderDetails.getDeliveryAddress().getPhone1();
-			}else{
-			 mobileNumber = customer.getMobileNumber();
 			}
-			if(null != orderDetails  && orderDetails.getDeliveryAddress() != null && orderDetails.getDeliveryAddress().getFirstname()!= null){
+			else
+			{
+				mobileNumber = customer.getMobileNumber();
+			}
+			if (null != orderDetails && orderDetails.getDeliveryAddress() != null
+					&& orderDetails.getDeliveryAddress().getFirstname() != null)
+			{
 				firstName = orderDetails.getDeliveryAddress().getFirstname();
-			}else{
-				if (null != customer && customer.getFirstName() !=null){
-				    firstName = customer.getFirstName();
-				}else {
+			}
+			else
+			{
+				if (null != customer && customer.getFirstName() != null)
+				{
+					firstName = customer.getFirstName();
+				}
+				else
+				{
 					firstName = CUSTOMER2;
 				}
 			}
-			
+
 			final String orderReferenceNumber = orderDetails.getCode();
 			//SDI-2038
-			final String trackingUrl = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-					+ "/" + orderReferenceNumber;
-			String url=null;
+			final String trackingUrl = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + "/" + orderReferenceNumber;
+			String url = null;
 			if (null != orderDetails.getIsEGVCart() && orderDetails.getIsEGVCart().booleanValue())
 			{
 				url = "My Account";
@@ -156,31 +167,33 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 			{
 				url = null != shortTrackingUrl ? shortTrackingUrl : trackingUrl;
 			}
-//			final String shortTrackingUrl = googleShortUrlService
-//					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
-//							.getParentReference().getCode());
-			try{
-			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, url);
+			//			final String shortTrackingUrl = googleShortUrlService
+			//					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+			//							.getParentReference().getCode());
+			try
+			{
+				final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, url);
 
-			final SendSMSRequestData smsRequestData = new SendSMSRequestData();
-			smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-			smsRequestData.setContent(content);
-			smsRequestData.setRecipientPhoneNumber(mobileNumber);
-			sendSMSService.sendSMS(smsRequestData);
-			}catch (final Exception ex)
+				final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+				smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+				smsRequestData.setContent(content);
+				smsRequestData.setRecipientPhoneNumber(mobileNumber);
+				sendSMSService.sendSMS(smsRequestData);
+			}
+			catch (final Exception ex)
 			{
 				LOG.error("Exceptions occured while sending sms " + ex);
 			}
 			/***
-			 * Added Code Send sms Notification For Wallet redeemed  Start
+			 * Added Code Send sms Notification For Wallet redeemed Start
 			 *
 			 */
 
-			  sendNotificationWalletRedeemed(orderModel, customer);
-          //Send sms Notification For Wallet redeemed  Start
+			sendNotificationWalletRedeemed(orderModel, customer);
+			//Send sms Notification For Wallet redeemed  Start
 
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -198,28 +211,48 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 	 * @param orderModel
 	 * @param customer
 	 * @param content
-	 * 
-	 * Send sms redeemed  amount from 
+	 *
+	 *           Send sms redeemed amount from
 	 */
-	private void sendNotificationWalletRedeemed(final OrderModel orderModel, CustomerModel customer)
+	private void sendNotificationWalletRedeemed(final OrderModel orderModel, final CustomerModel customer)
 	{
 		if (StringUtils.isNotEmpty(orderModel.getSplitModeInfo()) && !JUSPAY.equalsIgnoreCase(orderModel.getSplitModeInfo()))
 		{
-			for (AbstractOrderEntryModel entry : orderModel.getEntries())
+			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 			{
 				if (entry.getWalletApportionPaymentInfo() != null
 						&& entry.getWalletApportionPaymentInfo().getWalletCardList() != null)
 				{
-					for (WalletCardApportionDetailModel cardSplitValue : entry.getWalletApportionPaymentInfo().getWalletCardList())
+					for ( WalletCardApportionDetailModel cardSplitValue : entry.getWalletApportionPaymentInfo()
+							.getWalletCardList())
 					{
 						if (CUSTOMER2.equalsIgnoreCase(cardSplitValue.getBucketType()))
 						{
-							    String totalAmt = mplQCProgramDao.getCardTotalAmount(cardSplitValue.getCardNumber());
-						       int totalAmount = Double.valueOf(totalAmt).intValue();
-						       int redeemedTotalAmount = Double.valueOf(cardSplitValue.getCardAmount()).intValue();
-							    int remainingAmount = totalAmount - redeemedTotalAmount;
-							    sendNotificationForRedeemedAmountFromWallet(customer, cardSplitValue.getCardNumber(),
+							 WalletCardApportionDetailModel walletCardApportionDetailModel = mplQCProgramDao
+									.getCardTotalAmount(cardSplitValue.getCardNumber());
+							
+							String amountT=null;
+							if(StringUtils.isNotEmpty(walletCardApportionDetailModel.getRemainingCardAmount())){
+								amountT=walletCardApportionDetailModel.getRemainingCardAmount();
+							}else{
+								amountT=walletCardApportionDetailModel.getCardAmount();
+							}
+							 int totalAmount = Double.valueOf(amountT).intValue();
+							 int redeemedTotalAmount = Double.valueOf(cardSplitValue.getCardAmount()).intValue();
+							 int remainingAmount = totalAmount - redeemedTotalAmount;
+
+
+							sendNotificationForRedeemedAmountFromWallet(customer, cardSplitValue.getCardNumber(),
 									cardSplitValue.getCardAmount(), Integer.toString(remainingAmount));
+							try
+							{
+								walletCardApportionDetailModel.setRemainingCardAmount(Integer.toString(remainingAmount));
+								modelService.save(walletCardApportionDetailModel);
+							}
+							catch (final Exception exception)
+							{
+								LOG.error("Error Occure while saving RemainingCardAmount(");
+							}
 						}
 					}
 				}
@@ -236,16 +269,16 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);
 		return SiteChannel.B2C.equals(site.getChannel());
 	}
-	
-	//Send sms redeemed  amount from 
+
+	//Send sms redeemed  amount from
 	public void sendNotificationForRedeemedAmountFromWallet(final CustomerModel customerModel, final String cardNumber,
-			final String redeemedAmount, String remainingAmount)
+			final String redeemedAmount, final String remainingAmount)
 	{
 		try
 		{
 			if (StringUtils.isNotEmpty(customerModel.getQcVerifyMobileNo()))
 			{
-				String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED_FROM_WALLET
+				final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED_FROM_WALLET
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, cardNumber)
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, redeemedAmount)
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, remainingAmount);
@@ -256,12 +289,12 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 				sendSMSService.sendSMS(smsRequestData);
 			}
 		}
-		catch (JAXBException e)
+		catch (final JAXBException e)
 		{
 			e.printStackTrace();
 		}
 
 	}
 
-	
+
 }

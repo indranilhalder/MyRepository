@@ -15,11 +15,8 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+<template:page pageTitle="${pageTitle}">
 <style>
 ul.dropdown-menu {
 	border-top: none;
@@ -39,8 +36,6 @@ ul.dropdown-menu {
 	}
 }
 </style>
-
-<template:page pageTitle="${pageTitle}">
 <input type="hidden" id="minPrice" value="${minPrice}"/>
 <input type="hidden" id="maxPrice" value="${maxPrice}"/>
 	<div>

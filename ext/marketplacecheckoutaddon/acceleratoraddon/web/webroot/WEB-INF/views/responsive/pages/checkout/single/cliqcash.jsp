@@ -11,11 +11,9 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<template:page pageTitle="${pageTitle}">
 <c:set var="dateStyle" value="dd/MM/yyyy	" />
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <style>
 ul.dropdown-menu {
 	border-top: none;
@@ -35,9 +33,6 @@ ul.dropdown-menu {
 	}
 }
 </style>
-
-<template:page pageTitle="${pageTitle}">
-
 <input type="hidden" id="isEmailRequest" value="${isEmailRequest}" />
 <input type="hidden" id="emailOrderCode" value="${orderCode}" />
 	<div class="cliqCashContainer">
@@ -89,7 +84,7 @@ ul.dropdown-menu {
 					     <%-- <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
 				     	</a> --%>
-				     	<span class="addNewCard" onclick="createWallet();"><a href="#">
+				     	<span class="addNewCard" onclick="createWallet();"><a href="#" class="cliqCashBtns">
 				     	<spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
 			    </div>
 				</c:otherwise>
