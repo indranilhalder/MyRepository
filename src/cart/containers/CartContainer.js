@@ -18,9 +18,6 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    selectDeliveryModes: deliverModes => {
-      dispatch(selectDeliveryModes(deliverModes));
-    },
     getNetBankDetails: () => {
       dispatch(getNetBankDetails());
     },
