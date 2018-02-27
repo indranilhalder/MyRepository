@@ -412,6 +412,32 @@ public class WalletController
 							{
 								stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
 							}
+							try {
+								if (null == orderModel)
+								{
+									if(null != cartGuid) {
+										cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+										cart.setTotalWalletAmount(response.getWallet().getBalance());
+										cart.setPayableWalletAmount(Double.valueOf(0.0D));
+		                        modelService.save(cart);
+		                        modelService.refresh(cart);
+									}
+								//	applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
+
+								}
+								else if (null != cartGuid)
+								{
+									orderModel.setTotalWalletAmount(response.getWallet().getBalance());
+									orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+									modelService.save(orderModel);
+									modelService.refresh(orderModel);
+
+									//	applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+								}
+							}catch(Exception e){
+								LOG.error("Exception occurred while setting TotalWallet Amount "+e.getMessage(),e);
+							}
+							
 							redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
 							final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
 									MarketplacecommerceservicesConstants.INR);
@@ -427,20 +453,11 @@ public class WalletController
 								redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
 								redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
 								redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-								if (null == orderModel)
-								{
-									cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-									applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
-
-								}
-								else if (null != cartGuid)
-								{
-									applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
-								}
-								if (null != applyCliqCashWsDto)
-								{
-									redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
-								}
+								
+//								if (null != applyCliqCashWsDto)
+//								{
+//									redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
+//								}
 							}
 							else
 							{
