@@ -1742,6 +1742,11 @@
 		<property name="isEgvOrder" type="boolean" />
 		<property name="giftCardStatus" type="String" />
 	<!-- Added For EGV Functionality End -->	
+	<!-- Added for NU-56 -->
+	<property name="ratings" type="String" />
+	<property name="errorCode" type="String" />
+	<property name="message" type="String" />
+	<property name="status" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -4203,5 +4208,5 @@
 	
 
 	<!-- Added  For Buying Of EGV Functionality End  -->
-	
+
 </beans>

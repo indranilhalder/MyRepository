@@ -3,6 +3,7 @@
 // */
 package com.tisl.mpl.facades.account.register.impl;
 
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -73,7 +74,6 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
-import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -83,6 +83,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
@@ -916,7 +917,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	}
 
 
-             /*EGV Email Code Added  */
+	/* EGV Email Code Added */
 	@Override
 	public void sendNotificationEGVOrder(final String orderId)
 	{
@@ -924,13 +925,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		try
 		{
 			orderModel = orderModelDao.getOrderModel(orderId);
-			OrderProcessModel orderProcessModel=new OrderProcessModel();
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(orderModel);
-			OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+			final OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
 			eventService.publishEvent(orderEGVRecipientEmailEvent);
 
 		}
-		catch (Exception exception)
+		catch (final Exception exception)
 		{
 			LOG.error(" >> Exception occured while send notification", exception);
 		}
@@ -2048,6 +2049,28 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
+	}
+
+	/**
+	 * Added for NU-56
+	 */
+	@Override
+	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
+	{
+		OrderDataWsDTO result = new OrderDataWsDTO();
+		try
+		{
+
+			result = mplOrderService.orderExperience(orderId, ratings);
+			return result;
+
+		}
+
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B009900);
+		}
+
 	}
 
 

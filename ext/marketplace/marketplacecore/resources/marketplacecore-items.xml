@@ -4204,6 +4204,7 @@
 						<modifiers read="true" write="true" optional="true"
 							search="true" />
 					</attribute>
+
 				</attributes>
 			</itemtype>
 
@@ -6762,6 +6763,12 @@
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Added for NU-56 -->
+					<attribute qualifier="ratings" type="java.lang.Double">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> 
+					
 
 					<attribute qualifier="childOrders" type="ChildOrderCollection">
 						<modifiers optional="true" />
