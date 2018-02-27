@@ -15,10 +15,15 @@ import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,6 +91,12 @@ public class DefaultCMSComponentControler
 	@Autowired
 	private MplCMSComponentService mplCmsComponentService;
 
+	@Autowired
+	private ConfigurationService configurationService;
+
+	@Resource(name = "productModelUrlResolver")
+	private UrlResolver<ProductModel> productModelUrlResolver;
+
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	@SuppressWarnings("deprecation")
@@ -99,7 +110,7 @@ public class DefaultCMSComponentControler
 		final List<UICompPageElementWsDTO> genericUICompPageWsDTO = new ArrayList<UICompPageElementWsDTO>();
 
 		final UICompPageWiseWsDTO uiCompPageObj = new UICompPageWiseWsDTO();
-
+		final String siteUrl = configurationService.getConfiguration().getString("website.mpl.https");
 		if (contentPage != null)
 		{
 			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
@@ -333,7 +344,16 @@ public class DefaultCMSComponentControler
 										flashSalesElementWsDTO.setMrpPrice(flashSalesMRPPriceWsDTO);
 										flashSalesElementWsDTO.setDiscountedPrice(flashSalesDiscountPriceWsDTO);
 										flashSalesElementWsDTO.setTitle(flashSalesElementModel.getTitle());
-										flashSalesElementWsDTO.setWebURL(flashSalesElementModel.getWebURL());
+										if (null != productModelUrlResolver)
+										{
+											flashSalesElementWsDTO.setWebURL(
+													siteUrl + productModelUrlResolver.resolve(flashSalesElementModel.getProductCode()));
+										}
+										else
+										{
+											flashSalesElementWsDTO
+													.setWebURL(siteUrl + "/" + flashSalesElementModel.getProductCode().getCode());
+										}
 										if (flashSalesElementModel.getProductCode().getPicture() != null
 												&& flashSalesElementModel.getProductCode().getPicture().getURL() != null)
 										{
@@ -488,8 +508,15 @@ public class DefaultCMSComponentControler
 										bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
 										bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
 										bannerProCarouselElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-										bannerProCarouselElementWsDTO
-												.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+										if (null != productModelUrlResolver)
+										{
+											bannerProCarouselElementWsDTO
+													.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+										}
+										else
+										{
+											bannerProCarouselElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+										}
 										bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
 									}
 									bannerProCarouselList.add(bannerProCarouselElementWsDTO);
@@ -578,8 +605,15 @@ public class DefaultCMSComponentControler
 										videoProCarouselElementWsDTO.setMrpPrice(videoProMRPPriceWsDTO);
 										videoProCarouselElementWsDTO.setDiscountedPrice(videoProDiscountPriceWsDTO);
 										videoProCarouselElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-										videoProCarouselElementWsDTO
-												.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+										if (null != productModelUrlResolver)
+										{
+											videoProCarouselElementWsDTO
+													.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+										}
+										else
+										{
+											videoProCarouselElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+										}
 										if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 												&& productObj.getProductCode().getPicture().getURL() != null)
 										{
@@ -714,7 +748,15 @@ public class DefaultCMSComponentControler
 										themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
 										themeOffersElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
 										themeOffersElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-										themeOffersElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+										if (null != productModelUrlResolver)
+										{
+											themeOffersElementWsDTO
+													.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+										}
+										else
+										{
+											themeOffersElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+										}
 										if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 												&& productObj.getProductCode().getPicture().getURL() != null)
 										{
@@ -813,7 +855,15 @@ public class DefaultCMSComponentControler
 										themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
 										themeProWidElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
 										themeProWidElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-										themeProWidElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+										if (null != productModelUrlResolver)
+										{
+											themeProWidElementWsDTO
+													.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+										}
+										else
+										{
+											themeProWidElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+										}
 										if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 												&& productObj.getProductCode().getPicture().getURL() != null)
 										{
@@ -988,8 +1038,15 @@ public class DefaultCMSComponentControler
 										automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
 										automatedBrandProCarEleWsDTO.setDiscountedPrice(autoDiscountPriceWsDTO);
 										automatedBrandProCarEleWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-										automatedBrandProCarEleWsDTO
-												.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+										if (null != productModelUrlResolver)
+										{
+											automatedBrandProCarEleWsDTO
+													.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+										}
+										else
+										{
+											automatedBrandProCarEleWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+										}
 										if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 												&& productObj.getProductCode().getPicture().getURL() != null)
 										{
@@ -1239,8 +1296,15 @@ public class DefaultCMSComponentControler
 										curatedProWidgetElementWsDTO.setMrpPrice(curatedProWidgetEleMRPPriceWsDTO);
 										curatedProWidgetElementWsDTO.setDiscountedPrice(curatedProWidgetEleDiscountPriceWsDTO);
 										curatedProWidgetElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-										curatedProWidgetElementWsDTO
-												.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+										if (null != productModelUrlResolver)
+										{
+											curatedProWidgetElementWsDTO
+													.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+										}
+										else
+										{
+											curatedProWidgetElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+										}
 										curatedProWidgetElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
 									}
 									curatedProWidgetElementList.add(curatedProWidgetElementWsDTO);
@@ -1319,6 +1383,7 @@ public class DefaultCMSComponentControler
 		final UICompPageWiseWsDTO uiComponentWiseWsDTO = new UICompPageWiseWsDTO();
 		final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 		final List<UICompPageElementWsDTO> genericUICompPageWsDTO = new ArrayList<UICompPageElementWsDTO>();
+		final String siteUrl = configurationService.getConfiguration().getString("website.mpl.https");
 
 		if (contentPage != null && componentId != null)
 		{
@@ -1559,8 +1624,16 @@ public class DefaultCMSComponentControler
 									flashSalesElementWsDTO.setDiscountedPrice(flashSalesDiscountPriceWsDTO);
 									flashSalesElementWsDTO
 											.setTitle(null != flashSalesElementModel.getTitle() ? flashSalesElementModel.getTitle() : "");
-									flashSalesElementWsDTO
-											.setWebURL(null != flashSalesElementModel.getWebURL() ? flashSalesElementModel.getWebURL() : "");
+									if (null != productModelUrlResolver)
+									{
+										flashSalesElementWsDTO.setWebURL(
+												siteUrl + productModelUrlResolver.resolve(flashSalesElementModel.getProductCode()));
+									}
+									else
+									{
+										flashSalesElementWsDTO.setWebURL(siteUrl + "/" + flashSalesElementModel.getProductCode().getCode());
+									}
+
 									if (flashSalesElementModel.getProductCode().getPicture() != null
 											&& flashSalesElementModel.getProductCode().getPicture().getURL() != null)
 									{
@@ -1717,7 +1790,16 @@ public class DefaultCMSComponentControler
 									bannerProCarouselElementWsDTO.setMrpPrice(bannerProMRPPriceWsDTO);
 									bannerProCarouselElementWsDTO.setDiscountedPrice(bannerProDiscountPriceWsDTO);
 									bannerProCarouselElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-									bannerProCarouselElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+									if (null != productModelUrlResolver)
+									{
+										bannerProCarouselElementWsDTO
+												.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+									}
+									else
+									{
+										bannerProCarouselElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+									}
+
 									bannerProCarouselElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
 								}
 								bannerProCarouselList.add(bannerProCarouselElementWsDTO);
@@ -1809,7 +1891,6 @@ public class DefaultCMSComponentControler
 									videoProCarouselElementWsDTO.setMrpPrice(videoProMRPPriceWsDTO);
 									videoProCarouselElementWsDTO.setDiscountedPrice(videoProDiscountPriceWsDTO);
 									videoProCarouselElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-									videoProCarouselElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
 									if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 											&& productObj.getProductCode().getPicture().getURL() != null)
 									{
@@ -1818,6 +1899,15 @@ public class DefaultCMSComponentControler
 									else
 									{
 										videoProCarouselElementWsDTO.setImageURL("");
+									}
+									if (null != productModelUrlResolver)
+									{
+										videoProCarouselElementWsDTO
+												.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+									}
+									else
+									{
+										videoProCarouselElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
 									}
 								}
 								videoProCarouselList.add(videoProCarouselElementWsDTO);
@@ -1947,7 +2037,15 @@ public class DefaultCMSComponentControler
 									themeOffersElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
 									themeOffersElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
 									themeOffersElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-									themeOffersElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+									if (null != productModelUrlResolver)
+									{
+										themeOffersElementWsDTO
+												.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+									}
+									else
+									{
+										themeOffersElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+									}
 									if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 											&& productObj.getProductCode().getPicture().getURL() != null)
 									{
@@ -1957,6 +2055,7 @@ public class DefaultCMSComponentControler
 									{
 										themeOffersElementWsDTO.setImageURL("");
 									}
+
 								}
 								themeOffersElementList.add(themeOffersElementWsDTO);
 
@@ -2049,7 +2148,15 @@ public class DefaultCMSComponentControler
 									themeProWidElementWsDTO.setMrpPrice(thMrpPriceWsDTO);
 									themeProWidElementWsDTO.setDiscountedPrice(thDiscountPriceWsDTO);
 									themeProWidElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-									themeProWidElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+									if (null != productModelUrlResolver)
+									{
+										themeProWidElementWsDTO
+												.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+									}
+									else
+									{
+										themeProWidElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+									}
 									if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 											&& productObj.getProductCode().getPicture().getURL() != null)
 									{
@@ -2233,7 +2340,15 @@ public class DefaultCMSComponentControler
 									automatedBrandProCarEleWsDTO.setMrpPrice(autoMrpPriceWsDTO);
 									automatedBrandProCarEleWsDTO.setDiscountedPrice(autoDiscountPriceWsDTO);
 									automatedBrandProCarEleWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-									automatedBrandProCarEleWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+									if (null != productModelUrlResolver)
+									{
+										automatedBrandProCarEleWsDTO
+												.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+									}
+									else
+									{
+										automatedBrandProCarEleWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+									}
 									if (productObj.getProductCode() != null && productObj.getProductCode().getPicture() != null
 											&& productObj.getProductCode().getPicture().getURL() != null)
 									{
@@ -2499,7 +2614,15 @@ public class DefaultCMSComponentControler
 									curatedProWidgetElementWsDTO.setMrpPrice(curatedProWidgetEleMRPPriceWsDTO);
 									curatedProWidgetElementWsDTO.setDiscountedPrice(curatedProWidgetEleDiscountPriceWsDTO);
 									curatedProWidgetElementWsDTO.setTitle(null != productObj.getTitle() ? productObj.getTitle() : "");
-									curatedProWidgetElementWsDTO.setWebURL(null != productObj.getWebURL() ? productObj.getWebURL() : "");
+									if (null != productModelUrlResolver)
+									{
+										curatedProWidgetElementWsDTO
+												.setWebURL(siteUrl + productModelUrlResolver.resolve(productObj.getProductCode()));
+									}
+									else
+									{
+										curatedProWidgetElementWsDTO.setWebURL(siteUrl + "/" + productObj.getProductCode().getCode());
+									}
 									curatedProWidgetElementWsDTO.setImageURL(productObj.getProductCode().getPicture().getURL());
 								}
 								curatedProWidgetElementList.add(curatedProWidgetElementWsDTO);
