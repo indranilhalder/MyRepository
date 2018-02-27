@@ -502,7 +502,8 @@ public class CartsController extends BaseCommerceController
 		final CartDataList cartDataList = new CartDataList();
 		List<CartData> cartsList = null;
 		int count = 0;
-		
+		try
+		{
 		if (userFacade.isAnonymousUser())
 		{
 			throw new AccessDeniedException("Access is denied");
@@ -563,6 +564,7 @@ public class CartsController extends BaseCommerceController
 				response.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 		}
+	
 		catch (final Exception e)
 		{
 			response.setErrorCode(MarketplacecommerceservicesConstants.B001122);

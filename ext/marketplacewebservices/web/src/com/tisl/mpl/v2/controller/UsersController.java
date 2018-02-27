@@ -526,8 +526,7 @@ public class UsersController extends BaseCommerceController
 	private MplVoucherService mplVoucherService;
 	@Resource(name = "mplFollowedBrandFacade")
 	private MplFollowedBrandFacade mplFollowedBrandFacade;
-	@Autowired
-	private RegisterCustomerFacade registerCustomerFacade;
+
 	
 	@Autowired
 	private MplEgvWalletService mplEgvWalletService;

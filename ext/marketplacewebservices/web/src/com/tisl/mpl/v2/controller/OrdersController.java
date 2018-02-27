@@ -271,8 +271,7 @@ public class OrdersController extends BaseCommerceController
 	private PriceDataFactory priceDataFactory;
 
 
-   @Autowired
-   private MplPaymentFacade mplPaymentFacade;
+
 
    @Autowired
    private ModelService modelService;
