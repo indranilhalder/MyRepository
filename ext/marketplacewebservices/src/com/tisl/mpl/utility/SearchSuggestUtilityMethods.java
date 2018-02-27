@@ -180,7 +180,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -2341,6 +2341,16 @@ public class SearchSuggestUtilityMethods
 
 				sellingItemDetail.setNewProduct(productData.getIsProductNew());
 				sellingItemDetail.setOnlineExclusive(productData.getIsOnlineExclusive());
+
+				if (null != productData.getAverageRating())
+				{
+					sellingItemDetail.setAverageRating(productData.getAverageRating());
+				}
+
+				if (null != productData.getNumberOfReviews())
+				{
+					sellingItemDetail.setTotalNoOfReviews(productData.getNumberOfReviews());
+				}
 
 				searchProductDTOList.add(sellingItemDetail);
 			}
