@@ -231,4 +231,7 @@ public final class MessageConstants
 	public static final String LUXURY_GIGYA_APIKEY = "luxury.gigya.apikey";
 	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
 
+	public static final String TEXT_ACCOUNT_PROFILE_QC_SERVER_ERROR = "text.account.profile.qcServerError";
+
+
 }

@@ -838,6 +838,8 @@ p {margin: 0;}
 	width: 300px; height: 400px; margin: 0px; padding: 0 5px;
 }
 
+.whatToBuyNowText {position: absolute; top: 75%; font-weight: 600; color: #fff; text-align: center; width: 100%;}
+
 .whatToBuyItem:first-child {padding-left: 0;}
 
 .whatToBuyItemImg, .whatToBuyItemImg a {height: inherit;}
@@ -1197,7 +1199,7 @@ footer #footerLink div.column ul li {
   .footer-child section:first-child h4 {font-size: 18px;}
   .footer-child h4 i:last-child {display: block;}
   .footer-child ul li {padding-left: 20px;}		/* modified for TISUAT-6353 */
-  .footer-child ul {margin-bottom: 0px !important;margin-top: 0px;}	/* modified for TISUAT-6354 */
+  .footer-child ul {margin-bottom: 0px;margin-top: 0px;}
   .footer-copyright {padding: 0 25px; line-height: 48px; margin-bottom: 20px; font-size: 11px; letter-spacing: .6px;}
   .footer-child h4 i, .footer-child h4 i:before {font-size: 18px; line-height: 48px;}
   .footer-child {width: 100%; float: left;}

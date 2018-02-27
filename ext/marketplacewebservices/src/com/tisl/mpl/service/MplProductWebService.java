@@ -12,6 +12,7 @@ import de.hybris.platform.promotions.util.Tuple3;
 import java.util.List;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
@@ -28,6 +29,7 @@ public interface MplProductWebService
 
 	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl, String channel);
 
+	public EgvProductInfoWSDTO getEgvProductDetails();
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
 	public List<GalleryImageData> getGalleryImages(final ProductData productData);

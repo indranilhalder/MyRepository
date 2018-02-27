@@ -335,7 +335,7 @@
   										</c:when>
 								  		<c:otherwise>
 								  			<h2>Payment Method</h2>
-								  			<span>${subOrder.mplPaymentInfo.paymentOption}</span>
+								  			<span>${subOrder.mplPaymentInfo.paymentOption eq null ? '<b>CliQ Cash</b>' : subOrder.mplPaymentInfo.paymentOption}<%-- ${subOrder.mplPaymentInfo.paymentOption} --%></span>
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 								
 								  		</c:otherwise>

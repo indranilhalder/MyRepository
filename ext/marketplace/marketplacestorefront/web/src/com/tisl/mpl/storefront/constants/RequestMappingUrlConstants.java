@@ -38,6 +38,8 @@ public final class RequestMappingUrlConstants
 	public static final String NEW_OTP_GENERATE = "/newOTP";
 	public static final String RESCHEDULEDDELIVERYDATE = "/{orderCode}/reScheduledDeliveryDate";
 
+	public static final String SEND_NOTIFICATION_EGV_ORDER = "/sendNotificationEGVOrder";
+	public static final String GET_ORDER_STATEMENT = "/getStatement";
 
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";
@@ -187,8 +189,15 @@ public final class RequestMappingUrlConstants
 	public static final String FILE_DOWNLOAD_PATH = "return.filedownload.path";
 	public static final String RETURN_FILE_NAME = "return.filedownload.filename";
 
+	public static final String LINK_WALLET = "/wallet";
+	public static final String LINK_WALLET_VIEW = "/view";
+
 
 	//TPR-5954
 	public static final String IMG_UPLOAD_PATH = "img.fileupload.path";
+	
+	public static final String QC_MOBILE_VALIDATION = "/qcMobileValidation";
+	public static final String QC_OTP_VALIDATION = "/qcOTPValidation";
+
 
 }

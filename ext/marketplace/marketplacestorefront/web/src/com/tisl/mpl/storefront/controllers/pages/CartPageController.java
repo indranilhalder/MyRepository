@@ -413,6 +413,7 @@ public class CartPageController extends AbstractPageController
 				final List<OrderEntryData> sellerList = cartData.getEntries();
 				for (final OrderEntryData seller : sellerList)
 				{
+					if(seller.getSelectedSellerInformation()!=null){
 					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
 					if (cartLevelSellerID != null)
 					{
@@ -421,6 +422,7 @@ public class CartPageController extends AbstractPageController
 					else
 					{
 						cartLevelSellerID = sellerID;
+					}
 					}
 				}
 				model.addAttribute(ModelAttributetConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);

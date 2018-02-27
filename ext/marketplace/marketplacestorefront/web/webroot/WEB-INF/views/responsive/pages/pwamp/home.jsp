@@ -379,6 +379,20 @@
 	</p>
 	</c:if>
 	</c:if>
+	<!--  EGV Changes -->
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvProductCode')" var="productCode"/>
+        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="egvUrlEnable"/>
+	
+	<c:if test="${egvUrlEnable}">
+	    <p class="sidebar-divider-item"><a href="/wallet/getcliqcashPage" >
+			<spring:theme code="trackorder.header.cliqcash" text="CliQ Cash"/></a>		
+       </p>
+       <c:set var="myVar" value="/giftCard-" />
+       <c:set var ="egvProduct"  value="${myVar}${productCode}"/> 
+       <p class="sidebar-divider-item"><a href="<c:url value="${egvProduct}"/>">
+          <spring:theme code="trackorder.header.giftCard" text="Gift Card"/></a>
+       </p>
+    </c:if>
 	<p class="sidebar-divider-item sidebar-download-app">
 		<a href="${request.contextPath}/apps"><span></span>Download App</a>
 	</p>
@@ -552,7 +566,9 @@
 				<div class="whatToBuyItem">
 					<div class="whatToBuyItemImg">
 						<a href="{{imageURL}}"><amp-img class="responsive-img"
-								layout="fill" src="{{mediaURL}}" alt="{{imageName}}"></amp-img></a>
+								layout="fill" src="{{mediaURL}}" alt="{{imageName}}"></amp-img>
+								<span class="whatToBuyNowText">{{categoryName}}</span>
+								</a>
 					</div>
 				</div>
 				{{/categories}} 

@@ -483,12 +483,19 @@
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+
 				
 				<bean id="defaultCustomerReviewPopulator"
 			class="com.tisl.mpl.facades.populators.MplCustomerReviewPopulator">
 		<property name="principalConverter" ref="principalConverter"/>
 		
 	</bean>
+
+	
+		<bean id="mplEgvWalletService" class="com.tisl.mpl.service.impl.MplEgvWalletServiceImpl"/>	
+	
+				
+
 </beans>
 
 

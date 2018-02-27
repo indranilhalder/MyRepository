@@ -48,7 +48,15 @@ public interface ExtendedUserService extends UserService
 	 * @return true if customer will be unique
 	 */
 	public boolean isEmailUniqueForSite(String userId);
+	
+	/**
+	 * Checks if mobileNumber is unique for wallet Creation.
+	 * @return true if customer will be unique
+	 * 
+	 */
+	public boolean isMobileUniqueForWallet(String mobileNumber);
 
+	
 	/**
 	 * Gets the user for uid and site.
 	 *
