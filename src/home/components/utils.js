@@ -1,11 +1,11 @@
 export function transformData(datum) {
   return {
-    image: datum.imageURL,
+    image: datum.imageUrl,
     video: datum.video,
     title: datum.title,
     description: datum.description,
-    price: datum.mrpPrice && datum.mrpPrice.formattedValue,
-    discountPrice: datum.discountedPrice && datum.discountedPrice.formattedValue
+    price: datum.mrp,
+    discountPrice: datum.winningSellerMOP
   };
 }
 export function transformItem(datum) {

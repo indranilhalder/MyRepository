@@ -29,17 +29,19 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  "Hero Banner Component": props => <HeroBanner {...props} />,
+  // "Hero Banner Component": props => <HeroBanner {...props} />,
   // themeOffers: props => <ThemeOffer {...props} />,
   // productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  // bannerProductCarousel: props => <BannerProductCarousel {...props} />,
+  "Banner Product Carousel Component": props => (
+    <BannerProductCarousel {...props} />
+  )
   // videoProductCarousel: props => <VideoProductCarousel {...props} />,
   // automatedBrandProductCarousel: props => (
   //   <AutomatedBrandProductCarousel {...props} />
   // ),
-  "Flash Sales Component": props => <FlashSale {...props} />,
-  "Offers Component": props => <OfferWidget {...props} />,
-  "Multipurpose Banner Component": props => <ConnectWidget {...props} />
+  // "Flash Sales Component": props => <FlashSale {...props} />,
+  // "Offers Component": props => <OfferWidget {...props} />,
+  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />
   // themeProductWidget: props => <ThemeProductWidget {...props} />,
   // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
   // followBaseWidget: props => <FollowBase {...props} />,
