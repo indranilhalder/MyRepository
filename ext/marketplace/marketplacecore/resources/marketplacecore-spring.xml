@@ -1245,15 +1245,17 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- Added for Reviews and Ratings - Start -->
 	<bean id="mplAverageRatingValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplAverageRatingValuProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplAverageRatingValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="customerReviewService" ref="customerReviewService"/>
 	</bean>
 
-	<bean id="mplRatingCountValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplRatingCountValuProvider"
+	<bean id="mplReviewCountValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplReviewCountValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="customerReviewService" ref="customerReviewService"/>
 	</bean>
 
 	<bean id="mplIsOffersExistingValueProvider"

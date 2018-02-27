@@ -2151,6 +2151,8 @@
 		<property name="price" type="com.tisl.mpl.wsdto.PriceWsData"/>
 		<property name="newProduct" type="Boolean" />
 		<property name="onlineExclusive" type="Boolean" />
+		<property name="averageRating" type="Double"></property>
+		<property name="totalNoOfReviews" type="Integer"></property>
 		<!--  Added for NU-38 end-->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.VariantOptionsWsDto">
