@@ -5,13 +5,12 @@ import GridSelect from "../../general/components/GridSelect";
 import CheckBoxPoint from "../../general/components/CheckBoxPoint";
 export default class Question extends React.Component {
   render() {
-    const label = [{ label: "Yes, sure" }, { label: "No thanks" }];
     return (
       <div className={styles.base}>
         <div className={styles.questionText}>{this.props.question}</div>
         <div className={styles.answerHolder}>
           <GridSelect limit={1} offset={0} elementWidthMobile={100}>
-            {label.map((val, i) => {
+            {this.props.options.map((val, i) => {
               return <CheckBoxPoint label={val.label} value={i} />;
             })}
           </GridSelect>
@@ -21,7 +20,12 @@ export default class Question extends React.Component {
   }
 }
 Question.propTypes = {
-  question: PropTypes.string
+  question: PropTypes.string,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string
+    })
+  )
 };
 Question.defaultProps = {
   question:

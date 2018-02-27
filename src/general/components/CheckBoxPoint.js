@@ -9,11 +9,11 @@ export default class CheckBoxPoint extends React.Component {
   }
   render() {
     let classNameBase = styles.base;
-    if (this.props.selected) {
-      classNameBase = styles.selected;
-    }
     return (
-      <div className={classNameBase} onClick={() => this.handleClick()}>
+      <div
+        className={this.props.selected ? styles.selected : classNameBase}
+        onClick={() => this.handleClick()}
+      >
         <div className={styles.checkCicle}>
           <div className={styles.checkCircleInside} />
         </div>
