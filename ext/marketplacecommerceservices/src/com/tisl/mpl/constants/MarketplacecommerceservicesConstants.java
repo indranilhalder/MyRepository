@@ -203,6 +203,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEBIT = "Debit Card".intern();
 	public static final String CREDIT = "Credit Card".intern();
 	public static final String COD = "COD".intern();
+	public static final String CLIQ_CASH = "Cliq Cash".intern();
+	public static final String CLIQCASH = "CliqCash".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion".intern();
@@ -1084,6 +1086,35 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2000 = "B2000";
 	public static final String B2001 = "B2001";
 	public static final String B2002 = "B2002";
+
+
+	// Codes For EGV Functionaity START
+	public static final String B5001 = "B5001";
+	public static final String B5002 = "B5002";
+	public static final String B5003 = "B5003";
+	public static final String B5004 = "B5004";
+	public static final String B5005 = "B5004";
+	public static final String B5006 = "B5004";
+	public static final String B5007 = "B5004";
+	// Codes For EGV Functionaity END
+	
+	public static final String B5010 = "B5010";
+	public static final String B5011 = "B5011";
+	public static final String B5012 = "B5012";
+	public static final String B5013 = "B5013";
+	public static final String B5014 = "B5014";
+	public static final String B5015 = "B5015";
+	public static final String B5016 = "B5016";
+	public static final String B5017 = "B5017";
+	public static final String B5018 = "B5018";
+
+	public static final String B5020 = "B5020";
+	public static final String B5021 = "B5021";
+	public static final String B5022 = "B5022";
+	public static final String B5023 = "B5023";
+	public static final String B5024 = "B5024";
+	public static final String B5025 = "B5025";
+	
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
@@ -2353,6 +2384,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+	// EGV  changes Start
+
+		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
+		public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
+		public static final String QC_REFUND_TYPE_RETURN = "RETURN";
+		public static final String QC_REFUND_TYPE_REFUND = "REFUND";
+		
+		
+		public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
+		public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
+		public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
+		public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
+		// EGV Changes End
+		public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
+		
+		public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
+		
+		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
+		
+		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
+
+		public static final String PAYMENT_MODE_SPLIT = "split".trim();
+		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
+
+
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
 
 	public static final String REFUNDCLEARORDERQUERY = "SELECT {con.pk} FROM {Consignment AS con}, {Order as o} , {ComposedType as com} , {PaymentInfo as pf} WHERE {o.paymentInfo} ={pf.pk} and {pf.itemtype} = {com.pk} and {com.code} <> 'CODPaymentInfo' and {con.creationtime} <= ?queryTAT AND {con.creationtime} >= ?startTime AND {con.status} IN (?statusOne,?statusTwo)"
@@ -2443,10 +2499,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B0099008 = "B0099008";
 	public static final String B0099009 = "B0099009";
 
-public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
 	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
 
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "One-time password for activating your CLiQ Cash wallet is {1}. Please do not share with anyone. Feel free to call us at {2} in case of any queries.";
+	public static final String INVALID_WALLET_OTP = "INVALID";
+	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
+	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET= "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
 
 	//SONAR FIX UIUX_Post_Eoss_Commerce_Hotfix
 	public static final String BANNERURLLINK = "bannerUrlLink".intern();
@@ -2459,7 +2520,7 @@ public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled"
 	public static final String ERRORCREATINGREFUNDENTRYFORAUDIT = "Error while creating refund entry for audit: ".intern();
 	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
 	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
-
+	public static final String SPLIT = "split".intern();
 
 	//Report for bulk cancellation
 	/*
@@ -2480,4 +2541,12 @@ public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled"
 	public static final String BY_RATING = "byRating";
 	public static final String LATESTOTPMOBILEQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
 	public static final String LATESTOTPEMAILQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType  order by {creationtime} desc fetch first 1 rows only";
+
+	//NU-61
+
+	public static final String MPLPRODUCTVALUE = "productValue".intern();
+	public static final String EMIBANKSQUERYPRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  order by {m.bankname}"
+			.intern();
+	public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
+			.intern();
 }

@@ -49,4 +49,13 @@ public interface RegisterCustomerFacade
 	//NU-30
 	public boolean checkEmailIdUnique(ExtRegisterData data);
 
+	boolean checkUniquenessOfMobileForWallet(String mobileNumber);
+
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param mobileNumber
+	 */
+	public void registerWalletMobileNumber(String firstName, String lastName, String mobileNumber);
+
 }
