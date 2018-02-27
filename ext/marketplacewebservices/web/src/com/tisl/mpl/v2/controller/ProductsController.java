@@ -1904,7 +1904,7 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/searchProducts", method =
 	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ProductSearchPageWsDto searchProducts(@RequestParam(required = false) final String searchText,
+	public ProductSearchPageWsDto searchProductsNew(@RequestParam(required = false) final String searchText,
 			@RequestParam(required = false) final int page, @RequestParam(required = false) final int pageSize,
 			@RequestParam(required = false) final String sortCode, @RequestParam(required = false) final boolean isFilter,
 			@RequestParam(required = false) final boolean isPwa, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
