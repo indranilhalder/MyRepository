@@ -7,9 +7,6 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/desktop/formElement"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
-<span id="googleClientid" style="display:none">${googleClientid}</span>
-<span id="facebookAppid" style="display:none">${facebookAppid}</span>
-
 <spring:url value="/my-account" var="accountUrl" />
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -23,6 +20,8 @@
 <spring:url value="/my-account/inviteFriends" var="inviteFriendUrl" />
 
 <template:page pageTitle="${pageTitle}">
+<span id="googleClientid" style="display:none">${googleClientid}</span>
+<span id="facebookAppid" style="display:none">${facebookAppid}</span>
 
 
 	<div class="account" id="account-invite">

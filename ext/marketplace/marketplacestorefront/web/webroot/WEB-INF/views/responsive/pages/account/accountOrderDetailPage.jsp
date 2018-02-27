@@ -31,10 +31,11 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+
+<template:page pageTitle="${pageTitle}">
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
-<template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
