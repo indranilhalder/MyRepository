@@ -3,50 +3,61 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 
-<%-- <spring:url value="/my-account/profile" var="profileUrl"/> --%>
+<script type="text/javascript">
 
+function loadImageAjaxCall() {
+	    
+	    var formdata = $('#uploadImages')[0];
+		var form = new FormData(formdata);
+	 
+	  $.ajax({
+			url:ACC.config.encodedContextPath + "/my-account-imageUpload",
+			type: "POST",
+			 data:	form,
+			 enctype: 'multipart/form-data',
+		        processData: false,  // Important!
+		        contentType: false,
+		        cache: false,
+			success : function(response) {
+				alert(response[0].imageUrl);
+				$("#upload_file").empty();
+				$("#image_preview").empty();
+			},
+			error : function(resp) {
+			console.log(resp);
+			}
+		});
+}
 
-<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
-<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+function preview_image() 
+{
+	$("#upload_file").empty();
+ var total_file=document.getElementById("upload_file").files.length;
+ for(var i=0;i<total_file;i++)
+ {
+  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"'><br>");
+ }
+}
+</script>
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
-<style type="text/css">
-	.top-buffer { margin-top:100px; }
-</style>
-
- <template:page pageTitle="${pageTitle}">
- 
- <div class="container">
-	<div class="row top-buffer">
-	<div class="col-md-12">
-	<p >
-  	Drag & Drop Img SAP HYBRIS POC
-	</p></div>
-
-<div class="row"><form id="my-awesome-dropzone"  action="../my-account/saveImage" class="dropzone" method="POST" >
-	 <ul>
-	 <li>
-	 <select id="selectMediaFolder" >
+<template:page pageTitle="${pageTitle}">
+<div id="wrapper">
+ <form:form action="/my-account-imageUpload" method="POST" id="uploadImages" enctype="multipart/form-data">
+	<select id="selectMediaFolder" >
 	<c:forEach items="${mediaFolderList}" var="mediaFolder">
 	<option value="multistep-pci">${mediaFolder.qualifier}</option>
 	</c:forEach>
 	</select>
-	</li>
-	<li style="padding-top:50px">
-    <input type="text" placeholder="Enter Username" value="H" name="Name" class="dropzone"/>
-	</li></ul>
-<!--     <input type="text" placeholder="Enter Username" value="H1" name="Name1" class="dropzone"/> -->
-<!--     <input type="text" placeholder="Enter Username" value="H2" name="Name2" class="dropzone"/> -->
-	<!-- Change /upload-target to your upload address -->
-	</form></div>
-	
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
-
-
+  <input type="file" id="upload_file" name="file" onchange="preview_image();" multiple/>
+  <input type="button" name='submit_image' value="Upload Image" onclick="loadImageAjaxCall();"/>
+ </form:form>
+ <div id="image_preview"></div>
+  <div id="response_preview"></div>
+</div>
 </template:page>
 	

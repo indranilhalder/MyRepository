@@ -6108,7 +6108,45 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
+			
+			<itemtype code="MSDComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.MSDComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="subType"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="num_results"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="details"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="AdobeTargetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.AdobeTargetComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="mbox"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
 			<!-- Changes for Shop By Brand -->
 			<itemtype code="BrandCollectionComponent" generate="true"
 				autocreate="true" extends="SimpleCMSComponent"

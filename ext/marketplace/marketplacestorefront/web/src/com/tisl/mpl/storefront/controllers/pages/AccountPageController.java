@@ -61,19 +61,11 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
-import de.hybris.platform.core.model.media.MediaFolderModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.impex.jalo.ImpExException;
-import de.hybris.platform.impex.jalo.Importer;
-import de.hybris.platform.impex.jalo.imp.DefaultDumpHandler;
-import de.hybris.platform.impex.jalo.media.DefaultMediaDataHandler;
-import de.hybris.platform.impex.jalo.media.MediaDataTranslator;
-import de.hybris.platform.jalo.media.Media;
-import de.hybris.platform.jalo.media.MediaManager;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
@@ -87,18 +79,10 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.util.CSVReader;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -123,16 +107,12 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.restlet.resource.Post;
@@ -160,7 +140,6 @@ import com.granule.json.JSONObject;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
-import com.tis.mpl.facade.imageupload.MplImageUploadFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -337,14 +316,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	private static final String FINEJEWELLERY = "FineJewellery";
 	private static final String MPH = "MPH";
-	private static final String CATALOG_DATA = "mplContentCatalog";
-	private static final String CATALOG_VERSION_DATA = "Online";
-	private static final String siteResource = "file:/";
-	private static final String IMPORT_DATA = "$catalogversion=catalogversion(catalog(id[default='" + CATALOG_DATA
-			+ "']),version[default='" + CATALOG_VERSION_DATA + "'])" + "[unique=true,default='" + CATALOG_DATA + ":"
-			+ CATALOG_VERSION_DATA + "'] \n"
-			+ "INSERT_UPDATE Media;code[unique=true];$catalogversion;mime[default='image/jpeg'];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];folder(qualifier)[default='root']\n";
-
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
@@ -483,8 +454,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private CatalogUtils catalogUtils;
 
-	@Autowired
-	private MplImageUploadFacade mplImageUploadFacade;
 
 	//sonar issue fixed
 	/*
@@ -8467,155 +8436,5 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	}
 
-	@RequestMapping(value = "/imageUpload", method = RequestMethod.GET)
-	@RequireHardLogIn
-	public String getImageUploaded(final Model model) throws CMSItemNotFoundException
-	{
-		final List<MediaFolderModel> mediaFolder = getMediaFolderList();
-		storeCmsPageInModel(model, getContentPageForLabelOrId("imageUpload"));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("imageUpload"));
-		model.addAttribute("mediaFolderList", mediaFolder);
-		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, accountBreadcrumbBuilder.getBreadcrumbs("imageUpload"));
-		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-		return getViewForPage(model);
-	}
 
-	public List<MediaFolderModel> getMediaFolderList()
-	{
-
-		List<MediaFolderModel> MediaFolderDataList = null;
-		try
-		{
-			MediaFolderDataList = mplImageUploadFacade.getMediaFolders();
-
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			}
-		}
-
-		return MediaFolderDataList;
-	}
-
-	@RequestMapping(value = "/saveImage", method = RequestMethod.POST)
-	@ResponseBody
-	protected org.json.simple.JSONObject imageUpload(final HttpServletRequest request, final HttpServletResponse response)
-			throws ServletException, IOException
-	{
-
-		if (!ServletFileUpload.isMultipartContent(request))
-		{
-			throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
-		}
-
-		final ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
-		//final PrintWriter writer = response.getWriter();
-		final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
-		try
-		{
-			final List<FileItem> items = uploadHandler.parseRequest(request);
-
-			final StringBuilder sb = new StringBuilder();
-			String fileName = StringUtils.EMPTY;
-			for (final FileItem item : items)
-			{
-				if (!item.isFormField())
-				{
-					final File file = new File("F:/" + "/images/" + item.getName());
-					item.write(file);
-					sb.append(";" + item.getName() + ";;image/jpg;;" + siteResource + file.getPath() + ";root");
-					fileName = item.getName();
-				}
-				else
-				{
-					System.out.println("--- " + item.getFieldName() + " & Value -" + item.getString());
-				}
-			}
-
-			final StringBuilder returnObj = new StringBuilder();
-			returnObj.append(IMPORT_DATA + sb.toString());
-
-			final InputStream inputStream = new ByteArrayInputStream(returnObj.toString().getBytes());
-
-			//create stream reader
-			CSVReader reader = null;
-
-			reader = new CSVReader(inputStream, "UTF-8");
-
-			// import
-			MediaDataTranslator.setMediaDataHandler(new DefaultMediaDataHandler());
-			Importer importer = null;
-			//ImpExException error = null;
-			try
-			{
-				importer = new Importer(reader);
-				importer.getReader().enableCodeExecution(true);
-				importer.setMaxPass(-1);
-				importer.setDumpHandler(new FirstLinesDumpReader());
-				importer.importAll();
-			}
-			catch (final ImpExException e)
-			{
-				e.printStackTrace();
-			}
-
-			final Media mediaData = getMediaByCode(fileName);
-
-
-			jObject.put("imageName", mediaData.getFileName());
-			jObject.put("imageName", mediaData.getURL());
-
-
-			// failure handling
-			if (importer.hasUnresolvedLines())
-			{
-				System.out.println("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
-						+ importer.getDumpHandler().getDumpAsString());
-			}
-
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			MediaDataTranslator.unsetMediaDataHandler();
-		}
-
-		return jObject;
-	}
-
-	private class FirstLinesDumpReader extends DefaultDumpHandler
-	{
-		@Override
-		public String getDumpAsString()
-		{
-			final StringBuffer result = new StringBuffer(100);
-			try
-			{
-				final BufferedReader reader = new BufferedReader(new FileReader(getDumpAsFile()));
-				result.append(reader.readLine() + "\n");
-				result.append(reader.readLine() + "\n");
-				result.append(reader.readLine() + "\n");
-				reader.close();
-			}
-			catch (final FileNotFoundException e)
-			{
-				result.append("Error while reading dump " + e.getMessage());
-			}
-			catch (final IOException e)
-			{
-				result.append("Error while reading dump " + e.getMessage());
-			}
-			return result.toString();
-		}
-	}
-
-	private Media getMediaByCode(final String mediaCode)
-	{
-		return (Media) MediaManager.getInstance().getMediaByCode(mediaCode).iterator().next();
-	}
 }
