@@ -52,6 +52,11 @@ export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
 export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
+
+export const ORDER_SUMMARY_REQUEST = "ORDER_SUMMARY_REQUEST";
+export const ORDER_SUMMARY_SUCCESS = "ORDER_SUMMARY_SUCCESS";
+export const ORDER_SUMMARY_FAILURE = "ORDER_SUMMARY_FAILURE";
+
 const pincode = 229001;
 
 export function cartDetailsRequest() {
@@ -540,6 +545,54 @@ export function generateCartIdForAnonymous() {
       dispatch(generateCartIdAnonymousSuccess(resultJson));
     } catch (e) {
       dispatch(generateCartIdFailure(e.message));
+    }
+  };
+}
+
+export function orderSummaryRequest() {
+  return {
+    type: ORDER_SUMMARY_REQUEST,
+    status: REQUESTING
+  };
+}
+export function orderSumarySuccess(orderSummary) {
+  return {
+    type: ORDER_SUMMARY_SUCCESS,
+    status: SUCCESS,
+    orderSummary
+  };
+}
+
+export function orderSummaryFailure(error) {
+  return {
+    type: ORDER_SUMMARY_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getOrderSummary() {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  return async (dispatch, getState, { api }) => {
+    dispatch(orderSummaryRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          getState().user.user.customerInfo.mobileNumber
+        }/carts/${
+          JSON.parse(cartDetails).code
+        }/displayOrderSummary?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pincode=400083&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(orderSumarySuccess(resultJson));
+    } catch (e) {
+      dispatch(orderSummaryFailure(e.message));
     }
   };
 }
