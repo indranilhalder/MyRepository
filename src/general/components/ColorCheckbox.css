@@ -1,0 +1,52 @@
+.base{
+  width:100%;
+  height:auto;
+  position: relative;
+  padding-left:35px;
+  color:#888888;
+  font-size:14px;
+  font-family:regular;
+  line-height:24px;
+  transition:300ms;
+  margin-bottom:10px;
+}
+.checkCicle{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:1px solid #a2a2a2;
+  position: absolute;
+  left:0;
+  top:0;
+  transition:300ms;
+}
+.checkCircleInside{
+  width:12px;
+  height:12px;
+  position: absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  margin:auto;
+  background:#ff1744;
+  transform:scale(0);
+  transition:300ms;
+  border-radius: 50%;
+}
+.activeBorder{
+  composes:checkCicle;
+  border:1px solid #ff1744;
+  color:#ff1744;
+  transition:300ms;
+}
+.activeText{
+  composes:base;
+  color:#ff1744
+
+}
+.checkCircleActive{
+  composes:checkCircleInside;
+  transform:scale(1);
+}
+
