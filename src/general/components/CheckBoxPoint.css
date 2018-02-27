@@ -34,19 +34,18 @@
   transition:300ms;
   border-radius: 50%;
 }
-.activeBorder{
-  composes:checkCicle;
-  border:1px solid #ff1744;
-  color:#ff1744;
-  transition:300ms;
-}
-.activeText{
+
+.selected {
   composes:base;
   color:#ff1744
 
 }
-.checkCircleActive{
-  composes:checkCircleInside;
+.selected .checkCircleInside{
   transform:scale(1);
 }
+.selected .checkCicle{
+  border:1px solid #ff1744;
+  color:#ff1744;
+}
+
 
