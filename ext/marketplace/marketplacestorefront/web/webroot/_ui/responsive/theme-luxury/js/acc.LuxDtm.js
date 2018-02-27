@@ -2,7 +2,9 @@ var digitalData;
 var isImageHoverTriggered = false;		// flag to identify mouse hover action	
 $(document).ready(function(){
 	//console.log("lux dtm call");
-	_satellite.pageBottom();
+	if (typeof(_satellite) != "undefined") {
+		  _satellite.pageBottom();
+	  }
 	var pageType= $('#pageType').val();
 	var tealiumOrderFlag = $('#tealiumOrderFlag').val();
 	var subdomain = window.location.href.split("/")[2].split(".")[0];

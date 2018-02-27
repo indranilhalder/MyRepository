@@ -371,7 +371,11 @@
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 <!-- injecting satellite obj  for DTM  luxury addon tag-->	
-<script type="text/javascript">_satellite.pageBottom();</script>
+<script type="text/javascript">
+if (typeof(_satellite) != "undefined") {
+	  _satellite.pageBottom();
+}
+</script>
 	
 </body>
 

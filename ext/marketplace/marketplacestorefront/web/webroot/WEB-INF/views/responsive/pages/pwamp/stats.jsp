@@ -7,6 +7,10 @@
 <script src="${dtmUrl}"></script>
 </head>
 <body>
-<script type="text/javascript">_satellite.pageBottom();</script>
+<script type="text/javascript">
+if (typeof(_satellite) != "undefined") {
+	  _satellite.pageBottom();
+}
+</script>
 </body>
 </html>

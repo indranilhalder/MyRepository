@@ -122,7 +122,7 @@
 <!-- The script is used for validating email in news letter sign up Section -->
 <script>
 	function emailvalidate() {
-		<!-- TPR - 667--->
+		//TPR - 667
 		/*utag.link({
 		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
 	}); */
@@ -140,9 +140,7 @@
 				_satellite.track('news_letter_sign_up');
 			}, 1500);
 		}
-		<!--
-		TPR - 667
-		ends - -->
+		//TPR - 667 ends
 		var mail = $("#mailtext").val();
 
 		if (mail == "") {
