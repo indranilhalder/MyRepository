@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 
 export default class Widget extends React.Component {
   componentDidMount() {
-    console.log("component did mount");
-    console.log(this.props.postData);
     this.props.getComponentData(
       this.props.feedComponentData.fetchURL,
       this.props.positionInFeed,

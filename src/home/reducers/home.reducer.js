@@ -2,6 +2,7 @@ import * as homeActions from "../actions/home.actions";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
+import { homeFeed } from "../actions/home.actions";
 
 const home = (
   state = {
@@ -82,6 +83,14 @@ const home = (
         homeFeed: homeFeedData
       });
 
+    case homeActions.GET_ITEMS_SUCCESS:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].items = action.items;
+      return Object.assign({}, state, {
+        homeFeed: homeFeedData,
+        status: action.status
+      });
+
     case homeActions.COMPONENT_DATA_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
       let componentData = action.data;
@@ -95,8 +104,6 @@ const home = (
       };
 
       homeFeedData[action.positionInFeed] = componentData;
-      console.log("HOME FEED DATA");
-      console.log(homeFeedData);
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData

@@ -8,3 +8,11 @@ export function transformData(datum) {
     discountPrice: datum.discountedPrice && datum.discountedPrice.formattedValue
   };
 }
+export function transformItem(datum) {
+  return {
+    imageURL: datum.imageUrl,
+    discountPrice: datum.winningSellerMOP,
+    price: datum.mrp,
+    title: datum.productName
+  };
+}

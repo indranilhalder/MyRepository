@@ -1,4 +1,5 @@
-import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import each from "lodash/each";
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
@@ -15,7 +16,62 @@ export const HOME_FEED_PATH = "homepage";
 export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
 export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
 
+export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
+export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
+export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
+
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+
+export function getItemsRequest(positionInFeed) {
+  return {
+    type: GET_ITEMS_REQUEST,
+    positionInFeed,
+    status: REQUESTING
+  };
+}
+
+export function getItemsSuccess(positionInFeed, items) {
+  return {
+    type: GET_ITEMS_SUCCESS,
+    status: SUCCESS,
+    items,
+    positionInFeed
+  };
+}
+
+export function getItemsFailure(positionInFeed, errorMsg) {
+  return {
+    type: GET_ITEMS_FAILURE,
+    errorMsg,
+    status: FAILURE
+  };
+}
+
+export function getItems(positionInFeed, itemIds) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getItemsRequest(positionInFeed));
+    // /marketplacewebservices/v2/mpl/products/productInfo?productCodes=MP000000000573487,MP000000000431989,MP000000000892684
+    try {
+      let productCodes;
+      each(itemIds, itemId => {
+        productCodes = `${itemId},${productCodes}`;
+      });
+      const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
+      const result = await api.get(url);
+
+      const resultJson = await result.json();
+      if (resultJson.status === "FAILURE") {
+        throw new Error(`${resultJson.message}`);
+      }
+      console.log("GET FLASH SALE ITEMS");
+      console.log(resultJson.results);
+      console.log(positionInFeed);
+      dispatch(getItemsSuccess(positionInFeed, resultJson.results));
+    } catch (e) {
+      dispatch(getItemsFailure(positionInFeed, e.message));
+    }
+  };
+}
 
 export function multiSelectSubmitRequest(positionInFeed) {
   return {

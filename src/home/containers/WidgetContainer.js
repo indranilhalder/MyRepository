@@ -1,11 +1,14 @@
 import { connect } from "react-redux";
-import { getComponentData } from "../actions/home.actions";
+import { getComponentData, getItems } from "../actions/home.actions";
 import { withRouter } from "react-router-dom";
 import Widget from "../components/Widget";
 const mapDispatchToProps = dispatch => {
   return {
     getComponentData: (fetchUrl, positionInFeed, postParams) => {
       dispatch(getComponentData(positionInFeed, fetchUrl, postParams));
+    },
+    getItems: (positionInFeed, itemIds) => {
+      dispatch(getItems(positionInFeed, itemIds));
     }
   };
 };
