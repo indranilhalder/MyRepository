@@ -20,6 +20,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.solr.search.MplSearchFacetPriorityComparator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
@@ -1872,8 +1874,13 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
+
+		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
+
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
+			final List<MplSearchFacetPriorityComparator> searchFacetByPriorityList = new ArrayList<MplSearchFacetPriorityComparator>();
+
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
@@ -1950,7 +1957,11 @@ public class SearchSuggestUtilityMethods
 					//Fix to send only facets with visible true
 					if (visible.booleanValue())
 					{
-						searchfacetDTOList.add(facetWsDTO);
+						//searchfacetDTOList.add(facetWsDTO);
+						final MplSearchFacetPriorityComparator mplSearchFacetPriorityComparator = new MplSearchFacetPriorityComparator();
+						mplSearchFacetPriorityComparator.setPriority(facate.getPriority());
+						mplSearchFacetPriorityComparator.setFacetDataWsDTO(facetWsDTO);
+						searchFacetByPriorityList.add(mplSearchFacetPriorityComparator);
 					}
 
 				}
@@ -1992,6 +2003,18 @@ public class SearchSuggestUtilityMethods
 					productSearchPage.setFacetdatacategory(categoryHierarchy);
 				}
 			}
+			if (prioritySort)
+			{
+				Collections.sort(searchFacetByPriorityList, MplSearchFacetPriorityComparator.searchFacetByPriority);
+			}
+			if (CollectionUtils.isNotEmpty(searchFacetByPriorityList))
+			{
+				for (final MplSearchFacetPriorityComparator com : searchFacetByPriorityList)
+				{
+					searchfacetDTOList.add(com.getFacetDataWsDTO());
+				}
+			}
+
 			productSearchPage.setFacetdata(searchfacetDTOList);
 
 		}
@@ -2009,6 +2032,7 @@ public class SearchSuggestUtilityMethods
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
+		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
 		if (null != searchPageData.getResults())
 		{
 
@@ -2032,8 +2056,9 @@ public class SearchSuggestUtilityMethods
 			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
 		}
 
-		if (null != searchPageData.getFacets())
+		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
+			final List<MplSearchFacetPriorityComparator> searchFacetByPriorityList = new ArrayList<MplSearchFacetPriorityComparator>();
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
@@ -2107,7 +2132,11 @@ public class SearchSuggestUtilityMethods
 					//Fix to send only facets with visible true
 					if (visible.booleanValue())
 					{
-						searchfacetDTOList.add(facetWsDTO);
+						final MplSearchFacetPriorityComparator mplSearchFacetPriorityComparator = new MplSearchFacetPriorityComparator();
+						mplSearchFacetPriorityComparator.setPriority(facate.getPriority());
+						mplSearchFacetPriorityComparator.setFacetDataWsDTO(facetWsDTO);
+						searchFacetByPriorityList.add(mplSearchFacetPriorityComparator);
+						//searchfacetDTOList.add(facetWsDTO);
 					}
 					//searchfacetDTOList.add(facetWsDTO);
 				}
@@ -2148,6 +2177,20 @@ public class SearchSuggestUtilityMethods
 					productSearchPage.setFacetdatacategory(categoryHierarchy);
 				}
 			}
+
+			if (prioritySort)
+			{
+				Collections.sort(searchFacetByPriorityList, MplSearchFacetPriorityComparator.searchFacetByPriority);
+			}
+
+			if (CollectionUtils.isNotEmpty(searchFacetByPriorityList))
+			{
+				for (final MplSearchFacetPriorityComparator com : searchFacetByPriorityList)
+				{
+					searchfacetDTOList.add(com.getFacetDataWsDTO());
+				}
+			}
+
 			productSearchPage.setFacetdata(searchfacetDTOList);
 		}
 		else
