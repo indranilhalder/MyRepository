@@ -254,13 +254,13 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private DefaultCategoryService categoryService;
 
 	//added for pdp new ui end
-=======
+
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
->>>>>>> refs/remotes/origin/TCS_DEV_MASTER
+
 	/**
 	 * @throws CMSItemNotFoundException
 	 * @desc This service fetches all the details of A+ content based on product code
