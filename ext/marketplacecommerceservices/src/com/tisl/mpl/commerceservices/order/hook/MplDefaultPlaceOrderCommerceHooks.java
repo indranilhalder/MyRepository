@@ -996,6 +996,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					{
 
 						chlidCardApportionDetail.setCardAmount(data.getAmount().toString());
+						chlidCardApportionDetail.setRemainingCardAmount(data.getAmount().toString());
 					}
 					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
 					chlidCardApportionDetail.setCardExpiry(data.getCardExpiry());

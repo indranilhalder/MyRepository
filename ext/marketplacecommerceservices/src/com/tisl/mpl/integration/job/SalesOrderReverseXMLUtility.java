@@ -888,13 +888,7 @@ public class SalesOrderReverseXMLUtility
 											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
 										  || oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH))			&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 											{
-												
-								
-												if (null != oModel.getCode())
-												{
-													payemntrefid = oModel.getRequestId();
-												
-												}
+													payemntrefid = chaildModel.getParentReference().getCode();
 											}
 										}
 										}
@@ -1030,11 +1024,7 @@ public class SalesOrderReverseXMLUtility
 										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
 											|| oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH))	&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 										{
-											
-											if (null != oModel.getRequestId())
-											{
-												payemntrefid = oModel.getRequestId();
-											}
+                                               payemntrefid = chaildModel.getParentReference().getCode();
 										}
 									}
 									   merchantInfoXMlDataQC.setPaymentRefID(payemntrefid);

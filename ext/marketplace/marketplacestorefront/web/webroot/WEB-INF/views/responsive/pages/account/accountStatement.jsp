@@ -35,7 +35,7 @@
 								</c:if>
 								<div class="orderStatChildBody">
 									<fmt:formatNumber var="productPrice" value="${entry.amountAfterAllDisc.value + entry.currDelCharge.value + entry.scheduledDeliveryCharge}" maxFractionDigits="2" minFractionDigits="2" />
-									<fmt:formatNumber var="schedulingCharges" value="${entry.scheduledDeliveryCharge}" maxFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${entry.scheduledDeliveryCharge}" maxFractionDigits="2" minFractionDigits="2" />
 									
 									<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
 									<span class="totalOrderPrice">&#8377;${productPrice}
@@ -75,7 +75,7 @@
 											+ entry.walletApportionPaymentData.juspayShippingValue + entry.walletApportionPaymentData.juspaySchedulingValue}" maxFractionDigits="2"  minFractionDigits="2" />
 										<fmt:formatNumber var="deliveryCharges" value="${entry.walletApportionPaymentData.juspayDeliveryValue + entry.walletApportionPaymentData.juspayShippingValue}" maxFractionDigits="2" minFractionDigits="2" />
 										<fmt:formatNumber var="productCharges" value="${entry.walletApportionPaymentData.juspayApportionValue}" maxFractionDigits="2" minFractionDigits="2" />
-										<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionPaymentData.juspaySchedulingValue}" maxFractionDigits="2" />
+										<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionPaymentData.juspaySchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
 										
 										<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
 										<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
@@ -109,7 +109,7 @@
 										+ entry.walletApportionPaymentData.qcShippingPartValue + entry.walletApportionPaymentData.qcSchedulingPartValue}" maxFractionDigits="2" minFractionDigits="2" />
 									<fmt:formatNumber var="deliveryCharges" value="${entry.walletApportionPaymentData.qcDeliveryPartValue + entry.walletApportionPaymentData.qcShippingPartValue}" maxFractionDigits="2" minFractionDigits="2" />									
 									<fmt:formatNumber var="productCharges" value="${entry.walletApportionPaymentData.qcApportionPartValue}" maxFractionDigits="2" minFractionDigits="2" />
-									<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionPaymentData.qcSchedulingPartValue}" maxFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionPaymentData.qcSchedulingPartValue}" maxFractionDigits="2" minFractionDigits="2" />
 									
 									<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
 									<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
@@ -149,7 +149,7 @@
 							<c:if test="${entry.isCanAndReturn eq true}">
 								<div class="orderStatChildBody">
 									<fmt:formatNumber var="productPrice" value="${entry.amountAfterAllDisc.value + entry.currDelCharge.value + entry.scheduledDeliveryCharge}" maxFractionDigits="2" minFractionDigits="2" />
-									<fmt:formatNumber var="schedulingCharges" value="${entry.scheduledDeliveryCharge}" maxFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${entry.scheduledDeliveryCharge}" maxFractionDigits="2" minFractionDigits="2" />
 									
 									<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
 									<span class="totalOrderPrice">&#8377;${productPrice}
@@ -186,7 +186,7 @@
 												+ entry.walletApportionforReverseData.juspayShippingValue + entry.walletApportionforReverseData.juspaySchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
 											<fmt:formatNumber var="deliveryCharges" value="${entry.walletApportionforReverseData.juspayDeliveryValue + entry.walletApportionforReverseData.juspayShippingValue}" maxFractionDigits="2" minFractionDigits="2" />
 											<fmt:formatNumber var="productCharges" value="${entry.walletApportionforReverseData.juspayApportionValue}" maxFractionDigits="2" minFractionDigits="2" />
-											<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionforReverseData.juspaySchedulingValue}" maxFractionDigits="2" />
+											<fmt:formatNumber var="schedulingCharges" value="${entry.walletApportionforReverseData.juspaySchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
 											
 											<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 
 											<span class="totalOrderPrice">&#8377;${productPrice}</span></strong></p>
@@ -241,7 +241,7 @@
 									<fmt:formatNumber var="productPrice" value="${qcApportionValue + qcDeliveryValue + qcShippingValue + qcSchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
 									<fmt:formatNumber var="deliveryCharges" value="${qcDeliveryValue + qcShippingValue}" maxFractionDigits="2" minFractionDigits="2" />
 									<fmt:formatNumber var="productCharges" value="${qcApportionValue}" maxFractionDigits="2" minFractionDigits="2" />
-									<fmt:formatNumber var="schedulingCharges" value="${qcSchedulingValue}" maxFractionDigits="2" />
+									<fmt:formatNumber var="schedulingCharges" value="${qcSchedulingValue}" maxFractionDigits="2" minFractionDigits="2" />
 									
 									<div class="orderStatChildBody">
 										<p><span class="toggleStatementL2Info" onclick="toggleInnerData(this);">+</span> <strong>${entry.product.name} 

@@ -394,6 +394,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			return getCheckoutStep().previousStep();
 		}
+		CartModel cart = mplEGVCartService.getEGVCartModel(guid);
+		if (cart != null && cart.getIsEGVCart().booleanValue())
+		{
+			return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+					+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE) + "/?egvErrorMsg="
+					+ "paymentError";
+		}
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 		ValidationResults validationResult = null;
 

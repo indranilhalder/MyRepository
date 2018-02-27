@@ -71,8 +71,9 @@ public class MplQCProgramDaoImpl implements MplQCProgramDao
 	
 	
 	@Override
-	public String getCardTotalAmount(String cardNumber)
+	public WalletCardApportionDetailModel getCardTotalAmount(String cardNumber)
 	{
+		WalletCardApportionDetailModel walletCardApportionDetail = null;
 		try
 		{
 			ServicesUtil.validateParameterNotNull(cardNumber, "cardNumber must not be null");
@@ -81,18 +82,18 @@ public class MplQCProgramDaoImpl implements MplQCProgramDao
 			query.addQueryParameter(CARD_NUMBER, cardNumber);
 			final List<WalletCardApportionDetailModel> walletCardApportionDetailList = flexibleSearchService
 					.<WalletCardApportionDetailModel> search(query).getResult();
-			WalletCardApportionDetailModel walletCardApportionDetail = null;
+			
 			if (CollectionUtils.isNotEmpty(walletCardApportionDetailList))
 			{
 				walletCardApportionDetail = walletCardApportionDetailList.get(0);
 			}
-			return walletCardApportionDetail.getCardAmount();
+			return walletCardApportionDetail;
 		}
 		catch (Exception exception)
 		{
 			LOGGER.debug("exception while getting data amount");
 		}
-		return "0";
+		return walletCardApportionDetail;
 
 	}
 
