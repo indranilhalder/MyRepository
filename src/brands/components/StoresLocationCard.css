@@ -1,0 +1,59 @@
+.base {
+	width        : 100%;
+	height       : 100%;
+	background   : #fff;
+	display      : inline-block;
+	position     : relative;
+	border-radius: 4px;
+}
+.productInformation {
+	width  : 100%;
+	height : auto;
+	display: inline-block;
+	/* background-image   : url("../../general/components/img/cnsmmega.jpg"); */
+	background-position: center;
+	background-repeat  : no-repeat;
+	border-radius      : 4px;
+}
+.ProductStockInnerBox {
+	width     : auto;
+	height    : auto;
+	text-align: center;
+	bottom    : 15px;
+	left      : 20px;
+	position  : absolute;
+}
+.ProductStockHeading {
+	width      : 100%;
+	height     : auto;
+	color      : #fff;
+	font-size  : 30px;
+	line-height: 25px;
+	font-family: semibold;
+	text-align : left;
+}
+.ProductStockLabel {
+	width      : 100%;
+	height     : auto;
+	color      : #fff;
+	font-size  : 14px;
+	line-height: 30px;
+	text-align : left;
+}
+.buttonHolder {
+	width     : auto;
+	height    : auto;
+	margin-top: 18px;
+	display   : inline-block;
+	font-size : 14px;
+}
+.image {
+	width   : auto;
+	height  : auto;
+	position: absolute;
+	left    : 0;
+	top     : 0;
+	bottom  : 0;
+	right   : 0;
+	margin  : auto;
+}
