@@ -136,6 +136,10 @@ import com.tisl.mpl.util.OrderStatusSpecifier;
  * @author TCS
  *
  */
+/**
+ * @author 395340
+ *
+ */
 @Component
 @Qualifier(MarketplacecommerceservicesConstants.MPLPAYMENTSERVICE)
 public class MplPaymentServiceImpl implements MplPaymentService
@@ -337,6 +341,36 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return emiBankList;
 	}
 
+
+	// NU-61 getBankDetailsforEMI START
+
+
+	@Override
+	public List<EMIBankModel> getBankDetailsforEMI(final Double productValue) throws EtailNonBusinessExceptions
+	{
+
+		List<EMIBankModel> emiBankList = new ArrayList<EMIBankModel>();
+		final String emiCuttOffAmount = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.EMI_CUTOFF);
+
+
+		Double emiThreshold = new Double(0.0);
+		if (null != emiCuttOffAmount)
+		{
+			emiThreshold = Double.valueOf(emiCuttOffAmount);
+		}
+
+		if (null != productValue && productValue.doubleValue() >= emiThreshold.doubleValue())
+		{
+
+			emiBankList = getMplPaymentDao().getBankDetailsforEMI(productValue, null);
+
+		}
+
+		return emiBankList;
+	}
+
+	// NU-61 getBankDetailsforEMI END
 
 	/**
 	 * This method takes the totalAmount as parameter and then calculates the emi using the emi calculation logic. It the
@@ -2643,8 +2677,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//SDI-4494
 				else
 				{
-					OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(cartGuId);
-					if(null != orderModel)
+					final OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(cartGuId);
+					if (null != orderModel)
 					{
 						newAuditModel.setPaymentAmount(orderModel.getTotalPrice());
 					}
@@ -4613,8 +4647,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//SDI-4494
 				else
 				{
-					OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(guid);
-					if(null != orderModel)
+					final OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(guid);
+					if (null != orderModel)
 					{
 						newAuditModel.setPaymentAmount(orderModel.getTotalPrice());
 					}

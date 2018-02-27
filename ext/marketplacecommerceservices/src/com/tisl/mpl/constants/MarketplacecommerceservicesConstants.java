@@ -2443,7 +2443,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B0099008 = "B0099008";
 	public static final String B0099009 = "B0099009";
 
-public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
+	public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled";
 	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
 
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
@@ -2480,4 +2480,12 @@ public static final String SOCIAL_AUTH_ENABLE = "marketplace.socialAuth.enabled"
 	public static final String BY_RATING = "byRating";
 	public static final String LATESTOTPMOBILEQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.mobileNo}=?mobileNo and {o.otptype}=?OTPType order by {creationtime} desc fetch first 1 rows only";
 	public static final String LATESTOTPEMAILQUERY_WITHOUT_EXPIRY = "select {o.pk} from {otp as o} where {o.emailid}=?emailId and {o.otptype}=?OTPType  order by {creationtime} desc fetch first 1 rows only";
+
+	//NU-61
+
+	public static final String MPLPRODUCTVALUE = "productValue".intern();
+	public static final String EMIBANKSQUERYPRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  order by {m.bankname}"
+			.intern();
+	public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
+			.intern();
 }

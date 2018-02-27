@@ -189,6 +189,7 @@ import com.tisl.mpl.wsdto.CRMWsDataParent;
 import com.tisl.mpl.wsdto.CategoryBrandDTO;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.CorporateAddressWsDTO;
+import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.FileUploadResponseData;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.HomescreenListData;
@@ -707,9 +708,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1434,7 +1435,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1447,11 +1448,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1970,9 +1971,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2886,6 +2887,50 @@ public class MiscsController extends BaseController
 		}
 		return buffer.append(path).append(File.separator).append(originalFilename).toString();
 	}
+
+
+	// NU-61 getBankDetailsforEMI Start ****************
+
+	/**
+	 * @param productValue
+	 * @param fields
+	 * @return
+	 */
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/getBankDetailsforEMI", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public EMIBankListWsDTO getBankDetailsforEMI(@RequestParam final Double productValue, final String fields)
+	{
+		EMIBankListWsDTO emiBankListWsDTO = new EMIBankListWsDTO();
+		try
+		{
+			emiBankListWsDTO = mplNetBankingFacade.getBankDetailsforEMI(productValue);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				emiBankListWsDTO.setError(e.getErrorMessage());
+			}
+			emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				emiBankListWsDTO.setError(e.getErrorMessage());
+			}
+			emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return dataMapper.map(emiBankListWsDTO, EMIBankListWsDTO.class, fields);
+	}
+
+	// NU-61 getBankDetails End****************
 
 
 }
