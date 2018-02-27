@@ -10,14 +10,14 @@
 <!-- Luxury Specific JS Include Starts-->
 
 <c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
-	
-	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js?v=${buildNumber}"></script>
+<%-- 	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js?v=${buildNumber}"></script> --%>
 	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-tmpmain.min.js?v=${buildNumber}"></script>
 	<!-- Added feedback js to resolve JS issues in Dec 1st week 2017 Build  -->
 	<script type="text/javascript" src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}"></script>
 	<c:if test="${isIAEnabled}">
-		<script type="text/javascript" src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}"></script>
+		<script type="text/javascript" src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}"></script>	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery.lazy.min.js"></script>
 	</c:if>
+		<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery.lazy.min.js"></script>
 	
 </c:if>
 <!-- Luxury Specific JS Include Ends-->

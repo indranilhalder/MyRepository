@@ -968,9 +968,9 @@ public class SalesOrderReverseXMLUtility
 
 										splitMerchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
 										
-										if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
+										if (StringUtils.isNotEmpty(payemntrefid))
 										{
-											splitMerchantInfoXMlDataJuspay.setReversePaymentRefId(entry.getJuspayRequestId());
+											splitMerchantInfoXMlDataJuspay.setReversePaymentRefId(payemntrefid);
 										}
 										
 										double totalAmountJuspay=0;
@@ -1155,9 +1155,9 @@ public class SalesOrderReverseXMLUtility
 										}
 										
 										
-										if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
+										if (StringUtils.isNotEmpty(payemntrefid))
 										{
-											merchantInfoXMlDataJuspay.setReversePaymentRefId(entry.getJuspayRequestId());
+											merchantInfoXMlDataJuspay.setReversePaymentRefId(payemntrefid);
 										}
 										
 										if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)

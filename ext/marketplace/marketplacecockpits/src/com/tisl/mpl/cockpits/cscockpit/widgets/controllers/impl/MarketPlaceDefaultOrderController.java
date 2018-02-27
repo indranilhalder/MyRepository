@@ -277,7 +277,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					      			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
 					      				 double qcCliqCashAmt =0.0D;
 					      					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-					      					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+					      					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
 					      						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
 					      								+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
 					      								Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );
@@ -358,7 +358,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					      			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
 					      				 double qcCliqCashAmt =0.0D;
 					      					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-					      					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+					      					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
 					      						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
 					      								+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
 					      								Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );
@@ -1529,7 +1529,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		double cashBackAmt=0;
 		if(null !=orderEntry &&  null != orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
 			for(WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
-				if(cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+				if(cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
 					cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
 							+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
 							Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );

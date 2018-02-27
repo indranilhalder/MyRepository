@@ -3170,12 +3170,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//Redirection when transaction is successful i.e. CHARGED
 					if (null != orderStatusResponse)
 					{
-
-
 						/**
 						 * Wallet Changes
 						 */
 
+						MplPaymentAuditModel mplPaymentAudit = new MplPaymentAuditModel();
 						try
 						{
 							boolean qcFlag = false;
@@ -3193,8 +3192,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												for (final MplPaymentAuditEntryModel mplPaymentAuditEntry : mplPaymentAuditModel
 														.getAuditEntries())
 												{
-													if (null != mplPaymentAuditEntry.getStatus()
-															&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
+													 if(null != mplPaymentAuditEntry.getStatus() && !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("PENDING")) // case for EBS....
 													{
 														qcFlag = true;
 
@@ -3202,6 +3200,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													else
 													{
 														qcFlag = false;
+														mplPaymentAuditModel.setIsExpired(Boolean.TRUE); // if EBS is risk status is yellow or red case
+														modelService.save(mplPaymentAuditModel);
+														mplPaymentAudit =mplPaymentAuditModel;
 														break;
 													}
 												}
@@ -3273,7 +3274,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												{
 
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
-													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
+													mplPaymentAudit.setIsExpired(Boolean.TRUE);
+													getModelService().saveAll(); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
 													LOG.error("For GUID:- " + guid + " order already been processed");
 													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3281,7 +3283,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												}else{
 													
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
-													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
+													mplPaymentAudit.setIsExpired(Boolean.TRUE);
+													getModelService().saveAll();
 													LOG.error("For GUID:- " + guid + " order already been processed");
 													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3293,7 +3296,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										else
 										{
 											System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
+											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); 
+											mplPaymentAudit.setIsExpired(Boolean.TRUE);
+											getModelService().saveAll();
 											LOG.error("For GUID:- " + guid + " order already been processed");
 											GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 													MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3304,8 +3309,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									else
 									{
 										System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
-
+										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); 
+										mplPaymentAudit.setIsExpired(Boolean.TRUE);
+										getModelService().saveAll();
 										LOG.error("For GUID:- " + guid + " order already been processed");
 										GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 												MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
