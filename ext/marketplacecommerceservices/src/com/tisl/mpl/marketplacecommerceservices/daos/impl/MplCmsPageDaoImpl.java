@@ -20,6 +20,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -547,6 +548,32 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		}
 
 		return null;
+	}
+
+	@Override
+	public ContentSlotModel getContentSlotByName(String contentSlotName)
+	{
+		final String queryString = "select {cs.pk} from {ContentSlot as cs join CatalogVersion as cv on {cs.catalogVersion}={cv.pk}} where {cv.version}='Online' and {cs.Name} = ?contentSlotName";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		List<ContentSlotModel> contentSlots = new ArrayList<ContentSlotModel>();
+
+		try
+		{
+			query.addQueryParameter("contentSlotName", contentSlotName);
+
+			contentSlots = flexibleSearchService.<ContentSlotModel> search(query).getResult();
+
+			if (CollectionUtils.isNotEmpty(contentSlots))
+			{
+				return contentSlots.get(0);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+
+		return contentSlots.get(0);
 	}
 
 
