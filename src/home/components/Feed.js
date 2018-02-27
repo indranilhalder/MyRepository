@@ -24,34 +24,43 @@ import MDSpinner from "react-md-spinner";
 
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
+const typeKeyMapping = {
+  "Hero Banner Component": "heroBannerComponent"
+};
+
 const typeComponentMapping = {
-  heroBanner: props => <HeroBanner {...props} />,
-  themeOffers: props => <ThemeOffer {...props} />,
-  productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  bannerProductCarousel: props => <BannerProductCarousel {...props} />,
-  videoProductCarousel: props => <VideoProductCarousel {...props} />,
-  automatedBrandProductCarousel: props => (
-    <AutomatedBrandProductCarousel {...props} />
-  ),
-  flashSales: props => <FlashSale {...props} />,
-  offersWidget: props => <OfferWidget {...props} />,
-  connectBanner: props => <ConnectWidget {...props} />,
-  themeProductWidget: props => <ThemeProductWidget {...props} />,
-  multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
-  followBaseWidget: props => <FollowBase {...props} />,
-  singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
-  bannerSeparator: props => <BannerSeparator {...props} />,
-  productCapsules: props => <ProductCapsules {...props} />,
-  discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
-  discoverMoreWidget: props => <DiscoverMore500 {...props} />,
-  followedWidget: props => <FollowingBrands {...props} />
+  "Hero Banner Component": props => <HeroBanner {...props} />
+  // themeOffers: props => <ThemeOffer {...props} />,
+  // productRecommendationWidget: props => <RecommendationWidget {...props} />,
+  // bannerProductCarousel: props => <BannerProductCarousel {...props} />,
+  // videoProductCarousel: props => <VideoProductCarousel {...props} />,
+  // automatedBrandProductCarousel: props => (
+  //   <AutomatedBrandProductCarousel {...props} />
+  // ),
+  // flashSales: props => <FlashSale {...props} />,
+  // offersWidget: props => <OfferWidget {...props} />,
+  // connectBanner: props => <ConnectWidget {...props} />,
+  // themeProductWidget: props => <ThemeProductWidget {...props} />,
+  // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
+  // followBaseWidget: props => <FollowBase {...props} />,
+  // singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
+  // bannerSeparator: props => <BannerSeparator {...props} />,
+  // productCapsules: props => <ProductCapsules {...props} />,
+  // discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
+  // discoverMoreWidget: props => <DiscoverMore500 {...props} />,
+  // followedWidget: props => <FollowingBrands {...props} />
 };
 
 class Feed extends Component {
   renderFeedComponent(feedDatum, i) {
     return (
       typeComponentMapping[feedDatum.type] && (
-        <WidgetContainer positionInFeed={i} key={i}>
+        <WidgetContainer
+          positionInFeed={i}
+          key={i}
+          type={typeKeyMapping[feedDatum.type]}
+          postData={feedDatum.postParams}
+        >
           {typeComponentMapping[feedDatum.type] &&
             typeComponentMapping[feedDatum.type]}
         </WidgetContainer>

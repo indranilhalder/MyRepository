@@ -1,17 +1,18 @@
 import * as homeActions from "../actions/home.actions";
-import extend from "lodash/extend";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
+
 const home = (
   state = {
-    homeFeed: [],
+    homeFeed: [], //array of objects
     status: null,
     error: null,
     loading: false
   },
   action
 ) => {
+  let homeFeedData;
   switch (action.type) {
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
@@ -20,9 +21,15 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      let homeFeedClonedData = cloneDeep(action.data);
-      let homeFeedData = map(homeFeedClonedData, subData => {
-        return extend({}, subData, { loading: false, data: {}, status: "" });
+      const homeFeedClonedData = cloneDeep(action.data);
+      homeFeedData = map(homeFeedClonedData, subData => {
+        const key = Object.keys(subData)[0];
+        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+        return {
+          ...subData[key],
+          loading: false,
+          status: ""
+        };
       });
 
       return Object.assign({}, state, {
@@ -77,9 +84,19 @@ const home = (
 
     case homeActions.COMPONENT_DATA_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].data = action.data;
+      let componentData = action.data;
+      const key = Object.keys(componentData)[0];
 
-      homeFeedData[action.positionInFeed].loading = false;
+      componentData = {
+        ...homeFeedData[action.positionInFeed],
+        ...componentData[key],
+        loading: false,
+        status: action.status
+      };
+
+      homeFeedData[action.positionInFeed] = componentData;
+      console.log("HOME FEED DATA");
+      console.log(homeFeedData);
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData

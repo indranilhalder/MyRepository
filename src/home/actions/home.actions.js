@@ -15,6 +15,8 @@ export const HOME_FEED_PATH = "homepage";
 export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
 export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
 
+const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+
 export function multiSelectSubmitRequest(positionInFeed) {
   return {
     type: MULTI_SELECT_SUBMIT_REQUEST,
@@ -130,13 +132,23 @@ export function homeFeed() {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
-      const result = await api.getMock(HOME_FEED_PATH);
+      //TODO this needs to be cleaned up.
+      const result = await api.postAdobeTargetUrl(
+        null,
+        ADOBE_TARGET_HOME_FEED_MBOX_NAME,
+        null,
+        null,
+        true
+      );
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(homeFeedSuccess(resultJson.items));
+      let parsedResultJson = JSON.parse(resultJson.content);
+      parsedResultJson = parsedResultJson.items;
+
+      dispatch(homeFeedSuccess(parsedResultJson));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }
@@ -169,19 +181,32 @@ export function componentDataFailure(positionInFeed, error) {
   };
 }
 
-export function getComponentData(positionInFeed, fetchURL) {
+export function getComponentData(positionInFeed, fetchURL, postParams: null) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
+    console.log("GET COMPONENT DATA");
+    console.log("FETCH URL");
+    console.log(fetchURL);
+    console.log(postParams);
     try {
-      const result = await api.getMock(
-        fetchURL.substring(fetchURL.lastIndexOf("/") + 1)
+      const result = await api.postAdobeTargetUrl(
+        fetchURL,
+        postParams.mbox ? postParams.mbox : null,
+        null,
+        null,
+        false
       );
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(componentDataSuccess(resultJson, positionInFeed));
+      let parsedResultJson = JSON.parse(resultJson.content);
+      parsedResultJson = parsedResultJson.items[0];
+      console.log("COMPONENT DATA SUCCESS");
+      console.log(parsedResultJson);
+
+      dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
     } catch (e) {
       dispatch(componentDataFailure(positionInFeed, e.message));
     }

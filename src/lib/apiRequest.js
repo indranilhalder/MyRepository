@@ -1,7 +1,54 @@
 import "isomorphic-fetch";
+import * as Cookie from "./Cookie";
+import { LOGGED_IN_USER_DETAILS } from "./constants.js";
 export const API_URL_ROOT =
   "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
+export const HOME_FEED_API_ROOT =
+  "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
+
+export async function postAdobeTargetUrl(
+  path: null,
+  mbox,
+  marketingCloudVisitorId: null,
+  tntId: null,
+  useApiRoot: true
+) {
+  let url;
+  console.log("USE API ROOT");
+  console.log(useApiRoot);
+
+  // I want to use the API URL ROOT and I have a patj
+  // I want to use the API url root and I have no path
+  // I want to just use the path
+
+  if (!useApiRoot) {
+    url = path;
+  }
+
+  if (useApiRoot && path !== null) {
+    url = `${url}/${path}`;
+  }
+
+  if (useApiRoot && path === null) {
+    url = `${HOME_FEED_API_ROOT}`;
+  }
+
+  console.log("URL");
+  console.log(url);
+
+  return await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      mbox,
+      marketingCloudVisitorId,
+      tntId
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+}
 
 export async function post(path) {
   return await fetch(`${API_URL_ROOT}/${path}`, {

@@ -3,9 +3,12 @@ import PropTypes from "prop-types";
 
 export default class Widget extends React.Component {
   componentDidMount() {
+    console.log("component did mount");
+    console.log(this.props.postData);
     this.props.getComponentData(
       this.props.feedComponentData.fetchURL,
-      this.props.positionInFeed
+      this.props.positionInFeed,
+      this.props.postData
     );
   }
 
@@ -16,5 +19,7 @@ export default class Widget extends React.Component {
 
 Widget.propTypes = {
   feedComponentData: PropTypes.object,
-  positionInFeed: PropTypes.number
+  positionInFeed: PropTypes.number,
+  type: PropTypes.string,
+  postData: PropTypes.object
 };
