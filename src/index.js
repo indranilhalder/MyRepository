@@ -16,6 +16,8 @@ import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
 import cart from "./cart/reducers/cart.reducer";
 
+import "babel-polyfill";
+
 const rootReducer = combineReducers({
   user,
   modal,
