@@ -26,7 +26,8 @@ const cart = (
     userAddress: null,
     setAddress: null,
     netBankDetails: null,
-    emiBankDetails: null
+    emiBankDetails: null,
+    couponList: null
   },
   action
 ) => {
@@ -64,6 +65,26 @@ const cart = (
       });
 
     case cartActions.APPLY_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        couponError: action.error,
+        loading: false
+      });
+
+    case cartActions.GET_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_COUPON_SUCCESS:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: false,
+        couponList: action.couponList
+      });
+
+    case cartActions.GET_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
@@ -238,6 +259,7 @@ const cart = (
         status: action.status,
         error: action.error
       });
+
     default:
       return state;
   }

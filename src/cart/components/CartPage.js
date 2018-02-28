@@ -41,6 +41,9 @@ class CartPage extends React.Component {
         JSON.parse(cartDetailsAnonymous).guid
       );
     }
+    if (this.props.getCoupons) {
+      this.props.getCoupons();
+    }
   }
 
   renderLoader = () => {
@@ -52,7 +55,7 @@ class CartPage extends React.Component {
   };
 
   goToCouponPage = () => {
-    this.props.showCouponModal(this.props.productDetails);
+    this.props.showCouponModal(this.props.cart.couponList);
   };
   renderToDeliveryPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);

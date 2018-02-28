@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import {
   applyCoupon,
   getUserAddress,
-  selectDeliveryModes,
+  getCoupons,
   getEmiBankDetails,
   getNetBankDetails,
   getCartDetails,
@@ -33,6 +33,9 @@ const mapDispatchToProps = dispatch => {
     },
     checkPinCodeServiceAvailability: (userName, accessToken, pinCode) => {
       dispatch(checkPinCodeServiceAvailability(userName, accessToken, pinCode));
+    },
+    getCoupons: () => {
+      dispatch(getCoupons());
     }
   };
 };

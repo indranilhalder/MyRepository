@@ -14,6 +14,10 @@ export const APPLY_COUPON_REQUEST = "APPLY_COUPON_REQUEST";
 export const APPLY_COUPON_SUCCESS = "APPLY_COUPON_SUCCESS";
 export const APPLY_COUPON_FAILURE = "APPLY_COUPON_FAILURE";
 
+export const GET_COUPON_REQUEST = "GET_COUPON_REQUEST";
+export const GET_COUPON_SUCCESS = "GET_COUPON_SUCCESS";
+export const GET_COUPON_FAILURE = "GET_COUPON_FAILURE";
+
 export const SELECT_DELIVERY_MODES_REQUEST = "SELECT_DELIVERY_MODES_REQUEST";
 export const SELECT_DELIVERY_MODES_SUCCESS = "SELECT_DELIVERY_MODES_SUCCESS";
 export const SELECT_DELIVERY_MODES_FAILURE = "SELECT_DELIVERY_MODES_FAILURE";
@@ -146,6 +150,52 @@ export function getCartDetailsCNC(userId, accessToken, cartId) {
       dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsCNCFailure(e.message));
+    }
+  };
+}
+
+export function getCouponsRequest() {
+  return {
+    type: GET_COUPON_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getCouponsSuccess(couponList) {
+  return {
+    type: GET_COUPON_SUCCESS,
+    status: SUCCESS,
+    couponList
+  };
+}
+
+export function getCouponsFailure(error) {
+  return {
+    type: GET_CART_ID_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getCoupons() {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getCouponsRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/getCoupons?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&currentPage=0&usedCoupon=N&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(getCouponsSuccess());
+    } catch (e) {
+      dispatch(getCouponsFailure(e.message));
     }
   };
 }
