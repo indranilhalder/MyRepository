@@ -11,7 +11,7 @@
 	width     : auto;
 	height    : auto;
 	text-align: center;
-	top       : 110px;
+	bottom    : 110px;
 	position  : absolute;
 	margin    : auto;
 	right     : 0;
@@ -34,21 +34,4 @@
 	font-size  : 14px;
 	line-height: 30px;
 	text-align : left;
-}
-.buttonHolder {
-	width     : auto;
-	height    : auto;
-	margin-top: 18px;
-	display   : inline-block;
-	font-size : 14px;
-}
-.image {
-	width   : auto;
-	height  : auto;
-	position: absolute;
-	left    : 0;
-	top     : 0;
-	bottom  : 0;
-	right   : 0;
-	margin  : auto;
 }
