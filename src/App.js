@@ -64,35 +64,35 @@ class App extends Component {
   }
 
   getAccessToken = () => {
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    let cartIdForUser = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let cartDetailsForLoggedInUser = Cookie.getCookie(
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (!globalCookie) {
+    if (!globalAccessToken) {
       this.props.getGlobalAccessToken();
       if (!cartIdForAnonymous) {
         this.props.generateCartIdForAnonymous();
       }
     }
 
-    if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
+    if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
-      if (!cartIdForUser) {
+      if (!loggedInUserDetails) {
         this.props.generateCartIdForLoggedInUser();
       }
     }
 
-    if (customerCookie) {
+    if (customerAccessToken) {
       auth.isAuthenticated = true;
       if (!cartDetailsForLoggedInUser) {
         this.props.generateCartIdForLoggedInUser();
       }
     } else {
-      if (!cartDetailsForAnonymous && globalCookie) {
+      if (!cartDetailsForAnonymous && globalAccessToken) {
         this.props.generateCartIdForAnonymous();
       }
     }

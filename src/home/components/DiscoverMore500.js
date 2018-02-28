@@ -2,10 +2,11 @@ import React from "react";
 import Grid from "../../general/components/Grid";
 import CategoryWithName from "../../general/components/CategoryWithName";
 import PropTypes from "prop-types";
+
 import styles from "./DiscoverMore500.css";
 export default class DiscoverMore500 extends React.Component {
   render() {
-    const componentData = this.props.feedComponentData.data;
+    const componentData = this.props.feedComponentData;
 
     return (
       <div className={styles.base}>
@@ -31,7 +32,6 @@ export default class DiscoverMore500 extends React.Component {
 }
 DiscoverMore500.propTypes = {
   feedComponentData: PropTypes.shape({
-    title: PropTypes.string,
     data: PropTypes.shape({
       data: PropTypes.arrayOf(
         PropTypes.shape({
