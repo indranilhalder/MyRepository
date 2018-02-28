@@ -84,6 +84,7 @@
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/combined" name="lxstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js" name="mpstorefront.js.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/js" name="luxstorefront.js.dir" />
+
 	<property location="**.js" name="alljs.file.expression" />
 
 	<!-- Start properties for min-css for mpl -->
@@ -317,6 +318,17 @@
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
+						<arg line="--js ${luxstorefront.js.dir}/**jquery-2.1.1.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**jquery-ui-1.11.2.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**jquery.selectBoxIt.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**slick.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**jquery.elevatezoom.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**bootstrap.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**jquery.validate.min.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**main.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**acc.accountaddress.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**acc.productDetail.js" />
+						<arg line="--js ${luxstorefront.js.dir}/marketplacecheckoutaddon.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/_autoload.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/acc.accountpagination.js"/>
@@ -373,11 +385,12 @@
 						<arg line="--js ${mpstorefront.js.dir}/mpl/STWidget.js"/>
 						<arg line="--js ${mpstorefront.js.dir}/mpl/tealium.js" />
 						<arg line="--js ${luxstorefront.js.dir}/feedback.js" />
-						<arg line="--js ${luxstorefront.js.dir}/custom-search.js" />
-						<arg line="--js ${luxstorefront.js.dir}/popular-search.js" />
-						<arg line="--js ${luxstorefront.js.dir}/dropdown-menu.js" />
-						<arg line="--js ${luxstorefront.js.dir}/display-price.js" />
-						<arg line="--js ${luxstorefront.js.dir}/mobile-menu.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**custom-search.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**popular-search.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**dropdown-menu.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**display-price.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**mobile-menu.js" />
+						<arg line="--js ${luxstorefront.js.dir}/**acc.LuxDtm.js" />
 						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<echo message="Minifying JS for Luxury is completed..." />

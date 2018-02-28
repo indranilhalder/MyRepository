@@ -4,10 +4,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 
-<!-- TPR-430 -->
-<input type="hidden" id="product_category" value="${product_category}"/>
 
 <template:page pageTitle="${pageTitle}">
+<!-- TPR-430 -->
+<input type="hidden" id="product_category" value="${product_category}"/>
 
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
