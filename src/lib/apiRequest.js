@@ -15,8 +15,6 @@ export async function postAdobeTargetUrl(
   useApiRoot: true
 ) {
   let url;
-  console.log("USE API ROOT");
-  console.log(useApiRoot);
 
   // I want to use the API URL ROOT and I have a patj
   // I want to use the API url root and I have no path
@@ -50,11 +48,20 @@ export async function postAdobeTargetUrl(
   });
 }
 
-export async function post(path) {
-  return await fetch(`${API_URL_ROOT}/${path}`, {
+export async function post(path, postData, doNotUseApiRoot: false) {
+  let url = `${API_URL_ROOT}/${path}`;
+  if (doNotUseApiRoot) {
+    url = path;
+  }
+  console.log("IN POST");
+  console.log(JSON.stringify(postData));
+  console.log(url);
+  return await fetch(url, {
     method: "POST",
+    body: JSON.stringify(postData),
     headers: {
-      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
+      "Content-Type": "application/json"
     }
   });
 }

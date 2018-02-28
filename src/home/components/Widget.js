@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 
 export default class Widget extends React.Component {
   componentDidMount() {
-    this.props.getComponentData(
-      this.props.feedComponentData.fetchURL,
-      this.props.positionInFeed,
-      this.props.postData
-    );
+    if (!this.props.disableGetComponentDataCall) {
+      this.props.getComponentData(
+        this.props.feedComponentData.fetchURL,
+        this.props.positionInFeed,
+        this.props.postData
+      );
+    }
   }
 
   render() {
@@ -19,5 +21,10 @@ Widget.propTypes = {
   feedComponentData: PropTypes.object,
   positionInFeed: PropTypes.number,
   type: PropTypes.string,
-  postData: PropTypes.object
+  postData: PropTypes.object,
+  disableGetComponentDataCall: PropTypes.bool
+};
+
+Widget.defaultProps = {
+  disableGetComponentDataCall: false
 };

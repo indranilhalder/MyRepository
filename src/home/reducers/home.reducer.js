@@ -2,14 +2,14 @@ import * as homeActions from "../actions/home.actions";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
-import { homeFeed } from "../actions/home.actions";
 
 const home = (
   state = {
     homeFeed: [], //array of objects
     status: null,
     error: null,
-    loading: false
+    loading: false,
+    msdIndex: 0
   },
   action
 ) => {

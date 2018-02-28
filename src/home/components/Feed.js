@@ -30,7 +30,7 @@ const typeKeyMapping = {
 
 const typeComponentMapping = {
   // "Hero Banner Component": props => <HeroBanner {...props} />,
-  "Theme Offers Component": props => <ThemeOffer {...props} />
+  // "Theme Offers Component": props => <ThemeOffer {...props} />
   // productRecommendationWidget: props => <RecommendationWidget {...props} />,
   // "Banner Product Carousel Component": props => (
   //   <BannerProductCarousel {...props} />
@@ -44,11 +44,11 @@ const typeComponentMapping = {
   // "Flash Sales Component": props => <FlashSale {...props} />,
   // "Offers Component": props => <OfferWidget {...props} />,
   // "Multipurpose Banner Component": props => <ConnectWidget {...props} />
-  // themeProductWidget: props => <ThemeProductWidget {...props} />,
+  // "Multi Click Component": props => <ThemeProductWidget {...props} />
   // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
   // followBaseWidget: props => <FollowBase {...props} />,
   // singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
-  // bannerSeparator: props => <BannerSeparator {...props} />,
+  "Banner Separator Component": props => <BannerSeparator {...props} />
   // productCapsules: props => <ProductCapsules {...props} />,
   // discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
   // discoverMoreWidget: props => <DiscoverMore500 {...props} />,
@@ -56,6 +56,11 @@ const typeComponentMapping = {
 };
 
 class Feed extends Component {
+  constructor(props) {
+    super(props);
+    this.hasSeenThemeProductOrAutomatedBrandCarousel = true;
+  }
+
   renderFeedComponent(feedDatum, i) {
     return (
       typeComponentMapping[feedDatum.type] && (

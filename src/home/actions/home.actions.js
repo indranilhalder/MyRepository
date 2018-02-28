@@ -1,5 +1,13 @@
 import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
 import each from "lodash/each";
+import {
+  MSD_NUM_RESULTS,
+  MAD_UUID,
+  MSD_WIDGET_LIST,
+  MSD_WIDGET_PLATFORM,
+  MSD_API_KEY
+} from "../../lib/config.js";
+
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
@@ -50,7 +58,6 @@ export function getItemsFailure(positionInFeed, errorMsg) {
 export function getItems(positionInFeed, itemIds) {
   return async (dispatch, getState, { api }) => {
     dispatch(getItemsRequest(positionInFeed));
-    // /marketplacewebservices/v2/mpl/products/productInfo?productCodes=MP000000000573487,MP000000000431989,MP000000000892684
     try {
       let productCodes;
       each(itemIds, itemId => {
@@ -241,18 +248,29 @@ export function componentDataFailure(positionInFeed, error) {
 export function getComponentData(positionInFeed, fetchURL, postParams: null) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
-    console.log("GET COMPONENT DATA");
-    console.log("FETCH URL");
-    console.log(fetchURL);
-    console.log(postParams);
     try {
-      const result = await api.postAdobeTargetUrl(
-        fetchURL,
-        postParams.mbox ? postParams.mbox : null,
-        null,
-        null,
-        false
-      );
+      let postData;
+      let result;
+      if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
+        postData = {
+          ...postParams,
+          api_key: MSD_API_KEY,
+          num_results: MSD_NUM_RESULTS,
+          mad_uuid: MAD_UUID,
+          widget_list: MSD_WIDGET_LIST
+        };
+
+        result = await api.post(fetchURL, postData, true);
+      } else {
+        result = await api.postAdobeTargetUrl(
+          fetchURL,
+          postParams && postParams.mbox ? postParams.mbox : null,
+          null,
+          null,
+          false
+        );
+      }
+
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);

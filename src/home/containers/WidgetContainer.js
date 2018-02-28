@@ -16,8 +16,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   const positionInFeed = ownProps.positionInFeed;
   const feedComponentData = state.home.homeFeed[ownProps.positionInFeed];
-  console.log("FEED COMPONENT DATA IN CONTAINER");
-  console.log(feedComponentData);
   return {
     feedComponentData: feedComponentData,
     positionInFeed,

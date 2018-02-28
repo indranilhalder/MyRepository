@@ -4,4 +4,9 @@ export default {
     "367761167032-apbr4v0nndom1cafs9inrrnkk7iag5be.apps.googleusercontent.com"
 };
 
-// 410493949364507
+export const MSD_API_KEY = "a7e46b8a87c52ab85d352e9";
+
+export const MSD_NUM_RESULTS = 6;
+export const MAD_UUID = "tata_user_1";
+export const MSD_WIDGET_LIST = "tata_1";
+export const MSD_WIDGET_PLATFORM = "msd";
