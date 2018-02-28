@@ -30,18 +30,22 @@ export default class JewelleryDetailsAndLink extends React.Component {
           {this.props.price && (
             <div className={styles.price}>{`Rs. ${this.props.price}`}</div>
           )}
-          {this.props.deletePrice && (
-            <div className={styles.deletePriceAndDiscount}>
-              <div className={styles.deletePrice}>
-                {`Rs. ${this.props.deletePrice}`}
+          {this.props.price &&
+            this.props.discountPrice !== this.props.price && (
+              <div className={styles.deletePriceAndDiscount}>
+                <div className={styles.discountPrice}>
+                  {`Rs. ${this.props.discountPrice}`}
+                </div>
+                <div className={styles.discount}>
+                  {this.props.discount && `(${this.props.discount}%)`}
+                </div>
               </div>
-              <div className={styles.discount}>
-                {this.props.discount && `(${this.props.discount}%)`}
-              </div>
-            </div>
-          )}
+            )}
           <div className={styles.button} onClick={() => this.handleClick()}>
-            <UnderLinedButton label="Price Breakup" color={"#ff1744"} />
+            <UnderLinedButton
+              label={this.props.label}
+              color={this.props.buttonColour}
+            />
           </div>
         </div>
       </div>
@@ -52,7 +56,7 @@ JewelleryDetailsAndLink.propTypes = {
   productName: PropTypes.string,
   productDescription: PropTypes.string,
   productMaterial: PropTypes.string,
-  deletePrice: PropTypes.string,
+  discountPrice: PropTypes.string,
   discount: PropTypes.string,
   onClick: PropTypes.func
 };
