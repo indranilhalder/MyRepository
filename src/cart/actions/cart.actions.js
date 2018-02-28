@@ -164,11 +164,11 @@ export function getCouponsRequest() {
     status: REQUESTING
   };
 }
-export function getCouponsSuccess(couponList) {
+export function getCouponsSuccess(coupons) {
   return {
     type: GET_COUPON_SUCCESS,
     status: SUCCESS,
-    couponList
+    coupons
   };
 }
 
@@ -197,7 +197,7 @@ export function getCoupons() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getCouponsSuccess());
+      dispatch(getCouponsSuccess(resultJson));
     } catch (e) {
       dispatch(getCouponsFailure(e.message));
     }

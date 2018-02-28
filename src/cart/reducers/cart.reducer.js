@@ -27,7 +27,7 @@ const cart = (
     setAddress: null,
     netBankDetails: null,
     emiBankDetails: null,
-    couponList: null
+    coupons: null
   },
   action
 ) => {
@@ -81,7 +81,7 @@ const cart = (
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false,
-        couponList: action.couponList
+        coupons: action.coupons
       });
 
     case cartActions.GET_COUPON_FAILURE:
