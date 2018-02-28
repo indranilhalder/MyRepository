@@ -6,17 +6,14 @@ import styles from "./FollowBase.css";
 
 export default class FollowBase extends React.Component {
   render() {
-    const feedComponentData = this.props.feedComponentData;
+    const feedComponentData = this.props.feedComponentData.data;
     return (
       <div className={styles.base}>
-        <Carousel
-          elementWidthMobile={85}
-          elementWidthDesktop={33.333}
-          header={feedComponentData.title}
-        >
-          {feedComponentData.data.items &&
-            (feedComponentData.data.items.length > 0 &&
-              feedComponentData.data.items.map(datum => {
+        <Carousel elementWidthMobile={85} elementWidthDesktop={33.333}>
+          {feedComponentData &&
+            feedComponentData.data &&
+            (feedComponentData.data.length > 0 &&
+              feedComponentData.data.map(datum => {
                 return (
                   <NewBrand
                     image={datum.imageURL}

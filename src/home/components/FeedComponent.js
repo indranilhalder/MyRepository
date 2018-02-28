@@ -58,7 +58,7 @@ FeedComponent.propTypes = {
   banner: PropTypes.element,
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      productImage: PropTypes.string,
+      image: PropTypes.string,
       title: PropTypes.string,
       price: PropTypes.string,
       discountPrice: PropTypes.string,

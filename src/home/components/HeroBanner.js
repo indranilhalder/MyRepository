@@ -6,11 +6,11 @@ import styles from "./HeroBanner.css";
 export default class HeroBanner extends React.Component {
   renderBanner = () => {
     const feedComponentData = this.props.feedComponentData;
-    if (!this.props.loading && feedComponentData.data.items) {
+    if (!this.props.loading && feedComponentData.items) {
       return (
         <Banner>
-          {feedComponentData.data.items &&
-            feedComponentData.data.items.map((datum, i) => {
+          {feedComponentData.items &&
+            feedComponentData.items.map((datum, i) => {
               return (
                 <BannerImage
                   logo={datum.brandLogo}
