@@ -29,5 +29,6 @@ export default class StoresLocationBanner extends React.Component {
 StoresLocationBanner.propTypes = {
   headingText: PropTypes.string,
   label: PropTypes.string,
-  image: PropTypes.string
+  image: PropTypes.string,
+  heading: PropTypes.string
 };
