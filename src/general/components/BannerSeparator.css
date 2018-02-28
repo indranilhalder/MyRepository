@@ -3,7 +3,7 @@
   height: auto;
   padding: 30px;
   object-fit: contain;
-  background-image: linear-gradient(285deg, #fce38a, #f38181);
+  background-image: linear-gradient(#fce38a, #f38181);
   background-image: url(./img/download.svg)no-repeat;
 }
 .downloadInnerBox {
