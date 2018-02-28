@@ -952,3 +952,9 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);facetTopValue
 ;$solrIndexedType; volume               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplVolumeFacetValueProvider            ;                						;sizeAttributeSortProvider  ;
 ;$solrIndexedType; weight               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplWeightFacetValueProvider            ;                						;sizeAttributeSortProvider  ;
+
+##NU-38 and rating and review
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider
+;$solrIndexedType; averageRating               	  ;double ;    ;     ;     ; ; false    ; ;  ; mplAverageRatingValueProvider          
+;$solrIndexedType; noOfReviews               	  ;int ;    ;     ;     ; ; false    ; ;  ;mplReviewCountValueProvider           
+

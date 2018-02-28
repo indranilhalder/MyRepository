@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 
 
 /**
- * @author 988006
+ * @author TCS
  *
  */
 public class MplSearchResultVariantProductPopulator extends SearchResultVariantProductPopulator
@@ -47,7 +47,8 @@ public class MplSearchResultVariantProductPopulator extends SearchResultVariantP
 		target.setManufacturer(this.<String> getValue(source, "manufacturerName"));
 		target.setDescription(this.<String> getValue(source, "description"));
 		target.setSummary(this.<String> getValue(source, "summary"));
-		target.setAverageRating(this.<Double> getValue(source, "reviewAvgRating"));
+		target.setAverageRating(this.<Double> getValue(source, "averageRating"));
+		target.setNumberOfReviews(this.<Integer> getValue(source, "noOfReviews"));
 
 		populatePrices(source, target);
 

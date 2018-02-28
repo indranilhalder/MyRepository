@@ -58,6 +58,14 @@
 			<typeref type="AmpServiceworker" description="group.ampserviceworker.description" />
 			<typeref type="AmpMenifest" description="group.ampmenifest.description" />		
 		</group>
+		<!--NU-50 start  -->
+		<group name="group.followedbrand">
+			<typeref type="BrandMaster" description="group.brandmaster.description" />
+			<typeref type="FollowedBrandGender" description="group.followedbrandgender.description" />	
+			<typeref type="FollowedBrandMcvid" description="group.followedbrandmcvid.description" />	
+			<typeref type="FollowedBrandUpload" description="group.followedbrandupload.description" />		
+		</group>
+		<!--NU-50 end  -->
 	</explorertree>
 
 	<!-- Configuration for GlobalCodeMaster -->
@@ -4095,6 +4103,7 @@
 		<group name="mpl"  description="group.mplConfig.description">
 			<typeref type="MplConfig"  description="mpl.config.table.description"/>
             <typeref type="OrderShortUrlInfo"  description="mpl.shorturl.report.description"/>
+            <typeref type="mplQCProgramConfig"  description="mpl.config.programid.table.description"/>
 		</group>
 	</explorertree>
 	
@@ -4968,6 +4977,51 @@
 </type>	
 
 
+<type name="mplQCProgramConfig" mode="append">
+  <organizer>
+   <search mode="append">
+    <condition attribute="programId" />
+    <condition attribute="description" />
+   </search>
+   <result defaultview="list">
+    <listview>
+     <itemlayout mode="replace">
+      <attribute name="programId" width="200"></attribute>
+      <attribute name="description" width="200"></attribute>
+     </itemlayout>
+    </listview>
+    <editview mode="replace">
+     <itemlayout>
+      <attribute name="programId" width="200" />
+      <attribute name="description" width="200" />
+      <attribute name="statusFlag" width="200" />
+     </itemlayout>
+    </editview>
+    <treeview mode="replace">
+     <itemlayout>
+      <attribute name="programId" width="200" />
+      <attribute name="description" width="200" />
+      <attribute name="statusFlag" width="200" />
+     </itemlayout>
+    </treeview>
+   </result>
+   <editor>
+    
+    <tab name="mplconfig.tab" position="0">
+      <section name="mplconfig.section">
+      <listlayout>
+       <attribute name="programId"/>
+       <attribute name="description"/>
+       <attribute name="statusFlag"/>
+      </listlayout>
+     </section>
+    </tab>
+    
+   </editor>
+   
+  </organizer>
+ </type>
+
 <!-- START TPR-5733 -->
 <type name="MplFooterLink" mode="append">
 		<organizer>
@@ -5271,4 +5325,139 @@
 			</result>
 		</organizer>
 	</type>
+	
+	<!--NU-50 start  -->
+	<type name="FollowedBrandUpload" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="creationtime" />
+				<condition attribute="identifiers" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="identifiers" width="200"></attribute>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="creationtime" width="100"></attribute>
+						<attribute name="status" width="600"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="identifiers"/>
+						<attribute name="csvFile" />
+						<attribute name="status" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="identifiers"/>
+							<attribute name="csvFile" />
+						</row>
+						<row>
+							<attribute name="status" />
+						</row>
+					</columnlayout>
+				</essentials>
+				<tab name="category.followedbrandupload.tab" position="0">
+					<section name="category.followedbrandupload.section">
+						<listlayout>
+						<attribute name="identifiers" width="200"></attribute>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="status" width="600"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="1">
+					<section name="section.metadata">
+						<listlayout>
+							<attribute name="identifiers" mode="delete"/>
+							<attribute name="csvFile" mode="delete" />
+							<attribute name="status" mode="delete" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
+	<type name="BrandMaster" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="brandCode" />
+				<condition attribute="name" />
+				<condition attribute="logoImageUrl" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="brandCode" width="100"></attribute>
+						<attribute name="name" width="200"></attribute>
+						<attribute name="logoImageUrl" width="100"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="brandCode" />
+						<attribute name="name" />
+						<attribute name="logoImageUrl" />
+					</itemlayout>
+				</treeview>
+			</result>
+		</organizer>
+	</type>
+	
+	<type name="FollowedBrandMcvid" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="mcvid" />
+				<condition attribute="brandList" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="mcvid" width="100"></attribute>
+						<attribute name="brandList" width="200"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="mcvid" />
+						<attribute name="brandList" />
+					</itemlayout>
+				</treeview>
+			</result>
+		</organizer>
+	</type>
+	
+	<type name="FollowedBrandGender" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="uniqueId" />
+				<condition attribute="brandCode" />
+				<condition attribute="gender" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="uniqueId" width="100"></attribute>
+						<attribute name="brandCode" width="200"></attribute>
+						<attribute name="gender" width="100"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="uniqueId" />
+						<attribute name="brandCode" />
+						<attribute name="gender" />
+					</itemlayout>
+				</treeview>
+			</result>
+		</organizer>
+	</type>
+	<!--NU-50 end  -->
+
 </configuration>

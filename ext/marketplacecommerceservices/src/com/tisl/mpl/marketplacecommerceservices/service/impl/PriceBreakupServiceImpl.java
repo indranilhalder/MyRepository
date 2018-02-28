@@ -457,6 +457,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	{
 		try
 		{
+			LOG.debug("Step :-19 ");
 			//EQA : do modelService.create in the else block
 			OrderJewelEntryModel orderJewelEntryModel = null;
 
@@ -823,11 +824,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 					}
 				}
 			}
-
+			LOG.debug("Step :-20 ");
 			//abstractOrderEntryModel.getOrderJewelEntry();
 			orderJewelEntryModel.setAbstractOrderEntryjewel(entry);
 			entry.setOrderJewelEntry(orderJewelEntryModel);
+			LOG.debug("Step :-21");
 			modelService.saveAll(orderJewelEntryModel, entry);
+			LOG.debug("Step :-22 Saved jewallery saved......");
 		}
 		catch (final Exception e)
 		{

@@ -43,7 +43,14 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper" style="max-width: 1264px !important;">
-	<div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
+	               <c:choose>
+				   		<c:when test="${isEGVCart eq true  || isSplit eq true}">
+				   		<span> </span>
+				   		</c:when>
+				   		<c:otherwise>
+				   	          <div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
+				   		</c:otherwise>
+				</c:choose>
 		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
 			<jsp:body> --%>
 				<script>
@@ -201,9 +208,18 @@
 						           <p class="disclaimer-txt">
 										<spring:theme code="pay.price.change.notification"></spring:theme>
 									</p>
-					           </c:if>               
-						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
-					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
+					           </c:if>  
+					           
+			     <c:choose>
+				   		<c:when test="${isEGVCart eq true  || isSplit eq true}">
+				   		<span> </span>
+				   		</c:when>
+				   		<c:otherwise>
+				   	       <p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
+					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/>    </ycommerce:testId> <!-- TISPRDT-693 -->
+				   		</c:otherwise>
+				</c:choose>
+				
 				<!-- Unwanted code commented -->
                <%--  <c:choose>
                     <c:when test="${showTax}">
@@ -213,7 +229,7 @@
                         <format:price priceData="${cartData.totalPrice}"/>
                     </c:otherwise>
                 </c:choose> --%>
-            </ycommerce:testId>
+       
 					</span></p>
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
@@ -1460,6 +1476,8 @@
 				</div>				
 				<%-- </jsp:body>
 		</multiCheckout:checkoutSteps> --%>	
+		<input type="hidden" id="isEGVOrder" value="${isEGVCart}">
+		<input type="hidden" id="egvProductCode" value="${egvProductCode}">
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		<input type="hidden" name="juspayBaseUrl" id="juspayBaseUrl" value="${juspayBaseUrl}"/><!-- TPR-7448 -->
 	</div>		

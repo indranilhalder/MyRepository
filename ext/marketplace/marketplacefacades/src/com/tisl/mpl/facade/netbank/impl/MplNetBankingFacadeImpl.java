@@ -27,6 +27,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
+import de.hybris.platform.util.localization.Localization;
 
 
 /**
@@ -178,6 +179,116 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 		return emiBankListWsDTO;
 
 	}
+
+	// NU-61 getBankDetailsforEMI START*******************
+
+	/**
+	 * @param productValue
+	 * @return
+	 * @throws EtailBusinessExceptions
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public EMIBankListWsDTO getBankDetailsforEMI(final Double productValue) throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	{
+
+		List<EMIBankModel> emiBankList = new ArrayList<EMIBankModel>();
+		final List<EMIBankWsDTO> emiBankWsListDTO = new ArrayList<EMIBankWsDTO>();
+		final EMIBankListWsDTO emiBankListWsDTO = new EMIBankListWsDTO();
+
+		try
+		{
+			emiBankList = mplPaymentService.getBankDetailsforEMI(productValue);
+
+						if (emiBankList.isEmpty())
+						{
+							emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							emiBankListWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9029);
+							emiBankListWsDTO.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9029));
+
+						}
+						else
+						{
+
+							for (final EMIBankModel emibanking : emiBankList)
+							{
+
+								final EMIBankWsDTO eMIBankWsDTO = new EMIBankWsDTO();
+								final List<EMITermRateDataForMobile> emiBankmobileWsListDTO = new ArrayList<EMITermRateDataForMobile>();
+
+								if (StringUtils.isNotEmpty(emibanking.getName().getBankName()))
+								{
+									eMIBankWsDTO.setEmiBank(emibanking.getName().getBankName());
+								}
+								if (StringUtils.isNotEmpty(emibanking.getCode()))
+								{
+									eMIBankWsDTO.setCode(emibanking.getCode());
+								}
+
+								final List<EMITermRateDataForMobile> emiTermBankList = getBankTerms(eMIBankWsDTO.getEmiBank(), productValue);
+
+
+								for (final EMITermRateDataForMobile emilist : emiTermBankList)
+								{
+
+									final EMITermRateDataForMobile emilistforMobile = new EMITermRateDataForMobile();
+
+									if (StringUtils.isNotEmpty(emilist.getInterestPayable()))
+									{
+										emilistforMobile.setInterestPayable(emilist.getInterestPayable());
+									}
+									if (StringUtils.isNotEmpty(emilist.getInterestRate()))
+									{
+										emilistforMobile.setInterestRate(emilist.getInterestRate());
+									}
+									if (StringUtils.isNotEmpty(emilist.getMonthlyInstallment()))
+									{
+										emilistforMobile.setMonthlyInstallment(emilist.getMonthlyInstallment());
+									}
+									if (StringUtils.isNotEmpty(emilist.getTerm()))
+									{
+										emilistforMobile.setTerm(emilist.getTerm());
+									}
+
+									emiBankmobileWsListDTO.add(emilistforMobile);
+
+								}
+								eMIBankWsDTO.setEmitermsrate(emiBankmobileWsListDTO);
+								emiBankWsListDTO.add(eMIBankWsDTO);
+							}
+
+							final Comparator<EMIBankWsDTO> byName = (final EMIBankWsDTO o1, final EMIBankWsDTO o2) -> o1.getEmiBank()
+									.compareTo(o2.getEmiBank());
+
+							Collections.sort(emiBankWsListDTO, byName);
+							emiBankListWsDTO.setBankList(emiBankWsListDTO);
+							emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+						}
+
+					}
+
+		catch (final EtailBusinessExceptions businessException)
+		{
+			throw businessException;
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9013);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return emiBankListWsDTO;
+
+	}
+
+	// NU-61 getBankDetailsforEMI END*******************
 
 	/**
 	 * @description method is called to get the Details of EMI Terms for Banks

@@ -231,6 +231,61 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	}
 
 
+	//NU-61 getbankDetailsforEMI START
+
+
+	@Override
+	public List<EMIBankModel> getBankDetailsforEMI(final Double productValue, final String emiBankName)
+	{
+		try
+		{
+			final long startTime = System.currentTimeMillis();
+			LOG.debug("Entering Dao getBankDetailsforEMI()=======" + System.currentTimeMillis());
+
+			FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.EMPTY);
+			if (emiBankName == null)
+			{
+
+				final String queryString = MarketplacecommerceservicesConstants.EMIBANKSQUERYPRODUCTVALUE;
+				bankListQuery = new FlexibleSearchQuery(queryString);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLPRODUCTVALUE, productValue);
+
+			}
+			else
+			{
+				final String queryString = MarketplacecommerceservicesConstants.EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE;
+				bankListQuery = new FlexibleSearchQuery(queryString);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLPRODUCTVALUE, productValue);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.BANKNAME, emiBankName.toUpperCase());
+
+			}
+
+			final List<EMIBankModel> emiBankList = flexibleSearchService.<EMIBankModel> search(bankListQuery).getResult();
+			final long endTime = System.currentTimeMillis();
+			LOG.debug("Exiting Dao getBankDetailsforEMI()=======" + (endTime - startTime));
+			return emiBankList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	//19/02/2018 NU-61 getbankDetailsforEMI END
 
 	/**
 	 * This method returns the EMI terms available for the selected bank.

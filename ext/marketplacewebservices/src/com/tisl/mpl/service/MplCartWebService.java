@@ -5,6 +5,7 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartRestorationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -17,6 +18,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 
 import java.util.List;
@@ -25,8 +27,10 @@ import java.util.Map;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
+import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -182,7 +186,7 @@ public interface MplCartWebService
 	 * @throws CommerceCartMergingException
 	 */
 	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
-			throws CommerceCartRestorationException, CommerceCartMergingException;
+			throws CommerceCartRestorationException, CommerceCartMergingException;	
 
 	/**
 	 * Service to get cart details for pwa:NU-46
@@ -193,5 +197,11 @@ public interface MplCartWebService
 	 * @return CartDataDetailsWsDTO
 	 */
 	CartDataDetailsWsDTO getCartDetailsPwa(final String cartId, final String pincode, String channel);
+
+	/**
+	 * @param orderDetails
+	 * @return
+	 */
+	public Double calculateCartTotalMrp(OrderData orderDetails);
 
 }

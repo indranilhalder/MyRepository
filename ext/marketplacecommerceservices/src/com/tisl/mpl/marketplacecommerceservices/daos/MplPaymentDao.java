@@ -181,4 +181,12 @@ public interface MplPaymentDao
 
 	MplPaymentAuditModel getWalletAuditEntries(String auditId);
 
+	/**
+	 *
+	 * @param productValue
+	 * @param emiBankName
+	 * @return
+	 */
+	List<EMIBankModel> getBankDetailsforEMI(Double productValue, String emiBankName);
+
 }

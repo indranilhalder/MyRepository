@@ -271,7 +271,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 			put(ORDERPLACEDATE, orderPlaceDate);
 
-			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+			if (null != entryModel.getMplDeliveryMode()&& null != entryModel.getMplDeliveryMode().getDeliveryMode() 
+					&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode() && entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
 				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
 				final AddressModel address = model.getAddress();

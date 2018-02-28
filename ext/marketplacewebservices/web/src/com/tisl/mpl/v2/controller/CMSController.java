@@ -14,6 +14,7 @@ import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,17 +36,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.data.HelpmeShopCategoryData;
 import com.tisl.mpl.data.HelpmeShopData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.helpmeshop.impl.DefaultHelpMeShopFacadeImpl;
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.wsdto.CollectionPageWsDTO;
+import com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopCategoryWsDTO;
 import com.tisl.mpl.wsdto.HelpmeShopWsDTO;
 import com.tisl.mpl.wsdto.HeroProductWsDTO;
@@ -78,7 +83,7 @@ public class CMSController extends BaseController
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 *
+	 * 
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -97,7 +102,8 @@ public class CMSController extends BaseController
 	@Autowired
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 
-
+	@Resource
+	private ConfigurationService configurationService;
 	private static final String DEFAULT = "DEFAULT";
 
 	private static final String CHANNEL = "mobile";
@@ -707,4 +713,39 @@ public class CMSController extends BaseController
 
 		return null;
 	}
+
+	@RequestMapping(value = "/products/getEmiTermsAndConditions", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public EmiTermsandConditionsCMSWsDTO getEmiTermsAndConditions(@RequestParam(defaultValue = DEFAULT) final String productId)
+	{
+
+		EmiTermsandConditionsCMSWsDTO emiTermsdata = new EmiTermsandConditionsCMSWsDTO();
+		try
+		{
+			final String contentSlotName = configurationService.getConfiguration().getString("EMITermsAndConditionSlotName", "");
+			emiTermsdata = mplCmsFacade.getEmiTermsAndConditions(contentSlotName);
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Error in home page components controller" + e.getMessage());
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorCode())
+			{
+				emiTermsdata.setErrorCode(e.getErrorCode());
+			}
+			emiTermsdata.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error in home page components controller" + e.getMessage());
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			emiTermsdata.setErrorCode(MarketplacewebservicesConstants.H9002);
+			emiTermsdata.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
+
+		return emiTermsdata;
+	}
+
 }
