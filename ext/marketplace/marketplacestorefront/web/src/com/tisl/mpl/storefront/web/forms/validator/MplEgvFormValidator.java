@@ -3,10 +3,15 @@
  */
 package com.tisl.mpl.storefront.web.forms.validator;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
@@ -19,15 +24,11 @@ import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 @Component("mplEgvFormValidator")
 public class MplEgvFormValidator
 {
-	/**
-	 * 
-	 */
-	private static final int _15000 = 15000;
-	/**
-	 * 
-	 */
-	private static final int _15 = 15;
+
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	@Autowired
+	private ConfigurationService configurationService;
+	
 
 
 	public boolean validateEmailAddress(final String email)
@@ -50,8 +51,10 @@ public class MplEgvFormValidator
 
 		if (egvDetailForm != null)
 		{
+			 int minPrice=configurationService.getConfiguration().getInt("mpl.buyingEgv.minPrice");	
+			 int maxPrice=configurationService.getConfiguration().getInt("mpl.buyingEgv.maxPrice");	
 
-			if (egvDetailForm.getGiftRange() >= _15 && egvDetailForm.getGiftRange() <= _15000)
+			if (egvDetailForm.getGiftRange() >= minPrice && egvDetailForm.getGiftRange() <= maxPrice)
 			{
 				validateFlag = true;
 			}

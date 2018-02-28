@@ -21,6 +21,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -699,7 +700,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 					apportionDetaValue.setQcApportionValue(getRoundUpValue(apportionDeta.getQcApportionValue()));
 					apportionDetaValue.setQcDeliveryValue(getRoundUpValue(apportionDeta.getQcDeliveryValue()));
 					apportionDetaValue.setQcShippingValue(getRoundUpValue(apportionDeta.getQcShippingValue()));
-					apportionDetaValue.setQcSchedulingValue(getRoundUpValue(getRoundUpValue(apportionDeta.getQcSchedulingValue())));
+					apportionDetaValue.setQcSchedulingValue(getRoundUpValue(apportionDeta.getQcSchedulingValue()));
 					walletCardApportionDetaList.add(apportionDetaValue);
 				}
 				walletApportionPaymentData.setWalletCardApportionDataList(walletCardApportionDetaList);
@@ -751,13 +752,13 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	
 	
 	//Getting Round up value
-	private String getRoundUpValue(String value){
-		try{
-		Math.round(Float.parseFloat(value));
-		return Integer.toString(Math.round(Float.parseFloat(value)));
-		}catch(Exception exception){
-			exception.printStackTrace();
-		}
-		return null;
-	}
+	 private String getRoundUpValue(String value){
+	  try{
+	   DecimalFormat df = new DecimalFormat("#.##");
+	  return String.valueOf(df.format(Float.parseFloat(value)));
+	  }catch(Exception exception){
+	   exception.printStackTrace();
+	  }
+	  return null;
+	 }
 }

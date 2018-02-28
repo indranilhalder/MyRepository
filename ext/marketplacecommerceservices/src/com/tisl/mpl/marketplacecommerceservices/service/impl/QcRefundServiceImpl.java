@@ -66,7 +66,7 @@ public class QcRefundServiceImpl implements  QcRefundService
 				double qcCliqCashAmt = 0.0D;
 				if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 				{
-					if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+					if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 					{
 						qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue())
 								+ Double.parseDouble(null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail

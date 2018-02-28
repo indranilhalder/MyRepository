@@ -2469,7 +2469,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_RMS_TAT = "mpl.forwardpaymentcleanup.tat.rms";
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
-	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "One-time password for activating your CLiQ Cash wallet is {1}. Please do not share with anyone. Feel free to call us at {2} in case of any queries.";
+	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Use OTP {1} to buy your Gift Card/CLiQ Cash. Valid for 2 minutes only. For security reasons, do not share this number with anyone. Call us on {2} for queries.";
 	public static final String INVALID_WALLET_OTP = "INVALID";
 	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
 	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET= "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
@@ -2486,6 +2486,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
 	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
 	public static final String SPLIT = "split".intern();
+	public static final String B5026 = "B5026";
+	public static final String B5027 = "B5027";
 
 	//Report for bulk cancellation
 	/*

@@ -899,15 +899,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//SDI-2922
 			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
-					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
-					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
-					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-
 				/**
 				 * EGV CARD PURCHASE
 				 */
@@ -919,9 +916,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != response && response.equalsIgnoreCase(SUCCESS))
 					{
 						sendNotifiactionForEGVOrder(orderModel);
-			}
-			else
-			{
+						orderModel.setStatus(OrderStatus.PAYMENT_SUCCESSFUL);
+						modelService.save(orderModel);
+					}
+					else
+					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
 						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 						modelService.save(orderModel);
@@ -931,6 +930,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				/**
 				 * EGV CARD PURCHASE END
 				 */
+			}
 
 			else
 			{
@@ -964,7 +964,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			LOG.error("MplDefaultPlaceOrderCommerceHooks--beforeSubmitOrder--Without parent trying to create suborder");
 		}
 	}
-	}
+	
 	
 	private void sendNotifiactionForEGVOrder(final OrderModel orderModel)
 	{
@@ -988,7 +988,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				final Customer customer = new Customer();
 				final PurchaseEGVRequest purchaseEGVRequest = new PurchaseEGVRequest();
 				purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
-				purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
+				purchaseEGVRequest.setCardProgramGroupName(getConfigurationService().getConfiguration().getString("ProgramName"));
 				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
 				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
 				customer.setEmail(orderModel.getUser().getUid());
@@ -1022,6 +1022,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					{
 
 						chlidCardApportionDetail.setCardAmount(data.getAmount().toString());
+						chlidCardApportionDetail.setRemainingCardAmount(data.getAmount().toString());
 					}
 					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
 					chlidCardApportionDetail.setCardExpiry(data.getCardExpiry());
@@ -1493,10 +1494,46 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED))
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+					/**
+					 * EGV CARD PURCHASE
+					 */
+					if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+					{
+
+						mplEGVCartService.removeOldEGVCartCurrentCustomer();
+						final String response = getPurchaseEGVRequestPopulate(orderModel);
+						if (null != response && response.equalsIgnoreCase(SUCCESS))
+						{
+							sendNotifiactionForEGVOrder(orderModel);
+						}
+						else
+						{
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+							orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+							modelService.save(orderModel);
+							LOG.error(CLIQ_CASH_DOWN);
+						}
+					}
+					/**
+					 * EGV CARD PURCHASE END
+					 */
 				}
 				else if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
 				{
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+					/**
+					 * EGV CARD PURCHASE
+					 */
+					if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+					{
+						mplEGVCartService.removeOldEGVCartCurrentCustomer();
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						modelService.save(orderModel);
+					}else
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+					}
+					
 
 					try
 					{

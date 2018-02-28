@@ -29,15 +29,16 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 
-<style>
-#closePop {
-	float: right;
-}
-</style>
-<!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	<style>
+	#closePop {
+		float: right;
+	}
+	</style>
+	
 	<div class="account">
 		<h1 class="account-header">
 			<%-- <spring:theme code="text.account.headerTitle" text="My Tata CLiQ" /> --%>
@@ -617,6 +618,11 @@
 																	<c:set value="ture" var="egvredemStatusFlag"/>
 																	</c:if>									   
 															</c:forEach>
+											     <c:set var="rmsVerificationEGV" value="false"/>
+												 <c:if test="${empty orderHistoryDetail.egvCardNumber && orderHistoryDetail.isEGVOrder eq  true}">
+									                  <c:set var="rmsVerificationEGV" value="true"/>
+									                  <c:set value="true" var="egvredemStatusFlag"/>
+												 </c:if>
 															<c:if test="${egvredemStatusFlag eq  'false'}">
 															<div class="status statusConfirmed">
 																<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
@@ -628,6 +634,17 @@
 																	<span>${recordDate.date}</span>
 																	</c:forEach>
 																</div>
+															</c:if>
+															
+															<c:if test="${rmsVerificationEGV eq  'true'}">
+															 <div class="status orderRedeemedStatusInfo orderFailedStatusInfo"><span>FAILED</span></div><br />
+															 <%-- <div class="status statusConfirmed">
+															 	Pending
+																 <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
+															 </div> --%>
+															 <div class="statusDate">
+																	<span><spring:theme code="text.orderHistory.seller.order.rmsfailed" text="Refund will be processed for this order in 4 to 5 days" /></span>&nbsp;
+															 </div> 
 															</c:if>
 															
 														</div>
