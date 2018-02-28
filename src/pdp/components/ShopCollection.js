@@ -19,7 +19,7 @@ export default class ShopCollection extends React.Component {
         <div className={styles.overlay} />
         <div className={styles.textLine}>
           <div className={styles.headingHolder}>
-            <div className={styles.heading}>{this.props.beatsText}</div>
+            <div className={styles.heading}>{this.props.header}</div>
           </div>
           <div className={styles.title}>{this.props.title}</div>
           <div className={styles.buttonHolder}>
