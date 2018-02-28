@@ -3,6 +3,7 @@ import styles from "./ShopCollection.css";
 import { Image } from "xelpmoc-core";
 import Button from "../../general/components/Button";
 import PropTypes from "prop-types";
+
 export default class ShopCollection extends React.Component {
   handleClick = () => {
     if (this.props.onClick) {

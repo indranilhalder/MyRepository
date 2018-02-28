@@ -47,12 +47,12 @@
   position: absolute;
   margin-bottom: 40px;
 }
-.title {
-  width: 100%;
-  height: auto;
-}
 .headingHolder {
   width: 100%;
   height: auto;
   margin-bottom: 30px;
+}
+.title {
+  width: 100%;
+  height: auto;
 }
