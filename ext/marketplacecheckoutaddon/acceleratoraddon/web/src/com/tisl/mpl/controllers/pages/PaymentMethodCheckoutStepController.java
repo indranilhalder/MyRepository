@@ -3203,19 +3203,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													if(null != mplPaymentAuditEntry.getStatus() && mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.COMPLETED)) // case for EBS....
 													{
 														qcFlag = true;
-														break;
+														
 													}
-													else
-													{
-														if(null != mplPaymentAuditEntry.getStatus() && mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING)) // case for EBS....
+													else if(null != mplPaymentAuditEntry.getStatus() && mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING)) // case for EBS....
 														{
 															qcFlag = false;
 															mplPaymentAuditModel.setIsExpired(Boolean.TRUE); // if EBS is risk status is yellow or red case
 															modelService.save(mplPaymentAuditModel);
 															mplPaymentAudit =mplPaymentAuditModel;
-															break;
 														}
-													}
 												}
 											}
 										}
