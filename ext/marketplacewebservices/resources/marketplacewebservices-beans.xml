@@ -3740,6 +3740,7 @@
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<!-- TPR-7486 end-->
 	<!-- Added for TPR-5954 || Start -->
