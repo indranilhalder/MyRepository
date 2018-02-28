@@ -7325,6 +7325,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				if (mplEgvFormValidator.validate(egvDetailForm))
 				{
+					LOG.error("EGV CART CREATION START");
 					final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
 					giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
 					giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());

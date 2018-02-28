@@ -4607,6 +4607,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		CartData cartData = null;
 		try
 		{
+			LOG.error("GIFT CARD METHOD :: MPL CART FACADE EGV");
 			final CartModel cardModel = getCartModelForEGVProduct(egvDetailForm);
 			try
 			{
@@ -4635,7 +4636,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		//remove old egv cart for current Customer and create new Cart 
 		 mplEGVCartService.removeOldEGVCartCurrentCustomer();
-		
+		 LOG.error("CART CREATION FOR EGV PRODUCT");
 		final CartModel cardModel = cartFactory.createCart();
 		cardModel.setPincodeNumber(_400083);
 		final List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
@@ -4688,6 +4689,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		String productSellerName = null;
 		final CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
 		final ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
+		LOG.error("EGV CART ENTRY"+productModel);
 		abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
 		abstractOrderEntryModel.setQuantity(Long.valueOf(1));
 		abstractOrderEntryModel.setProduct(productModel);
@@ -4706,6 +4708,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			productSellerGiftCardUssId=configurationService.getConfiguration().getString(MPL_GIFTCARD_PRODUCT_SELLERID);
 			productSellerName = configurationService.getConfiguration().getString(MPL_GIFTCARD_SELLERNAME);
 		}
+		LOG.error("EGV CART ENTRY"+productSellerName + productSellerGiftCardUssId);
 		abstractOrderEntryModel.setSelectedUSSID(productSellerGiftCardUssId);
 		abstractOrderEntryModel.setSellerInfo(productSellerName);
 		abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
@@ -4775,6 +4778,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
 		try
 		{
+			LOG.error("SAVING EGV CART");
 			getModelService().saveAll(abstractOrderEntryModel);
 
 		}

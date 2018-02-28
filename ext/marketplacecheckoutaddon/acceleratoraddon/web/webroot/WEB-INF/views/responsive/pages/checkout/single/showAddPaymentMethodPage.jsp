@@ -42,7 +42,7 @@
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.payment.wallet')"
 		var="walletEnable" />
-		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="addGiftCardEnable"/>
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')" var="addGiftCardEnable"/>
 	
 	<div class="checkout-content checkout-payment cart checkout wrapper">
 		<!-- Added for Wallet -->
