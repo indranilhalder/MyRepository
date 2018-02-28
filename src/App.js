@@ -13,7 +13,6 @@ import FilterContainer from "./plp/containers/FilterContainer";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
-import PdpElectronics from "./pdp/components/PdpElectronics";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
@@ -112,7 +111,7 @@ class App extends Component {
     }
     return (
       <div className={className}>
-        {/* <Switch>
+        <Switch>
           <Route
             exact
             path={LOGIN_PATH}
@@ -171,8 +170,7 @@ class App extends Component {
             component={DeliveryModesContainer}
           />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
-        </Switch> */}
-        <PdpElectronics />
+        </Switch>
         <ModalContainer />
       </div>
     );
