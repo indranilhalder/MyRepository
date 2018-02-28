@@ -14,3 +14,8 @@ export function getCookie(cookieName) {
   let match = document.cookie.match(new RegExp(cookieName + `=([^;]+)`));
   if (match) return match[1];
 }
+
+export function deleteCookie(cookieName) {
+  document.cookie =
+    cookieName + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+}
