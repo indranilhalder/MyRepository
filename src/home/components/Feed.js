@@ -30,28 +30,30 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  "Hero Banner Component": props => <HeroBanner {...props} />,
-  "Theme Offers Component": props => <ThemeOffer {...props} />,
-  // productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  "Banner Product Carousel Component": props => (
-    <BannerProductCarousel {...props} />
-  ),
-  "Video Product Carousel Component": props => (
-    <VideoProductCarousel {...props} />
-  ),
+  // "Hero Banner Component": props => <HeroBanner {...props} />,
+  // "Theme Offers Component": props => <ThemeOffer {...props} />,
+  "Auto Product Recommendation Component": props => (
+    <RecommendationWidget {...props} />
+  )
+  // "Banner Product Carousel Component": props => (
+  //   <BannerProductCarousel {...props} />
+  // ),
+  // "Video Product Carousel Component": props => (
+  //   <VideoProductCarousel {...props} />
+  // ),
   // automatedBrandProductCarousel: props => (
   //   <AutomatedBrandProductCarousel {...props} />
   // ),
-  "Flash Sales Component": props => <FlashSale {...props} />,
-  "Offers Component": props => <OfferWidget {...props} />,
-  "Multipurpose Banner Component": props => <ConnectWidget {...props} />,
-  "Multi Click Component": props => <ThemeProductWidget {...props} />,
+  // "Flash Sales Component": props => <FlashSale {...props} />,
+  // "Offers Component": props => <OfferWidget {...props} />,
+  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />,
+  // "Multi Click Component": props => <ThemeProductWidget {...props} />,
   // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />, // not there
-  "Auto Fresh From Brands Component": props => <FollowBase {...props} />,
+  // "Auto Fresh From Brands Component": props => <FollowBase {...props} />,
   // singleSelectQuestion: props => <SingleQuestionContainer {...props} />, // not there
-  "Banner Separator Component": props => <BannerSeparator {...props} />,
+  // "Banner Separator Component": props => <BannerSeparator {...props} />,
   // productCapsules: props => <ProductCapsules {...props} />, // Not ready
-  "Auto Discover More Component": props => <DiscoverMore {...props} />
+  // "Auto Discover More Component": props => <DiscoverMore {...props} />
 };
 
 class Feed extends Component {

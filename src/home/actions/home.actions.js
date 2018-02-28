@@ -260,7 +260,7 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           api_key: MSD_API_KEY,
           num_results: MSD_NUM_RESULTS,
           mad_uuid: MAD_UUID,
-          widget_list: MSD_WIDGET_LIST
+          widget_list: MSD_WIDGET_LIST //TODO this is going to change.
         };
 
         result = await api.post(fetchURL, postData, true);
