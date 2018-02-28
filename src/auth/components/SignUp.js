@@ -35,7 +35,8 @@ class SignUp extends Component {
   onSubmit() {
     if (this.props.onSubmit) {
       this.props.onSubmit({
-        loginId: this.state.emailValue,
+        emailId: this.state.emailValue,
+        username: this.state.phoneNumberValue,
         password: this.state.passwordValue
       });
     }
@@ -49,6 +50,13 @@ class SignUp extends Component {
       this.props.onChangeName(val);
     }
     this.setState({ nameValue: val });
+  }
+
+  onPhoneNumberChange(val) {
+    if (this.props.onPhoneNumberChange) {
+      this.props.onPhoneNumberChange(val);
+    }
+    this.setState({ phoneNumberValue: val });
   }
 
   onChangeEmail(val) {
@@ -100,14 +108,18 @@ class SignUp extends Component {
           <div>
             <div className={styles.input}>
               <Input
-                value={this.props.value ? this.props.value : this.state.value}
-                placeholder={"Name"}
-                onChange={val => this.onChangeName(val)}
+                value={
+                  this.props.phoneNumberValue
+                    ? this.props.phoneNumberValue
+                    : this.state.phoneNumberValue
+                }
+                placeholder={"Phone number"}
+                onChange={val => this.onPhoneNumberChange(val)}
               />
             </div>
             <div className={styles.input}>
               <Input
-                placeholder={"Email or phone number"}
+                placeholder={"Email (optional)"}
                 value={
                   this.props.emailValue
                     ? this.props.emailValue
