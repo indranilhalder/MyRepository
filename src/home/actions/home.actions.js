@@ -203,7 +203,8 @@ export function homeFeed() {
 
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
-
+      console.log("PARSED RESULT JSON");
+      console.log(parsedResultJson);
       dispatch(homeFeedSuccess(parsedResultJson));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));

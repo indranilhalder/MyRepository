@@ -1,8 +1,17 @@
 export function transformData(datum) {
+  let image = datum.imageUrl;
+  if (!image) {
+    image = datum.imageURL;
+  }
+
+  let title = datum.productName;
+  if (!title) {
+    title = datum.title;
+  }
   return {
-    image: datum.imageUrl,
+    image: image,
     video: datum.video,
-    title: datum.title,
+    title: title,
     description: datum.description,
     price: datum.mrp,
     discountPrice: datum.winningSellerMOP
