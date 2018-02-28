@@ -9,6 +9,7 @@ import {
   CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
 export const USER_CART_PATH = "v2/mpl/users";
+export const ALL_STORES_PATH = "v2/mpl/allStores";
 
 export const APPLY_COUPON_REQUEST = "APPLY_COUPON_REQUEST";
 export const APPLY_COUPON_SUCCESS = "APPLY_COUPON_SUCCESS";
@@ -75,6 +76,10 @@ export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS =
   "CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS";
 export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE =
   "CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE";
+
+export const GET_ALL_STORES_CNC_REQUEST = "GET_ALL_STORES_CNC_REQUEST";
+export const GET_ALL_STORES_CNC_SUCCESS = "GET_ALL_STORES_CNC_SUCCESS";
+export const GET_ALL_STORES_CNC_FAILURE = "GET_ALL_STORES_CNC_FAILURE";
 
 const pincode = 229001;
 
@@ -798,6 +803,51 @@ export function checkPinCodeServiceAvailability(
       dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
     } catch (e) {
       dispatch(checkPinCodeServiceAvailabilityFailure(e.message));
+    }
+  };
+}
+
+// Actions to get All Stores CNC
+export function getAllStoresCNCRequest() {
+  return {
+    type: GET_ALL_STORES_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getAllStoresCNCSuccess(storeDetails) {
+  return {
+    type: GET_ALL_STORES_CNC_SUCCESS,
+    status: SUCCESS,
+    storeDetails
+  };
+}
+
+export function getAllStoresCNCFailure(error) {
+  return {
+    type: GET_ALL_STORES_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for getting all stores CNC
+export function getAllStoresCNC(pinCode) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getAllStoresCNCRequest());
+    try {
+      const result = await api.get(
+        `${ALL_STORES_PATH}/${pinCode}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(getAllStoresCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(getAllStoresCNCFailure(e.message));
     }
   };
 }

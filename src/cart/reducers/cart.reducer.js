@@ -27,7 +27,8 @@ const cart = (
     setAddress: null,
     netBankDetails: null,
     emiBankDetails: null,
-    coupons: null
+    coupons: null,
+    storeDetails: null
   },
   action
 ) => {
@@ -277,6 +278,26 @@ const cart = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        storeDetails: action.storeDetails,
+        loading: false
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
       });
 
     default:
