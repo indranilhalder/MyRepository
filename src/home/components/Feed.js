@@ -75,6 +75,12 @@ class Feed extends Component {
 
   componentWillMount() {
     this.props.homeFeed();
+    // _satellite.track("page view");
+
+    window.digitalData = Object.assign(
+      {},
+      { page: { pageInfo: { pageName: "home" } } }
+    );
   }
   render() {
     if (this.props.loading) {
