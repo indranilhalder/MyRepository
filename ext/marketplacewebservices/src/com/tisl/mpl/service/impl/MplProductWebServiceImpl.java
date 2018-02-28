@@ -46,8 +46,8 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -186,7 +186,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplCustomerReviewService customerReviewService;
 
 
-
 	private static final String Y = "Y";
 	private static final String N = "N";
 
@@ -258,14 +257,31 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	MplApiCachingStrategy mplApiCachingStrategy;
 
 	//check if memcache enabled is true in properties
-	private final boolean isCacheEnabled = configurationService.getConfiguration().getBoolean("pdp.memcache.enabled");
+	private String isCacheEnabled;
 
 
 	//added for pdp new ui end
 
+	/**
+	 * @return the isCacheEnabled
+	 */
+	public String getIsCacheEnabled()
+	{
+		return isCacheEnabled;
+	}
+
+	/**
+	 * @param isCacheEnabled
+	 *           the isCacheEnabled to set
+	 */
+	public void setIsCacheEnabled(final String isCacheEnabled)
+	{
+		this.isCacheEnabled = isCacheEnabled;
+	}
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
 
@@ -400,7 +416,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -2173,12 +2189,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3237,67 +3253,81 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 		return displayConfigurableAttributeForPriceBreakup;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
 	public EgvProductInfoWSDTO getEgvProductDetails()
 	{
 		LOG.debug("Getting EGV product Details");
-		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
-		AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
+		final EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		final AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
 		double minPrice = 1.0D;
 		double maxPrice = 30000.0D;
 		String priceOptions = null;
-		try {
-			
+		try
+		{
+
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
-			if(null != customer) {
-				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
+			if (null != customer)
+			{
+				if (null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
+				{
 					egvProductData.setIsWalletCreated(true);
 				}
-				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+				if (null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					egvProductData.setIsWalletOtpVerified(true);
-				}else {
-					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
-					if(null != walletCreateData) {
-						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+				}
+				else
+				{
+					final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					if (null != walletCreateData)
+					{
+						if (null != walletCreateData.getQcVerifyFirstName()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName()))
+						{
 							egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
 						}
-						if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+						if (null != walletCreateData.getQcVerifyLastName()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName()))
+						{
 							egvProductData.setLastName(walletCreateData.getQcVerifyLastName());
 						}
-						if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+						if (null != walletCreateData.getQcVerifyMobileNo()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo()))
+						{
 							egvProductData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
 						}
 					}
 				}
-					
-				
+
+
 			}
-			
+
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
 			{
 				minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);
-				LOG.debug("Configurable Buying EGV Min Price " +minPrice);
+				LOG.debug("Configurable Buying EGV Min Price " + minPrice);
 			}
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE))
 			{
 				maxPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE);
-				LOG.debug("Configurable Buying EGV Max Price " +maxPrice);
+				LOG.debug("Configurable Buying EGV Max Price " + maxPrice);
 			}
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS))
 			{
-				priceOptions = configurationService.getConfiguration()
-						.getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
-				LOG.debug("Configurable Buying EGV price options " +priceOptions);
+				priceOptions = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
+				LOG.debug("Configurable Buying EGV price options " + priceOptions);
 			}
 			if (minPrice > 0.0D)
 			{
-				TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+				final TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
 				final BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
 				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
 						MarketplacecommerceservicesConstants.INR);
@@ -3315,7 +3345,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			if (maxPrice > 0.0D)
 			{
-				TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+				final TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
 				final BigDecimal minPriceBigDecimal = new BigDecimal(maxPrice);
 				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
 						MarketplacecommerceservicesConstants.INR);
@@ -3334,12 +3364,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (null != priceOptions)
 			{
 				final String[] configurablePriceOptions = priceOptions.split(",");
-				List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
+				final List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
 				if (null != configurablePriceOptions)
 				{
 					for (final String price : configurablePriceOptions)
 					{
-						TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
+						final TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
 						final BigDecimal PriceBigDecimal = new BigDecimal(Double.valueOf(price).doubleValue());
 						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, PriceBigDecimal,
 								MarketplacecommerceservicesConstants.INR);
@@ -3354,24 +3384,27 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							configurablePrices.add(PriceWsDto);
 						}
 					}
-					
-					if(CollectionUtils.isNotEmpty(configurablePrices)){
+
+					if (CollectionUtils.isNotEmpty(configurablePrices))
+					{
 						amountOptions.setOptions(configurablePrices);
 					}
 				}
 			}
-			
+
 			egvProductData.setAmountOptions(amountOptions);
 			egvProductData.setIsCustomizationAvailable(true);
 			egvProductData.setIsMoreDesigns(false);
 			egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
 			egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
-		//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+			//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
 
-		}catch (Exception e) {
-			LOG.error("Exception occurredd while getting EGV Product Details "+e.getMessage());
 		}
-	
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurredd while getting EGV Product Details " + e.getMessage());
+		}
+
 		return egvProductData;
 	}
 
@@ -3567,7 +3600,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetails(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -3623,7 +3656,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
-					if (isCacheEnabled)
+					if (Boolean.parseBoolean(getIsCacheEnabled()))
 					{
 						final MplNewProductDetailMobileWsData details = mplApiCachingStrategy.get(productCode);
 						productDetailMobileNew = details;
@@ -4815,7 +4848,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobileNew.setSharedText(sharedText);
 
-			if (isCacheEnabled)
+			if (Boolean.parseBoolean(getIsCacheEnabled()))
 			{
 				mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
 			}
