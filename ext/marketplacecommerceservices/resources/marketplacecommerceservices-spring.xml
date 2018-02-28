@@ -2528,7 +2528,7 @@
 
 	
 	<!-- memcache for new ui/ux pdp api -->
-	<bean id="defaultApiCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultApiCachingStrategy" scope="tenant"> 
+	<bean id="defaultApiCachingStrategy" class="com.tisl.mpl.cache.strategy.impl.MplDefaultApiCachingStrategy" scope="tenant"> 
 	</bean>
 	
 
