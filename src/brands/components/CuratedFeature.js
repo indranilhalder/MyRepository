@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./CuratedFeature.css";
 import PropTypes from "prop-types";
-
+import { Image } from "xelpmoc-core";
 import Grid from "../../general/components/Grid";
 export default class CuratedFeature extends React.Component {
   render() {
@@ -12,13 +12,7 @@ export default class CuratedFeature extends React.Component {
           <Grid offset={10} elementWidthMobile={50}>
             {this.props.curatedFeature.map((val, i) => {
               return (
-                <div
-                  className={styles.curatedCard}
-                  style={{
-                    backgroundImage: `url(${val.imageUrl})`,
-                    backgroundSize: "cover"
-                  }}
-                >
+                <div className={styles.curatedCard}>
                   <div className={styles.overlay}>
                     <div className={styles.overlayTextHolder}>
                       {val.header && (
@@ -30,6 +24,9 @@ export default class CuratedFeature extends React.Component {
                         <div className={styles.featuresText}>{val.text}</div>
                       )}
                     </div>
+                  </div>
+                  <div className={styles.imageHolder}>
+                    <Image image={val.imageUrl} fit="cover" />
                   </div>
                 </div>
               );
