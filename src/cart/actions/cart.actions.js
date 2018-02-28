@@ -18,6 +18,10 @@ export const GET_COUPON_REQUEST = "GET_COUPON_REQUEST";
 export const GET_COUPON_SUCCESS = "GET_COUPON_SUCCESS";
 export const GET_COUPON_FAILURE = "GET_COUPON_FAILURE";
 
+export const RELEASE_COUPON_REQUEST = "RELEASE_COUPON_REQUEST";
+export const RELEASE_COUPON_SUCCESS = "RELEASE_COUPON_SUCCESS";
+export const RELEASE_COUPON_FAILURE = "RELEASE_COUPON_FAILURE";
+
 export const SELECT_DELIVERY_MODES_REQUEST = "SELECT_DELIVERY_MODES_REQUEST";
 export const SELECT_DELIVERY_MODES_SUCCESS = "SELECT_DELIVERY_MODES_SUCCESS";
 export const SELECT_DELIVERY_MODES_FAILURE = "SELECT_DELIVERY_MODES_FAILURE";
@@ -241,6 +245,50 @@ export function applyCoupon(cartGuide) {
       dispatch(applyCouponSuccess());
     } catch (e) {
       dispatch(applyCouponFailure(e.message));
+    }
+  };
+}
+
+export function releaseCouponRequest() {
+  return {
+    type: RELEASE_COUPON_REQUEST,
+    status: REQUESTING
+  };
+}
+export function releaseCouponSuccess() {
+  return {
+    type: RELEASE_COUPON_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function releaseCouponFailure(error) {
+  return {
+    type: RELEASE_COUPON_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function releaseCoupon(carId) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(releaseCouponRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/carId/releaseCoupons?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(releaseCouponSuccess());
+    } catch (e) {
+      dispatch(releaseCouponFailure(e.message));
     }
   };
 }

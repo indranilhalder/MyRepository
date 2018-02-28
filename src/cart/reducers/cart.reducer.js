@@ -91,6 +91,25 @@ const cart = (
         loading: false
       });
 
+    case cartActions.RELEASE_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.RELEASE_COUPON_SUCCESS:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.RELEASE_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        couponError: action.error,
+        loading: false
+      });
+
     case cartActions.SELECT_DELIVERY_MODES_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
