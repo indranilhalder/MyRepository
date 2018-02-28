@@ -19,6 +19,7 @@ import DiscoverMore500 from "./DiscoverMore500.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
+import DiscoverMore from "./DiscoverMore.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 
@@ -29,30 +30,28 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  // "Hero Banner Component": props => <HeroBanner {...props} />,
-  // "Theme Offers Component": props => <ThemeOffer {...props} />
+  "Hero Banner Component": props => <HeroBanner {...props} />,
+  "Theme Offers Component": props => <ThemeOffer {...props} />,
   // productRecommendationWidget: props => <RecommendationWidget {...props} />,
-  // "Banner Product Carousel Component": props => (
-  //   <BannerProductCarousel {...props} />
-  // )
-  // "Video Product Carousel Component": props => (
-  //   <VideoProductCarousel {...props} />
-  // )
+  "Banner Product Carousel Component": props => (
+    <BannerProductCarousel {...props} />
+  ),
+  "Video Product Carousel Component": props => (
+    <VideoProductCarousel {...props} />
+  ),
   // automatedBrandProductCarousel: props => (
   //   <AutomatedBrandProductCarousel {...props} />
   // ),
-  // "Flash Sales Component": props => <FlashSale {...props} />,
-  // "Offers Component": props => <OfferWidget {...props} />,
-  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />
-  // "Multi Click Component": props => <ThemeProductWidget {...props} />
-  // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />,
-  // followBaseWidget: props => <FollowBase {...props} />,
-  // singleSelectQuestion: props => <SingleQuestionContainer {...props} />,
-  "Banner Separator Component": props => <BannerSeparator {...props} />
-  // productCapsules: props => <ProductCapsules {...props} />,
-  // discoverMoreBaseWidget: props => <DiscoverMoreCarousel {...props} />,
-  // discoverMoreWidget: props => <DiscoverMore500 {...props} />,
-  // followedWidget: props => <FollowingBrands {...props} />
+  "Flash Sales Component": props => <FlashSale {...props} />,
+  "Offers Component": props => <OfferWidget {...props} />,
+  "Multipurpose Banner Component": props => <ConnectWidget {...props} />,
+  "Multi Click Component": props => <ThemeProductWidget {...props} />,
+  // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />, // not there
+  "Auto Fresh From Brands Component": props => <FollowBase {...props} />,
+  // singleSelectQuestion: props => <SingleQuestionContainer {...props} />, // not there
+  "Banner Separator Component": props => <BannerSeparator {...props} />,
+  // productCapsules: props => <ProductCapsules {...props} />, // Not ready
+  "Auto Discover More Component": props => <DiscoverMore {...props} />
 };
 
 class Feed extends Component {

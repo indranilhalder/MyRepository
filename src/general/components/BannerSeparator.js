@@ -5,9 +5,6 @@ import PropTypes from "prop-types";
 import image from "./img/download.svg";
 export default class BannerSeparator extends React.Component {
   render() {
-    console.log("FEED COMPONENT DATA");
-    console.log(this.props.feedComponentData);
-
     return (
       <div
         className={styles.base}

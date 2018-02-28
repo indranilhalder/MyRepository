@@ -93,15 +93,29 @@ const home = (
 
     case homeActions.COMPONENT_DATA_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
-      let componentData = action.data;
-      const key = Object.keys(componentData)[0];
-
+      let componentData;
+      let key = null;
       componentData = {
-        ...homeFeedData[action.positionInFeed],
-        ...componentData[key],
         loading: false,
         status: action.status
       };
+      let toUpdate;
+
+      if (!action.isMsd) {
+        key = Object.keys(action.data)[0];
+        toUpdate = action.data[key];
+        componentData = {
+          ...homeFeedData[action.positionInFeed],
+          ...toUpdate,
+          ...componentData
+        };
+      } else {
+        componentData = {
+          ...homeFeedData[action.positionInFeed],
+          data: action.data,
+          ...componentData
+        };
+      }
 
       homeFeedData[action.positionInFeed] = componentData;
       return Object.assign({}, state, {

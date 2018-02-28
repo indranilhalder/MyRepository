@@ -3,13 +3,11 @@ import PropTypes from "prop-types";
 
 export default class Widget extends React.Component {
   componentDidMount() {
-    if (!this.props.disableGetComponentDataCall) {
-      this.props.getComponentData(
-        this.props.feedComponentData.fetchURL,
-        this.props.positionInFeed,
-        this.props.postData
-      );
-    }
+    this.props.getComponentData(
+      this.props.feedComponentData.fetchURL,
+      this.props.positionInFeed,
+      this.props.postData
+    );
   }
 
   render() {

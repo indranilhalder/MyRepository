@@ -227,12 +227,13 @@ export function componentDataRequest(positionInFeed) {
   };
 }
 
-export function componentDataSuccess(data, positionInFeed) {
+export function componentDataSuccess(data, positionInFeed, isMsd: false) {
   return {
     type: COMPONENT_DATA_SUCCESS,
     status: SUCCESS,
     data,
-    positionInFeed
+    positionInFeed,
+    isMsd
   };
 }
 
@@ -247,6 +248,8 @@ export function componentDataFailure(positionInFeed, error) {
 
 export function getComponentData(positionInFeed, fetchURL, postParams: null) {
   return async (dispatch, getState, { api }) => {
+    console.log("FETCH URL");
+    console.log(fetchURL);
     dispatch(componentDataRequest(positionInFeed));
     try {
       let postData;
@@ -261,6 +264,13 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
         };
 
         result = await api.post(fetchURL, postData, true);
+        let resultJson = await result.json();
+        if (resultJson.status === "FAILURE") {
+          throw new Error(`${resultJson.message}`);
+        }
+        console.log("GET COMPONENT DATA");
+        console.log(resultJson);
+        dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         result = await api.postAdobeTargetUrl(
           fetchURL,
@@ -269,19 +279,16 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
           null,
           false
         );
+        const resultJson = await result.json();
+        if (resultJson.status === "FAILURE") {
+          throw new Error(`${resultJson.message}`);
+        }
+
+        let parsedResultJson = JSON.parse(resultJson.content);
+        parsedResultJson = parsedResultJson.items[0];
+
+        dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
       }
-
-      const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
-      }
-
-      let parsedResultJson = JSON.parse(resultJson.content);
-      parsedResultJson = parsedResultJson.items[0];
-      console.log("COMPONENT DATA SUCCESS");
-      console.log(parsedResultJson);
-
-      dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
     } catch (e) {
       dispatch(componentDataFailure(positionInFeed, e.message));
     }
