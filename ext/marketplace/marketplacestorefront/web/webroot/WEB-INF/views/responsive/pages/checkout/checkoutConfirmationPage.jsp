@@ -12,13 +12,13 @@
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<template:page pageTitle="${pageTitle}" >
  <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
  <script>
 	sessionStorage.setItem("confirmationPageVisited", "True");
 </script>
-<template:page pageTitle="${pageTitle}" >
 
 <!--- START: INSERTED for MSD --->
 <c:if test="${isMSDEnabled}">

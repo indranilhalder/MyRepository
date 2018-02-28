@@ -35,7 +35,7 @@
 				<table style="width: 100%;word-break: break-all;border-top: 1px solid #ccc;" cellpadding="5" cellspacing="0">
 					<thead style="color: #aa1d3d;">
 						<tr>
-							<th>Card Id</th>
+							<th>Card No</th>
 							<th>Card Pin</th>
 							<th>Expiry Date</th>
 						</tr>
@@ -100,7 +100,7 @@
 			</ol>
 		</div>
 		<div style="padding: 2%; background-color: #f6f6f6; border-radius: 4px; clear: both; display: table; width: -webkit-fill-available;">
-			<span style="float: left;">Gift card id:${ctx.cardNumber}</span>
+			<span style="float: left;">Gift card no:${ctx.cardNumber}</span>
 			<span style="float: right;">Order No: ${ctx.orderNumber}</span>
 		</div>
 	</div>

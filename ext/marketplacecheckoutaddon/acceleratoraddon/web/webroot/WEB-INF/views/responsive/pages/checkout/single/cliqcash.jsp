@@ -11,16 +11,28 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<c:set var="dateStyle" value="dd/MM/yyyy	" />
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <template:page pageTitle="${pageTitle}">
+<c:set var="dateStyle" value="dd/MM/yyyy	" />
+<style>
+ul.dropdown-menu {
+	border-top: none;
+    border-radius: 0;
+    box-shadow: none;
+}
 
+@media(max-width: 480px){
+	ul.dropdown-menu {
+		border: none;
+	}
+	
+	ul.dropdown-menu li a {
+		padding: 0;
+		height: 50px;
+		padding-top: 13px;
+	}
+}
+</style>
 <input type="hidden" id="isEmailRequest" value="${isEmailRequest}" />
 <input type="hidden" id="emailOrderCode" value="${orderCode}" />
 	<div class="cliqCashContainer">
@@ -72,7 +84,7 @@
 					     <%-- <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
 				     	</a> --%>
-				     	<span class="addNewCard" onclick="createWallet();"><a href="#">
+				     	<span class="addNewCard" onclick="createWallet();"><a href="#" class="cliqCashBtns">
 				     	<spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
 			    </div>
 				</c:otherwise>
@@ -279,7 +291,7 @@
 		
 	<script>
 	$(document).ready(function(){
-		var modelAttributeValue = '${isOTPValidtion}';
+		var modelAttributeValue = '${isCustomerWalletActive}';
 		  if(modelAttributeValue === 'false'){
 			  createWallet();
 		  }
@@ -426,8 +438,8 @@
 						$(".wcOTPError").text("OTP verification failed. Please try again");
 						$(".wcOTPError").show();
 					}
-					else if(response='EXPIRED'){
-						$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+					else if(response=='EXPIRED'){
+						$(".wcOTPError").text("Your OTP is valid for 2 minutes only, please generate again.");
 						$(".wcOTPError").show();
 					}
 					else if(response=='success'){

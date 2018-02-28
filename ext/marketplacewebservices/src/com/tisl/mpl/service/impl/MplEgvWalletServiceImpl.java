@@ -15,6 +15,7 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
@@ -23,6 +24,7 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -38,6 +40,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
@@ -47,10 +50,12 @@ import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.AmountOptionsWSDTO;
 import com.tisl.mpl.wsdto.ApplyCartCouponsDTO;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
@@ -98,7 +103,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			final Customer custInfo = new Customer();
 			custInfo.setEmail(currentCustomer.getOriginalUid());
 			custInfo.setEmployeeID(currentCustomer.getUid());
-			custInfo.setCorporateName("Tata Unistore Ltd");
+			custInfo.setCorporateName(configurationService.getConfiguration().getString("CorporateName"));
 
 			if (null != currentCustomer.getQcVerifyFirstName())
 			{
@@ -113,7 +118,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			{
 				custInfo.setPhoneNumber(currentCustomer.getQcVerifyMobileNo());
 			}
-
+			custInfo.setCorporateName("Tata Unistore Ltd");
 			customerRegisterReq.setExternalwalletid(currentCustomer.getUid());
 			customerRegisterReq.setCustomer(custInfo);
 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
@@ -141,7 +146,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 	 * @see com.tisl.mpl.service.MplEgvWalletService#verifyOtpAndCreateWallet(de.hybris.platform.core.model.user.CustomerModel, java.lang.String)
 	 */
 	@Override
-	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer, String otp)
+	public EgvWalletCreateResponceWsDTO verifyOtpAndCreateWallet(CustomerModel currentCustomer,String otp,String firstName,String lastName,String mobileNumber)
 	{
 		EgvWalletCreateResponceWsDTO responce = new EgvWalletCreateResponceWsDTO();
 			if (null != otp && !otp.isEmpty())
@@ -157,9 +162,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 				if (response.getOTPValid().booleanValue())
 				{
 				  if(customerWalletCreated) {
+
 					  CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 								.getCustomerWalletDetail().getWalletId());
 						UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
+						registerCustomerFacade.registerWalletMobileNumber(firstName,lastName,mobileNumber);//TPR-6272 parameter platformNumber passed
+
 						responce.setIsWalletCreated(true);
 						if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
 						{
@@ -172,11 +180,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 						modelService.save(currentCustomer);
 						responce.setIsWalletOtpVerified(true);
 				  }else {
-					  
 						final QCCustomerRegisterResponse customerRegisterResponse = createWalletContainer(currentCustomer);
 						if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
 								&& customerRegisterResponse.getResponseCode().intValue() == 0)
 						{
+							registerCustomerFacade.registerWalletMobileNumber(firstName,lastName,mobileNumber);//TPR-6272 parameter platformNumber passed
+
 							CustomerWalletDetailResponse customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer
 									.getCustomerWalletDetail().getWalletId());
 							UserCliqCashWsDto userCliqCashData = getCustomerWalletAmount(customerWalletDetailData);
@@ -314,7 +323,7 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 			   if(isWalletOtpVerified) {
 			   	responce.setIsWalletOtpVerified(true);
 			   }else {
-					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(currentCustomer);
 					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					if(null != walletCreateData) {
 						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
@@ -726,15 +735,15 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 					responce.setOtpExpiryTime(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TIMEFOROTP));
 					return responce;
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 				}
 			}else {
 				validateRequest(request);
 			}
 			if(null != customer) {
 				boolean isWalletOtpVerified = false ;
-				boolean isMobileNumberChanged = true;
-				boolean isNameChanged = true;
-			
+				boolean isMobileNumberChanged = true;			
 				if( null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					isWalletOtpVerified = true;
@@ -745,20 +754,12 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 					isMobileNumberChanged = false;
 				}
 				
-				if( ( null != customer.getQcVerifyFirstName() && 
-						(customer.getQcVerifyFirstName().trim().equalsIgnoreCase(request.getFirstName())) )|| 
-						(  null != customer.getQcVerifyLastName() && 
-						(customer.getQcVerifyLastName().trim().equalsIgnoreCase(request.getLastName())) ))
-			{
-					isNameChanged = false;
-			}
-				
 				if( !isWalletCreated || !isWalletOtpVerified ) {
 					
 					if(isMobileNumberChanged) {
 						if (registerCustomerFacade.checkUniquenessOfMobileForWallet(request.getMobileNumber()))
 						{
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
+						//	registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
 							mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 							//Set success flag
 							responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -770,9 +771,6 @@ public class MplEgvWalletServiceImpl implements MplEgvWalletService
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5010);
 						}
 					}else {
-						if(isNameChanged){
-							registerCustomerFacade.registerWalletMobileNumber(request.getFirstName(),request.getLastName(),request.getMobileNumber());//TPR-6272 parameter platformNumber passed
-						}
 						mplWalletFacade.generateOTP(customer,request.getMobileNumber());
 						//Set success flag
 						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -1172,6 +1170,144 @@ public boolean updateCustomerWallet(MplCustomerProfileData customerToSave,Custom
 		}
 		return false;
 	}
+
+/* (non-Javadoc)
+ * @see com.tisl.mpl.service.MplEgvWalletService#getEgvProductDetails(de.hybris.platform.core.model.user.CustomerModel)
+ */
+@Override
+public EgvProductInfoWSDTO getEgvProductDetails()
+{
+	LOG.debug("Getting EGV product Details");
+	EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+	AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
+	double minPrice = 1.0D;
+	double maxPrice = 30000.0D;
+	String priceOptions = null;
+	try {
+		CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+		if(null != customer) {
+			LOG.error(" FIrst Name "+customer.getFirstName());
+			LOG.error("QC FIrst Name "+customer.getQcVerifyFirstName());
+
+			if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
+				egvProductData.setIsWalletCreated(true);
+			}
+			if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+			{
+				egvProductData.setIsWalletOtpVerified(true);
+			}else {
+				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
+				if(null != walletCreateData) {
+					if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+						egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
+					}
+					if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+						egvProductData.setLastName(walletCreateData.getQcVerifyLastName());
+					}
+					if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+						egvProductData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+					}
+				}
+			}
+				
+			
+		}
+		
+		if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
+		{
+			minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);
+			LOG.debug("Configurable Buying EGV Min Price " +minPrice);
+		}
+		if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE))
+		{
+			maxPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE);
+			LOG.debug("Configurable Buying EGV Max Price " +maxPrice);
+		}
+		if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS))
+		{
+			priceOptions = configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
+			LOG.debug("Configurable Buying EGV price options " +priceOptions);
+		}
+		if (minPrice > 0.0D)
+		{
+			TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+			final BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
+			final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
+					MarketplacecommerceservicesConstants.INR);
+			if (null != priceData)
+			{
+				minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+				minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
+				minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
+				minPriceWsDto.setPriceType(priceData.getPriceType());
+				minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+				minPriceWsDto.setValue(priceData.getValue());
+				amountOptions.setMinPrice(minPriceWsDto);
+			}
+		}
+
+		if (maxPrice > 0.0D)
+		{
+			TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+			final BigDecimal minPriceBigDecimal = new BigDecimal(maxPrice);
+			final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
+					MarketplacecommerceservicesConstants.INR);
+			if (null != priceData)
+			{
+				minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+				minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
+				minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
+				minPriceWsDto.setPriceType(priceData.getPriceType());
+				minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+				minPriceWsDto.setValue(priceData.getValue());
+				amountOptions.setMaxPrice(minPriceWsDto);
+			}
+		}
+
+		if (null != priceOptions)
+		{
+			final String[] configurablePriceOptions = priceOptions.split(",");
+			List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
+			if (null != configurablePriceOptions)
+			{
+				for (final String price : configurablePriceOptions)
+				{
+					TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
+					final BigDecimal PriceBigDecimal = new BigDecimal(Double.valueOf(price).doubleValue());
+					final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, PriceBigDecimal,
+							MarketplacecommerceservicesConstants.INR);
+					if (null != priceData)
+					{
+						PriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+						PriceWsDto.setDoubleValue(priceData.getDoubleValue());
+						PriceWsDto.setFormattedValue(priceData.getFormattedValue());
+						PriceWsDto.setPriceType(priceData.getPriceType());
+						PriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+						PriceWsDto.setValue(priceData.getValue());
+						configurablePrices.add(PriceWsDto);
+					}
+				}
+				
+				if(CollectionUtils.isNotEmpty(configurablePrices)){
+					amountOptions.setOptions(configurablePrices);
+				}
+			}
+		}
+		
+		egvProductData.setAmountOptions(amountOptions);
+		egvProductData.setIsCustomizationAvailable(true);
+		egvProductData.setIsMoreDesigns(false);
+		egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
+		egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+	//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+
+	}catch (Exception e) {
+		LOG.error("Exception occurredd while getting EGV Product Details "+e.getMessage());
+	}
+
+	return egvProductData;
+}
 
 	
 }

@@ -5,10 +5,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 
+<template:page pageTitle="${pageTitle}">
+
 <!-- TPR-430 -->
 <input type="hidden" id="product_category" value="${product_category}"/>
-
-<template:page pageTitle="${pageTitle}">
 
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />

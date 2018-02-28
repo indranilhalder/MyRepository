@@ -190,7 +190,7 @@ TATA.CommonFunctions = {
                 }
             },
             submitHandler: function(form) {
-                const url = "/login/pw/request/confirmEmail?forgotPassword_email="+$("#forgotPassword_email").val();
+                var url = "/login/pw/request/confirmEmail?forgotPassword_email="+$("#forgotPassword_email").val();
                 $.ajax({
                     url: url,
                     type:"GET",
@@ -214,7 +214,7 @@ TATA.CommonFunctions = {
     },
 
     loadSignInForm: function(element){
-        const loginURL = element.attr("data-href");
+        var loginURL = element.attr("data-href");
         $.ajax({
             url: loginURL,
             beforeSend: function(){
@@ -228,7 +228,7 @@ TATA.CommonFunctions = {
     },
     
     loadRegisterForm: function(element){
-        const luxRegister = element.attr("href");
+        var luxRegister = element.attr("href");
         $.ajax({
             url: luxRegister,
             beforeSend: function(){
@@ -241,7 +241,7 @@ TATA.CommonFunctions = {
     },
     
     loadForgotPasswordForm: function(element){
-        const pwsRequest = element.attr("href");
+        var pwsRequest = element.attr("href");
         $.ajax({
             url: pwsRequest,
             beforeSend: function(){
@@ -1316,12 +1316,15 @@ TATA.Pages = {
                     var productCodePost = $("#productCodePost").val();
                     var productcodearray =[];
                     productcodearray.push(productCodePost);
+                    var product_category =$('#product_category').val();
                     utag.link({
                         link_obj: this,
                         link_text: 'add_to_wishlist_pdp' ,
                         event_type : 'add_to_wishlist_pdp',
                         product_sku_wishlist : productcodearray
                     });
+                  //for dtm pdp wishlist
+                    dtmLuxAddWL("pdp",productcodearray,product_category);
                 }
             });
         },
@@ -1409,6 +1412,10 @@ TATA.Pages = {
 
         removeFromWishlist: function(dataString){
             var requiredUrl = ACC.config.encodedContextPath+"/p" + "-removeFromWl";
+            var productCodePost = $("#productCodePost").val();
+            var productcodearray =[];
+            productcodearray.push(productCodePost);
+            var product_category =$('#product_category').val();
             $.ajax({
                 url: requiredUrl,
                 type: "GET",
@@ -1430,6 +1437,7 @@ TATA.Pages = {
                             $(".wishAlreadyAddedPlp").removeClass("active")
                         },3000);
                     }
+                    dtmLuxRemoveWL("pdp",productcodearray,product_category);
                 }
             });
         },
@@ -1631,6 +1639,7 @@ TATA.Pages = {
                                 });
                             }
 							/*TPR-641 ends*/
+                            dtmLuxEmiTrack(emiBankSelected);
                         },
                         error : function(resp) {
                             $('#emiSelectBank').show();
@@ -2567,7 +2576,7 @@ function addToWishlistForCart(ussid,productCode)
                         product_sku_wishlist : productcodearray
                     });
                 }
-
+                dtmLuxAddToWishlist("cart",productCode,""); 
                 localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 
                 /* 				var msg=$('#movedToWishlistFromCart').text();
@@ -2658,7 +2667,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
                     });
                 }
                 /*TPR-656 Ends*/
-
+                dtmLuxAddToWishlist("cart",productCode,""); 
                 localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 
 
