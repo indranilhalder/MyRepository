@@ -34,7 +34,6 @@
 }
 .price {
   padding-top: 6px;
-
   font-family: semibold;
 }
 .deletePriceAndDiscount {
@@ -53,6 +52,7 @@
   text-decoration: line-through;
   width: auto;
   display: inline-block;
+  opacity: 0.5;
 }
 .button {
   padding-top: 6px;
