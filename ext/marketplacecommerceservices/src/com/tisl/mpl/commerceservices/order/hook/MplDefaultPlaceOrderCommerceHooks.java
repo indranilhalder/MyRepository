@@ -905,6 +905,29 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				/**
+				 * EGV CARD PURCHASE
+				 */
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+				{
+
+					mplEGVCartService.removeOldEGVCartCurrentCustomer();
+					final String response = getPurchaseEGVRequestPopulate(orderModel);
+					if (null != response && response.equalsIgnoreCase(SUCCESS))
+					{
+						sendNotifiactionForEGVOrder(orderModel);
+					}
+					else
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						modelService.save(orderModel);
+						LOG.error(CLIQ_CASH_DOWN);
+					}
+				}
+				/**
+				 * EGV CARD PURCHASE END
+				 */
 			}
 
 			else
