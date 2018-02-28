@@ -16,10 +16,10 @@
   position: absolute;
   left: 0;
   top: 0;
-}
-.imageHolder div {
+  overflow: hidden;
   border-radius: 4px;
 }
+
 .textContainer {
   bottom: 0px;
   padding-bottom: 33px;
