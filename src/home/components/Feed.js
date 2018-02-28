@@ -21,7 +21,8 @@ import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
-
+import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
+import { PRODUCT_DELIVERY_ADDRESSES } from "../../lib/constants";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeComponentMapping = {
@@ -75,6 +76,13 @@ class Feed extends Component {
 
   componentWillMount() {
     this.props.homeFeed();
+    this.props.getCartId();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.type === MERGE_CART_ID_SUCCESS) {
+      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+    }
   }
   render() {
     if (this.props.loading) {

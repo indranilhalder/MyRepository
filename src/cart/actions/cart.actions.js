@@ -5,9 +5,9 @@ import {
   GLOBAL_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   FAILURE,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
-
 export const USER_CART_PATH = "v2/mpl/users";
 
 export const APPLY_COUPON_REQUEST = "APPLY_COUPON_REQUEST";
@@ -49,9 +49,24 @@ export const GENERATE_CART_ID_FAILURE = "GENERATE_CART_ID_FAILURE";
 export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
   "GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS";
 
-export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
+export const CART_DETAILS_REQUEST = "CART_DETAILS_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
+
+export const GET_CART_ID_REQUEST = "GET_CART_ID_REQUEST";
+export const GET_CART_ID_SUCCESS = "GET_CART_ID_SUCCESS";
+export const GET_CART_ID_FAILURE = "GET_CART_ID_FAILURE";
+
+export const MERGE_CART_ID_REQUEST = "MERGE_CART_ID_REQUEST";
+export const MERGE_CART_ID_SUCCESS = "MERGE_CART_ID_SUCCESS";
+export const MERGE_CART_ID_FAILURE = "MERGE_CART_ID_FAILURE";
+
+export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST =
+  "CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST";
+export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS =
+  "CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS";
+export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE =
+  "CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE";
 
 const pincode = 229001;
 
@@ -537,6 +552,154 @@ export function generateCartIdForAnonymous() {
       dispatch(generateCartIdAnonymousSuccess(resultJson));
     } catch (e) {
       dispatch(generateCartIdFailure(e.message));
+    }
+  };
+}
+
+export function getCartIdRequest() {
+  return {
+    type: GET_CART_ID_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getCartIdSuccess(cartDetails) {
+  return {
+    type: GET_CART_ID_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function getCartIdFailure(error) {
+  return {
+    type: GET_CART_ID_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function getCartId() {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getCartIdRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      if (cartDetailsAnonymous) {
+        dispatch(mergeCartId(resultJson));
+      } else {
+        dispatch(getCartIdSuccess(resultJson));
+      }
+    } catch (e) {
+      dispatch(getCartIdFailure(e.message));
+    }
+  };
+}
+
+export function mergeCardIdRequest() {
+  return {
+    type: MERGE_CART_ID_REQUEST,
+    status: REQUESTING
+  };
+}
+export function mergeCartIdSuccess(cartDetails) {
+  return {
+    type: MERGE_CART_ID_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function mergeCartIdFailure(error) {
+  return {
+    type: MERGE_CART_ID_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function mergeCartId(cartDetails) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(mergeCardIdRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&&platformNumber=2&userId=${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
+          cartDetails.guid
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+
+      dispatch(mergeCartIdSuccess(resultJson));
+    } catch (e) {
+      dispatch(mergeCartIdFailure(e.message));
+    }
+  };
+}
+
+export function checkPinCodeServiceAvailabilityRequest() {
+  return {
+    type: CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST,
+    status: REQUESTING
+  };
+}
+export function checkPinCodeServiceAvailabilitySuccess(cartDetailsCnc) {
+  return {
+    type: CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS,
+    status: SUCCESS,
+    cartDetailsCnc
+  };
+}
+
+export function checkPinCodeServiceAvailabilityFailure(error) {
+  return {
+    type: CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function checkPinCodeServiceAvailability(
+  userName,
+  accessToken,
+  pinCode
+) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(checkPinCodeServiceAvailabilityRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
+    } catch (e) {
+      dispatch(checkPinCodeServiceAvailabilityFailure(e.message));
     }
   };
 }

@@ -5,7 +5,8 @@ import {
   selectDeliveryModes,
   getEmiBankDetails,
   getNetBankDetails,
-  getCartDetails
+  getCartDetails,
+  checkPinCodeServiceAvailability
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -29,6 +30,9 @@ const mapDispatchToProps = dispatch => {
     },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));
+    },
+    checkPinCodeServiceAvailability: (userName, accessToken, pinCode) => {
+      dispatch(checkPinCodeServiceAvailability(userName, accessToken, pinCode));
     }
   };
 };

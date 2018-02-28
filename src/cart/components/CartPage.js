@@ -14,7 +14,8 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  PRODUCT_DELIVERY_ADDRESSES
+  PRODUCT_DELIVERY_ADDRESSES,
+  LOGIN_PATH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 class CartPage extends React.Component {
@@ -54,8 +55,36 @@ class CartPage extends React.Component {
     this.props.showCouponModal(this.props.productDetails);
   };
   renderToDeliveryPage() {
-    this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    if (customerCookie) {
+      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+    } else {
+      this.props.history.push(LOGIN_PATH);
+    }
   }
+
+  checkPinCodeAvailability = val => {
+    if (this.props.checkPinCodeServiceAvailability) {
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+      if (userDetails) {
+        this.props.checkPinCodeServiceAvailability(
+          JSON.parse(userDetails).customerInfo.mobileNumber,
+          JSON.parse(customerCookie).access_token,
+          val
+        );
+      } else {
+        this.props.checkPinCodeServiceAvailability(
+          ANONYMOUS_USER,
+          JSON.parse(globalCookie).access_token,
+          val
+        );
+      }
+    }
+  };
+
   render() {
     if (this.props.cart.cartDetailsStatus === SUCCESS) {
       const cartDetails = this.props.cart.cartDetails;
@@ -63,36 +92,41 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <div className={styles.search}>
-              <SearchAndUpdate />
+              <SearchAndUpdate
+                checkPinCodeAvailability={val =>
+                  this.checkPinCodeAvailability(val)
+                }
+              />
             </div>
             <div className={styles.offer}>
               <div className={styles.offerText}>{this.props.cartOfferText}</div>
               <div className={styles.offerName}>{this.props.cartOffer}</div>
             </div>
 
-            {cartDetails.products.map((product, i) => {
-              return (
-                <div className={styles.cartItem} key={i}>
-                  <CartItem
-                    productImage={product.imageURL}
-                    productDetails={product.description}
-                    productName={product.productName}
-                    price={product.priceValue.sellingPrice.formattedValue}
-                    deliveryInformation={product.elligibleDeliveryMode}
-                    deliverTime={
-                      product.elligibleDeliveryMode &&
-                      product.elligibleDeliveryMode[0].desc
-                    }
-                    option={[
-                      {
-                        value: product.qtySelectedByUser,
-                        label: product.qtySelectedByUser
+            {cartDetails.products &&
+              cartDetails.products.map((product, i) => {
+                return (
+                  <div className={styles.cartItem} key={i}>
+                    <CartItem
+                      productImage={product.imageURL}
+                      productDetails={product.description}
+                      productName={product.productName}
+                      price={product.priceValue.sellingPrice.formattedValue}
+                      deliveryInformation={product.elligibleDeliveryMode}
+                      deliverTime={
+                        product.elligibleDeliveryMode &&
+                        product.elligibleDeliveryMode[0].desc
                       }
-                    ]}
-                  />
-                </div>
-              );
-            })}
+                      option={[
+                        {
+                          value: product.qtySelectedByUser,
+                          label: product.qtySelectedByUser
+                        }
+                      ]}
+                    />
+                  </div>
+                );
+              })}
           </div>
           <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
           <Checkout
