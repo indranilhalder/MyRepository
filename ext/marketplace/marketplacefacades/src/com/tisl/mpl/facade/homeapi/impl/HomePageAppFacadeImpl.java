@@ -4,8 +4,10 @@
 package com.tisl.mpl.facade.homeapi.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
@@ -15,6 +17,7 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,9 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 	@Resource(name = "commonI18NService")
 	private CommonI18NService commonI18NService;
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 
 	@Resource(name = "productService")
 	private MplProductService mplProductService;
@@ -147,6 +153,7 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 		try
 		{
+
 			List<String> productCodes = new ArrayList<String>();
 			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
 			if (StringUtils.isNotEmpty(homepageComponentRequestDTO.getContent()))
@@ -222,11 +229,13 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 				if (buyBoxModel.getSpecialPrice() != null && Double.compare(buyBoxModel.getSpecialPrice().doubleValue(), 0.0) >= 0)
 				{
-					final PriceData discountedPrice = new PriceData();
-					discountedPrice.setDoubleValue(buyBoxModel.getSpecialPrice());
-					discountedPrice.setFormattedValue(df.format(buyBoxModel.getSpecialPrice()));
-					discountedPrice.setCurrencyIso(currencyIso);
-					discountedPrice.setCurrencySymbol(currencySymbol);
+					final PriceData discountedPrice = priceDataFactory.create(PriceDataType.BUY,
+							BigDecimal.valueOf(buyBoxModel.getSpecialPrice().doubleValue()), currency);
+					//					final PriceData discountedPrice = new PriceData();
+					//					discountedPrice.setDoubleValue(buyBoxModel.getSpecialPrice());
+					//					discountedPrice.setFormattedValue(df.format(buyBoxModel.getSpecialPrice()));
+					//					discountedPrice.setCurrencyIso(currencyIso);
+					//					discountedPrice.setCurrencySymbol(currencySymbol);
 
 					productdto.setDiscountedPrice(discountedPrice);
 				}
