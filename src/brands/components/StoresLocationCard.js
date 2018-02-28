@@ -6,11 +6,13 @@ import { Image } from "xelpmoc-core";
 export default class StoresLocationCard extends React.Component {
   render() {
     return (
-      <div className={styles.base}>
-        <div className={styles.productInformation} />
-        <div className={styles.image}>
-          <Image image={this.props.image} />
-        </div>
+      <div
+        className={styles.base}
+        style={{
+          backgroundImage: `url(${this.props.image})`,
+          backgroundSize: "cover"
+        }}
+      >
         <div className={styles.ProductStockInnerBox}>
           <div className={styles.ProductStockHeading}>
             {this.props.headingText}
@@ -23,5 +25,6 @@ export default class StoresLocationCard extends React.Component {
 }
 StoresLocationCard.propTypes = {
   headingText: PropTypes.string,
-  label: PropTypes.string
+  label: PropTypes.string,
+  image: PropTypes.string
 };

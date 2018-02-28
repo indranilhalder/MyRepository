@@ -17,6 +17,7 @@ export default class StoresLocationBanner extends React.Component {
                 headingText={datum.headingText}
                 label={datum.label}
                 image={datum.image}
+                key={i}
               />
             );
           })}
