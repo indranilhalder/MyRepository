@@ -20,7 +20,7 @@ public class MplDefaultApiCachingStrategy implements MplApiCachingStrategy
 	@Autowired
 	private MplMemcachedClientHelper mplMemcachedClientHelper;
 
-	int ttl = 3600;
+	int ttl = 43200000;
 
 	private final static Logger LOG = Logger.getLogger(MplDefaultApiCachingStrategy.class.getName());
 
