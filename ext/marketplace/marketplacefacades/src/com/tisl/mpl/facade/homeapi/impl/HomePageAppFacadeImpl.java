@@ -241,11 +241,13 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 				}
 				if (buyBoxModel.getMrp() != null && Double.compare(buyBoxModel.getMrp().doubleValue(), 0.0) > 0)
 				{
-					final PriceData mrpPrice = new PriceData();
-					mrpPrice.setDoubleValue(buyBoxModel.getMrp());
-					mrpPrice.setFormattedValue(df.format(buyBoxModel.getMrp()));
-					mrpPrice.setCurrencyIso(currencyIso);
-					mrpPrice.setCurrencySymbol(currencySymbol);
+					final PriceData mrpPrice = priceDataFactory.create(PriceDataType.BUY,
+							BigDecimal.valueOf(buyBoxModel.getMrp().doubleValue()), currency);
+					//					final PriceData mrpPrice = new PriceData();
+					//					mrpPrice.setDoubleValue(buyBoxModel.getMrp());
+					//					mrpPrice.setFormattedValue(df.format(buyBoxModel.getMrp()));
+					//					mrpPrice.setCurrencyIso(currencyIso);
+					//					mrpPrice.setCurrencySymbol(currencySymbol);
 
 					productdto.setMrpPrice(mrpPrice);
 				}
