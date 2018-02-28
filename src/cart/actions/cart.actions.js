@@ -52,6 +52,7 @@ export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
 export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
+
 const pincode = 229001;
 
 export function cartDetailsRequest() {
@@ -282,6 +283,48 @@ export function addUserAddress(userAddress) {
     }
   };
 }
+export function selectDeliveryModeRequest() {
+  return {
+    type: SELECT_DELIVERY_MODES_REQUEST,
+    status: REQUESTING
+  };
+}
+export function selectDeliveryModeSuccess(deliveryModes) {
+  return {
+    type: SELECT_DELIVERY_MODES_SUCCESS,
+    status: SUCCESS,
+    deliveryModes
+  };
+}
+
+export function selectDeliveryModeFailure(error) {
+  return {
+    type: SELECT_DELIVERY_MODES_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function selectDeliveryMode(deliveryMode, ussId, cartId) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(userAddressRequest());
+    try {
+      const result = await api.post(`${USER_CART_PATH}/${
+        getState().user.user.customerInfo.mobileNumber
+      }/carts/${cartId}/selectDeliveryMode?access_token=${
+        JSON.parse(customerCookie).access_token
+      }&deliverymodeussId={"${ussId}":"${deliveryMode}"}&
+      removeExchange=0`);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(selectDeliveryModeSuccess(resultJson));
+    } catch (e) {
+      dispatch(selectDeliveryModeFailure(e.message));
+    }
+  };
+}
 
 export function addAddressToCartRequest(error) {
   return {
@@ -327,52 +370,6 @@ export function addAddressToCart(addressId) {
       dispatch(addAddressToCartSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
-    }
-  };
-}
-
-export function selectDeliveryModeRequest() {
-  return {
-    type: SELECT_DELIVERY_MODES_REQUEST,
-    status: REQUESTING
-  };
-}
-export function selectDeliveryModeSuccess(deliveryModes) {
-  return {
-    type: SELECT_DELIVERY_MODES_SUCCESS,
-    status: SUCCESS,
-    deliveryModes
-  };
-}
-
-export function selectDeliveryModeFailure(error) {
-  return {
-    type: SELECT_DELIVERY_MODES_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-
-export function selectDeliveryModes(deliverModes) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  return async (dispatch, getState, { api }) => {
-    dispatch(selectDeliveryModeRequest());
-    try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
-        }/carts/15481123719086096-00652012/selectDeliveryMode?access_token=${
-          JSON.parse(customerCookie).access_token
-        }&deliverymodeussId=%7B%22100220MFS7601D20TURQXL %22%3A%22home-delivery%22%2C%22123762PL13939JS04AJ%22%3A%22click-and- collect%22%7D&removeExchange=0`
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
-      }
-
-      dispatch(selectDeliveryModeSuccess(resultJson));
-    } catch (e) {
-      dispatch(selectDeliveryModeFailure(e.message));
     }
   };
 }
