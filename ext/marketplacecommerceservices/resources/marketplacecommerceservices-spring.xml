@@ -2373,12 +2373,12 @@
    
    <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
     	  <property name="cache" ref="promotionsCachingStrategy"/>
-	</bean>
+	</bean>-->
 	
 	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper" >
 	<constructor-arg value = "${promotion.memcache.env.ip}"/>
 	 </bean>
-	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
+	 <!-- <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
 		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
 	</bean>  -->
@@ -2510,6 +2510,10 @@
 	</bean>
 		
 	<bean id="mplCustomerReviewDao" class="com.tisl.mpl.marketplacecommerceservices.daos.product.impl.MplCustomerReviewDaoImpl" parent="customerReviewDao"/>
+	
+	<!-- memcache for new ui/ux pdp api -->
+	<bean id="defaultApiCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultApiCachingStrategy" scope="tenant"> 
+	</bean>
 	
 </beans>
 
