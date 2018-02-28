@@ -44,6 +44,9 @@ import com.tisl.mpl.model.cms.components.AutomatedBrandProductCarouselComponentM
 import com.tisl.mpl.model.cms.components.BannerProdCarouselElementCompModel;
 import com.tisl.mpl.model.cms.components.BannerProductCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.BannerSeparatorComponentModel;
+import com.tisl.mpl.model.cms.components.BrandTabAZBrandElementModel;
+import com.tisl.mpl.model.cms.components.BrandsTabAZElementModel;
+import com.tisl.mpl.model.cms.components.BrandsTabAZListComponentModel;
 import com.tisl.mpl.model.cms.components.ConnectBannerComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetComponentModel;
 import com.tisl.mpl.model.cms.components.ContentWidgetElementModel;
@@ -1409,6 +1412,80 @@ public class DefaultCMSComponentControler
 							uiCompPageElementWsDTO.setAdobeTargetComponent(adobeTargetComponentWsDTO);
 							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 
+						}
+
+						if (abstractCMSComponentModel instanceof BrandsTabAZListComponentModel)
+						{
+							final BrandsTabAZListComponentWsDTO brandsTabAZListComponentWsDTO = new BrandsTabAZListComponentWsDTO();
+							final BrandsTabAZListComponentModel brandsTabAZListComponentModel = (BrandsTabAZListComponentModel) abstractCMSComponentModel;
+							List<BrandsTabAZListWsDTO> brandsTabAZList = new ArrayList<BrandsTabAZListWsDTO>();
+							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+
+							for (BrandsTabAZElementModel brandsTabAZElementModel : brandsTabAZListComponentModel.getItems())
+							{
+								final List<BrandsTabAZHeroBannerWsDTO> heroBannerCompList = new ArrayList<BrandsTabAZHeroBannerWsDTO>();
+								BrandsTabAZHeroBannerWsDTO brandsTabAZHeroBannerWsDTO = new BrandsTabAZHeroBannerWsDTO();
+								final BrandsTabAZListWsDTO brandsTabAZListWsDTO = new BrandsTabAZListWsDTO();
+								brandsTabAZListWsDTO.setSubType(
+										null != brandsTabAZElementModel.getSubType() ? brandsTabAZElementModel.getSubType() : "");
+								for (HeroBannerComponentModel heroBannerComponentModel : brandsTabAZElementModel.getItems())
+								{
+									final HeroBannerCompWsDTO heroBannerCompWsDTO = new HeroBannerCompWsDTO();
+									final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
+									if (null != heroBannerComponentModel.getItems() && heroBannerComponentModel.getItems().size() > 0)
+									{
+										for (final HeroBannerElementModel heroBannerElementModel : heroBannerComponentModel.getItems())
+										{
+											final HeroBannerCompListWsDTO heroBannerCompListObj = new HeroBannerCompListWsDTO();
+											if (null != heroBannerElementModel.getImageURL()
+													&& null != heroBannerElementModel.getImageURL().getURL())
+											{
+												heroBannerCompListObj.setImageURL(heroBannerElementModel.getImageURL().getURL());
+											}
+											else
+											{
+												heroBannerCompListObj.setImageURL("");
+											}
+											if (null != heroBannerElementModel.getBrandLogo()
+													&& null != heroBannerElementModel.getBrandLogo().getURL())
+											{
+												heroBannerCompListObj.setBrandLogo(heroBannerElementModel.getBrandLogo().getURL());
+											}
+											else
+											{
+												heroBannerCompListObj.setBrandLogo("");
+											}
+											heroBannerCompListObj.setTitle(
+													null != heroBannerElementModel.getTitle() ? heroBannerElementModel.getTitle() : "");
+											heroBannerCompListObj.setWebURL(
+													null != heroBannerElementModel.getWebURL() ? heroBannerElementModel.getWebURL() : "");
+											heroBannerCompListWsDTO.add(heroBannerCompListObj);
+										}
+									}
+									heroBannerCompWsDTO.setItems(heroBannerCompListWsDTO);
+									heroBannerCompWsDTO.setType("Hero Banner Component");
+									brandsTabAZHeroBannerWsDTO.setHeroBannerComponent(heroBannerCompWsDTO);
+									heroBannerCompList.add(brandsTabAZHeroBannerWsDTO);
+								}
+								List<BrandsTabAZListElementWsDTO> brandsTabAZElementList = new ArrayList<BrandsTabAZListElementWsDTO>();
+								for (BrandTabAZBrandElementModel brandTabAZBrandElementModel : brandsTabAZElementModel.getBrands())
+								{
+									final BrandsTabAZListElementWsDTO brandsTabAZListElement = new BrandsTabAZListElementWsDTO();
+									brandsTabAZListElement.setBrandName(null != brandTabAZBrandElementModel.getBrandName()
+											? brandTabAZBrandElementModel.getBrandName() : "");
+									brandsTabAZListElement.setWebURL(
+											null != brandTabAZBrandElementModel.getWebURL() ? brandTabAZBrandElementModel.getWebURL() : "");
+									brandsTabAZElementList.add(brandsTabAZListElement);
+								}
+								brandsTabAZListWsDTO.setItems(heroBannerCompList);
+								brandsTabAZListWsDTO.setBrands(brandsTabAZElementList);
+								brandsTabAZList.add(brandsTabAZListWsDTO);
+
+							}
+							brandsTabAZListComponentWsDTO.setItems(brandsTabAZList);
+							brandsTabAZListComponentWsDTO.setType("Brands Tab AZ List Component");
+							uiCompPageElementWsDTO.setBrandsTabAZListComponent(brandsTabAZListComponentWsDTO);
+							genericUICompPageWsDTO.add(uiCompPageElementWsDTO);
 						}
 					}
 				}

@@ -82,6 +82,12 @@
 		<collectiontype elementtype="SmartFilterWidgetElement"
 			code="SmartFilterWidgetCollection" type="list" autocreate="true"
 			generate="true" />
+		<collectiontype elementtype="HeroBannerComponent" code="HeroBannerComponentCollection"
+		type="list" autocreate="true" generate="true"/>
+		<collectiontype elementtype="BrandsTabAZElement" code="BrandsTabAZCollection"
+		type="list" autocreate="true" generate="true" />
+		<collectiontype elementtype="BrandTabAZBrandElement" code="BrandTabAZBrandCollection"
+		type="list" autocreate="true" generate="true" />
 		<collectiontype code="ChildOrderCollection"
 			elementtype="Order" autocreate="true" generate="true" type="list" />
 		<!-- Collection of SimpleBannerComponent -->
@@ -6145,6 +6151,58 @@
 						<persistence type='property' />
 					</attribute>
 				</attributes>
+			</itemtype>
+			
+			<itemtype code="BrandsTabAZListComponent" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BrandsTabAZListComponent">
+			<attributes>
+			<attribute type="BrandsTabAZCollection" qualifier="items">
+				<modifiers read="true" write="true" search="true"
+						 optional="false" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="BrandsTabAZElement" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BrandsTabAZElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="subType">
+						<modifiers read="true" write="true" search="true"
+						 optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="HeroBannerComponentCollection" qualifier="items">
+						<modifiers read="true" write="true" search="true"
+						 optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="BrandTabAZBrandCollection" qualifier="brands">
+						<modifiers read="true" write="true" search="true"
+						 optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			
+			<itemtype code="BrandTabAZBrandElement" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BrandTabAZBrandElement">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="webURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="false" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="brandName">
+				<modifiers read="true" write="true" search="true"
+						 optional="false" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
 			</itemtype>
 			
 			<!-- Changes for Shop By Brand -->

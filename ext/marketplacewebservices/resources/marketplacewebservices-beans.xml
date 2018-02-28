@@ -4231,6 +4231,26 @@
 		<property name="mbox" type="java.lang.String" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.BrandsTabAZListComponentWsDTO">
+		<property name="type" type="java.lang.String"/>
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.BrandsTabAZListWsDTO>"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BrandsTabAZListWsDTO">
+		<property name="SubType" type="java.lang.String"/>
+		<property name="items" type="java.util.List&lt;com.tisl.mpl.wsdto.BrandsTabAZHeroBannerWsDTO>"></property>
+		<property name="brands" type="java.util.List&lt;com.tisl.mpl.wsdto.BrandsTabAZListElementWsDTO>"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BrandsTabAZHeroBannerWsDTO">
+	<property name="heroBannerComponent" type="com.tisl.mpl.wsdto.HeroBannerCompWsDTO"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BrandsTabAZListElementWsDTO">
+		<property name="webURL" type="java.lang.String"/>
+		<property name="brandName" type="java.lang.String"></property>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
 		<property name="heroBannerComponent"
 			type="com.tisl.mpl.wsdto.HeroBannerCompWsDTO"/>
@@ -4272,6 +4292,8 @@
 			type="com.tisl.mpl.wsdto.MSDComponentWsDTO"/>
 		<property name="adobeTargetComponent"
 			type="com.tisl.mpl.wsdto.AdobeTargetComponentWsDTO"/>
+		<property name="brandsTabAZListComponent" 
+			type="com.tisl.mpl.wsdto.BrandsTabAZListComponentWsDTO"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.UICompPageWiseWsDTO">
