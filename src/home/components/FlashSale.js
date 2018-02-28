@@ -3,9 +3,40 @@ import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FlashSale.css";
+import concat from "lodash/concat";
+import { transformItem } from "./utils.js";
+
+const OFFER_AND_ITEM_LIMIT = 4;
 export default class FlashSale extends React.Component {
+  componentDidUpdate() {
+    const offers = this.props.feedComponentData.offers;
+    const itemIds = this.props.feedComponentData.itemIds;
+    let itemIdsToAdd;
+
+    if (offers.length < OFFER_AND_ITEM_LIMIT && itemIds) {
+      const numberOfItemsToTake = OFFER_AND_ITEM_LIMIT - offers.length;
+      itemIdsToAdd = itemIds.slice(0, numberOfItemsToTake);
+      if (
+        itemIds.length > 0 &&
+        this.props.feedComponentData.items.length === 0
+      ) {
+        this.props.getItems(this.props.positionInFeed, itemIdsToAdd);
+      }
+    }
+  }
+
   render() {
-    const data = this.props.feedComponentData.data;
+    const items = this.props.feedComponentData.items.map(item => {
+      return transformItem(item);
+    });
+    let offersAndItemsArray = concat(
+      this.props.feedComponentData.offers,
+      items
+    );
+
+    console.log("FLASH SALE");
+    console.log(this.props.feedComponentData.offers);
+
     return (
       <div
         className={styles.base}
@@ -23,8 +54,8 @@ export default class FlashSale extends React.Component {
         </div>
         <div className={styles.subheader}>{this.props.subHeader}</div>
         <Grid offset={20}>
-          {data.items &&
-            data.items.map((datum, i) => {
+          {offersAndItemsArray &&
+            offersAndItemsArray.map((datum, i) => {
               return (
                 <ProductModule
                   key={i}
