@@ -3610,9 +3610,10 @@ public class CartsController extends BaseCommerceController
 	{ "/applyCartCoupons", "/{cartId}/applyCartCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ApplyCartCouponsDTO applyCartCoupons(@RequestParam final String couponCode,
-			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
+			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode,
+			@RequestParam(required = false) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException
 	{
 		ApplyCartCouponsDTO applycouponDto = new ApplyCartCouponsDTO();
 		CartModel cartModel = null;
@@ -3662,6 +3663,35 @@ public class CartsController extends BaseCommerceController
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
+					if (isPwa)
+					{
+						final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+						final Double mrp = mplCartWebService.calculateCartTotalMrp(cartModel);
+						final DecimalFormat df = new DecimalFormat("#.##");
+						final CurrencyModel currency = commonI18NService.getCurrency(INR);
+						final double amountInclDelCharge = Double.parseDouble(applycouponDto.getTotal());
+						double actualDelCharge = 0.0;
+						if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+						{
+							for (final AbstractOrderEntryModel cartentry : cartModel.getEntries())
+							{
+								actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+							}
+						}
+						final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+						double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+						discount = Double.parseDouble(df.format(discount));
+						final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount),
+								currency);
+						final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+								currency);
+						final PriceData paybleAmount = priceDataFactory.create(PriceDataType.BUY,
+								BigDecimal.valueOf(amountInclDelCharge), currency);
+						pricePwa.setBagTotal(totalMrp);
+						pricePwa.setTotalDiscountAmount(totalDiscount);
+						pricePwa.setPaybleAmount(paybleAmount);
+						applycouponDto.setCartAmount(pricePwa);
+					}
 				}
 			}
 			else
@@ -3748,7 +3778,6 @@ public class CartsController extends BaseCommerceController
 		}
 		return applycouponDto;
 	}
-
 
 
 	/**
