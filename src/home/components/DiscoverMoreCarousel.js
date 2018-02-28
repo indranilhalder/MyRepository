@@ -6,7 +6,7 @@ import styles from "./DiscoverMoreCarousel.css";
 
 export default class DiscoverMoreCarousel extends React.Component {
   render() {
-    const discoverMoreCarouselData = this.props.feedComponentData.data;
+    const discoverMoreCarouselData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
         <Carousel header={this.props.feedComponentData.title}>
