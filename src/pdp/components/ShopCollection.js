@@ -1,16 +1,15 @@
 import React from "react";
-import styles from "./BeatsCollection.css";
+import styles from "./ShopCollection.css";
 import { Image } from "xelpmoc-core";
 import Button from "../../general/components/Button";
 import PropTypes from "prop-types";
-export default class BeatsCollection extends React.Component {
+export default class ShopCollection extends React.Component {
   handleClick = () => {
     if (this.props.onClick) {
       this.props.onClick();
     }
   };
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.imageHolder}>
@@ -36,7 +35,7 @@ export default class BeatsCollection extends React.Component {
     );
   }
 }
-BeatsCollection.propTypes = {
+ShopCollection.propTypes = {
   onClick: PropTypes.func,
   textLine: PropTypes.string,
   title: PropTypes.string,
