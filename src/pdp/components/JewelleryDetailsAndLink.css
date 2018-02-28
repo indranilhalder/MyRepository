@@ -47,6 +47,7 @@
 .discount {
   width: auto;
   display: inline-block;
+  color: #ff1744;
 }
 .deletePrice {
   text-decoration: line-through;
