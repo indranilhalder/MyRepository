@@ -5,8 +5,7 @@ import thunk from "redux-thunk";
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import * as user from "../mocks/user.mock";
 import * as Cookie from "../../lib/Cookie";
-const SIGN_UP_PATH =
-  "v2/mpl/users/customerRegistration?access_token=undefined&isPwa=true&username=undefined&password=123456&platformNumber=2";
+const SIGN_UP_PATH = `v2/mpl/users/customerRegistration?access_token=undefined&isPwa=true&username=undefined&password=123456&platformNumber=2`;
 const LOGIN_PATH =
   "v2/mpl/users/test@xelpmoc.in/customerLogin?access_token=undefined&password=123456&isPwa=true";
 const OTP_VERIFICATION_PATH =
