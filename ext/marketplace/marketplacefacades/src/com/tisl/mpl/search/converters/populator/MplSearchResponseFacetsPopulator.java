@@ -6,6 +6,7 @@ package com.tisl.mpl.search.converters.populator;
 import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetValueData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData;
+import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryTermData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.populators.SearchResponseFacetsPopulator;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.provider.TopValuesProvider;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
@@ -142,6 +143,41 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 		facetData.setSelectedFilterCount(count);
 		facetData.setValues(allFacetValues);
 
+		if (facetData.getCode().equalsIgnoreCase("price"))
+		{
+			if (count == 0)
+			{
+				//facetData = facetSelectedPrice(searchQueryData, facetData.getCode(), facetData);
+				for (final SolrSearchQueryTermData termData : searchQueryData.getFilterTerms())
+				{
+					if ((termData.getKey().equals(facetData.getCode())))
+					{
+						facetData.setCustomeRange(Boolean.TRUE);
+						//String price=termData.getValue();
+						facetData.setRangeApplied(Boolean.TRUE);
+						final String[] array = termData.getValue().split("-");
+
+						if (array.length >= 2)
+						{
+							facetData.setMinPrice(array[0]);
+							facetData.setMaxPrice(array[1]);
+						}
+
+
+
+					}
+				}
+			}
+
+			if (count >= 1)
+			{
+				//
+				facetData.setRangeApplied(Boolean.TRUE);
+				facetData.setCustomeRange(Boolean.FALSE);
+			}
+
+		}
+
 		final TopValuesProvider topValuesProvider = getTopValuesProvider(indexedProperty);
 		if ((isRanged(indexedProperty)) || (topValuesProvider == null))
 		{
@@ -172,15 +208,17 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 			final Facet facet, final FacetValue facetValue, final SearchResult solrSearchResult,
 			final SolrSearchQueryData searchQueryData)
 	{
-		if (facetData.isMultiSelect())
+
+		if (facetData.isMultiSelect() || facetData.getName().equalsIgnoreCase("price"))
 		{
 			final FacetValueData facetValueData = createFacetValueData();
 			facetValueData.setCode(facetValue.getName());
 			facetValueData.setName(facetValue.getDisplayName());
 			facetValueData.setCount(facetValue.getCount());
 
+			final boolean isSelected = isFacetSelected(searchQueryData, facet.getName(), facetValue.getName());
 
-			facetValueData.setSelected(isFacetSelected(searchQueryData, facet.getName(), facetValue.getName()));
+			facetValueData.setSelected(isSelected);
 
 			if (facetValueData.isSelected())
 
@@ -192,6 +230,16 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 			{
 				facetValueData.setQuery(refineQueryAddFacet(searchQueryData, facet.getName(), facetValue.getName()));
 			}
+
+			//			if (facetData.getName().equalsIgnoreCase("price"))
+			//			{
+			//				//
+			//				if (isSelected)
+			//				{
+			//					facetData.setRangeApplied(Boolean.TRUE);
+			//				}
+			//
+			//			}
 
 			return facetValueData;
 
@@ -220,4 +268,30 @@ public class MplSearchResponseFacetsPopulator extends SearchResponseFacetsPopula
 		}
 		return null;
 	}
+
+
+	//	protected FacetData facetSelectedPrice(final SolrSearchQueryData searchQueryData, final String facetName,
+	//			final FacetData facetData)
+	//	{
+	//		for (final SolrSearchQueryTermData termData : searchQueryData.getFilterTerms())
+	//		{
+	//			if ((termData.getKey().equals(facetName)))
+	//			{
+	//				facetData.setCustomeRange(Boolean.TRUE);
+	//				//String price=termData.getValue();
+	//				facetData.setRangeApplied(Boolean.TRUE);
+	//				final String[] array = termData.getValue().split("-");
+	//
+	//				if (array.length >= 2)
+	//				{
+	//					facetData.setMinPrice(array[0]);
+	//					facetData.setMaxPrice(array[1]);
+	//				}
+	//
+	//
+	//
+	//			}
+	//		}
+	//		return facetData;
+	//	}
 }

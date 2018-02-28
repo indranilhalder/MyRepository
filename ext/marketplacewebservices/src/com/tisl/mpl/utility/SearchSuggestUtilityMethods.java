@@ -182,7 +182,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -1874,7 +1874,6 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
-
 		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
 
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
@@ -1906,6 +1905,25 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+						}
+						if (null != facate.getCustomeRange())
+						{
+							facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+							if (facate.getCustomeRange().booleanValue())
+							{
+								facetWsDTO.setMinPrice(facate.getMinPrice());
+								facetWsDTO.setMaxPrice(facate.getMaxPrice());
+							}
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -2081,6 +2099,25 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+					
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+						}
+						if (null != facate.getCustomeRange())
+						{
+							facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+							if (facate.getCustomeRange().booleanValue())
+							{
+								facetWsDTO.setMinPrice(facate.getMinPrice());
+								facetWsDTO.setMaxPrice(facate.getMaxPrice());
+							}
+						}
+					}
+					
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))

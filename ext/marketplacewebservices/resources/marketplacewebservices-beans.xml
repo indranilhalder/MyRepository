@@ -2083,6 +2083,10 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
 		<!--  Added for NU-38 start-->	
 		<property name="selectedFilterCount" type="int" />
+		<property name="maxPrice" type="String" />
+		<property name="minPrice" type="String" />
+		<property name="rangeApplied" type="Boolean" />
+		<property name="customeRange" type="Boolean" />
 		<!--  Added for NU-38 end-->
 	</bean>
 
@@ -2095,7 +2099,7 @@
 		<property name="value" type="String" />
 		<property name="subcategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
-
+        <property name="hexColor" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
@@ -3818,6 +3822,10 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.facetdata.FacetData&lt;STATE>">
 	   <property name="selectedFilterCount" type="int"/>
+	   <property name="maxPrice" type="String" />
+	   <property name="minPrice" type="String" />
+	   <property name="rangeApplied" type="Boolean" />
+	   <property name="customeRange" type="Boolean" />
 	</bean>
 	<!--  Added for NU-38 end-->
 	
