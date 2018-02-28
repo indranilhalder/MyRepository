@@ -916,6 +916,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					if (null != response && response.equalsIgnoreCase(SUCCESS))
 					{
 						sendNotifiactionForEGVOrder(orderModel);
+						orderModel.setStatus(OrderStatus.PAYMENT_SUCCESSFUL);
+						modelService.save(orderModel);
 					}
 					else
 					{
@@ -1518,7 +1520,20 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				else if (mplAuditEntry.getStatus().toString().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING))
 				{
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+					/**
+					 * EGV CARD PURCHASE
+					 */
+					if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+					{
+						mplEGVCartService.removeOldEGVCartCurrentCustomer();
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						orderModel.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						modelService.save(orderModel);
+					}
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+					}
+					
 
 					try
 					{
