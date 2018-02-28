@@ -22,7 +22,7 @@
 	<div class="orderStatementMainItemBody">
 		<c:choose>
 			<c:when test="${juspayMode eq true}">
-				<div class="orderStatMainBody">'
+				<div class="orderStatMainBody">
 					<fmt:formatNumber var="juspayTotal" value="${juspayAmount}" maxFractionDigits="2" minFractionDigits="2" />
 					<h4><span class="toggleStatementL1Info" onclick="toggleData(this);">+</span> ${orderDetail.mplPaymentInfo.paymentOption} <span class="totalOrderPrice">&#8377;${juspayTotal}</span></h4>
 					<div class="orderStatementL1Body">
