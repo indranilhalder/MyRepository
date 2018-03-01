@@ -4,21 +4,18 @@ import styles from "./BrandCoupons.css";
 import { Image } from "xelpmoc-core";
 
 export default class BrandCoupons extends React.Component {
-  onSelect() {
-    if (this.props.selectItem) {
-      this.props.selectItem();
-    }
-  }
   render() {
-    console.log(this.props);
     return (
-      <div className={styles.base} onClick={() => this.onSelect()}>
-        <div className={styles.headingText}>{this.props.heading}</div>
+      <div className={styles.base}>
+        <div className={styles.couponInerBox}>
+          <div className={styles.headingText}>{this.props.heading}</div>
+          {this.props.time && (
+            <div className={styles.timeText}>{this.props.time}</div>
+          )}
+        </div>
         <div className={styles.label}>{this.props.label}</div>
-        {/* <div className={styles.couponInerBox}> */}
         <div className={styles.imageHolder}>
           <Image image={this.props.image} />
-          {/* </div> */}
         </div>
       </div>
     );
@@ -26,5 +23,6 @@ export default class BrandCoupons extends React.Component {
 }
 BrandCoupons.propTypes = {
   label: PropTypes.string,
-  image: PropTypes.string
+  image: PropTypes.string,
+  time: PropTypes.string
 };
