@@ -32,7 +32,6 @@ const cart = (
     orderSummaryStatus: null,
     orderSummaryError: null,
     coupons: null
-
   },
   action
 ) => {
