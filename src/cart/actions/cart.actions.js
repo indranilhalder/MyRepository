@@ -940,7 +940,7 @@ export function addStoreCNC(ussId, slaveId) {
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).code;
   return async (dispatch, getState, { api }) => {
-    dispatch(getAllStoresCNCRequest());
+    dispatch(addStoreCNCRequest());
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${
