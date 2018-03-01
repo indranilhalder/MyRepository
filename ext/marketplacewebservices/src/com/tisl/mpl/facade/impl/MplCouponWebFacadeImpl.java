@@ -165,12 +165,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
    					}
                }
              // EGV Changes END
-
-					if (StringUtils.isNotEmpty(cartCouponCode))
-					{
-						data = reapplyCartCoupon(data, cartCouponCode, cartModel);
-					}
-
+               
 					//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 					if (data != null && data.getCouponDiscount() != null && data.getCouponDiscount().getValue() != null)
 					{

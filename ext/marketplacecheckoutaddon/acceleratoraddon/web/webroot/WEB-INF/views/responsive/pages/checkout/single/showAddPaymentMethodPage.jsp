@@ -42,7 +42,7 @@
 	<spring:eval
 		expression="T(de.hybris.platform.util.Config).getParameter('marketplace.payment.wallet')"
 		var="walletEnable" />
-		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="addGiftCardEnable"/>
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')" var="addGiftCardEnable"/>
 	
 	<div class="checkout-content checkout-payment cart checkout wrapper">
 		<!-- Added for Wallet -->
@@ -131,8 +131,8 @@
 									</c:choose>
 								</c:if>
 
-								<span class="viewCardTerms"><a href="#"><spring:theme
-											code="text.cliq.cash.payment.term.label" /> </a></span> 
+								<%-- <span class="viewCardTerms"><a href="#"><spring:theme
+											code="text.cliq.cash.payment.term.label" /> </a></span>  --%>
 							</div>
 							<br />
 							<spring:theme code="text.cliq.cash.payment.addcash.label"
@@ -2161,8 +2161,8 @@ function submitWalletData(){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
 				}
-				else if(response='EXPIRED'){
-					$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+				else if(response=='EXPIRED'){
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only, please generate again.");
 					$(".wcOTPError").show();
 				}
 				else if(response=='success'){

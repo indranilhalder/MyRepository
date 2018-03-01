@@ -1,9 +1,11 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.core.mplqcprogram.dao;
 
 import com.tisl.mpl.core.model.MplQCProgramConfigModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
+
 
 /**
  * @author Tech
@@ -12,6 +14,6 @@ import com.tisl.mpl.core.model.MplQCProgramConfigModel;
 public interface MplQCProgramDao
 {
 	public MplQCProgramConfigModel getProgramIdConfigValueById(final String id);
-	
-	public String  getCardTotalAmount(final String cardNumber);
+
+	public WalletCardApportionDetailModel getCardTotalAmount(final String cardNumber);
 }

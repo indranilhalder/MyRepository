@@ -35,10 +35,27 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String LUX_TRACK_ORDER_LONG_URL_FORMAT = "lux.order.track.longurl.format".intern();
 	public static final String SHORTURL_CONNECTION_TIMEOUT = "short.url.connection.timeout";
 	public static final String SHORTURL_READ_TIMEOUT = "short.url.read.timeout";
+	public static final String QC_TIME_OUT = "qcTimeout";
 
 
 	// QC Wallet
-	public static final String QC_INITIALIZATION_URL = "http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/initialize";
+	public static final String QC_INITIALIZATION_URL = "initialize";
+	public static final String QC_WALLET_URL = "wallet/";
+	public static final String PURCHASE_EGV_CARD ="gc/createandissue";
+	public static final String GET_QC_BALANCE="/balance";
+	public static final String QC_WALLET_REDEMED = "/Redeem";
+	public static final String QC_CANCEL_REDEMED = "/Cancelredeem";
+	public static final String QC_WALLET_LOAD_CASHBACK ="/load/CASHBACK";
+	public static final String QC_WALLET_CANCEL_LOAD = "/CancelLoad";
+	public static final String QC_WALLET_QC_CARD = "/card";
+	public static final String QC_WALLET_QC_BALANCE = "/balance";
+	public static final String QC_WALLET_LIST_TRANSACTIONS = "/transactions";
+	public static final String QC_WALLET_LOAD_PROMOTION = "/load/PROMOTION";
+	public static final String QC_WALLET_LOAD_CREDIT = "/load/CREDIT";
+	public static final String QC_WALEET_ACTIVATE = "/Activate";
+	public static final String QC_WALLET_DEACTIVATE = "/Deactivate";
+	public static final String QC_WALLET_CUSTOMER ="/customer";
+	
 	public static final String FORWARDING_ENTITY_ID = "ForwardingEntityId";
 	public static final String FORWARDING_ENTITY_PASSWORD = "ForwardingEntityPassword";
 	public static final String TERMINAL_ID = "TerminalId";
@@ -56,9 +73,9 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String POS_NAME = "POSName";
 	public static final String TERM_APP_VERSION = "TermAppVersion";
 	public static final String CURRENT_BATCH_NUMBER = "CurrentBatchNumber";
+	public static final String QC_URL="qcUrl";
 
-	public static final String ADD_TO_CARD_TO_WALLET = "http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/";
-	public static final String GET_BALANCE_FOR_WALLET = "http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/";
+	
 
 	// QC Wallet
 

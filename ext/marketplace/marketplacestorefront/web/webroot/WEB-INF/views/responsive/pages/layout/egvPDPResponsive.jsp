@@ -15,14 +15,29 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <template:page pageTitle="${pageTitle}">
+<style>
+ul.dropdown-menu {
+	border-top: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+@media(max-width: 480px){
+	ul.dropdown-menu {
+		border: none;
+	}
+	
+	ul.dropdown-menu li a {
+		padding: 0;
+		height: 50px;
+		padding-top: 13px;
+	}
+}
+</style>
+<input type="hidden" id="minPrice" value="${minPrice}"/>
+<input type="hidden" id="maxPrice" value="${maxPrice}"/>
 	<div>
 		<br />
 		<div class="clearfix">
@@ -38,7 +53,7 @@
 										code="egv.product.msg.default" /></i></span>
 						</div>
 						<div class="giftFinalTempBottom">
-							<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
+							<span><span id="updatedCustomGiftValue"></span></span>
 						</div>
 					</div>
 				</div>
@@ -498,12 +513,14 @@ function validateEgvForm() {
 	var toEmail = $(".giftCard_toEmail").val();
 	var letters = new RegExp(/^[A-z]*$/);
 	var emailValidExpression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	var minPrice = $("#minPrice").val();
+	var maxPrice = $("#maxPrice").val();
 	
-	if(document.getElementById('customAmount').value >= 15 && document.getElementById('customAmount').value < 15001) {
+	if(parseInt(document.getElementById('customAmount').value) >= minPrice && parseInt(document.getElementById('customAmount').value) <= maxPrice) {
 		$("#customAmountError").hide();
 	} else {
 		$("#customAmountError").show();
-		$("#customAmountError").text('Please enter amount from 15 to 15000.');
+		$("#customAmountError").text('Please enter amount from '+minPrice+' to '+maxPrice+'.');
 		formValid = false;
 	}
 	
@@ -619,16 +636,31 @@ function validateEgvForm() {
 		    }); */
 		
 		//Updating Amount
+		if($("input[name=giftRange]:checked").val()) {
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+$("input[name=giftRange]:checked").val();
+			$("input[name=giftRange]:checked").closest('span').addClass('active');
+			document.getElementById('customAmount').value = $("input[name=giftRange]:checked").val();
+		} else if(document.getElementById('customGiftValue').value != '') {
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+document.getElementById('customGiftValue').value;
+			document.getElementById('customAmount').value = document.getElementById('customGiftValue').value;
+		} else {
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+0;
+		}
+		    
+		if(document.getElementById('giftCardMessageText').value != '') {
+			document.getElementById('updatedGiftCardMessageText').innerHTML = '&nbsp; &nbsp; &nbsp; &nbsp; '+document.getElementById('giftCardMessageText').value;
+		}
+		
 		$("input[name=giftRange]").on('change', function (){
 			document.getElementById('customGiftValue').value = '';
-			document.getElementById('updatedCustomGiftValue').innerHTML = $("input[name=giftRange]:checked").val();
+			document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+$("input[name=giftRange]:checked").val();
 			document.getElementById('customAmount').value = $("input[name=giftRange]:checked").val();
 		});
 		
 		$("#customGiftValue").on('keyup blur', function(){
 			$('input[name=giftRange]:checked').parents().find('.active').removeClass('active');
 			$("input[name=giftRange]").prop('checked', false);
-	       document.getElementById('updatedCustomGiftValue').innerHTML = $(this).val();
+	       document.getElementById('updatedCustomGiftValue').innerHTML = '&#8377;'+$(this).val();
 	       document.getElementById('customAmount').value = $(this).val();
 	    });
 	});
@@ -819,8 +851,8 @@ function submitWalletData(){
 				else if(response=='OTPERROR'){
 					$(".wcOTPError").text("OTP verification failed. Please try again");
 					$(".wcOTPError").show();
-				}else if(response='EXPIRED'){
-					$(".wcOTPError").text("Your OTP is valid for 2 minutes only,");
+				}else if(response=='EXPIRED'){
+					$(".wcOTPError").text("Your OTP is valid for 2 minutes only, please generate again.");
 					$(".wcOTPError").show();
 				}
 				else if(response=='qcDown'){
@@ -837,5 +869,17 @@ function submitWalletData(){
 			}
 		}); 
 } 
+
+var isOTPValidtion = '${isOTPValidtion}';
+
+window.addEventListener( "pageshow", function ( event ) {
+   var historyTraversal = event.persisted || ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 );
+   if ( historyTraversal ) {
+     // Handle page restore.
+     if(isOTPValidtion == 'false'){
+         window.location.reload();
+     }
+   }
+ });
 
 </script>

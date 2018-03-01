@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facades.cms.data.AmpMenifestData;
 import com.tisl.mpl.facades.cms.data.AmpServiceWorkerData;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 
 
 /**
@@ -158,11 +159,23 @@ public class ServiceWorkerController
 	public String tealiumHtml(final HttpServletRequest request, final HttpServletResponse response) throws IOException
 	{
 		// code here
-		final String ampAnalyticsHostTealium = configurationService.getConfiguration().getString("amp.analytics.source.origin",
-				"*.tatacliq.com");
-		response.addHeader("Access-Control-Allow-Origin", ampAnalyticsHostTealium);
-		response.addHeader("AMP-Access-Control-Allow-Source-Origin", ampAnalyticsHostTealium);
-		response.addHeader("Access-Control-Expose-Headers", ampAnalyticsHostTealium);
+		final String ampAnalyticsHostTealium = configurationService.getConfiguration().getString(
+				MessageConstants.AMP_ANALYTICS_SOURCE_ORIGIN, MessageConstants.TATACLIQ_URL);
+		response.addHeader(MessageConstants.ACCESS_CONTROL_ALLOW_REQUEST_HEADER, ampAnalyticsHostTealium);
+		response.addHeader(MessageConstants.AMP_ACCESS_CONTROL_ALLOW_SOURCE_REQUEST_HEADER, ampAnalyticsHostTealium);
+		response.addHeader(MessageConstants.ACCESS_CONTROL_EXPOSE_HEADER, ampAnalyticsHostTealium);
 		return "pages/pwamp/iframeUtag";
+	}
+
+	@RequestMapping(value = "/stats.html", method = RequestMethod.GET)
+	public String dtmHtml(final HttpServletRequest request, final HttpServletResponse response) throws IOException
+	{
+		// code here
+		final String ampAnalyticsHostTealium = configurationService.getConfiguration().getString(
+				MessageConstants.AMP_ANALYTICS_SOURCE_ORIGIN, MessageConstants.TATACLIQ_URL);
+		response.addHeader(MessageConstants.ACCESS_CONTROL_ALLOW_REQUEST_HEADER, ampAnalyticsHostTealium);
+		response.addHeader(MessageConstants.AMP_ACCESS_CONTROL_ALLOW_SOURCE_REQUEST_HEADER, ampAnalyticsHostTealium);
+		response.addHeader(MessageConstants.ACCESS_CONTROL_EXPOSE_HEADER, ampAnalyticsHostTealium);
+		return "pages/pwamp/stats";
 	}
 }

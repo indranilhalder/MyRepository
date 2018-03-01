@@ -410,7 +410,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 				{
 					if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 					{
-						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 						{
 							totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
 						}
@@ -492,7 +492,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
    			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
    				 double qcCliqCashAmt =0.0D;
    					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
    						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue());  
    						   QCCreditRequest qcCreditRequest =new QCCreditRequest();
    		    	      	qcCreditRequest.setAmount(decimalFormat.format(qcCliqCashAmt));
@@ -631,7 +631,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 			{
 				if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 				{
-					if (cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+					if (cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 					{
 						cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue());
 					}
@@ -675,9 +675,9 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 			}
 			walletCardApportionDetailModel.setTransactionId(response.getTransactionId().toString());
 			walletCardApportionDetailModel.setQcApportionValue(walletObject.getQcApportionValue());
-			walletCardApportionDetailModel.setQcDeliveryValue(walletObject.getQcDeliveryValue());
-			walletCardApportionDetailModel.setQcSchedulingValue(walletObject.getQcSchedulingValue());
-			walletCardApportionDetailModel.setQcShippingValue(walletObject.getQcShippingValue());
+			walletCardApportionDetailModel.setQcDeliveryValue("0");
+			walletCardApportionDetailModel.setQcSchedulingValue("0");
+			walletCardApportionDetailModel.setQcShippingValue("0");
 		}else{
 			walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
 			walletCardApportionDetailModel.setTransactionId("0");

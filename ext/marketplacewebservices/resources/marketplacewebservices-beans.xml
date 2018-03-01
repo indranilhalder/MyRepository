@@ -1562,6 +1562,9 @@
 		<property name="isWalletPay" type="boolean" />
 		<property name="walletTransactionId" type="String" />
 		<property name="orderAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
+		<property name="JuspayAmountDeducted" type="java.lang.Double" />
+
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -2410,6 +2413,7 @@
 		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isRemainingAmount" type="boolean" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->

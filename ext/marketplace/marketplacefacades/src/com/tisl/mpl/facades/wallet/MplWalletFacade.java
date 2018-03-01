@@ -32,7 +32,7 @@ public interface MplWalletFacade
 
 	public QCCustomerRegisterResponse createWalletContainer(final QCCustomerRegisterRequest registerCustomerRequest);
 
-	public void addEGVToWallet();
+	/*public void addEGVToWallet();*/
 
 	public BalanceBucketWise getQCBucketBalance(final String customerWalletId);
 
@@ -60,7 +60,7 @@ public interface MplWalletFacade
 	
 	public CustomerWalletDetailResponse deactivateQCUserAccount(String walletId);
 	
-	public WalletCreateData getWalletCreateData();
+	public WalletCreateData getWalletCreateData(CustomerModel customer);
 	
 	public OTPResponseData validateOTP(final String customerID, final String enteredOTPNumber);
 	

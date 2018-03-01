@@ -3273,24 +3273,22 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
-			if (null != customer)
-			{
-				if (null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
-				{
+
+			if(null != customer) {
+				LOG.error(" FIrst Name "+customer.getFirstName());
+				LOG.error("QC FIrst Name "+customer.getQcVerifyFirstName());
+
+				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
 					egvProductData.setIsWalletCreated(true);
 				}
 				if (null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					egvProductData.setIsWalletOtpVerified(true);
-				}
-				else
-				{
-					final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
-					if (null != walletCreateData)
-					{
-						if (null != walletCreateData.getQcVerifyFirstName()
-								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName()))
-						{
+
+				}else {
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
+					if(null != walletCreateData) {
+						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
 							egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
 						}
 						if (null != walletCreateData.getQcVerifyLastName()

@@ -44,6 +44,7 @@ $("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function(){
 			
 	});
 	}
+	dtmPaymentModeSelection('credit card');
 });
 
 $("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
@@ -77,6 +78,7 @@ $("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
 	utag.link({
 		"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
 	});
+	dtmPaymentModeSelection('debit card');
 });
 
 $("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function(){
@@ -98,6 +100,7 @@ $("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function(){
 	utag.link({
 		"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
 	});
+	dtmPaymentModeSelection('net banking');
 });
 
 $("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
@@ -127,6 +130,7 @@ $("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
 			"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	dtmPaymentModeSelection('cod');
 });
 
 $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){
@@ -149,6 +153,7 @@ $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){
 	utag.link({
 		"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
 	});
+	dtmPaymentModeSelection('emi');
 }); 
 // Mode button click function ends
 
@@ -7815,6 +7820,7 @@ $("#couponSubmitButton").click(function(){
 	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");
+	 				dtmCouponCheck("invalid_coupon",couponCode);
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
 	 				/*TPR-4746*/
@@ -7846,6 +7852,7 @@ $("#couponSubmitButton").click(function(){
 			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);
 			 				//TPR-658
 			 				onSubmitAnalytics("success");
+			 				dtmCouponCheck("success",couponCode);
 			 			}
 		 				else
 		 				{
@@ -8048,6 +8055,18 @@ function sendTealiumData(){
 				        });
 		        	}
 		        }
+		    	if(typeof _satellite != "undefined"){
+ 		    		_satellite.track('cpj_place_order');
+ 		    	}
+ 		    	if(typeof (digitalData.cpj.product) != 'undefined'){
+ 		    		digitalData.cpj.product.id = $('#product_id').val();
+ 		    		digitalData.cpj.product.category =$('#product_category').val();
+ 		    	}
+ 		    	
+ 		    	if(typeof (digitalData.cpj.payment) != 'undefined'){
+ 		    	    digitalData.cpj.payment.finalMode = payment_mode.toLowerCase() ;
+ 
+		    	}
 	        
 	   } catch (e) {
 		// TODO: handle exception
@@ -8196,7 +8215,8 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 					});
 				}
 				/*TPR-656 Ends*/
-				
+				dtmLuxAddToWishlist("cart",productCode,"");  
+				console.log("lux Cart addToWl:marketplacecheckoutaddon.js");
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 				
 				

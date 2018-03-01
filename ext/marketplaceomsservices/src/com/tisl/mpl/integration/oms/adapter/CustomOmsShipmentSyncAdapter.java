@@ -1384,7 +1384,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
 				
 					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
 						 qcCliqCashAmt += Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 );
 			
 					}
@@ -1400,7 +1400,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
 				
 					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
 						 qcCliqCashAmt += Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 );
 			
 					}
@@ -1416,7 +1416,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		if(null !=orderEntry &&  null != orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
 			for(WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
 				if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-				if(cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+				if(cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
 					cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
 							+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
 							Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );

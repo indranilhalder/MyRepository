@@ -139,7 +139,7 @@ public class MplQCInitServiceImpl
 			}
 			else
 			{
-				final QCInitializationResponse initResponse = getMplWalletServices().walletInitilization();
+				/*final QCInitializationResponse initResponse = getMplWalletServices().walletInitilization();
 
 				if (null != initResponse && Integer.parseInt("" + initResponse.getResponseCode()) == 0)
 				{
@@ -159,7 +159,7 @@ public class MplQCInitServiceImpl
 						getQcInitDataBean().setCurrentBatchNumber("" + qcInitModelData.getCurrentBatchNumber());
 
 					}
-				}
+				}*/
 			}
 		}
 		catch (final Exception ex)
