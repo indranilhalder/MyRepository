@@ -2,10 +2,11 @@ import { connect } from "react-redux";
 import {
   applyCoupon,
   getUserAddress,
-  selectDeliveryModes,
+  getCoupons,
   getEmiBankDetails,
   getNetBankDetails,
-  getCartDetails
+  getCartDetails,
+  checkPinCodeServiceAvailability
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
@@ -18,9 +19,6 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    selectDeliveryModes: deliverModes => {
-      dispatch(selectDeliveryModes(deliverModes));
-    },
     getNetBankDetails: () => {
       dispatch(getNetBankDetails());
     },
@@ -32,6 +30,12 @@ const mapDispatchToProps = dispatch => {
     },
     showCouponModal: data => {
       dispatch(showModal(PRODUCT_COUPONS, data));
+    },
+    checkPinCodeServiceAvailability: (userName, accessToken, pinCode) => {
+      dispatch(checkPinCodeServiceAvailability(userName, accessToken, pinCode));
+    },
+    getCoupons: () => {
+      dispatch(getCoupons());
     }
   };
 };

@@ -1,0 +1,64 @@
+.base {
+  width: 100%;
+  height: auto;
+  background-color: #ececec;
+  display: flex;
+  justify-content: flex-start;
+}
+.detailsContainer {
+  width: 65%;
+  height: auto;
+  padding-bottom: 1px;
+  display: inline-block;
+  text-align: left;
+}
+.productName {
+  padding-top: 6px;
+  font-family: semibold;
+}
+.productDescription {
+  padding-top: 6px;
+  font-family: regular;
+  font-size: 14px;
+}
+.productMaterial {
+  padding-top: 6px;
+  font-family: regular;
+  font-size: 14px;
+}
+.priceContainer {
+  width: 35%;
+  height: auto;
+  display: inline-block;
+  text-align: right;
+}
+.price {
+  padding-top: 6px;
+  font-family: semibold;
+}
+.deletePriceAndDiscount {
+  padding-top: 6px;
+  font-family: regular;
+  width: 100%;
+  display: inline-block;
+  font-size: 14px;
+}
+.discount {
+  width: auto;
+  display: inline-block;
+  color: #ff1744;
+  padding-left: 5px;
+}
+
+.discountPrice {
+  text-decoration: line-through;
+  width: auto;
+  display: inline-block;
+  opacity: 0.5;
+}
+.button {
+  padding-top: 6px;
+  font-size: 14px;
+  width: 90px;
+  display: inline-block;
+}

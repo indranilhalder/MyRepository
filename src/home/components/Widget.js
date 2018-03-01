@@ -5,7 +5,8 @@ export default class Widget extends React.Component {
   componentDidMount() {
     this.props.getComponentData(
       this.props.feedComponentData.fetchURL,
-      this.props.positionInFeed
+      this.props.positionInFeed,
+      this.props.postData
     );
   }
 
@@ -16,5 +17,12 @@ export default class Widget extends React.Component {
 
 Widget.propTypes = {
   feedComponentData: PropTypes.object,
-  positionInFeed: PropTypes.number
+  positionInFeed: PropTypes.number,
+  type: PropTypes.string,
+  postData: PropTypes.object,
+  disableGetComponentDataCall: PropTypes.bool
+};
+
+Widget.defaultProps = {
+  disableGetComponentDataCall: false
 };

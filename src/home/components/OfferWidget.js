@@ -11,8 +11,8 @@ export default class OfferWidget extends React.Component {
     this.props.history.push(PRODUCT_LISTINGS);
   };
   render() {
-    const data = this.props.feedComponentData.data.items
-      ? this.props.feedComponentData.data.items
+    const data = this.props.feedComponentData.items
+      ? this.props.feedComponentData.items
       : false;
 
     return (
