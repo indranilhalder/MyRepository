@@ -32,7 +32,9 @@ const cart = (
     orderSummaryStatus: null,
     orderSummaryError: null,
     coupons: null,
-    storeDetails: null
+
+    storeDetails: null,
+    storeStatus: null
   },
   action
 ) => {
@@ -303,20 +305,20 @@ const cart = (
 
     case cartActions.GET_ALL_STORES_CNC_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        storeStatus: action.status,
         loading: true
       });
 
     case cartActions.GET_ALL_STORES_CNC_SUCCESS:
       return Object.assign({}, state, {
-        status: action.status,
+        storeStatus: action.status,
         storeDetails: action.storeDetails,
         loading: false
       });
 
     case cartActions.GET_ALL_STORES_CNC_FAILURE:
       return Object.assign({}, state, {
-        status: action.status,
+        storeStatus: action.status,
         error: action.error,
         loading: false
       });
