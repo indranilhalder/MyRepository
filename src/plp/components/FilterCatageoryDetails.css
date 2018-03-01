@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding-bottom: 5px;
+  margin-bottom:15px;
 }
 .header {
   composes: base;
@@ -31,5 +31,5 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  padding-left: 20px;
+  padding-left: 25px;
 }

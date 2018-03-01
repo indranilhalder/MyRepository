@@ -11,7 +11,9 @@ export default class FilterCatageoryDetails extends React.Component {
   }
   handleClick() {
     this.setState({ isOpen: !this.state.isOpen }, () => {
-      this.props.onClick();
+      if (this.props.onClick) {
+        this.props.onClick();
+      }
     });
   }
   render() {
@@ -27,9 +29,10 @@ export default class FilterCatageoryDetails extends React.Component {
             {this.props.categoryCount}
           </div>
         </div>
-        {this.props.children && (
-          <div className={styles.subListHolder}>{this.props.children}</div>
-        )}
+        {this.props.children &&
+          this.state.isOpen && (
+            <div className={styles.subListHolder}>{this.props.children}</div>
+          )}
       </div>
     );
   }
