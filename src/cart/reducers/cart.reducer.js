@@ -34,7 +34,8 @@ const cart = (
     coupons: null,
 
     storeDetails: null,
-    storeStatus: null
+    storeStatus: null,
+    storeError: null
   },
   action
 ) => {
@@ -319,7 +320,7 @@ const cart = (
     case cartActions.GET_ALL_STORES_CNC_FAILURE:
       return Object.assign({}, state, {
         storeStatus: action.status,
-        error: action.error,
+        storeError: action.error,
         loading: false
       });
 
