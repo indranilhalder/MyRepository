@@ -61,6 +61,10 @@ export const CART_DETAILS_REQUEST = "CART_DETAILS_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
 
+export const ORDER_SUMMARY_REQUEST = "ORDER_SUMMARY_REQUEST";
+export const ORDER_SUMMARY_SUCCESS = "ORDER_SUMMARY_SUCCESS";
+export const ORDER_SUMMARY_FAILURE = "ORDER_SUMMARY_FAILURE";
+
 export const GET_CART_ID_REQUEST = "GET_CART_ID_REQUEST";
 export const GET_CART_ID_SUCCESS = "GET_CART_ID_SUCCESS";
 export const GET_CART_ID_FAILURE = "GET_CART_ID_FAILURE";
@@ -318,21 +322,21 @@ export function userAddressFailure(error) {
 
 export function getUserAddress() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(userAddressRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }/addresses?channel=mobile&emailId=${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
@@ -654,6 +658,28 @@ export function generateCartIdForAnonymous() {
   };
 }
 
+export function orderSummaryRequest() {
+  return {
+    type: ORDER_SUMMARY_REQUEST,
+    status: REQUESTING
+  };
+}
+export function orderSumarySuccess(orderSummary) {
+  return {
+    type: ORDER_SUMMARY_SUCCESS,
+    status: SUCCESS,
+    orderSummary
+  };
+}
+
+export function orderSummaryFailure(error) {
+  return {
+    type: ORDER_SUMMARY_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function getCartIdRequest() {
   return {
     type: GET_CART_ID_REQUEST,
@@ -672,8 +698,35 @@ export function getCartIdSuccess(cartDetails) {
 export function getCartIdFailure(error) {
   return {
     type: GET_CART_ID_FAILURE,
+
     status: ERROR,
     error
+  };
+}
+
+export function getOrderSummary() {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  return async (dispatch, getState, { api }) => {
+    dispatch(orderSummaryRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          getState().user.user.customerInfo.mobileNumber
+        }/carts/${
+          JSON.parse(cartDetails).code
+        }/displayOrderSummary?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pincode=400083&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(orderSumarySuccess(resultJson));
+    } catch (e) {
+      dispatch(orderSummaryFailure(e.message));
+    }
   };
 }
 export function getCartId() {

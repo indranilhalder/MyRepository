@@ -27,6 +27,10 @@ const cart = (
     setAddress: null,
     netBankDetails: null,
     emiBankDetails: null,
+
+    orderSummary: null,
+    orderSummaryStatus: null,
+    orderSummaryError: null,
     coupons: null
   },
   action
@@ -235,6 +239,23 @@ const cart = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error
+      });
+
+    case cartActions.ORDER_SUMMARY_REQUEST:
+      return Object.assign({}, state, {
+        orderSummaryStatus: action.status
+      });
+
+    case cartActions.ORDER_SUMMARY_SUCCESS:
+      return Object.assign({}, state, {
+        orderSummaryStatus: action.status,
+        orderSummary: action.orderSummary
+      });
+
+    case cartActions.ORDER_SUMMARY_FAILURE:
+      return Object.assign({}, state, {
+        orderSummaryStatus: action.status,
+        orderSummaryError: action.error
       });
 
     case cartActions.GET_CART_ID_REQUEST:
