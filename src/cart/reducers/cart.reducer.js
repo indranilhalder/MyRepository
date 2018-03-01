@@ -324,6 +324,26 @@ const cart = (
         loading: false
       });
 
+    case cartActions.ADD_STORE_CNC_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_STORE_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeDetails: action.storeDetails,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
+      });
+
     default:
       return state;
   }
