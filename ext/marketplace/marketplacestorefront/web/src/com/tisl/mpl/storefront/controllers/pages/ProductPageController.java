@@ -5578,21 +5578,16 @@ public class ProductPageController extends MidPageController
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			populateProductDetailForDisplay(productModel, model, request);
-			if (currentCustomer.getIsWalletActivated() != null)
+			
+			if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
 			{
-				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
-				{
-					model.addAttribute("isOTPValidtion", Boolean.TRUE);
-				}
-				else
-				{
-					model.addAttribute("isOTPValidtion", Boolean.FALSE);
-				}
+				model.addAttribute("isOTPValidtion", Boolean.TRUE);
 			}
 			else
 			{
 				model.addAttribute("isOTPValidtion", Boolean.FALSE);
 			}
+			
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
 			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
@@ -5603,9 +5598,13 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
 			try{
+				 String minPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.minPrice");	
+				 String maxPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.maxPrice");	
 			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
 			 String [] amountList = productPrice.split(",");
 			 model.addAttribute("amountList", amountList);
+			 model.addAttribute("minPrice", minPrice);
+			 model.addAttribute("maxPrice", maxPrice);
 			}catch(Exception exception){
 				LOG.error("Exception Occur while getting product price  ");
 			}

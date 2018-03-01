@@ -3167,6 +3167,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
 			if(null != customer) {
+				LOG.error(" FIrst Name "+customer.getFirstName());
+				LOG.error("QC FIrst Name "+customer.getQcVerifyFirstName());
+
 				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
 					egvProductData.setIsWalletCreated(true);
 				}
@@ -3174,7 +3177,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					egvProductData.setIsWalletOtpVerified(true);
 				}else {
-					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
 					if(null != walletCreateData) {
 						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
 							egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());

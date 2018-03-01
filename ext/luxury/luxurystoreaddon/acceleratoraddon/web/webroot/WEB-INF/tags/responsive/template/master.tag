@@ -35,7 +35,7 @@
 	   <c:out value="${titleSocialTags}" escapeXml="false"/>
    </title>
 	<%-- Meta Content --%>
-	   <meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095â€/>
+	   <meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095â"€/>
               <meta name="google-play-app" content="com.tataunistore.luxury">
 
 <!-- <meta name="msApplication-ID" content="microsoft.build.App"/>
@@ -48,7 +48,9 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticResourceHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
-
+	<!-- injecting adobe staging js on head tag -->
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<script src="${dtmUrl}"></script>
 <%-- <link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css"/>
 <c:if test="${not empty productMediadnsHost}">
@@ -81,8 +83,6 @@
 	<!-- Tag for Google Webmaster Tool Verification -->
 	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
 	 <meta name="google-site-verification" content="BinPUCzYwsMCqMgbZ7Dxaik-cMOJPhoXkn4x7sJiM8c" />
-	
-	
 	<c:set var="host" value="${header.host}"/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('update_Email_url')" var="emailURL"/>
 	<c:set var="pageURL" value="${emailURL}"/>
@@ -370,7 +370,12 @@
 	
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-
+<!-- injecting satellite obj  for DTM  luxury addon tag-->	
+<script type="text/javascript">
+if (typeof(_satellite) != "undefined") {
+	  _satellite.pageBottom();
+}
+</script>
 	
 </body>
 

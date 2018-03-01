@@ -170,9 +170,14 @@ function registerUserGigya(eventObject)
    				);
     		  
     		//TPR-675 PART-A  ends
-    		 if(typeof _satellite !="undefined"){
+    		 /*if(typeof _satellite !="undefined"){
         		  _satellite.track('review_submit_click');
-        	 }
+        	 }*/
+    		  setTimeout(function() {
+    			  if(typeof _satellite !="undefined"){
+    				  _satellite.track('review_submit_click');
+    			  }
+    		  }, 1500);
     		getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());
     	}
     	

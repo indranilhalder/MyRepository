@@ -14535,7 +14535,11 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true" />
 					</attribute>
-					
+					<attribute autocreate="true" generate="true" qualifier="remainingCardAmount"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			

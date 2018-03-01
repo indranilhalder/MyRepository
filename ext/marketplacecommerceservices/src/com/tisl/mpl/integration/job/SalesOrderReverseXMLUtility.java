@@ -900,13 +900,7 @@ public class SalesOrderReverseXMLUtility
 											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
 										  || oModel.getPaymentProvider().equalsIgnoreCase(CLIQCASH))			&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 											{
-												
-								
-												if (null != oModel.getCode())
-												{
-													payemntrefid = oModel.getRequestId();
-												
-												}
+													payemntrefid = chaildModel.getParentReference().getCode();
 											}
 										}
 										}
@@ -980,9 +974,9 @@ public class SalesOrderReverseXMLUtility
 
 										splitMerchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
 										
-										if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
+										if (StringUtils.isNotEmpty(payemntrefid))
 										{
-											splitMerchantInfoXMlDataJuspay.setReversePaymentRefId(entry.getJuspayRequestId());
+											splitMerchantInfoXMlDataJuspay.setReversePaymentRefId(payemntrefid);
 										}
 										
 										double totalAmountJuspay=0;
@@ -1042,11 +1036,7 @@ public class SalesOrderReverseXMLUtility
 										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && (oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
 											|| oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH))	&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 										{
-											
-											if (null != oModel.getRequestId())
-											{
-												payemntrefid = oModel.getRequestId();
-											}
+                                               payemntrefid = chaildModel.getParentReference().getCode();
 										}
 									}
 									   merchantInfoXMlDataQC.setPaymentRefID(payemntrefid);
@@ -1167,9 +1157,9 @@ public class SalesOrderReverseXMLUtility
 										}
 										
 										
-										if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
+										if (StringUtils.isNotEmpty(payemntrefid))
 										{
-											merchantInfoXMlDataJuspay.setReversePaymentRefId(entry.getJuspayRequestId());
+											merchantInfoXMlDataJuspay.setReversePaymentRefId(payemntrefid);
 										}
 										
 										if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)

@@ -4977,7 +4977,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
 						try
 						{
-							saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+							if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+								saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
+							}
+							
 						}
 						catch(final Exception e)
 						{
@@ -5309,7 +5312,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
    			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
    				 double qcCliqCashAmt =0.0D;
    					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION")){
    						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue());
    					     
    						   QCCreditRequest qcCreditRequest =new QCCreditRequest();
@@ -5795,6 +5798,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 				auditEntry.setAuditId(transactionId);
 				auditEntry.setCreationtime(new Date());
+				auditEntry.setResponseDate(new Date());
 				auditEntryList.add(auditEntry);
 				auditModel.setAuditEntries(auditEntryList);
 				getModelService().save(auditModel);
@@ -5809,6 +5813,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 				auditModel.setRequestDate(new Date());
 				auditEntry.setAuditId(transactionId);
 				auditEntry.setCreationtime(new Date());
+				auditEntry.setResponseDate(new Date());
 				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
 				auditEntryList.add(auditEntry);
 				auditModel.setAuditEntries(auditEntryList);
@@ -5841,7 +5846,7 @@ private WalletApportionReturnInfoModel constructQuickCilverOrderEntryForSplit(fi
 				{
 					if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 					{
-						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 						{
 							totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
 						}

@@ -590,7 +590,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 		{
 			for (WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo().getWalletCardList())
 			{
-				if (null != cardApportionDetail.getBucketType() && cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+				if (null != cardApportionDetail.getBucketType() && cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 				{
 					cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue())
 							+ Double.parseDouble(
