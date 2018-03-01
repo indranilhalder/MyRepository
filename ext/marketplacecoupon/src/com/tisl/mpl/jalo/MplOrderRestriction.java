@@ -51,6 +51,7 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		//SDI-5493 Customization
 		final Currency minimumOrderValueCurrency = getCurrency();
 		final Currency currentOrderCurrency = anOrder.getCurrency();
+
 		final double minimumTotal = minimumOrderValueCurrency.convert(currentOrderCurrency, getTotalAsPrimitive());
 
 		final Set<Restriction> restrictions = getVoucher().getRestrictions();
@@ -92,6 +93,26 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 								: (productVal.doubleValue());
 					}
 				}
+				boolean cliqCashValidation = true;
+				String splitModeInfo = null;
+				if (null != anOrder.getAttribute("splitModeInfo"))
+				{
+					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+				}
+
+				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+				{
+					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+					if (isPositiveAsPrimitive() && cliqCashValidation)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				
 				// Coupon Evaluation
 				if (isPositiveAsPrimitive())
 				{
@@ -129,6 +150,26 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 								: (productVal.doubleValue());
 					}
 				}
+				
+				boolean cliqCashValidation = true;
+				String splitModeInfo = null;
+				if (null != anOrder.getAttribute("splitModeInfo"))
+				{
+					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+				}
+
+				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+				{
+					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+					if (isPositiveAsPrimitive() && cliqCashValidation)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
 
 				if (currentTotal >= minimumTotal)
 				{
@@ -157,6 +198,26 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
 						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
 								: (productVal.doubleValue());
+					}
+				}
+				
+				boolean cliqCashValidation = true;
+				String splitModeInfo = null;
+				if (null != anOrder.getAttribute("splitModeInfo"))
+				{
+					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+				}
+
+				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+				{
+					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+					if (isPositiveAsPrimitive() && cliqCashValidation)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
 					}
 				}
 
@@ -189,7 +250,25 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 								: (productVal.doubleValue());
 					}
 				}
+				boolean cliqCashValidation = true;
+				String splitModeInfo = null;
+				if (null != anOrder.getAttribute("splitModeInfo"))
+				{
+					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+				}
 
+				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+				{
+					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+					if (isPositiveAsPrimitive() && cliqCashValidation)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
 				if (currentTotal >= minimumTotal)
 				{
 					checkFlag = true;
@@ -223,11 +302,11 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 					final Collection<SellerMaster> sellerList = sellerRestriction.getSeller();
 					if (positive.booleanValue())
 					{
-						isValid = checkSellerIncl(sellerList, entryList, minimumTotal);
+						isValid = checkSellerIncl(sellerList, entryList, minimumTotal, anOrder);
 					}
 					else
 					{
-						isValid = checkSellerExcl(sellerList, entryList, minimumTotal);
+						isValid = checkSellerExcl(sellerList, entryList, minimumTotal, anOrder);
 					}
 				}
 				return isValid;
@@ -259,11 +338,11 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 					final Collection<SellerMaster> sellerList = sellerRestriction.getSeller();
 					if (positive.booleanValue())
 					{
-						isValid = checkSellerIncl(sellerList, entryList, minimumTotal);
+						isValid = checkSellerIncl(sellerList, entryList, minimumTotal,anOrder);
 					}
 					else
 					{
-						isValid = checkSellerExcl(sellerList, entryList, minimumTotal);
+						isValid = checkSellerExcl(sellerList, entryList, minimumTotal, anOrder);
 					}
 				}
 				return isValid;
@@ -302,6 +381,26 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 						final Double productVal = (Double) abEntry.getAttribute(TOTALPRICE);
 						currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
 								: (productVal.doubleValue());
+					}
+				}
+				
+				boolean cliqCashValidation = true;
+				String splitModeInfo = null;
+				if (null != anOrder.getAttribute("splitModeInfo"))
+				{
+					splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+				}
+
+				if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+				{
+					cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+					if (isPositiveAsPrimitive() && cliqCashValidation)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
 					}
 				}
 
@@ -348,11 +447,11 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 					final Collection<SellerMaster> sellerList = sellerRestriction.getSeller();
 					if (positive.booleanValue())
 					{
-						isValid = checkSellerIncl(sellerList, finalEntryList, minimumTotal);
+						isValid = checkSellerIncl(sellerList, finalEntryList, minimumTotal, anOrder);
 					}
 					else
 					{
-						isValid = checkSellerExcl(sellerList, finalEntryList, minimumTotal);
+						isValid = checkSellerExcl(sellerList, finalEntryList, minimumTotal,anOrder);
 					}
 				}
 				return isValid;
@@ -371,7 +470,7 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 
 
 	protected boolean checkSellerIncl(final Collection<SellerMaster> sellerList, final List<AbstractOrderEntry> entryList,
-			final double minimumTotal) throws JaloInvalidParameterException, JaloSecurityException
+			final double minimumTotal, AbstractOrder anOrder) throws JaloInvalidParameterException, JaloSecurityException
 	{
 		boolean checkFlag = false;
 		double currentTotal = 0;
@@ -400,6 +499,26 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 				}
 			}
 		}
+		
+		boolean cliqCashValidation = true;
+		String splitModeInfo = null;
+		if (null != anOrder.getAttribute("splitModeInfo"))
+		{
+			splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+		}
+
+		if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+		{
+			cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+			if (isPositiveAsPrimitive() && cliqCashValidation)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		if (currentTotal >= minimumTotal)
 		{
@@ -410,7 +529,7 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 	}
 
 	protected boolean checkSellerExcl(final Collection<SellerMaster> sellerList, final List<AbstractOrderEntry> entryList,
-			final double minimumTotal) throws JaloInvalidParameterException, JaloSecurityException
+			final double minimumTotal, AbstractOrder anOrder) throws JaloInvalidParameterException, JaloSecurityException
 	{
 		boolean checkFlag = false;
 		double currentTotal = 0;
@@ -440,6 +559,26 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 
 			}
 		}
+		
+		boolean cliqCashValidation = true;
+		String splitModeInfo = null;
+		if (null != anOrder.getAttribute("splitModeInfo"))
+		{
+			splitModeInfo = (String) anOrder.getAttribute("splitModeInfo");
+		}
+
+		if (null != splitModeInfo && splitModeInfo.trim().equalsIgnoreCase("Split") /* && checkForBankVoucher*/)
+		{
+			cliqCashValidation = checkCliqCashValue(minimumTotal, anOrder , currentTotal);
+			if (isPositiveAsPrimitive() && cliqCashValidation)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		if (currentTotal >= minimumTotal)
 		{
@@ -447,6 +586,21 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		}
 
 		return checkFlag;
+	}
+	
+	private boolean checkCliqCashValue(final double minimumTotal, final AbstractOrder anOrder, double currentTotal)
+			throws JaloInvalidParameterException, JaloSecurityException
+	{
+		LOG.debug("Inside Order Retriction checkCliqCashValue");
+		double totalPayableAmount = currentTotal;
+		final Double walletAmount = (Double) anOrder.getAttribute("totalWalletAmount");
+		totalPayableAmount -= null !=walletAmount? walletAmount.doubleValue() :0.0d;
+
+		if (totalPayableAmount >= minimumTotal)
+		{
+			return true;
+		}
+		return false;
 	}
 
 }

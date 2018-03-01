@@ -116,8 +116,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import reactor.function.support.UriUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
@@ -163,6 +161,7 @@ import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -185,6 +184,8 @@ import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+
+import reactor.function.support.UriUtils;
 
 
 /**
@@ -210,6 +211,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "pdpPincodeCookieGenerator")
 	private PDPPincodeCookieGenerator pdpPincodeCookie;
+	
+	 @Autowired
+	 MplEGVCartService mplEGVCartService;
 
 	/**
 	 * @return the configurationService
@@ -431,6 +435,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					LOG.debug("type of device=" + device.isTablet());
 				}
 			}
+			//EGV Changes start
+	        removeEGVCartCurrentCustomer();
+	      //EGV Changes end
 			final CartModel cartModel = getCartService().getSessionCart();
 			LOG.debug("Device Type=" + deviceType);
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
@@ -487,6 +494,36 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
 				model.addAttribute("checkoutPageName", selectAddress);
+
+				/**
+				 * Wallet Changes
+				 */
+				boolean checkUserWalletStatus = true;
+				
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+				/*if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+						&& !currentCustomer.getIsWalletActivated().booleanValue() && null != currentCustomer.getCustomerWalletDetail())
+				{
+					checkUserWalletStatus = false;
+				}*/
+			
+				if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+				{
+					checkUserWalletStatus=true;
+				}
+				else
+				{
+					checkUserWalletStatus=false;
+				}
+
+				model.addAttribute("isCustomerWalletActive", checkUserWalletStatus);
+				cartModel.setSplitModeInfo("juspay");
+
+				/**
+				 * Wallet Changes End
+				 */
+
 				if (isResponsive)
 				{
 					model.addAttribute("deviceType", "mobile");
@@ -3815,6 +3852,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		//Getting Payment modes
 		paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 		prepareDataForPage(model);
+
+		getSessionService().setAttribute("disableCODandWAllet", "false");
+
 		model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODES, paymentModeMap);
 		model.addAttribute(MarketplacecheckoutaddonConstants.TRANERRORMSG, "");
 		//timeOutSet(model);
@@ -4178,7 +4218,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 				// TPR-429 END
 				//Getting Payment modes
-				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
+				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData,false);
 
 
 				//TISSQAUAT-536 fixes
@@ -5855,5 +5895,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return json;
 	}
 
-
+	private void removeEGVCartCurrentCustomer()
+	 {
+	  try
+	  {
+	   mplEGVCartService.removeOldEGVCartCurrentCustomer();
+	  }
+	  catch (Exception exception)
+	  {
+	   LOG.error("Error occure while remove egv old card ");
+	  }
+	 }
 }

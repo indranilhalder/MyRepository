@@ -9,18 +9,17 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<link rel="amphtml" href="/pwamp/home">
-<link rel="canonical" href="/">
-<!-- TPR-1072 START -->
-<c:if test="${not empty googlebot}">
-<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div>
-<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/shopByBrandImagesPanel.jsp"%></div>
-<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/footerPanel.jsp"%></div>
-<div style="display:none;"><%@include file="/WEB-INF/views/responsive/cms/navigationbarcollectioncomponent.jsp"%></div>
-</c:if>
-<!-- TPR-1072 END -->
 
 <template:page pageTitle="${pageTitle}">
+	<!-- TPR-1072 START -->
+	<c:if test="${not empty googlebot}">
+		<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div>
+		<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/shopByBrandImagesPanel.jsp"%></div>
+		<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/footerPanel.jsp"%></div>
+		<div style="display:none;"><%@include file="/WEB-INF/views/responsive/cms/navigationbarcollectioncomponent.jsp"%></div>
+	</c:if>
+	<!-- TPR-1072 END -->
+	
 	<div class="no-space homepage-banner">
 		<cms:pageSlot position="Section1" var="feature">
 			<cms:component component="${feature}" />

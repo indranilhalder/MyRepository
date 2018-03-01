@@ -16,6 +16,8 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -416,9 +418,36 @@ public interface MplPaymentService
 	 * added for TPR-1348 for AutofundInitiation SprintPaymentFixes:-
 	 *
 	 * @param orderEntryModel
+	 * @param bigDecimal
 	 *
 	 */
-	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
+	public String doRefundPayment(List<OrderEntryModel> orderEntryModel, BigDecimal amountToRefund);
+
+	/**
+	 * @param rs
+	 * @param paymentMode
+	 * @param order
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void setQCPaymentTransaction(ArrayList<String> rs, Map<String, Double> paymentMode, AbstractOrderModel order,
+			String cliqCashPaymentMode, final String WalletTotal) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param qcOrderID
+	 * @param channel
+	 * @param cartGuId
+	 * @param qcAmount
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	boolean createQCEntryInAudit(String qcOrderID, String channel, String cartGuId, String qcAmount, String qcResponseCode,
+			String transactionId) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @return
+	 */
+	public String createQCPaymentId();
+
 
 	//CheckedInvalid PaymentInfo missing handled call
 	boolean createPaymentInfo(OrderModel order);

@@ -293,4 +293,6 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @param cartEntryList
 	 */
 	void resetSlotEntries(List<AbstractOrderEntryModel> cartEntryList);
+	
+	public OrderModel placeEGVOrder(final CartModel cartModel) throws InvalidCartException;
 }

@@ -838,10 +838,25 @@ p {margin: 0;}
 	width: 300px; height: 400px; margin: 0px; padding: 0 5px;
 }
 
+.whatToBuyNowText {position: absolute; bottom: 15%; font-weight: 600; color: #fff; text-align: center; width: 100%; white-space: pre-wrap; text-transform: uppercase;}
+
 .whatToBuyItem:first-child {padding-left: 0;}
 
 .whatToBuyItemImg, .whatToBuyItemImg a {height: inherit;}
 #whatToBuyComp {display: block; padding: 10px 0px 20px; padding: 20px 60px;}
+
+.whatToBuyItemImg amp-img:after {
+    width: 100%;
+    height: 100%;
+    content: "";
+    display: inline-block;
+    left: 0;
+    top: 0;
+    position: absolute;
+    background: -moz-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
+    background: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
+    background: linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 25%,rgba(0,0,0,0.85) 100%);
+   }
 
 @media(max-width: 480px) {
 	#whatToBuyComp {padding: 5px 0px;}

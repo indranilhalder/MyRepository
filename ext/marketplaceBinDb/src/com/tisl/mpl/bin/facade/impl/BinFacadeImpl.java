@@ -6,8 +6,11 @@ package com.tisl.mpl.bin.facade.impl;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -127,6 +130,26 @@ public class BinFacadeImpl implements BinFacade
 			 * getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION,
 			 * entry.getKey()); break; } } }
 			 */
+
+			LOG.debug("From session=====Bank:::::::"
+					+ getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
+
+			if (null == getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION))
+			{
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.PAYMENTMODE);
+				if (MapUtils.isNotEmpty(paymentInfo))
+				{
+				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+				{
+					if (!(MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+					{
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION, entry.getKey());
+						break;
+					}
+				}
+				}
+			}
 
 		}
 		catch (final Exception e)

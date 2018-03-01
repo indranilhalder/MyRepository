@@ -41,6 +41,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
@@ -116,14 +117,18 @@ import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.data.StatusRecordData;
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
+import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.strategies.OrderCodeIdentificationStrategy;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -222,8 +227,7 @@ public class OrdersController extends BaseCommerceController
 	 */
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
-	@Resource
-	private ModelService modelService;
+
 	@Resource
 	private MplProductWebService productWebService;
 	@Resource
@@ -246,7 +250,17 @@ public class OrdersController extends BaseCommerceController
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
+   @Autowired
+   private MplPaymentFacade mplPaymentFacade;
 
+   @Autowired
+   private ModelService modelService;
+   
+   @Autowired
+   private MplWalletFacade mplWalletFacade;
+   
+   
+   
 	/**
 	 * @return the mplSellerInformationService
 	 */
@@ -593,10 +607,53 @@ public class OrdersController extends BaseCommerceController
 		{
 			//removeProductFromWL(orderCode);
 			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+			String paymentMode = orderModel.getSplitModeInfo();
+			LOG.debug("Payment Split MOde " + orderModel.getSplitModeInfo() + "  Order Id" + orderModel.getCode());
+			if (null != paymentMode && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
+			{
+				// pay Amount Here from QC  If payment SplitModeInfo is CLIQ_CASH  
+				// For SplitMode and Juspay Amount is already deducted In UpdatePaymentTransactions API 
+				orderModel.setModeOfOrderPayment(MarketplacewebservicesConstants.CLIQ_CASH);
+				modelService.save(orderModel);
+				try
+				{
+					LOG.debug("Payment Mode Split Mode .. So paying  remaiing amount through Wallet ");
+					final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+					qcResponse = mplPaymentFacade.createQCOrderRequest(orderModel.getGuid(), orderModel,
+							currentCustomer.getCustomerWalletDetail().getWalletId(),
+							MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
+							MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getTotalPrice().doubleValue(), 0.0D);
+				}
+				catch (Exception e)
+				{
+					LOG.error("Exception Occurred While Paying Amount through QC" + e.getMessage());
+				}
+				if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+				{
+					orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+					modelService.save(orderModel);
+				}
+				else if (null == qcResponse || null == qcResponse.getResponseCode())
+				{
+					orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+					modelService.save(orderModel);
+				}
+
+				if (mplPaymentWebFacade.updateOrder(orderModel))
+				{
+					response.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+				}
+			}
 			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			wishlistFacade.remProdFromWLForConf(orderDetail, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
 			response = processOrderCode(orderCode, orderModel, orderDetail, request);
+			if(null != response && null !=orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D ) {
+				response.setCliqCashApplied(true);
+				response.setCliqCashAmountDeducted(orderModel.getPayableWalletAmount());
+			}
 		}
 
 		catch (final EtailNonBusinessExceptions e)
@@ -625,8 +682,23 @@ public class OrdersController extends BaseCommerceController
 			}
 			response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		catch (InvalidCartException e)
+		{
+			LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+			response.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+			response.setError(e.getMessage());
+		}
+		catch (CalculationException e)
+		{
+			LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+			response.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+		}
 		return response;
 	}
+
+	
+	
+
 
 	//TODO It was added in respect of CheckoutController.java
 	/*
@@ -698,6 +770,10 @@ public class OrdersController extends BaseCommerceController
 			 * "|").equals( getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID))) { return
 			 * getCheckoutRedirectUrl(); }
 			 */
+			orderWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
+			if(orderDetail.isIsEGVOrder()){
+				orderWsDTO.setIsEgvOrder(true);
+			}
 			if (null != orderDetail && orderDetail.getEntries() != null && !orderDetail.getEntries().isEmpty())
 			{
 				final SimpleDateFormat sdformat = new SimpleDateFormat(MarketplacewebservicesConstants.DATEFORMAT_FULL);

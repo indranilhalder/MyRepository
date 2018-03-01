@@ -34,6 +34,16 @@
 <c:set var="isWeight" value="false"/>
 
 	<c:url value="${entry.product.url}" var="productUrl" />
+	<!-- EGV Changes Start-->
+	<c:if test="${orderData.isEGVOrder eq  true}">
+		<spring:eval
+			expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvProductCode')"
+			var="productCode" />
+		<c:set var="myVar" value="/giftCard-" />
+		<c:set var="egvProduct" value="${myVar}${productCode}" />
+		<c:url value="${egvProduct}" var="productUrl" />
+	</c:if>
+<!-- EGV Changes END-->
 	<li class="item">
 		<ul class="desktop">
 			<li>
@@ -56,12 +66,26 @@
 
 					<p class="company"></p>
 					<ycommerce:testId code="orderDetails_productName_link">
-						<h3 class="product-brand-name">
-							<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.brand.brandname}</a>
-						</h3>
-						<h3 class="product-name">
-							<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
-						</h3>
+                     <!-- EGV Changes Start-->
+					   <c:choose>
+				   		<c:when test="${orderData.isEGVOrder eq  true}">
+				   		 <h3 class="product-brand-name">
+									<a href="${productUrl}">${entry.product.brand.brandname}</a>
+								</h3>
+								<h3 class="product-name">
+									<a href="${productUrl}">${entry.product.name}</a>
+								</h3>
+				   		</c:when>
+				   		<c:otherwise>
+				   	     <h3 class="product-brand-name">
+									<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.brand.brandname}</a>
+								</h3>
+								<h3 class="product-name">
+									<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
+								</h3>
+				   		</c:otherwise>
+				   		</c:choose>
+                     <!-- EGV Changes END-->
 						<input type="hidden" name="productArrayForIA"
 							value="${entry.product.code}" />
 					</ycommerce:testId>
@@ -215,6 +239,7 @@
 
 			</li>
 			<li class="shipping">
+			<c:if test="${orderData.isEGVOrder ne true}">
 				<ul class="${entry.mplDeliveryMode.name}">
 					 <!-- UF-306 starts -->
 					 <%-- <li class="deliver-type">${entry.mplDeliveryMode.name}</li> --%>
@@ -224,6 +249,9 @@
 				   		</c:when>
 				   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
 				   			<li class="deliver-type"><spring:theme code="text.express.shipping"/></li>
+				   		</c:when>
+				   		<c:when test="${empty entry.mplDeliveryMode.code}">
+				   		 <li class="deliver-type"><spring:theme code="text.home.delivery"/></li>
 				   		</c:when>
 				   		<c:otherwise>
 				   			<li class="deliver-type"><spring:theme code="text.clickandcollect.delivery"/></li>
@@ -275,6 +303,7 @@
                   </c:choose>
 					<%-- <li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li> --%>
 				</ul>
+			</c:if>
 			</li>
 			<%-- <td headers="header5">
 						<ycommerce:testId code="orderDetails_productItemPrice_label"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></ycommerce:testId>
@@ -329,9 +358,21 @@
 
 					<p class="company"></p>
 					<ycommerce:testId code="orderDetails_productName_link">
-						<h3 class="product-name">
-							<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
-						</h3>
+					
+					<!-- EGV Changes Start-->
+					   <c:choose>
+				   		<c:when test="${orderData.isEGVOrder eq  true}">
+							<h3 class="product-name">
+								<a href="${productUrl}">${entry.product.name}</a>
+							</h3>
+				   		</c:when>
+				   		<c:otherwise>
+					   	    <h3 class="product-name">
+								<a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a>
+							</h3>
+				   		</c:otherwise>
+				   		</c:choose>
+                     <!-- EGV Changes END-->
 					</ycommerce:testId>
 
 					<c:forEach items="${entry.product.baseOptions}" var="option">
@@ -422,6 +463,7 @@
 					<!-- <ul class="item-details"></ul> -->
 				</div>
 			</li>
+			<c:if test="${orderData.isEGVOrder ne true}">
 			<li class="shipping">
 				<p>
 					<spring:theme code="text.deliveryMethod"
@@ -458,6 +500,7 @@
 					<%-- <li class="deliver">${entry.mplDeliveryMode.description}</li> --%>
 				</ul>
 			</li>
+			</c:if>
 		</ul>
 	</li>
 </c:forEach>

@@ -989,7 +989,30 @@ public final class ModelAttributetConstants
 	// TPR-3878 END
 	public static final String SUB_REASON = "subReason";
 	public static final String NEW_COMMENTS = "newComments";
-	
+
 	//SDI-2112
 	public static final String RETURN_ALREADY_INITIATED = "Your return is already initiated".intern();
+	public static final String ERROR_CODE_10027 = "10027";
+	public static final String ERROR_CODE_10004 = "10004";
+	public static final String ERROR_CODE_10096 = "10096";
+	public static final String ERROR_CODE_10528 = "10528";
+	public static final String ERROR_CODE_10550 = "10550";
+	public static final String ERROR_CODE_10086 = "10086";
+
+	public static final String ERROR_CODE_10027_DESC = "Card is deactivated.";
+	public static final String ERROR_CODE_10004_DESC = "Could not find card. Please enter valid card number.";
+	public static final String ERROR_CODE_10096_DESC = "Merchant not authorized to accept this card.";
+	public static final String ERROR_CODE_10528_DESC = "Wallet - Card Already Added";
+	public static final String ERROR_CODE_10550_DESC = "Card Already Associated With Another Wallet. Card Cannot be Shared.";
+	public static final String ERROR_CODE_10086_DESC = "Either card number or card pin is incorrect.";
+
+
+	//TPR-7741, TPR-7750
+	public static final String USER_LOGIN_TYPE = "user_login_type".intern();
+	public static final String USER_TYPE = "user_type".intern();
+	public static final String USER_ID = "user_id".intern();
+	public static final String SESSION_ID = "session_id".intern();
+	public static final String VISITOR_IP = "visitor_ip".intern();
+	public static final String CID = "cid".intern();
+	public static final String ITEMS = "items".intern();
 }

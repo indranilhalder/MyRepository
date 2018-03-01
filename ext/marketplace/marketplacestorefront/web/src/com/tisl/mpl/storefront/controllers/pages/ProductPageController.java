@@ -60,6 +60,7 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
@@ -67,6 +68,7 @@ import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -76,6 +78,7 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,6 +86,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -163,8 +169,10 @@ import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.cms.data.FooterLinkData;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MSDRequestdata;
+import com.tisl.mpl.facades.data.MSDResponsedata;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -180,6 +188,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
@@ -198,15 +207,19 @@ import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
+import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+
+import atg.taglib.json.util.JSONException;
 
 
 
@@ -220,6 +233,12 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	
+	private static final String PLEASE_PROVIDE_CORRECT_INFORMATION = "Please provide correct information ";
+
+	private static final String ERRO_MSG = "erroMsg";
+
+	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -353,6 +372,8 @@ public class ProductPageController extends MidPageController
 	private BuyBoxFacade buyBoxFacade;
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 
 	@Resource(name = "baseSiteService")
@@ -401,7 +422,11 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
+	@Resource(name = "mplSlaveMasterFacade")
+	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
+	@Resource(name = "pointOfServiceConverter")
+	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
 
 	@Autowired
@@ -489,7 +514,7 @@ public class ProductPageController extends MidPageController
 	}
 
 	/**
-	 * 
+	 *
 	 * @param productCode
 	 * @param dropDownText
 	 * @param model
@@ -715,7 +740,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * The Logic Identifies the PDP to be that of Home or not and if so removes Size Guide
-	 * 
+	 *
 	 * @param categoryType
 	 * @param model
 	 */
@@ -738,7 +763,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This Method deals with population of Buying Guide details on PDP
-	 * 
+	 *
 	 * @param productModel
 	 * @param model
 	 */
@@ -1189,7 +1214,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Get buybox data in respect of productCode and sellerId for sizeguide
-	 * 
+	 *
 	 * @param productCode
 	 * @param sellerId
 	 * @return JSONObject
@@ -1201,8 +1226,7 @@ public class ProductPageController extends MidPageController
 
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
-	public @ResponseBody
-	JSONObject getBuyboxDataForSizeGuide(
+	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
@@ -1311,7 +1335,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Set the hedder data of the sizeguide
-	 * 
+	 *
 	 * @param sizeguideList
 	 * @param categoryType
 	 * @return List<String>
@@ -1481,7 +1505,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * this method checks the servicability of a pincode and fetches list of servicable sellers/skuids from oms
-	 * 
+	 *
 	 * @param pin
 	 * @param productCode
 	 * @param seller
@@ -1596,7 +1620,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Populating other sellers for displaying into sellersDetail page
-	 * 
+	 *
 	 * @param productCode
 	 * @param model
 	 * @param ussid
@@ -1828,7 +1852,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Populating information for quick view
-	 * 
+	 *
 	 * @param productCode
 	 * @param model
 	 * @return ControllerConstants
@@ -2180,7 +2204,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Populating all details of product from product model
-	 * 
+	 *
 	 * @param productModel
 	 * @param model
 	 * @param request
@@ -2502,7 +2526,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * UF-432
-	 * 
+	 *
 	 * @param productData
 	 * @param model
 	 */
@@ -2946,7 +2970,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Displaying classification attributes in the Details tab of the PDP page
-	 * 
+	 *
 	 * @param productData
 	 * @param model
 	 */
@@ -3254,7 +3278,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * @description Populating product data
-	 * 
+	 *
 	 * @param productData
 	 * @param model
 	 */
@@ -3389,8 +3413,8 @@ public class ProductPageController extends MidPageController
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
 	 * PDP Ajax call and it will return JSON response
-	 * 
-	 * 
+	 *
+	 *
 	 * @param productCode
 	 * @return buyboxJson
 	 * @throws JSONException
@@ -3400,8 +3424,8 @@ public class ProductPageController extends MidPageController
 	 */
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
-	public @ResponseBody
-	JSONObject getBuyboxPrice(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+	public @ResponseBody JSONObject getBuyboxPrice(
+			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("variantCode") String variantCode,
 			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId //CKD:TPR-250
 	) throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
@@ -3622,7 +3646,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * Gets Seller ID Data
-	 * 
+	 *
 	 * @param buydata
 	 * @return String
 	 */
@@ -3668,7 +3692,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This is the GET method which fetches the list of banks
-	 * 
+	 *
 	 * @param productVal
 	 * @return List<String>
 	 */
@@ -3709,13 +3733,12 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This is the GET method which fetches the bank terms for EMI mode of Payment
-	 * 
+	 *
 	 * @param selectedEMIBank
 	 * @return List<EMITermRateData>
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getTerms", method = RequestMethod.GET)
-	public @ResponseBody
-	List<EMITermRateData> getBankTerms(final String productVal, final String selectedEMIBank)
+	public @ResponseBody List<EMITermRateData> getBankTerms(final String productVal, final String selectedEMIBank)
 	{
 		List<EMITermRateData> emiTermRate = null;
 
@@ -3743,7 +3766,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This is the GET method which checks wether is logged in or not
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -3806,7 +3829,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * populating the request data to be send to oms
-	 * 
+	 *
 	 * @param productCode
 	 * @return requestData
 	 */
@@ -3890,8 +3913,8 @@ public class ProductPageController extends MidPageController
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
 	 * PDP Ajax call and it will return JSON response
-	 * 
-	 * 
+	 *
+	 *
 	 * @param productCode
 	 * @return buyboxJson
 	 * @throws JSONException
@@ -3930,12 +3953,12 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This method is responsible for sending emails
-	 * 
-	 * 
+	 *
+	 *
 	 * @param emailIds
 	 * @param productId
 	 * @return successful
-	 * 
+	 *
 	 */
 
 	@ResponseBody
@@ -4005,13 +4028,12 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This is the GET method which fetches the bank last modified wishlist
-	 * 
-	 * 
+	 *
+	 *
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getLastModifiedWishlistByUssid", method = RequestMethod.GET)
-	public @ResponseBody
-	boolean getLastModifiedWishlist(@RequestParam(USSID) final String ussid)
+	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam(USSID) final String ussid)
 	{
 		boolean existUssid = false;
 
@@ -4413,7 +4435,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * checks for a BOGO promotion present in the product
-	 * 
+	 *
 	 * @param productPromotion
 	 * @return
 	 */
@@ -4498,7 +4520,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * changes for TPR-1375 populating buybox details in json format
-	 * 
+	 *
 	 * @param buydata
 	 * @param buyboxJson
 	 * @throws com.granule.json.JSONException
@@ -4700,7 +4722,7 @@ public class ProductPageController extends MidPageController
 				}
 				else
 				{
-					returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
+				returnString = "/pages/" + contentPage.getMasterTemplate().getFrontendTemplateName();
 				}
 
 
@@ -4779,7 +4801,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This is used to verify the configured MPH category product can get SizeGuide & choose size
-	 * 
+	 *
 	 * @param productModel
 	 */
 
@@ -4849,8 +4871,8 @@ public class ProductPageController extends MidPageController
 	 */
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
-	public @ResponseBody
-	JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException, com.granule.json.JSONException
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
+			com.granule.json.JSONException
 	{
 		final String ussidList[] = ussids.split(",");
 		final StringBuilder ussidIds = new StringBuilder();
@@ -4963,7 +4985,7 @@ public class ProductPageController extends MidPageController
 	/**
 	 * PCM will send hierarchies together in brandcode field of the brand feed, this method will extract the brand
 	 * hierarchy code alone
-	 * 
+	 *
 	 * @param superCategories
 	 * @return brandCode
 	 */
@@ -5126,9 +5148,9 @@ public class ProductPageController extends MidPageController
 
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-productClassAttribs", method = RequestMethod.GET)
-	public @ResponseBody
-	String getAjaxProductClassAttribs(@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			final Model model) throws com.granule.json.JSONException
+	public @ResponseBody String getAjaxProductClassAttribs(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode, final Model model)
+			throws com.granule.json.JSONException
 	{
 		LOG.debug("***************************productClassAttribs call for*************" + productCode);
 		String returnStatement = null;
@@ -5218,8 +5240,7 @@ public class ProductPageController extends MidPageController
 	}
 
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.EXCHANGE, method = RequestMethod.GET)
-	public @ResponseBody
-	ExchangeGuideDropdownData viewExchangeOption(
+	public @ResponseBody ExchangeGuideDropdownData viewExchangeOption(
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.L3CATEGORY, required = true) final String l3code)
 			throws CMSItemNotFoundException
 	{
@@ -5253,7 +5274,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * this method checks the servicability of a pincode against the greenDust Table
-	 * 
+	 *
 	 * @param pin
 	 * @return boolean
 	 * @throws CMSItemNotFoundException
@@ -5292,7 +5313,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * This is used to check if the product is a Large Appliance for UF-160
-	 * 
+	 *
 	 * @param breadcrumbs
 	 */
 	private boolean checkIfLargeAppliance(final List<Breadcrumb> breadcrumbs)
@@ -5336,7 +5357,7 @@ public class ProductPageController extends MidPageController
 
 	/**
 	 * @desc Returns nearby store location based on pincode.
-	 * 
+	 *
 	 * @return Store details
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
@@ -5533,4 +5554,109 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
+	@RequireHardLogIn
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
+	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+			final Model model, final HttpServletRequest request,@RequestParam(value = "egvErrorMsg", required = false) final String egvErrorMsg)
+	{
+		try
+		{
+
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			CustomerModel currentCustomer=null;
+			try
+			{
+				 currentCustomer = (CustomerModel) userService.getCurrentUser();
+				if(currentCustomer ==null){
+					return REDIRECT_PREFIX + "/login";
+				}
+				if(currentCustomer.getOriginalUid()==null){
+					return REDIRECT_PREFIX + "/login";
+				}
+			}
+			catch (Exception exception)
+			{
+				LOG.error("Getting Excpetion While getting current customer ");
+				return REDIRECT_PREFIX + "/login";
+			}
+
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			populateProductDetailForDisplay(productModel, model, request);
+			
+			if (currentCustomer.getIsqcOtpVerify() != null && currentCustomer.getIsqcOtpVerify().booleanValue())
+			{
+				model.addAttribute("isOTPValidtion", Boolean.TRUE);
+			}
+			else
+			{
+				model.addAttribute("isOTPValidtion", Boolean.FALSE);
+			}
+			
+			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
+			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
+			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+			model.addAttribute(new ReviewForm());
+			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
+			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
+			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+			try{
+				 String minPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.minPrice");	
+				 String maxPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.maxPrice");	
+			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
+			 String [] amountList = productPrice.split(",");
+			 model.addAttribute("amountList", amountList);
+			 model.addAttribute("minPrice", minPrice);
+			 model.addAttribute("maxPrice", maxPrice);
+			}catch(Exception exception){
+				LOG.error("Exception Occur while getting product price  ");
+			}
+			 
+			 model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE, variantProductModel.getSize());
+			}
+			getViewForPage(model);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		final EgvDetailForm egvDetailsform = new EgvDetailForm();
+		model.addAttribute("egvDetailsform", egvDetailsform);
+		if (StringUtils.isNotEmpty(egvErrorMsg))
+		{
+			 if(egvErrorMsg.equalsIgnoreCase("formValidation")){
+			     model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
+			 }else if(egvErrorMsg.equalsIgnoreCase("paymentError")){
+				 GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.paymentMessage",
+							new Object[] {});
+			 }
+			 else if(egvErrorMsg.equalsIgnoreCase("EGVOderError")){
+				 GlobalMessages.addMessage(model, GlobalMessages.ERROR_MESSAGES_HOLDER, "mpl.gift.error.message",
+							new Object[] {});
+			 }
+		}
+		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
+		storeCmsPageInModel(model, contentPage);
+		setUpMetaDataForContentPage(model, contentPage);
+		return PAGES_LAYOUT_EGV_PDP_RESPONSIVE;
+	}
 }

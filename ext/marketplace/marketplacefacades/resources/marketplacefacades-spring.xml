@@ -2091,6 +2091,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
+
 	<alias name="defaultHomePageTypesConverter" alias="homePageTypesConverter" />
 	<bean id="defaultHomePageTypesConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass"
@@ -2107,6 +2108,18 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultHomePageTypesFacadeImpl" alias="homePageTypesFacade" />
 	<bean id="defaultHomePageTypesFacadeImpl" class="com.tisl.luxury.facade.impl.HomePageTypesFacadeImpl"></bean>
 	
+
+	<!-- mplWalletFacade EGV -->
+		<bean id="mplWalletFacade" class="com.tisl.mpl.facades.wallet.impl.MplWalletFacadeImpl" >
+<!--      	<property name="mplWalletServices" ref="mplWalletServices" /> -->
+       </bean>
+
+   <bean id="eGVOrderRecipientContex"
+		class="com.tisl.mpl.facades.process.email.context.EGVOrderRecipientContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	<!--  EGV Order Email-->	
+
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
 	
 	<bean id="mplWebFormFacade" class="com.tisl.mpl.facades.webform.MplDefaultWebFormFacade" />

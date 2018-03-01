@@ -386,31 +386,7 @@ TATA.CommonFunctions = {
         });
 
     },
-    
-    ProductSlider: function() {
 
-        $('.product-slider').slick({
-            infinite: true,
-            slidesToShow: 3,
-            slidesToScroll: 3,
-            dots: false,
-            responsive: [
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1.5,
-                        slidesToScroll: 1,
-                        //centerMode: true,
-                        arrows: true,
-                        dots:false
-                    }
-                }
-            ]
-        });
-
-    },
-    
- 
     Accordion: function() {
         var Acc = $('.accordion').find('.accordion-title');
 
@@ -959,7 +935,6 @@ TATA.CommonFunctions = {
         _self.MainBanner();
         _self.LookBookSlider();
         _self.BrandSlider();
-        _self.ProductSlider();
         _self.Accordion();
         _self.ShopByCatagorySlider();
         _self.TrendingCatagorySlider();
@@ -970,8 +945,6 @@ TATA.CommonFunctions = {
         _self.swipeLookBook();  
         _self.removeProdouct();
         _self.displayRemoveCoupon();
-        
-       
     }
 
 };
@@ -1168,8 +1141,11 @@ TATA.Pages = {
                 }
             });
             
-                       //Update URL without Refresh
+            //Update URL without Refresh
+            console.log("replace the current URL with parameters");
             var currentURL=window.location.href.split('?')[0];
+            console.log(requestUrl.split('?')[1]);
+            console.log("current URL is "+currentURL);
             history.pushState(null, null, currentURL+"?"+requestUrl.split('?')[1]);
         },
 
@@ -1349,12 +1325,15 @@ TATA.Pages = {
                     var productCodePost = $("#productCodePost").val();
                     var productcodearray =[];
                     productcodearray.push(productCodePost);
+                    var product_category =$('#product_category').val();
                     utag.link({
                         link_obj: this,
                         link_text: 'add_to_wishlist_pdp' ,
                         event_type : 'add_to_wishlist_pdp',
                         product_sku_wishlist : productcodearray
                     });
+                  //for dtm pdp wishlist
+                    dtmLuxAddWL("pdp",productcodearray,product_category);
                 }
             });
         },
@@ -1442,6 +1421,10 @@ TATA.Pages = {
 
         removeFromWishlist: function(dataString){
             var requiredUrl = ACC.config.encodedContextPath+"/p" + "-removeFromWl";
+            var productCodePost = $("#productCodePost").val();
+            var productcodearray =[];
+            productcodearray.push(productCodePost);
+            var product_category =$('#product_category').val();
             $.ajax({
                 url: requiredUrl,
                 type: "GET",
@@ -1463,6 +1446,7 @@ TATA.Pages = {
                             $(".wishAlreadyAddedPlp").removeClass("active")
                         },3000);
                     }
+                    dtmLuxRemoveWL("pdp",productcodearray,product_category);
                 }
             });
         },
@@ -1664,6 +1648,7 @@ TATA.Pages = {
                                 });
                             }
 							/*TPR-641 ends*/
+                            dtmLuxEmiTrack(emiBankSelected);
                         },
                         error : function(resp) {
                             $('#emiSelectBank').show();
@@ -2600,7 +2585,7 @@ function addToWishlistForCart(ussid,productCode)
                         product_sku_wishlist : productcodearray
                     });
                 }
-
+                dtmLuxAddToWishlist("cart",productCode,""); 
                 localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 
                 /* 				var msg=$('#movedToWishlistFromCart').text();
@@ -2691,7 +2676,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
                     });
                 }
                 /*TPR-656 Ends*/
-
+                dtmLuxAddToWishlist("cart",productCode,""); 
                 localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 
 
