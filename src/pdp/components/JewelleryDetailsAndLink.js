@@ -52,6 +52,7 @@ export default class JewelleryDetailsAndLink extends React.Component {
     );
   }
 }
+
 JewelleryDetailsAndLink.propTypes = {
   productName: PropTypes.string,
   productDescription: PropTypes.string,
