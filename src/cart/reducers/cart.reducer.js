@@ -27,7 +27,7 @@ const cart = (
     setAddress: null,
     netBankDetails: null,
     emiBankDetails: null,
-    
+
     orderSummary: null,
     orderSummaryStatus: null,
     orderSummaryError: null,
@@ -257,7 +257,8 @@ const cart = (
       return Object.assign({}, state, {
         orderSummaryStatus: action.status,
         orderSummaryError: action.error
-        
+      });
+
     case cartActions.GET_CART_ID_REQUEST:
       return Object.assign({}, state, {
         status: action.status
