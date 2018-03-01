@@ -917,11 +917,11 @@ export function addStoreCNCRequest() {
   };
 }
 
-export function addStoreCNCSuccess(storeDetails) {
+export function addStoreCNCSuccess(storeAdded) {
   return {
     type: ADD_STORE_CNC_SUCCESS,
     status: SUCCESS,
-    storeDetails
+    storeAdded
   };
 }
 

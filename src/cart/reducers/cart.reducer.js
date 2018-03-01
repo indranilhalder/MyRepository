@@ -35,7 +35,8 @@ const cart = (
 
     storeDetails: null,
     storeStatus: null,
-    storeError: null
+    storeError: null,
+    storeAdded: null
   },
   action
 ) => {
@@ -333,7 +334,7 @@ const cart = (
     case cartActions.ADD_STORE_CNC_SUCCESS:
       return Object.assign({}, state, {
         storeStatus: action.status,
-        storeDetails: action.storeDetails,
+        storeAdded: action.storeAdded,
         loading: false
       });
 
