@@ -6,7 +6,14 @@ import ProductGalleryMobile from "./ProductGalleryMobile";
 import ColourSelector from "./ColourSelector";
 import SizeSelector from "./SizeSelector";
 import OfferCard from "./OfferCard";
+import PdpLink from "./PdpLink";
+import ProductDetails from "./ProductDetails";
+import RatingAndTextLink from "./RatingAndTextLink";
+import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import styles from "./ProductDescriptionPage.css";
+
+const DELIVERY_TEXT = "Delivery Options For";
+const PIN_CODE = "110011";
 export default class PdpElectronics extends React.Component {
   render() {
     const mobileGalleryImages = [
@@ -24,6 +31,10 @@ export default class PdpElectronics extends React.Component {
       }
     ];
     const productData = {
+      otherSellersText:
+        "<p>Sold directly by <b>Westside</b> and 9 other sellers</p>",
+      averageRating: 4.2,
+      productReviewsCount: 50,
       emiInfo: { emiText: "Emi available on this product" },
       productOfferPromotion: [
         {
@@ -272,7 +283,49 @@ export default class PdpElectronics extends React.Component {
             ]
           }
         ]
-      }
+      },
+      eligibleDeliveryModes: [
+        {
+          code: "express-delivery",
+          displayCost: "₹0.00",
+          name: "Express Delivery",
+          timeline: "Delivered in 3-6 business days."
+        },
+        {
+          code: "home-delivery",
+          displayCost: "₹0.00",
+          name: "Home Delivery",
+          timeline: "Delivered in 3-6 business days."
+        },
+        {
+          code: "click-and-collect",
+          displayCost: "₹0.00",
+          name: "Click and Collect",
+          timeline: "Delivered in 3-6 business days."
+        }
+      ],
+      productDetails: [
+        {
+          title: "Product Description",
+          details:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultricies laoreet sapien, a malesuada lorem porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas"
+        },
+        {
+          title: "Size and Fit",
+          details:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultricies laoreet sapien, a malesuada lorem porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas"
+        },
+        {
+          title: "Composition and Care",
+          details:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultricies laoreet sapien, a malesuada lorem porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas"
+        },
+        {
+          title: "Shipping and Free Returns",
+          details:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultricies laoreet sapien, a malesuada lorem porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas"
+        }
+      ]
     };
     return (
       <PdpFrame>
@@ -289,11 +342,13 @@ export default class PdpElectronics extends React.Component {
           averageRating={4.2}
         />
         {productData.emiInfo && (
-          <div className={styles.info}>
-            {productData.emiInfo.emiText}
-            <span className={styles.link} onClick={this.showEmiModal}>
-              View Plans
-            </span>
+          <div className={styles.separator}>
+            <div className={styles.info}>
+              {productData.emiInfo.emiText}
+              <span className={styles.link} onClick={this.showEmiModal}>
+                View Plans
+              </span>
+            </div>
           </div>
         )}
         <OfferCard
@@ -329,6 +384,40 @@ export default class PdpElectronics extends React.Component {
               />
             </React.Fragment>
           )}
+        {productData.eligibleDeliveryModes &&
+          productData.eligibleDeliveryModes.map((val, idx) => {
+            return (
+              <DeliveryInformation
+                key={idx}
+                header={val.name}
+                placedTime={val.timeline}
+                type={val.code}
+                onClick={() => this.renderAddressModal()}
+                deliveryOptions={DELIVERY_TEXT}
+                label={PIN_CODE}
+              />
+            );
+          })}
+        <div className={styles.separator}>
+          <PdpLink onClick={this.goToSellerPage}>
+            <div
+              className={styles.sellers}
+              dangerouslySetInnerHTML={{
+                __html: productData.otherSellersText
+              }}
+            />
+          </PdpLink>
+        </div>
+        <div className={styles.details}>
+          <ProductDetails data={productData.productDetails} />
+        </div>
+        <div className={styles.separator}>
+          <RatingAndTextLink
+            onClick={this.goToReviewPage}
+            averageRating={productData.averageRating}
+            numberOfReview={productData.productReviewsCount}
+          />
+        </div>
       </PdpFrame>
     );
   }
