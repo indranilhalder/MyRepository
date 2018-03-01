@@ -327,21 +327,21 @@ export function userAddressFailure(error) {
 
 export function getUserAddress() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(userAddressRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }/addresses?channel=mobile&emailId=${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
