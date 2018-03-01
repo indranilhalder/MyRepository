@@ -4210,5 +4210,9 @@
 	
 
 	<!-- Added  For Buying Of EGV Functionality End  -->
-	
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO" >
+	<property name="searchQuery" type="String"/>
+	<property name="appliedSort" type="String"/>
+	<property name="appliedFilters" type="String"/>
+	</bean>
 </beans>
