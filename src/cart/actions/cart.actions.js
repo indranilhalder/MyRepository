@@ -337,11 +337,8 @@ export function getUserAddress() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
-      console.log(resultJson);
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
-      console.log(e.message);
       dispatch(userAddressFailure(e.message));
     }
   };
