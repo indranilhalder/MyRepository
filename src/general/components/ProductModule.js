@@ -9,17 +9,6 @@ import downloadIconWhite from "./img/downloadWhite.svg";
 import ProductInfo from "./ProductInfo.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
-/*
-
-  handleClick = () => {
-    console.log("HANDLE CLICK");
-    console.log(this.props.data);
-    if (this.props.data.webURL) {
-      const urlSuffix = this.props.data.webURL.replace(TATA_CLIQ_ROOT, "");
-      this.props.history.push(urlSuffix);
-    }
-  };
-*/
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {

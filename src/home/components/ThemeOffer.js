@@ -4,12 +4,19 @@ import PropTypes from "prop-types";
 import Background from "./img/bg.jpg";
 import concat from "lodash/concat";
 import { transformData, transformItem } from "./utils.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 const OFFER_AND_ITEM_LIMIT = 4;
 
 export default class ThemeOffer extends React.Component {
+  handleClick() {
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
+  }
   componentDidUpdate() {
-    console.log(this.props.feedComponentData);
     const offers = this.props.feedComponentData.offers;
 
     const itemIds = this.props.feedComponentData.itemIds;
