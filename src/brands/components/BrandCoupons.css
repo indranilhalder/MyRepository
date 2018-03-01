@@ -52,8 +52,9 @@
 }
 .couponInerBox {
 	width         : 100%;
-	height        : auto;
 	display       : inline-block;
 	vertical-align: middle;
 	color         : #000;
+	height        : auto;
+
 }
