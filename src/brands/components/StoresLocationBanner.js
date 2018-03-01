@@ -7,7 +7,6 @@ import BannerMobile from "../../general/components/BannerMobile";
 export default class StoresLocationBanner extends React.Component {
   render() {
     let data = this.props.brandLocation;
-    console.log(data);
     return (
       <div className={styles.base}>
         <BannerMobile>
@@ -26,9 +25,18 @@ export default class StoresLocationBanner extends React.Component {
     );
   }
 }
+StoresLocationBanner.propTypes = {};
 StoresLocationBanner.propTypes = {
   headingText: PropTypes.string,
   label: PropTypes.string,
   image: PropTypes.string,
-  heading: PropTypes.string
+  heading: PropTypes.string,
+  StoresLocationBanner: PropTypes.arrayOf(
+    PropTypes.shape({
+      headingText: PropTypes.string,
+      label: PropTypes.string,
+      image: PropTypes.string,
+      heading: PropTypes.string
+    })
+  )
 };
