@@ -12,7 +12,15 @@ export default class BrandCardHeader extends React.Component {
     };
   }
   handleClick() {
-    this.setState({ buttonLabel: "Follow" }, () => this.props.onClick());
+    if (this.state.buttonLabel === "Unfollow") {
+      this.setState({ buttonLabel: "Follow" }, () =>
+        this.props.onClickFollow()
+      );
+    } else {
+      this.setState({ buttonLabel: "Unfollow" }, () =>
+        this.props.onClickUnfollow()
+      );
+    }
   }
   render() {
     return (
@@ -55,7 +63,8 @@ BrandCardHeader.propTypes = {
   subText: PropTypes.string,
   logo: PropTypes.string,
   buttonLabel: PropTypes.string,
-  onClick: PropTypes.func
+  onClickFollow: PropTypes.func,
+  onClickUnfollow: PropTypes.func
 };
 BrandCardHeader.defaultProps = {
   image: "",
