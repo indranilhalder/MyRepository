@@ -2,7 +2,6 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  position: relative;
 }
 
 .productDetails {
@@ -12,12 +11,25 @@
 .content {
   width: 100%;
   height: auto;
+  margin-top: 10px;
+}
+.description {
+  width: 100%;
   line-height: 24px;
   font-size: 14px;
   font-family: regular;
+}
+.header {
+  composes: description;
+  font-family: semibold;
+}
+.holder {
+  width: 100%;
+  height: auto;
+  position: relative;
   padding-bottom: 15px;
 }
-.base:after {
+.holder:after {
   content: "";
   width: 100%;
   height: 1px;
