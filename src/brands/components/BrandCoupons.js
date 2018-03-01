@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./BrandCoupons.css";
 import { Image } from "xelpmoc-core";
-
 export default class BrandCoupons extends React.Component {
   render() {
     return (
