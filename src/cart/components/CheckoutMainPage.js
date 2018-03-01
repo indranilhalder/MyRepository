@@ -80,6 +80,11 @@ export default class CheckoutMainPage extends React.Component {
         <div className={styles.content}>
           {data.addresses && (
             <ConfirmAddress
+              selected={
+                data.addresses.filter(val => {
+                  return val.defaultAddress;
+                }).map
+              }
               address={data.addresses.map(address => {
                 return {
                   addressTitle: address.addressType,

@@ -14,6 +14,7 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
+  CHECKOUT_ROUTER,
   PRODUCT_DELIVERY_ADDRESSES,
   LOGIN_PATH
 } from "../../lib/constants";
@@ -57,10 +58,10 @@ class CartPage extends React.Component {
   goToCouponPage = () => {
     this.props.showCouponModal(this.props.cart.coupons);
   };
-  renderToDeliveryPage() {
+  renderToCheckOutPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     if (customerCookie) {
-      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+      this.props.history.push(CHECKOUT_ROUTER);
     } else {
       this.props.history.push(LOGIN_PATH);
     }
@@ -139,7 +140,7 @@ class CartPage extends React.Component {
             offers={this.props.offers}
             delivery={this.props.delivery}
             payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-            onCheckout={() => this.renderToDeliveryPage()}
+            onCheckout={() => this.renderToCheckOutPage()}
           />
         </div>
       );
