@@ -1012,7 +1012,7 @@ public class SalesOrderReverseXMLUtility
 									
 								}
 							
-							   else if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && CLIQ_CASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()))
+							   else if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && (CLIQ_CASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()) || (CLIQCASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()))))
 								{
 									if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null   && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
 									LOG.info("QC merchantInfoXMlData");
