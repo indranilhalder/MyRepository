@@ -18,7 +18,7 @@
 }
 .textAndLogoContainer {
   bottom: 0px;
-  padding-bottom: 33px;
+  padding-bottom: 12px;
   position: absolute;
   width: 100%;
   height: auto;
@@ -30,13 +30,11 @@
   height: auto;
 }
 .text {
-  padding-top: 9px;
   font-size: 30px;
   font-family: semibold;
   color: #ffffff;
 }
 .subText {
-  padding-top: 9px;
   font-size: 30px;
   color: #ffffff;
   font-family: semibold;
