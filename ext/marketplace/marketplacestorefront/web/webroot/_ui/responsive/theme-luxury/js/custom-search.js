@@ -9,3 +9,7 @@ $('input[type=radio][name=searchCategory]').change(function() {
 	$("#js-site-search-input").focus();
 	$("#js-site-search-input").trigger("keydown");
 });
+
+$('.topluxmenu').click(function() {
+	window.location.href=$(this).find('a').attr('href');
+});
