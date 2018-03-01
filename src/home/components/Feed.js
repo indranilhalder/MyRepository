@@ -22,7 +22,8 @@ import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionConta
 import DiscoverMore from "./DiscoverMore.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
-
+import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
+import { PRODUCT_DELIVERY_ADDRESSES } from "../../lib/constants";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -94,12 +95,18 @@ class Feed extends Component {
 
   componentWillMount() {
     this.props.homeFeed();
-
+    this.props.getCartId();
     window.digitalData = Object.assign(
       {},
       { page: { pageInfo: { pageName: "home" } } }
     );
     window._satellite.track("page view");
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.type === MERGE_CART_ID_SUCCESS) {
+      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+    }
   }
   render() {
     if (this.props.loading) {
