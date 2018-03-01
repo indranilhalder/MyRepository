@@ -2091,6 +2091,10 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
 		<!--  Added for NU-38 start-->	
 		<property name="selectedFilterCount" type="int" />
+		<property name="maxPrice" type="String" />
+		<property name="minPrice" type="String" />
+		<property name="rangeApplied" type="Boolean" />
+		<property name="customeRange" type="Boolean" />
 		<!--  Added for NU-38 end-->
 	</bean>
 
@@ -2103,7 +2107,7 @@
 		<property name="value" type="String" />
 		<property name="subcategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
-
+        <property name="hexColor" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
@@ -3829,6 +3833,10 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.facetdata.FacetData&lt;STATE>">
 	   <property name="selectedFilterCount" type="int"/>
+	   <property name="maxPrice" type="String" />
+	   <property name="minPrice" type="String" />
+	   <property name="rangeApplied" type="Boolean" />
+	   <property name="customeRange" type="Boolean" />
 	</bean>
 	<!--  Added for NU-38 end-->
 	
@@ -4211,6 +4219,13 @@
 		<property name="otpExpiryTime " type="String" />
 	</bean>
 	<!-- Added  For Buying Of EGV Functionality End  -->
+<!--NU-38 start  -->
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO" >
+	<property name="searchQuery" type="String"/>
+	<property name="appliedSort" type="String"/>
+	<property name="appliedFilters" type="String"/>
+   </bean>
+   <!--NU-38 end  -->
 	<bean class="com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO">
 		<property name="termAndConditions" type= "String"/>		
 		<property name="errorCode" type="String" />

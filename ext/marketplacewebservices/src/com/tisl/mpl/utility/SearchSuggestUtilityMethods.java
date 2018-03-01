@@ -1874,7 +1874,6 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
-
 		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
 
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
@@ -1906,6 +1905,35 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+
+
+							if (null != facate.getCustomeRange())
+							{
+								facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+								if (facate.getCustomeRange().booleanValue())
+								{
+									facetWsDTO.setMinPrice(facate.getMinPrice());
+									facetWsDTO.setMaxPrice(facate.getMaxPrice());
+								}
+							}
+							else
+							{
+								facetWsDTO.setCustomeRange(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							facetWsDTO.setRangeApplied(Boolean.FALSE);
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -1942,6 +1970,16 @@ public class SearchSuggestUtilityMethods
 							if (StringUtils.isNotEmpty(values.getCode()))
 							{
 								facetValueWsDTO.setValue(values.getCode());
+							}
+
+							if (facate.getCode().equalsIgnoreCase("colour"))
+							{
+								//"#"+ st.substring(st.indexOf('_')+1)
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									final String st = values.getCode();
+									facetValueWsDTO.setHexColor("#" + st.substring(st.indexOf('_') + 1));
+								}
 							}
 
 							//If facet name is "Include out of stock"  value will be false
@@ -2081,6 +2119,35 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+
+
+							if (null != facate.getCustomeRange())
+							{
+								facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+								if (facate.getCustomeRange().booleanValue())
+								{
+									facetWsDTO.setMinPrice(facate.getMinPrice());
+									facetWsDTO.setMaxPrice(facate.getMaxPrice());
+								}
+							}
+							else
+							{
+								facetWsDTO.setCustomeRange(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							facetWsDTO.setRangeApplied(Boolean.FALSE);
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -2120,11 +2187,22 @@ public class SearchSuggestUtilityMethods
 							}
 
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+
+							if (facate.getCode().equalsIgnoreCase("colour"))
+							{
+								//"#"+ st.substring(st.indexOf('_')+1)
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									final String st = values.getCode();
+									facetValueWsDTO.setHexColor("#" + st.substring(st.indexOf('_') + 1));
+								}
+							}
 							// To skip Include out of stock
 							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
+
 
 						}
 					}

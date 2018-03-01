@@ -45,6 +45,7 @@ import de.hybris.platform.commercewebservicescommons.dto.product.ReviewWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.product.StockWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.product.SuggestionListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.queues.ProductExpressUpdateElementListWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.search.facetdata.ProductSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderStockSearchPageWsDTO;
@@ -125,8 +126,8 @@ import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
-import com.tisl.mpl.wsdto.FollowedBrandWsDto;
 import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
+import com.tisl.mpl.wsdto.FollowedBrandWsDto;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.MplFollowedBrandsWsDto;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
@@ -1813,8 +1814,8 @@ public class ProductsController extends BaseController
 
 
 
-	
-	
+
+
 	/**
 	 * Returns the reviews for a product with a given product code.
 	 *
@@ -1824,17 +1825,22 @@ public class ProductsController extends BaseController
 	//@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
 	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
-	public EgvProductInfoWSDTO getEgvProductInfo(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+	public EgvProductInfoWSDTO getEgvProductInfo(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			final HttpServletRequest request)
 	{
 		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
-		try {
-			 egvProductData = mplProductWebService.getEgvProductDetails();
-			 if(null != egvProductData){
-				 egvProductData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			 }else {
-				 egvProductData = new EgvProductInfoWSDTO();
-				 egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			 }
+		try
+		{
+			egvProductData = mplProductWebService.getEgvProductDetails();
+			if (null != egvProductData)
+			{
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				egvProductData = new EgvProductInfoWSDTO();
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1977,6 +1983,7 @@ public class ProductsController extends BaseController
 
 					productSearchPage.setPagination(paginationWsDTO);
 
+
 				}
 				if (null != sortingvalues.getSorts())
 				{
@@ -1984,7 +1991,36 @@ public class ProductsController extends BaseController
 				}
 				if (null != sortingvalues.getCurrentQuery())
 				{
-					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
+					final SearchStateWsDTO currentQuery = new SearchStateWsDTO();
+
+					currentQuery.setUrl(sortingvalues.getCurrentQuery().getUrl());
+					currentQuery.setQuery(sortingvalues.getCurrentQuery().getQuery());
+
+					currentQuery.setAppliedSort(sortingvalues.getPagination().getSort());
+
+					final String query = sortingvalues.getCurrentQuery().getQuery().getValue();
+
+					final String[] arr = query.split(":");
+
+					if (arr.length > 2)
+					{
+						currentQuery.setAppliedFilters(query.substring(query.indexOf(":", query.indexOf(":") + 1) + 1));
+						currentQuery.setSearchQuery(arr[0]);
+					}
+					else if (arr.length == 2 || query.indexOf(":", query.indexOf(":") + 1) == -1)
+					{
+						currentQuery.setSearchQuery(arr[0]);
+						currentQuery.setAppliedFilters(" ");
+					}
+					else if (arr.length == 0)
+					{
+						if (StringUtils.isNotEmpty(query))
+						{
+							currentQuery.setSearchQuery(query);
+						}
+					}
+
+					productSearchPage.setCurrentQuery(currentQuery);
 				}
 
 			}
