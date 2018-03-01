@@ -126,7 +126,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	public void getWalletInitilization()
 	{
 
-		getMplWalletServices().walletInitilization();
+		getMplWalletServices().walletInitilization(generateQCTransactionId());
 	}
 
 
@@ -148,12 +148,12 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 *
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#addEGVToWallet()
 	 */
-	@Override
+	/*@Override
 	public void addEGVToWallet()
 	{
 
 		getMplWalletServices().addEgvToWallet();
-	}
+	}*/
 
 
 
@@ -373,9 +373,14 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	}
 	
 	@Override
-	public WalletCreateData getWalletCreateData()
+	public WalletCreateData getWalletCreateData(CustomerModel currentCustomer)
 	{
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		if(null == currentCustomer) {
+			 currentCustomer = (CustomerModel) userService.getCurrentUser();
+		}
+		LOG.error("FIrst Name "+currentCustomer.getFirstName());
+		LOG.error("QC FIrst Name "+currentCustomer.getQcVerifyFirstName());
+
 		WalletCreateData walletCreateData = new WalletCreateData();
 	   if (StringUtils.isNotEmpty(currentCustomer.getQcVerifyFirstName()))
 		{
@@ -467,7 +472,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		final Customer custInfo = new Customer();
 		custInfo.setEmail(currentCustomer.getOriginalUid());
 		custInfo.setEmployeeID(currentCustomer.getUid());
-		custInfo.setCorporateName("Tata Unistore Ltd");
+		custInfo.setCorporateName(configurationService.getConfiguration().getString("CorporateName"));
 		if (null != qcFirstName)
 		{
 			custInfo.setFirstname(qcFirstName);

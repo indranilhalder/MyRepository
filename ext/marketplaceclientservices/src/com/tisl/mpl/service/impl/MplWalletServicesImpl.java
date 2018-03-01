@@ -81,7 +81,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 	private final String SELECT_CLASS = "select {";
 	private final String FROM_CLASS = "} from {";
 	private final String WHERE_CLASS = "} where {";
-
 	/**
 	 * @return the qcInitDataBean
 	 */
@@ -139,10 +138,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 	}
 
 	@Override
-	public QCInitializationResponse walletInitilization()
+	public QCInitializationResponse walletInitilization(String transactionId)
 	{
 		QCInitializationResponse qcInitializationResponse = new QCInitializationResponse();
-		//	final Client client = Client.create();
 		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
@@ -150,25 +148,22 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/Qwikcilver/eGMS.RestApi/api/initialize").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +  MarketplaceclientservicesConstants.QC_INITIALIZATION_URL).build());
 			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+					.getString("ForwardingEntityId");
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
-
+					.getString("ForwardingEntityPassword");
 			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
+					.getString("TerminalId");
 			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
+					.getString("Username");
 			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+					.getString("Password");
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+					.getString("IsForwardingEntityExists");
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
@@ -176,7 +171,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
 					.header(MarketplaceclientservicesConstants.USERNAME, userName)
 					.header(MarketplaceclientservicesConstants.PASSWORD, password)
-					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, "11")
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
 					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
 					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -215,36 +210,59 @@ public class MplWalletServicesImpl implements MplWalletServices
 		//	final Client client = Client.create();
 		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
+		//LOG.debug("Successfully ********************** .................." + registerCustomerRequest.getCustomer().getCorporateName());
 		ClientResponse response = null;
 		WebResource webResource = null;
 		QCCustomerRegisterResponse custResponse = new QCCustomerRegisterResponse();
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/Qwikcilver/eGMS.RestApi/api/wallet/").build());
-
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL).build());
+			
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
+			
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(registerCustomerRequest);
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId)
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null")
-					.header("CurrentBatchNumber", getConfigurationService().getConfiguration().getString("qc.batch.number"))
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
 				custResponse = objectMapper.readValue(output, QCCustomerRegisterResponse.class);
-				LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getWallet().getWalletNumber());
+				//LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getWallet().getWalletNumber());
+				LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getErrorCode());
+				LOG.debug(" *********QC NEW CUSTOMER REGISTRATION***** response----" + custResponse.getErrorDescription());
 				return custResponse;
 			}
 		}
@@ -274,27 +292,46 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/Qwikcilver/eGMS.RestApi/api/gc/createandissue").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.PURCHASE_EGV_CARD).build());
 
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
+			
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(purchaseEGVRequest);
 			
 			LOG.debug("Qc Request Post...###############"+requestBody);
           
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId)
-					//(random number logic)
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null")
-					.header("CurrentBatchNumber", getConfigurationService().getConfiguration().getString("qc.batch.number"))
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
@@ -318,7 +355,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		return purchaseEgvResponse;
 	}
 
-	@Override
+	/*@Override
 	public void addEgvToWallet()
 	{
 		//	final Client client = Client.create();
@@ -328,8 +365,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		WebResource webResource = null;
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 			webResource = client
 					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
 							+ "/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/card").build());
@@ -360,9 +397,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		{
 			LOG.error(ex.getMessage());
 		}
-	}
-
-
+	}*/
 
 	@Override
 	public BalanceBucketWise getQCBucketBalance(final String customerWalletId, final String transactionId)
@@ -376,29 +411,40 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/balance").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId + MarketplaceclientservicesConstants.GET_QC_BALANCE).build());
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10").header("Username", "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul").header("TransactionId", transactionId)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
 			if (null != response)
@@ -438,23 +484,41 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/Redeem").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId + MarketplaceclientservicesConstants.QC_WALLET_REDEMED).build());
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(qcRedeemRequest);
-			response = webResource.header("ForwardingEntityId", "tatacliq.com").header("ForwardingEntityPassword", "tatacliq.com")
-					.header("TerminalId", "webpos-tul-dev10").header("Username", "tulwebuser").header("Password", "webusertul")
-					.header("TransactionId", transactionId)
-					//(random number logic)
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null")
-					.header("CurrentBatchNumber", getConfigurationService().getConfiguration().getString("qc.batch.number"))
+			response = webResource.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
@@ -489,11 +553,23 @@ public class MplWalletServicesImpl implements MplWalletServices
 		QCRedeeptionResponse qcRedeeptionResponse = null;
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletId + "/Cancelredeem").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_CANCEL_REDEMED).build());
 
 			//need to create marshalling for request body
 			//Transaction ID will be same as Wallet redeem
@@ -503,22 +579,21 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//final String requestBody = "{\"OriginalTransactionId\":\"20\",\"OriginalBatchNumber\":\"10207477\"}";
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, qcRefundRequest.getOriginalTransactionId())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
@@ -564,26 +639,40 @@ public class MplWalletServicesImpl implements MplWalletServices
 		{
 			requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
-					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CASHBACK").build());
+					.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_WALLET_LOAD_CASHBACK).build());
+			
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
+			
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
@@ -618,7 +707,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		String requestBody = null;
 		String output = null;
 		QCRedeeptionResponse qcRedeeptionResponse = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final QCRefundRequest request = new QCRefundRequest();
 		request.setOriginalTransactionId(transactionId);
 		request.setOriginalBatchNumber(getConfigurationService().getConfiguration().getString("qc.batch.number"));
@@ -627,29 +715,39 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//get Wallet number from facade
 			//TransactionId unique
 			// InvoiceNo Unique
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client.resource(
-					UriBuilder.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET + walletId + "/CancelLoad").build());
+					UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL+ walletId +MarketplaceclientservicesConstants.QC_WALLET_CANCEL_LOAD).build());
 			final ObjectMapper objectMapper = new ObjectMapper();
 			requestBody = objectMapper.writeValueAsString(request);
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class, requestBody);
 
@@ -688,22 +786,40 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId).build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId).build());
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "46")
-					//(random number logic)
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null")
-					.header("CurrentBatchNumber", getConfigurationService().getConfiguration().getString("qc.batch.number"))
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
 					.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
 			if (null != response)
@@ -748,35 +864,43 @@ public class MplWalletServicesImpl implements MplWalletServices
 			String requestBody = null;
 			String output = null;
 
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
 
 			final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
 			final ObjectMapper objectMapper = new ObjectMapper();
-
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			requestBody = objectMapper.writeValueAsString(addToCardWallet);
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/card").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+ MarketplaceclientservicesConstants.QC_WALLET_URL + customerWalletId + MarketplaceclientservicesConstants.QC_WALLET_QC_CARD).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class, requestBody);
 
@@ -815,30 +939,40 @@ public class MplWalletServicesImpl implements MplWalletServices
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + cardNumber + "/balance").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + cardNumber + MarketplaceclientservicesConstants.QC_WALLET_QC_BALANCE).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.get(ClientResponse.class);
 
@@ -884,30 +1018,41 @@ public class MplWalletServicesImpl implements MplWalletServices
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
+			
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletCardNumber + "/transactions").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) +MarketplaceclientservicesConstants.QC_WALLET_URL+ walletCardNumber + MarketplaceclientservicesConstants.QC_WALLET_LIST_TRANSACTIONS).build());
 
 			final ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.get(ClientResponse.class);
 
@@ -969,32 +1114,45 @@ public class MplWalletServicesImpl implements MplWalletServices
 		ClientResponse response = null;
 		WebResource webResource = null;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+
 		final ObjectMapper objectMapper = new ObjectMapper();
+		client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+		client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+		final String forwardEntityID = getConfigurationService().getConfiguration()
+				.getString("ForwardingEntityId");
+		final String forwardEntityPassword = getConfigurationService().getConfiguration()
+				.getString("ForwardingEntityPassword");
+		final String terminalID = getConfigurationService().getConfiguration()
+				.getString("TerminalId");
+		final String userName = getConfigurationService().getConfiguration()
+				.getString("Username");
+		final String password = getConfigurationService().getConfiguration()
+				.getString("Password");
+		final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+				.getString("IsForwardingEntityExists");
 		try
 		{
 			final String requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
-					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/PROMOTION").build());
+					.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_WALLET_LOAD_PROMOTION).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
@@ -1030,6 +1188,20 @@ public class MplWalletServicesImpl implements MplWalletServices
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
+		client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+		client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+		final String forwardEntityID = getConfigurationService().getConfiguration()
+				.getString("ForwardingEntityId");
+		final String forwardEntityPassword = getConfigurationService().getConfiguration()
+				.getString("ForwardingEntityPassword");
+		final String terminalID = getConfigurationService().getConfiguration()
+				.getString("TerminalId");
+		final String userName = getConfigurationService().getConfiguration()
+				.getString("Username");
+		final String password = getConfigurationService().getConfiguration()
+				.getString("Password");
+		final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+				.getString("IsForwardingEntityExists");
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -1037,26 +1209,24 @@ public class MplWalletServicesImpl implements MplWalletServices
 		{
 			final String requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(
-					UriBuilder.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CREDIT").build());
+					UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL) + MarketplaceclientservicesConstants.QC_WALLET_URL+ walletId + MarketplaceclientservicesConstants.QC_WALLET_LOAD_CREDIT).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
@@ -1144,7 +1314,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		CustomerWalletDetailResponse customerWalletDetailResponse = new CustomerWalletDetailResponse();
 		try
 		{
-			//	final Client client = Client.create();
 			final Client client = getProxyConnection();
 			LOG.debug("Successfully client .................." + client);
 			ClientResponse response = null;
@@ -1152,29 +1321,41 @@ public class MplWalletServicesImpl implements MplWalletServices
 			String output = null;
 			QCCreditRequest creditRequest =new QCCreditRequest();
 			final ObjectMapper objectMapper = new ObjectMapper();
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			final String requestBody = objectMapper.writeValueAsString(creditRequest);
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletId + "/Activate").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_WALEET_ACTIVATE).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,requestBody);
 
@@ -1200,7 +1381,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		CustomerWalletDetailResponse customerWalletDetailResponse = new CustomerWalletDetailResponse();
 		try
 		{
-			//	final Client client = Client.create();
 			final Client client = getProxyConnection();
 			LOG.debug("Successfully client .................." + client);
 			ClientResponse response = null;
@@ -1209,28 +1389,39 @@ public class MplWalletServicesImpl implements MplWalletServices
 			QCCreditRequest creditRequest =new QCCreditRequest();
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(creditRequest);
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletId + "/Deactivate").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL + walletId + MarketplaceclientservicesConstants.QC_WALLET_DEACTIVATE).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,requestBody);
 
@@ -1261,33 +1452,43 @@ public class MplWalletServicesImpl implements MplWalletServices
 		CustomerWalletDetailResponse custResponse = new CustomerWalletDetailResponse();
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_TIME_OUT)));
+
+			final String forwardEntityID = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityId");
+			final String forwardEntityPassword = getConfigurationService().getConfiguration()
+					.getString("ForwardingEntityPassword");
+			final String terminalID = getConfigurationService().getConfiguration()
+					.getString("TerminalId");
+			final String userName = getConfigurationService().getConfiguration()
+					.getString("Username");
+			final String password = getConfigurationService().getConfiguration()
+					.getString("Password");
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
+					.getString("IsForwardingEntityExists");
 			webResource = client
-					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/Qwikcilver/eGMS.RestApi/api/wallet/"+walletId+"/customer").build());
+					.resource(UriBuilder.fromUri(getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.QC_URL)+MarketplaceclientservicesConstants.QC_WALLET_URL+walletId+MarketplaceclientservicesConstants.QC_WALLET_CUSTOMER).build());
 
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(registerCustomerRequest);
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
-					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
+					.header(MarketplaceclientservicesConstants.USERNAME, userName)
+					.header(MarketplaceclientservicesConstants.PASSWORD, password)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
-					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
-					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
-					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
-					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
-					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
-					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
-					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
-					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
-							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, getConfigurationService().getConfiguration().getString("MerchantOutletName"))
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, getConfigurationService().getConfiguration().getString("AcquirerId"))
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, getConfigurationService().getConfiguration().getString("OrganizationName"))
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, getConfigurationService().getConfiguration().getString("POSEntryMode"))
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, getConfigurationService().getConfiguration().getString("POSTypeId"))
+					.header(MarketplaceclientservicesConstants.POS_NAME, getConfigurationService().getConfiguration().getString("POSName"))
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, getConfigurationService().getConfiguration().getString("TermAppVersion"))
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getConfigurationService().getConfiguration().getString("qc.batch.number"))
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,requestBody);
 

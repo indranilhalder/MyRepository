@@ -2655,15 +2655,16 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		final List<AbstractOrderEntryModel> entries = getOrderEntryModelFromVouEntries(voucher, oModel);
 		double subtotal = getSubtotalForCoupon(entries);
 
-		if(oModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+		if(null != oModel.getSplitModeInfo() && oModel.getSplitModeInfo().equalsIgnoreCase("Split")){
 			final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(oModel.getDiscounts());
 			if(null == voucher.getCurrency()  && cartCouponObj.getFirst().booleanValue()){
-				subtotal -= oModel.getTotalWalletAmount().doubleValue(); 
+				double walletAmount= null != oModel.getTotalWalletAmount() ? oModel.getTotalWalletAmount().doubleValue() :0.0d; 
+				subtotal -= walletAmount; 
 			}
 		}
 		return getDiscountValue(voucher, subtotal);
 	}
-
+	
 	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
 	{
 		boolean flag = false;

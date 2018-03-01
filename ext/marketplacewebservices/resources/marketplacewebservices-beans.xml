@@ -1562,6 +1562,9 @@
 		<property name="isWalletPay" type="boolean" />
 		<property name="walletTransactionId" type="String" />
 		<property name="orderAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
+		<property name="JuspayAmountDeducted" type="java.lang.Double" />
+
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1742,6 +1745,11 @@
 		<property name="isEgvOrder" type="boolean" />
 		<property name="giftCardStatus" type="String" />
 	<!-- Added For EGV Functionality End -->	
+	<!-- Added for NU-56 -->
+	<property name="ratings" type="String" />
+	<property name="errorCode" type="String" />
+	<property name="message" type="String" />
+	<property name="status" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -2409,6 +2417,7 @@
 		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isRemainingAmount" type="boolean" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->
@@ -2551,6 +2560,7 @@
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.GigyaWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="sessionToken" type="String" />
@@ -3738,6 +3748,7 @@
 		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<!-- TPR-7486 end-->
 	<!-- Added for TPR-5954 || Start -->
@@ -4207,12 +4218,18 @@
 	<bean class="com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO" >		
 		<property name="otpExpiryTime " type="String" />
 	</bean>
-	
-
 	<!-- Added  For Buying Of EGV Functionality End  -->
+<!--NU-38 start  -->
 	<bean class="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO" >
 	<property name="searchQuery" type="String"/>
 	<property name="appliedSort" type="String"/>
 	<property name="appliedFilters" type="String"/>
+   </bean>
+   <!--NU-38 end  -->
+	<bean class="com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO">
+		<property name="termAndConditions" type= "String"/>		
+		<property name="errorCode" type="String" />
+		<property name="message" type="String" />
+		<property name="status" type="String" />
 	</bean>
 </beans>

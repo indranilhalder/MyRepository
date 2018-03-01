@@ -13,6 +13,11 @@
  */
 package com.tisl.mpl.constants;
 
+import java.util.Date;
+
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -20,12 +25,6 @@ import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
-
-import java.util.Date;
-
-import com.tisl.mpl.core.model.FreebieDetailModel;
-import com.tisl.mpl.core.model.ProductFreebieDetailModel;
-
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 
@@ -1097,7 +1096,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5006 = "B5004";
 	public static final String B5007 = "B5004";
 	// Codes For EGV Functionaity END
-	
+
 	public static final String B5010 = "B5010";
 	public static final String B5011 = "B5011";
 	public static final String B5012 = "B5012";
@@ -1114,7 +1113,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5023 = "B5023";
 	public static final String B5024 = "B5024";
 	public static final String B5025 = "B5025";
-	
+
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
@@ -2386,27 +2385,27 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// EGV  changes Start
 
-		public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
-		public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
-		public static final String QC_REFUND_TYPE_RETURN = "RETURN";
-		public static final String QC_REFUND_TYPE_REFUND = "REFUND";
-		
-		
-		public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
-		public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
-		public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
-		public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
-		// EGV Changes End
-		public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
-		
-		public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
-		
-		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
-		
-		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
+	public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
+	public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
+	public static final String QC_REFUND_TYPE_RETURN = "RETURN";
+	public static final String QC_REFUND_TYPE_REFUND = "REFUND";
 
-		public static final String PAYMENT_MODE_SPLIT = "split".trim();
-		public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
+
+	public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
+	public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
+	public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
+	public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
+	// EGV Changes End
+	public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
+
+	public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
+
+	public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
+
+	public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
+
+	public static final String PAYMENT_MODE_SPLIT = "split".trim();
+	public static final String PAYMENT_MODE_LIQ_CASH = "cliqcash".trim();
 
 
 	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
@@ -2503,8 +2502,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SOCIAL_AUTH_FB_TOKEN = "marketplace.socialAuth.fb.adminToken";
 
 	public static final String MANUAL_REFUND_CHECK_ENABLED = "marketplace.RefundClear.manualrefundcheck.enabled".intern();
+
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
-	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "One-time password for activating your CLiQ Cash wallet is {1}. Please do not share with anyone. Feel free to call us at {2} in case of any queries.";
+	public static final String SMS_MESSAGE_WALLET_CREATE_OTP = "Use OTP {1} to buy your Gift Card/CLiQ Cash. Valid for 2 minutes only. For security reasons, do not share this number with anyone. Call us on {2} for queries.";
 	public static final String INVALID_WALLET_OTP = "INVALID";
 	public static final String WALLET_ACTIVATED_MESSAGE = "your wallet activated  successfully";
 	public static final String SMS_MESSAGE_ORDER_PLACED_FROM_WALLET= "Your Tata Cliq Gift card {0} has been redeemed for Rs. {1}. The remaining balance is Rs.{2}";
@@ -2521,6 +2521,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REFUNDENTRYEXISTSFORAUDIT = "Refund entry already exists for audit :".intern();
 	public static final String LANDINGPAGENOTFOUNDFORCATEGORY = "Could not find a landing page for the given category ".intern();
 	public static final String SPLIT = "split".intern();
+	public static final String B5026 = "B5026";
+	public static final String B5027 = "B5027";
 
 	//Report for bulk cancellation
 	/*
@@ -2549,4 +2551,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String EMIBANK_FOR_BANKNAMES_QUERY_PRODUCTVALUE = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?productValue and {b.emiUpperLimit}>=?productValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
 			.intern();
+	//NU-56
+	public static final String SUCCESS_MSG_CUST_EXP = "Thank you for sharing your valuable feedback.";
+	public static final String SUCCESS_FLAG_CUST_EXP = "Success";
+	public static final String ERROR_FLAG_CUST_EXP = "Failure";
+	public static final String ERROR_Message_response = "Some issue occurred, please try again";
+	public static final String B009900 = "B009900";
 }

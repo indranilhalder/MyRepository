@@ -46,8 +46,8 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -86,6 +86,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cache.strategy.MplApiCachingStrategy;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
@@ -185,7 +186,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplCustomerReviewService customerReviewService;
 
 
-
 	private static final String Y = "Y";
 	private static final String N = "N";
 
@@ -253,11 +253,35 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private DefaultCategoryService categoryService;
 
+	@Resource(name = "defaultApiCachingStrategy")
+	MplApiCachingStrategy mplApiCachingStrategy;
+
+	//check if memcache enabled is true in properties
+	private String isCacheEnabled;
+
+
 	//added for pdp new ui end
+
+	/**
+	 * @return the isCacheEnabled
+	 */
+	public String getIsCacheEnabled()
+	{
+		return isCacheEnabled;
+	}
+
+	/**
+	 * @param isCacheEnabled
+	 *           the isCacheEnabled to set
+	 */
+	public void setIsCacheEnabled(final String isCacheEnabled)
+	{
+		this.isCacheEnabled = isCacheEnabled;
+	}
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
 
@@ -3229,67 +3253,79 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 		return displayConfigurableAttributeForPriceBreakup;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
 	 */
 	@Override
 	public EgvProductInfoWSDTO getEgvProductDetails()
 	{
 		LOG.debug("Getting EGV product Details");
-		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
-		AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
+		final EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		final AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
 		double minPrice = 1.0D;
 		double maxPrice = 30000.0D;
 		String priceOptions = null;
-		try {
-			
+		try
+		{
+
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
+
 			if(null != customer) {
+				LOG.error(" FIrst Name "+customer.getFirstName());
+				LOG.error("QC FIrst Name "+customer.getQcVerifyFirstName());
+
 				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
 					egvProductData.setIsWalletCreated(true);
 				}
-				if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+				if (null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					egvProductData.setIsWalletOtpVerified(true);
+
 				}else {
-					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
 					if(null != walletCreateData) {
 						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
 							egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
 						}
-						if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+						if (null != walletCreateData.getQcVerifyLastName()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName()))
+						{
 							egvProductData.setLastName(walletCreateData.getQcVerifyLastName());
 						}
-						if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+						if (null != walletCreateData.getQcVerifyMobileNo()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo()))
+						{
 							egvProductData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
 						}
 					}
 				}
-					
-				
+
+
 			}
-			
+
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
 			{
 				minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);
-				LOG.debug("Configurable Buying EGV Min Price " +minPrice);
+				LOG.debug("Configurable Buying EGV Min Price " + minPrice);
 			}
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE))
 			{
 				maxPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE);
-				LOG.debug("Configurable Buying EGV Max Price " +maxPrice);
+				LOG.debug("Configurable Buying EGV Max Price " + maxPrice);
 			}
 			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS))
 			{
-				priceOptions = configurationService.getConfiguration()
-						.getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
-				LOG.debug("Configurable Buying EGV price options " +priceOptions);
+				priceOptions = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
+				LOG.debug("Configurable Buying EGV price options " + priceOptions);
 			}
 			if (minPrice > 0.0D)
 			{
-				TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+				final TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
 				final BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
 				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
 						MarketplacecommerceservicesConstants.INR);
@@ -3307,7 +3343,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			if (maxPrice > 0.0D)
 			{
-				TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+				final TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
 				final BigDecimal minPriceBigDecimal = new BigDecimal(maxPrice);
 				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
 						MarketplacecommerceservicesConstants.INR);
@@ -3326,12 +3362,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (null != priceOptions)
 			{
 				final String[] configurablePriceOptions = priceOptions.split(",");
-				List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
+				final List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
 				if (null != configurablePriceOptions)
 				{
 					for (final String price : configurablePriceOptions)
 					{
-						TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
+						final TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
 						final BigDecimal PriceBigDecimal = new BigDecimal(Double.valueOf(price).doubleValue());
 						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, PriceBigDecimal,
 								MarketplacecommerceservicesConstants.INR);
@@ -3346,24 +3382,27 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							configurablePrices.add(PriceWsDto);
 						}
 					}
-					
-					if(CollectionUtils.isNotEmpty(configurablePrices)){
+
+					if (CollectionUtils.isNotEmpty(configurablePrices))
+					{
 						amountOptions.setOptions(configurablePrices);
 					}
 				}
 			}
-			
+
 			egvProductData.setAmountOptions(amountOptions);
 			egvProductData.setIsCustomizationAvailable(true);
 			egvProductData.setIsMoreDesigns(false);
 			egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
 			egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
-		//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+			//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
 
-		}catch (Exception e) {
-			LOG.error("Exception occurredd while getting EGV Product Details "+e.getMessage());
 		}
-	
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurredd while getting EGV Product Details " + e.getMessage());
+		}
+
 		return egvProductData;
 	}
 
@@ -3567,7 +3606,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public MplNewProductDetailMobileWsData getProductdetails(final String productCode, final String baseUrl, final String channel)
 	{
 		// YTODO Auto-generated method stub
-		final MplNewProductDetailMobileWsData productDetailMobileNew = new MplNewProductDetailMobileWsData();
+		MplNewProductDetailMobileWsData productDetailMobileNew = new MplNewProductDetailMobileWsData();
 		ProductModel productModel = null;
 		ProductData productData = null;
 		BuyBoxData buyBoxData = null;
@@ -3577,7 +3616,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
 				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
-		MplNewProductDetailMobileWsData isNewOrOnlineExclusive = new MplNewProductDetailMobileWsData();
+		//MplNewProductDetailMobileWsData isNewOrOnlineExclusive = new MplNewProductDetailMobileWsData();
 		String ussid = null;
 		String isEMIeligible = null;
 		List<ClassificationMobileWsData> specificationsList = null;
@@ -3594,11 +3633,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		//Added for TPR-6869
 		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
 		String sellerMonogramMessage = MarketplacecommerceservicesConstants.EMPTY;
-		String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
+		//String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
+		MplNewProductDetailMobileWsData details = null;
 
 		try
 		{
-			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
 			productModel = productService.getProductForCode(productCode);
 
 			if (null != productModel)
@@ -3606,9 +3645,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
-
-				//Added for TPR-6869
-				buyingGuideURL = populateBuyingGuide(productModel);
 			}
 			else
 			{
@@ -3619,6 +3655,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
+					if (Boolean.parseBoolean(getIsCacheEnabled()))
+					{
+						details = mplApiCachingStrategy.get(productCode);
+
+						if (null != details)
+						{
+							productDetailMobileNew = details;
+						}
+						else
+						{
+							details = getCachedAttributes(productData, productModel, baseUrl);
+							productDetailMobileNew = details;
+						}
+					}
+					else
+					{
+						details = getCachedAttributes(productData, productModel, baseUrl);
+						productDetailMobileNew = details;
+					}
 					//TPR-797---TISSTRT-1403 TISPRM-56
 					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 					{
@@ -3733,34 +3788,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 			}
 
-			isNewOrOnlineExclusive = getRichAttributesForPwa(productModel);
-
-			if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsOnlineExclusive())
-			{
-				productDetailMobileNew.setIsOnlineExclusive(isNewOrOnlineExclusive.getIsOnlineExclusive());
-			}
-			if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsProductNew())
-			{
-				productDetailMobileNew.setIsProductNew(isNewOrOnlineExclusive.getIsProductNew());
-			}
-
-			final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-			final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
-					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
-
-			if (null != productModel.getMaxOrderQuantity() && productModel.getMaxOrderQuantity().intValue() > 0
-					&& productModel.getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
-			{
-				productDetailMobileNew.setMaxQuantityAllowed(productModel.getMaxOrderQuantity().toString());
-			}
-			else if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
-			{
-				productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy_jewellery));
-			}
-			else
-			{
-				productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
-			}
 			if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
 			{
 				ussid = buyBoxData.getSellerArticleSKU();
@@ -3846,55 +3873,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setMrpPrice(buyBoxData.getMrp());
 				}
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
-				{
-					productDetailMobileNew.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
-				}
-
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
-				{
-					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
-				}
-				if (null != productData.getListingId())
-				{
-					productDetailMobileNew.setProductListingId(productData.getListingId());
-				}
-				if (null != productData.getProductTitle())
-				{
-					productDetailMobileNew.setProductName(productData.getProductTitle());
-				}
-				if (null != productData.getArticleDescription())
-				{
-					productDetailMobileNew.setProductDescription(productData.getArticleDescription());
-				}
-				final List<MplCategoryHierarchydata> list = getcategoryHierarchyForPwa(productModel);
-				productDetailMobileNew.setCategoryHierarchy(list);
-
 				//final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
 				//				if (null != mplBrandInfo)
 				//				{
 				//					productDetailMobileNew.setBrandInfo(mplBrandInfo);
 				//				}
-				final boolean showSizeGuide = showSizeGuidePwa(productModel);
-				productDetailMobileNew.setShowSizeGuide(Boolean.valueOf(showSizeGuide));
-
-				if (null != productData.getUrl()
-						&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
-				{
-					//sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + "" + productData.getUrl(); Do not add empty strings
-					sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
-				}
-				else if (null != productData.getUrl())
-				{
-					sharedText += productData.getUrl();
-				}
-
-				productDetailMobileNew.setIsExchangeAvailable(isExchangeAvailablePwa(productModel.getSupercategories(), productData));
-
-				if (CollectionUtils.isNotEmpty(productData.getImages()))
-				{
-					productDetailMobileNew.setGalleryImagesList(getGalleryImages(productData));
-				}
 
 				if (CollectionUtils.isNotEmpty(productData.getClassifications()))
 				{
@@ -4092,17 +4075,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setOtherSellers(framedOtherSellerDataList);
 				}
-				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
-				{
-					productDetailMobileNew.setBrandName(productData.getBrand().getBrandname());
-				}
-
-				final String brandUrl = prepareBrandWebUrlDataPwa(productData);
-
-				if (StringUtils.isNotEmpty(brandUrl))
-				{
-					productDetailMobileNew.setBrandURL(brandUrl);
-				}
 
 				//Added for jewellery
 				if (null != buyBoxData)
@@ -4122,18 +4094,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setKnowMore(knowMoreList);
 				}
-				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
-				{
-					productDetailMobileNew
-							.setBrandInfo(productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
-									.getBrand().getBrandDescription() : StringUtils.substring(
-									productData.getBrand().getBrandDescription(), 0, MplConstants.BRANDINFO_CHAR_LIMIT));
-				}
-				if (null != productData.getRootCategory())
-				{
-					productDetailMobileNew.setRootCategory(productData.getRootCategory());
-				}
-
 				potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList, channel);
 
 				if (null != potenitalPromo)
@@ -4182,62 +4142,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 				}
 
-				if (productData.getLuxIndicator() != null
-						&& productData.getLuxIndicator().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
-				{
-					productDetailMobileNew.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
-
-					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("luxury.care.mail"));
-				}
-
-
-				if (StringUtils.isNotEmpty(productData.getLevel3CategoryCode())
-						&& StringUtils.isNotEmpty(productData.getLevel3CategoryName()))
-				{
-					productDetailMobileNew.setL3code(productData.getLevel3CategoryCode());
-					productDetailMobileNew.setL3name(productData.getLevel3CategoryName());
-
-					final ContentSlotModel contentSlotModel = contentSlotService
-							.getContentSlotForId(MarketplacecommerceservicesConstants.Exchange_Slot);
-					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
-
-					if (contentSlotModel != null)
-					{
-						final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
-						if (CollectionUtils.isNotEmpty(componentLists))
-						{
-							for (final AbstractCMSComponentModel model : componentLists)
-							{
-								final ExchangeLinkUrl linkUrl = new ExchangeLinkUrl();
-								if (model instanceof SimpleCMSComponentModel)
-
-								{
-									final SimpleCMSComponentModel simpleComponent = (SimpleCMSComponentModel) model;
-
-									if (simpleComponent instanceof CMSLinkComponentModel)
-									{
-										final CMSLinkComponentModel model2 = (CMSLinkComponentModel) simpleComponent;
-										if (StringUtils.isNotEmpty(model2.getName()))
-										{
-											linkUrl.setName(model2.getName());
-										}
-										if (StringUtils.isNotEmpty(model2.getUrl()))
-										{
-											linkUrl.setUrl(model2.getUrl() + MarketplacecommerceservicesConstants.MOBILE_SOURCE2);
-										}
-										if (StringUtils.isNotEmpty(model2.getUid()))
-										{
-											linkUrl.setId(model2.getUid());
-										}
-									}
-									linkUrlList.add(linkUrl);
-								}
-							}
-							productDetailMobileNew.setLinkUrls(linkUrlList);
-						}
-					}
-				}
-
 				//Added for jewellery
 				if ((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
 				{
@@ -4269,34 +4173,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						productDetailMobileNew.setPriceBreakUpDetailsMap(priceBreakUpList);
 					}
 				}
+
 				if (((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
 						|| ((MarketplacewebservicesConstants.FASHIONJEWELLERY).equalsIgnoreCase(productData.getRootCategory())))
 				{
-					final String jwlryCat = configurationService.getConfiguration().getString("mpl.jewellery.category");
-					boolean showSizeOrLength = false;
-					if (StringUtils.isNotEmpty(jwlryCat))
-					{
-						final List<String> catCodeList = Arrays.asList(jwlryCat.split(","));
-
-						for (final CategoryData cat : productData.getCategories())
-						{
-							final String catCode = cat.getCode();
-							if (catCodeList.contains(catCode))
-							{
-								showSizeOrLength = true;
-								break;
-							}
-						}
-					}
-					if (showSizeOrLength)
-					{
-						productDetailMobileNew.setIsSizeOrLength("Length");
-					}
-					else
-					{
-						productDetailMobileNew.setIsSizeOrLength("Size");
-					}
-
 					if (null != buyBoxData)
 					{
 						refundReturnList = getRefundReturnDetails(productModel, buyBoxData, ussidJwlry);
@@ -4305,24 +4185,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						productDetailMobileNew.setReturnAndRefund(refundReturnList);
 					}
-
 				}
 
 				if (StringUtils.isNotEmpty(sellerMonogramMessage))
 				{
 					productDetailMobileNew.setCustomizationInfoText(sellerMonogramMessage);
 				}
-
-				if (StringUtils.isNotEmpty(buyingGuideURL))
-				{
-					productDetailMobileNew.setBuyingGuideUrl(buyingGuideURL);
-				}
-
-				if (null != productData.getArticleDescription())
-				{
-					productDetailMobileNew.setStyleNote(productData.getArticleDescription());
-				}
-
 				if (null != productData.getAverageRating())
 				{
 					productDetailMobileNew.setAverageRating(productData.getAverageRating());
@@ -4332,10 +4200,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setNumberOfReviews(productData.getNumberOfReviews());
 				}
+
 			}
-			sharedText += MarketplacecommerceservicesConstants.SPACE
-					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
-			productDetailMobileNew.setSharedText(sharedText);
+
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -4770,6 +4637,248 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 
 		return list;
+	}
+
+	private MplNewProductDetailMobileWsData getCachedAttributes(final ProductData productData, final ProductModel productModel,
+			final String baseUrl)
+	{
+		final MplNewProductDetailMobileWsData productDetailMobileNew = new MplNewProductDetailMobileWsData();
+		MplNewProductDetailMobileWsData isNewOrOnlineExclusive = new MplNewProductDetailMobileWsData();
+		String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
+
+		try
+		{
+			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+
+			if (null != productData)
+			{
+				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
+				{
+					productDetailMobileNew.setBrandName(productData.getBrand().getBrandname());
+				}
+
+				final String brandUrl = prepareBrandWebUrlDataPwa(productData);
+
+				if (StringUtils.isNotEmpty(brandUrl))
+				{
+					productDetailMobileNew.setBrandURL(brandUrl);
+				}
+
+				final List<MplCategoryHierarchydata> list = getcategoryHierarchyForPwa(productModel);
+				if (CollectionUtils.isNotEmpty(list))
+				{
+					productDetailMobileNew.setCategoryHierarchy(list);
+				}
+
+				if (CollectionUtils.isNotEmpty(productData.getImages()))
+				{
+					productDetailMobileNew.setGalleryImagesList(getGalleryImages(productData));
+				}
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
+				{
+					productDetailMobileNew.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
+				}
+
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
+				{
+					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
+				}
+
+				if (productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
+				{
+					productDetailMobileNew.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
+
+					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("luxury.care.mail"));
+				}
+
+				if (((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+						|| ((MarketplacewebservicesConstants.FASHIONJEWELLERY).equalsIgnoreCase(productData.getRootCategory())))
+				{
+					final String jwlryCat = configurationService.getConfiguration().getString("mpl.jewellery.category");
+					boolean showSizeOrLength = false;
+					if (StringUtils.isNotEmpty(jwlryCat))
+					{
+						final List<String> catCodeList = Arrays.asList(jwlryCat.split(","));
+
+						for (final CategoryData cat : productData.getCategories())
+						{
+							final String catCode = cat.getCode();
+							if (catCodeList.contains(catCode))
+							{
+								showSizeOrLength = true;
+								break;
+							}
+						}
+					}
+					if (showSizeOrLength)
+					{
+						productDetailMobileNew.setIsSizeOrLength("Length");
+					}
+					else
+					{
+						productDetailMobileNew.setIsSizeOrLength("Size");
+					}
+				}
+
+				if (null != productData.getListingId())
+				{
+					productDetailMobileNew.setProductListingId(productData.getListingId());
+				}
+				if (null != productData.getProductTitle())
+				{
+					productDetailMobileNew.setProductName(productData.getProductTitle());
+				}
+				if (null != productData.getArticleDescription())
+				{
+					productDetailMobileNew.setProductDescription(productData.getArticleDescription());
+				}
+
+				final boolean showSizeGuide = showSizeGuidePwa(productModel);
+				productDetailMobileNew.setShowSizeGuide(Boolean.valueOf(showSizeGuide));
+
+				if (null != productData.getRootCategory())
+				{
+					productDetailMobileNew.setRootCategory(productData.getRootCategory());
+				}
+
+				if (null != productData.getUrl()
+						&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
+				{
+					sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
+				}
+				else if (null != productData.getUrl())
+				{
+					sharedText += productData.getUrl();
+				}
+
+				if (null != productData.getArticleDescription())
+				{
+					productDetailMobileNew.setStyleNote(productData.getArticleDescription());
+				}
+
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
+						MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+
+				if (null != productModel.getMaxOrderQuantity() && productModel.getMaxOrderQuantity().intValue() > 0
+						&& productModel.getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+				{
+					productDetailMobileNew.setMaxQuantityAllowed(productModel.getMaxOrderQuantity().toString());
+				}
+				else if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+				{
+					productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy_jewellery));
+				}
+				else
+				{
+					productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+				}
+
+				productDetailMobileNew.setIsExchangeAvailable(isExchangeAvailablePwa(productModel.getSupercategories(), productData));
+
+				if (StringUtils.isNotEmpty(productData.getLevel3CategoryCode())
+						&& StringUtils.isNotEmpty(productData.getLevel3CategoryName()))
+				{
+					productDetailMobileNew.setL3code(productData.getLevel3CategoryCode());
+					productDetailMobileNew.setL3name(productData.getLevel3CategoryName());
+
+					final ContentSlotModel contentSlotModel = contentSlotService
+							.getContentSlotForId(MarketplacecommerceservicesConstants.Exchange_Slot);
+					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
+
+					if (contentSlotModel != null)
+					{
+						final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+						if (CollectionUtils.isNotEmpty(componentLists))
+						{
+							for (final AbstractCMSComponentModel model : componentLists)
+							{
+								final ExchangeLinkUrl linkUrl = new ExchangeLinkUrl();
+								if (model instanceof SimpleCMSComponentModel)
+
+								{
+									final SimpleCMSComponentModel simpleComponent = (SimpleCMSComponentModel) model;
+
+									if (simpleComponent instanceof CMSLinkComponentModel)
+									{
+										final CMSLinkComponentModel model2 = (CMSLinkComponentModel) simpleComponent;
+										if (StringUtils.isNotEmpty(model2.getName()))
+										{
+											linkUrl.setName(model2.getName());
+										}
+										if (StringUtils.isNotEmpty(model2.getUrl()))
+										{
+											linkUrl.setUrl(model2.getUrl() + MarketplacecommerceservicesConstants.MOBILE_SOURCE2);
+										}
+										if (StringUtils.isNotEmpty(model2.getUid()))
+										{
+											linkUrl.setId(model2.getUid());
+										}
+									}
+									linkUrlList.add(linkUrl);
+								}
+							}
+							productDetailMobileNew.setLinkUrls(linkUrlList);
+						}
+					}
+				}
+
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
+				{
+					productDetailMobileNew
+							.setBrandInfo(productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+									.getBrand().getBrandDescription() : StringUtils.substring(
+									productData.getBrand().getBrandDescription(), 0, MplConstants.BRANDINFO_CHAR_LIMIT));
+				}
+
+				isNewOrOnlineExclusive = getRichAttributesForPwa(productModel);
+
+				if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsOnlineExclusive())
+				{
+					productDetailMobileNew.setIsOnlineExclusive(isNewOrOnlineExclusive.getIsOnlineExclusive());
+				}
+				if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsProductNew())
+				{
+					productDetailMobileNew.setIsProductNew(isNewOrOnlineExclusive.getIsProductNew());
+				}
+
+				//Added for TPR-6869
+				buyingGuideURL = populateBuyingGuide(productModel);
+
+				if (StringUtils.isNotEmpty(buyingGuideURL))
+				{
+					productDetailMobileNew.setBuyingGuideUrl(buyingGuideURL);
+				}
+
+			}
+			sharedText += MarketplacecommerceservicesConstants.SPACE
+					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
+			productDetailMobileNew.setSharedText(sharedText);
+
+			if (Boolean.parseBoolean(getIsCacheEnabled()))
+			{
+				mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
+			}
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9037);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		return productDetailMobileNew;
+
 	}
 
 	/**

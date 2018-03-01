@@ -100,4 +100,5 @@ public interface MplCmsPageDao extends CMSPageDao
 	 * @return List<AmpServiceworkerModel>
 	 */
 	List<AmpMenifestModel> getAllAmpMenifestJsons();
+	ContentSlotModel getContentSlotByName(String contentSlotName);
 }
