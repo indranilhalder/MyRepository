@@ -1104,6 +1104,12 @@ TATA.Pages = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
+                    var inputArrayB="";
+                    inputArrayB=$(filtered).find('input[name=inputArray]').val();
+                    inputArrayB=inputArrayB.replace('["', "");
+                    inputArrayB=inputArrayB.replace('"]', "");
+                    inputArrayB=inputArrayB.replace('","', ',');
+                    		
                     $(filtered).has("h4.categor-name") && $(".plp-wrapper h4").html($(filtered).find("h4.categor-name"));
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")),
                         TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());
@@ -1119,6 +1125,9 @@ TATA.Pages = {
                         }
                     }
                     TATA.Pages.PLP.productHover();
+                   
+                    constructDepartmentHierarchy(inputArrayB.split(","));
+
                 },
                 complete: function(){
                     $('body').removeClass('loader');

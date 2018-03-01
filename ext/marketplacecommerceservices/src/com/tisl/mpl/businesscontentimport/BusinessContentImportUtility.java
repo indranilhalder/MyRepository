@@ -49,15 +49,28 @@ public class BusinessContentImportUtility
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BusinessContentImportUtility.class.getName());
 
-	/**
-	 * @Descriptiion: Process uploaded .csv File to create Content
-	 * @param : input
-	 * @param : output
-	 * @param : flag
-	 */
+	private static final String LUX = "lux";
+
 
 	public String processFile(final InputStream input, final OutputStream output, final boolean flag) throws IOException
 	{
+		return processFile(input, output, flag, null);
+	}
+
+	/**
+	 * @Descriptiion: Process uploaded .csv File to create Content
+	 * @param :
+	 *           input
+	 * @param :
+	 *           output
+	 * @param :
+	 *           flag
+	 */
+
+	public String processFile(final InputStream input, final OutputStream output, final boolean flag, final String site)
+			throws IOException
+	{
+		LOG.debug("Selected Site is ==" + site);
 		String error = null;
 		final CSVWriter writer = getCSVWriter(output);
 		final CSVReader reader = new CSVReader(input, "UTF-8");
@@ -70,8 +83,18 @@ public class BusinessContentImportUtility
 		if (flag)
 		{
 			//@Description : To create Contents in Bulk
-			error = businessContentImportService
-					.processUpdateForContentImport(reader, writer, map, errorPosition, headerRowIncluded);
+			if (null != site && site.equals(LUX))
+			{
+				LOG.debug("LUX : Selected Site is ==" + site);
+				error = businessContentImportService.processUpdateForContentImport(reader, writer, map, errorPosition,
+						headerRowIncluded, site);
+			}
+			else
+			{
+				LOG.debug("MPL : Selected Site is ==" + site);
+				error = businessContentImportService.processUpdateForContentImport(reader, writer, map, errorPosition,
+						headerRowIncluded);
+			}
 		}
 		else
 		{

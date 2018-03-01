@@ -66,6 +66,7 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 	private ExtendedUserDaoImpl userDao;
 
 
+
 	/**
 	 * @return the mplCustomerProfileDao
 	 */
@@ -293,6 +294,12 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 				mplCustomerProfileData.setMobileNumber(MarketplacecommerceservicesConstants.EMPTY);
 			}
 
+			if (null != customerModelData.getHomePagePrefernce())
+			{
+				mplCustomerProfileData.setHomePagePrefernce(customerModelData.getHomePagePrefernce().getCode());
+
+			}
+
 			// set GENDER
 			if (null != customerModelData.getGender())
 			{
@@ -479,8 +486,8 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 	 *           ,currentPassword
 	 */
 	@Override
-	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
-			PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword)
+			throws DuplicateUidException, PasswordMismatchException
 	{
 		try
 		{
