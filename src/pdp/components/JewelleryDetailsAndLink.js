@@ -30,7 +30,7 @@ export default class JewelleryDetailsAndLink extends React.Component {
           {this.props.price && (
             <div className={styles.price}>{`Rs. ${this.props.price}`}</div>
           )}
-          {this.props.price &&
+          {this.props.discountPrice &&
             this.props.discountPrice !== this.props.price && (
               <div className={styles.deletePriceAndDiscount}>
                 <div className={styles.discountPrice}>
@@ -59,4 +59,7 @@ JewelleryDetailsAndLink.propTypes = {
   discountPrice: PropTypes.string,
   discount: PropTypes.string,
   onClick: PropTypes.func
+};
+JewelleryDetailsAndLink.defaultProps = {
+  label: "Price Breakup"
 };

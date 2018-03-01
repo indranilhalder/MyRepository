@@ -47,6 +47,7 @@
   width: auto;
   display: inline-block;
   color: #ff1744;
+  padding-left: 5px;
 }
 .discountPrice {
   text-decoration: line-through;
