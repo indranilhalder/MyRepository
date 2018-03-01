@@ -149,6 +149,8 @@ const user = (
       });
 
     case userActions.GLOBAL_ACCESS_TOKEN_SUCCESS:
+      console.log("GLOBAL ACCESS TOKEN");
+      debugger;
       Cookies.createCookie(
         GLOBAL_ACCESS_TOKEN,
         JSON.stringify(action.globalAccessTokenDetails),
@@ -299,6 +301,7 @@ const user = (
       });
 
     case userActions.REFRESH_TOKEN_FAILURE:
+      localStorage.removeItem(REFRESH_TOKEN);
       return Object.assign({}, state, {
         status: action.status,
         loading: false,
