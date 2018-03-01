@@ -96,6 +96,11 @@ class Feed extends Component {
   componentWillMount() {
     this.props.homeFeed();
     this.props.getCartId();
+    window.digitalData = Object.assign(
+      {},
+      { page: { pageInfo: { pageName: "home" } } }
+    );
+    window._satellite.track("page view");
   }
 
   componentWillReceiveProps(nextProps) {
