@@ -21,3 +21,8 @@ export default class FilterCatageorySubList extends React.Component {
     );
   }
 }
+FilterCatageorySubList.propTypes = {
+  selectItem: PropTypes.func,
+  subListItem: PropTypes.string,
+  subListCount: PropTypes.number
+};

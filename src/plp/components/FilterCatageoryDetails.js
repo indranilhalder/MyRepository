@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./FilterCatageoryDetails.css";
 import PropTypes from "prop-types";
-import FilterCatageorySubList from "./FilterCatageorySubList";
 export default class FilterCatageoryDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -37,3 +36,8 @@ export default class FilterCatageoryDetails extends React.Component {
     );
   }
 }
+FilterCatageoryDetails.propTypes = {
+  onClick: PropTypes.func,
+  category: PropTypes.string,
+  categoryCount: PropTypes.number
+};

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import FilterCatageoryDetails from "./FilterCatageoryDetails";
 import FilterCatageorySubList from "./FilterCatageorySubList";
+import PropTypes from "prop-types";
 import GridSelect from "../../general/components/GridSelect";
 import styles from "./FilterCatageory.css";
 export default class FilterCatageory extends Component {
@@ -33,3 +34,13 @@ export default class FilterCatageory extends Component {
     );
   }
 }
+FilterCatageory.propTypes = {
+  category: PropTypes.string,
+  categoryCount: PropTypes.number,
+  typeList: PropTypes.arrayOf(
+    PropTypes.shape({
+      subListItem: PropTypes.string,
+      subListCount: PropTypes.number
+    })
+  )
+};
