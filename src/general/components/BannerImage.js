@@ -4,12 +4,17 @@ import Button from "./Button";
 import Logo from "./Logo";
 import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 export default class Banner extends React.Component {
+  onClick = () => {
+    const urlSuffix = this.props.url.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
+  };
   render() {
     return (
       <React.Fragment>
         <MediaQuery query="(min-device-width: 1025px)">
-          <div className={styles.base}>
+          <div className={styles.base} onClick={this.onClick}>
             <div
               className={styles.imageHolder}
               style={{ backgroundImage: `url(${this.props.image})` }}
@@ -32,7 +37,7 @@ export default class Banner extends React.Component {
           </div>
         </MediaQuery>
         <MediaQuery query="(max-device-width: 1024px)">
-          <div className={styles.base}>
+          <div className={styles.base} onClick={this.onClick}>
             <div
               className={styles.imageHolder}
               style={{ backgroundImage: `url(${this.props.image})` }}

@@ -4,37 +4,44 @@ import MediaQuery from "react-responsive";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FeedComponent.css";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class FeedComponent extends React.Component {
   render() {
+    const {
+      data,
+      carouselOptions,
+      banner,
+      backgroundColor,
+      backgroundImage,
+      ...rest
+    } = this.props;
     return (
       <div
         className={styles.base}
         style={{
-          backgroundColor: this.props.backgroundColor,
-          backgroundImage: `url(${this.props.backgroundImage})`
+          backgroundColor: backgroundColor,
+          backgroundImage: `url(${backgroundImage})`
         }}
       >
         <MediaQuery query="(max-device-width: 1024px)">
-          {this.props.banner && (
-            <div className={styles.banner}>{this.props.banner}</div>
-          )}
+          {banner && <div className={styles.banner}>{banner}</div>}
         </MediaQuery>
         <Carousel
-          {...this.props.carouselOptions}
-          banner={this.props.banner}
+          {...carouselOptions}
+          banner={banner}
           bannerWidth="42%"
           elementWidthDesktop={33.333}
         >
-          {this.props.data &&
-            this.props.data.map((datum, i) => {
+          {data &&
+            data.map((datum, i) => {
               return (
                 <ProductModule
                   key={i}
                   isWhite={
-                    this.props.carouselOptions
-                      ? this.props.carouselOptions.isWhite
-                        ? this.props.carouselOptions.isWhite
+                    carouselOptions
+                      ? carouselOptions.isWhite
+                        ? carouselOptions.isWhite
                         : false
                       : false
                   }
@@ -44,7 +51,8 @@ export default class FeedComponent extends React.Component {
                   discountPrice={datum.discountPrice}
                   description={datum.description}
                   onDownload={datum.onDownload}
-                  onClick={datum.onClick}
+                  webURL={datum.webURL}
+                  {...rest}
                 />
               );
             })}

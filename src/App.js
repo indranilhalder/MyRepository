@@ -14,6 +14,7 @@ import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
+import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import {
@@ -34,7 +35,9 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   LOGGED_IN_USER_DETAILS,
-  PRODUCT_CART_DELIVERY_MODES
+  PRODUCT_CART_DELIVERY_MODES,
+  SEARCH_RESULTS_PAGE,
+  BRAND_OR_CATEGORY_LANDING_PAGE
 } from "../src/lib/constants";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -126,6 +129,18 @@ class App extends Component {
               <SignUpContainer {...routeProps} {...this.props} />
             )}
           />
+
+          <Route
+            exact
+            path={SEARCH_RESULTS_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+          <Route
+            exact
+            path={BRAND_OR_CATEGORY_LANDING_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
           <Route
             exact
             path={PRODUCT_LISTINGS}

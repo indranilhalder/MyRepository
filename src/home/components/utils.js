@@ -14,7 +14,8 @@ export function transformData(datum) {
     title: title,
     description: datum.description,
     price: datum.mrp,
-    discountPrice: datum.winningSellerMOP
+    discountPrice: datum.winningSellerMOP,
+    webURL: datum.webURL
   };
 }
 export function transformItem(datum) {
@@ -22,6 +23,7 @@ export function transformItem(datum) {
     imageURL: datum.imageUrl,
     discountPrice: datum.winningSellerMOP,
     price: datum.mrp,
-    title: datum.productName
+    title: datum.productName,
+    webURL: datum.webURL
   };
 }

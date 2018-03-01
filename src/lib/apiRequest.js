@@ -7,6 +7,8 @@ export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 
+export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
+
 export async function postAdobeTargetUrl(
   path: null,
   mbox,
