@@ -27,7 +27,7 @@ export const PRODUCT_FILTER_ROUTER = "/filter";
 export const PRODUCT_SELLER_ROUTER = "/productSeller";
 export const PRODUCT_CART_ROUTER = "/myBag";
 export const ORDER_SUMMARY_ROUTER = "/orderSummary";
-
+export const CHECKOUT_ROUTER = "/checkout";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
 export const PRICE_TEXT = "Price";

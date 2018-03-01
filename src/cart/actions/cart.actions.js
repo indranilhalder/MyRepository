@@ -61,7 +61,6 @@ export const CART_DETAILS_REQUEST = "CART_DETAILS_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
 
-
 export const ORDER_SUMMARY_REQUEST = "ORDER_SUMMARY_REQUEST";
 export const ORDER_SUMMARY_SUCCESS = "ORDER_SUMMARY_SUCCESS";
 export const ORDER_SUMMARY_FAILURE = "ORDER_SUMMARY_FAILURE";
@@ -80,7 +79,6 @@ export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS =
   "CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS";
 export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE =
   "CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE";
-
 
 const pincode = 229001;
 
@@ -324,14 +322,15 @@ export function userAddressFailure(error) {
 
 export function getUserAddress() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(userAddressRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }/addresses?channel=mobile&emailId=${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
@@ -339,8 +338,10 @@ export function getUserAddress() {
         throw new Error(`${resultJson.message}`);
       }
 
+      console.log(resultJson);
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
+      console.log(e.message);
       dispatch(userAddressFailure(e.message));
     }
   };
@@ -660,7 +661,6 @@ export function generateCartIdForAnonymous() {
   };
 }
 
-
 export function orderSummaryRequest() {
   return {
     type: ORDER_SUMMARY_REQUEST,
@@ -678,7 +678,7 @@ export function orderSumarySuccess(orderSummary) {
 export function orderSummaryFailure(error) {
   return {
     type: ORDER_SUMMARY_FAILURE,
-      status: ERROR,
+    status: ERROR,
     error
   };
 }
@@ -854,7 +854,6 @@ export function checkPinCodeServiceAvailability(
       dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
     } catch (e) {
       dispatch(checkPinCodeServiceAvailabilityFailure(e.message));
-
     }
   };
 }
