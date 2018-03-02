@@ -12,11 +12,12 @@
   padding : 0px 50px 0px 50px;
 }
 .couponIcon  {
-  width   : 25px;
-  height  : 25px;
   position: absolute;
   left    : 0;
   top     : 0;
+  width   : 25px;
+  height  : 25px;
+
 }
 .headingText  {
   width      : 100%;

@@ -19,7 +19,7 @@ export default class ShippingCommenced extends React.Component {
   }
 }
 ShippingCommenced.propTypes = {
-  heading: PropTypes.string,
   label: PropTypes.string,
-  image: PropTypes.string
+  image: PropTypes.string,
+  heading: PropTypes.string
 };
