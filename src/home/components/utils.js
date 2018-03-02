@@ -8,6 +8,8 @@ export function transformData(datum) {
   if (!title) {
     title = datum.title;
   }
+  console.log("IN TRANSFORM DATA");
+  console.log(datum);
   return {
     image: image,
     video: datum.video,
@@ -15,7 +17,8 @@ export function transformData(datum) {
     description: datum.description,
     price: datum.mrp,
     discountPrice: datum.winningSellerMOP,
-    webURL: datum.webURL
+    webURL: datum.webURL,
+    ...datum
   };
 }
 export function transformItem(datum) {

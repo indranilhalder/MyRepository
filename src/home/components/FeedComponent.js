@@ -4,9 +4,11 @@ import MediaQuery from "react-responsive";
 import ProductModule from "../../general/components/ProductModule";
 import PropTypes from "prop-types";
 import styles from "./FeedComponent.css";
+import { withRouter } from "react-router";
+
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
-export default class FeedComponent extends React.Component {
+class FeedComponent extends React.Component {
   render() {
     const {
       data,
@@ -16,6 +18,7 @@ export default class FeedComponent extends React.Component {
       backgroundImage,
       ...rest
     } = this.props;
+
     return (
       <div
         className={styles.base}
@@ -35,6 +38,8 @@ export default class FeedComponent extends React.Component {
         >
           {data &&
             data.map((datum, i) => {
+              console.log("DATUM");
+              console.log(datum);
               return (
                 <ProductModule
                   key={i}
@@ -53,6 +58,7 @@ export default class FeedComponent extends React.Component {
                   onDownload={datum.onDownload}
                   webURL={datum.webURL}
                   {...rest}
+                  {...datum}
                 />
               );
             })}
@@ -61,6 +67,8 @@ export default class FeedComponent extends React.Component {
     );
   }
 }
+
+export default withRouter(FeedComponent);
 FeedComponent.propTypes = {
   backgroundColor: PropTypes.string,
   banner: PropTypes.element,

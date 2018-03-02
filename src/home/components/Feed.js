@@ -31,29 +31,26 @@ const typeKeyMapping = {
 
 const typeComponentMapping = {
   // "Hero Banner Component": props => <HeroBanner {...props} />,
-  "Theme Offers Component": props => <ThemeOffer {...props} />
+  // "Theme Offers Component": props => <ThemeOffer {...props} />,
   // "Auto Product Recommendation Component": props => (
   //   <RecommendationWidget {...props} />
-  // )
+  // ),
   // "Banner Product Carousel Component": props => (
   //   <BannerProductCarousel {...props} />
   // ),
   // "Video Product Carousel Component": props => (
   //   <VideoProductCarousel {...props} />
   // ),
-  // // automatedBrandProductCarousel: props => (
-  // //   <AutomatedBrandProductCarousel {...props} />
-  // // ),
-  // "Flash Sales Component": props => <FlashSale {...props} />
-  // "Offers Component": props => <OfferWidget {...props} />,
-  // "Multipurpose Banner Component": props => <ConnectWidget {...props} />,
-  // "Multi Click Component": props => <ThemeProductWidget {...props} />,
-  // // multiSelectQuestion: props => <MultiSelectQuestionContainer {...props} />, // not there
-  // "Auto Fresh From Brands Component": props => <FollowBase {...props} />,
-  // // singleSelectQuestion: props => <SingleQuestionContainer {...props} />, // not there
-  // "Banner Separator Component": props => <BannerSeparator {...props} />,
-  // // productCapsules: props => <ProductCapsules {...props} />, // Not ready
-  // "Auto Discover More Component": props => <DiscoverMore {...props} />
+  // automatedBrandProductCarousel: props => (
+  //   <AutomatedBrandProductCarousel {...props} />
+  // ),
+  "Flash Sales Component": props => <FlashSale {...props} /> //need to see about button here
+  // "Offers Component": props => <OfferWidget {...props} /> // wired up
+  // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
+  // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
+  // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
+  // "Banner Separator Component": props => <BannerSeparator {...props} />
+  // "Auto Discover More Component": props => <DiscoverMore {...props} /> // wired up with clickable urls
 };
 
 class Feed extends Component {
