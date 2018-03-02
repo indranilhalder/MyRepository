@@ -451,7 +451,7 @@ export function addProductReview(productCode, productReviews) {
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
     try {
-      const result = await api.getMock(
+      const result = await api.post(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }&comment=${productReviews.comment}&rating=${
@@ -495,7 +495,7 @@ export function editProductReview(productCode, productReviews) {
   return async (dispatch, getState, { api }) => {
     dispatch(editProductReviewRequest());
     try {
-      const result = await api.getMock(
+      const result = await api.post(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
         }&id={productReviews.id}&comment=${productReviews.comment}&rating=${
@@ -539,7 +539,7 @@ export function deleteProductReview(productCode, reviewId) {
   return async (dispatch, getState, { api }) => {
     dispatch(deleteProductReviewRequest());
     try {
-      const result = await api.getMock(
+      const result = await api.get(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviewId/deleteReview?access_token=${
           JSON.parse(customerCookie).access_token
         }`
@@ -583,7 +583,7 @@ export function getProductReviews(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductReviewRequest());
     try {
-      const result = await api.getMock(
+      const result = await api.get(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/users/${
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/reviews?access_token=${
