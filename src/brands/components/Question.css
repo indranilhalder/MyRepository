@@ -1,0 +1,21 @@
+.base{
+  width:100%;
+  height:auto;
+  background:#fff;
+  display:inline-block;
+}
+.questionText{
+  width:100%;
+  height:auto;
+  color:#212121;
+  font-size:14px;
+  line-height:25px;
+  font-family:regular;
+  margin-bottom:20px;
+  display:inline-block;
+}
+.answerHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}

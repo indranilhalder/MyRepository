@@ -6,9 +6,6 @@ import { withRouter } from "react-router-dom";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProductListings: () => {
-      dispatch(getProductListings());
-    },
     showSort: () => {
       dispatch(showModal(SORT));
     }

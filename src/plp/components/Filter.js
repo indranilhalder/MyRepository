@@ -34,7 +34,9 @@ export default class Filter extends React.Component {
     this.setState({ selected: [[null]] });
   };
   handleBackClick = () => {
-    this.props.history.goBack();
+    if (this.props.backPage) {
+      this.props.backPage();
+    }
   };
 
   onApply(val) {
@@ -50,7 +52,6 @@ export default class Filter extends React.Component {
       });
 
       this.props.onApply(filters);
-      this.props.history.goBack();
     }
   }
   handleSelect(val, index) {
@@ -60,7 +61,11 @@ export default class Filter extends React.Component {
   }
 
   render() {
+    // If state.pageNumber is 0, then we need to display the category section
+    //
+
     const filterDatum = this.props.filterData[this.state.pageNumber];
+
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>
@@ -69,37 +74,39 @@ export default class Filter extends React.Component {
             text={FILTER_HEADER}
           />
         </div>
-        <div className={styles.tabs}>
-          <FilterCategories
-            data={this.props.filterData}
-            selected={this.state.selected}
-            pageNumber={this.state.pageNumber}
-            onClick={val => this.switchPage(val)}
-          />
-        </div>
-        <div className={styles.options}>
-          <FilterWithMultiSelect
-            selected={
-              this.state.selected[this.state.pageNumber]
-                ? this.state.selected[this.state.pageNumber]
-                : [null]
-            }
-            onSelect={val => {
-              this.handleSelect(val, this.state.pageNumber);
-            }}
-          >
-            {filterDatum.values &&
-              filterDatum.values.map((value, i) => {
-                return (
-                  <FilterSelect
-                    label={value.name}
-                    value={value.value}
-                    count={value.count}
-                    key={i}
-                  />
-                );
-              })}
-          </FilterWithMultiSelect>
+        <div className={styles.filterData}>
+          <div className={styles.tabs}>
+            <FilterCategories
+              data={this.props.filterData}
+              selected={this.state.selected}
+              pageNumber={this.state.pageNumber}
+              onClick={val => this.switchPage(val)}
+            />
+          </div>
+          <div className={styles.options}>
+            <FilterWithMultiSelect
+              selected={
+                this.state.selected[this.state.pageNumber]
+                  ? this.state.selected[this.state.pageNumber]
+                  : [null]
+              }
+              onSelect={val => {
+                this.handleSelect(val, this.state.pageNumber);
+              }}
+            >
+              {filterDatum.values &&
+                filterDatum.values.map((value, i) => {
+                  return (
+                    <FilterSelect
+                      label={value.name}
+                      value={value.value}
+                      count={value.count}
+                      key={i}
+                    />
+                  );
+                })}
+            </FilterWithMultiSelect>
+          </div>
         </div>
         <div className={styles.footer}>
           <div className={styles.buttonHolder}>
@@ -130,5 +137,6 @@ Filter.propTypes = {
     })
   ),
   onClear: PropTypes.func,
-  onApply: PropTypes.func
+  onApply: PropTypes.func,
+  backPage: PropTypes.func
 };

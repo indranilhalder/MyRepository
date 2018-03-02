@@ -3,20 +3,23 @@ import NewBrand from "../../general/components/NewBrand.js";
 import Carousel from "../../general/components/Carousel.js";
 import PropTypes from "prop-types";
 import styles from "./FollowBase.css";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class FollowBase extends React.Component {
+  handleClick = webUrl => {
+    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
+  };
   render() {
-    const feedComponentData = this.props.feedComponentData;
+    let { feedComponentData, ...rest } = this.props;
+    feedComponentData = feedComponentData.data;
     return (
       <div className={styles.base}>
-        <Carousel
-          elementWidthMobile={85}
-          elementWidthDesktop={33.333}
-          header={feedComponentData.title}
-        >
-          {feedComponentData.data.items &&
-            (feedComponentData.data.items.length > 0 &&
-              feedComponentData.data.items.map(datum => {
+        <Carousel elementWidthMobile={85} elementWidthDesktop={33.333}>
+          {feedComponentData &&
+            feedComponentData.data &&
+            (feedComponentData.data.length > 0 &&
+              feedComponentData.data.map(datum => {
                 return (
                   <NewBrand
                     image={datum.imageURL}
@@ -24,6 +27,9 @@ export default class FollowBase extends React.Component {
                     label={datum.title}
                     follow={datum.isFollowing}
                     key={datum.id}
+                    webUrl={datum.webURL}
+                    onClick={this.handleClick}
+                    {...rest}
                   />
                 );
               }))}
