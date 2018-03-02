@@ -14,9 +14,6 @@ class ProductListingsPage extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     } else if (this.props.productListings !== null) {
-      console.log("PRODUCT LISTINGS");
-      console.log(this.props.productListings);
-
       return (
         <Plp
           history={this.props.history}
