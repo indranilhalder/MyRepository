@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ColourSelector.css";
 import ColourSelect from "./ColourSelect";
-import CarouselWithSelect from "../../general/components/CarouselWithSelect";
+import Carousel from "../../general/components/Carousel";
 import PropTypes from "prop-types";
 export default class ColourSelector extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ export default class ColourSelector extends React.Component {
 
     return (
       <div className={styles.base}>
-        <CarouselWithSelect
+        <Carousel
           elementWidthMobile={22}
           limit={1}
           selected={this.props.selected}
@@ -38,7 +38,7 @@ export default class ColourSelector extends React.Component {
               />
             );
           })}
-        </CarouselWithSelect>
+        </Carousel>
       </div>
     );
   }

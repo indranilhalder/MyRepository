@@ -5,7 +5,6 @@ import Accordion from "../../general/components/Accordion.js";
 export default class ProductDetails extends React.Component {
   render() {
     const data = this.props.data;
-    console.log(this.props);
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {

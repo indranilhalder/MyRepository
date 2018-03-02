@@ -21,7 +21,6 @@ export default class AllDescription extends React.Component {
     });
   }
   render() {
-    // console.log(this.props);
     const dataList = this.props.productContent
       .sort((a, b) => {
         if (a.key < b.key) {
@@ -35,14 +34,14 @@ export default class AllDescription extends React.Component {
       .map(val => {
         return val.value;
       });
-    console.log(dataList);
+
     return (
       <div className={styles.base}>
         <div className={styles.descriptionList}>
           {dataList &&
             dataList
               .filter((val, i) => {
-                return !this.state.showAll ? i < 1 : true;
+                return !this.state.showAll ? i < 2 : true;
               })
               .map((val, i) => {
                 return <ElectronicsDescription value={val} />;

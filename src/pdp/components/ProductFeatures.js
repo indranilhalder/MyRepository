@@ -4,7 +4,7 @@ import Accordion from "../../general/components/Accordion.js";
 import styles from "./ProductFeatures.css";
 export default class ProductFeatures extends React.Component {
   render() {
-    const data = this.props.data;
+    const data = this.props.features;
     return (
       <div className={styles.base}>
         {this.props.features.map((datum, i) => {
@@ -12,17 +12,15 @@ export default class ProductFeatures extends React.Component {
             <Accordion
               data={data}
               key={i}
-              text={datum.title}
+              text={datum.groupName}
               headerFontSize={16}
             >
               <div className={styles.holder}>
-                {datum.features.map(val => {
+                {datum.specifications.map(val => {
                   return (
                     <div className={styles.content}>
-                      <div className={styles.header}>{val.feature}</div>
-                      <div className={styles.description}>
-                        {val.description}
-                      </div>
+                      <div className={styles.header}>{val.key}</div>
+                      <div className={styles.description}>{val.value}</div>
                     </div>
                   );
                 })}

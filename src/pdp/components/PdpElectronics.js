@@ -12,11 +12,18 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import Logo from "../../general/components/Logo.js";
+import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
 export default class PdpElectronics extends React.Component {
+  visitBrand() {
+    if (this.props.visitBrandStore) {
+      this.props.visitBrandStore();
+    }
+  }
   render() {
     const productData = {
       type: "productDetailMobileWsData",
@@ -682,52 +689,33 @@ export default class PdpElectronics extends React.Component {
       winningSellerName: "Sancell",
       winningUssID: "123869iPhone7256GBGold"
     };
-    const mobileGalleryImages1 = [
-      {
-        value:
-          "https://i.pinimg.com/564x/5f/f6/42/5ff642df7ed892a1614fe179e6a1a255.jpg"
-      },
-      {
-        value:
-          "https://i.pinimg.com/564x/5f/f6/42/5ff642df7ed892a1614fe179e6a1a255.jpg"
-      },
-      {
-        value:
-          "https://i.pinimg.com/564x/5f/f6/42/5ff642df7ed892a1614fe179e6a1a255.jpg"
-      }
-    ];
+
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
-        console.log(galleryImageList);
-        return galleryImageList.galleryImages;
+        return galleryImageList.galleryImages.filter(galleryImages => {
+          return galleryImages.key === "product";
+        });
       })
-      .map(galleryImages => {
-        console.log(galleryImages);
-        return galleryImages;
-      })
-      .map(galleryImage => {
-        console.log(galleryImage);
-        return galleryImage;
-      })
-      .filter(image => {
-        console.log(image);
-        return image.key === "product";
+      .map(image => {
+        return image[0].value;
       });
-    console.log(mobileGalleryImages);
+
     return (
       <PdpFrame>
         <ProductGalleryMobile>
-          {mobileGalleryImages1.map((val, idx) => {
-            return <Image image={val.value} key={idx} />;
+          {mobileGalleryImages.map((val, idx) => {
+            return <Image image={val} key={idx} />;
           })}
         </ProductGalleryMobile>
-        <ProductDetailsMainCard
-          productName={"Beats by Dre"}
-          productDescription={"Studio3 Wireless Headphones"}
-          price={"32,800"}
-          discountPrice={"29,620"}
-          averageRating={4.2}
-        />
+        <div className={styles.content}>
+          <ProductDetailsMainCard
+            productName={productData.brandName}
+            productDescription={productData.productName}
+            price={productData.mrp}
+            discountPrice={productData.winningSellerMOP}
+            averageRating={productData.averageRating}
+          />
+        </div>
         {productData.emiInfo && (
           <div className={styles.separator}>
             <div className={styles.info}>
@@ -809,9 +797,9 @@ export default class PdpElectronics extends React.Component {
             numberOfReview={productData.productReviewsCount}
           />
         </div>
-        {productData.productFeatures && (
+        {productData.classifications && (
           <div className={styles.details}>
-            <ProductFeatures features={productData.productFeatures} />
+            <ProductFeatures features={productData.classifications} />
           </div>
         )}
         {productData.APlusContent && (
@@ -819,6 +807,32 @@ export default class PdpElectronics extends React.Component {
             productContent={productData.APlusContent.productContent}
           />
         )}
+        <div className={styles.brandSection}>
+          <div className={styles.brandHeader}>About the brand</div>
+          <div className={styles.brandLogoSection}>
+            {productData.brandLogoImage && (
+              <div className={styles.brandLogoHolder}>
+                <Logo image={productData.brandLogoImage} />
+              </div>
+            )}
+            <div className={styles.followButton}>
+              <Button label="Follow" type="tertiary" />
+            </div>
+          </div>
+          {productData.brandInfo && (
+            <div className={styles.brandDescription}>
+              {productData.brandInfo}
+            </div>
+          )}
+          {/* Suggested  products part goes here  */}
+          <div className={styles.visitBrandButton}>
+            <Button
+              type="secondary"
+              label="Visit Brand Store"
+              oncLick={() => this.visitBrand()}
+            />
+          </div>
+        </div>
       </PdpFrame>
     );
   }
