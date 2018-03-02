@@ -6,6 +6,7 @@ import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
 import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
 import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionContainer";
+import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
@@ -21,7 +22,6 @@ import MDSpinner from "react-md-spinner";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
-  PRODUCT_DESCRIPTION_ROUTER,
   MAIN_ROUTER,
   PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
@@ -38,7 +38,9 @@ import {
   LOGGED_IN_USER_DETAILS,
   PRODUCT_CART_DELIVERY_MODES,
   ORDER_SUMMARY_ROUTER,
-  CHECKOUT_ROUTER
+  CHECKOUT_ROUTER,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../src/lib/constants";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -144,8 +146,13 @@ class App extends Component {
           />
 
           <Route
-            path={PRODUCT_DESCRIPTION_ROUTER}
-            component={ProductDescriptionContainer}
+            path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
+          />
+
+          <Route
+            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
           />
           <Route
             exact
