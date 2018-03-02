@@ -70,9 +70,6 @@ export function getItems(positionInFeed, itemIds) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      console.log("GET FLASH SALE ITEMS");
-      console.log(resultJson.results);
-      console.log(positionInFeed);
       dispatch(getItemsSuccess(positionInFeed, resultJson.results));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
@@ -210,8 +207,6 @@ export function homeFeed() {
 
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
-      console.log("PARSED RESULT JSON");
-      console.log(parsedResultJson);
       dispatch(homeFeedSuccess(parsedResultJson));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
@@ -248,8 +243,6 @@ export function componentDataFailure(positionInFeed, error) {
 
 export function getComponentData(positionInFeed, fetchURL, postParams: null) {
   return async (dispatch, getState, { api }) => {
-    console.log("FETCH URL");
-    console.log(fetchURL);
     dispatch(componentDataRequest(positionInFeed));
     try {
       let postData;
@@ -268,8 +261,6 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
         if (resultJson.status === "FAILURE") {
           throw new Error(`${resultJson.message}`);
         }
-        console.log("GET COMPONENT DATA");
-        console.log(resultJson);
         dispatch(componentDataSuccess(resultJson, positionInFeed, true));
       } else {
         result = await api.postAdobeTargetUrl(
