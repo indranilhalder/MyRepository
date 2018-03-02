@@ -11,7 +11,7 @@ const search = (
   switch (action.type) {
     case searchActions.SET_SEARCH_STRING:
       return Object.assign({}, state, {
-        string: action.searchString
+        string: action.string
       });
     case searchActions.SET_FILTERS:
       return Object.assign({}, state, {

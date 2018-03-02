@@ -1,11 +1,13 @@
 import React from "react";
 import ProductListingsContainer from "../containers/ProductListingsContainer.js";
 import throttle from "lodash/throttle";
+import queryString from "query-string";
 
 const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
 const CAPTURE_REGEX = /c-(.*)/;
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
+const SEARCH_CATEGORY_TO_IGNORE = "all";
 
 // ?searchText=:relevance:category:MSH1012100&isFilter=false&isTextSearch=false&isPwa=false&page=0&pageSize=20&typeID=all --> is an url
 
@@ -14,6 +16,10 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     // this will do the check for category or brand
     // which does not happen now
     window.addEventListener("scroll", this.handleScroll);
+
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    console.log(parsedQueryString);
+    const searchCategory = parsedQueryString.searchCategory;
 
     const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
     let match;
@@ -30,8 +36,19 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       filters = [{ key: "brand", filters: [`${match}`] }];
     }
 
+    if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
+      filters = [{ key: "category", filters: [`${searchCategory}`] }];
+    }
+
+    if (parsedQueryString.q) {
+      const query = parsedQueryString.q;
+      const splitQueryString = query.split(":");
+      console.log(splitQueryString);
+      const searchText = splitQueryString[0];
+    }
+
     // I can just assume that we need to set filters here.
-    this.props.getProductListings(filters, SUFFIX, 0);
+    this.props.getProductListings(parsedQueryString.text, filters, SUFFIX, 0);
   }
 
   handleScroll = () => {

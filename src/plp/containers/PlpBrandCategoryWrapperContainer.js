@@ -1,10 +1,19 @@
 import { connect } from "react-redux";
-import { setFilters, setSort } from "../../search/actions/search.actions.js";
+import {
+  setFilters,
+  setSort,
+  setSearchString
+} from "../../search/actions/search.actions.js";
 import { getProductListings, setPage } from "../actions/plp.actions.js";
 import PlpBrandCategoryWrapper from "../components/PlpBrandCategoryWrapper";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductListings: (filters, suffix, page) => {
+    getProductListings: (search: null, filters, suffix, page) => {
+      console.log("GET PRODUCT LISTINGS");
+      console.log(search);
+      if (search) {
+        dispatch(setSearchString(search));
+      }
       dispatch(setSort("relevance"));
       dispatch(setPage(page));
       dispatch(setFilters(filters));
