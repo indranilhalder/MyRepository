@@ -67,7 +67,6 @@ export default class PdpElectronics extends React.Component {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
     productDetails.ussId = this.props.productDetails.winningUssID;
-    productDetails.wishListName = "MyWishList";
 
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);

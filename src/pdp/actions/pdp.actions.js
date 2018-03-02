@@ -85,6 +85,10 @@ const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
 const MSD_REQUEST_PATH = "widgets";
+const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
+const WIDGET_LIST = [0];
+const NUMBER_RESULTS = [20];
+const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
 
 export function getProductDescriptionRequest() {
   return {
@@ -191,9 +195,7 @@ export function addProductToWishList(userId, accessToken, productDetails) {
       const result = await api.post(
         `${PRODUCT_DETAILS_PATH}/${userId}/addProductInWishlist?platformNumber=2&access_token=${accessToken}&isPwa=true&ussid=${
           productDetails.ussId
-        }&productCode=${productDetails.code}&wishlistName=${
-          productDetails.wishListName
-        }`
+        }&productCode=${productDetails.code}&wishlistName=${MY_WISH_LIST}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -641,15 +643,12 @@ export function productMsdFailure(error) {
 export function getMsdRequest(productCode) {
   return async (dispatch, getState, { api }) => {
     let msdRequestObject = new FormData();
-    msdRequestObject.append(
-      "api_key",
-      "8783ef14595919d35b91cbc65b51b5b1da72a5c3"
-    );
-    msdRequestObject.append("widget_list", [0]);
-    msdRequestObject.append("num_results", [20]);
-    msdRequestObject.append("mad_uuid", "F4B82964-5E08-4531-87AF-7E03E3CD0307");
+    msdRequestObject.append("api_key", API_KEY);
+    msdRequestObject.append("widget_list", WIDGET_LIST);
+    msdRequestObject.append("num_results", NUMBER_RESULTS);
+    msdRequestObject.append("mad_uuid", MAD_UUID);
     msdRequestObject.append("details", false);
-    msdRequestObject.append("product_id", "MP000000000602914");
+    msdRequestObject.append("product_id", productCode);
 
     dispatch(productMsdRequest());
 

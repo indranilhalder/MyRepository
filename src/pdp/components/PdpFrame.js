@@ -10,7 +10,7 @@ export default class PdpFrame extends React.Component {
       this.props.addProductToWishList();
     }
   }
-  onAddToBag(productDetails) {
+  onAddToBag() {
     if (this.props.addProductToBag) {
       this.props.addProductToBag();
     }
