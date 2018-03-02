@@ -1,9 +1,8 @@
 import React from "react";
 import styles from "./ColourSelector.css";
 import ColourSelect from "./ColourSelect";
-import CarouselWithSelect from "../../general/components/CarouselWithSelect";
+import Carousel from "../../general/components/Carousel";
 import PropTypes from "prop-types";
-import { PRODUCT_DESCRIPTION_ROUTER } from "../../lib/constants";
 export default class ColourSelector extends React.Component {
   constructor(props) {
     super(props);
@@ -11,22 +10,14 @@ export default class ColourSelector extends React.Component {
       displayColour: this.props.selected[0]
     };
   }
-  updateColour(val, productCode) {
-    this.setState({ displayColour: val }, () => {
-      if (this.props.updateColour) {
-        this.props.updateColour(this.state.displayColour);
-        this.props.getProductSpecification(productCode);
-      }
-    });
-    this.props.history.push(`${PRODUCT_DESCRIPTION_ROUTER}/${productCode}`);
-  }
+
   render() {
     let data = this.props.data;
 
     return (
       <div className={styles.base}>
-        <CarouselWithSelect
-          elementWidthMobile={19}
+        <Carousel
+          elementWidthMobile={22}
           limit={1}
           selected={this.props.selected}
           headerComponent={
@@ -44,13 +35,10 @@ export default class ColourSelector extends React.Component {
                 key={i}
                 colour={datum.hexCode}
                 value={datum.color}
-                onSelect={val =>
-                  this.updateColour(val, datum.sizelink[0].productCode)
-                }
               />
             );
           })}
-        </CarouselWithSelect>
+        </Carousel>
       </div>
     );
   }
