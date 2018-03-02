@@ -28,29 +28,30 @@ export default class BrandCardHeader extends React.Component {
         <div className={styles.container}>
           <div className={styles.imageHolder}>
             <Image image={this.props.image} />
-          </div>
-          <div className={styles.textAndLogoContainer}>
-            <div className={styles.logo}>
-              <Logo image={this.props.logo} />
+            <div className={styles.textAndLogoContainer}>
+              <div className={styles.logo}>
+                <Logo image={this.props.logo} />
+              </div>
+              <div className={styles.text}>{this.props.text}</div>
             </div>
-            <div className={styles.text}>{this.props.text}</div>
-            <div className={styles.subText}>{this.props.subText}</div>
-          </div>
-          <div className={styles.button}>
-            <CoreButton
-              width={100}
-              height={36}
-              backgroundColor={"transparent"}
-              borderRadius={100}
-              borderColor={"#FFFFFF"}
-              label={this.state.buttonLabel}
-              textStyle={{
-                color: "#FFFFFF",
-                fontSize: 14,
-                fontFamily: "semibold"
-              }}
-              onClick={() => this.handleClick()}
-            />
+            <div className={styles.buttonHolder}>
+              <div className={styles.button}>
+                <CoreButton
+                  width={100}
+                  height={36}
+                  backgroundColor={"transparent"}
+                  borderRadius={100}
+                  borderColor={"#FFFFFF"}
+                  label={this.state.buttonLabel}
+                  textStyle={{
+                    color: "#FFFFFF",
+                    fontSize: 14,
+                    fontFamily: "semibold"
+                  }}
+                  onClick={() => this.handleClick()}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -60,7 +61,6 @@ export default class BrandCardHeader extends React.Component {
 BrandCardHeader.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string,
-  subText: PropTypes.string,
   logo: PropTypes.string,
   buttonLabel: PropTypes.string,
   onClickFollow: PropTypes.func,
@@ -69,7 +69,6 @@ BrandCardHeader.propTypes = {
 BrandCardHeader.defaultProps = {
   image: "",
   text: "",
-  subText: "",
   logo: "",
   buttonLabel: "Unfollow"
 };

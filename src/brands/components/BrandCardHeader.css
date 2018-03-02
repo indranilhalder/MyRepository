@@ -22,8 +22,9 @@
   position: absolute;
   width: 100%;
   height: auto;
-  padding-left: 16px;
-  padding-right: 35px;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: inline-block;
 }
 .logo {
   width: 100%;
@@ -33,19 +34,21 @@
   font-size: 30px;
   font-family: semibold;
   color: #ffffff;
+  display: inline-block;
+  text-align: left;
 }
-.subText {
-  font-size: 30px;
-  color: #ffffff;
-  font-family: semibold;
+.buttonHolder {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  top: 0px;
+  left: 0px;
+  padding: 14px;
+  display: inline-block;
+  text-align: right;
 }
 .button {
-  top: 0px;
-  padding-top: 9px;
-  padding-right: 9px;
-  bottom: 0px;
-  right: 0px;
   width: auto;
   height: auto;
-  position: absolute;
+  display: inline-block;
 }
