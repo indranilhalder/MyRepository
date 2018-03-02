@@ -22,7 +22,8 @@ import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionConta
 import DiscoverMore from "./DiscoverMore.js";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
-
+import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
+import { PRODUCT_DELIVERY_ADDRESSES } from "../../lib/constants";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -30,27 +31,27 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  // "Hero Banner Component": props => <HeroBanner {...props} />,
-  // "Theme Offers Component": props => <ThemeOffer {...props} />,
-  // "Auto Product Recommendation Component": props => (
-  //   <RecommendationWidget {...props} />
-  // ),
-  // "Banner Product Carousel Component": props => (
-  //   <BannerProductCarousel {...props} />
-  // ),
-  // "Video Product Carousel Component": props => (
-  //   <VideoProductCarousel {...props} />
-  // ),
+  "Hero Banner Component": props => <HeroBanner {...props} />,
+  "Theme Offers Component": props => <ThemeOffer {...props} />,
+  "Auto Product Recommendation Component": props => (
+    <RecommendationWidget {...props} />
+  ),
+  "Banner Product Carousel Component": props => (
+    <BannerProductCarousel {...props} />
+  ),
+  "Video Product Carousel Component": props => (
+    <VideoProductCarousel {...props} />
+  ),
   // automatedBrandProductCarousel: props => (
   //   <AutomatedBrandProductCarousel {...props} />
   // ),
-  "Flash Sales Component": props => <FlashSale {...props} /> //need to see about button here
-  // "Offers Component": props => <OfferWidget {...props} /> // wired up
-  // "Multipurpose Banner Component": props => <ConnectWidget {...props} /> // modal not working - need to figure out what to show here.
-  // "Multi Click Component": props => <ThemeProductWidget {...props} /> // not wired up for some reason
-  // "Auto Fresh From Brands Component": props => <FollowBase {...props} /> // wired up with clickable url
-  // "Banner Separator Component": props => <BannerSeparator {...props} />
-  // "Auto Discover More Component": props => <DiscoverMore {...props} /> // wired up with clickable urls
+  "Flash Sales Component": props => <FlashSale {...props} />, // wired up
+  "Offers Component": props => <OfferWidget {...props} />, // wired up
+  "Multipurpose Banner Component": props => <ConnectWidget {...props} />, // modal not working - need to figure out what to show here.
+  "Multi Click Component": props => <ThemeProductWidget {...props} />, // not wired up for some reason
+  "Auto Fresh From Brands Component": props => <FollowBase {...props} />, // wired up with clickable url
+  "Banner Separator Component": props => <BannerSeparator {...props} />,
+  "Auto Discover More Component": props => <DiscoverMore {...props} /> // wired up with clickable urls
 };
 
 class Feed extends Component {
@@ -91,6 +92,18 @@ class Feed extends Component {
 
   componentWillMount() {
     this.props.homeFeed();
+    this.props.getCartId();
+    window.digitalData = Object.assign(
+      {},
+      { page: { pageInfo: { pageName: "home" } } }
+    );
+    window._satellite.track("page view");
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.type === MERGE_CART_ID_SUCCESS) {
+      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+    }
   }
   render() {
     if (this.props.loading) {

@@ -21,8 +21,8 @@ import {
 } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductDescription: () => {
-      dispatch(getProductDescription());
+    getProductDescription: productCode => {
+      dispatch(getProductDescription(productCode));
     },
     getProductPinCode: productDetails => {
       dispatch(getProductPinCode(productDetails));

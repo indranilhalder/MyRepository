@@ -23,8 +23,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     }
 
     match = match.toUpperCase();
-    console.log("match");
-    console.log(match);
     // I can just assume that we need to set filters here.
     const suffix = `&isTextSearch=false&isFilter=false`;
     const filters = [{ key: "category", filters: [`${match}`] }];

@@ -15,6 +15,8 @@ import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
+import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
+import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import {
@@ -37,7 +39,9 @@ import {
   LOGGED_IN_USER_DETAILS,
   PRODUCT_CART_DELIVERY_MODES,
   SEARCH_RESULTS_PAGE,
-  BRAND_OR_CATEGORY_LANDING_PAGE
+  BRAND_OR_CATEGORY_LANDING_PAGE,
+  ORDER_SUMMARY_ROUTER,
+  CHECKOUT_ROUTER
 } from "../src/lib/constants";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -184,6 +188,12 @@ class App extends Component {
             path={PRODUCT_CART_DELIVERY_MODES}
             component={DeliveryModesContainer}
           />
+          <Route
+            exact
+            path={ORDER_SUMMARY_ROUTER}
+            component={DisplayOrderSummaryContainer}
+          />
+          <Route exact path={CHECKOUT_ROUTER} component={CheckOutContainer} />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
         </Switch>
         <ModalContainer />

@@ -7,8 +7,12 @@ import concat from "lodash/concat";
 import { transformItem } from "./utils.js";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import TimerCounter from "../../general/components/TimerCounter.js";
+import { Icon } from "xelpmoc-core";
+import ClockImage from "../../pdp/components/img/clockWhite.svg";
 
 const OFFER_AND_ITEM_LIMIT = 4;
+
 export default class FlashSale extends React.Component {
   componentDidUpdate() {
     const offers = this.props.feedComponentData.offers;
@@ -48,6 +52,8 @@ export default class FlashSale extends React.Component {
     });
     let offersAndItemsArray = concat(feedComponentData.offers, items);
 
+    console.log("FLASH SALE");
+    console.log(feedComponentData);
     return (
       <div
         className={styles.base}
@@ -60,7 +66,14 @@ export default class FlashSale extends React.Component {
         <div className={styles.header}>
           <div className={styles.headingText}>{headingText}</div>
           <div className={styles.offerTime}>
-            <div className={styles.clock} />
+            <div className={styles.clock}>
+              <div className={styles.timerHolder}>
+                <Icon image={ClockImage} size={20} />
+              </div>
+              <div className={styles.countDownHolder}>
+                <TimerCounter endTime={feedComponentData.endDate} />
+              </div>
+            </div>
           </div>
         </div>
         <div className={styles.subheader}>{subHeader}</div>
