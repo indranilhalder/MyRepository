@@ -5,8 +5,6 @@ import PlpBrandCategoryWrapper from "../components/PlpBrandCategoryWrapper";
 const mapDispatchToProps = dispatch => {
   return {
     getProductListings: (search: null, suffix, page) => {
-      console.log("GET PRODUCT LISTINGS SEARCH");
-      console.log(search);
       dispatch(setSearchString(search));
       dispatch(setPage(page));
       dispatch(getProductListings(suffix));

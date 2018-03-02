@@ -1,6 +1,4 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
-import each from "lodash/each";
-import { SET_FILTERS } from "../../search/actions/search.actions";
 export const PRODUCT_LISTINGS_REQUEST = "PRODUCT_LISTINGS_REQUEST";
 export const PRODUCT_LISTINGS_SUCCESS = "PRODUCT_LISTINGS_SUCCESS";
 export const PRODUCT_LISTINGS_FAILURE = "PRODUCT_LISTINGS_FAILURE";
@@ -54,8 +52,6 @@ export function getProductListings(suffix: null, paginated: false) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest());
     try {
-      console.log("SEARCH STATE");
-      console.log(getState().search);
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
       let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${
@@ -68,8 +64,6 @@ export function getProductListings(suffix: null, paginated: false) {
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
       const result = await api.get(queryString);
-      console.log("QUERY STRING");
-      console.log(queryString);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

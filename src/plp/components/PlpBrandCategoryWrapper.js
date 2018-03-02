@@ -9,8 +9,6 @@ const CAPTURE_REGEX = /c-(.*)/;
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 
-// ?searchText=:relevance:category:MSH1012100&isFilter=false&isTextSearch=false&isPwa=false&page=0&pageSize=20&typeID=all --> is an url
-
 export default class PlpBrandCategoryWrapper extends React.Component {
   componentDidMount() {
     // this will do the check for category or brand
@@ -18,7 +16,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     window.addEventListener("scroll", this.handleScroll);
 
     const parsedQueryString = queryString.parse(this.props.location.search);
-    console.log(parsedQueryString);
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
 
@@ -27,8 +24,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     if (CATEGORY_REGEX.test(brandOrCategoryId)) {
       match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
       match = match.toUpperCase();
-      console.log("MATCH");
-      console.log(match);
       searchText = `:relevance:category:${match}`;
     }
 
