@@ -194,10 +194,9 @@ export function addProductToWishList(userId, accessToken, productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(resultJson);
+
       dispatch(addProductToWishListSuccess());
     } catch (e) {
-      console.log(e.message);
       dispatch(addProductToWishListFailure(e.message));
     }
   };
@@ -276,10 +275,8 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(resultJson);
       dispatch(addProductToCartSuccess());
     } catch (e) {
-      console.log(e.message);
       dispatch(addProductToCartFailure(e.message));
     }
   };
