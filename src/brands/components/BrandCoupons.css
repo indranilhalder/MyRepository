@@ -40,16 +40,25 @@
 }
 
 .imageHolder {
-	width     : 100%;
-	height    : 144px;
-	left      : 0;
-	top       : 0;
-	overflow  : hidden;
-	margin-top: 15px;
+	width         : 100%;
+	height        : auto;
+	left          : 0;
+	top           : 20px;
+	padding-bottom: 50%;
+	display       : inline-block;
+	position      : relative;
+
 }
 .couponInerBox {
 	width         : 100%;
 	height        : auto;
 	display       : inline-block;
 	vertical-align: middle;
+}
+.image{
+	width   : 100%;
+	height  : 100%;
+	position: absolute;
+	left    : 0;
+	top     : 0;
 }

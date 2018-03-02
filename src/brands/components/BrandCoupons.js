@@ -14,7 +14,9 @@ export default class BrandCoupons extends React.Component {
         </div>
         <div className={styles.label}>{this.props.label}</div>
         <div className={styles.imageHolder}>
-          <Image image={this.props.image} />
+          <div className={styles.image}>
+            <Image image={this.props.image} />
+          </div>
         </div>
       </div>
     );
