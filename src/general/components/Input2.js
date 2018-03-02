@@ -47,7 +47,9 @@ export default class Input2 extends React.Component {
             style={{
               paddingLeft: `${this.props.leftChildSize - 10}px`,
               paddingRight: `${this.props.rightChildSize - 10}px`,
-              height: `${this.props.height}px`
+              height: `${this.props.height}px`,
+              borderColor: `${this.props.borderColor}`,
+              borderBottom: `${this.props.borderBottom}`
             }}
           >
             <input
@@ -102,5 +104,6 @@ Input2.defaultProps = {
   type: "text",
   textStyle: {
     fontSize: 14
-  }
+  },
+  borderBottom: "1px solid #fff"
 };

@@ -1,0 +1,38 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.InformationHeader {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+}
+.searchHolder {
+  position: absolute;
+  display: inline-block;
+  top: 14px;
+  right: 10px;
+}
+.searchWithInputRedHolder {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  display: inline-block;
+  top: 14px;
+  bottom: 0px;
+  padding-left: 50px;
+}
+.searchRedHolder {
+  width: auto;
+  height: auto;
+  position: absolute;
+  display: inline-block;
+}
+.input {
+  width: auto;
+  height: auto;
+  position: absolute;
+  display: inline-block;
+}
