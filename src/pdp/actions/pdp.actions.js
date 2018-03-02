@@ -64,6 +64,10 @@ export const DELETE_PRODUCT_REVIEW_REQUEST = "DELETE_PRODUCT_REVIEW_REQUEST";
 export const DELETE_PRODUCT_REVIEW_SUCCESS = "DELETE_PRODUCT_REVIEW_SUCCESS";
 export const DELETE_PRODUCT_REVIEW_FAILURE = "DELETE_PRODUCT_REVIEW_FAILURE";
 
+export const PRODUCT_MSD_REQUEST = "PRODUCT_MSD_REQUEST";
+export const PRODUCT_MSD_SUCCESS = "PRODUCT_MSD_SUCCESS";
+export const PRODUCT_MSD_FAILURE = "PRODUCT_MSD_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
@@ -80,6 +84,11 @@ const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
+const MSD_REQUEST_PATH = "widgets";
+const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
+const WIDGET_LIST = [0];
+const NUMBER_RESULTS = [20];
+const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
 
 export function getProductDescriptionRequest() {
   return {
@@ -179,15 +188,20 @@ export function addProductToWishListFailure(error) {
   };
 }
 
-export function addProductToWishList(productDetails) {
+export function addProductToWishList(userId, accessToken, productDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToWishListRequest());
     try {
-      const result = await api.postMock(ADD_PRODUCT_TO_WISH_LIST);
+      const result = await api.post(
+        `${PRODUCT_DETAILS_PATH}/${userId}/addProductInWishlist?platformNumber=2&access_token=${accessToken}&isPwa=true&ussid=${
+          productDetails.ussId
+        }&productCode=${productDetails.code}&wishlistName=${MY_WISH_LIST}`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(addProductToWishListSuccess());
     } catch (e) {
       dispatch(addProductToWishListFailure(e.message));
@@ -252,22 +266,22 @@ export function addProductToCartFailure(error) {
     error
   };
 }
-export function addProductToCart(productDetails) {
+
+export function addProductToCart(userId, cartId, accessToken, productDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToCartRequest());
     try {
       const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${productDetails.userId}/carts/${
-          productDetails.cartId
-        }/addProductToCart?access_token=${
-          productDetails.accessToken
-        }&isPwa=true&platformNumber=2&productCode=MP000000000113789&USSID=273570HMAIBSSZ05&quantity=2&addedToCartWl=false`
+        `${PRODUCT_DETAILS_PATH}/${userId}/carts/${cartId}/addProductToCart?access_token=${accessToken}&isPwa=true&platformNumber=2&productCode=${
+          productDetails.code
+        }&USSID=${productDetails.ussId}&quantity=${
+          productDetails.quantity
+        }&addedToCartWl=false`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
@@ -296,11 +310,14 @@ export function getProductSizeGuideFailure(error) {
     error
   };
 }
-export function getProductSizeGuide() {
+
+export function getProductSizeGuide(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductSizeGuideRequest());
     try {
-      const result = await api.postMock(PRODUCT_SIZE_GUIDE_PATH);
+      const result = await api.get(
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -597,6 +614,53 @@ export function getProductReviews(productCode) {
       dispatch(getProductReviewSuccess(resultJson));
     } catch (e) {
       dispatch(getProductReviewFailure(e.message));
+    }
+  };
+}
+
+export function productMsdRequest() {
+  return {
+    type: PRODUCT_MSD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function productMsdSuccess(msdItems) {
+  return {
+    type: PRODUCT_MSD_SUCCESS,
+    status: SUCCESS,
+    msdItems
+  };
+}
+
+export function productMsdFailure(error) {
+  return {
+    type: PRODUCT_MSD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getMsdRequest(productCode) {
+  return async (dispatch, getState, { api }) => {
+    let msdRequestObject = new FormData();
+    msdRequestObject.append("api_key", API_KEY);
+    msdRequestObject.append("widget_list", WIDGET_LIST);
+    msdRequestObject.append("num_results", NUMBER_RESULTS);
+    msdRequestObject.append("mad_uuid", MAD_UUID);
+    msdRequestObject.append("details", false);
+    msdRequestObject.append("product_id", productCode);
+
+    dispatch(productMsdRequest());
+
+    try {
+      const result = await api.postMsd(MSD_REQUEST_PATH, msdRequestObject);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(productMsdSuccess(resultJson));
+    } catch (e) {
+      dispatch(productMsdFailure(e.message));
     }
   };
 }
