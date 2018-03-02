@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./ShippingCommenced.css";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import couponIcon from "../../general/components/img/coupon-1.svg";
+import couponIcon from "../../general/components/img/order-history.svg";
 
 export default class ShippingCommenced extends React.Component {
   render() {
