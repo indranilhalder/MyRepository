@@ -88,8 +88,8 @@ class CheckOutPage extends React.Component {
       );
     } else {
       this.props.selectDeliveryMode(
-        "273564HOME0004",
         "Click-and-Collect",
+        "273564HOME0004",
         JSON.parse(cartDetailsAnonymous).guid
       );
     }
