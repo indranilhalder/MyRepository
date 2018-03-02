@@ -3,7 +3,8 @@ import {
   getProductDescription,
   addProductToCart,
   getProductSizeGuide,
-  addProductToWishList
+  addProductToWishList,
+  getMsdRequest
 } from "../actions/pdp.actions";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
@@ -21,13 +22,18 @@ const mapDispatchToProps = dispatch => {
     },
     addProductToWishList: (userId, accessToken, productDetails) => {
       dispatch(addProductToWishList(userId, accessToken, productDetails));
+    },
+    getMsdRequest: productCode => {
+      dispatch(getMsdRequest(productCode));
     }
   };
 };
 
 const mapStateToProps = state => {
   return {
-    productDetails: state.productDescription.productDetails
+    productDetails: state.productDescription.productDetails,
+    msdRequest: state.productDescription.msdRequest,
+    sizeGuide: state.productDescription.sizeGuide
   };
 };
 

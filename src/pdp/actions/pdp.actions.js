@@ -64,6 +64,10 @@ export const DELETE_PRODUCT_REVIEW_REQUEST = "DELETE_PRODUCT_REVIEW_REQUEST";
 export const DELETE_PRODUCT_REVIEW_SUCCESS = "DELETE_PRODUCT_REVIEW_SUCCESS";
 export const DELETE_PRODUCT_REVIEW_FAILURE = "DELETE_PRODUCT_REVIEW_FAILURE";
 
+export const PRODUCT_MSD_REQUEST = "PRODUCT_MSD_REQUEST";
+export const PRODUCT_MSD_SUCCESS = "PRODUCT_MSD_SUCCESS";
+export const PRODUCT_MSD_FAILURE = "PRODUCT_MSD_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
@@ -80,6 +84,7 @@ const ORDER_BY = "desc";
 const SORT = "byDate";
 const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
+const MSD_REQUEST_PATH = "widgets";
 
 export function getProductDescriptionRequest() {
   return {
@@ -607,6 +612,56 @@ export function getProductReviews(productCode) {
       dispatch(getProductReviewSuccess(resultJson));
     } catch (e) {
       dispatch(getProductReviewFailure(e.message));
+    }
+  };
+}
+
+export function productMsdRequest() {
+  return {
+    type: PRODUCT_MSD_REQUEST,
+    status: REQUESTING
+  };
+}
+export function productMsdSuccess(msdRequest) {
+  return {
+    type: PRODUCT_MSD_SUCCESS,
+    status: SUCCESS,
+    msdRequest
+  };
+}
+
+export function productMsdFailure(error) {
+  return {
+    type: PRODUCT_MSD_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getMsdRequest(productCode) {
+  return async (dispatch, getState, { api }) => {
+    let msdRequestObject = new FormData();
+    msdRequestObject.append(
+      "api_key",
+      "8783ef14595919d35b91cbc65b51b5b1da72a5c3"
+    );
+    msdRequestObject.append("widget_list", [0]);
+    msdRequestObject.append("num_results", [20]);
+    msdRequestObject.append("mad_uuid", "F4B82964-5E08-4531-87AF-7E03E3CD0307");
+    msdRequestObject.append("details", false);
+    msdRequestObject.append("product_id", "MP000000000602914");
+
+    dispatch(productMsdRequest());
+
+    try {
+      const result = await api.postMsd(MSD_REQUEST_PATH, msdRequestObject);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(productMsdSuccess(resultJson));
+    } catch (e) {
+      dispatch(productMsdFailure(e.message));
     }
   };
 }

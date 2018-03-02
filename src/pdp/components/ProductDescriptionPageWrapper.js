@@ -10,6 +10,7 @@ const typeComponentMapping = {
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     this.props.getProductDescription(this.props.match.params[2]);
+    this.props.getMsdRequest(this.props.match.params[2]);
   }
 
   renderRootCategory = datumType => {

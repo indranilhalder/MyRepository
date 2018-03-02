@@ -10,7 +10,8 @@ const productDescription = (
     wishList: null,
     reviews: null,
     reviewsStatus: null,
-    reviewsError: null
+    reviewsError: null,
+    msdRequest: null
   },
   action
 ) => {
@@ -265,6 +266,26 @@ const productDescription = (
       return Object.assign({}, state, {
         reviewsStatus: action.status,
         reviewsError: action.error,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_MSD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_MSD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        msdRequest: action.msdRequest,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_MSD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
         loading: false
       });
 
