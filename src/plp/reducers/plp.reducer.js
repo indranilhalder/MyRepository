@@ -4,7 +4,8 @@ const productListings = (
     status: null,
     error: null,
     loading: false,
-    productListings: null
+    productListings: null,
+    pageNumber: 0
   },
   action
 ) => {
@@ -26,6 +27,10 @@ const productListings = (
         status: action.status,
         error: action.error,
         loading: false
+      });
+    case plpActions.SET_PAGE:
+      return Object.assign({}, state, {
+        pageNumber: action.pageNumber
       });
     default:
       return state;

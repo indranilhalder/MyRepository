@@ -23,9 +23,13 @@ export default class NewBrand extends React.Component {
       this.onUnFollowClick();
     }
   }
+
+  handleBrandClick = () => {
+    this.props.onClick(this.props.webUrl);
+  };
   render() {
     return (
-      <div className={styles.base}>
+      <div className={styles.base} onClick={this.handleBrandClick}>
         <div className={styles.imageHolder}>
           <Image image={this.props.image} color="transparent" />
           <div className={styles.brandOverlay}>
@@ -61,7 +65,8 @@ NewBrand.propTypes = {
   onFollowClick: PropTypes.func,
   onUnFollowClick: PropTypes.func,
   follow: PropTypes.bool,
-  logo: PropTypes.string
+  logo: PropTypes.string,
+  onClick: PropTypes.func
 };
 NewBrand.defaultProps = {
   follow: false

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import styles from "./HeroBanner.css";
 export default class HeroBanner extends React.Component {
   renderBanner = () => {
-    const feedComponentData = this.props.feedComponentData;
+    const { feedComponentData, ...rest } = this.props;
     if (!this.props.loading && feedComponentData.items) {
       return (
         <Banner>
@@ -17,6 +17,8 @@ export default class HeroBanner extends React.Component {
                   title={datum.title}
                   image={datum.imageURL}
                   key={i}
+                  url={datum.webURL}
+                  {...rest}
                 />
               );
             })}

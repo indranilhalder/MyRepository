@@ -2,10 +2,15 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import ProductVideo from "../../general/components/ProductVideo";
 import { transformData } from "./utils.js";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class VideoProductCarousel extends React.Component {
   handleClick() {
-    this.props.history.push(PRODUCT_LISTINGS);
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
   }
 
   componentDidUpdate() {

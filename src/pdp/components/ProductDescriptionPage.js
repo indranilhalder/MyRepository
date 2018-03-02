@@ -112,7 +112,6 @@ class ProductDescriptionPage extends Component {
   }
   render() {
     if (this.props.productDetails) {
-      console.log(this.props.productDetails);
       const productData = this.props.productDetails;
       const mobileGalleryImages = productData.galleryImagesList;
       return (

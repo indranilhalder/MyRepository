@@ -1,19 +1,18 @@
 import React from "react";
 import styles from "./OfferWidget.css";
-import { Image } from "xelpmoc-core";
-import Button from "../../general/components/Button";
 import Carousel from "../../general/components/Carousel";
-import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
+import Offer from "./Offer.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class OfferWidget extends React.Component {
-  handleClick = () => {
-    this.props.history.push(PRODUCT_LISTINGS);
+  handleClick = webUrl => {
+    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
   };
   render() {
-    const data = this.props.feedComponentData.items
-      ? this.props.feedComponentData.items
-      : false;
+    let { feedComponentData, rest } = this.props;
+    const data = feedComponentData.items ? feedComponentData.items : false;
 
     return (
       <div className={styles.holder}>
@@ -25,39 +24,12 @@ export default class OfferWidget extends React.Component {
           {data &&
             data.map((datum, i) => {
               return (
-                <div className={styles.base} key={i}>
-                  <div className={styles.imageHolder}>
-                    <Image image={datum.imageURL} key={i} />
-                  </div>
-                  <MediaQuery query="(min-device-width: 1025px)">
-                    <div
-                      className={styles.overlay}
-                      onClick={() => this.handleClick()}
-                    />
-                  </MediaQuery>
-                  <MediaQuery query="(max-device-width: 1024px)">
-                    <div className={styles.overlay} />
-                  </MediaQuery>
-                  <div className={styles.ovalImage}>
-                    <div className={styles.text} key={i}>
-                      {datum.discountText}
-                    </div>
-                  </div>
-                  <div className={styles.textLine}>
-                    {datum.title}
-                    <MediaQuery query="(max-device-width: 1024px)">
-                      <div className={styles.buttonHolder}>
-                        <Button
-                          type="hollow"
-                          color="#fff"
-                          label={datum.btnText}
-                          onClick={() => this.handleClick()}
-                          width={130}
-                        />
-                      </div>
-                    </MediaQuery>
-                  </div>
-                </div>
+                <Offer
+                  onClick={this.handleClick}
+                  key={i}
+                  datum={datum}
+                  {...rest}
+                />
               );
             })}
         </Carousel>
