@@ -1,0 +1,24 @@
+.base{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  padding: 15px;
+  background: #fff;
+}
+.descriptionList{
+  width:100%;
+  height:auto;
+  border-bottom:1px solid #ececec;
+}
+.buttonHolder{
+  width:100%;
+  height:auto;
+  padding:15px 0px;
+  display:inline-block;
+  text-align:left;
+}
+.button{
+  width:auto;
+  height:auto;
+  display:inline-block;
+}
