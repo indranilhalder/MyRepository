@@ -89,6 +89,10 @@ export const ADD_STORE_CNC_REQUEST = "ADD_STORE_CNC_REQUEST";
 export const ADD_STORE_CNC_SUCCESS = "ADD_STORE_CNC_SUCCESS";
 export const ADD_STORE_CNC_FAILURE = "ADD_STORE_CNC_FAILURE";
 
+export const ADD_PICKUP_PERSON_REQUEST = "ADD_PICKUP_PERSON_REQUEST";
+export const ADD_PICKUP_PERSON_SUCCESS = "ADD_PICKUP_PERSON_SUCCESS";
+export const ADD_PICKUP_PERSON_FAILURE = "ADD_PICKUP_PERSON_FAILURE";
+
 const pincode = 229001;
 
 export function cartDetailsRequest() {
@@ -106,27 +110,6 @@ export function cartDetailsSuccess(cartDetails) {
 }
 
 export function cartDetailsFailure(error) {
-  return {
-    type: CART_DETAILS_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function cartDetailsCNCRequest() {
-  return {
-    type: CART_DETAILS_REQUEST,
-    status: REQUESTING
-  };
-}
-export function cartDetailsCNCSuccess(cartDetails) {
-  return {
-    type: CART_DETAILS_SUCCESS,
-    status: SUCCESS,
-    cartDetails
-  };
-}
-
-export function cartDetailsCNCFailure(error) {
   return {
     type: CART_DETAILS_FAILURE,
     status: ERROR,
@@ -152,6 +135,29 @@ export function getCartDetails(userId, accessToken, cartId) {
     }
   };
 }
+
+export function cartDetailsCNCRequest() {
+  return {
+    type: CART_DETAILS_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cartDetailsCNCSuccess(cartDetails) {
+  return {
+    type: CART_DETAILS_CNC_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function cartDetailsCNCFailure(error) {
+  return {
+    type: CART_DETAILS_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function getCartDetailsCNC(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsCNCRequest());
@@ -956,6 +962,57 @@ export function addStoreCNC(ussId, slaveId) {
       dispatch(addStoreCNCSuccess(resultJson));
     } catch (e) {
       dispatch(addStoreCNCFailure(e.message));
+    }
+  };
+}
+
+// Actions to Add Pick up Person
+export function addPickUpPersonRequest() {
+  return {
+    type: ADD_PICKUP_PERSON_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addPickUpPersonSuccess(personAssigned) {
+  return {
+    type: ADD_PICKUP_PERSON_SUCCESS,
+    status: SUCCESS,
+    personAssigned
+  };
+}
+
+export function addPickUpPersonFailure(error) {
+  return {
+    type: ADD_PICKUP_PERSON_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to Add Pick Up Person with personObject containing "personMobile" and "personName" as params
+export function addPickupPersonCNC(personMobile, personName) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).code;
+  return async (dispatch, getState, { api }) => {
+    dispatch(addPickUpPersonRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/${cartId}/addPickupPerson?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2&personMobile=${personMobile}&personName=${personName}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(addPickUpPersonSuccess(resultJson));
+    } catch (e) {
+      dispatch(addPickUpPersonFailure(e.message));
     }
   };
 }
