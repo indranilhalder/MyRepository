@@ -1,13 +1,18 @@
 import React from "react";
-
+import FilterContainer from "../containers/FilterContainer";
 import ProductGrid from "./ProductGrid";
 import PlpMobileFooter from "./PlpMobileFooter";
 import InformationHeader from "../../general/components/InformationHeader";
 import styles from "./Plp.css";
-import { PRODUCT_FILTER_ROUTER } from "../../lib/constants";
 export default class Plp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showFilter: false
+    };
+  }
   toggleFilter = () => {
-    this.props.history.push(PRODUCT_FILTER_ROUTER);
+    this.setState({ showFilter: !this.state.showFilter });
   };
   onApply = val => {
     this.toggleFilter();
@@ -20,12 +25,19 @@ export default class Plp extends React.Component {
       this.props.onBack();
     }
   };
+  backPage() {
+    this.setState({ showFilter: !this.state.showFilter });
+  }
   onSortClick = () => {
     if (this.props.showSort) {
       this.props.showSort();
     }
   };
   render() {
+    let filterClass = styles.filter;
+    if (this.state.showFilter) {
+      filterClass = styles.filterOpen;
+    }
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>
@@ -40,8 +52,8 @@ export default class Plp extends React.Component {
             data={this.props.searchresult}
           />
         </div>
-        <div className={styles.filter}>
-          <InformationHeader onClick={this.toggleFilter} text="Refine by" />
+        <div className={filterClass}>
+          <FilterContainer backPage={() => this.backPage()} />
         </div>
         <div className={styles.footer}>
           <PlpMobileFooter
