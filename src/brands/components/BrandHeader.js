@@ -4,7 +4,7 @@ import InformationHeader from "../../general/components/InformationHeader";
 import searchIcon from "./img/Search.svg";
 import searchRedIcon from "./img/SearchRed.svg";
 import PropTypes from "prop-types";
-import { CircleButton, Icon } from "xelpmoc-core";
+import { Icon } from "xelpmoc-core";
 import Input2 from "../../general/components/Input2.js";
 export default class BrandHeader extends React.Component {
   constructor(props) {
@@ -31,7 +31,6 @@ export default class BrandHeader extends React.Component {
     if (this.state.searchBar) {
       text = "";
     }
-
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>
@@ -46,9 +45,9 @@ export default class BrandHeader extends React.Component {
           )}
           {this.state.searchBar && (
             <div className={styles.searchWithInputRedHolder}>
-              {/* <div className={styles.searchRedHolder}>
+              <div className={styles.searchRedHolder}>
                 <Icon image={searchRedIcon} size={22} />
-              </div> */}
+              </div>
               <div className={styles.input}>
                 <Input2
                   onChange={val => this.onSearch(val)}
@@ -57,7 +56,6 @@ export default class BrandHeader extends React.Component {
                   isWhite={true}
                   borderColor={"#212121"}
                   borderBottom={"0px solid #212121"}
-                  leftChild={<Icon image={searchRedIcon} size={22} />}
                 />
               </div>
             </div>

@@ -20,19 +20,21 @@
   height: auto;
   position: absolute;
   display: inline-block;
-  top: 14px;
+  top: 0px;
   bottom: 0px;
   padding-left: 50px;
 }
-
 .searchRedHolder {
+  top: 14px;
   width: auto;
   height: auto;
   position: absolute;
   display: inline-block;
 }
 .input {
+  padding-left: 30px;
   width: auto;
+  top: 10px;
   height: auto;
   position: absolute;
   display: inline-block;
