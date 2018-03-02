@@ -1,5 +1,10 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS
+} from "../../lib/constants";
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -43,6 +48,22 @@ export const PRODUCT_SPECIFICATION_REQUEST = "PRODUCT_SPECIFICATION_REQUEST";
 export const PRODUCT_SPECIFICATION_SUCCESS = "PRODUCT_SPECIFICATION_SUCCESS";
 export const PRODUCT_SPECIFICATION_FAILURE = "PRODUCT_SPECIFICATION_FAILURE";
 
+export const ADD_PRODUCT_REVIEW_REQUEST = "ADD_PRODUCT_REVIEW_REQUEST";
+export const ADD_PRODUCT_REVIEW_SUCCESS = "ADD_PRODUCT_REVIEW_SUCCESS";
+export const ADD_PRODUCT_REVIEW_FAILURE = "ADD_PRODUCT_REVIEW_FAILURE";
+
+export const EDIT_PRODUCT_REVIEW_REQUEST = "EDIT_PRODUCT_REVIEW_REQUEST";
+export const EDIT_PRODUCT_REVIEW_SUCCESS = "EDIT_PRODUCT_REVIEW_SUCCESS";
+export const EDIT_PRODUCT_REVIEW_FAILURE = "EDIT_PRODUCT_REVIEW_FAILURE";
+
+export const GET_PRODUCT_REVIEW_REQUEST = "GET_PRODUCT_REVIEW_REQUEST";
+export const GET_PRODUCT_REVIEW_SUCCESS = "GET_PRODUCT_REVIEW_SUCCESS";
+export const GET_PRODUCT_REVIEW_FAILURE = "GET_PRODUCT_REVIEW_FAILURE";
+
+export const DELETE_PRODUCT_REVIEW_REQUEST = "DELETE_PRODUCT_REVIEW_REQUEST";
+export const DELETE_PRODUCT_REVIEW_SUCCESS = "DELETE_PRODUCT_REVIEW_SUCCESS";
+export const DELETE_PRODUCT_REVIEW_FAILURE = "DELETE_PRODUCT_REVIEW_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
@@ -55,6 +76,10 @@ const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
 const PRODUCT_SPECIFICATION_PATH = "marketplacewebservices/v2/mpl/products";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products";
+const ORDER_BY = "desc";
+const SORT = "byDate";
+const PAGE_VALUE = "0";
+const PAGE_NUMBER = "1";
 
 export function getProductDescriptionRequest() {
   return {
@@ -396,6 +421,182 @@ export function getProductSpecification(productId) {
       dispatch(ProductSpecificationSuccess(resultJson));
     } catch (e) {
       dispatch(ProductSpecificationFailure(e.message));
+    }
+  };
+}
+
+export function addProductReviewRequest() {
+  return {
+    type: ADD_PRODUCT_REVIEW_REQUEST,
+    status: REQUESTING
+  };
+}
+export function addProductReviewSuccess() {
+  return {
+    type: ADD_PRODUCT_REVIEW_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function addProductReviewFailure(error) {
+  return {
+    type: ADD_PRODUCT_REVIEW_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function addProductReview(productCode, productReviews) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(addProductReviewRequest());
+    try {
+      const result = await api.post(
+        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&comment=${productReviews.comment}&rating=${
+          productReviews.rating
+        }&headline=${productReviews.headLine}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(addProductReviewSuccess());
+    } catch (e) {
+      dispatch(addProductReviewFailure(e.message));
+    }
+  };
+}
+
+export function editProductReviewRequest() {
+  return {
+    type: EDIT_PRODUCT_REVIEW_REQUEST,
+    status: REQUESTING
+  };
+}
+export function editProductReviewSuccess() {
+  return {
+    type: EDIT_PRODUCT_REVIEW_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function editProductReviewFailure(error) {
+  return {
+    type: EDIT_PRODUCT_REVIEW_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function editProductReview(productCode, productReviews) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(editProductReviewRequest());
+    try {
+      const result = await api.post(
+        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&id={productReviews.id}&comment=${productReviews.comment}&rating=${
+          productReviews.rating
+        }&headline=${productReviews.headLine}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(editProductReviewSuccess());
+    } catch (e) {
+      dispatch(editProductReviewFailure(e.message));
+    }
+  };
+}
+
+export function deleteProductReviewRequest() {
+  return {
+    type: DELETE_PRODUCT_REVIEW_REQUEST,
+    status: REQUESTING
+  };
+}
+export function deleteProductReviewSuccess() {
+  return {
+    type: DELETE_PRODUCT_REVIEW_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function deleteProductReviewFailure(error) {
+  return {
+    type: DELETE_PRODUCT_REVIEW_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function deleteProductReview(productCode, reviewId) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(deleteProductReviewRequest());
+    try {
+      const result = await api.get(
+        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviewId/deleteReview?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(deleteProductReviewSuccess());
+    } catch (e) {
+      dispatch(deleteProductReviewFailure(e.message));
+    }
+  };
+}
+
+export function getProductReviewRequest() {
+  return {
+    type: GET_PRODUCT_REVIEW_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getProductReviewSuccess(reviews) {
+  return {
+    type: GET_PRODUCT_REVIEW_SUCCESS,
+    status: SUCCESS,
+    reviews
+  };
+}
+
+export function getProductReviewFailure(error) {
+  return {
+    type: GET_PRODUCT_REVIEW_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getProductReviews(productCode) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getProductReviewRequest());
+    try {
+      const result = await api.get(
+        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/users/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/reviews?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(getProductReviewSuccess(resultJson));
+    } catch (e) {
+      dispatch(getProductReviewFailure(e.message));
     }
   };
 }
