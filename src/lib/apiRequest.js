@@ -7,6 +7,8 @@ export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 
+export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
+
 export async function postAdobeTargetUrl(
   path: null,
   mbox,
@@ -32,9 +34,6 @@ export async function postAdobeTargetUrl(
     url = `${HOME_FEED_API_ROOT}`;
   }
 
-  console.log("URL");
-  console.log(url);
-
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify({
@@ -53,9 +52,6 @@ export async function post(path, postData, doNotUseApiRoot: false) {
   if (doNotUseApiRoot) {
     url = path;
   }
-  console.log("IN POST");
-  console.log(JSON.stringify(postData));
-  console.log(url);
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),

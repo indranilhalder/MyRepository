@@ -6,6 +6,7 @@ import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
 import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
 import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionContainer";
+import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
@@ -14,13 +15,14 @@ import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
 import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
 import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
+import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
+import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
-  PRODUCT_DESCRIPTION_ROUTER,
   MAIN_ROUTER,
   PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
@@ -36,7 +38,12 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   LOGGED_IN_USER_DETAILS,
   PRODUCT_CART_DELIVERY_MODES,
-  ORDER_SUMMARY_ROUTER
+  SEARCH_RESULTS_PAGE,
+  BRAND_OR_CATEGORY_LANDING_PAGE,
+  ORDER_SUMMARY_ROUTER,
+  CHECKOUT_ROUTER,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../src/lib/constants";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -128,6 +135,18 @@ class App extends Component {
               <SignUpContainer {...routeProps} {...this.props} />
             )}
           />
+
+          <Route
+            exact
+            path={SEARCH_RESULTS_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+          <Route
+            exact
+            path={BRAND_OR_CATEGORY_LANDING_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
           <Route
             exact
             path={PRODUCT_LISTINGS}
@@ -142,8 +161,13 @@ class App extends Component {
           />
 
           <Route
-            path={PRODUCT_DESCRIPTION_ROUTER}
-            component={ProductDescriptionContainer}
+            path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
+          />
+
+          <Route
+            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
           />
           <Route
             exact
@@ -176,6 +200,7 @@ class App extends Component {
             path={ORDER_SUMMARY_ROUTER}
             component={DisplayOrderSummaryContainer}
           />
+          <Route exact path={CHECKOUT_ROUTER} component={CheckOutContainer} />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
         </Switch>
         <ModalContainer />

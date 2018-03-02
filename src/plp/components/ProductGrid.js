@@ -40,29 +40,29 @@ export default class ProductGrid extends React.Component {
   };
 
   renderComponent = data => {
-    if (data.type === PRODUCT) {
-      return (
-        <ProductModule
-          productImage={data.imageURL}
-          title={data.brandname}
-          price={data.price.mrpPrice.formattedValue}
-          discountPrice={data.price.sellingPrice.formattedValue}
-          description={data.productname}
-          bestDeliveryInfo={data.bestDeliveryInfo}
-          offerText={data.offerText}
-          averageRating={data.averageRating}
-          totalNoOfReviews={data.totalNoOfReviews}
-          view={this.state.view}
-          onClick={() => this.goToProductDescription()}
-        />
-      );
-    } else if (data.type === PLPAD) {
-      return <PlpAds imageURL={data.imageURL} />;
-    } else if (data.type === ICONICFILTER) {
-      return <IconicFilter data={data.filterValue} title={data.filterTitle} />;
-    } else {
-      return null;
-    }
+    // if (data.type === PRODUCT) {
+    return (
+      <ProductModule
+        productImage={data.imageURL}
+        title={data.brandname}
+        price={data.mrpPrice.formattedValue}
+        discountPrice={data.sellingPrice.formattedValue}
+        description={data.productname}
+        bestDeliveryInfo={data.bestDeliveryInfo}
+        offerText={data.offerText}
+        averageRating={data.averageRating}
+        totalNoOfReviews={data.totalNoOfReviews}
+        view={this.state.view}
+        onClick={() => this.goToProductDescription()}
+      />
+    );
+    // } else if (data.type === PLPAD) {
+    //   return <PlpAds imageURL={data.imageURL} />;
+    // } else if (data.type === ICONICFILTER) {
+    //   return <IconicFilter data={data.filterValue} title={data.filterTitle} />;
+    // } else {
+    //   return null;
+    // }
   };
   render() {
     return (
@@ -88,28 +88,28 @@ export default class ProductGrid extends React.Component {
           >
             {this.props.data &&
               this.props.data.map((datum, i) => {
-                if (
-                  datum.type === PRODUCT ||
-                  datum.type === PLPAD ||
-                  datum.type === ICONICFILTER
-                ) {
-                  let widthMobile = false;
-                  if (datum.type === PLPAD || datum.type === ICONICFILTER) {
-                    widthMobile = 100;
-                  }
-                  return (
-                    <PlpComponent
-                      key={i}
-                      gridWidthMobile={widthMobile}
-                      view={this.state.view}
-                      type={datum.type}
-                    >
-                      {this.renderComponent(datum)}
-                    </PlpComponent>
-                  );
-                } else {
-                  return null;
+                // if (
+                //   datum.type === PRODUCT ||
+                //   datum.type === PLPAD ||
+                //   datum.type === ICONICFILTER
+                // ) {
+                let widthMobile = false;
+                if (datum.type === PLPAD || datum.type === ICONICFILTER) {
+                  widthMobile = 100;
                 }
+                return (
+                  <PlpComponent
+                    key={i}
+                    gridWidthMobile={widthMobile}
+                    view={this.state.view}
+                    type={datum.type}
+                  >
+                    {this.renderComponent(datum)}
+                  </PlpComponent>
+                );
+                // } else {
+                //   return null;
+                // }
               })}
           </Grid>
         </div>
