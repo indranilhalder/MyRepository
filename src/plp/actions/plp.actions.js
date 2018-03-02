@@ -9,6 +9,8 @@ export const PRODUCT_LISTINGS_PATH = "v2/mpl/products/serpsearch";
 export const PRODUCT_LISTINGS_SUFFIX = "&isPwa=true&pageSize=20&typeID=all";
 export const SORT_PRODUCT_LISTINGS_PATH = "serpsearch";
 export const FILTER_PRODUCT_LISTINGS_PATH = "serpsearch";
+export const GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS =
+  "GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS";
 
 export const SET_PAGE = "SET_PAGE";
 
@@ -18,6 +20,13 @@ export function setPage(pageNumber) {
   return {
     type: SET_PAGE,
     pageNumber
+  };
+}
+
+export function getProductListingsPaginatedSuccess(productListings) {
+  return {
+    type: GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS,
+    productListings
   };
 }
 export function getProductListingsRequest() {
@@ -41,7 +50,7 @@ export function getProductListingsFailure(error) {
     error
   };
 }
-export function getProductListings(suffix: null) {
+export function getProductListings(suffix: null, paginated: false) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest());
     try {
@@ -54,6 +63,7 @@ export function getProductListings(suffix: null) {
       const sortString = searchState.sort;
       let filterString = "";
       let queryString = `${PRODUCT_LISTINGS_PATH}`;
+
       each(filters, filterObj => {
         const key = filterObj.key;
         const filterValues = filterObj.filters;
@@ -96,7 +106,13 @@ export function getProductListings(suffix: null) {
         throw new Error(`${resultJson.message}`);
       }
       // TODO: dispatch a modal here
-      dispatch(getProductListingsSuccess(resultJson));
+      if (paginated) {
+        if (resultJson.searchresult) {
+          dispatch(getProductListingsPaginatedSuccess(resultJson));
+        }
+      } else {
+        dispatch(getProductListingsSuccess(resultJson));
+      }
     } catch (e) {
       dispatch(getProductListingsFailure(e.message));
     }

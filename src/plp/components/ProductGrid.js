@@ -94,9 +94,9 @@ export default class ProductGrid extends React.Component {
                 //   datum.type === ICONICFILTER
                 // ) {
                 let widthMobile = false;
-                if (datum.type === PLPAD || datum.type === ICONICFILTER) {
-                  widthMobile = 100;
-                }
+                // if (datum.type === PLPAD || datum.type === ICONICFILTER) {
+                //   widthMobile = 100;
+                // }
                 return (
                   <PlpComponent
                     key={i}
