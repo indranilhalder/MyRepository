@@ -9,6 +9,7 @@ import {
   CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
 export const USER_CART_PATH = "v2/mpl/users";
+export const ALL_STORES_PATH = "v2/mpl/allStores";
 
 export const APPLY_COUPON_REQUEST = "APPLY_COUPON_REQUEST";
 export const APPLY_COUPON_SUCCESS = "APPLY_COUPON_SUCCESS";
@@ -79,6 +80,14 @@ export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS =
   "CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS";
 export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE =
   "CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE";
+
+export const GET_ALL_STORES_CNC_REQUEST = "GET_ALL_STORES_CNC_REQUEST";
+export const GET_ALL_STORES_CNC_SUCCESS = "GET_ALL_STORES_CNC_SUCCESS";
+export const GET_ALL_STORES_CNC_FAILURE = "GET_ALL_STORES_CNC_FAILURE";
+
+export const ADD_STORE_CNC_REQUEST = "ADD_STORE_CNC_REQUEST";
+export const ADD_STORE_CNC_SUCCESS = "ADD_STORE_CNC_SUCCESS";
+export const ADD_STORE_CNC_FAILURE = "ADD_STORE_CNC_FAILURE";
 
 const pincode = 229001;
 
@@ -851,6 +860,102 @@ export function checkPinCodeServiceAvailability(
       dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
     } catch (e) {
       dispatch(checkPinCodeServiceAvailabilityFailure(e.message));
+    }
+  };
+}
+
+// Actions to get All Stores CNC
+export function getAllStoresCNCRequest() {
+  return {
+    type: GET_ALL_STORES_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getAllStoresCNCSuccess(storeDetails) {
+  return {
+    type: GET_ALL_STORES_CNC_SUCCESS,
+    status: SUCCESS,
+    storeDetails
+  };
+}
+
+export function getAllStoresCNCFailure(error) {
+  return {
+    type: GET_ALL_STORES_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for getting all stores CNC
+export function getAllStoresCNC(pinCode) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getAllStoresCNCRequest());
+    try {
+      const result = await api.get(
+        `${ALL_STORES_PATH}/${pinCode}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(getAllStoresCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(getAllStoresCNCFailure(e.message));
+    }
+  };
+}
+
+// Actions to Add Store CNC
+export function addStoreCNCRequest() {
+  return {
+    type: ADD_STORE_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addStoreCNCSuccess(storeAdded) {
+  return {
+    type: ADD_STORE_CNC_SUCCESS,
+    status: SUCCESS,
+    storeAdded
+  };
+}
+
+export function addStoreCNCFailure(error) {
+  return {
+    type: ADD_STORE_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to Add Store CNC
+export function addStoreCNC(ussId, slaveId) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).code;
+  return async (dispatch, getState, { api }) => {
+    dispatch(addStoreCNCRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/${cartId}/addStore?USSID=${ussId}&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&slaveId=${slaveId}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(addStoreCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(addStoreCNCFailure(e.message));
     }
   };
 }

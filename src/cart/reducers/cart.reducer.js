@@ -31,7 +31,12 @@ const cart = (
     orderSummary: null,
     orderSummaryStatus: null,
     orderSummaryError: null,
-    coupons: null
+    coupons: null,
+
+    storeDetails: null,
+    storeStatus: null,
+    storeError: null,
+    storeAdded: null
   },
   action
 ) => {
@@ -298,6 +303,46 @@ const cart = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeDetails: action.storeDetails,
+        loading: false
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_STORE_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeAdded: action.storeAdded,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
       });
 
     default:

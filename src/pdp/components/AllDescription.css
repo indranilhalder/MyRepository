@@ -1,24 +1,26 @@
-.base{
-  width:100%;
-  height:auto;
-  display:inline-block;
+.base {
+  width: 100%;
+  height: auto;
+}
+.descriptionList {
+  width: 100%;
+  height: auto;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
   padding: 15px;
   background: #fff;
+  text-align: left;
+  margin-top: -30px;
+  border-top: 1px solid #ececec;
 }
-.descriptionList{
-  width:100%;
-  height:auto;
-  border-bottom:1px solid #ececec;
+.noBackground {
+  composes: buttonHolder;
+  background: transparent;
 }
-.buttonHolder{
-  width:100%;
-  height:auto;
-  padding:15px 0px;
-  display:inline-block;
-  text-align:left;
-}
-.button{
-  width:auto;
-  height:auto;
-  display:inline-block;
+.button {
+  width: auto;
+  height: auto;
+  display: inline-block;
 }
