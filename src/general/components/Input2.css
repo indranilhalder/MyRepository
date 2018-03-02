@@ -26,6 +26,7 @@
   border-color: #d3d3d3;
   border-style: solid;
 }
+
 .whiteHollow {
   composes: container;
   color: #fff;

@@ -31,6 +31,7 @@ export default class BrandHeader extends React.Component {
     if (this.state.searchBar) {
       text = "";
     }
+
     return (
       <div className={styles.base}>
         <div className={styles.InformationHeader}>

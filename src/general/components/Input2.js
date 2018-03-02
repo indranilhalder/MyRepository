@@ -99,6 +99,7 @@ Input2.propTypes = {
     fontSize: PropTypes.number
   })
 };
+
 Input2.defaultProps = {
   height: 40,
   type: "text",
