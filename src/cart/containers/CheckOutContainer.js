@@ -10,13 +10,16 @@ import {
   getOrderSummary,
   getCoupons,
   applyCoupon,
-  releaseCoupon
+  releaseCoupon,
+  getAllStoresCNC,
+  addStoreCNC,
+  addPickupPersonCNC
 } from "../actions/cart.actions";
 
 const mapDispatchToProps = dispatch => {
   return {
-    getCartDetailsCNC: (cartId, userId, accessToken) => {
-      dispatch(getCartDetailsCNC(cartId, userId, accessToken));
+    getCartDetailsCNC: (userId, accessToken, cartId) => {
+      dispatch(getCartDetailsCNC(userId, accessToken, cartId));
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
@@ -26,9 +29,6 @@ const mapDispatchToProps = dispatch => {
     },
     addAddressToCart: addressId => {
       dispatch(addAddressToCart(addressId));
-    },
-    selectDeliveryMode: (code, ussId, cartId) => {
-      dispatch(selectDeliveryMode(code, ussId, cartId));
     },
     getOrderSummary: () => {
       dispatch(getOrderSummary());
@@ -41,6 +41,18 @@ const mapDispatchToProps = dispatch => {
     },
     releaseCoupon: () => {
       dispatch(releaseCoupon());
+    },
+    selectDeliveryMode: (code, ussId, cartId) => {
+      dispatch(selectDeliveryMode(code, ussId, cartId));
+    },
+    getAllStoresCNC: pinCode => {
+      dispatch(getAllStoresCNC(pinCode));
+    },
+    addStoreCNC: (ussId, slaveId) => {
+      dispatch(addStoreCNC(ussId, slaveId));
+    },
+    addPickupPersonCNC: (personMobile, personName) => {
+      dispatch(addPickupPersonCNC(personMobile, personName));
     }
   };
 };

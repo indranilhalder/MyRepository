@@ -990,7 +990,7 @@ export function addPickUpPersonFailure(error) {
   };
 }
 
-// Action Creator to Add Pick Up Person with personObject containing "personMobile" and "personName" as params
+// Action Creator to Add Pick Up Person
 export function addPickupPersonCNC(personMobile, personName) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
