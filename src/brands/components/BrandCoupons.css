@@ -4,29 +4,13 @@
 	display       : inline-block;
 	vertical-align: middle;
 	color         : #000;
-	padding       : 10px 15px;
 }
-.headingText {
-	width      : 70%;
-	color      : #000000;
-	font-size  : 14px;
-	font-family: semibold;
-	margin     : auto;
-	text-align : left;
-	line-height: 25px;
-	display    : inline-block;
-	top        : 0;
-}
-.timeText {
-	width      : 30%;
-	color      : #000000;
-	font-size  : 14px;
-	margin     : auto;
-	line-height: 30px;
-	display    : inline-block;
-	top        : 0;
-	right      : 0;
-	text-align : left;
+.couponInerBox {
+	width         : 100%;
+	height        : auto;
+	display       : inline-block;
+	vertical-align: middle;
+	margin-bottom : 10px;
 }
 .label {
 	width      : 100%;
@@ -38,22 +22,15 @@
 	line-height: 20px;
 	display    : inline-block;
 }
-
 .imageHolder {
 	width         : 100%;
 	height        : auto;
 	left          : 0;
-	top           : 20px;
+	margin-top    : 20px;
 	padding-bottom: 50%;
 	display       : inline-block;
 	position      : relative;
 
-}
-.couponInerBox {
-	width         : 100%;
-	height        : auto;
-	display       : inline-block;
-	vertical-align: middle;
 }
 .image{
 	width   : 100%;
@@ -62,3 +39,27 @@
 	left    : 0;
 	top     : 0;
 }
+.headingText {
+	width      : 70%;
+	color      : #000000;
+	font-size  : 14px;
+	font-family: semibold;
+	margin     : auto;
+	text-align : left;
+	line-height: 20px;
+	display    : inline-block;
+}
+.timeText {
+	width     : 30%;
+	color     : #000000;
+	font-size : 14px;
+	margin    : auto;
+	display   : inline-block;
+	top       : 0;
+	right     : 0;
+	text-align: right;
+}
+
+
+
+
