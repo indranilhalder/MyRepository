@@ -25,6 +25,7 @@ export default class PdpElectronics extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
     const productData = this.props;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -70,33 +71,24 @@ export default class PdpElectronics extends React.Component {
               onClick={this.goToCouponPage}
             />
           )}
-          {productData.variantOptions &&
-            productData.variantOptions.showColor && (
-              <React.Fragment>
-                <ColourSelector
-                  data={productData.variantOptions.colorlink}
-                  selected={productData.variantOptions.colorlink
-                    .filter(option => {
-                      return option.selected;
-                    })
-                    .map(value => {
-                      return value.color;
-                    })}
-                  updateColour={val => {}}
-                  getProductSpecification={this.props.getProductSpecification}
-                />
-                <SizeSelector
-                  showSizeGuide={this.props.showSizeGuide}
-                  data={productData.variantOptions.colorlink
-                    .filter(option => {
-                      return option.selected;
-                    })
-                    .map(value => {
-                      return value.sizelink;
-                    })}
-                />
-              </React.Fragment>
-            )}
+          {productData.variantOptions && (
+            <React.Fragment>
+              <ColourSelector
+                data={productData.variantOptions.map(value => {
+                  return value.colorlink;
+                })}
+                history={this.props.history}
+                updateColour={val => {}}
+                getProductSpecification={this.props.getProductSpecification}
+              />
+              <SizeSelector
+                showSizeGuide={this.props.showSizeGuide}
+                data={productData.variantOptions.map(value => {
+                  return value.sizelink;
+                })}
+              />
+            </React.Fragment>
+          )}
           {productData.eligibleDeliveryModes &&
             productData.eligibleDeliveryModes.map((val, idx) => {
               return (
