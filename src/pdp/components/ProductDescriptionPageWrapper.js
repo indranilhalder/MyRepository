@@ -12,10 +12,10 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     this.props.getProductDescription(this.props.match.params[2]);
   }
 
-  renderRootCategory = (datumType, productDetails) => {
+  renderRootCategory = datumType => {
     return (
       <React.Fragment>
-        {typeComponentMapping[datumType](productDetails)}
+        {typeComponentMapping[datumType]({ ...this.props })}
       </React.Fragment>
     );
   };
@@ -24,10 +24,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     if (this.props.productDetails) {
       return (
         <div>
-          {this.renderRootCategory(
-            this.props.productDetails.rootCategory,
-            this.props.productDetails
-          )}
+          {this.renderRootCategory(this.props.productDetails.rootCategory)}
         </div>
       );
     } else {

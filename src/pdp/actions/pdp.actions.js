@@ -179,17 +179,25 @@ export function addProductToWishListFailure(error) {
   };
 }
 
-export function addProductToWishList(productDetails) {
+export function addProductToWishList(userId, accessToken, productDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToWishListRequest());
     try {
-      const result = await api.postMock(ADD_PRODUCT_TO_WISH_LIST);
+      const result = await api.post(
+        `${PRODUCT_DETAILS_PATH}/${userId}/addProductInWishlist?platformNumber=2&access_token=${accessToken}&isPwa=true&ussid=${
+          productDetails.ussId
+        }&productCode=${productDetails.code}&wishlistName=${
+          productDetails.wishListName
+        }`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+      console.log(resultJson);
       dispatch(addProductToWishListSuccess());
     } catch (e) {
+      console.log(e.message);
       dispatch(addProductToWishListFailure(e.message));
     }
   };
@@ -252,24 +260,26 @@ export function addProductToCartFailure(error) {
     error
   };
 }
-export function addProductToCart(productDetails) {
+
+export function addProductToCart(userId, cartId, accessToken, productDetails) {
   return async (dispatch, getState, { api }) => {
     dispatch(addProductToCartRequest());
     try {
       const result = await api.post(
-        `${PRODUCT_DETAILS_PATH}/${productDetails.userId}/carts/${
-          productDetails.cartId
-        }/addProductToCart?access_token=${
-          productDetails.accessToken
-        }&isPwa=true&platformNumber=2&productCode=MP000000000113789&USSID=273570HMAIBSSZ05&quantity=2&addedToCartWl=false`
+        `${PRODUCT_DETAILS_PATH}/${userId}/carts/${cartId}/addProductToCart?access_token=${accessToken}&isPwa=true&platformNumber=2&productCode=${
+          productDetails.code
+        }&USSID=${productDetails.ussId}&quantity=${
+          productDetails.quantity
+        }&addedToCartWl=false`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
+      console.log(resultJson);
       dispatch(addProductToCartSuccess());
     } catch (e) {
+      console.log(e.message);
       dispatch(addProductToCartFailure(e.message));
     }
   };

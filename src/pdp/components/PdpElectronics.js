@@ -15,17 +15,80 @@ import DeliveryInformation from "../../general/components/DeliveryInformations.j
 import Logo from "../../general/components/Logo.js";
 import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
-
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS,
+  ANONYMOUS_USER
+} from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
+const PRODUCT_QUANTITY = "1";
 export default class PdpElectronics extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
     }
   }
+
+  addToCart = () => {
+    let productDetails = {};
+    productDetails.code = this.props.productListingId;
+    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.props.productDetails.winningUssID;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    if (userDetails) {
+      this.props.addProductToCart(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(cartDetailsLoggedInUser).code,
+        JSON.parse(customerCookie).access_token,
+        productDetails
+      );
+    } else {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
+    }
+  };
+
+  addToWishList = () => {
+    let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.ussId = this.props.productDetails.winningUssID;
+    productDetails.wishListName = "MyWishList";
+
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    if (userDetails) {
+      this.props.addProductToWishList(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(customerCookie).access_token,
+        productDetails
+      );
+    } else {
+      this.props.addProductToWishList(
+        ANONYMOUS_USER,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
+    }
+  };
   render() {
-    const productData = this.props;
+    const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -37,7 +100,10 @@ export default class PdpElectronics extends React.Component {
       });
     if (productData) {
       return (
-        <PdpFrame>
+        <PdpFrame
+          addProductToBag={() => this.addToCart()}
+          addProductToWishList={() => this.addToWishList()}
+        >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
               return <Image image={val} key={idx} />;
