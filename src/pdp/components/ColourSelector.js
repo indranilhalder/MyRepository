@@ -14,12 +14,8 @@ export default class ColourSelector extends React.Component {
   updateColour(productUrl) {
     console.log(productUrl);
     console.log(PRODUCT_DESCRIPTION_ROUTER);
-    // this.setState({ displayColour: val }, () => {
-    //   if (this.props.updateColour) {
-    //     this.props.getProductSpecification(productUrl);
-    //   }
-    // });
-    // this.props.history.push(`${PRODUCT_DESCRIPTION_ROUTER}/${productUrl}`);
+
+    this.props.history.push(`${PRODUCT_DESCRIPTION_ROUTER}/${productUrl}`);
     this.props.history.push(`${productUrl}`);
   }
   render() {

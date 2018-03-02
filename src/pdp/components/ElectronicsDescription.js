@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { Image } from "xelpmoc-core";
 export default class ElectronicsDescription extends React.Component {
   render() {
-    //console.log(this.props.value.textList);
     if (this.props.value.textList) {
       if (this.props.value.textList[0]) {
         console.log(

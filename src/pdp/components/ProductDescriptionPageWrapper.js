@@ -8,15 +8,21 @@ const typeComponentMapping = {
   "FashionJewellery":props => <ProductDescriptionPage {...props} />,
   "Clothing":props => <PdpApparel {...props} />
 };
+
+const PRODUCT_CODE_REGEX = /(.*)/;
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
+    console.log("IN COMPONENT DID MOUNT");
+    console.log(this.props.match);
+
     this.props.getProductDescription(this.props.match.params[2]);
+    this.props.getMsdRequest(this.props.match.params[2]);
   }
 
-  renderRootCategory = (datumType, productDetails, history) => {
+  renderRootCategory = datumType => {
     return (
       <React.Fragment>
-        {typeComponentMapping[datumType](productDetails, history)}
+        {typeComponentMapping[datumType]({ ...this.props })}
       </React.Fragment>
     );
   };
@@ -25,11 +31,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
     if (this.props.productDetails) {
       return (
         <div>
-          {this.renderRootCategory(
-            this.props.productDetails.rootCategory,
-            this.props.productDetails,
-            this.props.history
-          )}
+          {this.renderRootCategory(this.props.productDetails.rootCategory)}
         </div>
       );
     } else {

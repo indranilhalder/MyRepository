@@ -1,0 +1,24 @@
+.base {
+	width         : 100%;
+	height        : auto;
+	display       : inline-block;
+	vertical-align: middle;
+	text-align    : center;
+}
+.iconeHolder {
+	width     : 25px;
+	height    : 25px;
+	position  : relative;
+	display   : inline-block;
+	transition: 600ms;
+}
+.ProfileMenuText {
+	width      : 100%;
+	height     : auto;
+	font-family: regular;
+	font-size  : 12px;
+	line-height: 14px;
+	text-align : center;
+	color      : #ffffff;
+	transition : 300ms;
+}

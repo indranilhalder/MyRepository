@@ -8,6 +8,7 @@ export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 
 export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
+export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
 export async function postAdobeTargetUrl(
   path: null,
@@ -121,5 +122,13 @@ export async function putMock(url, payload) {
     headers: {
       access_token: localStorage.getItem("authorizationKey")
     }
+  });
+}
+
+export async function postMsd(url, payload) {
+  return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
+    method: "POST",
+
+    body: payload
   });
 }
