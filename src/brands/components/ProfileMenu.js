@@ -3,14 +3,17 @@ import PropTypes from "prop-types";
 import styles from "./ProfileMenu.css";
 import { Icon } from "xelpmoc-core";
 export default class ProfileMenu extends React.Component {
-  onSelect() {
-    if (this.props.selectItem) {
-      this.props.selectItem();
+  onSave(value) {
+    if (this.props.onSave) {
+      this.props.onSave(value);
     }
   }
   render() {
     return (
-      <div className={styles.base} onClick={() => this.onSelect()}>
+      <div
+        className={styles.base}
+        onClick={value => this.onSave({ value: this.props.text })}
+      >
         <div className={styles.iconeHolder}>
           <Icon image={this.props.image} size={25} />
         </div>
@@ -21,6 +24,6 @@ export default class ProfileMenu extends React.Component {
 }
 
 ProfileMenu.propTypes = {
-  onClick: PropTypes.func,
+  onSave: PropTypes.func,
   text: PropTypes.string
 };

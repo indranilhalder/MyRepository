@@ -4,6 +4,11 @@ import ProfileMenu from "./ProfileMenu";
 import PropTypes from "prop-types";
 import styles from "./ProfileMenuGrid.css";
 export default class ProfileMenuGrid extends React.Component {
+  onSave(value) {
+    if (this.props.onSave) {
+      this.props.onSave(value);
+    }
+  }
   render() {
     const data = this.props.data;
     return (
@@ -11,7 +16,12 @@ export default class ProfileMenuGrid extends React.Component {
         <Grid elementWidthMobile={33.33}>
           {data.map((datum, i) => {
             return (
-              <ProfileMenu image={datum.image} text={datum.text} key={i} />
+              <ProfileMenu
+                image={datum.image}
+                text={datum.text}
+                key={i}
+                onSave={value => this.onSave(value)}
+              />
             );
           })}
         </Grid>
