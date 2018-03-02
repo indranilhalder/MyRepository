@@ -1,8 +1,9 @@
 import React from "react";
+import PdpElectronics from "./PdpElectronics";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 // prettier-ignore
 const typeComponentMapping = {
-  "Electronics": props => <ProductDescriptionPage {...props} />,
+  "Electronics": props => <PdpElectronics {...props} />,
   "FashionJewellery":props => <ProductDescriptionPage {...props} />,
   "Clothing":props => <ProductDescriptionPage {...props} />
 };
