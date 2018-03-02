@@ -5,14 +5,13 @@
   border-radius   : 4px;
   padding         : 10px 20px;
 }
-
 .couponInnerBox {
   width   : 100%;
   height  : auto;
   position: relative;
   padding : 0px 50px 0px 50px;
 }
-.headingText {
+.headingText  {
   width      : 100%;
   color      : #000000;
   font-size  : 14px;
@@ -21,13 +20,13 @@
   text-align : left;
   line-height: 25px;
 }
-.couponNumber{
+.couponNumber  {
 
   composes   : headingText;
   font-size  : 18px;
   font-family: semibold;
 }
-.lebelText{
+.lebelText  {
   composes: headingText;
 }
 .couponIcon {
@@ -37,18 +36,18 @@
   left    : 0;
   top     : 0;
 }
-.coupounFooter{
+.couponFooter  {
   height    : 154px;
   width     : 100%;
   margin-top: 25px;
 }
-.coupounFooterHolder{
+.couponFooterHolder  {
   width  : 100%;
   height : 100%;
   display: inline-block;
 
 }
-.coupounInformation{
+.couponInformation  {
   width      : 50%;
   height     : auto;
   display    : inline-block;

@@ -3,7 +3,6 @@ import styles from "./MyCoupons.css";
 import { Icon } from "xelpmoc-core";
 import PropTypes from "prop-types";
 import couponIcon from "../../general/components/img/coupon-1.svg";
-
 export default class MyCoupons extends React.Component {
   render() {
     return (
@@ -16,24 +15,24 @@ export default class MyCoupons extends React.Component {
         </div>
         <div className={styles.couponNumber}>{this.props.couponNumber}</div>
         <div className={styles.lebelText}>{this.props.label}</div>
-        <div className={styles.coupounFooter}>
-          <div className={styles.coupounFooterHolder}>
-            <div className={styles.coupounInformation}>
+        <div className={styles.couponFooter}>
+          <div className={styles.couponFooterHolder}>
+            <div className={styles.couponInformation}>
               {this.props.maxRedemption}
             </div>
-            <div className={styles.coupounInformation}>
+            <div className={styles.couponInformation}>
               {this.props.maxRedemptionValue}
             </div>
-            <div className={styles.coupounInformation}>
+            <div className={styles.couponInformation}>
               {this.props.creationDate}
             </div>
-            <div className={styles.coupounInformation}>
+            <div className={styles.couponInformation}>
               {this.props.creationDateValue}
             </div>
-            <div className={styles.coupounInformation}>
+            <div className={styles.couponInformation}>
               {this.props.expiryDate}
             </div>
-            <div className={styles.coupounInformation}>
+            <div className={styles.couponInformation}>
               {this.props.expiryDateValue}
             </div>
           </div>
