@@ -974,11 +974,11 @@ export function addPickUpPersonRequest() {
   };
 }
 
-export function addPickUpPersonSuccess(personAssigned) {
+export function addPickUpPersonSuccess(cartDetailsCNC) {
   return {
     type: ADD_PICKUP_PERSON_SUCCESS,
     status: SUCCESS,
-    personAssigned
+    cartDetailsCNC
   };
 }
 
