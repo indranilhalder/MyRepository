@@ -1,0 +1,26 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.replaceContainer {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+}
+.replace {
+  font-size: 14px;
+  display: inline-block;
+  opacity: 0.5;
+}
+.reviewContainer {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: right;
+}
+.review {
+  font-size: 14px;
+  display: inline-block;
+}
