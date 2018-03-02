@@ -581,7 +581,7 @@ export function getProductReviews(productCode) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
-    dispatch(deleteProductReviewRequest());
+    dispatch(getProductReviewRequest());
     try {
       const result = await api.getMock(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/users/${
@@ -594,9 +594,9 @@ export function getProductReviews(productCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(deleteProductReviewSuccess(resultJson));
+      dispatch(getProductReviewSuccess(resultJson));
     } catch (e) {
-      dispatch(deleteProductReviewFailure(e.message));
+      dispatch(getProductReviewFailure(e.message));
     }
   };
 }
