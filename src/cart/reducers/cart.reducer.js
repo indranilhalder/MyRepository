@@ -35,7 +35,8 @@ const cart = (
 
     storeDetails: null,
     storeStatus: null,
-    storeError: null
+    storeError: null,
+    storeAdded: null
   },
   action
 ) => {
@@ -318,6 +319,26 @@ const cart = (
       });
 
     case cartActions.GET_ALL_STORES_CNC_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_STORE_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeAdded: action.storeAdded,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_FAILURE:
       return Object.assign({}, state, {
         storeStatus: action.status,
         storeError: action.error,
