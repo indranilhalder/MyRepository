@@ -9,9 +9,10 @@ class ProductListingsPage extends Component {
       </div>
     );
   }
-
   render() {
-    if (this.props.loading) {
+    console.log("PRODUCT LISTINGS PAGE");
+    console.log(this.props.pageNumber);
+    if (this.props.loading && this.props.pageNumber === 0) {
       return this.renderLoader();
     } else if (this.props.productListings !== null) {
       return (
