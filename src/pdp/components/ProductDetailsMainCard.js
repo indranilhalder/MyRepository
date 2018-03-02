@@ -25,12 +25,10 @@ export default class ProductDetailsMainCard extends React.Component {
             </div>
           </div>
           <div className={styles.productPriceSection}>
-            <div className={styles.price}>{`Rs. ${displayPrice}`}</div>
+            <div className={styles.price}>{displayPrice}</div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
-                <div className={styles.priceCancelled}>
-                  {`Rs. ${this.props.price}`}
-                </div>
+                <div className={styles.priceCancelled}>{this.props.price}</div>
               )}
           </div>
         </div>

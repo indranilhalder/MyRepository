@@ -61,7 +61,11 @@ export default class Filter extends React.Component {
   }
 
   render() {
+    // If state.pageNumber is 0, then we need to display the category section
+    //
+
     const filterDatum = this.props.filterData[this.state.pageNumber];
+
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>

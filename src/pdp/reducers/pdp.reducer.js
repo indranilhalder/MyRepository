@@ -7,7 +7,10 @@ const productDescription = (
     productDetails: null,
     sizeGuide: null,
     emiResult: null,
-    wishList: null
+    wishList: null,
+    reviews: null,
+    reviewsStatus: null,
+    reviewsError: null
   },
   action
 ) => {
@@ -19,7 +22,6 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_SUCCESS:
-      console.log(action.productDescription);
       return Object.assign({}, state, {
         status: action.status,
         productDetails: action.productDescription,
@@ -189,6 +191,83 @@ const productDescription = (
         error: action.error,
         loading: false
       });
+
+    case pdpActions.ADD_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.ADD_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: false
+      });
+
+    case pdpActions.ADD_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+
+    case pdpActions.EDIT_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.EDIT_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: false
+      });
+
+    case pdpActions.EDIT_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+    case pdpActions.DELETE_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.DELETE_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: false
+      });
+
+    case pdpActions.DELETE_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+
+    case pdpActions.GET_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.GET_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviews: action.reviews,
+        loading: false
+      });
+
+    case pdpActions.GET_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+
     default:
       return state;
   }
