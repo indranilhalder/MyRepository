@@ -14,22 +14,19 @@
 	margin     : auto;
 	text-align : left;
 	line-height: 25px;
-	position   : absolute;
 	display    : inline-block;
 	top        : 0;
 }
 .timeText {
-	width       : 100%;
-	color       : #000000;
-	font-size   : 14px;
-	margin      : auto;
-	line-height : 30px;
-	display     : inline-block;
-	padding-left: 75%;
-	top         : 0;
-	right       : 0;
-	text-align  : left;
-	position    : absolute;
+	width      : 30%;
+	color      : #000000;
+	font-size  : 14px;
+	margin     : auto;
+	line-height: 30px;
+	display    : inline-block;
+	top        : 0;
+	right      : 0;
+	text-align : left;
 }
 .label {
 	width      : 100%;
@@ -52,9 +49,7 @@
 }
 .couponInerBox {
 	width         : 100%;
+	height        : auto;
 	display       : inline-block;
 	vertical-align: middle;
-	color         : #000;
-	height        : auto;
-
 }
