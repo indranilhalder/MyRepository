@@ -58,64 +58,18 @@ export function getProductListings(suffix: null, paginated: false) {
       console.log(getState().search);
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
-      console.log("PRODUCT LISTINGS CALLED");
-      console.log(searchState);
-      let searchString = searchState.string ? searchState.string : "";
-      const filters = searchState.filters;
-
-      // TODO brand or category filters must always come first.
-      const sortString = searchState.sort ? searchState.sort : "";
-      let filterString = "";
-      let queryString = `${PRODUCT_LISTINGS_PATH}`;
-      console.log("BEFORE FILTERS");
-      console.log(filters);
-      if (filters) {
-        each(filters, filterObj => {
-          const key = filterObj.key;
-          const filterValues = filterObj.filters;
-          each(filterValues, filterValue => {
-            if (filterString.length === 0) {
-              filterString = `${filterString}${key}:${filterValue}`;
-            } else {
-              filterString = `${filterString}:${key}:${filterValue}`;
-            }
-          });
-        });
-      }
-      console.log("WTF");
-      console.log(sortString);
-      console.log(searchString);
-      console.log(filterString);
-      if (
-        sortString.length !== 0 ||
-        filterString.length !== 0 ||
-        searchString.length !== 0
-      ) {
-        console.log("IN SIDE IF");
-        queryString = `${queryString}?searchText=`;
-
-        if (searchString.length > 0) {
-          queryString = `${queryString}${searchString}`;
-        }
-
-        if (sortString.length > 0) {
-          queryString = `${queryString}:${sortString}`;
-        }
-        if (filterString.length > 0) {
-          queryString = `${queryString}:${filterString}`;
-        }
-      }
-
-      console.log("AFTER FILTERS");
+      let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${
+        searchState.string
+      }`;
 
       if (suffix) {
         queryString = `${queryString}${suffix}`;
       }
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
+      const result = await api.get(queryString);
       console.log("QUERY STRING");
       console.log(queryString);
-      const result = await api.get(queryString);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

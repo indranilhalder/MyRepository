@@ -20,35 +20,34 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     const parsedQueryString = queryString.parse(this.props.location.search);
     console.log(parsedQueryString);
     const searchCategory = parsedQueryString.searchCategory;
+    let searchText = parsedQueryString.q;
 
     const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
     let match;
-    let filters;
     if (CATEGORY_REGEX.test(brandOrCategoryId)) {
       match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
       match = match.toUpperCase();
-      filters = [{ key: "category", filters: [`${match}`] }];
+      console.log("MATCH");
+      console.log(match);
+      searchText = `:relevance:category:${match}`;
     }
 
     if (BRAND_REGEX.test(brandOrCategoryId)) {
       match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
       match = match.toUpperCase();
-      filters = [{ key: "brand", filters: [`${match}`] }];
+      searchText = `:relevance:brand:${match}`;
     }
 
     if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
-      filters = [{ key: "category", filters: [`${searchCategory}`] }];
+      searchText = `:category:${searchCategory}`;
     }
 
-    if (parsedQueryString.q) {
-      const query = parsedQueryString.q;
-      const splitQueryString = query.split(":");
-      console.log(splitQueryString);
-      const searchText = splitQueryString[0];
+    if (!searchText) {
+      searchText = parsedQueryString.text;
     }
 
     // I can just assume that we need to set filters here.
-    this.props.getProductListings(parsedQueryString.text, filters, SUFFIX, 0);
+    this.props.getProductListings(searchText, SUFFIX, 0);
   }
 
   handleScroll = () => {
