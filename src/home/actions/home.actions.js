@@ -55,7 +55,7 @@ export function getItemsFailure(positionInFeed, errorMsg) {
   };
 }
 
-export function getItems(positionInFeed, itemIds) {
+export function getItems(positionInFeed, itemIds, isPdp: false) {
   return async (dispatch, getState, { api }) => {
     dispatch(getItemsRequest(positionInFeed));
     try {
@@ -70,6 +70,7 @@ export function getItems(positionInFeed, itemIds) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(getItemsSuccess(positionInFeed, resultJson.results));
     } catch (e) {
       dispatch(getItemsFailure(positionInFeed, e.message));
