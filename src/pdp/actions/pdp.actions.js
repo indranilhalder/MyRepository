@@ -45,7 +45,6 @@ export const PRODUCT_SPECIFICATION_FAILURE = "PRODUCT_SPECIFICATION_FAILURE";
 
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
-export const PRODUCT_DESCRIPTION_PATH = "pdp";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
 const CHANNEL = "channel";
@@ -55,6 +54,7 @@ const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
 const PRODUCT_SPECIFICATION_PATH = "marketplacewebservices/v2/mpl/products";
+const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products";
 
 export function getProductDescriptionRequest() {
   return {
@@ -77,11 +77,13 @@ export function getProductDescriptionFailure(error) {
     error
   };
 }
-export function getProductDescription() {
+export function getProductDescription(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductDescriptionRequest());
     try {
-      const result = await api.getMock(PRODUCT_DESCRIPTION_PATH);
+      const result = await api.get(
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
