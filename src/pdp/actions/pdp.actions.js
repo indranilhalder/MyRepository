@@ -296,11 +296,14 @@ export function getProductSizeGuideFailure(error) {
     error
   };
 }
-export function getProductSizeGuide() {
+
+export function getProductSizeGuide(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductSizeGuideRequest());
     try {
-      const result = await api.postMock(PRODUCT_SIZE_GUIDE_PATH);
+      const result = await api.get(
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide`
+      );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);

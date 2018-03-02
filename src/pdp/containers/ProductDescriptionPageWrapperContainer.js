@@ -1,5 +1,9 @@
 import { connect } from "react-redux";
-import { getProductDescription } from "../actions/pdp.actions";
+import {
+  getProductDescription,
+  addProductToCart,
+  getProductSizeGuide
+} from "../actions/pdp.actions";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
 
@@ -7,6 +11,12 @@ const mapDispatchToProps = dispatch => {
   return {
     getProductDescription: productCode => {
       dispatch(getProductDescription(productCode));
+    },
+    addProductToCart: productDetails => {
+      dispatch(addProductToCart(productDetails));
+    },
+    getProductSizeGuide: productCode => {
+      dispatch(getProductSizeGuide(productCode));
     }
   };
 };
