@@ -9,6 +9,7 @@ export default class StoresLocationBanner extends React.Component {
     let data = this.props.brandLocation;
     return (
       <div className={styles.base}>
+        <div className={styles.storeHedaer}>{this.props.storeHeader}</div>
         <BannerMobile>
           {data.map((datum, i) => {
             return (
@@ -25,7 +26,6 @@ export default class StoresLocationBanner extends React.Component {
     );
   }
 }
-StoresLocationBanner.propTypes = {};
 StoresLocationBanner.propTypes = {
   headingText: PropTypes.string,
   label: PropTypes.string,
