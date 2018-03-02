@@ -1,13 +1,13 @@
 import React from "react";
 import ProductListingsContainer from "../containers/ProductListingsContainer.js";
 import throttle from "lodash/throttle";
+import queryString from "query-string";
 
 const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
 const CAPTURE_REGEX = /c-(.*)/;
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
-
-// ?searchText=:relevance:category:MSH1012100&isFilter=false&isTextSearch=false&isPwa=false&page=0&pageSize=20&typeID=all --> is an url
+const SEARCH_CATEGORY_TO_IGNORE = "all";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
   componentDidMount() {
@@ -15,23 +15,34 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     // which does not happen now
     window.addEventListener("scroll", this.handleScroll);
 
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const searchCategory = parsedQueryString.searchCategory;
+    let searchText = parsedQueryString.q;
+
     const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
     let match;
-    let filters;
     if (CATEGORY_REGEX.test(brandOrCategoryId)) {
       match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
       match = match.toUpperCase();
-      filters = [{ key: "category", filters: [`${match}`] }];
+      searchText = `:relevance:category:${match}`;
     }
 
     if (BRAND_REGEX.test(brandOrCategoryId)) {
       match = CAPTURE_REGEX.exec(brandOrCategoryId)[1];
       match = match.toUpperCase();
-      filters = [{ key: "brand", filters: [`${match}`] }];
+      searchText = `:relevance:brand:${match}`;
+    }
+
+    if (searchCategory && searchCategory !== SEARCH_CATEGORY_TO_IGNORE) {
+      searchText = `:category:${searchCategory}`;
+    }
+
+    if (!searchText) {
+      searchText = parsedQueryString.text;
     }
 
     // I can just assume that we need to set filters here.
-    this.props.getProductListings(filters, SUFFIX, 0);
+    this.props.getProductListings(searchText, SUFFIX, 0);
   }
 
   handleScroll = () => {

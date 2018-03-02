@@ -43,8 +43,10 @@ import {
   ORDER_SUMMARY_ROUTER,
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
-  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PLP_CATEGORY_SEARCH
 } from "../src/lib/constants";
+import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
