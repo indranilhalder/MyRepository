@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Plp from "./Plp";
 class ProductListingsPage extends Component {
-  componentWillMount() {
-    this.props.getProductListings();
-  }
-
   renderLoader() {
     return (
       <div>

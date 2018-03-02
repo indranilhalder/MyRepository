@@ -19,7 +19,6 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_SUCCESS:
-      console.log(action.productDescription);
       return Object.assign({}, state, {
         status: action.status,
         productDetails: action.productDescription,

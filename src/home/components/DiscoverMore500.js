@@ -2,26 +2,32 @@ import React from "react";
 import Grid from "../../general/components/Grid";
 import CategoryWithName from "../../general/components/CategoryWithName";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 import styles from "./DiscoverMore500.css";
-export default class DiscoverMore500 extends React.Component {
-  render() {
-    const componentData = this.props.feedComponentData;
+class DiscoverMore500 extends React.Component {
+  handleClick = webUrl => {
+    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
+  };
 
+  render() {
+    const { feedComponentData } = this.props;
     return (
       <div className={styles.base}>
-        <div className={styles.header}>
-          {this.props.feedComponentData.title}
-        </div>
+        <div className={styles.header}>{feedComponentData.title}</div>
         <Grid elementWidthMobile={33.33} offset={20}>
-          {componentData &&
-            componentData.data &&
-            componentData.data.map((datum, i) => {
+          {feedComponentData &&
+            feedComponentData.data &&
+            feedComponentData.data.map((datum, i) => {
               return (
                 <CategoryWithName
                   image={datum.imageURL}
                   label={datum.title}
                   key={i}
+                  value={datum.webURL}
+                  onClick={this.handleClick}
                 />
               );
             })}
@@ -30,6 +36,8 @@ export default class DiscoverMore500 extends React.Component {
     );
   }
 }
+
+export default withRouter(DiscoverMore500);
 DiscoverMore500.propTypes = {
   feedComponentData: PropTypes.shape({
     data: PropTypes.shape({
