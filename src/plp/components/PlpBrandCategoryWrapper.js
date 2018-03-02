@@ -11,7 +11,6 @@ const SUFFIX = `&isTextSearch=false&isFilter=false`;
 
 export default class PlpBrandCategoryWrapper extends React.Component {
   componentDidMount() {
-    console.log("COMPONENT DID MOUNT CALLED");
     // this will do the check for category or brand
     // which does not happen now
     window.addEventListener("scroll", this.handleScroll);

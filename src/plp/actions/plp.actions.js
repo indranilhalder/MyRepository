@@ -24,8 +24,6 @@ export function setPage(pageNumber) {
 }
 
 export function getProductListingsPaginatedSuccess(productListings) {
-  console.log("GET PRODUCT LISTINGS PAGINATED SUCCESS");
-  console.log(productListings);
   return {
     type: GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS,
     productListings
