@@ -26,7 +26,7 @@ export default class SizeSelector extends React.Component {
             />
           </div>
         </div>
-        <CarouselWithSelect elementWidthMobile={18} limit={1}>
+        <CarouselWithSelect elementWidthMobile={22} limit={1}>
           {data.map((datum, i) => {
             return (
               <SizeSelect
@@ -34,6 +34,7 @@ export default class SizeSelector extends React.Component {
                 selected={this.props.selected}
                 size={datum.size}
                 value={datum.size}
+                fontSize={this.props.textSize}
               />
             );
           })}
@@ -51,5 +52,6 @@ SizeSelector.propTypes = {
         selected: PropTypes.bool
       })
     )
-  )
+  ),
+  textSize: PropTypes.oneOfType([PropTypes.string, PropTypes.string])
 };

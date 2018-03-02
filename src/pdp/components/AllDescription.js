@@ -21,26 +21,37 @@ export default class AllDescription extends React.Component {
     });
   }
   render() {
+    const dataList = this.props.productContent
+      .sort((a, b) => {
+        if (a.key < b.key) {
+          return -1;
+        }
+        if (a.key > b.key) {
+          return 1;
+        }
+        return 0;
+      })
+      .map(val => {
+        return val.value;
+      });
+
     return (
       <div className={styles.base}>
         <div className={styles.descriptionList}>
-          {this.props.descriptionList &&
-            this.props.descriptionList
+          {dataList &&
+            dataList
               .filter((val, i) => {
-                return !this.state.showAll ? i < 1 : true;
+                return !this.state.showAll ? i < 2 : true;
               })
               .map((val, i) => {
-                return (
-                  <ElectronicsDescription
-                    imageUrl={val.imageUrl}
-                    descriptionHeader={val.descriptionHeader}
-                    description={val.description}
-                    value={i}
-                  />
-                );
+                return <ElectronicsDescription value={val} />;
               })}
         </div>
-        <div className={styles.buttonHolder}>
+        <div
+          className={
+            !this.state.showAll ? styles.buttonHolder : styles.noBackground
+          }
+        >
           <div className={styles.button}>
             <Button
               type="hollow"
