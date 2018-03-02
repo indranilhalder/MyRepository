@@ -11,7 +11,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   componentDidMount() {
     // this will do the check for category or brand
     // which does not happen now
-    console.log(this.props);
     const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
     let match;
     if (CATEGORY_REGEX.test(brandOrCategoryId)) {

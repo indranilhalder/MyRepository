@@ -65,8 +65,6 @@ export default class ProductGrid extends React.Component {
     // }
   };
   render() {
-    console.log("IN PRODUCT GRID");
-    console.log(this.props.data);
     return (
       <div className={styles.base}>
         <div className={styles.header}>

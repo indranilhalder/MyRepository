@@ -34,9 +34,6 @@ export async function postAdobeTargetUrl(
     url = `${HOME_FEED_API_ROOT}`;
   }
 
-  console.log("URL");
-  console.log(url);
-
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify({
@@ -55,9 +52,6 @@ export async function post(path, postData, doNotUseApiRoot: false) {
   if (doNotUseApiRoot) {
     url = path;
   }
-  console.log("IN POST");
-  console.log(JSON.stringify(postData));
-  console.log(url);
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
