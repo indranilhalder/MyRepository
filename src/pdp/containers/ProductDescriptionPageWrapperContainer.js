@@ -32,7 +32,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
-    msdRequest: state.productDescription.msdRequest,
+    msdItems: state.productDescription.msdItems,
     sizeGuide: state.productDescription.sizeGuide
   };
 };

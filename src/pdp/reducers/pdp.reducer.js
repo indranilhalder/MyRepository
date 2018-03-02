@@ -11,7 +11,7 @@ const productDescription = (
     reviews: null,
     reviewsStatus: null,
     reviewsError: null,
-    msdRequest: null
+    msdItems: null
   },
   action
 ) => {
@@ -278,7 +278,7 @@ const productDescription = (
     case pdpActions.PRODUCT_MSD_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
-        msdRequest: action.msdRequest,
+        msdItems: action.msdItems,
         loading: false
       });
 

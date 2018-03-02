@@ -624,11 +624,11 @@ export function productMsdRequest() {
     status: REQUESTING
   };
 }
-export function productMsdSuccess(msdRequest) {
+export function productMsdSuccess(msdItems) {
   return {
     type: PRODUCT_MSD_SUCCESS,
     status: SUCCESS,
-    msdRequest
+    msdItems
   };
 }
 
