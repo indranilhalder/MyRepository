@@ -38,8 +38,6 @@ class FeedComponent extends React.Component {
         >
           {data &&
             data.map((datum, i) => {
-              console.log("DATUM");
-              console.log(datum);
               return (
                 <ProductModule
                   key={i}

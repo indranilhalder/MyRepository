@@ -21,8 +21,6 @@ class DiscoverMore500 extends React.Component {
           {feedComponentData &&
             feedComponentData.data &&
             feedComponentData.data.map((datum, i) => {
-              console.log("FEED COMPONENT DATUM");
-              console.log(datum.webURL);
               return (
                 <CategoryWithName
                   image={datum.imageURL}

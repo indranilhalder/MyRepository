@@ -12,7 +12,6 @@ export default class ThemeProductWidget extends React.Component {
   }
   render() {
     const data = transformData(this.props.feedComponentData);
-    console.log(data);
     return (
       <div
         className={styles.base}

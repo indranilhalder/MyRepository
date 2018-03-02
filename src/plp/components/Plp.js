@@ -21,8 +21,6 @@ export default class Plp extends React.Component {
     }
   };
   handleBackClick = () => {
-    console.log("HISTORY");
-    console.log(this.props.history);
     this.props.history.goBack();
     if (this.props.onBack) {
       this.props.onBack();

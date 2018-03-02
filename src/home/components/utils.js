@@ -8,8 +8,6 @@ export function transformData(datum) {
   if (!title) {
     title = datum.title;
   }
-  console.log("IN TRANSFORM DATA");
-  console.log(datum);
   return {
     image: image,
     video: datum.video,

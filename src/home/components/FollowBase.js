@@ -20,8 +20,6 @@ export default class FollowBase extends React.Component {
             feedComponentData.data &&
             (feedComponentData.data.length > 0 &&
               feedComponentData.data.map(datum => {
-                console.log("FOLLOW BASE");
-                console.log(datum.webURL);
                 return (
                   <NewBrand
                     image={datum.imageURL}

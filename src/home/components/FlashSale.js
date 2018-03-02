@@ -52,8 +52,6 @@ export default class FlashSale extends React.Component {
     });
     let offersAndItemsArray = concat(feedComponentData.offers, items);
 
-    console.log("FLASH SALE");
-    console.log(feedComponentData);
     return (
       <div
         className={styles.base}

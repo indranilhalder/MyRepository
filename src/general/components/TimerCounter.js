@@ -14,7 +14,6 @@ export default class Counter extends React.Component {
     let endTime = this.props.endTime;
     const regex = /(.*)\/(.*)\/(.*) (\d+):(\d+):(\d+)/;
     const match = regex.exec(endTime);
-    console.log(match);
     const newDateStr = `${match[2]}/${match[1]}/${match[3]} ${match[4]}:${
       match[5]
     }:${match[6]}`;
