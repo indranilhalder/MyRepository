@@ -7,6 +7,8 @@ import styles from "./ProductModule.css";
 import downloadIcon from "./img/download.svg";
 import downloadIconWhite from "./img/downloadWhite.svg";
 import ProductInfo from "./ProductInfo.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class ProductModule extends React.Component {
   onDownload = () => {
     if (this.props.onDownload) {
@@ -14,6 +16,13 @@ export default class ProductModule extends React.Component {
     }
   };
   onClick = () => {
+    if (this.props.webURL) {
+      const urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "");
+      this.props.history.push(urlSuffix);
+    } else if (this.props.productListingId) {
+      const urlSuffix = `p-${this.props.productListingId.toLowerCase()}`;
+      this.props.history.push(urlSuffix);
+    }
     if (this.props.onClick) {
       this.props.onClick();
     }

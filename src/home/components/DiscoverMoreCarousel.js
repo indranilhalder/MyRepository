@@ -3,8 +3,14 @@ import Carousel from "../../general/components/Carousel";
 import CircleProductImage from "../../general/components/CircleProductImage";
 import PropTypes from "prop-types";
 import styles from "./DiscoverMoreCarousel.css";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+import { withRouter } from "react-router";
 
-export default class DiscoverMoreCarousel extends React.Component {
+class DiscoverMoreCarousel extends React.Component {
+  handleClick = webUrl => {
+    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
+  };
   render() {
     const discoverMoreCarouselData = this.props.feedComponentData;
     return (
@@ -17,6 +23,8 @@ export default class DiscoverMoreCarousel extends React.Component {
                   image={datum.imageURL}
                   label={datum.title}
                   key={i}
+                  value={datum.webURL}
+                  onClick={this.handleClick}
                 />
               );
             })}
@@ -25,6 +33,8 @@ export default class DiscoverMoreCarousel extends React.Component {
     );
   }
 }
+
+export default withRouter(DiscoverMoreCarousel);
 DiscoverMoreCarousel.propTypes = {
   header: PropTypes.string,
   discoverMoreCarouselData: PropTypes.object
