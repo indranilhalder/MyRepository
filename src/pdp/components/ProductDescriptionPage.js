@@ -28,7 +28,7 @@ import {
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
-const PRODUCT_CODE_FOR_HOME = "mp000000000113243";
+const PRODUCT_CODE_FOR_HOME = "mp000000000169248";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
     this.props.getProductDescription(PRODUCT_CODE_FOR_HOME);

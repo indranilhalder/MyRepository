@@ -20,9 +20,10 @@ export const BRAND_OR_CATEGORY_LANDING_PAGE =
   "/:brandOrCategory/:brandOrCategoryId";
 export const PRODUCT_LISTINGS = "/productListings";
 export const SEARCH_RESULTS_PAGE = "/search";
-
 export const HOME_ROUTER = "/home";
-export const PRODUCT_DESCRIPTION_ROUTER = "/productDescription";
+export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
+export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/(p-.*)";
+export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
 export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
