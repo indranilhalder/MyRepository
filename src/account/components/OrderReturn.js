@@ -17,7 +17,7 @@ export default class OrderReturn extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.replaceContainer}>
+        <div className={styles.replaceHolder}>
           <div className={styles.replace}>
             <ColourButton
               label={this.props.buttonLabel}
@@ -25,7 +25,7 @@ export default class OrderReturn extends React.Component {
             />
           </div>
         </div>
-        <div className={styles.reviewContainer}>
+        <div className={styles.reviewHolder}>
           <div className={styles.review} onClick={() => this.writeReview()}>
             <UnderLinedButton
               label={this.props.underlineButtonLabel}
