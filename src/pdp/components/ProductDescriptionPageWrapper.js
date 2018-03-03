@@ -1,7 +1,9 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
 import PdpApparel from "./PdpApparel";
+import styles from "./ProductDescriptionPageWrapper.css";
 import ProductDescriptionPage from "./ProductDescriptionPage";
+import MDSpinner from "react-md-spinner";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
@@ -47,10 +49,18 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   renderRootCategory = datumType => {
     return (
       <React.Fragment>
-        {typeComponentMapping[datumType]({ ...this.props })}
+        {typeComponentMapping[datumType] &&
+          typeComponentMapping[datumType]({ ...this.props })}
       </React.Fragment>
     );
   };
+  renderLoader() {
+    return (
+      <div className={styles.loadingIndicator}>
+        <MDSpinner />
+      </div>
+    );
+  }
 
   render() {
     if (this.props.productDetails) {
@@ -60,7 +70,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         </div>
       );
     } else {
-      return null;
+      return this.renderLoader();
     }
   }
 }
