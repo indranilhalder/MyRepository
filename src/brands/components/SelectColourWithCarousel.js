@@ -1,11 +1,7 @@
 import React from "react";
 import styles from "./SelectColourWithCarousel.css";
-import { Image } from "xelpmoc-core";
-import Button from "../../general/components/Button";
 import PropTypes from "prop-types";
-import Logo from "../../general/components/Logo";
 import ColourSelect from "../../pdp/components/ColourSelect";
-import GridSelect from "../../general/components/GridSelect";
 import Carousel from "../../general/components/Carousel";
 export default class SelectColourWithCarousel extends React.Component {
   render() {
@@ -29,4 +25,12 @@ export default class SelectColourWithCarousel extends React.Component {
     );
   }
 }
-SelectColourWithCarousel.propTypes = {};
+SelectColourWithCarousel.propTypes = {
+  multipleColour: PropTypes.arrayOf(
+    PropTypes.shape({
+      colour: PropTypes.string,
+      selected: PropTypes.boolean
+    })
+  ),
+  heading: PropTypes.string
+};
