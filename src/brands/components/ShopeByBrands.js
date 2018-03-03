@@ -3,14 +3,14 @@ import ShopeByBrandLists from "./ShopeByBrandLists.js";
 import styles from "./ShopeByBrands.css";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
-const numberOfVisibleItem = 8;
+const NUMBER_OFVISIBLE_ITEM = 8;
 export default class ShopeByBrands extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showAll: false,
       label: `view  ${this.props.brandLists.length -
-        numberOfVisibleItem} more brands`
+        NUMBER_OFVISIBLE_ITEM} more brands`
     };
   }
   showMore() {
@@ -18,7 +18,7 @@ export default class ShopeByBrands extends React.Component {
       if (this.state.label === "View Less") {
         this.setState({
           label: `view  ${this.props.brandLists.length -
-            numberOfVisibleItem} more brands`
+            NUMBER_OFVISIBLE_ITEM} more brands`
         });
       } else {
         this.setState({ label: "View Less" });
@@ -38,7 +38,7 @@ export default class ShopeByBrands extends React.Component {
           {this.props.brandLists &&
             this.props.brandLists
               .filter((val, i) => {
-                return !this.state.showAll ? i < 8 : true;
+                return !this.state.showAll ? i < NUMBER_OFVISIBLE_ITEM : true;
               })
               .map((val, i) => {
                 return (
