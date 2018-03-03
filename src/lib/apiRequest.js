@@ -5,7 +5,6 @@ export const API_URL_ROOT =
   "https://uat2.tataunistore.com/marketplacewebservices";
 export const API_URL_ROOT_DUMMY =
   "https://www.tatacliq.com/marketplacewebservices";
-("https://uat2.tataunistore.com/marketplacewebservices");
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
@@ -67,7 +66,7 @@ export async function post(path, postData, doNotUseApiRoot: false) {
 }
 
 export async function get(url) {
-  return await fetch(`${API_URL_ROOT}/${url}`, {
+  return await fetch(`${API_URL_ROOT_DUMMY}/${url}`, {
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }

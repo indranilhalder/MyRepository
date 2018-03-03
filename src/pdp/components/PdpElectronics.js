@@ -93,8 +93,7 @@ export default class PdpElectronics extends React.Component {
   };
   render() {
     const productData = this.props.productDetails;
-    console.log("PRODUCT DATA");
-    console.log(productData);
+    console.log(productData.otherSellers);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -104,6 +103,21 @@ export default class PdpElectronics extends React.Component {
       .map(image => {
         return image[0].value;
       });
+    let otherSellersText;
+
+    if (productData.otherSellers && productData.otherSellers.length > 0) {
+      otherSellersText = (
+        <span>
+          Sold by{" "}
+          <span className={styles.winningSellerText}>
+            {" "}
+            {productData.winningSellerName}
+          </span>{" "}
+          and {productData.otherSellers.length} other sellers;
+        </span>
+      );
+    }
+
     if (productData) {
       return (
         <PdpFrame
@@ -177,12 +191,7 @@ export default class PdpElectronics extends React.Component {
           {productData.otherSellers && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>
-                <div
-                  className={styles.sellers}
-                  dangerouslySetInnerHTML={{
-                    __html: productData.otherSellersText
-                  }}
-                />
+                <div className={styles.sellers}>{otherSellersText}</div>
               </PdpLink>
             </div>
           )}
@@ -210,29 +219,11 @@ export default class PdpElectronics extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <div className={styles.brandSection}>
-            <div className={styles.brandHeader}>About the brand</div>
-            <div className={styles.brandLogoSection}>
-              {productData.brandLogoImage && (
-                <div className={styles.brandLogoHolder}>
-                  <Logo image={productData.brandLogoImage} />
-                </div>
-              )}
-              <div className={styles.followButton}>
-                <Button label="Follow" type="tertiary" />
-              </div>
-            </div>
-            {productData.brandInfo && (
-              <div className={styles.brandDescription}>
-                {productData.brandInfo}
-              </div>
-            )}
 
-            <PDPRecommendedSections
-              msdItems={this.props.msdItems}
-              productData={this.props.productData}
-            />
-          </div>
+          <PDPRecommendedSections
+            msdItems={this.props.msdItems}
+            productData={productData}
+          />
         </PdpFrame>
       );
     } else {

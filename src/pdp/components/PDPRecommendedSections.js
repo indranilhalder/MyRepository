@@ -86,6 +86,8 @@ class PDPRecommendedSections extends React.Component {
   }
 
   render() {
+    console.log("OFFERS");
+    console.log(this.props.productData);
     return (
       <React.Fragment>
         {this.renderAboutTheBrand()}

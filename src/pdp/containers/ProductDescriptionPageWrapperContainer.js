@@ -391,7 +391,7 @@ const mapStateToProps = state => {
     winningUssID: "100001300712393005"
   };
   return {
-    productDetails,
+    productDetails: state.productDescription.productDetails,
     msdItems: state.productDescription.msdItems,
     sizeGuide: state.productDescription.sizeGuide
   };

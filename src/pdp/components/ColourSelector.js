@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./ColourSelector.css";
 import ColourSelect from "./ColourSelect";
 import Carousel from "../../general/components/Carousel";
-import { PRODUCT_DESCRIPTION_ROUTER } from "../../lib/constants";
 import PropTypes from "prop-types";
 export default class ColourSelector extends React.Component {
   constructor(props) {
@@ -12,11 +11,11 @@ export default class ColourSelector extends React.Component {
     };
   }
   updateColour(productUrl) {
-    this.props.history.push(`${PRODUCT_DESCRIPTION_ROUTER}/${productUrl}`);
-    this.props.history.push(`${productUrl}`);
+    this.props.history.push(productUrl);
   }
   render() {
     let data = this.props.data;
+
     return (
       <div className={styles.base}>
         <Carousel

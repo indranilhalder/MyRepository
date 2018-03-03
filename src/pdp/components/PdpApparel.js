@@ -29,14 +29,9 @@ export default class PdpApparel extends React.Component {
       this.props.visitBrandStore();
     }
   }
-  componentDidUpdate(props) {
-    console.log("");
-  }
-
   render() {
     const productData = this.props.productDetails;
-    console.log("PDP APPAREL");
-    console.log(this.props.productData);
+
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
