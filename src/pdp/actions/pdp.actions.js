@@ -670,10 +670,6 @@ export function getMsdRequest(productCode) {
         throw new Error(`${resultJson.message}`);
       }
 
-      console.log("MSD REQUEST");
-      console.log(resultJson);
-      console.log(resultJson.data[0]);
-
       if (resultJson.data[0].length > 0) {
         dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
       }
@@ -731,7 +727,6 @@ export function getPdpItems(itemIds, widgetKey) {
       }
       dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
     } catch (e) {
-      console.log(e.message);
       dispatch(getPdpItemsFailure(e.message));
     }
   };
