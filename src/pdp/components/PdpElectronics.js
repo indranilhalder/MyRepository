@@ -20,15 +20,16 @@ import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
 import { transformData } from "../../home/components/utils.js";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
-
 import {
+  PRODUCT_SELLER_ROUTER,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
-  CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER
 } from "../../lib/constants";
+
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
 const PRODUCT_QUANTITY = "1";
@@ -43,6 +44,9 @@ export default class PdpElectronics extends React.Component {
     this.props.history.goBack();
   };
 
+  goToSellerPage = () => {
+    this.props.history.push(PRODUCT_SELLER_ROUTER);
+  };
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productListingId;
