@@ -12,15 +12,11 @@ export default class ColourSelector extends React.Component {
     };
   }
   updateColour(productUrl) {
-    console.log(productUrl);
-    console.log(PRODUCT_DESCRIPTION_ROUTER);
-
-    this.props.history.push(`${PRODUCT_DESCRIPTION_ROUTER}/${productUrl}`);
-    this.props.history.push(`${productUrl}`);
+    this.props.history.push(productUrl);
   }
   render() {
     let data = this.props.data;
-    console.log(data);
+
     return (
       <div className={styles.base}>
         <Carousel
@@ -36,7 +32,6 @@ export default class ColourSelector extends React.Component {
           }
         >
           {data.map((datum, i) => {
-            console.log(datum);
             return (
               <ColourSelect
                 key={i}

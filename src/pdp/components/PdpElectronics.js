@@ -90,9 +90,8 @@ export default class PdpElectronics extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
-    console.log();
+
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -227,8 +226,7 @@ export default class PdpElectronics extends React.Component {
             )}
             {this.props.msdItems && (
               <Carousel>
-                {this.props.msdItems.data[0].map((val, i) => {
-                  console.log(val);
+                {this.props.msdItems.map((val, i) => {
                   const transformedDatum = transformData(val);
                   const productImage = transformedDatum.image;
                   return (
