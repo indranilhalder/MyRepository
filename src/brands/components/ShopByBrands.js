@@ -1,10 +1,10 @@
 import React from "react";
-import ShopeByBrandLists from "./ShopeByBrandLists.js";
-import styles from "./ShopeByBrands.css";
+import ShopByBrandLists from "./ShopByBrandLists.js";
+import styles from "./ShopByBrands.css";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
 const NUMBER_OFVISIBLE_ITEM = 8;
-export default class ShopeByBrands extends React.Component {
+export default class ShopByBrands extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +42,7 @@ export default class ShopeByBrands extends React.Component {
               })
               .map((val, i) => {
                 return (
-                  <ShopeByBrandLists
+                  <ShopByBrandLists
                     brandList={val.list}
                     key={i}
                     value={val.list}
@@ -68,7 +68,7 @@ export default class ShopeByBrands extends React.Component {
     );
   }
 }
-ShopeByBrands.propTypes = {
+ShopByBrands.propTypes = {
   onClick: PropTypes.func,
   brandHeader: PropTypes.string,
   brandLists: PropTypes.arrayOf(

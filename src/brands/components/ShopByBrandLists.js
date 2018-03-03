@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./ShopeByBrandLists.css";
+import styles from "./ShopByBrandLists.css";
 import PropTypes from "prop-types";
 import { Icon } from "xelpmoc-core";
 import arrowIcon from "../../general/components/img/arrow.svg";
-export default class ShopeByBrandLists extends React.Component {
+export default class ShopByBrandLists extends React.Component {
   handleClick(val) {
     if (this.props.onClick) {
       this.props.onClick(val);
@@ -23,7 +23,7 @@ export default class ShopeByBrandLists extends React.Component {
     );
   }
 }
-ShopeByBrandLists.propTypes = {
+ShopByBrandLists.propTypes = {
   onClick: PropTypes.func,
   brandList: PropTypes.string
 };
