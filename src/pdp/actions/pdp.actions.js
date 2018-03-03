@@ -647,7 +647,7 @@ export function getMsdRequest(productCode) {
     msdRequestObject.append("widget_list", WIDGET_LIST);
     msdRequestObject.append("num_results", NUMBER_RESULTS);
     msdRequestObject.append("mad_uuid", MAD_UUID);
-    msdRequestObject.append("details", true);
+    msdRequestObject.append("details", false);
     msdRequestObject.append("product_id", productCode);
 
     dispatch(productMsdRequest());
