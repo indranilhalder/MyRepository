@@ -19,16 +19,13 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  PRODUCT_SELLER_ROUTER
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
-import {
-  ABOUT_THE_BRAND_WIDGET_KEY,
-  RECOMMENDED_PRODUCTS_WIDGET_KEY,
-  SIMILAR_PRODUCTS_WIDGET_KEY
-} from "../actions/pdp.actions.js";
+
 const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -40,6 +37,9 @@ export default class PdpApparel extends React.Component {
   }
   gotoPreviousPage = () => {
     this.props.history.goBack();
+  };
+  goToSellerPage = () => {
+    this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
 
   addToCart = () => {
