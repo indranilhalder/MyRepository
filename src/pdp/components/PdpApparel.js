@@ -12,87 +12,26 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
-import Logo from "../../general/components/Logo.js";
-import Carousel from "../../general/components/Carousel.js";
-import ProductModule from "../../general/components/ProductModule.js";
-import Button from "../../general/components/Button.js";
-import styles from "./ProductDescriptionPage.css";
-import * as Cookie from "../../lib/Cookie";
-import { transformData } from "../../home/components/utils.js";
-import PDPRecommendedSections from "./PDPRecommendedSections.js";
 
+import styles from "./ProductDescriptionPage.css";
+import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
-  CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS,
-  GLOBAL_ACCESS_TOKEN,
-  CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS,
-  ANONYMOUS_USER
-} from "../../lib/constants";
+  ABOUT_THE_BRAND_WIDGET_KEY,
+  RECOMMENDED_PRODUCTS_WIDGET_KEY,
+  SIMILAR_PRODUCTS_WIDGET_KEY
+} from "../actions/pdp.actions.js";
+
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
-const PRODUCT_QUANTITY = "1";
-export default class PdpElectronics extends React.Component {
+export default class PdpApparel extends React.Component {
   visitBrand() {
     if (this.props.visitBrandStore) {
       this.props.visitBrandStore();
     }
   }
-
-  addToCart = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    let cartDetailsLoggedInUser = Cookie.getCookie(
-      CART_DETAILS_FOR_LOGGED_IN_USER
-    );
-    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-    if (userDetails) {
-      this.props.addProductToCart(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
-        JSON.parse(cartDetailsLoggedInUser).code,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToCart(
-        ANONYMOUS_USER,
-        JSON.parse(cartDetailsAnonymous).guid,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
-
-  addToWishList = () => {
-    let productDetails = {};
-    productDetails.code = this.props.productDetails.productListingId;
-    productDetails.ussId = this.props.productDetails.winningUssID;
-
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-    if (userDetails) {
-      this.props.addProductToWishList(
-        JSON.parse(userDetails).customerInfo.mobileNumber,
-        JSON.parse(customerCookie).access_token,
-        productDetails
-      );
-    } else {
-      this.props.addProductToWishList(
-        ANONYMOUS_USER,
-        JSON.parse(globalCookie).access_token,
-        productDetails
-      );
-    }
-  };
   render() {
     const productData = this.props.productDetails;
+
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -102,27 +41,9 @@ export default class PdpElectronics extends React.Component {
       .map(image => {
         return image[0].value;
       });
-    let otherSellersText;
-
-    if (productData.otherSellers && productData.otherSellers.length > 0) {
-      otherSellersText = (
-        <span>
-          Sold by{" "}
-          <span className={styles.winningSellerText}>
-            {" "}
-            {productData.winningSellerName}
-          </span>{" "}
-          and {productData.otherSellers.length} other sellers;
-        </span>
-      );
-    }
-
     if (productData) {
       return (
-        <PdpFrame
-          addProductToBag={() => this.addToCart()}
-          addProductToWishList={() => this.addToWishList()}
-        >
+        <PdpFrame>
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
               return <Image image={val} key={idx} />;
@@ -187,10 +108,15 @@ export default class PdpElectronics extends React.Component {
                 />
               );
             })}
-          {productData.otherSellers && (
+          {productData.otherSellersText && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>
-                <div className={styles.sellers}>{otherSellersText}</div>
+                <div
+                  className={styles.sellers}
+                  dangerouslySetInnerHTML={{
+                    __html: productData.otherSellersText
+                  }}
+                />
               </PdpLink>
             </div>
           )}
@@ -218,7 +144,6 @@ export default class PdpElectronics extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-
           <PDPRecommendedSections
             msdItems={this.props.msdItems}
             productData={productData}

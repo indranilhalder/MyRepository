@@ -12,7 +12,7 @@ export default class SizeSelector extends React.Component {
     }
   }
   render() {
-    let data = this.props.data[0];
+    let data = this.props.data;
     return (
       <div className={styles.base}>
         <div className={styles.header}>
