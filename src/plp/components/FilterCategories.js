@@ -5,13 +5,28 @@ import PropTypes from "prop-types";
 const GLOBAL = "global";
 const ADVANCE = "advance";
 export default class FilterCategories extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: this.props.data
+    };
+  }
   handleClick(val) {
     if (this.props.onClick) {
       this.props.onClick(val);
     }
   }
+  componentDidMount() {
+    const data = this.state.data;
+    console.log(this.props);
+    if (this.props.hasCategory) {
+      data.unshift({ category: true, key: "category", name: "Category" });
+      this.setState({ data });
+    }
+  }
   render() {
-    let data = this.props.data;
+    let data = this.state.data;
+
     let filterCount = [];
     if (this.props.selected) {
       filterCount = this.props.selected.map(val => {
@@ -24,6 +39,7 @@ export default class FilterCategories extends React.Component {
         return summer;
       });
     }
+
     return (
       <div className={styles.base}>
         {data.map((datum, i) => {

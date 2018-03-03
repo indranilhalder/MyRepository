@@ -1,25 +1,31 @@
 .base {
   width: 100%;
   height: auto;
-  padding-top: 20px;
+  padding-top: 15px;
 }
 .header {
+  width: 100%;
+  height: auto;
   position: relative;
+  padding-right: 30px;
 }
 .subCategoryList {
-  font-size: 16px;
+  font-size: 14px;
   font-family: regular;
   display: inline-block;
   text-align: left;
-  width: 80%;
+  width: 100%;
+  line-height: 20px;
   height: auto;
 }
 .subCategoryListCount {
   font-size: 14px;
   font-family: regular;
   opacity: 0.5;
-  display: inline-block;
-  width: 20%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
   height: auto;
   text-align: right;
 }

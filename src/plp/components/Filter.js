@@ -1,7 +1,8 @@
 import React from "react";
-import FilterWithMultiSelect from "./FilterWithMultiSelect";
+import FilterSection from "./FilterSection";
 import FilterSelect from "./FilterSelect";
 import FilterCategories from "./FilterCategories";
+import FilterCatageory from "./FilterCatageory";
 import PropTypes from "prop-types";
 import styles from "./Filter.css";
 import map from "lodash/map";
@@ -60,7 +61,11 @@ export default class Filter extends React.Component {
     this.setState({ selected });
   }
 
+  onCategorySelect(val) {
+    console.log(val);
+  }
   render() {
+    console.log(this.props);
     // If state.pageNumber is 0, then we need to display the category section
     //
 
@@ -84,28 +89,37 @@ export default class Filter extends React.Component {
             />
           </div>
           <div className={styles.options}>
-            <FilterWithMultiSelect
-              selected={
-                this.state.selected[this.state.pageNumber]
-                  ? this.state.selected[this.state.pageNumber]
-                  : [null]
-              }
-              onSelect={val => {
-                this.handleSelect(val, this.state.pageNumber);
-              }}
-            >
-              {filterDatum.values &&
-                filterDatum.values.map((value, i) => {
-                  return (
-                    <FilterSelect
-                      label={value.name}
-                      value={value.value}
-                      count={value.count}
-                      key={i}
-                    />
-                  );
-                })}
-            </FilterWithMultiSelect>
+            {filterDatum.key !== "category" && (
+              <FilterSection
+                selected={
+                  this.state.selected[this.state.pageNumber]
+                    ? this.state.selected[this.state.pageNumber]
+                    : [null]
+                }
+                onSelect={val => {
+                  this.handleSelect(val, this.state.pageNumber);
+                }}
+              >
+                {filterDatum.values &&
+                  filterDatum.values.map((value, i) => {
+                    return (
+                      <FilterSelect
+                        label={value.name}
+                        value={value.value}
+                        count={value.count}
+                        key={i}
+                      />
+                    );
+                  })}
+              </FilterSection>
+            )}
+            {filterDatum.key === "category" &&
+              this.props.categoryData && (
+                <FilterCatageory
+                  categoryTypeList={this.props.categoryData.filters}
+                  onCategorySelect={val => this.onCategorySelect(val)}
+                />
+              )}
           </div>
         </div>
         <div className={styles.footer}>
