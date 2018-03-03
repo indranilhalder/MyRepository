@@ -289,6 +289,24 @@ const productDescription = (
         loading: false
       });
 
+    case pdpActions.GET_PDP_ITEMS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.GET_PDP_ITEMS_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: action.items,
+        loading: false
+      });
+    case pdpActions.GET_PDP_ITEMS_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
     default:
       return state;
   }
