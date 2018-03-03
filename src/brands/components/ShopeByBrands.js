@@ -17,7 +17,8 @@ export default class ShopeByBrands extends React.Component {
     this.setState({ showAll: !this.state.showAll }, () => {
       if (this.state.label === "View Less") {
         this.setState({
-          label: `view  ${this.props.brandLists.length - 8} more brands`
+          label: `view  ${this.props.brandLists.length -
+            numberOfVisibleItem} more brands`
         });
       } else {
         this.setState({ label: "View Less" });
