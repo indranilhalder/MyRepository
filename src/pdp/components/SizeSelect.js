@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./SizeSelect.css";
 import PropTypes from "prop-types";
 
-export default class SizeAdd extends React.Component {
+export default class SizeSelect extends React.Component {
   handleClick() {
     if (this.props.selectItem) {
       this.props.selectItem();
@@ -17,12 +17,21 @@ export default class SizeAdd extends React.Component {
     }
     return (
       <div className={classActive} onClick={() => this.handleClick()}>
-        <div className={classSelected}>{this.props.size}</div>
+        <div
+          className={classSelected}
+          style={{ fontSize: this.props.fontSize }}
+        >
+          {this.props.size}
+        </div>
       </div>
     );
   }
 }
-SizeAdd.propTypes = {
+SizeSelect.propTypes = {
   size: PropTypes.string,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
+  fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+};
+SizeSelect.defaultProps = {
+  fontSize: 14
 };

@@ -1,4 +1,5 @@
 import * as pdpActions from "../actions/pdp.actions";
+import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
     status: null,
@@ -7,7 +8,11 @@ const productDescription = (
     productDetails: null,
     sizeGuide: null,
     emiResult: null,
-    wishList: null
+    wishList: null,
+    reviews: null,
+    reviewsStatus: null,
+    reviewsError: null,
+    msdItems: {}
   },
   action
 ) => {
@@ -19,7 +24,6 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_SUCCESS:
-      console.log(action.productDescription);
       return Object.assign({}, state, {
         status: action.status,
         productDetails: action.productDescription,
@@ -184,6 +188,123 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_SPECIFICATION_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case pdpActions.ADD_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.ADD_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: false
+      });
+
+    case pdpActions.ADD_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+
+    case pdpActions.EDIT_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.EDIT_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: false
+      });
+
+    case pdpActions.EDIT_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+    case pdpActions.DELETE_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.DELETE_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: false
+      });
+
+    case pdpActions.DELETE_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+
+    case pdpActions.GET_PRODUCT_REVIEW_REQUEST:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        loading: true
+      });
+
+    case pdpActions.GET_PRODUCT_REVIEW_SUCCESS:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviews: action.reviews,
+        loading: false
+      });
+
+    case pdpActions.GET_PRODUCT_REVIEW_FAILURE:
+      return Object.assign({}, state, {
+        reviewsStatus: action.status,
+        reviewsError: action.error,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_MSD_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.PRODUCT_MSD_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: action.msdItems,
+        loading: false
+      });
+
+    case pdpActions.PRODUCT_MSD_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case pdpActions.GET_PDP_ITEMS_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case pdpActions.GET_PDP_ITEMS_SUCCESS:
+      const newMsdItems = cloneDeep(state.msdItems);
+      newMsdItems[action.widgetKey] = action.items;
+      return Object.assign({}, state, {
+        status: action.status,
+        msdItems: newMsdItems,
+        loading: false
+      });
+    case pdpActions.GET_PDP_ITEMS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
