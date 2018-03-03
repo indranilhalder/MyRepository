@@ -7,7 +7,6 @@ import downloadIcon from "../../general/components/img/download.svg";
 import { Icon } from "xelpmoc-core";
 export default class HollowHeader extends React.Component {
   backPage() {
-    console.log(this.props);
     if (this.props.gotoPreviousPage) {
       this.props.gotoPreviousPage();
     }
