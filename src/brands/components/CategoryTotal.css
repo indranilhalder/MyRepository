@@ -9,15 +9,14 @@
   height:auto;
 }
 .brandListHolder{
-  width:100%;
-  height:auto;
+ composes:brandGallery;
 }
 .productDetailsHolder{
-  composes:brandListHolder;
+  composes:brandGallery;
   margin:40px 0px;
 }
 .colourSelectHolder{
-  composes:brandListHolder;
+  composes:brandGallery;
   background:#fff;
   padding:30px 0px;
 }
@@ -36,7 +35,7 @@
   margin-bottom:20px;
 }
 .newBrandImageHolder{
- composes:brandListHolder
+ composes:brandGallery
 }
 .footer{
 width:100%;
