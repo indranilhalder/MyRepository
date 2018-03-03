@@ -8,6 +8,19 @@ export function transformData(datum) {
   if (!title) {
     title = datum.title;
   }
+
+  if (datum.image_link) {
+    image = datum.image_link;
+  }
+
+  let url;
+  if (datum.webURL) {
+    url = datum.webURL;
+  }
+
+  if (datum.link) {
+    url = datum.link;
+  }
   return {
     image: image,
     video: datum.video,
@@ -15,7 +28,7 @@ export function transformData(datum) {
     description: datum.description,
     price: datum.mrp,
     discountPrice: datum.winningSellerMOP,
-    webURL: datum.webURL,
+    webURL: url,
     ...datum
   };
 }
