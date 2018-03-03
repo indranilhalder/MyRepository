@@ -19,6 +19,8 @@ import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
 import { transformData } from "../../home/components/utils.js";
+import PDPRecommendedSections from "./PDPRecommendedSections.js";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -90,8 +92,9 @@ export default class PdpElectronics extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
+    console.log("PRODUCT DATA");
+    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -224,28 +227,11 @@ export default class PdpElectronics extends React.Component {
                 {productData.brandInfo}
               </div>
             )}
-            {this.props.msdItems && (
-              <Carousel>
-                {this.props.msdItems.data[0].map((val, i) => {
-                  console.log(val);
-                  const transformedDatum = transformData(val);
-                  const productImage = transformedDatum.image;
-                  return (
-                    <ProductModule
-                      {...transformedDatum}
-                      productImage={productImage}
-                    />
-                  );
-                })}
-              </Carousel>
-            )}
-            <div className={styles.visitBrandButton}>
-              <Button
-                type="secondary"
-                label="Visit Brand Store"
-                oncLick={() => this.visitBrand()}
-              />
-            </div>
+
+            <PDPRecommendedSections
+              msdItems={this.props.msdItems}
+              productData={this.props.productData}
+            />
           </div>
         </PdpFrame>
       );

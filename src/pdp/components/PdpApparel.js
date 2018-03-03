@@ -12,9 +12,14 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
-import Logo from "../../general/components/Logo.js";
-import Button from "../../general/components/Button.js";
+
 import styles from "./ProductDescriptionPage.css";
+import PDPRecommendedSections from "./PDPRecommendedSections.js";
+import {
+  ABOUT_THE_BRAND_WIDGET_KEY,
+  RECOMMENDED_PRODUCTS_WIDGET_KEY,
+  SIMILAR_PRODUCTS_WIDGET_KEY
+} from "../actions/pdp.actions.js";
 
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -27,10 +32,11 @@ export default class PdpApparel extends React.Component {
   componentDidUpdate(props) {
     console.log("");
   }
+
   render() {
     const productData = this.props.productDetails;
-    console.log(this.props);
-
+    console.log("PDP APPAREL");
+    console.log(this.props.productData);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -143,32 +149,10 @@ export default class PdpApparel extends React.Component {
               productContent={productData.APlusContent.productContent}
             />
           )}
-          <div className={styles.brandSection}>
-            <div className={styles.brandHeader}>About the brand</div>
-            <div className={styles.brandLogoSection}>
-              {productData.brandLogoImage && (
-                <div className={styles.brandLogoHolder}>
-                  <Logo image={productData.brandLogoImage} />
-                </div>
-              )}
-              <div className={styles.followButton}>
-                <Button label="Follow" type="tertiary" />
-              </div>
-            </div>
-            {productData.brandInfo && (
-              <div className={styles.brandDescription}>
-                {productData.brandInfo}
-              </div>
-            )}
-            {/* Suggested  products part goes here  */}
-            <div className={styles.visitBrandButton}>
-              <Button
-                type="secondary"
-                label="Visit Brand Store"
-                oncLick={() => this.visitBrand()}
-              />
-            </div>
-          </div>
+          <PDPRecommendedSections
+            msdItems={this.props.msdItems}
+            productData={productData}
+          />
         </PdpFrame>
       );
     } else {

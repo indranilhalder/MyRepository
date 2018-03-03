@@ -1,4 +1,5 @@
 import * as pdpActions from "../actions/pdp.actions";
+import cloneDeep from "lodash/cloneDeep";
 const productDescription = (
   state = {
     status: null,
@@ -11,7 +12,7 @@ const productDescription = (
     reviews: null,
     reviewsStatus: null,
     reviewsError: null,
-    msdItems: null
+    msdItems: {}
   },
   action
 ) => {
@@ -296,9 +297,11 @@ const productDescription = (
       });
 
     case pdpActions.GET_PDP_ITEMS_SUCCESS:
+      const newMsdItems = cloneDeep(state.msdItems);
+      newMsdItems[action.widgetKey] = action.items;
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: action.items,
+        msdItems: newMsdItems,
         loading: false
       });
     case pdpActions.GET_PDP_ITEMS_FAILURE:

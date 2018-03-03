@@ -78,6 +78,10 @@ export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
+
+export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
+export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
+export const SIMILAR_PRODUCTS_WIDGET_KEY = "similarProducts";
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
@@ -664,7 +668,23 @@ export function getMsdRequest(productCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getPdpItems(resultJson.data[0]));
+
+      console.log("MSD REQUEST");
+      console.log(resultJson);
+      console.log(resultJson.data[0]);
+
+      if (resultJson.data[0].length > 0) {
+        dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
+      }
+      if (resultJson.data[1].length > 0) {
+        dispatch(
+          getPdpItems(resultJson.data[1], RECOMMENDED_PRODUCTS_WIDGET_KEY)
+        );
+      }
+
+      if (resultJson.data[2].length > 0) {
+        dispatch(getPdpItems(resultJson.data[2], SIMILAR_PRODUCTS_WIDGET_KEY));
+      }
     } catch (e) {
       dispatch(productMsdFailure(e.message));
     }
@@ -677,11 +697,12 @@ export function getPdpItemsPdpRequest() {
     status: REQUESTING
   };
 }
-export function getPdpItemsPdpSuccess(items) {
+export function getPdpItemsPdpSuccess(items, widgetKey) {
   return {
     type: GET_PDP_ITEMS_SUCCESS,
     status: SUCCESS,
-    items
+    items,
+    widgetKey
   };
 }
 export function getPdpItemsFailure(positionInFeed, errorMsg) {
@@ -692,7 +713,7 @@ export function getPdpItemsFailure(positionInFeed, errorMsg) {
   };
 }
 
-export function getPdpItems(itemIds) {
+export function getPdpItems(itemIds, widgetKey) {
   return async (dispatch, getState, { api }) => {
     dispatch(getPdpItemsPdpRequest());
     try {
@@ -700,7 +721,6 @@ export function getPdpItems(itemIds) {
       each(itemIds, itemId => {
         productCodes = `${itemId},${productCodes}`;
       });
-      console.log(productCodes);
       const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
       const result = await api.getMsd(url);
 
@@ -708,8 +728,7 @@ export function getPdpItems(itemIds) {
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
-      console.log(resultJson.results);
-      dispatch(getPdpItemsPdpSuccess(resultJson.results));
+      dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
     } catch (e) {
       console.log(e.message);
       dispatch(getPdpItemsFailure(e.message));
