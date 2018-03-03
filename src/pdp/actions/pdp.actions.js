@@ -128,6 +128,7 @@ export function getProductDescription(productCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(getProductDescriptionSuccess(resultJson));
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
