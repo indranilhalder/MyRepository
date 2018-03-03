@@ -92,7 +92,6 @@ export default class PdpElectronics extends React.Component {
   render() {
     console.log(this.props);
     const productData = this.props.productDetails;
-    console.log();
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -172,7 +171,7 @@ export default class PdpElectronics extends React.Component {
                 />
               );
             })}
-          {productData.otherSellersText && (
+          {productData.otherSellers && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>
                 <div
