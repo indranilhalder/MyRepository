@@ -17,7 +17,15 @@ export default class StoresLocationCard extends React.Component {
           <div className={styles.ProductStockHeading}>
             {this.props.headingText}
           </div>
-          <div className={styles.ProductStockLabel}>{this.props.label}</div>
+
+          {this.props.label && (
+            <div className={styles.ProductStockLabel}>{this.props.label}</div>
+          )}
+          {this.props.descriptionText && (
+            <div className={styles.productDescriptionText}>
+              {this.props.descriptionText}
+            </div>
+          )}
         </div>
       </div>
     );
