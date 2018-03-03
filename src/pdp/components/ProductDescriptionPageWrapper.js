@@ -63,7 +63,7 @@ export default class ProductDescriptionPageWrapper extends React.Component {
   }
 
   render() {
-    if (this.props.productDetails) {
+    if (!this.props.loading && this.props.productDetails) {
       return (
         <div>
           {this.renderRootCategory(this.props.productDetails.rootCategory)}
