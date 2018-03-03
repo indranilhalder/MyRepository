@@ -2,15 +2,16 @@
   width: 100%;
   height: auto;
   display: inline-block;
-  margin-bottom:15px;
 }
 .header {
   composes: base;
+  padding-right: 30px;
+  position: relative;
 }
 .subCategoryRegular {
   font-size: 16px;
   font-family: regular;
-  width: 50%;
+  width: 100%;
   height: auto;
   display: inline-block;
 }
@@ -22,14 +23,16 @@
   font-size: 14px;
   font-family: regular;
   opacity: 0.5;
-  width: 50%;
+  width: 30px;
   height: auto;
   text-align: right;
-  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 .subListHolder {
   width: 100%;
   height: auto;
   display: inline-block;
-  padding-left: 25px;
+  padding-left: 10px;
 }

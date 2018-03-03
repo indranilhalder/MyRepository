@@ -2,7 +2,7 @@ import React from "react";
 import FilterSection from "./FilterSection";
 import FilterSelect from "./FilterSelect";
 import FilterCategories from "./FilterCategories";
-import FilterCatageory from "./FilterCatageory";
+import FilterCategorySection from "./FilterCategorySection";
 import PropTypes from "prop-types";
 import styles from "./Filter.css";
 import map from "lodash/map";
@@ -13,16 +13,16 @@ export default class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageNumber: 0,
-      selected: this.props.filterData.map(val => {
-        return val.values.map(v => {
-          if (v.selected) {
-            return v.value;
-          } else {
-            return null;
-          }
-        });
-      })
+      pageNumber: 0
+      // selected: this.props.filterData.map(val => {
+      //   return val.values.map(v => {
+      //     if (v.selected) {
+      //       return v.value;
+      //     } else {
+      //       return null;
+      //     }
+      //   });
+      // })
     };
   }
   switchPage = val => {
@@ -39,7 +39,12 @@ export default class Filter extends React.Component {
       this.props.backPage();
     }
   };
-
+  handleSelect(val) {
+    if (this.props.onFilter) {
+      console.log(val);
+      // this.props.onFilter(val.url);
+    }
+  }
   onApply(val) {
     if (this.props.onApply) {
       const filters = map(this.state.selected, (selectedArr, i) => {
@@ -55,19 +60,25 @@ export default class Filter extends React.Component {
       this.props.onApply(filters);
     }
   }
-  handleSelect(val, index) {
-    let selected = this.state.selected;
-    selected[index] = val;
-    this.setState({ selected });
-  }
-
   onCategorySelect(val) {
     console.log(val);
   }
+  // handleSelect(val, index) {
+  //   let selected = this.state.selected;
+  //   selected[index] = val;
+  //   this.setState({ selected });
+  // }
+
   render() {
-    console.log(this.props);
+    let hasCategory = false;
+    if (this.props.categoryData) {
+      if (this.props.categoryData.category) {
+        hasCategory = true;
+      }
+    }
     // If state.pageNumber is 0, then we need to display the category section
     //
+    console.log("FILTER");
 
     const filterDatum = this.props.filterData[this.state.pageNumber];
 
@@ -86,16 +97,12 @@ export default class Filter extends React.Component {
               selected={this.state.selected}
               pageNumber={this.state.pageNumber}
               onClick={val => this.switchPage(val)}
+              hasCategory={hasCategory}
             />
           </div>
           <div className={styles.options}>
             {filterDatum.key !== "category" && (
               <FilterSection
-                selected={
-                  this.state.selected[this.state.pageNumber]
-                    ? this.state.selected[this.state.pageNumber]
-                    : [null]
-                }
                 onSelect={val => {
                   this.handleSelect(val, this.state.pageNumber);
                 }}
@@ -107,7 +114,10 @@ export default class Filter extends React.Component {
                         label={value.name}
                         value={value.value}
                         count={value.count}
+                        url={value.url}
+                        selected={value.selected}
                         key={i}
+                        onSelect={val => this.handleSelect(val)}
                       />
                     );
                   })}
@@ -115,7 +125,7 @@ export default class Filter extends React.Component {
             )}
             {filterDatum.key === "category" &&
               this.props.categoryData && (
-                <FilterCatageory
+                <FilterCategorySection
                   categoryTypeList={this.props.categoryData.filters}
                   onCategorySelect={val => this.onCategorySelect(val)}
                 />

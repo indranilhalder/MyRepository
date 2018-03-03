@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./FilterCatageorySubList.css";
+import styles from "./FilterCategorySubList.css";
 import PropTypes from "prop-types";
-export default class FilterCatageorySubList extends React.Component {
+export default class FilterCategorySubList extends React.Component {
   handleClick() {
     if (this.props.selectItem) {
       this.props.selectItem();
@@ -21,7 +21,7 @@ export default class FilterCatageorySubList extends React.Component {
     );
   }
 }
-FilterCatageorySubList.propTypes = {
+FilterCategorySubList.propTypes = {
   selectItem: PropTypes.func,
   subListItem: PropTypes.string,
   subListCount: PropTypes.number
