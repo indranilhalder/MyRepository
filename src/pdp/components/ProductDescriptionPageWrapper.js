@@ -1,5 +1,6 @@
 import React from "react";
 import PdpElectronics from "./PdpElectronics";
+import PdpApparel from "./PdpApparel";
 import ProductDescriptionPage from "./ProductDescriptionPage";
 import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
@@ -9,8 +10,9 @@ import {
 const typeComponentMapping = {
   "Electronics": props => <PdpElectronics {...props} />,
   "FashionJewellery":props => <ProductDescriptionPage {...props} />,
-  "Clothing":props => <ProductDescriptionPage {...props} />
+  "Clothing":props => <PdpApparel {...props} />
 };
+
 export default class ProductDescriptionPageWrapper extends React.Component {
   componentDidMount() {
     if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
@@ -23,6 +25,22 @@ export default class ProductDescriptionPageWrapper extends React.Component {
       this.props.getMsdRequest(this.props.match.params[2]);
     } else {
       //need to show error page
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+        this.props.getProductDescription(this.props.match.params[0]);
+        this.props.getMsdRequest(this.props.match.params[0]);
+      } else if (
+        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+      ) {
+        this.props.getProductDescription(this.props.match.params[2]);
+        this.props.getMsdRequest(this.props.match.params[2]);
+      } else {
+        //need to show error page
+      }
     }
   }
 
