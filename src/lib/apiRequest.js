@@ -3,6 +3,9 @@ import * as Cookie from "./Cookie";
 import { LOGGED_IN_USER_DETAILS } from "./constants.js";
 export const API_URL_ROOT =
   "https://uat2.tataunistore.com/marketplacewebservices";
+export const API_URL_ROOT_DUMMY =
+  "https://www.tatacliq.com/marketplacewebservices";
+("https://uat2.tataunistore.com/marketplacewebservices");
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
@@ -128,7 +131,14 @@ export async function putMock(url, payload) {
 export async function postMsd(url, payload) {
   return await fetch(`${API_MSD_URL_ROOT}/${url}`, {
     method: "POST",
-
     body: payload
+  });
+}
+
+export async function getMsd(url) {
+  return await fetch(`${API_URL_ROOT_DUMMY}/${url}`, {
+    headers: {
+      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
+    }
   });
 }
