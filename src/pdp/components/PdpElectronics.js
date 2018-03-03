@@ -39,6 +39,10 @@ export default class PdpElectronics extends React.Component {
     }
   }
 
+  gotoPreviousPage = () => {
+    this.props.history.goBack();
+  };
+
   addToCart = () => {
     let productDetails = {};
     productDetails.code = this.props.productListingId;
@@ -120,6 +124,7 @@ export default class PdpElectronics extends React.Component {
     if (productData) {
       return (
         <PdpFrame
+          gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
         >

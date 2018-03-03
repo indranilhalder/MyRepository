@@ -12,6 +12,15 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS,
+  ANONYMOUS_USER
+} from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
@@ -20,7 +29,7 @@ import {
   RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
-
+const PRODUCT_QUANTITY = "1";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
 export default class PdpApparel extends React.Component {
@@ -29,6 +38,63 @@ export default class PdpApparel extends React.Component {
       this.props.visitBrandStore();
     }
   }
+  gotoPreviousPage = () => {
+    this.props.history.goBack();
+  };
+
+  addToCart = () => {
+    let productDetails = {};
+    productDetails.code = this.props.productListingId;
+    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.ussId = this.props.productDetails.winningUssID;
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    if (userDetails) {
+      this.props.addProductToCart(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(cartDetailsLoggedInUser).code,
+        JSON.parse(customerCookie).access_token,
+        productDetails
+      );
+    } else {
+      this.props.addProductToCart(
+        ANONYMOUS_USER,
+        JSON.parse(cartDetailsAnonymous).guid,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
+    }
+  };
+
+  addToWishList = () => {
+    let productDetails = {};
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.ussId = this.props.productDetails.winningUssID;
+
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    if (userDetails) {
+      this.props.addProductToWishList(
+        JSON.parse(userDetails).customerInfo.mobileNumber,
+        JSON.parse(customerCookie).access_token,
+        productDetails
+      );
+    } else {
+      this.props.addProductToWishList(
+        ANONYMOUS_USER,
+        JSON.parse(globalCookie).access_token,
+        productDetails
+      );
+    }
+  };
+
   render() {
     const productData = this.props.productDetails;
 
@@ -43,7 +109,11 @@ export default class PdpApparel extends React.Component {
       });
     if (productData) {
       return (
-        <PdpFrame>
+        <PdpFrame
+          gotoPreviousPage={() => this.gotoPreviousPage()}
+          addProductToBag={() => this.addToCart()}
+          addProductToWishList={() => this.addToWishList()}
+        >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
               return <Image image={val} key={idx} />;

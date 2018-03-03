@@ -33,7 +33,8 @@ const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
     msdItems: state.productDescription.msdItems,
-    sizeGuide: state.productDescription.sizeGuide
+    sizeGuide: state.productDescription.sizeGuide,
+    loading: state.productDescription.loading
   };
 };
 

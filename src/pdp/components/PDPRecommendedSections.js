@@ -14,6 +14,9 @@ import {
 import styles from "./PDPRecommendedSections.css";
 
 class PDPRecommendedSections extends React.Component {
+  goToProductDescription = url => {
+    this.props.history.push(url);
+  };
   renderAboutTheBrand() {
     return (
       <React.Fragment>
@@ -65,6 +68,8 @@ class PDPRecommendedSections extends React.Component {
                 {...transformedDatum}
                 {...this.props}
                 productImage={productImage}
+                productId={val.productListingId}
+                onClick={url => this.goToProductDescription(url)}
               />
             );
           })}
