@@ -3,12 +3,14 @@ import ShopeByBrandLists from "./ShopeByBrandLists.js";
 import styles from "./ShopeByBrands.css";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton.js";
+const numberOfVisibleItem = 8;
 export default class ShopeByBrands extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showAll: false,
-      label: `view  ${this.props.brandLists.length - 8} more brands`
+      label: `view  ${this.props.brandLists.length -
+        numberOfVisibleItem} more brands`
     };
   }
   showMore() {
