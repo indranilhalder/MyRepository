@@ -13519,24 +13519,18 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public OrderDataWsDTO orderExperience(@PathVariable final String orderId,
 			@RequestParam(required = false) final String emailId, @RequestParam(required = false) final String phone,
-			@RequestParam final Double ratings)
-
-	throws RequestParameterException
+			@RequestParam final Double ratings) throws RequestParameterException
 	{
-
 		OrderDataWsDTO result = new OrderDataWsDTO();
 		boolean successFlag = false;
 		try
 		{
-
 			if (ratings.doubleValue() > 0 && ratings.doubleValue() <= 5)
 			{
 				result = mplOrderFacade.orderExperience(orderId, ratings);
-				if (!result.getStatus().equals("Failure"))
-
+				if (null != result.getStatus() && result.getStatus().equalsIgnoreCase("Success"))
 				{
 					successFlag = true;
-
 				}
 			}
 			else
@@ -13544,13 +13538,10 @@ public class UsersController extends BaseCommerceController
 				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG_CUST_EXP);
 				result.setErrorCode(MarketplacecommerceservicesConstants.B009900);
 				result.setMessage(MarketplacecommerceservicesConstants.ERROR_Message_response);
-
 			}
 		}
-
 		catch (final EtailNonBusinessExceptions e)
 		{
-
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
@@ -13564,7 +13555,6 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
@@ -13575,20 +13565,15 @@ public class UsersController extends BaseCommerceController
 		{
 			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG_CUST_EXP);
 			result.setMessage(MarketplacecommerceservicesConstants.SUCCESS_MSG_CUST_EXP);
-
 			return result;
-
 		}
-
 		else
-
 		{
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG_CUST_EXP);
 			result.setErrorCode(MarketplacecommerceservicesConstants.B009900);
 			result.setMessage(MarketplacecommerceservicesConstants.ERROR_Message_response);
 			return result;
 		}
-
 	}
 
 }

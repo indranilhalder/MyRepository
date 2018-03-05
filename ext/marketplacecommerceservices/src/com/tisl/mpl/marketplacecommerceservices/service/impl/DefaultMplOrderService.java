@@ -48,6 +48,7 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.util.localization.Localization;
@@ -73,7 +74,8 @@ public class DefaultMplOrderService implements MplOrderService
 	private SellerBasedPromotionService sellerBasedPromotionService;
 	@Resource(name = "modelService")
 	private ModelService modelService;
-
+	@Resource
+	private UserService userService;
 	private final static Logger LOG = Logger.getLogger(DefaultMplOrderService.class);
 
 	/**
@@ -497,31 +499,32 @@ public class DefaultMplOrderService implements MplOrderService
 	@Override
 	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
 	{
-
-		//boolean successFlag = false;
 		final OrderDataWsDTO result = new OrderDataWsDTO();
 		final OrderModel orderModelRatings = getOrderByParentOrderId(orderId);
 
 		try
 		{
-
-			if (null != orderModelRatings)
+			if (null != orderModelRatings && null != orderModelRatings.getUser())
 			{
-				orderModelRatings.setRatings(ratings);
-				modelService.save(orderModelRatings);
-				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG_CUST_EXP);
-				result.setMessage(MarketplacecommerceservicesConstants.SUCCESS_MSG_CUST_EXP);
-				//successFlag = true;
+				final String ordercustId = orderModelRatings.getUser().getUid();
 
-			}
+				/* for getting the logged in user */
+				final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
-			else
-			{
-
-				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG_CUST_EXP);
-				result.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B0099008));
-				result.setErrorCode(MarketplacecommerceservicesConstants.B0099008);
-
+				final String custId = customer.getUid();
+				if (ordercustId.equals(custId))
+				{
+					orderModelRatings.setRatings(ratings);
+					modelService.save(orderModelRatings);
+					result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG_CUST_EXP);
+					result.setMessage(MarketplacecommerceservicesConstants.SUCCESS_MSG_CUST_EXP);
+				}
+				else
+				{
+					result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG_CUST_EXP);
+					result.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B0099008));
+					result.setErrorCode(MarketplacecommerceservicesConstants.B0099008);
+				}
 			}
 		}
 		catch (final ModelSavingException me)
@@ -531,5 +534,5 @@ public class DefaultMplOrderService implements MplOrderService
 			result.setErrorCode(MarketplacecommerceservicesConstants.B0099008);
 		}
 		return result;
-	}
+}
 }
