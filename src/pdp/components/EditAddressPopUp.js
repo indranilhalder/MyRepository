@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./EditAddressPopUp.css";
+import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import OrderReturn from "../../account/components/OrderReturn";
 import SelectBoxMobile from "../../general/components/SelectBoxMobile";
@@ -102,3 +103,17 @@ export default class EditAddressPopUp extends React.Component {
     );
   }
 }
+EditAddressPopUp.propTypes = {
+  country: PropTypes.string,
+  buttonLabel: PropTypes.string,
+  underlineButtonLabel: PropTypes.string,
+  userName: PropTypes.string,
+  contactNumber: PropTypes.string,
+  line1: PropTypes.string,
+  line2: PropTypes.string,
+  postalCode: PropTypes.bool,
+  state: PropTypes.string,
+  cancelAddress: PropTypes.func,
+  saveChanges: PropTypes.func,
+  onChange: PropTypes.func
+};
