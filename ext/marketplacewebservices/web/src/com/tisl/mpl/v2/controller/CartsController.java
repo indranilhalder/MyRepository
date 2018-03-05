@@ -3889,8 +3889,8 @@ public class CartsController extends BaseCommerceController
 				{
 					discountAmount = cartModel.getTotalDiscounts().doubleValue();
 				}
-				final Double totalWithoutCoupon = Double.valueOf(cartModel.getTotalPrice().doubleValue()
-						+ Double.valueOf(discountAmount).doubleValue());
+				final Double totalWithoutCoupon =(cartModel.getTotalPrice().doubleValue()
+						+ (discountAmount).doubleValue());
 				if (null != totalWithoutCoupon)
 				{
 					releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
