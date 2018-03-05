@@ -13,6 +13,16 @@ const productListings = (
 ) => {
   let existingProductListings;
   switch (action.type) {
+    case plpActions.UPDATE_FACETS:
+      console.log("IS UPDATE FACETS CALLED");
+      const productListings = cloneDeep(state.productListings);
+      productListings.facetdata = action.productListings.facetdata;
+      productListings.facetdatacategory =
+        action.productListings.facetdatacategory;
+      console.log(productListings);
+      return Object.assign({}, state, {
+        productListings
+      });
     case plpActions.PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,

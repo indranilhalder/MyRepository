@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { getProductListings } from "../actions/plp.actions.js";
 import Filter from "../components/Filter";
+import { withRouter } from "react-router-dom";
 const mapDispatchToProps = dispatch => {
   return {
     onApply: filters => {
@@ -20,6 +21,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const FilterContainer = connect(mapStateToProps, mapDispatchToProps)(Filter);
+const FilterContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Filter)
+);
 
 export default FilterContainer;

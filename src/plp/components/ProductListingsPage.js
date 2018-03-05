@@ -10,7 +10,11 @@ class ProductListingsPage extends Component {
     );
   }
   render() {
-    if (this.props.loading && this.props.pageNumber === 0) {
+    if (
+      this.props.loading &&
+      this.props.pageNumber === 0 &&
+      this.props.isFilter === false
+    ) {
       return this.renderLoader();
     } else if (this.props.productListings !== null) {
       return (

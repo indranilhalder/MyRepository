@@ -12,8 +12,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
+    isFilter: ownProps.isFilter,
     loading: state.productListings.loading,
     productListings: state.productListings.productListings,
     pageNumber: state.productListings.pageNumber

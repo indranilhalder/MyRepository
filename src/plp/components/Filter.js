@@ -40,10 +40,7 @@ export default class Filter extends React.Component {
     }
   };
   handleSelect(val) {
-    if (this.props.onFilter) {
-      console.log(val);
-      // this.props.onFilter(val.url);
-    }
+    this.props.history.push(val, { isFilter: true });
   }
   onApply(val) {
     if (this.props.onApply) {
@@ -71,7 +68,12 @@ export default class Filter extends React.Component {
 
   render() {
     let hasCategory = false;
+    console.log("category data");
+    console.log(this.props.categoryData);
+    console.log("facet data");
+    console.log(this.props.filterData);
     if (this.props.categoryData) {
+      console.log(this.props.categoryData.category);
       if (this.props.categoryData.category) {
         hasCategory = true;
       }
@@ -117,7 +119,7 @@ export default class Filter extends React.Component {
                         url={value.url}
                         selected={value.selected}
                         key={i}
-                        onSelect={val => this.handleSelect(val)}
+                        selectItem={val => this.handleSelect(val)}
                       />
                     );
                   })}

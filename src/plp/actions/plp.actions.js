@@ -10,6 +10,8 @@ export const FILTER_PRODUCT_LISTINGS_PATH = "serpsearch";
 export const GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS =
   "GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS";
 
+export const UPDATE_FACETS = "UPDATE_FACETS";
+
 export const SET_PAGE = "SET_PAGE";
 
 const FAILURE = "FAILURE";
@@ -18,6 +20,14 @@ export function setPage(pageNumber) {
   return {
     type: SET_PAGE,
     pageNumber
+  };
+}
+
+export function updateFacets(productListings) {
+  return {
+    type: UPDATE_FACETS,
+    status: SUCCESS,
+    productListings
   };
 }
 
@@ -48,7 +58,11 @@ export function getProductListingsFailure(error) {
     error
   };
 }
-export function getProductListings(suffix: null, paginated: false) {
+export function getProductListings(
+  suffix: null,
+  paginated: false,
+  isFilter: false
+) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductListingsRequest());
     try {
@@ -73,6 +87,8 @@ export function getProductListings(suffix: null, paginated: false) {
         if (resultJson.searchresult) {
           dispatch(getProductListingsPaginatedSuccess(resultJson));
         }
+      } else if (isFilter) {
+        dispatch(updateFacets(resultJson));
       } else {
         dispatch(getProductListingsSuccess(resultJson));
       }

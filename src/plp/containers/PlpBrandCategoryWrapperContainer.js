@@ -4,10 +4,10 @@ import { getProductListings, setPage } from "../actions/plp.actions.js";
 import PlpBrandCategoryWrapper from "../components/PlpBrandCategoryWrapper";
 const mapDispatchToProps = dispatch => {
   return {
-    getProductListings: (search: null, suffix, page) => {
+    getProductListings: (search: null, suffix, page, isFilter) => {
       dispatch(setSearchString(search));
       dispatch(setPage(page));
-      dispatch(getProductListings(suffix));
+      dispatch(getProductListings(suffix, false, isFilter));
     },
     paginate: (page, suffix) => {
       dispatch(setPage(page));
