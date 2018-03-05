@@ -203,6 +203,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+	private static final String LOG1 = "************ Mobile webservice Sship product ************* Delivery cost ";
+	private static final String FOR = "for";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
 
@@ -1478,8 +1480,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										if (LOG.isDebugEnabled())
 										{
-											LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-													+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+											LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 										}
 										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -1573,8 +1574,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										if (LOG.isDebugEnabled())
 										{
-											LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-													+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+											LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 										}
 										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -1671,8 +1671,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								selectedDelivery.setDeliveryCost(String.valueOf(abstractOrderEntry.getCurrDelCharge()));
 								if (LOG.isDebugEnabled())
 								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ abstractOrderEntry.getCurrDelCharge() + "for" + gwlp.getFullfillmentType());
+									LOG.debug(LOG1 + abstractOrderEntry.getCurrDelCharge() + FOR + gwlp.getFullfillmentType());
 								}
 							}
 
@@ -3346,8 +3345,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -4259,8 +4258,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								if (LOG.isDebugEnabled())
 								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+									LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 								}
 								if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 										&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -4348,8 +4346,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								if (LOG.isDebugEnabled())
 								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+									LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 								}
 								if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 										&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -4438,8 +4435,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						configureDeliveryChargeForProduct(String.valueOf(abstractOrderEntry.getCurrDelCharge()), selectedDelivery);
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-									+ abstractOrderEntry.getCurrDelCharge() + "for" + gwlp.getFullfillmentType());
+							LOG.debug(LOG1 + abstractOrderEntry.getCurrDelCharge() + FOR + gwlp.getFullfillmentType());
 						}
 					}
 

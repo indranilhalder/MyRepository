@@ -96,7 +96,7 @@ public class ForgottenPasswordsController extends BaseController
 	 * @formparam userId Customer's user id. Customer user id is case insensitive.
 	 */
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void restorePassword(@RequestParam final String userId)
@@ -115,8 +115,8 @@ public class ForgottenPasswordsController extends BaseController
 	 * @return UserResultWsDto
 	 */
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
-	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = "application/json")
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields, final HttpServletRequest request)
 	{
@@ -202,8 +202,8 @@ public class ForgottenPasswordsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
-	@RequestMapping(value = "/customerForgotPassword", method = RequestMethod.POST, produces = "application/json")
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/customerForgotPassword", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplRegistrationResultWsDto customerForgotPassword(@RequestParam final String username,
 			@RequestParam final int platformNumber, @RequestParam final String isPwa) throws Exception
@@ -243,8 +243,8 @@ public class ForgottenPasswordsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
-	@RequestMapping(value = "/forgotPasswordOTPVerification", method = RequestMethod.POST, produces = "application/json")
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/forgotPasswordOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplRegistrationResultWsDto forgotPasswordOTPVerification(@RequestParam final String username,
 			@RequestParam final int platformNumber, @RequestParam final String otp, @RequestParam final String isPwa)
@@ -360,7 +360,7 @@ public class ForgottenPasswordsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
 	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto resetPassword(@RequestParam final String username, @RequestParam final String newPassword,

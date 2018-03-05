@@ -551,6 +551,9 @@ public class UsersController extends BaseCommerceController
 	private static final String RETURN_PICK_SLOT = "Return Pickup Slot From Time :";
 	private static final String EXCEPTION_OCCURED = "Exception Occured during saving Customer BankDetails for COD order : ";
 	private static final String EXCEPTION_OCCURED_FICO = "Exception Occured while sending bank details to Fico  :  ";
+	private static final String CART_ID_IS = "  cartId: ";
+	private static final String isPwa = "isPwa";
+	private static final String Followed_Brand_Error = "Followed Brand Error";
 	@Autowired
 	private HttpServletRequest request;
 
@@ -6841,12 +6844,12 @@ public class UsersController extends BaseCommerceController
 					if (userFacade.isAnonymousUser())
 					{
 						cartIdentifier = cartModel.getGuid();
-						LOG.debug("addAddressToOrder: Anonymous User" + cartIdentifier + "  cartId: " + cartId);
+						LOG.debug("addAddressToOrder: Anonymous User" + cartIdentifier + CART_ID_IS + cartId);
 					}
 					else
 					{
 						cartIdentifier = cartModel.getCode();
-						LOG.debug("addAddressToOrder: Loged in User" + cartIdentifier + "  cartId: " + cartId);
+						LOG.debug("addAddressToOrder: Loged in User" + cartIdentifier + CART_ID_IS + cartId);
 					}
 					if (addressmodel != null && !removeExchangeFromCart)
 					{
@@ -7113,12 +7116,12 @@ public class UsersController extends BaseCommerceController
 					if (userFacade.isAnonymousUser())
 					{
 						cartIdentifier = cartModel.getGuid();
-						LOG.debug("attachAddressToOrder: Anonymous User" + cartIdentifier + "  cartId: " + cartId);
+						LOG.debug("attachAddressToOrder: Anonymous User" + cartIdentifier + CART_ID_IS + cartId);
 					}
 					else
 					{
 						cartIdentifier = cartModel.getCode();
-						LOG.debug("attachAddressToOrder: Loged in User" + cartIdentifier + "  cartId: " + cartId);
+						LOG.debug("attachAddressToOrder: Loged in User" + cartIdentifier + CART_ID_IS + cartId);
 					}
 					if (addressmodel != null && !removeExchangeFromCart)
 					{
@@ -10875,7 +10878,7 @@ public class UsersController extends BaseCommerceController
 			{
 				emailIdLwCase = emailId.toLowerCase();
 			}
-			LOG.debug("The platform number is " + platformNumber);
+			LOG.debug(PLATFORM_NO + platformNumber);
 			int platformDecider;
 			if (StringUtils.isNotEmpty(platformNumber))
 			{
@@ -10885,7 +10888,7 @@ public class UsersController extends BaseCommerceController
 			{
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 			}
-			LOG.debug("The platform number is " + platformDecider);
+			LOG.debug(PLATFORM_NO + platformDecider);
 			userResult = mobileUserService.registerAppUser(username, platformDecider, emailIdLwCase);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -10919,7 +10922,7 @@ public class UsersController extends BaseCommerceController
 
 	@Secured(
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/registrationOTPVerification", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/registrationOTPVerification", params = isPwa, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserLoginResultWsDto registrationOTPVerification(@RequestParam final String username,
 			@RequestParam final String password, @RequestParam(required = true) final String otp,
@@ -10948,7 +10951,7 @@ public class UsersController extends BaseCommerceController
 				{
 					emailIdLwCase = emailId.toLowerCase();
 				}
-				LOG.debug("The platform number is " + platformNumber);
+				LOG.debug(PLATFORM_NO + platformNumber);
 				int platformDecider;
 				if (StringUtils.isNotEmpty(platformNumber))
 				{
@@ -10958,7 +10961,7 @@ public class UsersController extends BaseCommerceController
 				{
 					platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 				}
-				LOG.debug("The platform number is " + platformDecider);
+				LOG.debug(PLATFORM_NO + platformDecider);
 				userResult = mobileUserService.registerNewMplUserWithMobile(username, password, true, platformDecider, emailIdLwCase);
 				//final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 				userLoginResultWsDto.setStatus(userResult.getStatus());
@@ -11144,7 +11147,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	@Secured(
 	{ ROLE_CLIENT, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/socialMediaRegistration", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/socialMediaRegistration", params = isPwa, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserLoginResultWsDto socialCutomerRegistration(@RequestParam(required = true) final boolean isPwa,
 			@RequestParam final String emailId, @RequestParam final String socialMedia,
@@ -11157,7 +11160,7 @@ public class UsersController extends BaseCommerceController
 		final UpdateCustomerDetailDto updateCustomerDetailDto = new UpdateCustomerDetailDto();
 		try
 		{
-			LOG.debug("The platform number is " + platformNumber);
+			LOG.debug(PLATFORM_NO + platformNumber);
 			int platformDecider;
 			if (StringUtils.isNotEmpty(platformNumber))
 			{
@@ -11167,7 +11170,7 @@ public class UsersController extends BaseCommerceController
 			{
 				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;
 			}
-			LOG.debug("The platform number is " + platformDecider);
+			LOG.debug(PLATFORM_NO + platformDecider);
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
 			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
@@ -11245,7 +11248,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "{emailId}/loginSocialUser", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "{emailId}/loginSocialUser", params = isPwa, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserLoginResultWsDto socialLogin(@PathVariable final String emailId, @RequestParam final String socialMedia,
 			@RequestParam(required = true) final boolean isPwa) throws RequestParameterException, WebserviceValidationException,
@@ -11345,7 +11348,7 @@ public class UsersController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{userId}/updateprofile", params = "isPwa", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/{userId}/updateprofile", params = isPwa, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UpdateCustomerDetailDto updateCustomerProfile(@PathVariable final String userId,
 			@RequestParam(required = false) final String emailid, @RequestParam(required = false) final String firstName,
@@ -11859,7 +11862,7 @@ public class UsersController extends BaseCommerceController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(Followed_Brand_Error + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
@@ -11873,7 +11876,7 @@ public class UsersController extends BaseCommerceController
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(Followed_Brand_Error + e.getMessage());
 			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU150));
 			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU150);
 			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
@@ -11913,7 +11916,7 @@ public class UsersController extends BaseCommerceController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(Followed_Brand_Error + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				mplFollowedBrandsWsDto.setMessage(e.getErrorMessage());
@@ -11927,7 +11930,7 @@ public class UsersController extends BaseCommerceController
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(Followed_Brand_Error + e.getMessage());
 			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
 			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.E0000);
 			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
@@ -13529,7 +13532,7 @@ public class UsersController extends BaseCommerceController
 			if (ratings.doubleValue() > 0 && ratings.doubleValue() <= 5)
 			{
 				result = mplOrderFacade.orderExperience(orderId, ratings);
-				if (result.getStatus() != "Failure")
+				if (!result.getStatus().equals("Failure"))
 
 				{
 					successFlag = true;
