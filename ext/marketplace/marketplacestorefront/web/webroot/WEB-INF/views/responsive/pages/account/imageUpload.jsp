@@ -24,7 +24,7 @@ function loadImageAjaxCall() {
 		        contentType: false,
 		        cache: false,
 			success : function(response) {
-				alert(response[0].imageUrl);
+				//alert(response[0].imageUrl);
 				$("#upload_file").empty();
 				$("#image_preview").empty();
 			},
@@ -48,9 +48,9 @@ function preview_image()
 <template:page pageTitle="${pageTitle}">
 <div id="wrapper">
  <form:form action="/my-account-imageUpload" method="POST" id="uploadImages" enctype="multipart/form-data">
-	<select id="selectMediaFolder" >
+	<select id="selectMediaFolder" name="name1">
 	<c:forEach items="${mediaFolderList}" var="mediaFolder">
-	<option value="multistep-pci">${mediaFolder.qualifier}</option>
+	<option value="${mediaFolder.qualifier}">${mediaFolder.qualifier}</option>
 	</c:forEach>
 	</select>
   <input type="file" id="upload_file" name="file" onchange="preview_image();" multiple/>

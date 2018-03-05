@@ -14,6 +14,7 @@ import de.hybris.platform.impex.jalo.media.DefaultMediaDataHandler;
 import de.hybris.platform.impex.jalo.media.MediaDataTranslator;
 import de.hybris.platform.jalo.media.Media;
 import de.hybris.platform.jalo.media.MediaManager;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.util.CSVReader;
 
 import java.io.BufferedReader;
@@ -32,7 +33,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,9 +73,13 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	@Autowired
 	private CommonsMultipartResolver multipartResolver;
 
+	@Autowired
+	private ConfigurationService configurationService;
+
 	private static final String CATALOG_DATA = "mplContentCatalog";
 	private static final String CATALOG_VERSION_DATA = "Online";
 	private static final String siteResource = "file:/";
+	private static final Logger LOG = LoggerFactory.getLogger(ImageUploadController.class);
 
 	private static final String IMPORT_DATA = "$catalogversion=catalogversion(catalog(id[default='" + CATALOG_DATA
 			+ "']),version[default='" + CATALOG_VERSION_DATA + "'])" + "[unique=true,default='" + CATALOG_DATA + ":"
@@ -120,9 +128,40 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
 		final JSONArray ja = new JSONArray();
+		String fileUploadLocation = null;
+		String uploadFolderName = StringUtils.EMPTY;
 		try
 		{
+			if (null != configurationService)
+			{
+				fileUploadLocation = configurationService.getConfiguration().getString("mpl.bulkimage.uploadpath");
+				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
+				{
+					final Path path = Paths.get(fileUploadLocation);
+					//if directory exists?
+					if (!Files.exists(path))
+					{
+						try
+						{
+							Files.createDirectories(path);
+						}
+						catch (final IOException e)
+						{
+							//fail to create directory
+							LOG.error("Exception Occer While Creating the File Location :" + e.getMessage());
+						}
+					}
+				}
+			}
+			if (null != request.getParameterValues("name1"))
+			{
 
+				uploadFolderName = request.getParameterValues("name1")[0];
+			}
+			else
+			{
+				uploadFolderName = "root";
+			}
 			File f = new File("");
 			for (final MultipartFile files : file)
 			{
@@ -130,14 +169,14 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				{
 					continue; //next pls
 				}
-
 				try
 				{
 					final byte[] bytes = files.getBytes();
-					final Path path = Paths.get("f:/images/" + files.getOriginalFilename());
-					f = new File("F:/" + "/images/" + files.getOriginalFilename());
+					final Path path = Paths.get(fileUploadLocation + files.getOriginalFilename());
+					f = new File(fileUploadLocation + files.getOriginalFilename());
 					Files.write(path, bytes);
-					stringBuilder.append(";" + f.getName() + ";;image/jpg;;" + siteResource + f.getAbsolutePath() + ";root" + "/n");
+					stringBuilder.append(
+							";" + f.getName() + ";;image/jpg;;" + siteResource + f.getAbsolutePath() + ";" + uploadFolderName + ";/n");
 					System.out.println("------------" + f.getAbsolutePath());
 					list.add(f.getName());
 					//stringBuilder.append(stringBuilder.toString() + "/n");
@@ -146,11 +185,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				{
 					e.printStackTrace();
 				}
-
 			}
-
-
-
 			final InputStream inputStream = new ByteArrayInputStream((IMPORT_DATA + stringBuilder.toString()).getBytes());
 
 			//create stream reader
@@ -174,16 +209,16 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			{
 				e.printStackTrace();
 			}
-
 			for (final String object : list)
 			{
 				final Media mediaData = getMediaByCode(object);
-				jObject.put("imageName", object);
-				jObject.put("imageUrl", mediaData.getURL().replace(".*", " / " + object));
+				jObject.put("imageName", mediaData.getFileName());
+				final String array[] = mediaData.getURL().toString().split(".");
+				jObject.put("imageUrl", array[0] + mediaData.getFileName() + "." + array[1]);
 				jObject.put("size", mediaData.getSize());
+				jObject.put("creationTime", mediaData.getCreationTime());
 				ja.add(jObject);
 			}
-
 			// failure handling
 			if (importer.hasUnresolvedLines())
 			{
