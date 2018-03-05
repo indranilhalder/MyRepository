@@ -28,6 +28,9 @@ export default class BrandsTotal extends React.Component {
   brandsItem(val) {
     console.log(val);
   }
+  componentDidMount() {
+    this.props.getBrandDetails();
+  }
   render() {
     const storeLocation = "adidas® stores near you";
     const data = [

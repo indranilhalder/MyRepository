@@ -24,6 +24,8 @@ export const PLP_CATEGORY_SEARCH = "/search/?searchCategory=all&text=shirt";
 export const SEARCH_RESULTS_PAGE = "/search/";
 export const HOME_ROUTER = "/home";
 
+export const BRAND_LANDING_PAGE = "/brand";
+
 export const PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE = "/(.*)/(p-)(.*)";
 export const PRODUCT_DESCRIPTION_PRODUCT_CODE = "/p-(.*)";
 export const PRODUCT_DESCRIPTION_ROUTER = PRODUCT_DESCRIPTION_PRODUCT_CODE; //TODO remove this
