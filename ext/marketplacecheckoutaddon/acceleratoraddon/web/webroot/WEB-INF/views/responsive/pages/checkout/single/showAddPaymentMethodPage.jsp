@@ -124,7 +124,7 @@
 														code="text.cliq.cash.payment.addcard.label" /></a></span>
 										</c:when>
 										<c:otherwise>
-											<span class="addNewCard" onclick="createWallet();"><a
+											<span class="addNewCard" id="create_wallet_onpayment"><a
 												href="#"><spring:theme
 														code="text.cliq.cash.payment.addcard.label" /></a></span>
 										</c:otherwise>
@@ -2029,6 +2029,8 @@ var createWalletData = document.getElementById('createWalletData');
 var createWalletPopup = document.getElementById('createWalletPopup');
 
 var createWalletPopupHtml = '';
+var isWalletActive = '${isCustomerWalletActive}';
+
 function createWallet() {
 		$.ajax({
 			type : "GET",
@@ -2045,6 +2047,14 @@ function createWallet() {
 				});  
 	
 }
+
+$('#create_wallet_onpayment').on('click', function () {
+	if(isWalletActive == 'false'){
+		createWallet();	
+	} else {
+		showAddEGV();
+	}
+});
 
 function closepop(){
 	createWalletData.innerHTML=createWalletPopupHtml;
@@ -2167,6 +2177,7 @@ function submitWalletData(){
 				}
 				else if(response=='success'){
 					closepop();
+					isWalletActive = 'true';
 					showAddEGV();
 				}
 				else {
