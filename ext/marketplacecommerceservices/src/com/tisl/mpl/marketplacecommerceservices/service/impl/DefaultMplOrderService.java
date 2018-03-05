@@ -498,7 +498,7 @@ public class DefaultMplOrderService implements MplOrderService
 	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
 	{
 
-		boolean successFlag = false;
+		//boolean successFlag = false;
 		final OrderDataWsDTO result = new OrderDataWsDTO();
 		final OrderModel orderModelRatings = getOrderByParentOrderId(orderId);
 

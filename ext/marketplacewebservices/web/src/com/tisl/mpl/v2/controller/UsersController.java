@@ -1,10 +1,5 @@
 package com.tisl.mpl.v2.controller;
 
-import com.tisl.mpl.facades.wallet.MplWalletFacade;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
-import com.tisl.mpl.service.MplEgvWalletService;
-import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
-import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.address.AddressVerificationFacade;
@@ -27,7 +22,6 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
-import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -86,7 +80,6 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
@@ -242,6 +235,7 @@ import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.service.impl.MplProductWebServiceImpl;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
@@ -485,19 +479,6 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-
-	@Autowired
-	private MplWalletFacade mplWalletFacade;
-
-	@Resource(name = "mplDefaultPriceDataFactory")
-	private DefaultPriceDataFactory priceDataFactory;
-
-	@Autowired
-	private CommonI18NService commonI18NService;
-
-	@Autowired
-	private MplEGVCartService mplEGVCartService;
-
 	@Resource(name = "mplWebFormFacade")
 	private MplWebFormFacade mplWebFormFacade;
 
@@ -7396,7 +7377,8 @@ public class UsersController extends BaseCommerceController
 				if (null != orderModel.getSplitModeInfo()
 						&& orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 				{
-					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item,cardFingerPrint,cardRefNo,token,cardSaved,bankName);
+					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item, cardFingerPrint, cardRefNo, token,
+							cardSaved, bankName);
 					return orderCreateInJusPayWsDto;
 				}
 			}
@@ -7406,7 +7388,8 @@ public class UsersController extends BaseCommerceController
 				if (null != cart && null != cart.getSplitModeInfo()
 						&& cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 				{
-					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item,cardFingerPrint,cardRefNo,token,cardSaved,bankName);
+					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item, cardFingerPrint, cardRefNo, token,
+							cardSaved, bankName);
 					return orderCreateInJusPayWsDto;
 				}
 			}
@@ -11960,11 +11943,12 @@ public class UsersController extends BaseCommerceController
 	 *
 	 */
 	private OrderCreateInJusPayWsDto patAmountUsingQC(final String userId, final String cartGuid, final String pincode,
-			final InventoryReservListRequestWsDTO item,String cardFingerPrint,String cardRefNo,String token,String cardSaved,String bankName)
+			final InventoryReservListRequestWsDTO item, final String cardFingerPrint, final String cardRefNo, final String token,
+			final String cardSaved, final String bankName)
 	{
 		LOG.info("Paying  Full amount through QC for GUID" + cartGuid);
 		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
-		String uid = "";
+		String uid;
 		String failErrorCode = "";
 		boolean failFlag = false;
 		OrderModel orderModel = null;
@@ -11976,9 +11960,9 @@ public class UsersController extends BaseCommerceController
 		//		double payableJuspayAmount = 0.0D;
 		//		double totalWalletAmount = 0.0D;
 
-		final QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+		//final QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();--Sonar Fix
 
-		final BalanceBucketWise balBucketwise = null;
+		//final BalanceBucketWise balBucketwise = null;--Sonar Fix
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("********* Creating QC  Order mobile web service");
@@ -12343,20 +12327,20 @@ public class UsersController extends BaseCommerceController
 					for (final Map.Entry<String, Boolean> voucherentry : voucherMap.entrySet())
 					{
 
-//<<<<<<< HEAD
-//				if (!failFlag
-//						&& !mplCartFacade.isInventoryReservedMobile(
-//								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
-//								SalesApplication.MOBILE))
-//				{
-//					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
-//					getMplCartFacade().recalculateOrder(orderModel);
-//					failFlag = true;
-//					failErrorCode = MarketplacecommerceservicesConstants.B9047;
-//					//notify EMAil SMS TPR-815
-//					mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
-//				}
-//=======
+						//<<<<<<< HEAD
+						//				if (!failFlag
+						//						&& !mplCartFacade.isInventoryReservedMobile(
+						//								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
+						//								SalesApplication.MOBILE))
+						//				{
+						//					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+						//					getMplCartFacade().recalculateOrder(orderModel);
+						//					failFlag = true;
+						//					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+						//					//notify EMAil SMS TPR-815
+						//					mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
+						//				}
+						//=======
 						if (voucherentry.getKey().equals(MPLCARTVOUCHER))
 						{
 							if (!voucherentry.getValue().booleanValue())
@@ -12374,8 +12358,7 @@ public class UsersController extends BaseCommerceController
 					}
 					if (!checkcartVoucher1 && !checkPromovoucher2)
 					{ //both coupon and voucher
-						orderCreateInJusPayWsDto
-								.setErrorMessage(MarketplacecommerceservicesConstants.CARTANDCOUPONBOTHFAILUREMESSAGE);
+						orderCreateInJusPayWsDto.setErrorMessage(MarketplacecommerceservicesConstants.CARTANDCOUPONBOTHFAILUREMESSAGE);
 						failFlag = true;
 						failErrorCode = MarketplacecommerceservicesConstants.B9078;
 					}
@@ -12397,8 +12380,8 @@ public class UsersController extends BaseCommerceController
 					//TPR-7448 Starts here
 					if (!failFlag && (StringUtils.isNotEmpty(token) || StringUtils.isNotEmpty(cardFingerPrint)))
 					{
-						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token, cardSaved,
-								cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
+						final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidationMobile(orderModel, token,
+								cardSaved, cardRefNo, cardFingerPrint, MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE);
 						if (null != tuple3 && !((Boolean) tuple3.getFirst()).booleanValue())
 						{
 							failFlag = true;
@@ -12416,7 +12399,7 @@ public class UsersController extends BaseCommerceController
 					//TPR-7448 Ends here
 				}
 				//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NULL
-			
+
 				if (failFlag)
 				{
 					throw new EtailBusinessExceptions(failErrorCode);

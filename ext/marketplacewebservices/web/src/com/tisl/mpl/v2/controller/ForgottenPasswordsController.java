@@ -308,7 +308,7 @@ public class ForgottenPasswordsController extends BaseController
 		final MplUserResultWsDto validated = new MplUserResultWsDto();
 		try
 		{
-			final String userIdLwCase = userId.toLowerCase();
+			//final String userIdLwCase = userId.toLowerCase();
 			//		validated = mplUserHelper.validateRegistrationData(userIdLwCase, newPassword);//to-do
 			if (null != validated.getStatus()
 					&& validated.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
