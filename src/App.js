@@ -144,6 +144,15 @@ class App extends Component {
             component={PlpBrandCategoryWrapperContainer}
           />
           <Route
+            path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
+          />
+
+          <Route
+            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
+          />
+          <Route
             exact
             path={BRAND_OR_CATEGORY_LANDING_PAGE}
             component={PlpBrandCategoryWrapperContainer}
@@ -162,15 +171,6 @@ class App extends Component {
             render={routeProps => <Auth {...routeProps} {...this.props} />}
           />
 
-          <Route
-            path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
-            component={ProductDescriptionPageWrapperContainer}
-          />
-
-          <Route
-            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
-            component={ProductDescriptionPageWrapperContainer}
-          />
           <Route
             exact
             path={PRODUCT_REVIEW_ROUTER}

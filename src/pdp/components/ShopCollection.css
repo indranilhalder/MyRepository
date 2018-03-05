@@ -28,7 +28,7 @@
   margin: auto;
   word-break: break-word;
   text-align: left;
-  padding: 0px 20px 20px 20px;
+  padding: 0px 15px 20px 15px;
   width: 100%;
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -47,12 +47,16 @@
   position: absolute;
   margin-bottom: 40px;
 }
+.logoHolder {
+  width: 100%;
+  height: auto;
+}
 .headingHolder {
   width: 100%;
   height: auto;
-  margin-bottom: 30px;
 }
 .title {
   width: 100%;
   height: auto;
 }
+

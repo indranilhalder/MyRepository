@@ -15,6 +15,11 @@ export default class PdpFrame extends React.Component {
       this.props.addProductToBag();
     }
   }
+  goBack = () => {
+    if (this.props.gotoPreviousPage) {
+      this.props.gotoPreviousPage();
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -22,7 +27,7 @@ export default class PdpFrame extends React.Component {
           <HollowHeader
             addProductToBag={() => this.onSave()}
             addProductToWishList={() => this.onAddToBag()}
-            history={this.props.history}
+            gotoPreviousPage={() => this.goBack()}
           />
         </div>
         {this.props.children}
