@@ -239,7 +239,7 @@ public class WalletController
 
 	/**
 	 * This API is used to Remove the Cliq Cash From Cart
-	 * 
+	 *
 	 * @param cartGuid
 	 * @return
 	 * @throws EtailNonBusinessExceptions
@@ -251,12 +251,14 @@ public class WalletController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.REMOVE_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ApplyCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions, CalculationException
+	public ApplyCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid,
+			@RequestParam(required = false) final boolean isPwa) throws EtailNonBusinessExceptions, EtailBusinessExceptions,
+			CalculationException
 	{
 		LOG.info("Removing cliq Cash ");
 		ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
 		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		CartModel cart = null;
 		try
 		{
@@ -317,6 +319,25 @@ public class WalletController
 				modelService.save(cart);
 				modelService.refresh(cart);
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+							currency);
+					pricePwa.setBagTotal(totalMrp);
+					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
+					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					final DecimalFormat df = new DecimalFormat("#.##");
+					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					discount = Double.parseDouble(df.format(discount));
+					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					removeCliqCashWsDto.setCartAmount(pricePwa);
+
+				}
+
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
@@ -371,6 +392,25 @@ public class WalletController
 				modelService.save(orderModel);
 				modelService.refresh(orderModel);
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+							currency);
+					pricePwa.setBagTotal(totalMrp);
+					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
+					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					final DecimalFormat df = new DecimalFormat("#.##");
+					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					discount = Double.parseDouble(df.format(discount));
+					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					removeCliqCashWsDto.setCartAmount(pricePwa);
+
+				}
+
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
@@ -396,7 +436,7 @@ public class WalletController
 
 	/**
 	 * This API Is used to Redeem Cliq Cash using Cart Number and Pin
-	 * 
+	 *
 	 * @param couponCode
 	 * @param passKey
 	 * @return
