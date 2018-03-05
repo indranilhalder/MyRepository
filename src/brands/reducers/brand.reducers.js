@@ -18,6 +18,8 @@ const brandDetails = (
         brandDetails: action.brandDetails,
         status: action.status
       });
+    default:
+      return state;
   }
 };
 export default brandDetails;

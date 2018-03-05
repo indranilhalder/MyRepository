@@ -121,16 +121,26 @@ export default class BrandsTotal extends React.Component {
         price: "1,295"
       }
     ];
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.bannerHeader}>
           <BrandCardHeader
             onClickFollow={() => this.onClickFollow()}
             onClickUnfollow={() => this.onClickUnfollow()}
-            image="https://i.ytimg.com/vi/qYw54gT7uJA/maxresdefault.jpg"
-            text="Your full potential. Unlocked."
+            image={
+              this.props.brandDetails &&
+              this.props.brandDetails.heroSection.backgroundImage
+            }
+            text={
+              this.props.brandDetails &&
+              this.props.brandDetails.heroSection.description
+            }
             buttonLabel="Unfollow"
-            logo="http://res.cloudinary.com/dka5wc5e4/image/upload/v1518509587/westside_logo_beotcg.png"
+            logo={
+              this.props.brandDetails &&
+              this.props.brandDetails.heroSection.logoImage
+            }
           />
         </div>
         <div className={styles.brandsList}>

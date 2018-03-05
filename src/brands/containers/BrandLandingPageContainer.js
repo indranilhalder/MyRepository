@@ -9,8 +9,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const mapStateToProps = state => {
+  console.log(state);
   return {
-    brands: state
+    brandDetails: state.brandDetails.brandDetails
   };
 };
 const BrandLandingPageContainer = connect(mapStateToProps, mapDispatchToProps)(
