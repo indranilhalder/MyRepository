@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ShopCollection.css";
-import { Image } from "xelpmoc-core";
+import { Image, Icon } from "xelpmoc-core";
 import Button from "../../general/components/Button";
 import PropTypes from "prop-types";
 import Logo from "../../general/components/Logo";
@@ -21,7 +21,7 @@ export default class ShopCollection extends React.Component {
           <div className={styles.headingHolder}>
             {this.props.logo && (
               <div className={styles.logoHolder}>
-                <Logo image={this.props.logo} />
+                <Icon image={this.props.logo} size={40} />
               </div>
             )}
             <div className={styles.heading}>{this.props.header}</div>

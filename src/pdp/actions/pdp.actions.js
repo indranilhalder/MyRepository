@@ -1,10 +1,12 @@
 import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
+import each from "lodash/each";
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
 } from "../../lib/constants";
+
 export const PRODUCT_DESCRIPTION_REQUEST = "PRODUCT_DESCRIPTION_REQUEST";
 export const PRODUCT_DESCRIPTION_SUCCESS = "PRODUCT_DESCRIPTION_SUCCESS";
 export const PRODUCT_DESCRIPTION_FAILURE = "PRODUCT_DESCRIPTION_FAILURE";
@@ -68,10 +70,18 @@ export const PRODUCT_MSD_REQUEST = "PRODUCT_MSD_REQUEST";
 export const PRODUCT_MSD_SUCCESS = "PRODUCT_MSD_SUCCESS";
 export const PRODUCT_MSD_FAILURE = "PRODUCT_MSD_FAILURE";
 
+export const GET_PDP_ITEMS_REQUEST = "GET_PDP_ITEMS_REQUEST";
+export const GET_PDP_ITEMS_SUCCESS = "GET_PDP_ITEMS_SUCCESS";
+export const GET_PDP_ITEMS_FAILURE = "GET_PDP_ITEMS_FAILURE";
+
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
 export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
+
+export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
+export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
+export const SIMILAR_PRODUCTS_WIDGET_KEY = "similarProducts";
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
@@ -86,7 +96,7 @@ const PAGE_VALUE = "0";
 const PAGE_NUMBER = "1";
 const MSD_REQUEST_PATH = "widgets";
 const API_KEY = "8783ef14595919d35b91cbc65b51b5b1da72a5c3";
-const WIDGET_LIST = [0];
+const WIDGET_LIST = [0, 8];
 const NUMBER_RESULTS = [20];
 const MAD_UUID = "F4B82964-5E08-4531-87AF-7E03E3CD0307";
 
@@ -122,6 +132,7 @@ export function getProductDescription(productCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(getProductDescriptionSuccess(resultJson));
     } catch (e) {
       dispatch(getProductDescriptionFailure(e.message));
@@ -644,7 +655,7 @@ export function getMsdRequest(productCode) {
   return async (dispatch, getState, { api }) => {
     let msdRequestObject = new FormData();
     msdRequestObject.append("api_key", API_KEY);
-    msdRequestObject.append("widget_list", WIDGET_LIST);
+    msdRequestObject.append("widget_list", JSON.stringify(WIDGET_LIST));
     msdRequestObject.append("num_results", NUMBER_RESULTS);
     msdRequestObject.append("mad_uuid", MAD_UUID);
     msdRequestObject.append("details", false);
@@ -658,9 +669,65 @@ export function getMsdRequest(productCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(productMsdSuccess(resultJson));
+
+      if (resultJson.data[0].length > 0) {
+        dispatch(getPdpItems(resultJson.data[0], ABOUT_THE_BRAND_WIDGET_KEY));
+      }
+      if (resultJson.data[1].length > 0) {
+        dispatch(
+          getPdpItems(resultJson.data[1], RECOMMENDED_PRODUCTS_WIDGET_KEY)
+        );
+      }
+
+      if (resultJson.data[2].length > 0) {
+        dispatch(getPdpItems(resultJson.data[2], SIMILAR_PRODUCTS_WIDGET_KEY));
+      }
     } catch (e) {
       dispatch(productMsdFailure(e.message));
+    }
+  };
+}
+
+export function getPdpItemsPdpRequest() {
+  return {
+    type: GET_PDP_ITEMS_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getPdpItemsPdpSuccess(items, widgetKey) {
+  return {
+    type: GET_PDP_ITEMS_SUCCESS,
+    status: SUCCESS,
+    items,
+    widgetKey
+  };
+}
+export function getPdpItemsFailure(positionInFeed, errorMsg) {
+  return {
+    type: GET_PDP_ITEMS_FAILURE,
+    errorMsg,
+    status: FAILURE
+  };
+}
+
+export function getPdpItems(itemIds, widgetKey) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getPdpItemsPdpRequest());
+    try {
+      let productCodes;
+      each(itemIds, itemId => {
+        productCodes = `${itemId},${productCodes}`;
+      });
+      const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
+      const result = await api.getMsd(url);
+
+      const resultJson = await result.json();
+      if (resultJson.status === "FAILURE") {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(getPdpItemsPdpSuccess(resultJson.results, widgetKey));
+    } catch (e) {
+      dispatch(getPdpItemsFailure(e.message));
     }
   };
 }

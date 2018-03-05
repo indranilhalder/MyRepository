@@ -8,3 +8,7 @@
   display:inline-block;
   padding-left: 20px;
 }
+.active{
+  composes:base;
+  color:#ff1744
+}
