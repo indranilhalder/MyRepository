@@ -6233,3 +6233,7 @@ span#offer_section_responsive_error_msg {
 #totalPayableLabel, #totalPayableLabelBottom {font-weight: 500;}
 .cliqCashInfoSection {display: table;}
 
+.cncOrderInfo .thumb { /*added for TISUAT-6496*/
+    padding-top: 16px;
+}
+
