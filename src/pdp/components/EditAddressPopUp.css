@@ -1,0 +1,21 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.container {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  border-top: 1px solid #ececec;
+}
+.holder {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  margin-bottom: 15px;
+}
