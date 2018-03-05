@@ -511,7 +511,7 @@ public class DefaultMplOrderService implements MplOrderService
 				modelService.save(orderModelRatings);
 				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG_CUST_EXP);
 				result.setMessage(MarketplacecommerceservicesConstants.SUCCESS_MSG_CUST_EXP);
-				successFlag = true;
+				//successFlag = true;
 
 			}
 
