@@ -4228,7 +4228,7 @@
    </bean>
    <!--NU-38 end  -->
 	<bean class="com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO">
-		<property name="termAndConditions" type= "String"/>		
+		<property name="termAndConditions" type= "java.util.List&lt;String>"/>		
 		<property name="errorCode" type="String" />
 		<property name="message" type="String" />
 		<property name="status" type="String" />
