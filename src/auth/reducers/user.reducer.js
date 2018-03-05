@@ -149,7 +149,6 @@ const user = (
       });
 
     case userActions.GLOBAL_ACCESS_TOKEN_SUCCESS:
-      console.log("GLOBAL ACCESS TOKEN");
       debugger;
       Cookies.createCookie(
         GLOBAL_ACCESS_TOKEN,

@@ -8,13 +8,28 @@ export function transformData(datum) {
   if (!title) {
     title = datum.title;
   }
+
+  if (datum.image_link) {
+    image = datum.image_link;
+  }
+
+  let url;
+  if (datum.webURL) {
+    url = datum.webURL;
+  }
+
+  if (datum.link) {
+    url = datum.link;
+  }
   return {
     image: image,
     video: datum.video,
     title: title,
     description: datum.description,
     price: datum.mrp,
-    discountPrice: datum.winningSellerMOP
+    discountPrice: datum.winningSellerMOP,
+    webURL: url,
+    ...datum
   };
 }
 export function transformItem(datum) {
@@ -22,6 +37,7 @@ export function transformItem(datum) {
     imageURL: datum.imageUrl,
     discountPrice: datum.winningSellerMOP,
     price: datum.mrp,
-    title: datum.productName
+    title: datum.productName,
+    webURL: datum.webURL
   };
 }

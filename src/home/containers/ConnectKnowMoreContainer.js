@@ -6,8 +6,11 @@ import ConnectKnowMore from "../components/ConnectKnowMore.js";
 import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state, ownProps) => {
+  const { data, rest } = ownProps;
+
   return {
-    data: ownProps
+    data,
+    ...rest
   };
 };
 const mapDispatchToProps = dispatch => {

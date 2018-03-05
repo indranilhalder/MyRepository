@@ -29,9 +29,10 @@ import {
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
+const PRODUCT_CODE_FOR_HOME = "mp000000000169248";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
-    this.props.getProductDescription();
+    this.props.getProductDescription(PRODUCT_CODE_FOR_HOME);
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
     this.props.getProductWishList();
@@ -113,9 +114,7 @@ class ProductDescriptionPage extends Component {
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
-      const mobileGalleryImages = productData.galleryImagesList.filter(val => {
-        return val.imageType === MOBILE_PDP_VIEW;
-      })[0].galleryImages;
+      const mobileGalleryImages = productData.galleryImagesList;
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
@@ -136,10 +135,10 @@ class ProductDescriptionPage extends Component {
             </ProductGalleryMobile>
             <div className={styles.content}>
               <ProductDetailsMainCard
-                productName={productData.productBrandInfo.brandName}
+                productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrpPrice.formattedValue}
-                discountPrice={productData.discountedPrice.formattedValue}
+                price={productData.mrp}
+                discountPrice={productData.discount}
                 averageRating={productData.averageRating}
               />
             </div>

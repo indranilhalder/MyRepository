@@ -2,10 +2,15 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import { transformData } from "./utils.js";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class RecommendationWidget extends React.Component {
   handleClick() {
-    this.props.history.push(PRODUCT_LISTINGS);
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
   }
 
   componentDidUpdate() {
@@ -22,8 +27,6 @@ export default class RecommendationWidget extends React.Component {
 
   render() {
     let feedComponentData = this.props.feedComponentData;
-    console.log("feed component data");
-    console.log(feedComponentData);
     let carouselData;
     if (feedComponentData.items && feedComponentData.items instanceof Array) {
       carouselData = feedComponentData.items.map(transformData);

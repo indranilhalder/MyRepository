@@ -1,9 +1,0 @@
-import React from "react";
-import styles from "./MobileFooterNew.css";
-import withMultiSelect from "../../higherOrderComponents/withMultiSelect";
-const MobileFooter = class MobileFooterNew extends React.Component {
-  render() {
-    return <div className={styles.base}>{this.props.children}</div>;
-  }
-};
-export default withMultiSelect(MobileFooter);
