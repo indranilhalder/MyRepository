@@ -1200,9 +1200,9 @@ function onFilterAddAnalytics(filterName,filterValue){
 	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	// TPR-6287 | filter tacking
-	if (typeof _satellite != "undefined") {
+	/*if (typeof _satellite != "undefined") {
 		_satellite.track('filter_temp');
-    }
+    }*/
 	if(typeof digitalData.filter != "undefined"){
 		if(typeof digitalData.filter.temp != "undefined"){
 			digitalData.filter.temp.type = filter_type;
@@ -1231,6 +1231,12 @@ function onFilterAddAnalytics(filterName,filterValue){
 		"filter_type" : filter_type,
 		"filter_value" : filter_value
 	});
+	
+	setTimeout(function() {
+		if (typeof _satellite != "undefined") {
+			_satellite.track('filter_temp');
+	    }
+	}, 1500);
 }
 
 function onFilterRemoveAnalytics(filterName,filterValue){

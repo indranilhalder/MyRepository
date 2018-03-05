@@ -16,6 +16,7 @@ package com.tisl.mpl.core.event;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commerceservices.enums.SiteChannel;
 import de.hybris.platform.commerceservices.event.AbstractSiteEventListener;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 //import de.hybris.platform.orderprocessing.events.OrderPlacedEvent;
@@ -25,11 +26,16 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
+import javax.xml.bind.JAXBException;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
+import com.tisl.mpl.core.mplqcprogram.dao.MplQCProgramDao;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
@@ -43,6 +49,16 @@ import com.tisl.mpl.sms.MplSendSMSService;
 public class OrderConfirmationEventListener extends AbstractSiteEventListener<OrderPlacedEvent>
 {
 
+	/**
+	 *
+	 */
+	private static final String CUSTOMER2 = "Customer";
+
+	/**
+	 *
+	 */
+	private static final String JUSPAY = "Juspay";
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -51,6 +67,8 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 
 	@Autowired
 	private ShortUrlService googleShortUrlService;
+	@Autowired
+	MplQCProgramDao mplQCProgramDao;
 
 	private static final Logger LOG = Logger.getLogger(OrderConfirmationEventListener.class);
 
@@ -87,61 +105,95 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"orderConfirmationEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
 				"orderConfirmationEmailProcess");
-		final String shortTrackingUrl = googleShortUrlService
-				.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
-						.getParentReference().getCode());
+		final String shortTrackingUrl = googleShortUrlService.genearateShortURL(
+				orderModel.getParentReference() == null ? orderModel.getCode() : orderModel.getParentReference().getCode());
 		orderProcessModel.setOrder(orderModel);
 		getModelService().save(orderProcessModel);
-		if(null != shortTrackingUrl) {
+		if (null != shortTrackingUrl)
+		{
 			orderProcessModel.setOrderTrackUrl(shortTrackingUrl);
 		}
 		getBusinessProcessService().startProcess(orderProcessModel);
+
 
 		//send SMS
 		try
 		{
 			String mobileNumber = null;
 			String firstName = null;
-			
+
 			final OrderModel orderDetails = orderProcessModel.getOrder();
-			CustomerModel customer=null;
-			if(orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel){
-				 customer=(CustomerModel) orderModel.getUser();
+			CustomerModel customer = null;
+			if (orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel)
+			{
+				customer = (CustomerModel) orderModel.getUser();
 			}
-			if(null != orderDetails  && orderDetails.getDeliveryAddress() != null && orderDetails.getDeliveryAddress().getPhone1()!= null){
+			if (null != orderDetails && orderDetails.getDeliveryAddress() != null
+					&& orderDetails.getDeliveryAddress().getPhone1() != null)
+			{
 				mobileNumber = orderDetails.getDeliveryAddress().getPhone1();
-			}else{
-			 mobileNumber = customer.getMobileNumber();
 			}
-			if(null != orderDetails  && orderDetails.getDeliveryAddress() != null && orderDetails.getDeliveryAddress().getFirstname()!= null){
+			else
+			{
+				mobileNumber = customer.getMobileNumber();
+			}
+			if (null != orderDetails && orderDetails.getDeliveryAddress() != null
+					&& orderDetails.getDeliveryAddress().getFirstname() != null)
+			{
 				firstName = orderDetails.getDeliveryAddress().getFirstname();
-			}else{
-				if (null != customer && customer.getFirstName() !=null){
-				    firstName = customer.getFirstName();
-				}else {
-					firstName = "Customer";
+			}
+			else
+			{
+				if (null != customer && customer.getFirstName() != null)
+				{
+					firstName = customer.getFirstName();
+				}
+				else
+				{
+					firstName = CUSTOMER2;
 				}
 			}
-			
+
 			final String orderReferenceNumber = orderDetails.getCode();
 			//SDI-2038
-			final String trackingUrl = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-					+ "/" + orderReferenceNumber;
+			final String trackingUrl = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + "/" + orderReferenceNumber;
+			String url = null;
+			if (null != orderDetails.getIsEGVCart() && orderDetails.getIsEGVCart().booleanValue())
+			{
+				url = "My Account";
+			}
+			else
+			{
+				url = null != shortTrackingUrl ? shortTrackingUrl : trackingUrl;
+			}
+			//			final String shortTrackingUrl = googleShortUrlService
+			//					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+			//							.getParentReference().getCode());
+			try
+			{
+				final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, url);
 
-//			final String shortTrackingUrl = googleShortUrlService
-//					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
-//							.getParentReference().getCode());
-			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null !=shortTrackingUrl?shortTrackingUrl : trackingUrl);
+				final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+				smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+				smsRequestData.setContent(content);
+				smsRequestData.setRecipientPhoneNumber(mobileNumber);
+				sendSMSService.sendSMS(smsRequestData);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Exceptions occured while sending sms " + ex);
+			}
+			/***
+			 * Added Code Send sms Notification For Wallet redeemed Start
+			 *
+			 */
 
-			final SendSMSRequestData smsRequestData = new SendSMSRequestData();
-			smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-			smsRequestData.setContent(content);
-			smsRequestData.setRecipientPhoneNumber(mobileNumber);
-			sendSMSService.sendSMS(smsRequestData);
+			sendNotificationWalletRedeemed(orderModel, customer);
+			//Send sms Notification For Wallet redeemed  Start
 
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -155,6 +207,59 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 
 	}
 
+	/**
+	 * @param orderModel
+	 * @param customer
+	 * @param content
+	 *
+	 *           Send sms redeemed amount from
+	 */
+	private void sendNotificationWalletRedeemed(final OrderModel orderModel, final CustomerModel customer)
+	{
+		if (StringUtils.isNotEmpty(orderModel.getSplitModeInfo()) && !JUSPAY.equalsIgnoreCase(orderModel.getSplitModeInfo()))
+		{
+			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+			{
+				if (entry.getWalletApportionPaymentInfo() != null
+						&& entry.getWalletApportionPaymentInfo().getWalletCardList() != null)
+				{
+					for ( WalletCardApportionDetailModel cardSplitValue : entry.getWalletApportionPaymentInfo()
+							.getWalletCardList())
+					{
+						if (CUSTOMER2.equalsIgnoreCase(cardSplitValue.getBucketType()))
+						{
+							 WalletCardApportionDetailModel walletCardApportionDetailModel = mplQCProgramDao
+									.getCardTotalAmount(cardSplitValue.getCardNumber());
+							
+							String amountT=null;
+							if(StringUtils.isNotEmpty(walletCardApportionDetailModel.getRemainingCardAmount())){
+								amountT=walletCardApportionDetailModel.getRemainingCardAmount();
+							}else{
+								amountT=walletCardApportionDetailModel.getCardAmount();
+							}
+							 int totalAmount = Double.valueOf(amountT).intValue();
+							 int redeemedTotalAmount = Double.valueOf(cardSplitValue.getCardAmount()).intValue();
+							 int remainingAmount = totalAmount - redeemedTotalAmount;
+
+
+							sendNotificationForRedeemedAmountFromWallet(customer, cardSplitValue.getCardNumber(),
+									cardSplitValue.getCardAmount(), Integer.toString(remainingAmount));
+							try
+							{
+								walletCardApportionDetailModel.setRemainingCardAmount(Integer.toString(remainingAmount));
+								modelService.save(walletCardApportionDetailModel);
+							}
+							catch (final Exception exception)
+							{
+								LOG.error("Error Occure while saving RemainingCardAmount(");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	protected boolean shouldHandleEvent(final OrderPlacedEvent event)
 	{
@@ -164,4 +269,32 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);
 		return SiteChannel.B2C.equals(site.getChannel());
 	}
+
+	//Send sms redeemed  amount from
+	public void sendNotificationForRedeemedAmountFromWallet(final CustomerModel customerModel, final String cardNumber,
+			final String redeemedAmount, final String remainingAmount)
+	{
+		try
+		{
+			if (StringUtils.isNotEmpty(customerModel.getQcVerifyMobileNo()))
+			{
+				final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED_FROM_WALLET
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, cardNumber)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, redeemedAmount)
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, remainingAmount);
+				final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+				smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+				smsRequestData.setContent(content);
+				smsRequestData.setRecipientPhoneNumber(customerModel.getQcVerifyMobileNo());
+				sendSMSService.sendSMS(smsRequestData);
+			}
+		}
+		catch (final JAXBException e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+
 }

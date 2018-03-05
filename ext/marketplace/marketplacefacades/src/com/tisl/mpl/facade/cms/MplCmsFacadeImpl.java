@@ -101,6 +101,7 @@ import com.tisl.mpl.facades.data.SimpleBannerComponentData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultProductModelUrlResolver;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -118,6 +119,7 @@ import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpCompListWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpStripWsDTO;
@@ -197,6 +199,9 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private Converter<SimpleBannerComponentModel, SimpleBannerComponentData> mplBannerConverter;
 
 	private Converter<MplFooterLinkModel, FooterLinkData> footerLinkConverter;
+
+	@Autowired
+	private MplCmsPageDao mplCmsPageDao;
 
 	/**
 	 * @return the footerLinkConverter
@@ -3434,5 +3439,38 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		return ampMenifestData;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getEmiTermsAndConditions()
+	 */
+	@Override
+	public EmiTermsandConditionsCMSWsDTO getEmiTermsAndConditions(final String contentSlotName)
+	{
+
+		final EmiTermsandConditionsCMSWsDTO emiterms = new EmiTermsandConditionsCMSWsDTO();
+
+		final ContentSlotModel emiSlot = mplCmsPageDao.getContentSlotByName(contentSlotName);
+
+		if (null != emiSlot && CollectionUtils.isNotEmpty(emiSlot.getCmsComponents()))
+		{
+			for (final AbstractCMSComponentModel cmsComponentModel : emiSlot.getCmsComponents())
+			{
+				if (cmsComponentModel instanceof CMSParagraphComponentModel)
+				{
+					final CMSParagraphComponentModel emiTermsText = (CMSParagraphComponentModel) cmsComponentModel;
+					emiterms.setTermAndConditions(emiTermsText.getContent());
+					emiterms.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+				}
+			}
+		}
+
+
+		return emiterms;
+
+	}
+
 
 }

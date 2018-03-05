@@ -216,6 +216,12 @@
 				<widget id="pincodes_upload" widgetDefinitionId="com.hybris.oms.widgets.pincodesuploadwidget"
 					slotId="perspectives" template="true">
 				</widget>
+				
+				<widget id="wallets_upload" widgetDefinitionId="com.hybris.oms.walletdatauploadwidget"
+					slotId="perspectives" template="true">
+				</widget>
+				
+				
 				<!-- Tship Delivery tat @prabhakar.s@techouts -->
 				<widget widgetDefinitionId="com.techouts.widgets.tshipdeliverytatwidget"
 					id="tshipdeliverytat" slotId="perspectives" template="true"></widget>

@@ -2373,12 +2373,12 @@
    
    <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
     	  <property name="cache" ref="promotionsCachingStrategy"/>
-	</bean>
+	</bean>-->
 	
 	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper" >
 	<constructor-arg value = "${promotion.memcache.env.ip}"/>
 	 </bean>
-	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
+	 <!-- <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
 		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
 	</bean>  -->
@@ -2511,6 +2511,12 @@
 	<alias name="mplFollowedBrandDao" alias="mplFollowedBrandDao"/>
 	<bean id="mplFollowedBrandDao" class="com.tisl.mpl.marketplacecommerceservices.daos.brand.impl.MplFollowedBrandDaoImpl" >
     </bean>
+    
+    <bean id="followedBrandUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.FollowedBrandUploadPrepareInterceptor" autowire="byName"></bean>
+<bean id="followedBrandUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+	<property name="interceptor" ref="followedBrandUploadPrepareInterceptor"></property>
+	<property name="typeCode" value="FollowedBrandUpload"></property>
+</bean>
    <!--  NU-50 end -->
 
 	<alias alias="mplCustomerReviewService" name="mplCustomerReviewService"/>
@@ -2519,6 +2525,29 @@
 	</bean>
 		
 	<bean id="mplCustomerReviewDao" class="com.tisl.mpl.marketplacecommerceservices.daos.product.impl.MplCustomerReviewDaoImpl" parent="customerReviewDao"/>
+
+	
+	<!-- memcache for new ui/ux pdp api -->
+	<bean id="defaultApiCachingStrategy" class="com.tisl.mpl.cache.strategy.impl.MplDefaultApiCachingStrategy" scope="tenant"> 
+	</bean>
+	
+
+       <!--  Added EGV Beans 22-09-2017 --> 
+   <bean id="MplEGVCartServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.service.cart.impl.MplEGVCartServiceImpl">
+   </bean>
+   <bean id="MplEGVCartDaoImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.dao.cart.impl.MplEGVCartDaoImpl">
+   </bean>
+   
+   <!--  END EGV Beans 22-09-2017 -->
+   
+   <bean id="MplQcPaymentFailService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplQcPaymentFailServiceImpl">
+   </bean>
+   
+   <bean id="MplQcPaymentFailDao" class="com.tisl.mpl.promotion.dao.impl.MplQcPaymentFailDaoImpl">
+   </bean>
+   
+   <bean id="MplQcRefundService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
+   </bean>
 
 </beans>
 

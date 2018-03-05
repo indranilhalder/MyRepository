@@ -35,6 +35,49 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String LUX_TRACK_ORDER_LONG_URL_FORMAT = "lux.order.track.longurl.format".intern();
 	public static final String SHORTURL_CONNECTION_TIMEOUT = "short.url.connection.timeout";
 	public static final String SHORTURL_READ_TIMEOUT = "short.url.read.timeout";
+	public static final String QC_TIME_OUT = "qcTimeout";
+
+
+	// QC Wallet
+	public static final String QC_INITIALIZATION_URL = "initialize";
+	public static final String QC_WALLET_URL = "wallet/";
+	public static final String PURCHASE_EGV_CARD ="gc/createandissue";
+	public static final String GET_QC_BALANCE="/balance";
+	public static final String QC_WALLET_REDEMED = "/Redeem";
+	public static final String QC_CANCEL_REDEMED = "/Cancelredeem";
+	public static final String QC_WALLET_LOAD_CASHBACK ="/load/CASHBACK";
+	public static final String QC_WALLET_CANCEL_LOAD = "/CancelLoad";
+	public static final String QC_WALLET_QC_CARD = "/card";
+	public static final String QC_WALLET_QC_BALANCE = "/balance";
+	public static final String QC_WALLET_LIST_TRANSACTIONS = "/transactions";
+	public static final String QC_WALLET_LOAD_PROMOTION = "/load/PROMOTION";
+	public static final String QC_WALLET_LOAD_CREDIT = "/load/CREDIT";
+	public static final String QC_WALEET_ACTIVATE = "/Activate";
+	public static final String QC_WALLET_DEACTIVATE = "/Deactivate";
+	public static final String QC_WALLET_CUSTOMER ="/customer";
+	
+	public static final String FORWARDING_ENTITY_ID = "ForwardingEntityId";
+	public static final String FORWARDING_ENTITY_PASSWORD = "ForwardingEntityPassword";
+	public static final String TERMINAL_ID = "TerminalId";
+	public static final String USERNAME = "Username";
+	public static final String PASSWORD = "Password";
+	public static final String TRANSACTION_ID = "TransactionId";
+	public static final String DATE_AT_CLIENT = "DateAtClient";
+	public static final String IS_FORWARDING_ENTIRY_EXISTS = "IsForwardingEntityExists";
+	public static final String CONTENT_TYPE = "Content-Type";
+	public static final String ACQUIRERID = "AcquirerId";
+	public static final String MERCHANT_OUTLET_NAME = "MerchantOutletName";
+	public static final String ORGANIZATION_NAME = "OrganizationName";
+	public static final String POS_ENTRY_MODE = "POSEntryMode";
+	public static final String POS_TYPE_ID = "POSTypeId";
+	public static final String POS_NAME = "POSName";
+	public static final String TERM_APP_VERSION = "TermAppVersion";
+	public static final String CURRENT_BATCH_NUMBER = "CurrentBatchNumber";
+	public static final String QC_URL="qcUrl";
+
+	
+
+	// QC Wallet
 
 	// Pincode Serviceabilty constants
 	/*
@@ -43,7 +86,7 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	 * ; public static final String URLSECONDPHASE =
 	 * "<Item><USSID><replaceUssid></USSID><FulfilmentType>TSHIP</FulfilmentType><TransportMode>AIR</TransportMode><DeliveryMode><Type>HD</Type><Inventory>449</Inventory><isPincodeServiceable>Y</isPincodeServiceable><isCOD>N</isCOD><isPrepaidEligible>N</isPrepaidEligible><DeliveryDate>2015-07-21T15:54:04Z</DeliveryDate></DeliveryMode></Item>"
 	 * ; public static final String URLTHIRDPHASE = "</PincodeServiceability>";
-	 *
+	 * 
 	 * public static final String URLSOFTFIRSTPHASE =
 	 * "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><inventoryReservationResponseDTO>"; public static
 	 * final String URLSOFTSECONDPHASE =

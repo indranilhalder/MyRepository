@@ -80,7 +80,8 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li {
     display: inline-block;
 }
-body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.viewDetailsAnchor a, body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor a {
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.viewDetailsAnchor a, body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor a,
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.resendEmail span {
     height: 16px;
     font-size: 12px;
     line-height: 1.33;
@@ -88,6 +89,7 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
     text-align: center;
     color: #a5173c;
     text-transform: uppercase;
+    cursor: pointer;
 }
 body .account .right-account .order-history .navigation2 {
     margin-right: 18px;

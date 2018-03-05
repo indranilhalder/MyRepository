@@ -336,6 +336,9 @@
 	<property name="commonI18NService" ref="commonI18NService" />
 	<property name="customerReviewService" ref="mplCustomerReviewService"/>
 	<property name="customerReviewConverter" ref="customerReviewConverter"/>
+	<!-- for memcache in pdp new ui/ux -->
+	<property name="isCacheEnabled" value="#{configurationService.configuration.getProperty('pdp.memcache.enabled')}" />
+	<!-- for memcache in pdp new ui/ux -->
 	<property name="redirectHandlers">
 		<util:map key-type="de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType" map-class="java.util.HashMap">
 			<entry key="CONTAINS" value-ref="containsKeywordRedirectHandler" />
@@ -483,12 +486,19 @@
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+
 				
 				<bean id="defaultCustomerReviewPopulator"
 			class="com.tisl.mpl.facades.populators.MplCustomerReviewPopulator">
 		<property name="principalConverter" ref="principalConverter"/>
 		
 	</bean>
+
+	
+		<bean id="mplEgvWalletService" class="com.tisl.mpl.service.impl.MplEgvWalletServiceImpl"/>	
+	
+				
+
 </beans>
 
 

@@ -112,6 +112,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.jalo.BundlingPromotionWithPercentageSlab;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultExtStockLevelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
@@ -122,10 +123,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.CartOfferDetailsWsDTO;
@@ -134,6 +138,8 @@ import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
+import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
+import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -224,7 +230,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Autowired
 	private ConfigurationService configurationService;
-
 	//for new get user cart details ui/ux:NU-46
 	@Autowired
 	private CommonI18NService commonI18NService;
@@ -232,6 +237,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Resource(name = "defaultStockLevelDao")
 	private DefaultExtStockLevelDao defaultStockLevelDao;
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
+	
+	@Autowired
+	private MplEgvWalletService mplEgvWalletService;
 
 	/**
 	 * Service to create cart
@@ -966,12 +976,21 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (isPwa)
 				{
 					final Double mrp = calculateCartTotalMrp(cart);
-					//
 					final PriceData totalMrp = createPriceCharge(mrp.toString());
 					pricePwa.setBagTotal(totalMrp);
-					final PriceData payableAmount = createPriceCharge(cartDataDetails.getTotalPrice());
-					pricePwa.setPaybleAmount(payableAmount);
-					final double discount = totalMrp.getDoubleValue().doubleValue() - payableAmount.getDoubleValue().doubleValue();
+					double actualDelCharge = 0.0;
+					if (CollectionUtils.isNotEmpty(cart.getEntries()))
+					{
+						for (final AbstractOrderEntryModel cartentry : cart.getEntries())
+						{
+							actualDelCharge += cartentry.getCurrDelCharge().doubleValue();
+						}
+					}
+					final PriceData amountInclDelCharge = createPriceCharge(cartDataDetails.getTotalPrice());
+					pricePwa.setPaybleAmount(amountInclDelCharge);
+					final double delCharge = actualDelCharge;
+					final double payableamtWdDelCharge = (Double.parseDouble(cartDataDetails.getTotalPrice()) - delCharge);
+					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
 					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
 					pricePwa.setTotalDiscountAmount(totalDiscount);
 					cartDataDetails.setCartAmount(pricePwa);
@@ -3332,8 +3351,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3602,7 +3621,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -4640,7 +4659,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 
+	
 
+	
 
 
 

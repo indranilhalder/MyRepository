@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.pojo;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -13,30 +15,38 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlRootElement(name = "TransactionInfo")
-@XmlType(propOrder =
-{ "transactionId", "paymentRefID", "orderTag", "fulfillmentType", "itemNumber", "USSID", "amount", "shipmentCharge",
+/*@XmlType(propOrder =
+{ "transactionId", "paymentRefID", "orderTag", "fulfillmentType", "itemNumber", "USSID","MerchantInfo","amount", "shipmentCharge",
 		"sellerCode", "expressdeliveryCharge", "primaryCategory", "secondaryCategory", "cancelDate", "returnDate",
-		"reversePaymentRefId", "deliveryMode", "scheduleDelCharge" })
+		"reversePaymentRefId", "deliveryMode", "scheduleDelCharge" })*/
+
+@XmlType(propOrder ={ "transactionId", "orderTag", "fulfillmentType", "deliveryMode","itemNumber", "USSID","merchantInfoList","amount", 
+		"sellerCode", "primaryCategory", "secondaryCategory", "cancelDate", "returnDate"})
+
+
+
+
 public class ChildOrderXMlData
 {
 
 	private String transactionId;
-	private String paymentRefID;
+	//private String paymentRefID;
 	private String orderTag;
 	private String fulfillmentType;
 	private String itemNumber;
 	private String USSID;
 	private double amount;
-	private double shipmentCharge;
+	//private double shipmentCharge;
 	private String sellerCode;
-	private double expressdeliveryCharge;
+	//private double expressdeliveryCharge;
 	private String primaryCategory;
 	private String secondaryCategory;
 	private String cancelDate;
 	private String returnDate;
-	private String reversePaymentRefId;
+//	private String reversePaymentRefId;
 	private String deliveryMode;
-	private double scheduleDelCharge;
+//	private double scheduleDelCharge;
+	private List<MerchantInfoXMlData> merchantInfoList;
 
 
 
@@ -60,22 +70,22 @@ public class ChildOrderXMlData
 
 	/**
 	 * @return the paymentRefID
-	 */
+	 *//*
 	@XmlElement(name = "PaymentRefID")
 	public String getPaymentRefID()
 	{
 		return paymentRefID;
 	}
 
-	/**
+	*//**
 	 * @param paymentRefID
 	 *           the paymentRefID to set
-	 */
+	 *//*
 	public void setPaymentRefID(final String paymentRefID)
 	{
 		this.paymentRefID = paymentRefID;
 	}
-
+*/
 	/**
 	 * @return the orderTag
 	 */
@@ -152,7 +162,7 @@ public class ChildOrderXMlData
 	/**
 	 * @return the amount
 	 */
-	@XmlElement(name = "Amount")
+	@XmlElement(name = "TAmount")
 	public double getAmount()
 	{
 		return amount;
@@ -168,24 +178,24 @@ public class ChildOrderXMlData
 	}
 
 
-
-	/**
+/*
+	*//**
 	 * @return the shipmentCharge
-	 */
+	 *//*
 	@XmlElement(name = "ShipmentCharge")
 	public double getShipmentCharge()
 	{
 		return shipmentCharge;
 	}
 
-	/**
+	*//**
 	 * @param shipmentCharge
 	 *           the shipmentCharge to set
-	 */
+	 *//*
 	public void setShipmentCharge(final double shipmentCharge)
 	{
 		this.shipmentCharge = shipmentCharge;
-	}
+	}*/
 
 	/**
 	 * @return the sellerCode
@@ -206,24 +216,24 @@ public class ChildOrderXMlData
 	}
 
 
-	/**
+/*	*//**
 	 * @return the expressdeliveryCharge
-	 */
+	 *//*
 	@XmlElement(name = "ExpressDelCharge")
 	public double getExpressdeliveryCharge()
 	{
 		return expressdeliveryCharge;
 	}
 
-	/**
+	*//**
 	 * @param expressdeliveryCharge
 	 *           the expressdeliveryCharge to set
-	 */
+	 *//*
 	public void setExpressdeliveryCharge(final double expressdeliveryCharge)
 	{
 		this.expressdeliveryCharge = expressdeliveryCharge;
 	}
-
+*/
 	/**
 	 * @return the primaryCategory
 	 */
@@ -260,23 +270,23 @@ public class ChildOrderXMlData
 		this.secondaryCategory = secondaryCategory;
 	}
 
-	/**
+/*	*//**
 	 * @return the reversePaymentRefId
-	 */
+	 *//*
 	@XmlElement(name = "ReversePaymentRefId")
 	public String getReversePaymentRefId()
 	{
 		return reversePaymentRefId;
 	}
 
-	/**
+	*//**
 	 * @param reversePaymentRefId
 	 *           the reversePaymentRefId to set
-	 */
+	 *//*
 	public void setReversePaymentRefId(final String reversePaymentRefId)
 	{
 		this.reversePaymentRefId = reversePaymentRefId;
-	}
+	}*/
 
 	/**
 	 * @return the cancelDate
@@ -335,19 +345,40 @@ public class ChildOrderXMlData
 	/**
 	 * @return the scheduleDelCharge
 	 */
-	@XmlElement(name = "ScheduleDelCharge")
+/*	@XmlElement(name = "ScheduleDelCharge")
 	public double getScheduleDelCharge()
 	{
 		return scheduleDelCharge;
 	}
 
-	/**
+	*//**
 	 * @param scheduleDelCharge
 	 *           the scheduleDelCharge to set
-	 */
+	 *//*
 	public void setScheduleDelCharge(final double scheduleDelCharge)
 	{
 		this.scheduleDelCharge = scheduleDelCharge;
 	}
+*/
+	/**
+	 * @return the merchantInfoList
+	 */
+	@XmlElement(name = "MerchantInfo")
+	public List<MerchantInfoXMlData> getMerchantInfoList()
+	{
+		return merchantInfoList;
+	}
+
+	/**
+	 * @param merchantInfoList the merchantInfoList to set
+	 */
+	public void setMerchantInfoList(List<MerchantInfoXMlData> merchantInfoList)
+	{
+		this.merchantInfoList = merchantInfoList;
+	}
+
+	/**
+	 * @return the merchantInfo
+	 */
 
 }

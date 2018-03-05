@@ -22,9 +22,14 @@
 <div class="right-block billing  checkout-list-right">
 	<div class="checkout-order-summary">
 	<h3>Order Summary</h3>
+	
+	
 		<%-- <div class="headline"><spring:theme code="checkout.multi.order.summary" text="Order Summary" /></div> --%>
 		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
-		<multi-checkout:coupons isCart="${isCart}"/>
+		<c:if test="${isEGVCart ne true}">
+		<c:if test="${isSplit ne true}">
+			<multi-checkout:coupons isCart="${isCart}"/>
+		</c:if>
 		<h2 class="payment-delivery-details">Delivery Details</h2>
 		<div class="bottom order-details block delivery-info">
 			<!-- <ul class="checkout-order-summary-list"> -->
@@ -45,6 +50,7 @@
 				</c:choose>
 
 				<multi-checkout:paymentInfo paymentInfo="${cartData.paymentInfo}" showPaymentInfo="${showPaymentInfo}"/>
+				</c:if>
 			<!-- </ul> -->
 		</div>
 	</div>

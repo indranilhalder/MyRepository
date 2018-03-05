@@ -435,7 +435,7 @@ public class MplPaymentFacadeImplUnitTest
 
 		data.put(paymentTypeModel.getMode(), paymentTypeModel.getIsAvailable());
 
-		final Map<String, Boolean> actualData = mplPaymentFacadeImpl.getPaymentModes("mpl", orderData);
+		final Map<String, Boolean> actualData = mplPaymentFacadeImpl.getPaymentModes("mpl", orderData, false);
 
 		Assert.assertEquals(data, actualData);
 
