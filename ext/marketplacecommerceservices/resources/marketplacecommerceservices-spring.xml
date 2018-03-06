@@ -2549,5 +2549,24 @@
    <bean id="MplQcRefundService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.QcRefundServiceImpl">
    </bean>
 
+<bean id="mplCmsComponentDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultMplCMSComponentDao">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<bean id="mplCmsComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplCMSComponentService" >
+		<property name="mplCmsComponentDao" ref="mplCmsComponentDao" />
+		<property name="catalogService" ref="catalogService" />
+	</bean>
+	
+	<bean id="imageUploadService"
+			class="com.tisl.mpl.marketplacecommerceservices.service.impl.ImageUploadServiceImpl">
+			<property name="imageUploadDao" ref="imageUploadDao" />
+	</bean>
+
+	<bean id="imageUploadDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ImageUploadDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
 </beans>
 

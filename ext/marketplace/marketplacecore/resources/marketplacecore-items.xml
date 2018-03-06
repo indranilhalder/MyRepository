@@ -43,7 +43,51 @@
 		<!-- Collection of CMS Departments -->
 		<!-- <collectiontype elementtype="CMSDepartment" code="CMSDepartmentCollection" 
 			type="list" autocreate="true" generate="true" /> -->
-
+		<collectiontype elementtype="OffersWidgetElement" code="OffersWidgetCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="FlashSalesElement" code="FlashSalesCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="ThemeOffersCompOfferElement" code="ThemeOffersCompOfferCollection"
+   			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="ThemeOffersItemsElement" code="ThemeOffersItemsCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="ThemeProductWidgetElement" code="ThemeProductWidgetCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="FlashSalesItemElement" code="FlashSalesItemCollection"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="HeroBannerElement"
+			code="HeroBannerCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="ContentWidgetElement"
+			code="ContentWidgetCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="ProductCapsulesElement"
+			code="ProductCapsulesCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="AutomatedBrandProductCarElement"
+			code="AutomatedBrandProductCarCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="MonoBLPBannerElement"
+			code="MonoBLPBannerCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="SubBrandBannerBLPElement"
+			code="SubBrandBannerBLPCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="TopCategoriesWidgetElement"
+			code="TopCategoriesWidgetCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="CuratedProductsWidgetElement"
+			code="CuratedProductsWidgetCollection" autocreate="true" generate="true"
+			type="list" />
+		<collectiontype elementtype="SmartFilterWidgetElement"
+			code="SmartFilterWidgetCollection" type="list" autocreate="true"
+			generate="true" />
+		<collectiontype elementtype="HeroBannerComponent" code="HeroBannerComponentCollection"
+		type="list" autocreate="true" generate="true"/>
+		<collectiontype elementtype="BrandsTabAZElement" code="BrandsTabAZCollection"
+		type="list" autocreate="true" generate="true" />
+		<collectiontype elementtype="BrandTabAZBrandElement" code="BrandTabAZBrandCollection"
+		type="list" autocreate="true" generate="true" />
 		<collectiontype code="ChildOrderCollection"
 			elementtype="Order" autocreate="true" generate="true" type="list" />
 		<!-- Collection of SimpleBannerComponent -->
@@ -55,8 +99,11 @@
 		<collectiontype code="AssociatedItemsList" elementtype="java.lang.String"
 			autocreate="true" generate="true" type="list" />
 		<collectiontype code="ProductCollectionType"
-			elementtype="Product" autocreate="true" generate="false" type="list" />
-
+			elementtype="Product" autocreate="true" generate="false" type="list" /> 
+	    <collectiontype code="BannerProdCarEleCompCollectionType"
+			elementtype="BannerProdCarouselElementComp" autocreate="true" generate="false" type="list" />
+		<collectiontype code="VideoProductCarouselCollection"
+			elementtype="VideoProductCarouselElement" autocreate="true" generate="false" type="list" />
 		<collectiontype code="ImeiNoCollection" elementtype="java.lang.String"
 			autocreate="true" generate="false" type="list" />
 		<collectiontype code="ConsignmentList" elementtype="Consignment"
@@ -15299,8 +15346,1181 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="SmartFilterWidgetComponent" generate="true"
+				extends="SimpleCMSComponent" autocreate="true"
+				jaloclass="com.tisl.mpl.core.jalo.SmartFilterWidgetComponent">
+				<attributes>
+					<attribute qualifier="title" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="items" type="SmartFilterWidgetCollection"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SmartFilterWidgetElement" generate="true"
+				autocreate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.SmartFilterWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="media" qualifier="imageURL">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="ConnectBannerComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ConnectBannerComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="subType"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="iconImageURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="backgroundImageURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="startHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="endHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="OffersWidgetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.OffersWidgetComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="OffersWidgetCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="OffersWidgetElement" extends="SimpleCMSComponent"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.cms.components.OffersWidgetElement">
+				<attributes>
+					<attribute qualifier="webURL" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="imageURL" type="media" generate="true"
+						autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="btnText" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="discountText" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="FlashSalesComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.FlashSalesComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="backgroundHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="backgroundImageURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="startDate"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="FlashSalesCollection" qualifier="offers"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="FlashSalesItemCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="FlashSalesElement" extends="SimpleCMSComponent"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.cms.components.FlashSalesElement">
+				<attributes>
+					<attribute qualifier="title" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="description" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="imageURL" type="media" generate="true"
+						autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="webURL" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="FlashSalesItemElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.FlashSalesItemElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="HeroBannerComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.HeroBannerComponent">
+				<attributes>
+					<attribute type="HeroBannerCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+			<itemtype code="HeroBannerElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.HeroBannerElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="brandLogo"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+               </itemtype>
+			<itemtype code="ContentWidgetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ContentWidgetComponent">
+				<attributes>
+					<attribute type="ContentWidgetCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="ContentWidgetElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ContentWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="BannerProductCarouselComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.BannerProductCarouselComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="BannerProdCarEleCompCollectionType" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="BannerProdCarouselElementComp" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.BannerProdCarouselElementComp">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="VideoProductCarouselComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.VideoProductCarouselComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="videoURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="brandLogo" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="VideoProductCarouselCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="VideoProductCarouselElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.VideoProductCarouselElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="ThemeOffersComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeOffersComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="backgroundHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="backgroundImageURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="ThemeOffersCompOfferCollection" qualifier="offers"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="ThemeOffersItemsCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="ThemeOffersCompOfferElement" extends="SimpleCMSComponent"
+		    autocreate="true" generate="true"
+		    jaloclass="com.tisl.mpl.jalo.cms.components.ThemeOffersCompOfferElement">
+			    <attributes>
+				     <attribute qualifier="title" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="description" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="imageURL" type="media" generate="true"
+				      autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+				     <attribute qualifier="webURL" type="java.lang.String"
+				      generate="true" autocreate="true">
+				      <persistence type="property" />
+				      <modifiers optional="true" />
+				     </attribute>
+			    </attributes>
+		   </itemtype>
+
+			<itemtype code="ThemeOffersItemsElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeOffersItemsElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="ThemeProductWidgetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeProductWidgetComponent">
+				<attributes>
+					<attribute type="media" qualifier="imageURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="brandLogo" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="ThemeProductWidgetCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="ThemeProductWidgetElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ThemeProductWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="ProductCapsulesComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ProductCapsulesComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="ProductCapsulesCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="ProductCapsulesElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ProductCapsulesElement">
+				<attributes>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="BannerSeparatorComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.BannerSeparatorComponent">
+				<attributes>
+					<attribute type="media" qualifier="iconImageURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="startHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="endHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="AutomatedBrandProductCarouselComponent"
+				autocreate="true" generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.AutomatedBrandProductCarouselComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="brandLogo" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="AutomatedBrandProductCarCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="AutomatedBrandProductCarElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.AutomatedBrandProductCarElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="CuratedListingStripComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.CuratedListingStripComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="startHexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="MonoBLPBannerComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.MonoBLPBannerComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="MonoBLPBannerCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="MonoBLPBannerElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.MonoBLPBannerElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="hexCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="SubBrandBannerBLPComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.SubBrandBannerBLPComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="SubBrandBannerBLPCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="SubBrandBannerBLPElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.SubBrandBannerBLPElement">
+				<attributes>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="brandLogo" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="TopCategoriesWidgetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.TopCategoriesWidgetComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="TopCategoriesWidgetCollection"
+						qualifier="items" autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="TopCategoriesWidgetElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.TopCategoriesWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="media" qualifier="imageURL" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="CuratedProductsWidgetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.CuratedProductsWidgetComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="btnText"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="CuratedProductsWidgetCollection" qualifier="items"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="CuratedProductsWidgetElement" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.CuratedProductsWidgetElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="webURL"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="Product" qualifier="ProductCode"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="MSDComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.MSDComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="subType"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.Integer" qualifier="num_results"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="details"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="AdobeTargetComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.AdobeTargetComponent">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="mbox"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="BrandsTabAZListComponent" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BrandsTabAZListComponent">
+			<attributes>
+			<attribute type="BrandsTabAZCollection" qualifier="items">
+				<modifiers read="true" write="true" search="true"
+						 optional="false" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="BrandsTabAZElement" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BrandsTabAZElement">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="subType">
+						<modifiers read="true" write="true" search="true"
+						 optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="HeroBannerComponentCollection" qualifier="items">
+						<modifiers read="true" write="true" search="true"
+						 optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="BrandTabAZBrandCollection" qualifier="brands">
+						<modifiers read="true" write="true" search="true"
+						 optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			
+			<itemtype code="BrandTabAZBrandElement" autocreate="true"
+			generate="true" extends="SimpleCMSComponent"
+			jaloclass="com.tisl.mpl.jalo.cms.components.BrandTabAZBrandElement">
+			<attributes>
+			<attribute type="java.lang.String" qualifier="webURL">
+				<modifiers read="true" write="true" search="true"
+				 optional="false" />
+				<persistence type="property" />
+			</attribute>
+			<attribute type="java.lang.String" qualifier="brandName">
+				<modifiers read="true" write="true" search="true"
+						 optional="false" />
+				<persistence type="property" />
+			</attribute>
+			</attributes>
+			</itemtype>
  </typegroup>
 	<!-- NU-50 end -->
+	
+	
 	
 		
   </itemtypes>
