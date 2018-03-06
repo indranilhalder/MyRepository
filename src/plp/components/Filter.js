@@ -14,18 +14,17 @@ const FILTER_HEADER = "Refine by";
 export default class Filter extends React.Component {
   constructor(props) {
     super(props);
+    const url = `${props.location.pathname}${props.location.search}`;
     this.state = {
-      pageNumber: 0
+      pageNumber: 0,
+      url
     };
   }
   switchPage = val => {
     this.setState({ pageNumber: val });
   };
   onClear = () => {
-    if (this.props.onClear) {
-      this.props.onClear();
-    }
-    this.setState({ selected: [[null]] });
+    this.props.history.push(this.state.url, { isFilter: true });
   };
   handleBackClick = () => {
     if (this.props.backPage) {
@@ -41,28 +40,18 @@ export default class Filter extends React.Component {
     const pathName = this.props.location.pathname;
     const search = this.props.location.search;
     const url = `${pathName}${search}`;
-    this.props.history.push(search, {
+    this.props.history.push(url, {
       isFilter: false
     });
   }
   onCategorySelect = val => {
     const parsedQueryString = queryString.parse(this.props.location.search);
-    const CATEGORY_REGEX = /:category:(\w+):/;
-    let match;
-    if (CATEGORY_REGEX.test(parsedQueryString.q)) {
-      match = parsedQueryString.q.replace(CATEGORY_REGEX, `:category:${val}`);
-    }
 
     this.props.history.push(this.props.location, {
       q: parsedQueryString,
       isFilter: true
     });
   };
-  // handleSelect(val, index) {
-  //   let selected = this.state.selected;
-  //   selected[index] = val;
-  //   this.setState({ selected });
-  // }
 
   render() {
     const filterDatum = this.props.filterData[this.state.pageNumber];
