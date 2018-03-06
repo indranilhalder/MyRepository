@@ -3804,7 +3804,6 @@
 		<property name="imageURL" type="java.lang.String"/>
 		<property name="brandLogo" type="java.lang.String"/>
 	</bean>
-	
 	<bean class="com.tisl.mpl.wsdto.HeroBannerCompWsDTO">
 	<property name="type" type="String" />
 	<property name="componentId" type="java.lang.String"/>
@@ -4250,8 +4249,9 @@
 		<property name="webURL" type="java.lang.String"/>
 		<property name="brandName" type="java.lang.String"></property>
 	</bean>
-	
+
 	<bean class="com.tisl.mpl.wsdto.UICompPageElementWsDTO">
+		<property name="componentName" type="java.lang.String"/>
 		<property name="heroBannerComponent"
 			type="com.tisl.mpl.wsdto.HeroBannerCompWsDTO"/>
 		<property name="multiPurposeBanner"
