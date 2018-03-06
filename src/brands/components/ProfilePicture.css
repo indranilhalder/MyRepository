@@ -1,0 +1,48 @@
+.base {
+  width: 100%;
+  height: 180px;
+  display: inline-block;
+  background: url(../../general/components/img/background.png)no-repeat;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  position: relative;
+}
+.nameAndLogoHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.profileLogoHolder {
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+.edit {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 14.6%;
+  top: 14.6%;
+  transform: translateX(50%) translateY(-50%);
+  opacity: 0;
+}
+.onEdit {
+  composes: edit;
+  opacity: 1;
+}
+.nameOfProfileHolder {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  font-family: regular;
+}
