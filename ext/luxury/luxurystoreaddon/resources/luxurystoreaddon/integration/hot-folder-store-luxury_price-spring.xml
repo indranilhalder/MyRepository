@@ -95,6 +95,7 @@
      <!-- Transformer for Price Import -->
     <bean id="batchLuxpriceConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+
     p:mapping="lux_mplluxuryprice"
     p:converter-ref="batchLuxpriceConverter"/>
            
@@ -103,6 +104,7 @@
      <!-- Transformer for Product Approval when price is given Import -->      
     <bean id="batchLuxuryHomedeliveryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+
     p:mapping="lux_mplluxuryprice"
     p:converter-ref="batchLuxuryHomedeliveryConverter"/>
     
