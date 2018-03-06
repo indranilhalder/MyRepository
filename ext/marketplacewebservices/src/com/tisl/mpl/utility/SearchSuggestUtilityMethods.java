@@ -104,6 +104,12 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "buyBoxDao")
 	private BuyBoxDao buyBoxDao;
+	private static String SNS = "snsCategory";
+	private static String DEPT_TYPE = "deptType";
+	private static String SELLER_ID = "sellerId";
+	private static String FALSE = "false";
+	private static String micrositeSnsCategory = "micrositeSnsCategory";
+	private static String categoryNameCodeMapping = "categoryNameCodeMapping";
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -455,12 +461,12 @@ public class SearchSuggestUtilityMethods
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -522,7 +528,7 @@ public class SearchSuggestUtilityMethods
 							// added count
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 							// To skip Include out of stock
-							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -1436,12 +1442,11 @@ public class SearchSuggestUtilityMethods
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
-						&& !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode()) && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1508,7 +1513,7 @@ public class SearchSuggestUtilityMethods
 
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
-									.equalsIgnoreCase("false")))
+									.equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -1882,12 +1887,11 @@ public class SearchSuggestUtilityMethods
 
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
-						&& !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode()) && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1984,7 +1988,7 @@ public class SearchSuggestUtilityMethods
 
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
-									.equalsIgnoreCase("false")))
+									.equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -2099,12 +2103,12 @@ public class SearchSuggestUtilityMethods
 			final List<MplSearchFacetPriorityComparator> searchFacetByPriorityList = new ArrayList<MplSearchFacetPriorityComparator>();
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -2198,7 +2202,7 @@ public class SearchSuggestUtilityMethods
 								}
 							}
 							// To skip Include out of stock
-							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}

@@ -221,7 +221,8 @@ public class ProductsController extends BaseController
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
-
+	private static final String EXP = "[^a-zA-Z&0-9\\s+]+";
+	private static final String FOLLOW_BRAND_ERROR = "Followed Brand Error";
 	@Resource
 	private UserService userService;
 
@@ -991,8 +992,7 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
-						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll(EXP, ""));
 			}
 		}
 		return productSearchPage;
@@ -1240,7 +1240,7 @@ public class ProductsController extends BaseController
 							&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
 					{
 						productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
-								.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+								.replaceAll(EXP, ""));
 						final SearchStateData searchStateAll = new SearchStateData();
 						final SearchQueryData searchQueryDataAll = new SearchQueryData();
 						searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
@@ -1514,8 +1514,7 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
-						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll(EXP, ""));
 			}
 		}
 		return productSearchPage;
@@ -1948,8 +1947,7 @@ public class ProductsController extends BaseController
 			if (null != searchPageData.getSpellingSuggestion()
 					&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
-						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll(EXP, ""));
 				final SearchStateData searchStateAll = new SearchStateData();
 				final SearchQueryData searchQueryDataAll = new SearchQueryData();
 				searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
@@ -2092,7 +2090,7 @@ public class ProductsController extends BaseController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(FOLLOW_BRAND_ERROR + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
@@ -2106,7 +2104,7 @@ public class ProductsController extends BaseController
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(FOLLOW_BRAND_ERROR + e.getMessage());
 			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU350));
 			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU350);
 			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
@@ -2146,7 +2144,7 @@ public class ProductsController extends BaseController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(FOLLOW_BRAND_ERROR + e.getMessage());
 			if (null != e.getErrorMessage())
 			{
 				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
@@ -2160,7 +2158,7 @@ public class ProductsController extends BaseController
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
-			LOG.error("Followed Brand Error" + e.getMessage());
+			LOG.error(FOLLOW_BRAND_ERROR + e.getMessage());
 			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU250));
 			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU250);
 			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.NU250);

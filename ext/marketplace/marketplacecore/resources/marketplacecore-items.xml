@@ -1432,8 +1432,9 @@
   <!-- NU-50 start -->
   <relation code="CustomerMcvidBrandRelation" localized="false"
 			generate="true" autocreate="true">
+			<deployment table="McvId2CustomerRel" typecode="21900" />
 			<sourceElement type="Customer" qualifier="customer"
-				cardinality="one">
+				cardinality="many">
 				<modifiers read="true" write="true" optional="true" />
 			</sourceElement>
 			<targetElement type="FollowedBrandMcvid" qualifier="followedBrandMcvid"

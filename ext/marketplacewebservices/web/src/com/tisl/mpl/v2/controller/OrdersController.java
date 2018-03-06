@@ -12,7 +12,7 @@
  *
  */
 package com.tisl.mpl.v2.controller;
-
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.email.EmailService;
 import de.hybris.platform.commercefacades.order.OrderFacade;
@@ -133,9 +133,9 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
-import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.pojo.response.BalanceBucketWise;
+//import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.strategies.OrderCodeIdentificationStrategy;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -157,7 +157,7 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
@@ -228,9 +228,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 * 
+	 *
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -273,14 +273,14 @@ public class OrdersController extends BaseCommerceController
 
 
 
-   @Autowired
-   private ModelService modelService;
-   
-   @Autowired
-   private MplWalletFacade mplWalletFacade;
-   
-   
-   
+	@Autowired
+	private ModelService modelService;
+
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
+
+
+
 	/**
 	 * @return the mplSellerInformationService
 	 */
@@ -474,9 +474,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 * 
+	 *
 	 * @param orderNumber
-	 * 
+	 *
 	 * @param lineID
 	 */
 
@@ -628,12 +628,12 @@ public class OrdersController extends BaseCommerceController
 			//removeProductFromWL(orderCode);
 			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
 			QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
-			String paymentMode = orderModel.getSplitModeInfo();
+			final String paymentMode = orderModel.getSplitModeInfo();
 			LOG.debug("Payment Split MOde " + orderModel.getSplitModeInfo() + "  Order Id" + orderModel.getCode());
 			if (null != paymentMode && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 			{
-				// pay Amount Here from QC  If payment SplitModeInfo is CLIQ_CASH  
-				// For SplitMode and Juspay Amount is already deducted In UpdatePaymentTransactions API 
+				// pay Amount Here from QC  If payment SplitModeInfo is CLIQ_CASH
+				// For SplitMode and Juspay Amount is already deducted In UpdatePaymentTransactions API
 				orderModel.setModeOfOrderPayment(MarketplacewebservicesConstants.CLIQ_CASH);
 				modelService.save(orderModel);
 				try
@@ -641,12 +641,12 @@ public class OrdersController extends BaseCommerceController
 					LOG.debug("Payment Mode Split Mode .. So paying  remaiing amount through Wallet ");
 					final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-					qcResponse = mplPaymentFacade.createQCOrderRequest(orderModel.getGuid(), orderModel,
-							currentCustomer.getCustomerWalletDetail().getWalletId(),
-							MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-							MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getTotalPrice().doubleValue(), 0.0D);
+					qcResponse = mplPaymentFacade
+							.createQCOrderRequest(orderModel.getGuid(), orderModel, currentCustomer.getCustomerWalletDetail()
+									.getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
+									MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getTotalPrice().doubleValue(), 0.0D);
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					LOG.error("Exception Occurred While Paying Amount through QC" + e.getMessage());
 				}
@@ -670,7 +670,9 @@ public class OrdersController extends BaseCommerceController
 			wishlistFacade.remProdFromWLForConf(orderDetail, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
 			response = processOrderCode(orderCode, orderModel, orderDetail, request);
-			if(null != response && null !=orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D ) {
+			if (null != response && null != orderModel.getPayableWalletAmount()
+					&& orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
+			{
 				response.setCliqCashApplied(true);
 				response.setCliqCashAmountDeducted(orderModel.getPayableWalletAmount());
 			}
@@ -702,13 +704,13 @@ public class OrdersController extends BaseCommerceController
 			}
 			response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		catch (InvalidCartException e)
+		catch (final InvalidCartException e)
 		{
 			LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
 			response.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
 			response.setError(e.getMessage());
 		}
-		catch (CalculationException e)
+		catch (final CalculationException e)
 		{
 			LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
 			response.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
@@ -716,8 +718,8 @@ public class OrdersController extends BaseCommerceController
 		return response;
 	}
 
-	
-	
+
+
 
 
 	//TODO It was added in respect of CheckoutController.java
@@ -791,7 +793,8 @@ public class OrdersController extends BaseCommerceController
 			 * getCheckoutRedirectUrl(); }
 			 */
 			orderWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
-			if(orderDetail.isIsEGVOrder()){
+			if (orderDetail.isIsEGVOrder())
+			{
 				orderWsDTO.setIsEgvOrder(true);
 			}
 			if (null != orderDetail && orderDetail.getEntries() != null && !orderDetail.getEntries().isEmpty())
@@ -1178,11 +1181,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
