@@ -16,14 +16,6 @@ export default class FilterCategories extends React.Component {
       this.props.onClick(val);
     }
   }
-  componentDidMount() {
-    const data = this.state.data;
-    console.log(this.props);
-    if (this.props.hasCategory) {
-      data.unshift({ category: true, key: "category", name: "Category" });
-      this.setState({ data });
-    }
-  }
   render() {
     let data = this.state.data;
 

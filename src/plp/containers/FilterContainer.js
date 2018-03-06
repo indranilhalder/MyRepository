@@ -13,11 +13,12 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   const facetData = state.productListings.productListings.facetdata;
   const categoryData = state.productListings.productListings.facetdatacategory;
-
+  if (facetData[0].name !== "Category") {
+    facetData.unshift(categoryData);
+  }
   return {
     ...ownProps,
-    filterData: state.productListings.productListings.facetdata,
-    categoryData: state.productListings.productListings.facetdatacategory
+    filterData: state.productListings.productListings.facetdata
   };
 };
 

@@ -5,7 +5,28 @@ import PropTypes from "prop-types";
 import Grid from "../../general/components/Grid";
 import styles from "./FilterCategorySection.css";
 export default class FilterCategorySection extends Component {
+  constructor(props) {
+    super(props);
+    const selectedCategoryCodes = [];
+    props.categoryTypeList[0].childFilters.forEach(val => {
+      val.childFilters.forEach(filter => {
+        selectedCategoryCodes.push(filter.categoryCode);
+      });
+    });
+    this.state = {
+      selectedCategoryCodes
+    };
+  }
   onSelect(val) {
+    const selectedCategoryCodes = this.state.selectedCategoryCodes;
+    // if the val is in selectedCategoryCodes, then we need to reverse the render
+    if (selectedCategoryCodes[val]) {
+      selectedCategoryCodes[val] = !selectedCategoryCodes[val];
+    } else {
+      selectedCategoryCodes[val] = true;
+    }
+
+    this.setState({ selectedCategoryCodes });
     if (this.props.onCategorySelect) {
       this.props.onCategorySelect(val);
     }
@@ -27,6 +48,9 @@ export default class FilterCategorySection extends Component {
                       <FilterCategorySubList
                         subListItem={data.categoryName}
                         key={i}
+                        selected={
+                          this.state.selectedCategoryCodes[data.categoryCode]
+                        }
                         value={data.categoryCode}
                         subListCount={data.quantity}
                         onSelect={value => this.onSelect(value)}

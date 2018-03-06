@@ -16,14 +16,14 @@ export default class FilterCategoryDetails extends React.Component {
     });
   }
   render() {
-    let ClassName = styles.subCategoryRegular;
+    let className = styles.subCategoryRegular;
     if (this.state.isOpen) {
-      ClassName = styles.subCategoryBold;
+      className = styles.subCategoryBold;
     }
     return (
       <div className={styles.base}>
         <div className={styles.header} onClick={() => this.handleClick()}>
-          <div className={ClassName}>{this.props.category}</div>
+          <div className={className}>{this.props.category}</div>
           <div className={styles.subCategoryCount}>
             {this.props.categoryCount}
           </div>

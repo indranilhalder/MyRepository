@@ -8,21 +8,14 @@ import styles from "./Filter.css";
 import map from "lodash/map";
 import compact from "lodash/compact";
 import InformationHeader from "../../general/components/InformationHeader";
+import queryString from "query-string";
+
 const FILTER_HEADER = "Refine by";
 export default class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pageNumber: 0
-      // selected: this.props.filterData.map(val => {
-      //   return val.values.map(v => {
-      //     if (v.selected) {
-      //       return v.value;
-      //     } else {
-      //       return null;
-      //     }
-      //   });
-      // })
     };
   }
   switchPage = val => {
@@ -42,24 +35,29 @@ export default class Filter extends React.Component {
   handleSelect(val) {
     this.props.history.push(val, { isFilter: true });
   }
-  onApply(val) {
-    if (this.props.onApply) {
-      const filters = map(this.state.selected, (selectedArr, i) => {
-        const key = this.props.filterData[i].key;
-        const compactedSelectedArr = compact(selectedArr);
-        const selectedArrObject = {
-          key,
-          filters: compactedSelectedArr
-        };
-        return selectedArrObject;
-      });
-
-      this.props.onApply(filters);
+  onApply() {
+    console.log("ON APPLY IS CALLED");
+    console.log(this.props);
+    const pathName = this.props.location.pathname;
+    const search = this.props.location.search;
+    const url = `${pathName}${search}`;
+    this.props.history.push(search, {
+      isFilter: false
+    });
+  }
+  onCategorySelect = val => {
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    const CATEGORY_REGEX = /:category:(\w+):/;
+    let match;
+    if (CATEGORY_REGEX.test(parsedQueryString.q)) {
+      match = parsedQueryString.q.replace(CATEGORY_REGEX, `:category:${val}`);
     }
-  }
-  onCategorySelect(val) {
-    console.log(val);
-  }
+
+    this.props.history.push(this.props.location, {
+      q: parsedQueryString,
+      isFilter: true
+    });
+  };
   // handleSelect(val, index) {
   //   let selected = this.state.selected;
   //   selected[index] = val;
@@ -67,23 +65,7 @@ export default class Filter extends React.Component {
   // }
 
   render() {
-    let hasCategory = false;
-    console.log("category data");
-    console.log(this.props.categoryData);
-    console.log("facet data");
-    console.log(this.props.filterData);
-    if (this.props.categoryData) {
-      console.log(this.props.categoryData.category);
-      if (this.props.categoryData.category) {
-        hasCategory = true;
-      }
-    }
-    // If state.pageNumber is 0, then we need to display the category section
-    //
-    console.log("FILTER");
-
     const filterDatum = this.props.filterData[this.state.pageNumber];
-
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>
@@ -99,7 +81,7 @@ export default class Filter extends React.Component {
               selected={this.state.selected}
               pageNumber={this.state.pageNumber}
               onClick={val => this.switchPage(val)}
-              hasCategory={hasCategory}
+              hasCategory={false}
             />
           </div>
           <div className={styles.options}>
@@ -125,13 +107,12 @@ export default class Filter extends React.Component {
                   })}
               </FilterSection>
             )}
-            {filterDatum.key === "category" &&
-              this.props.categoryData && (
-                <FilterCategorySection
-                  categoryTypeList={this.props.categoryData.filters}
-                  onCategorySelect={val => this.onCategorySelect(val)}
-                />
-              )}
+            {filterDatum.name === "Category" && (
+              <FilterCategorySection
+                categoryTypeList={filterDatum.filters}
+                onCategorySelect={this.onCategorySelect}
+              />
+            )}
           </div>
         </div>
         <div className={styles.footer}>

@@ -3,8 +3,8 @@ import styles from "./FilterCategorySubList.css";
 import PropTypes from "prop-types";
 export default class FilterCategorySubList extends React.Component {
   handleClick() {
-    if (this.props.selectItem) {
-      this.props.selectItem();
+    if (this.props.onSelect) {
+      this.props.onSelect(this.props.value);
     }
   }
   render() {

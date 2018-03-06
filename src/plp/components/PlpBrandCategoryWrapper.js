@@ -2,7 +2,8 @@ import React from "react";
 import ProductListingsContainer from "../containers/ProductListingsContainer.js";
 import throttle from "lodash/throttle";
 import queryString from "query-string";
-
+import { Redirect } from "react-router";
+import { SEARCH_RESULTS_PAGE } from "../../lib/constants.js";
 const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
 const CAPTURE_REGEX = /c-(.*)/;
@@ -39,8 +40,8 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     return searchText;
   }
   componentDidMount() {
-    // this will do the check for category or brand
-    // which does not happen now
+    // this will do the check for category or brand\
+
     window.addEventListener("scroll", this.handleScroll);
 
     const searchText = this.getSearchTextFromUrl();
@@ -50,12 +51,13 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("COMPONENT DID UPDATE CALLED");
-
     if (this.props.location.state && this.props.location.state.isFilter) {
       const suffix = "&isFilter=true";
       const searchText = this.getSearchTextFromUrl();
       this.props.getProductListings(searchText, suffix, 0, true);
+    } else {
+      const searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, SUFFIX, 0);
     }
   }
 
@@ -103,7 +105,20 @@ export default class PlpBrandCategoryWrapper extends React.Component {
         ? this.props.location.state.isFilter
         : false;
     }
-    return <ProductListingsContainer isFilter={isFilter} />;
+    if (this.props.location.pathname === SEARCH_RESULTS_PAGE) {
+      const parsedQueryString = queryString.parse(this.props.location.search);
+      const searchCategory = parsedQueryString.searchCategory;
+      const searchText = parsedQueryString.text;
+      if (searchCategory && searchText) {
+        const url = `/search/?q=${searchText}:relevance:${SUFFIX}`;
+        return <Redirect to={url} />;
+      }
+    }
+    return (
+      <React.Fragment>
+        <ProductListingsContainer isFilter={isFilter} />
+      </React.Fragment>
+    );
   }
 }
 
