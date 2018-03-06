@@ -80,7 +80,7 @@ public class SalesOrderReverseXMLUtility
 	 * 
 	 */
 	private static final String CLIQ_CASH = "Cliq Cash";
-	private static final String CLIQCASH = "CliCash";
+	private static final String CLIQCASH = "CliqCash";
 	/**
 	 * 
 	 */
