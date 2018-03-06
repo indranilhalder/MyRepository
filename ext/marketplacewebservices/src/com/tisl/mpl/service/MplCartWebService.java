@@ -5,6 +5,7 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartRestorationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -17,6 +18,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 
 import java.util.List;
@@ -25,8 +27,10 @@ import java.util.Map;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
+import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -77,8 +81,8 @@ public interface MplCartWebService
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions;
 
 	/**
 	 * Service to get product details
@@ -95,7 +99,7 @@ public interface MplCartWebService
 	public List<GetWishListProductWsDTO> productDetails(final AbstractOrderModel abstractOrderModel,
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetRequired, final List<PinCodeResponseData> pincodeList, final String pincode)
-					throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * pincode response from OMS at cart level
@@ -121,15 +125,18 @@ public interface MplCartWebService
 
 	public PriceData calculateTotalDiscount(final CartModel cart);
 
+	public Double calculateCartTotalMrp(final AbstractOrderModel abstractOrderModel);
+
 	/**
 	 * Service to get cart details with POS
 	 *
 	 * @param cartId
 	 * @param addressListDTO
 	 * @param pincode
+	 * @param isPwa
 	 * @return CartDataDetailsWsDTO
 	 */
-	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode);
+	public CartDataDetailsWsDTO getCartDetailsWithPOS(String cartId, AddressListWsDTO addressListDTO, String pincode, boolean isPwa);
 
 	/**
 	 * Service to get cart details with with all summary using cartModel
@@ -166,12 +173,12 @@ public interface MplCartWebService
 	 * @throws InvalidCartException
 	 */
 	WebSerResponseWsDTO addProductToCartwithExchange(final String productCode, final String cartId, final String quantity,
-			String USSID, boolean addedToCartWl, String channel, String exchangeParam)
-					throws InvalidCartException, CommerceCartModificationException;
+			String USSID, boolean addedToCartWl, String channel, String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * Service to merge carts
-	 * 
+	 *
 	 * @param fromAnonymousCartGuid
 	 * @param toUserCartGuid
 	 * @return CartRestorationData
@@ -179,6 +186,22 @@ public interface MplCartWebService
 	 * @throws CommerceCartMergingException
 	 */
 	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
-			throws CommerceCartRestorationException, CommerceCartMergingException;
+			throws CommerceCartRestorationException, CommerceCartMergingException;	
+
+	/**
+	 * Service to get cart details for pwa:NU-46
+	 *
+	 * @param cartId
+	 * @param pincode
+	 * @param channel
+	 * @return CartDataDetailsWsDTO
+	 */
+	CartDataDetailsWsDTO getCartDetailsPwa(final String cartId, final String pincode, String channel);
+
+	/**
+	 * @param orderDetails
+	 * @return
+	 */
+	public Double calculateCartTotalMrp(OrderData orderDetails);
 
 }

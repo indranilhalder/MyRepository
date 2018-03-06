@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentM
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
+import de.hybris.platform.category.impl.DefaultCategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.classification.ClassificationService;
 import de.hybris.platform.classification.features.Feature;
@@ -31,21 +32,30 @@ import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.PromotionData;
+import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
+import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
-import de.hybris.platform.core.PK;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.customerreview.model.CustomerReviewModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.solrfacetsearch.enums.KeywordRedirectMatchType;
 import de.hybris.platform.solrfacetsearch.handler.KeywordRedirectHandler;
 import de.hybris.platform.solrfacetsearch.model.redirect.SolrFacetSearchKeywordRedirectModel;
@@ -76,11 +86,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.cache.strategy.MplApiCachingStrategy;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
@@ -92,21 +102,26 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
+import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.marketplacecommerceservice.url.ExtDefaultCategoryModelUrlResolver;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplCustomerReviewService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.AmountOptionsWSDTO;
 import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationDTO;
 import com.tisl.mpl.wsdto.ClassificationDTOLister;
@@ -114,16 +129,15 @@ import com.tisl.mpl.wsdto.ClassificationMobileWsData;
 import com.tisl.mpl.wsdto.Classifications;
 import com.tisl.mpl.wsdto.ColorLinkData;
 import com.tisl.mpl.wsdto.DeliveryModeData;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.ExchangeLinkUrl;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListDTO;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
 import com.tisl.mpl.wsdto.GiftProductMobileData;
 import com.tisl.mpl.wsdto.KnowMoreDTO;
-import com.tisl.mpl.wsdto.MplBrandInfoData;
 import com.tisl.mpl.wsdto.MplCategoryHierarchydata;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
-import com.tisl.mpl.wsdto.MplNewSellerInformationMobileData;
 import com.tisl.mpl.wsdto.PriceBreakUpDto;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductContentWsData;
@@ -133,6 +147,7 @@ import com.tisl.mpl.wsdto.PromotionMobileData;
 import com.tisl.mpl.wsdto.RefundReturnDTO;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
+import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.VariantOptionMobileData;
 
 
@@ -168,8 +183,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private MplProductFacade mplProductFacade;
 
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
-
-
+	private MplCustomerReviewService customerReviewService;
 
 
 	private static final String Y = "Y";
@@ -190,6 +204,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private SiteConfigService siteConfigService;
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
+	private Converter<CustomerReviewModel, ReviewData> customerReviewConverter;
+
+
 	//sonar fix
 	/*
 	 * @Resource(name = "mplProductWebService") private MplProductWebServiceImpl mplProductWebServiceImpl;
@@ -203,6 +220,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	@Autowired
 	private DefaultCMSContentSlotService contentSlotService;
 
+	@Resource(name = "mplDefaultPriceDataFactory")
+	private DefaultPriceDataFactory priceDataFactory;
 
 	//added for pdp new ui start
 	public static final String INR = "INR";
@@ -229,7 +248,43 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String Home_Delivery = "Home Delivery";
 	private static final String Standard_Delivery = "Standard Delivery";
 
+	@Resource(name = "defaultCategoryModelUrlResolver")
+	private ExtDefaultCategoryModelUrlResolver defaultCategoryModelUrlResolver;
+
+	private DefaultCategoryService categoryService;
+
+	@Resource(name = "defaultApiCachingStrategy")
+	MplApiCachingStrategy mplApiCachingStrategy;
+
+	//check if memcache enabled is true in properties
+	private String isCacheEnabled;
+
+
 	//added for pdp new ui end
+
+	/**
+	 * @return the isCacheEnabled
+	 */
+	public String getIsCacheEnabled()
+	{
+		return isCacheEnabled;
+	}
+
+	/**
+	 * @param isCacheEnabled
+	 *           the isCacheEnabled to set
+	 */
+	public void setIsCacheEnabled(final String isCacheEnabled)
+	{
+		this.isCacheEnabled = isCacheEnabled;
+	}
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
+
 	/**
 	 * @throws CMSItemNotFoundException
 	 * @desc This service fetches all the details of A+ content based on product code
@@ -412,7 +467,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER,
+						ProductOption.REVIEW));
+
 
 				//Added for TPR-6869
 
@@ -1157,6 +1214,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			//TPR-978
 
+			setRatingAndReview(productDetailMobile, productData);
 
 		}
 
@@ -1177,6 +1235,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return productDetailMobile;
+	}
+
+	/**
+	 * @param productDetailMobile
+	 * @param productData
+	 */
+	private void setRatingAndReview(final ProductDetailMobileWsData productDetailMobile, final ProductData productData)
+	{
+		productDetailMobile.setAverageRating(productData.getAverageRating());
+		productDetailMobile.setNumberOfReviews(productData.getNumberOfReviews());
 	}
 
 	/**
@@ -2507,6 +2575,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
+					if (StringUtils.isNotEmpty(variantData.getCode())
+							&& StringUtils.equalsIgnoreCase(productData.getCode(), variantData.getCode()))
+					{
+						colorLinkData.setSelected(true);
+					}
 					variantMobileData.setColorlink(colorLinkData);
 					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
@@ -2543,6 +2616,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								{
 									sizeLinkData.setIsAvailable(false);
 								}
+							}
+							if (StringUtils.isNotEmpty(variantData.getCode()))
+							{
+								sizeLinkData.setProductCode(variantData.getCode());
 							}
 
 						}
@@ -3177,6 +3254,159 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		return displayConfigurableAttributeForPriceBreakup;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.MplProductWebService#getEgvProduct()
+	 */
+	@Override
+	public EgvProductInfoWSDTO getEgvProductDetails()
+	{
+		LOG.debug("Getting EGV product Details");
+		final EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		final AmountOptionsWSDTO amountOptions = new AmountOptionsWSDTO();
+		double minPrice = 1.0D;
+		double maxPrice = 30000.0D;
+		String priceOptions = null;
+		try
+		{
+
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+
+			if(null != customer) {
+				LOG.error(" FIrst Name "+customer.getFirstName());
+				LOG.error("QC FIrst Name "+customer.getQcVerifyFirstName());
+
+				if(null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() ){
+					egvProductData.setIsWalletCreated(true);
+				}
+				if (null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
+				{
+					egvProductData.setIsWalletOtpVerified(true);
+
+				}else {
+					WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
+					if(null != walletCreateData) {
+						if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+							egvProductData.setFirstName(walletCreateData.getQcVerifyFirstName());
+						}
+						if (null != walletCreateData.getQcVerifyLastName()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName()))
+						{
+							egvProductData.setLastName(walletCreateData.getQcVerifyLastName());
+						}
+						if (null != walletCreateData.getQcVerifyMobileNo()
+								&& StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo()))
+						{
+							egvProductData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+						}
+					}
+				}
+
+
+			}
+
+			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE))
+			{
+				minPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MIN_PRICE);
+				LOG.debug("Configurable Buying EGV Min Price " + minPrice);
+			}
+			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE))
+			{
+				maxPrice = configurationService.getConfiguration().getDouble(MarketplacewebservicesConstants.BUYING_EGV_MAX_PRICE);
+				LOG.debug("Configurable Buying EGV Max Price " + maxPrice);
+			}
+			if (null != configurationService.getConfiguration().getString(MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS))
+			{
+				priceOptions = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.BUYING_EGV_PRICE_OPTIONS);
+				LOG.debug("Configurable Buying EGV price options " + priceOptions);
+			}
+			if (minPrice > 0.0D)
+			{
+				final TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+				final BigDecimal minPriceBigDecimal = new BigDecimal(minPrice);
+				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
+						MarketplacecommerceservicesConstants.INR);
+				if (null != priceData)
+				{
+					minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+					minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
+					minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
+					minPriceWsDto.setPriceType(priceData.getPriceType());
+					minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+					minPriceWsDto.setValue(priceData.getValue());
+					amountOptions.setMinPrice(minPriceWsDto);
+				}
+			}
+
+			if (maxPrice > 0.0D)
+			{
+				final TotalCliqCashBalanceWsDto minPriceWsDto = new TotalCliqCashBalanceWsDto();
+				final BigDecimal minPriceBigDecimal = new BigDecimal(maxPrice);
+				final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, minPriceBigDecimal,
+						MarketplacecommerceservicesConstants.INR);
+				if (null != priceData)
+				{
+					minPriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+					minPriceWsDto.setDoubleValue(priceData.getDoubleValue());
+					minPriceWsDto.setFormattedValue(priceData.getFormattedValue());
+					minPriceWsDto.setPriceType(priceData.getPriceType());
+					minPriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+					minPriceWsDto.setValue(priceData.getValue());
+					amountOptions.setMaxPrice(minPriceWsDto);
+				}
+			}
+
+			if (null != priceOptions)
+			{
+				final String[] configurablePriceOptions = priceOptions.split(",");
+				final List<TotalCliqCashBalanceWsDto> configurablePrices = new ArrayList<>();
+				if (null != configurablePriceOptions)
+				{
+					for (final String price : configurablePriceOptions)
+					{
+						final TotalCliqCashBalanceWsDto PriceWsDto = new TotalCliqCashBalanceWsDto();
+						final BigDecimal PriceBigDecimal = new BigDecimal(Double.valueOf(price).doubleValue());
+						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, PriceBigDecimal,
+								MarketplacecommerceservicesConstants.INR);
+						if (null != priceData)
+						{
+							PriceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+							PriceWsDto.setDoubleValue(priceData.getDoubleValue());
+							PriceWsDto.setFormattedValue(priceData.getFormattedValue());
+							PriceWsDto.setPriceType(priceData.getPriceType());
+							PriceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+							PriceWsDto.setValue(priceData.getValue());
+							configurablePrices.add(PriceWsDto);
+						}
+					}
+
+					if (CollectionUtils.isNotEmpty(configurablePrices))
+					{
+						amountOptions.setOptions(configurablePrices);
+					}
+				}
+			}
+
+			egvProductData.setAmountOptions(amountOptions);
+			egvProductData.setIsCustomizationAvailable(true);
+			egvProductData.setIsMoreDesigns(false);
+			egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
+			egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+			//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occurredd while getting EGV Product Details " + e.getMessage());
+		}
+
+		return egvProductData;
+	}
+
+
 	/**
 	 * @return the buyBoxFacade
 	 */
@@ -3376,7 +3606,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public MplNewProductDetailMobileWsData getProductdetails(final String productCode, final String baseUrl, final String channel)
 	{
 		// YTODO Auto-generated method stub
-		final MplNewProductDetailMobileWsData productDetailMobileNew = new MplNewProductDetailMobileWsData();
+		MplNewProductDetailMobileWsData productDetailMobileNew = new MplNewProductDetailMobileWsData();
 		ProductModel productModel = null;
 		ProductData productData = null;
 		BuyBoxData buyBoxData = null;
@@ -3386,18 +3616,28 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
 				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
-		MplNewProductDetailMobileWsData isNewOrOnlineExclusive = new MplNewProductDetailMobileWsData();
+		//MplNewProductDetailMobileWsData isNewOrOnlineExclusive = new MplNewProductDetailMobileWsData();
 		String ussid = null;
 		String isEMIeligible = null;
 		List<ClassificationMobileWsData> specificationsList = null;
 		final Map<String, FineJwlryClassificationListDTO> fineJewelleryClassificationList = new LinkedHashMap<String, FineJwlryClassificationListDTO>();
 		List<VariantOptionMobileData> variantDataList = new ArrayList<VariantOptionMobileData>();
-		List<MplNewSellerInformationMobileData> framedOtherSellerDataList = null;
+		List<SellerInformationMobileData> framedOtherSellerDataList = null;
 		List<SellerInformationData> otherSellerDataList = null;
+		String ussidJwlry = "";
+		List<KnowMoreDTO> knowMoreList = null;
+		PromotionMobileData potenitalPromo = null;
+		List<PriceBreakupData> priceMap = new ArrayList<PriceBreakupData>();
+		final List<PriceBreakUpDto> priceBreakUpList = new ArrayList<PriceBreakUpDto>();
+		List<RefundReturnDTO> refundReturnList = null;
+		//Added for TPR-6869
+		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
+		String sellerMonogramMessage = MarketplacecommerceservicesConstants.EMPTY;
+		//String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
+		MplNewProductDetailMobileWsData details = null;
 
 		try
 		{
-			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
 			productModel = productService.getProductForCode(productCode);
 
 			if (null != productModel)
@@ -3405,7 +3645,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
-
 			}
 			else
 			{
@@ -3416,6 +3655,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				try
 				{
+					if (Boolean.parseBoolean(getIsCacheEnabled()))
+					{
+						details = mplApiCachingStrategy.get(productCode);
+
+						if (null != details)
+						{
+							productDetailMobileNew = details;
+						}
+						else
+						{
+							details = getCachedAttributes(productData, productModel, baseUrl);
+							productDetailMobileNew = details;
+						}
+					}
+					else
+					{
+						details = getCachedAttributes(productData, productModel, baseUrl);
+						productDetailMobileNew = details;
+					}
 					//TPR-797---TISSTRT-1403 TISPRM-56
 					if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
 					{
@@ -3450,6 +3708,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							stockAvailibilty.put(pCode, Integer.valueOf(0));
 						}
 						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+
+						//Added for TPR-6869
+						sellerID = getSellerIDData(buydata);
+
+						if (StringUtils.isNotEmpty(sellerID))
+						{
+							sellerMonogramMessage = buyBoxFacade.getSellerMonogrammingMsg(productCode, sellerID);
+						}
 					}
 					//Commented for TPR-797
 					//buyBoxData = buyBoxFacade.buyboxPrice(productCode);
@@ -3522,34 +3788,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 			}
 
-			isNewOrOnlineExclusive = getRichAttributesForPwa(productModel);
-
-			if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsOnlineExclusive())
-			{
-				productDetailMobileNew.setIsOnlineExclusive(isNewOrOnlineExclusive.getIsOnlineExclusive());
-			}
-			if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsProductNew())
-			{
-				productDetailMobileNew.setIsProductNew(isNewOrOnlineExclusive.getIsProductNew());
-			}
-
-			final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-			final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
-					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
-
-			if (null != productModel.getMaxOrderQuantity() && productModel.getMaxOrderQuantity().intValue() > 0
-					&& productModel.getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
-			{
-				productDetailMobileNew.setMaxQuantityAllowed(productModel.getMaxOrderQuantity().toString());
-			}
-			else if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
-			{
-				productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy_jewellery));
-			}
-			else
-			{
-				productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
-			}
 			if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
 			{
 				ussid = buyBoxData.getSellerArticleSKU();
@@ -3617,75 +3855,29 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
-					productDetailMobileNew.setWinningSellerPrice(createPriceSign(buyBoxData.getSpecialPriceMobile(),
-							commonI18NService.getCurrency(INR)));
+					productDetailMobileNew.setWinningSellerPrice(buyBoxData.getSpecialPriceMobile());
+
 				}
 				else if (!specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPrice()
 						&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
-					productDetailMobileNew.setWinningSellerPrice(createPriceSign(buyBoxData.getSpecialPrice(),
-							commonI18NService.getCurrency(INR)));
+					productDetailMobileNew.setWinningSellerPrice(buyBoxData.getSpecialPrice());
 				}
 				else if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getFormattedValue()
 						&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
-					productDetailMobileNew.setWinningSellerPrice(createPriceSign(buyBoxData.getPrice(),
-							commonI18NService.getCurrency(INR)));
+					productDetailMobileNew.setWinningSellerPrice(buyBoxData.getPrice());
 				}
 				if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getFormattedValue())
 				{
-					productDetailMobileNew.setMrpPrice(createPriceSign(buyBoxData.getMrp(), commonI18NService.getCurrency(INR)));
+					productDetailMobileNew.setMrpPrice(buyBoxData.getMrp());
 				}
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
-				{
-					productDetailMobileNew.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
-				}
-
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
-				{
-					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
-				}
-				if (null != productData.getListingId())
-				{
-					productDetailMobileNew.setProductListingId(productData.getListingId());
-				}
-				if (null != productData.getProductTitle())
-				{
-					productDetailMobileNew.setProductName(productData.getProductTitle());
-				}
-				if (null != productData.getArticleDescription())
-				{
-					productDetailMobileNew.setProductDescription(productData.getArticleDescription());
-				}
-				final List<MplCategoryHierarchydata> list = getcategoryHierarchyForPwa(productModel);
-				productDetailMobileNew.setCategoryHierarchy(list);
-
-				final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
-				if (null != mplBrandInfo)
-				{
-					productDetailMobileNew.setBrandInfo(mplBrandInfo);
-				}
-				final boolean showSizeGuide = showSizeGuidePwa(productModel);
-				productDetailMobileNew.setShowSizeGuide(Boolean.valueOf(showSizeGuide));
-
-				if (null != productData.getUrl()
-						&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
-				{
-					//sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + "" + productData.getUrl(); Do not add empty strings
-					sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
-				}
-				else if (null != productData.getUrl())
-				{
-					sharedText += productData.getUrl();
-				}
-
-				productDetailMobileNew.setIsExchangeAvailable(isExchangeAvailablePwa(productModel.getSupercategories(), productData));
-
-				if (CollectionUtils.isNotEmpty(productData.getImages()))
-				{
-					productDetailMobileNew.setGalleryImagesList(getGalleryImages(productData));
-				}
+				//final MplBrandInfoData mplBrandInfo = getBrandInfoPwa(productModel);
+				//				if (null != mplBrandInfo)
+				//				{
+				//					productDetailMobileNew.setBrandInfo(mplBrandInfo);
+				//				}
 
 				if (CollectionUtils.isNotEmpty(productData.getClassifications()))
 				{
@@ -3883,10 +4075,134 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setOtherSellers(framedOtherSellerDataList);
 				}
+
+				//Added for jewellery
+				if (null != buyBoxData)
+				{
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacewebservicesConstants.FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxData
+								.getSellerArticleSKU());
+						if (CollectionUtils.isNotEmpty(jewelleryInfo) && StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+						{
+							ussidJwlry = jewelleryInfo.get(0).getPCMUSSID();
+						}
+					}
+					knowMoreList = getknowMoreDetails(productModel, buyBoxData, ussidJwlry);
+				}
+				if (CollectionUtils.isNotEmpty(knowMoreList))
+				{
+					productDetailMobileNew.setKnowMore(knowMoreList);
+				}
+				potenitalPromo = getPromotionsForProduct(productData, buyBoxData, framedOtherSellerDataList, channel);
+
+				if (null != potenitalPromo)
+				{
+					productDetailMobileNew.setPotentialPromotions(potenitalPromo);
+				}
+
+				final Map<String, Map<String, String>> offerMessageMap = prodOfferDetFacade.showOfferMessage(productCode);
+				if (MapUtils.isNotEmpty(offerMessageMap) && null != buyBoxData && null != buyBoxData.getSellerId()
+						&& offerMessageMap.containsKey(buyBoxData.getSellerId()))
+				{
+					for (final Entry<String, Map<String, String>> entry : offerMessageMap.entrySet())
+					{
+						if (null != entry && null != entry.getKey() && null != entry.getValue()
+								&& entry.getKey().equals(buyBoxData.getSellerId()))
+						{
+							final Map<String, String> offerMessage = entry.getValue();
+							final ProductOfferMsgDTO ProductOfferMsgDTO = new ProductOfferMsgDTO();
+							for (final Entry<String, String> entry1 : offerMessage.entrySet())
+							{
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEDET))
+								{
+									ProductOfferMsgDTO.setMessageDetails(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGE))
+								{
+									ProductOfferMsgDTO.setMessageID(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGESTARTDATE))
+								{
+
+									ProductOfferMsgDTO.setStartDate(entry1.getValue());
+								}
+								if (null != entry1 && null != entry1.getValue()
+										&& entry1.getKey().equalsIgnoreCase(MarketplacecommerceservicesConstants.MESSAGEENDDATE))
+								{
+									ProductOfferMsgDTO.setEndDate(entry1.getValue());
+								}
+							}
+							productDetailMobileNew.setProductOfferMsg(ProductOfferMsgDTO);
+						}
+					}
+
+				}
+
+				//Added for jewellery
+				if ((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+				{
+					//TPR-7645 starts
+					final String jewelleryVariant = jewelleryService.checkIfWeightVariantJewl(productData.getCode());
+					if (MarketplacecommerceservicesConstants.Y.equalsIgnoreCase(jewelleryVariant))
+					{
+						productDetailMobileNew.setPriceDisclaimerTextPDP(MarketplacewebservicesConstants.PRICE_DISCLAIMER_JEWELLERY);
+					}
+					//TPR-7645 ends
+					if (StringUtils.isNotEmpty(buyBoxData.getSellerArticleSKU()))
+					{
+						final String priceBrkUpPDP = displayConfigurableAttributeForPriceBreakup(buyBoxData.getSellerArticleSKU());
+						productDetailMobileNew.setShowPriceBrkUpPDP(priceBrkUpPDP);
+						priceMap = priceBreakupFacade.getPricebreakup(buyBoxData.getSellerArticleSKU(), buyBoxData.getSellerId());
+					}
+
+					if (CollectionUtils.isNotEmpty(priceMap))
+					{
+						for (final PriceBreakupData priceBrkUp : priceMap)
+						{
+							final PriceBreakUpDto priceBreakUp = new PriceBreakUpDto();
+							priceBreakUp.setName(priceBrkUp.getName());
+							priceBreakUp.setPrice(priceBrkUp.getPrice());
+							priceBreakUp.setWeightRateList(priceBrkUp.getWeightRateList());
+							priceBreakUpList.add(priceBreakUp);
+						}
+
+						productDetailMobileNew.setPriceBreakUpDetailsMap(priceBreakUpList);
+					}
+				}
+
+				if (((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+						|| ((MarketplacewebservicesConstants.FASHIONJEWELLERY).equalsIgnoreCase(productData.getRootCategory())))
+				{
+					if (null != buyBoxData)
+					{
+						refundReturnList = getRefundReturnDetails(productModel, buyBoxData, ussidJwlry);
+					}
+					if (CollectionUtils.isNotEmpty(refundReturnList))
+					{
+						productDetailMobileNew.setReturnAndRefund(refundReturnList);
+					}
+				}
+
+				if (StringUtils.isNotEmpty(sellerMonogramMessage))
+				{
+					productDetailMobileNew.setCustomizationInfoText(sellerMonogramMessage);
+				}
+				if (null != productData.getAverageRating())
+				{
+					productDetailMobileNew.setAverageRating(productData.getAverageRating());
+				}
+
+				if (null != productData.getNumberOfReviews())
+				{
+					productDetailMobileNew.setNumberOfReviews(productData.getNumberOfReviews());
+				}
+
 			}
-			sharedText += MarketplacecommerceservicesConstants.SPACE
-					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
-			productDetailMobileNew.setSharedText(sharedText);
+
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -3908,22 +4224,43 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	}
 
 	/**
+	 * @param productData
+	 * @return
+	 */
+	private String prepareBrandWebUrlDataPwa(final ProductData productData)
+	{
+		// YTODO Auto-generated method stub
+		String webUrl = null;
+		if (CollectionUtils.isNotEmpty(productData.getCategories()))
+		{
+			for (final CategoryData category : productData.getCategories())
+			{
+				if (category.getCode().startsWith(MplConstants.BRAND_HIERARCHY_ROOT_CATEGORY_CODE))
+				{
+					webUrl = category.getUrl();
+				}
+			}
+		}
+		return webUrl;
+	}
+
+	/**
 	 * @param otherSellerDataList
 	 * @param productModel
 	 * @return
 	 */
-	private List<MplNewSellerInformationMobileData> frameOtherSellerDetailsPwa(final List<SellerInformationData> otherSellerList,
+	private List<SellerInformationMobileData> frameOtherSellerDetailsPwa(final List<SellerInformationData> otherSellerList,
 			final ProductModel productModel)
 	{
 		// YTODO Auto-generated method stub
-		final List<MplNewSellerInformationMobileData> othersellerDataList = new ArrayList<MplNewSellerInformationMobileData>();
+		final List<SellerInformationMobileData> othersellerDataList = new ArrayList<SellerInformationMobileData>();
 		List<DeliveryModeData> mplDeliverymodeInfoData = new ArrayList<DeliveryModeData>();
 		try
 		{
 			for (final SellerInformationData seller : otherSellerList)
 			{
 				String isEMIeligible = null;
-				final MplNewSellerInformationMobileData sellerMobileData = new MplNewSellerInformationMobileData();
+				final SellerInformationMobileData sellerMobileData = new SellerInformationMobileData();
 				if (null != seller.getAvailableStock())
 				{
 					sellerMobileData.setAvailableStock(seller.getAvailableStock().toString());
@@ -3988,25 +4325,24 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						&& null != seller.getSpPriceMobile().getValue()
 						&& seller.getSpPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
-					sellerMobileData.setSellerSpecialPrice(createPriceSign(seller.getSpPriceMobile(),
-							commonI18NService.getCurrency(INR)));
+					sellerMobileData.setSpecialPriceSeller(seller.getSpPriceMobile());
 				}
 				else if (null == seller.getSpPriceMobile() && null != seller.getSpPrice()
 						&& null != seller.getSpPrice().getFormattedValue() && null != seller.getSpPrice().getValue()
 						&& seller.getSpPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
 				{
-					sellerMobileData.setSellerSpecialPrice(createPriceSign(seller.getSpPrice(), commonI18NService.getCurrency(INR)));
+					sellerMobileData.setSpecialPriceSeller(seller.getSpPrice());
 				}
 
 				else if (null != seller.getMopPrice() && null != seller.getMopPrice().getFormattedValue()
 						&& null != seller.getMopPrice().getValue() && seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
-					sellerMobileData.setSellerSpecialPrice(createPriceSign(seller.getMopPrice(), commonI18NService.getCurrency(INR)));
+					sellerMobileData.setSpecialPriceSeller(seller.getMopPrice());
 				}
 				if (null != seller.getMrpPrice() && null != seller.getMrpPrice().getFormattedValue()
 						&& null != seller.getMrpPrice().getValue() && seller.getMrpPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
-					sellerMobileData.setSellerMRP(createPriceSign(seller.getMrpPrice(), commonI18NService.getCurrency(INR)));
+					sellerMobileData.setMrpSeller(seller.getMrpPrice());
 				}
 				mplDeliverymodeInfoData = createDeliverymodeInfoDataPwa(seller, productModel);
 				if (CollectionUtils.isNotEmpty(mplDeliverymodeInfoData))
@@ -4194,67 +4530,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	}
 
 	/**
-	 * @param code
-	 * @return
-	 */
-	private MplBrandInfoData getBrandInfoPwa(final ProductModel productModel)
-	{
-		// YTODO Auto-generated method stub
-		final MplBrandInfoData mplBrandInfo = new MplBrandInfoData();
-		try
-		{
-			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
-
-			if (CollectionUtils.isNotEmpty(superCategoryDetails))
-			{
-				for (final CategoryModel category : superCategoryDetails)
-				{
-					if (category.getCode().startsWith("MBH"))
-					{
-						mplBrandInfo.setBrandId(category.getCode());
-						break;
-					}
-				}
-			}
-
-			setBrandDetails(mplBrandInfo, productModel.getPk());
-
-		}
-		catch (final Exception exception)
-		{
-			LOG.error("Error during population of BrandInfo >> for Product >>" + productModel.getCode() + "Error>>" + exception);
-		}
-		return mplBrandInfo;
-	}
-
-	/**
-	 * @param mplBrandInfo
-	 * @param pk
-	 */
-	private void setBrandDetails(final MplBrandInfoData mplBrandInfo, final PK pk)
-	{
-		// YTODO Auto-generated method stub
-		//	final BrandModel brandModel = brandDao.brandInfoPwa(mplBrandInfo.getBrandId().replaceFirst("MBH", "").trim());
-		final BrandModel brandModel = brandDao.brandInfoPwa(pk);
-		mplBrandInfo.setBrandDetails(brandModel.getDescription());
-		mplBrandInfo.setBrandName(brandModel.getName());
-	}
-
-	/**
-	 * @param formattedValue
-	 * @return
-	 */
-	private PriceData createPriceSign(final PriceData value, final CurrencyModel currency)
-	{
-		// YTODO Auto-generated method stub
-
-		final String currencySymbol = currency.getSymbol();
-		value.setCurrencySymbol(currencySymbol);
-
-		return value;
-	}
-
-	/**
 	 * @param productModel
 	 * @return
 	 */
@@ -4364,6 +4639,248 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		return list;
 	}
 
+	private MplNewProductDetailMobileWsData getCachedAttributes(final ProductData productData, final ProductModel productModel,
+			final String baseUrl)
+	{
+		final MplNewProductDetailMobileWsData productDetailMobileNew = new MplNewProductDetailMobileWsData();
+		MplNewProductDetailMobileWsData isNewOrOnlineExclusive = new MplNewProductDetailMobileWsData();
+		String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
+
+		try
+		{
+			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+
+			if (null != productData)
+			{
+				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
+				{
+					productDetailMobileNew.setBrandName(productData.getBrand().getBrandname());
+				}
+
+				final String brandUrl = prepareBrandWebUrlDataPwa(productData);
+
+				if (StringUtils.isNotEmpty(brandUrl))
+				{
+					productDetailMobileNew.setBrandURL(brandUrl);
+				}
+
+				final List<MplCategoryHierarchydata> list = getcategoryHierarchyForPwa(productModel);
+				if (CollectionUtils.isNotEmpty(list))
+				{
+					productDetailMobileNew.setCategoryHierarchy(list);
+				}
+
+				if (CollectionUtils.isNotEmpty(productData.getImages()))
+				{
+					productDetailMobileNew.setGalleryImagesList(getGalleryImages(productData));
+				}
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
+				{
+					productDetailMobileNew.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
+				}
+
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
+				{
+					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
+				}
+
+				if (productData.getLuxIndicator() != null
+						&& productData.getLuxIndicator().equalsIgnoreCase(MarketplaceCoreConstants.LUXURY))
+				{
+					productDetailMobileNew.setLuxIndicator(MarketplaceCoreConstants.LUXURY);
+
+					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("luxury.care.mail"));
+				}
+
+				if (((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+						|| ((MarketplacewebservicesConstants.FASHIONJEWELLERY).equalsIgnoreCase(productData.getRootCategory())))
+				{
+					final String jwlryCat = configurationService.getConfiguration().getString("mpl.jewellery.category");
+					boolean showSizeOrLength = false;
+					if (StringUtils.isNotEmpty(jwlryCat))
+					{
+						final List<String> catCodeList = Arrays.asList(jwlryCat.split(","));
+
+						for (final CategoryData cat : productData.getCategories())
+						{
+							final String catCode = cat.getCode();
+							if (catCodeList.contains(catCode))
+							{
+								showSizeOrLength = true;
+								break;
+							}
+						}
+					}
+					if (showSizeOrLength)
+					{
+						productDetailMobileNew.setIsSizeOrLength("Length");
+					}
+					else
+					{
+						productDetailMobileNew.setIsSizeOrLength("Size");
+					}
+				}
+
+				if (null != productData.getListingId())
+				{
+					productDetailMobileNew.setProductListingId(productData.getListingId());
+				}
+				if (null != productData.getProductTitle())
+				{
+					productDetailMobileNew.setProductName(productData.getProductTitle());
+				}
+				if (null != productData.getArticleDescription())
+				{
+					productDetailMobileNew.setProductDescription(productData.getArticleDescription());
+				}
+
+				final boolean showSizeGuide = showSizeGuidePwa(productModel);
+				productDetailMobileNew.setShowSizeGuide(Boolean.valueOf(showSizeGuide));
+
+				if (null != productData.getRootCategory())
+				{
+					productDetailMobileNew.setRootCategory(productData.getRootCategory());
+				}
+
+				if (null != productData.getUrl()
+						&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
+				{
+					sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
+				}
+				else if (null != productData.getUrl())
+				{
+					sharedText += productData.getUrl();
+				}
+
+				if (null != productData.getArticleDescription())
+				{
+					productDetailMobileNew.setStyleNote(productData.getArticleDescription());
+				}
+
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
+						MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+
+				if (null != productModel.getMaxOrderQuantity() && productModel.getMaxOrderQuantity().intValue() > 0
+						&& productModel.getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+				{
+					productDetailMobileNew.setMaxQuantityAllowed(productModel.getMaxOrderQuantity().toString());
+				}
+				else if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+				{
+					productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy_jewellery));
+				}
+				else
+				{
+					productDetailMobileNew.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+				}
+
+				productDetailMobileNew.setIsExchangeAvailable(isExchangeAvailablePwa(productModel.getSupercategories(), productData));
+
+				if (StringUtils.isNotEmpty(productData.getLevel3CategoryCode())
+						&& StringUtils.isNotEmpty(productData.getLevel3CategoryName()))
+				{
+					productDetailMobileNew.setL3code(productData.getLevel3CategoryCode());
+					productDetailMobileNew.setL3name(productData.getLevel3CategoryName());
+
+					final ContentSlotModel contentSlotModel = contentSlotService
+							.getContentSlotForId(MarketplacecommerceservicesConstants.Exchange_Slot);
+					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
+
+					if (contentSlotModel != null)
+					{
+						final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+						if (CollectionUtils.isNotEmpty(componentLists))
+						{
+							for (final AbstractCMSComponentModel model : componentLists)
+							{
+								final ExchangeLinkUrl linkUrl = new ExchangeLinkUrl();
+								if (model instanceof SimpleCMSComponentModel)
+
+								{
+									final SimpleCMSComponentModel simpleComponent = (SimpleCMSComponentModel) model;
+
+									if (simpleComponent instanceof CMSLinkComponentModel)
+									{
+										final CMSLinkComponentModel model2 = (CMSLinkComponentModel) simpleComponent;
+										if (StringUtils.isNotEmpty(model2.getName()))
+										{
+											linkUrl.setName(model2.getName());
+										}
+										if (StringUtils.isNotEmpty(model2.getUrl()))
+										{
+											linkUrl.setUrl(model2.getUrl() + MarketplacecommerceservicesConstants.MOBILE_SOURCE2);
+										}
+										if (StringUtils.isNotEmpty(model2.getUid()))
+										{
+											linkUrl.setId(model2.getUid());
+										}
+									}
+									linkUrlList.add(linkUrl);
+								}
+							}
+							productDetailMobileNew.setLinkUrls(linkUrlList);
+						}
+					}
+				}
+
+				if (null != productData.getBrand() && StringUtils.isNotEmpty(productData.getBrand().getBrandDescription()))
+				{
+					productDetailMobileNew
+							.setBrandInfo(productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
+									.getBrand().getBrandDescription() : StringUtils.substring(
+									productData.getBrand().getBrandDescription(), 0, MplConstants.BRANDINFO_CHAR_LIMIT));
+				}
+
+				isNewOrOnlineExclusive = getRichAttributesForPwa(productModel);
+
+				if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsOnlineExclusive())
+				{
+					productDetailMobileNew.setIsOnlineExclusive(isNewOrOnlineExclusive.getIsOnlineExclusive());
+				}
+				if (null != isNewOrOnlineExclusive && null != isNewOrOnlineExclusive.getIsProductNew())
+				{
+					productDetailMobileNew.setIsProductNew(isNewOrOnlineExclusive.getIsProductNew());
+				}
+
+				//Added for TPR-6869
+				buyingGuideURL = populateBuyingGuide(productModel);
+
+				if (StringUtils.isNotEmpty(buyingGuideURL))
+				{
+					productDetailMobileNew.setBuyingGuideUrl(buyingGuideURL);
+				}
+
+			}
+			sharedText += MarketplacecommerceservicesConstants.SPACE
+					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
+			productDetailMobileNew.setSharedText(sharedText);
+
+			if (Boolean.parseBoolean(getIsCacheEnabled()))
+			{
+				mplApiCachingStrategy.put(productData.getCode(), productDetailMobileNew);
+			}
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9037);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		return productDetailMobileNew;
+
+	}
+
 	/**
 	 * @return the classificationService
 	 */
@@ -4383,5 +4900,102 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setClassificationService(final ClassificationService classificationService)
 	{
 		this.classificationService = classificationService;
+	}
+
+	@Override
+	public List<ReviewData> getReviews(final String productCode, final Integer numberOfReviews)
+	{
+		final ProductModel product = getProductService().getProductForCode(productCode);
+		final List<CustomerReviewModel> reviews = getCustomerReviewService().getReviewsForProductAndLanguage(product,
+				getCommonI18NService().getCurrentLanguage());
+
+		if (numberOfReviews == null)
+		{
+			return Converters.convertAll(reviews, getCustomerReviewConverter());
+		}
+		else if (numberOfReviews.intValue() < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		else
+		{
+			return Converters.convertAll(reviews.subList(0, Math.min(numberOfReviews.intValue(), reviews.size())),
+					getCustomerReviewConverter());
+		}
+	}
+
+	@Override
+	public Tuple3<List<ReviewData>, Long, Integer> getReviews(final String productCode, final PageableData pageableData,
+			final String orderBy)
+	{
+		final ProductModel product = getProductService().getProductForCode(productCode);
+		final SearchPageData<CustomerReviewModel> reviews = getCustomerReviewService().getReviewsForProductAndLanguage(product,
+				getCommonI18NService().getCurrentLanguage(), pageableData, orderBy);
+
+		List<ReviewData> reviewDataList = null;
+		Tuple3<List<ReviewData>, Long, Integer> tuple3 = null;
+		if (reviews != null && CollectionUtils.isNotEmpty(reviews.getResults()))
+		{
+			reviewDataList = Converters.convertAll(reviews.getResults(), getCustomerReviewConverter());
+			tuple3 = new Tuple3(reviewDataList, Long.valueOf(reviews.getPagination().getTotalNumberOfResults()),
+					Integer.valueOf(reviews.getPagination().getNumberOfPages()));
+		}
+		else
+		{
+			reviewDataList = new ArrayList<ReviewData>();
+			tuple3 = new Tuple3(reviewDataList, Long.valueOf(0), Integer.valueOf(0));
+		}
+		return tuple3;
+	}
+
+	/**
+	 * @return the customerReviewConverter
+	 */
+	public Converter<CustomerReviewModel, ReviewData> getCustomerReviewConverter()
+	{
+		return customerReviewConverter;
+	}
+
+	/**
+	 * @param customerReviewConverter
+	 *           the customerReviewConverter to set
+	 */
+	public void setCustomerReviewConverter(final Converter<CustomerReviewModel, ReviewData> customerReviewConverter)
+	{
+		this.customerReviewConverter = customerReviewConverter;
+	}
+
+	/**
+	 * @return the customerReviewService
+	 */
+	public MplCustomerReviewService getCustomerReviewService()
+	{
+		return customerReviewService;
+	}
+
+	/**
+	 * @param customerReviewService
+	 *           the customerReviewService to set
+	 */
+	public void setCustomerReviewService(final MplCustomerReviewService customerReviewService)
+	{
+		this.customerReviewService = customerReviewService;
+	}
+
+	/**
+	 * @return the categoryService
+	 */
+	public DefaultCategoryService getCategoryService()
+	{
+		return categoryService;
+	}
+
+	/**
+	 * @param categoryService
+	 *           the categoryService to set
+	 */
+	public void setCategoryService(final DefaultCategoryService categoryService)
+	{
+		this.categoryService = categoryService;
 	}
 }

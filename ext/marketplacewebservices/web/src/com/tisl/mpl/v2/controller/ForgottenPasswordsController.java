@@ -46,7 +46,10 @@ import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
+import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
+import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.helper.MplUserHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.ForgetPasswordService;
 import com.tisl.mpl.service.MplMobileUserService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -75,6 +78,10 @@ public class ForgottenPasswordsController extends BaseController
 	private UserService userService;
 	@Resource
 	private CustomerAccountService customerAccountService;
+	@Resource
+	private ExtendedUserService extUserService;
+	@Resource
+	private RegisterCustomerFacade registerCustomerFacade;
 
 
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
@@ -310,12 +317,6 @@ public class ForgottenPasswordsController extends BaseController
 			}
 			else
 			{
-				//				if (containsRole(auth, TRUSTED_CLIENT) || containsRole(auth, CUSTOMERMANAGER))
-				//				{
-				//					extUserService.setPassword(userIdLwCase, newPassword);
-				//				}
-				//				else
-				//				{
 				final UserModel user = userService.getCurrentUser();
 				try
 				{
@@ -325,32 +326,85 @@ public class ForgottenPasswordsController extends BaseController
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0017);
 				}
-				//}
-				//				final CustomerModel currentUser = null;
-				//				try
-				//				{
-				//					if (null != userService.getCurrentUser())
-				//					{
-				//						currentUser = (CustomerModel) userService.getCurrentUser();
-				//					}
-				//					if (null != currentUser)
-				//					{
-				//						//						mplCustomerProfileFacade.sendEmailForChangePassword(currentUser);
-				//						//
-				//						final String specificUrl = MarketplacecommerceservicesConstants.LINK_MY_ACCOUNT
-				//								+ MarketplacecommerceservicesConstants.LINK_UPDATE_PROFILE;
-				//						final String profileUpdateUrl = urlForMobileEmailContext(request, specificUrl);
-				//						final List<String> updatedDetailList = new ArrayList<String>();
-				//						updatedDetailList.add(MarketplacecommerceservicesConstants.PASSWORD_suffix);
-				//						mplCustomerProfileFacade.sendEmailForUpdateCustomerProfile(updatedDetailList, profileUpdateUrl);
-				//					}
-				//				}
-				//				catch (final Exception e)
-				//				{
-				//					LOG.error("*************** Exception in sending mail after change password MOBILE ******************* " + e);
-				//				}
 				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				result.setMessage("Password has been updated successfuly");
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				result.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				result.setErrorCode(e.getErrorCode());
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return result;
+	}
+
+	@Secured(
+	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserResultWsDto resetPassword(@RequestParam final String username, @RequestParam final String newPassword,
+			@RequestParam final String otp) throws RequestParameterException,
+			de.hybris.platform.commerceservices.customer.PasswordMismatchException
+	{
+		final UserResultWsDto result = new UserResultWsDto();
+		boolean validOtpFlag = false;
+		try
+		{
+			final String userIdLwCase = username.toLowerCase();
+			final ExtRegisterData registration = new ExtRegisterData();
+			//OTP validation
+			validOtpFlag = mobileUserService.validateOtpWithoutExpiryTime(username, otp, OTPTypeEnum.FORGOT_PASSWORD);
+			if (validOtpFlag)
+			{
+				//Checking for user ID existence
+				if (StringUtils.isNotEmpty(username) && username.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+				{
+					registration.setLogin(username);
+					if (registerCustomerFacade.checkMobileNumberUnique(registration))
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU005);
+					}
+				}
+				else if (StringUtils.isNotEmpty(username) && username.contains("@"))
+				{
+					registration.setUid(username);
+					if (registerCustomerFacade.checkEmailIdUnique(registration))
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU005);
+					}
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.NU005);
+				}
+				extUserService.setPassword(userIdLwCase, newPassword);
+				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				result.setStatus("Failure");
+				result.setError("Incorrect OTP. Please try again");
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)

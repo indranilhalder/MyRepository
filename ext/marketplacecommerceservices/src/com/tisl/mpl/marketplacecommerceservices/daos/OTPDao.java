@@ -56,4 +56,7 @@ public interface OTPDao
 	 */
 	OTPModel fetchLatestInvalidatedOTP(String customerPK, OTPTypeEnum OTPType);
 
+	//NU-51
+	public OTPModel getOtpWithoutValidation(String emailId, String mobileNo, OTPTypeEnum OTPType);
+
 }

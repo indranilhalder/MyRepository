@@ -216,6 +216,15 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
+		//EGV Changes 
+	  if (orderProcessModel.getOrder().getIsEGVCart() != null && orderProcessModel.getOrder().getIsEGVCart().booleanValue())
+	  {
+	   put("isEGVOrder", Boolean.FALSE);
+	  }
+	  else
+	  {
+	   put("isEGVOrder", Boolean.TRUE);
+	  }
 
 		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
 
@@ -271,7 +280,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 			put(ORDERPLACEDATE, orderPlaceDate);
 
-			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+			if (null != entryModel.getMplDeliveryMode()&& null != entryModel.getMplDeliveryMode().getDeliveryMode() 
+					&& null != entryModel.getMplDeliveryMode().getDeliveryMode().getCode() && entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
 				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
 				final AddressModel address = model.getAddress();

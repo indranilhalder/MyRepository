@@ -3,6 +3,7 @@
 // */
 package com.tisl.mpl.facades.account.register.impl;
 
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
@@ -20,6 +21,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
@@ -28,6 +30,7 @@ import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -80,6 +83,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
@@ -139,6 +143,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/* sonar fix */
 	/* private final int queryCount = 0; */
+
+	@Autowired
+	EventService eventService;
 
 	protected static final Logger LOG = Logger.getLogger(DefaultMplOrderFacade.class);
 
@@ -909,6 +916,26 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 	}
 
+
+	/* EGV Email Code Added */
+	@Override
+	public void sendNotificationEGVOrder(final String orderId)
+	{
+		OrderModel orderModel = null;
+		try
+		{
+			orderModel = orderModelDao.getOrderModel(orderId);
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderModel);
+			final OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+			eventService.publishEvent(orderEGVRecipientEmailEvent);
+
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(" >> Exception occured while send notification", exception);
+		}
+	}
 
 
 
@@ -2022,6 +2049,28 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
+	}
+
+	/**
+	 * Added for NU-56
+	 */
+	@Override
+	public OrderDataWsDTO orderExperience(final String orderId, final Double ratings)
+	{
+		OrderDataWsDTO result = new OrderDataWsDTO();
+		try
+		{
+
+			result = mplOrderService.orderExperience(orderId, ratings);
+			return result;
+
+		}
+
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B009900);
+		}
+
 	}
 
 

@@ -43,6 +43,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -570,6 +571,24 @@ public class CheckoutController extends AbstractCheckoutController
 				//saving IP of the Customer
 				try
 				{
+					double totalQcTotalAmount =0d;
+					double totalPayableAmount = 0d;
+					boolean isCliqCashApplied =false;
+					DecimalFormat decimalFormat =new DecimalFormat("#.00");
+					if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+						if(null!=orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount()>0){
+						totalQcTotalAmount=orderModel.getTotalWalletAmount();
+						totalPayableAmount=orderModel.getTotalPrice()-orderModel.getTotalWalletAmount();
+						isCliqCashApplied=true;
+						}
+					}else if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+						totalQcTotalAmount=orderModel.getTotalPrice();
+						isCliqCashApplied =true;
+						totalPayableAmount = 0;
+					}
+					model.addAttribute("totalPayableAmount", decimalFormat.format(totalPayableAmount));
+					model.addAttribute("totalQcTotalAmount", decimalFormat.format(totalQcTotalAmount));
+					model.addAttribute("isCliqCashApplied", isCliqCashApplied);
 					final String userIpAddress = request.getHeader("X-Forwarded-For");
 					orderModel.setIpAddress(userIpAddress);
 					getModelService().save(orderModel);
@@ -608,7 +627,7 @@ public class CheckoutController extends AbstractCheckoutController
 				}
 
 				final String uid;
-
+				
 				if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm"))
 				{
 					final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
@@ -631,10 +650,12 @@ public class CheckoutController extends AbstractCheckoutController
 				model.addAttribute("metaRobots", "noindex,nofollow");
 
 				//TISCR-413
+				if(null != orderModel.getIsEGVCart() && !orderModel.getIsEGVCart()){
 				final Map<String, Integer> deliveryTimeMap = getDeliveryTime(orderModel);
 
 				model.addAttribute("deliveryStartTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_STARTTIME));
 				model.addAttribute("deliveryEndTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_ENDTIME));
+			   }
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)

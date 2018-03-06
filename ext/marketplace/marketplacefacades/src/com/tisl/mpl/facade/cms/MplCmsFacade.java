@@ -20,6 +20,7 @@ import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
 import com.tisl.mpl.facades.data.FooterComponentData;
+import com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO;
 import com.tisl.mpl.wsdto.LuxBlpCompWsDTO;
 import com.tisl.mpl.wsdto.LuxHomePageCompWsDTO;
 import com.tisl.mpl.wsdto.LuxNavigationWsDTO;
@@ -117,4 +118,6 @@ public interface MplCmsFacade
 	 * @return AmpMenifestData
 	 */
 	AmpMenifestData getAmpMenifestData();
+
+	EmiTermsandConditionsCMSWsDTO getEmiTermsAndConditions(String contentSlotName);
 }

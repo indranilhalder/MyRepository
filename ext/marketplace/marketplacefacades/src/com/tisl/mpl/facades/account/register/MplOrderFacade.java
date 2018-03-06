@@ -20,6 +20,7 @@ import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
+import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 
 
@@ -212,5 +213,14 @@ public interface MplOrderFacade
 	 */
 	OrderModel getOrderForAnonymousUser(String orderNumber);
 
+	public void sendNotificationEGVOrder(String orderNumber);
 
+	/**
+	 * Added for NU-56
+	 *
+	 * @param orderId
+	 * @param ratings
+	 * @return OrderDataWsDTO
+	 */
+	public OrderDataWsDTO orderExperience(String orderId, Double ratings);
 }

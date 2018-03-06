@@ -25,4 +25,6 @@ public interface MplNetBankingFacade
 	public List<EMITermRateDataForMobile> getBankTerms(final String bank, final Double totalAmount);
 
 	public List<CountryData> getCountries();
+
+	public EMIBankListWsDTO getBankDetailsforEMI(final Double productValue);
 }

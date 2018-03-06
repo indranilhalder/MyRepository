@@ -94,7 +94,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 
 	/*
 	 * To authenticate users
-	 *
+	 * 
 	 * @see de.hybris.platform.spring.security.CoreAuthenticationProvider#authenticate(org.springframework.security.core.
 	 * Authentication)
 	 */
@@ -109,7 +109,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 			String tamperCheck = null;
 
 			String testingParamValue = null;
-			String socialUserId = null;
+			//	String socialUserId = null;
 			String socialChannel = null;
 
 			if (null != authentication.getDetails())
@@ -130,11 +130,11 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 							testingParamValue = entry.getValue();
 							tamperCheck = "Y";
 						}
-						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("userId_param") && null != entry.getValue())
-						{
-							socialUserId = entry.getValue();
-							tamperCheck = "Y";
-						}
+						//						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("userId_param") && null != entry.getValue())
+						//						{
+						//							socialUserId = entry.getValue();
+						//							tamperCheck = "Y";
+						//						}
 						if (null != entry.getKey() && entry.getKey().equalsIgnoreCase("social_channel") && null != entry.getValue())
 						{
 							socialChannel = entry.getValue();
@@ -156,14 +156,14 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 					{
 						if (socialChannel.equalsIgnoreCase("G"))
 						{
-							if (!socialLoginValidationService.checkGoogleAccessToken(testingParamValue, socialUserId))
+							if (!socialLoginValidationService.checkGoogleAccessToken(testingParamValue, userName))
 							{
 								throw new AuthChallengeException();
 							}
 						}
 						else if (socialChannel.equalsIgnoreCase("F"))
 						{
-							if (!socialLoginValidationService.checkFacebookAccessToken(testingParamValue, socialUserId))
+							if (!socialLoginValidationService.checkFacebookAccessToken(testingParamValue, userName))
 							{
 								throw new AuthChallengeException();
 							}
@@ -297,7 +297,7 @@ public class ExtCoreAuthenticationProvider extends CoreAuthenticationProvider
 	 * user) { final UsernamePasswordAuthenticationToken result = new
 	 * UsernamePasswordAuthenticationToken(user.getUsername(), authentication.getCredentials(), user.getAuthorities());
 	 * if (null != authentication.getDetails()) { result.setDetails(authentication.getDetails()); }
-	 *
+	 * 
 	 * return result; }
 	 */
 

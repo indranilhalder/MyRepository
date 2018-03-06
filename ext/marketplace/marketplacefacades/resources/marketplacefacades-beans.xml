@@ -478,6 +478,7 @@
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
 			<property name="pickupName" type="String"/>
 			<property name="pickupPhoneNumber" type="String"/>
+			<property name="resendEgvMailAvailable" type="boolean"/>
 			<property name="deliveryAddressList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />
 	</bean>
@@ -576,6 +577,8 @@
 		<property name="cmsWaistSize" type="String" />
 		<property name="inchesWaistSize" type="String" />
 		<property name="inchesBeltLength" type="String" />
+		<!-- for new ui/ux sizeguide api -->
+		<property name="priority" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">
@@ -640,6 +643,7 @@
 			
 			<property name="returnMethodType" type="String"></property>
 			<property name="isRefundable" type="boolean"></property>
+			<property name="isCanAndReturn" type="boolean"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">
@@ -1291,6 +1295,19 @@
 		<property name="mad_uuid" type="String"></property>
 	</bean>
 	
+	<bean class="com.tisl.mpl.facades.egv.data.EgvDetailsData">
+		<property name="giftRange" type="double" />
+		<property name="openTextAmount" type="double" />
+		<property name="toEmailAddress" type="String" />
+		<property name="fromEmailAddress" type="String" />
+		<property name="messageBox" type="String" />	
+		<property name="totalEGV" type="int" />
+    	<property name="productCode" type="String" />
+    	<property name="fromFirstName" type="String" />	
+		<property name="fromLastName" type="String" />
+    	<property name="fromPhoneNo" type="String" />
+	</bean>
+	
 	<!-- TPR-6665: Update synonyms in solr slave  end -->
 	<bean class="com.tisl.mpl.facades.data.MSDResponsedata">
 		<property name="Msddata" type="java.util.List&lt;com.tisl.mpl.facades.data.MSDResponsedataList>"></property>
@@ -1373,6 +1390,29 @@
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
 		<property name="currencySymbol" type="String" />				
+	</bean>
+<bean class="de.hybris.platform.commercefacades.product.data.ReviewData">
+		<property name="canEditDelete" type="boolean"/>
+	</bean>
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.product.ReviewWsDTO">
+		<property name="canEditDelete" type="boolean"/>
+	</bean>
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.product.ReviewListWsDTO">
+		<property name="totalNoOfReviews" type="Long"/>
+		<property name="totalNoOfPages" type="Integer"/>
+		<property name="pageSize" type="Integer"/>
+		<property name="pageNumber" type="Integer"/>
+	</bean>
+	<bean class="com.tisl.mpl.product.data.ReviewDataList">
+		<property name="totalNoOfReviews" type="Long"/>
+		<property name="totalNoOfPages" type="Integer"/>
+		<property name="pageSize" type="Integer"/>
+		<property name="pageNumber" type="Integer"/>
+</bean>
+	<bean class="com.tisl.mpl.facades.cms.data.WalletCreateData">
+		<property name="qcVerifyFirstName" type="String" />
+		<property name="qcVerifyLastName" type="String" />
+		<property name="qcVerifyMobileNo" type="String" />
 	</bean>
 	
 </beans>

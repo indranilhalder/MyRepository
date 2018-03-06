@@ -31,10 +31,11 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+
+<template:page pageTitle="${pageTitle}">
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
-<template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
@@ -335,7 +336,7 @@
   										</c:when>
 								  		<c:otherwise>
 								  			<h2>Payment Method</h2>
-								  			<span>${subOrder.mplPaymentInfo.paymentOption}</span>
+								  			<span>${subOrder.mplPaymentInfo.paymentOption eq null ? '<b>CliQ Cash</b>' : subOrder.mplPaymentInfo.paymentOption}<%-- ${subOrder.mplPaymentInfo.paymentOption} --%></span>
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 								
 								  		</c:otherwise>

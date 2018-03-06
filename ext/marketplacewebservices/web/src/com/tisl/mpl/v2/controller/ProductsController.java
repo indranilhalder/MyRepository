@@ -45,6 +45,7 @@ import de.hybris.platform.commercewebservicescommons.dto.product.ReviewWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.product.StockWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.product.SuggestionListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.queues.ProductExpressUpdateElementListWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.search.facetdata.ProductSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.search.pagedata.PaginationWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderStockSearchPageWsDTO;
@@ -56,7 +57,10 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.promotions.util.Tuple3;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.i18n.I18NService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 
 import java.net.MalformedURLException;
@@ -96,15 +100,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.brand.MplFollowedBrandFacade;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facade.compare.MplProductCompareFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.ProductCompareData;
 import com.tisl.mpl.formatters.WsDateFormatter;
+import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
 import com.tisl.mpl.product.data.ReviewDataList;
 import com.tisl.mpl.product.data.SuggestionDataList;
 import com.tisl.mpl.queues.data.ProductExpressUpdateElementData;
@@ -119,7 +126,10 @@ import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
+import com.tisl.mpl.wsdto.FollowedBrandWsDto;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
+import com.tisl.mpl.wsdto.MplFollowedBrandsWsDto;
 import com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
@@ -201,11 +211,46 @@ public class ProductsController extends BaseController
 	@Resource(name = "mplCategoryFacade")
 	private MplCategoryFacade mplCategoryFacade;
 
+	@Resource(name = "productService")
+	private MplProductService productService;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
+
+
+	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
+	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
+	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
+
+	@Resource
+	private UserService userService;
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
 	@Resource
 	private SearchSuggestUtilityMethods searchSuggestUtilityMethods;
 	//critical sonar fix
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
+
+
+	@Resource(name = "mplFollowedBrandFacade")
+	private MplFollowedBrandFacade mplFollowedBrandFacade;
 
 	static
 	{
@@ -502,6 +547,37 @@ public class ProductsController extends BaseController
 	 *
 	 * @return product's review list
 	 */
+	@RequestMapping(value = "/{productCode}/users/{userId}/reviews", method = RequestMethod.GET)
+	@ResponseBody
+	public ReviewListWsDTO getPaginatedProductReviews(
+			@PathVariable final String productCode,
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			@RequestParam(required = false, defaultValue = "0") final int page,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false, defaultValue = MarketplacecommerceservicesConstants.BY_DATE) final String sort,
+			@RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false, defaultValue = "desc") final String orderBy)
+	{
+		final ReviewDataList reviewDataList = new ReviewDataList();
+		if (pageSize == null)
+		{
+			pageSize = Integer.valueOf(configurationService.getConfiguration().getString(
+					"ratingAndReview.webservice.getReviews.pageSize", "10"));
+		}
+		final PageableData pageableData = createPageableData(page, pageSize.intValue(), sort, ShowMode.Page);
+		final Tuple3<List<ReviewData>, Long, Integer> tuple3 = mplProductWebService.getReviews(productCode, pageableData, orderBy);
+		reviewDataList.setReviews(tuple3.getFirst());
+		reviewDataList.setPageNumber(Integer.valueOf(page));
+		reviewDataList.setPageSize(pageSize);
+		reviewDataList.setTotalNoOfReviews(tuple3.getSecond());
+		reviewDataList.setTotalNoOfPages(tuple3.getThird());
+		return dataMapper.map(reviewDataList, ReviewListWsDTO.class, fields);
+	}
+
+	/**
+	 * Returns the reviews for a product with a given product code.
+	 *
+	 * @return product's review list
+	 */
 	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.GET)
 	@ResponseBody
 	public ReviewListWsDTO getProductReviews(@PathVariable final String productCode,
@@ -509,7 +585,7 @@ public class ProductsController extends BaseController
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		final ReviewDataList reviewDataList = new ReviewDataList();
-		reviewDataList.setReviews(productFacade.getReviews(productCode, maxCount));
+		reviewDataList.setReviews(mplProductWebService.getReviews(productCode, maxCount));
 		return dataMapper.map(reviewDataList, ReviewListWsDTO.class, fields);
 	}
 
@@ -525,19 +601,54 @@ public class ProductsController extends BaseController
 	 * @throws WebserviceValidationException
 	 *            When given parameters are incorrect
 	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{productCode}/reviews", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	public ReviewWsDTO createReview(@PathVariable final String productCode,
+	public ReviewWsDTO createEditReview(@PathVariable final String productCode,
 			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
 			throws WebserviceValidationException
 	{
 		final ReviewData reviewData = new ReviewData();
 		httpRequestReviewDataPopulator.populate(request, reviewData);
+		final String reviewId = request.getParameter("id");
 		validate(reviewData, "reviewData", reviewValidator);
-		final ReviewData reviewDataRet = productFacade.postReview(productCode, reviewData);
+		ReviewData reviewDataRet = null;
+		if (StringUtils.isNotBlank(reviewId))
+		{
+			reviewDataRet = productService.editDeleteReviewEntry(getUserService().getCurrentUser(),
+					productService.getProductForCode(productCode), reviewId, true, reviewData);
+		}
+		else
+		{
+			reviewDataRet = productFacade.postReview(productCode, reviewData);
+		}
 		final ReviewWsDTO dto = dataMapper.map(reviewDataRet, ReviewWsDTO.class, fields);
 		return dto;
+	}
+
+	/**
+	 * Delete's a Review for a logged in Customer
+	 *
+	 *
+	 * @return void
+	 * @throws WebserviceValidationException
+	 *            When given parameters are incorrect
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{productCode}/{reviewId}/deleteReview", method = RequestMethod.GET)
+	@ResponseBody
+	public void deleteReview(@PathVariable final String productCode, @PathVariable final String reviewId,
+			final HttpServletRequest request) throws WebserviceValidationException
+	{
+		if (StringUtils.isNotBlank(reviewId))
+		{
+			productService.editDeleteReviewEntry(getUserService().getCurrentUser(), productService.getProductForCode(productCode),
+					reviewId, false, null);
+		}
+
 	}
 
 	/**
@@ -786,12 +897,12 @@ public class ProductsController extends BaseController
 	 */
 	@RequestMapping(value = "/{productCode}/sizeGuide", method = RequestMethod.GET)
 	@ResponseBody
-	public SizeGuideWsDTO getSizeGuide(@PathVariable final String productCode)
+	public SizeGuideWsDTO getSizeGuide(@PathVariable final String productCode, @RequestParam(required = false) final Boolean isPwa)
 	{
 		SizeGuideWsDTO sizeGuideDataList = new SizeGuideWsDTO();
 		try
 		{
-			sizeGuideDataList = sizeGuideFacade.getWSProductSizeguide(productCode);
+			sizeGuideDataList = sizeGuideFacade.getWSProductSizeguide(productCode, isPwa);
 			if (!(sizeGuideDataList != null))
 			{
 				throw new RequestParameterException(MarketplacecommerceservicesConstants.B9205);
@@ -1609,6 +1720,7 @@ public class ProductsController extends BaseController
 
 
 
+
 	@RequestMapping(value = "/{productCode}", params = "isPwa", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
 	@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
@@ -1702,6 +1814,64 @@ public class ProductsController extends BaseController
 
 
 
+
+
+	/**
+	 * Returns the reviews for a product with a given product code.
+	 *
+	 * @return product's review list
+	 */
+	@RequestMapping(value = "/egvProductInfo", method = RequestMethod.GET)
+	//@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
+	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	@ResponseBody
+	public EgvProductInfoWSDTO getEgvProductInfo(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields,
+			final HttpServletRequest request)
+	{
+		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		try
+		{
+			egvProductData = mplProductWebService.getEgvProductDetails();
+			if (null != egvProductData)
+			{
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				egvProductData = new EgvProductInfoWSDTO();
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			egvProductData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			egvProductData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return egvProductData;
+	}
+
+
 	/**
 	 * @return the messageSource
 	 */
@@ -1740,7 +1910,7 @@ public class ProductsController extends BaseController
 	@RequestMapping(value = "/searchProducts", method =
 	{ RequestMethod.POST, RequestMethod.GET }, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ProductSearchPageWsDto searchProducts(@RequestParam(required = false) final String searchText,
+	public ProductSearchPageWsDto searchProductsNew(@RequestParam(required = false) final String searchText,
 			@RequestParam(required = false) final int page, @RequestParam(required = false) final int pageSize,
 			@RequestParam(required = false) final String sortCode, @RequestParam(required = false) final boolean isFilter,
 			@RequestParam(required = false) final boolean isPwa, @RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
@@ -1813,6 +1983,7 @@ public class ProductsController extends BaseController
 
 					productSearchPage.setPagination(paginationWsDTO);
 
+
 				}
 				if (null != sortingvalues.getSorts())
 				{
@@ -1820,7 +1991,36 @@ public class ProductsController extends BaseController
 				}
 				if (null != sortingvalues.getCurrentQuery())
 				{
-					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
+					final SearchStateWsDTO currentQuery = new SearchStateWsDTO();
+
+					currentQuery.setUrl(sortingvalues.getCurrentQuery().getUrl());
+					currentQuery.setQuery(sortingvalues.getCurrentQuery().getQuery());
+
+					currentQuery.setAppliedSort(sortingvalues.getPagination().getSort());
+
+					final String query = sortingvalues.getCurrentQuery().getQuery().getValue();
+
+					final String[] arr = query.split(":");
+
+					if (arr.length > 2)
+					{
+						currentQuery.setAppliedFilters(query.substring(query.indexOf(":", query.indexOf(":") + 1) + 1));
+						currentQuery.setSearchQuery(arr[0]);
+					}
+					else if (arr.length == 2 || query.indexOf(":", query.indexOf(":") + 1) == -1)
+					{
+						currentQuery.setSearchQuery(arr[0]);
+						currentQuery.setAppliedFilters(" ");
+					}
+					else if (arr.length == 0)
+					{
+						if (StringUtils.isNotEmpty(query))
+						{
+							currentQuery.setSearchQuery(query);
+						}
+					}
+
+					productSearchPage.setCurrentQuery(currentQuery);
 				}
 
 			}
@@ -1860,5 +2060,129 @@ public class ProductsController extends BaseController
 		}
 		return productSearchPage;
 	}
+
 	//NU-38 end
+
+	@RequestMapping(value = "/getFollowedBrands", method = RequestMethod.GET, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public MplFollowedBrandsWsDto getFollowedBrands(final String fields, @RequestParam(required = true) final String gender,
+			@RequestParam(required = false) final boolean isPwa)
+
+
+	{
+		final MplFollowedBrandsWsDto mplFollowedBrandsWsDto = new MplFollowedBrandsWsDto();
+
+		try
+		{
+			List<FollowedBrandWsDto> followedBrandList = new ArrayList<FollowedBrandWsDto>();
+
+			followedBrandList = mplFollowedBrandFacade.getFollowedBrands(gender);
+
+			if (CollectionUtils.isNotEmpty(followedBrandList))
+			{
+				mplFollowedBrandsWsDto.setFollowedBrandList(followedBrandList);
+			}
+			else
+			{
+				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+				mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU350));
+				mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU350);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			if (null != e.getErrorMessage())
+			{
+				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplFollowedBrandsWsDto.setErrorCode(e.getErrorCode());
+			}
+			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU350));
+			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU350);
+			mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+
+		}
+		return mplFollowedBrandsWsDto;
+
+
+	}
+
+
+	@RequestMapping(value = "{mcvId}/updateFollowedBrands", method = RequestMethod.POST, produces = MarketplacecommerceservicesConstants.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public MplFollowedBrandsWsDto updateFollowedBrands(@PathVariable final String mcvId, final String fields,
+			@RequestParam(required = true) final String brands, @RequestParam(required = true) final boolean follow,
+			@RequestParam(required = false) final boolean isPwa)
+
+
+	{
+		final MplFollowedBrandsWsDto mplFollowedBrandsWsDto = new MplFollowedBrandsWsDto();
+		try
+		{
+			final boolean status = mplFollowedBrandFacade.updateFollowedBrands(mcvId, brands, follow);
+
+			if (status)
+			{
+				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.SUCCESS);
+				mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU450));
+			}
+			else
+			{
+				mplFollowedBrandsWsDto.setStatus(MarketplacewebservicesConstants.FAILURE);
+				mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU250));
+				mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU250);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			if (null != e.getErrorMessage())
+			{
+				mplFollowedBrandsWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplFollowedBrandsWsDto.setErrorCode(e.getErrorCode());
+			}
+			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			LOG.error("Followed Brand Error" + e.getMessage());
+			mplFollowedBrandsWsDto.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.NU250));
+			mplFollowedBrandsWsDto.setErrorCode(MarketplacecommerceservicesConstants.NU250);
+			mplFollowedBrandsWsDto.setStatus(MarketplacecommerceservicesConstants.NU250);
+
+		}
+		return mplFollowedBrandsWsDto;
+	}
+
+	/**
+	 * @return the mplFollowedBrandFacade
+	 */
+	public MplFollowedBrandFacade getMplFollowedBrandFacade()
+	{
+		return mplFollowedBrandFacade;
+	}
+
+	/**
+	 * @param mplFollowedBrandFacade
+	 *           the mplFollowedBrandFacade to set
+	 */
+	public void setMplFollowedBrandFacade(final MplFollowedBrandFacade mplFollowedBrandFacade)
+	{
+		this.mplFollowedBrandFacade = mplFollowedBrandFacade;
+	}
 }

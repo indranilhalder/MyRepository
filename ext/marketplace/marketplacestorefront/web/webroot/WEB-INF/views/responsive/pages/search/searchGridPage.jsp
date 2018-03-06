@@ -15,15 +15,6 @@
 <c:if test="${currentPageEnd > searchPageData.pagination.totalNumberOfResults}">
     <c:set value="${searchPageData.pagination.totalNumberOfResults}" var="currentPageEnd"/>
 </c:if>
-<!-- Tealium hidden fields -->
-<input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
-<input type="hidden" id="searchCategory" value="${searchCategory}">
-<input type="hidden" id="search_results" value="${currentPageEnd}">
-<input type="hidden" id="page_name" value="${page_name}">
-
-<input type="hidden" id="search_type" value="${searchType}"><!-- For TPR-666 -->
-<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
-<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
 
 
 
@@ -41,6 +32,15 @@
 <c:otherwise>
 
 <template:page pageTitle="${pageTitle}">
+<!-- Tealium hidden fields -->
+<input type="hidden" id="search_keyword" value="${searchPageData.freeTextSearch}">
+<input type="hidden" id="searchCategory" value="${searchCategory}">
+<input type="hidden" id="search_results" value="${currentPageEnd}">
+<input type="hidden" id="page_name" value="${page_name}">
+
+<input type="hidden" id="search_type" value="${searchType}"><!-- For TPR-666 -->
+<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
+<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
 
 <!-- TPR-4471 Starts -->
 <c:url value="${param}" var="paramUrl" />
@@ -122,4 +122,3 @@ $(document).ready(function(){
 </template:page>
 </c:otherwise>
 </c:choose>
-

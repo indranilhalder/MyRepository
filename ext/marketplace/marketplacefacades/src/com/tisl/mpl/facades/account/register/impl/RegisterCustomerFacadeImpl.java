@@ -304,14 +304,19 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setIscheckedMyRewards(Boolean.valueOf(registerData.isCheckTataRewards()));
 				//NU-30
 				newCustomer.setOtpVerified(Boolean.TRUE);
-				if (StringUtils.isNotEmpty(registerData.getEmailId()))
-				{
-					registerData.setLogin(registerData.getEmailId());
-				}
-				else
-				{
-					registerData.setLogin(registerData.getMobilenumber());
-				}
+				//				if (StringUtils.isNotEmpty((registerData.getLogin()))) // CHECKING IF uid ALREADY SET
+				//				{
+				//					if (StringUtils.isNotEmpty(registerData.getEmailId()) && !registerData.getLogin().contains("@"))
+				//					{
+				//						registerData.setLogin(registerData.getEmailId());
+				//					}
+				//					else if()
+				//					{
+				//						registerData.setLogin(registerData.getMobilenumber());
+				//					}
+				//				}
+
+
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
@@ -340,7 +345,10 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
 					newCustomer.setMobileNumber(registerData.getMobilenumber());
 				}
-
+				if (StringUtils.isNotEmpty(registerData.getEmailId()))
+				{
+					newCustomer.setOriginalUid(registerData.getEmailId());
+				}
 				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId(),
 						platformNumber);
 				/*
@@ -359,7 +367,6 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
 
 	/**
 	 * @description this method is used to check uniqueness og email id
@@ -404,6 +411,24 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 		{
 			throw new AmbiguousIdentifierException("Found two profiles with same mobile number");
 		}
+	}
+
+	/**
+	 * @description this method is used to check uniqueness of MobileNumber For Wallet
+	 * @param data
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkUniquenessOfMobileForWallet(final String mobileNumber)
+	{
+		boolean flag = false;
+		flag = extUserService.isMobileUniqueForWallet(mobileNumber);
+		//		if (!flag)
+		//		{
+		//			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+		//		}
+		return flag;
+
 	}
 
 	/**
@@ -812,5 +837,17 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 		this.orderModelService = orderModelService;
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.register.RegisterCustomerFacade#registerWalletMobileNumber(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void registerWalletMobileNumber(final String firstName, final String lastName, final String mobileNumber)
+	{
+		extDefaultCustomerService.registerWalletMobileNumber(firstName, lastName, mobileNumber);
+	}
 
 }

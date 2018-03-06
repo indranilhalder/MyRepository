@@ -21,5 +21,5 @@ public interface SizeGuideFacade
 	public Map<String, List<SizeGuideData>> getProductSizeguide(final String productCode, String categoryType)
 			throws CMSItemNotFoundException;
 
-	public SizeGuideWsDTO getWSProductSizeguide(final String productCode) throws CMSItemNotFoundException;
+	public SizeGuideWsDTO getWSProductSizeguide(final String productCode, final Boolean isPwa) throws CMSItemNotFoundException;
 }

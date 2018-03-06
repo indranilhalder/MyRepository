@@ -20,6 +20,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.service.MplProductWebService;
+import com.tisl.mpl.solr.search.MplSearchFacetPriorityComparator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
@@ -180,7 +182,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -1872,8 +1874,12 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
+		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
+
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
+			final List<MplSearchFacetPriorityComparator> searchFacetByPriorityList = new ArrayList<MplSearchFacetPriorityComparator>();
+
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
@@ -1899,6 +1905,35 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+
+
+							if (null != facate.getCustomeRange())
+							{
+								facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+								if (facate.getCustomeRange().booleanValue())
+								{
+									facetWsDTO.setMinPrice(facate.getMinPrice());
+									facetWsDTO.setMaxPrice(facate.getMaxPrice());
+								}
+							}
+							else
+							{
+								facetWsDTO.setCustomeRange(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							facetWsDTO.setRangeApplied(Boolean.FALSE);
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -1937,6 +1972,16 @@ public class SearchSuggestUtilityMethods
 								facetValueWsDTO.setValue(values.getCode());
 							}
 
+							if (facate.getCode().equalsIgnoreCase("colour"))
+							{
+								//"#"+ st.substring(st.indexOf('_')+1)
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									final String st = values.getCode();
+									facetValueWsDTO.setHexColor("#" + st.substring(st.indexOf('_') + 1));
+								}
+							}
+
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
 									.equalsIgnoreCase("false")))
@@ -1950,7 +1995,11 @@ public class SearchSuggestUtilityMethods
 					//Fix to send only facets with visible true
 					if (visible.booleanValue())
 					{
-						searchfacetDTOList.add(facetWsDTO);
+						//searchfacetDTOList.add(facetWsDTO);
+						final MplSearchFacetPriorityComparator mplSearchFacetPriorityComparator = new MplSearchFacetPriorityComparator();
+						mplSearchFacetPriorityComparator.setPriority(facate.getPriority());
+						mplSearchFacetPriorityComparator.setFacetDataWsDTO(facetWsDTO);
+						searchFacetByPriorityList.add(mplSearchFacetPriorityComparator);
 					}
 
 				}
@@ -1992,6 +2041,18 @@ public class SearchSuggestUtilityMethods
 					productSearchPage.setFacetdatacategory(categoryHierarchy);
 				}
 			}
+			if (prioritySort)
+			{
+				Collections.sort(searchFacetByPriorityList, MplSearchFacetPriorityComparator.searchFacetByPriority);
+			}
+			if (CollectionUtils.isNotEmpty(searchFacetByPriorityList))
+			{
+				for (final MplSearchFacetPriorityComparator com : searchFacetByPriorityList)
+				{
+					searchfacetDTOList.add(com.getFacetDataWsDTO());
+				}
+			}
+
 			productSearchPage.setFacetdata(searchfacetDTOList);
 
 		}
@@ -2009,6 +2070,7 @@ public class SearchSuggestUtilityMethods
 	{
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
+		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
 		if (null != searchPageData.getResults())
 		{
 
@@ -2032,8 +2094,9 @@ public class SearchSuggestUtilityMethods
 			productSearchPage.setError(MarketplacecommerceservicesConstants.SEARCHNOTFOUND);
 		}
 
-		if (null != searchPageData.getFacets())
+		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
 		{
+			final List<MplSearchFacetPriorityComparator> searchFacetByPriorityList = new ArrayList<MplSearchFacetPriorityComparator>();
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
 				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
@@ -2056,6 +2119,35 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+
+
+							if (null != facate.getCustomeRange())
+							{
+								facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+								if (facate.getCustomeRange().booleanValue())
+								{
+									facetWsDTO.setMinPrice(facate.getMinPrice());
+									facetWsDTO.setMaxPrice(facate.getMaxPrice());
+								}
+							}
+							else
+							{
+								facetWsDTO.setCustomeRange(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							facetWsDTO.setRangeApplied(Boolean.FALSE);
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -2095,11 +2187,22 @@ public class SearchSuggestUtilityMethods
 							}
 
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+
+							if (facate.getCode().equalsIgnoreCase("colour"))
+							{
+								//"#"+ st.substring(st.indexOf('_')+1)
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									final String st = values.getCode();
+									facetValueWsDTO.setHexColor("#" + st.substring(st.indexOf('_') + 1));
+								}
+							}
 							// To skip Include out of stock
 							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
+
 
 						}
 					}
@@ -2107,7 +2210,11 @@ public class SearchSuggestUtilityMethods
 					//Fix to send only facets with visible true
 					if (visible.booleanValue())
 					{
-						searchfacetDTOList.add(facetWsDTO);
+						final MplSearchFacetPriorityComparator mplSearchFacetPriorityComparator = new MplSearchFacetPriorityComparator();
+						mplSearchFacetPriorityComparator.setPriority(facate.getPriority());
+						mplSearchFacetPriorityComparator.setFacetDataWsDTO(facetWsDTO);
+						searchFacetByPriorityList.add(mplSearchFacetPriorityComparator);
+						//searchfacetDTOList.add(facetWsDTO);
 					}
 					//searchfacetDTOList.add(facetWsDTO);
 				}
@@ -2148,6 +2255,20 @@ public class SearchSuggestUtilityMethods
 					productSearchPage.setFacetdatacategory(categoryHierarchy);
 				}
 			}
+
+			if (prioritySort)
+			{
+				Collections.sort(searchFacetByPriorityList, MplSearchFacetPriorityComparator.searchFacetByPriority);
+			}
+
+			if (CollectionUtils.isNotEmpty(searchFacetByPriorityList))
+			{
+				for (final MplSearchFacetPriorityComparator com : searchFacetByPriorityList)
+				{
+					searchfacetDTOList.add(com.getFacetDataWsDTO());
+				}
+			}
+
 			productSearchPage.setFacetdata(searchfacetDTOList);
 		}
 		else
@@ -2341,6 +2462,16 @@ public class SearchSuggestUtilityMethods
 
 				sellingItemDetail.setNewProduct(productData.getIsProductNew());
 				sellingItemDetail.setOnlineExclusive(productData.getIsOnlineExclusive());
+
+				if (null != productData.getAverageRating())
+				{
+					sellingItemDetail.setAverageRating(productData.getAverageRating());
+				}
+
+				if (null != productData.getNumberOfReviews())
+				{
+					sellingItemDetail.setTotalNoOfReviews(productData.getNumberOfReviews());
+				}
 
 				searchProductDTOList.add(sellingItemDetail);
 			}

@@ -368,6 +368,9 @@
 		<property name="mobileNumber" type="String" />
 		<property name="nickName" type="String" />
 		<property name="InvitationDetails" type="com.tisl.mpl.data.InvitationDetails" />
+		<property name="fav_ProductCount" type="int" />
+		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyMobileWsDTO"
@@ -740,6 +743,11 @@
 		<!-- TPR-6117 -->
 		<property name="maxQuantityAllowed" type="String" />
 		<!--<property name="priceDisclaimerTextJwlry" type="String" /> -->
+		
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="priceValue" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="availableStockCount" type="Integer" />
+		<property name="isOutOfStock" type="Boolean" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -750,6 +758,8 @@
 		<!-- SDI-4197-->
 		<property name="priority" type="int" />
 		<!-- SDI-4197-->
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="charge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.WebSerResponseWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="code" type="String" />
@@ -879,6 +889,8 @@
 		<!-- TPR-3893 ends here -->
 		<!-- TPR-6980 -->
 		<property name="priceDisclaimerTextJwlry" type="String" />
+		<!-- added for get user cart details api:NU-46 -->
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -908,7 +920,7 @@
 
 
 
-		<!-- PotentialPromotions -->
+		<!-- PotentialPromotions -->		
 	</bean>
 	<!--End of Get Cart details -->
 	<!-- Registration Mobile web service -->
@@ -1114,6 +1126,8 @@
 		<!-- TPR-6869: Start & end -->
 		<property name="classificationList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ClassificationDTOLister>" />
+		<property name="averageRating" type="Double" />
+		<property name="numberOfReviews" type="Integer" />
 	</bean>
 
 	<!-- TPR-6869 : Start -->
@@ -1164,6 +1178,8 @@
 		<property name="juspayReturnUrl" type="String"></property>
 		<property name="juspayOrderId" type="String"></property>
 		<property name="orderId" type="String"></property>
+		<property name="cliqcashSelected" type="boolean"></property>
+		<property name="cliqcashAmount" type="Double"></property>
 		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
 		<property name="errorMessage" type="String"></property>
@@ -1183,6 +1199,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.EMIBankWsDTO>" />
 		<property name="emitermsrate"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.EMITermRateDataForMobile>" />
+			<property name="message" type="String" /> 
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.EMIBankWsDTO">
@@ -1192,6 +1209,8 @@
 		<property name="emiLowerLimit" type="String" />
 		<property name="emiUpperLimit" type="String" />
 		<property name="emiTermRates" type="String" />
+		<property name="emitermsrate"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.EMITermRateDataForMobile>" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.NetBankingWsDTO">
 		<property name="bankName" type="String" />
@@ -1233,8 +1252,21 @@
 
 	<!-- Bin Number Details -->
 
+
+	<bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="currencyIso" type="String" />
+		<property name="doubleValue" type="Double" />
+		<property name="formattedValue" type="String" />
+		<property name="formattedValueNoDecimal" type="String"/>
+		<property name="priceType" type="de.hybris.platform.commercefacades.product.data.PriceDataType" />	
+		<property name="value" type="java.math.BigDecimal" />	
+	</bean>
+	
+	 
+	
+	
 	<!-- COD Details -->
-	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData">
+	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="bankName" type="String"></property>
 		<property name="bankCode" type="String"></property>
 		<property name="basestore" type="String"></property>
@@ -1246,12 +1278,26 @@
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
 		<property name="listofPotentialRestriction"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
+		<!-- Added For CLiq Cash Functionality  Start -->
+		
+		<property name="savedCardResponse"
+			type="com.tisl.mpl.wsdto.MplSavedCardDTO"/>
+		<property name="cliqCash"
+			type="com.tisl.mpl.wsdto.CliqCashWsDto"/>	
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="paybleAmount" type="String" />
+		<property name="CliqCashAmountDeducted" type="java.lang.Double" />
+			
+	   <!-- Added For CLiq Cash Functionality  End -->		
 		<property name="paymentOffers" type="com.tisl.mpl.wsdto.OfferListWsData" />
 		<property name="merchantID" type="String" />
 		<property name="merchantKey" type="String" />
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />	
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -1327,6 +1373,8 @@
 		<property name="inchesWaistSize" type="String" />
 		<property name="inchesBeltLength" type="String" />
 		<!-- This is added by SAP For Accessories END :::: -->
+		<!-- for new ui/ux sizeguide api -->
+		<property name="priority" type="String" />
 	</bean>
 
 	<!-- About Us -->
@@ -1502,11 +1550,20 @@
 		<!-- <property name="statusDisplayMsg" type="java.util.Map&lt;String,String>" 
 			/> -->
 		<property name="pickupPersonName" type="String" />
+		<property name="isEgvOrder" type="boolean" />
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean" />
+		<property name="cartExpiryDate" type="String" />
+		<property name="resendAvailable" type="boolean" />
+		<property name="resendAttemptedCount" type="int"/>
+		<property name="egvCardNumber" type="String" />
+		<property name="giftCardStatus" type="String" />
 		<property name="isWalletPay" type="boolean" />
 		<property name="walletTransactionId" type="String" />
+		<property name="orderAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
+		<property name="JuspayAmountDeducted" type="java.lang.Double" />
 
 	</bean>
 
@@ -1540,6 +1597,9 @@
 		<property name="couponDiscount" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="isEgvOrder" type="boolean" />
+		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
 		<!-- TPR-1083 Start -->
 		<property name="exchangeId" type="String" />
 		<property name="isWalletPay" type="java.lang.Boolean" />
@@ -1616,6 +1676,8 @@
 		<property name="scheduleDeliveryDate" type="String" />
 		<property name="scheduleDeliveryTime" type="String" />
 		<property name="selfCourierDocumentLink" type="String" />
+		<property name="WalletApportionPaymentData" type="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData" />
+		<property name="walletApportionforReverseData" type="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData" />
 		<property name="awbPopupLink" type="String" />
 		<!-- TPR-1083 Start -->
 		<property name="exchangeId" type="String" />
@@ -1674,6 +1736,20 @@
 		<property name="pickupPersonMobile" type="String" />
 		<!-- TPR-1083 Start -->
 		<property name="exchangeId" type="String" />
+		<property name="orderAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+	<!-- Added For EGV Functionality Start -->
+	<property name="cartExpiryDate" type="String" />
+		<property name="resendAvailable" type="boolean" />
+		<property name="resendAttemptedCount" type="int"/>
+		<property name="egvCardNumber" type="String" />
+		<property name="isEgvOrder" type="boolean" />
+		<property name="giftCardStatus" type="String" />
+	<!-- Added For EGV Functionality End -->	
+	<!-- Added for NU-56 -->
+	<property name="ratings" type="String" />
+	<property name="errorCode" type="String" />
+	<property name="message" type="String" />
+	<property name="status" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -2015,6 +2091,10 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
 		<!--  Added for NU-38 start-->	
 		<property name="selectedFilterCount" type="int" />
+		<property name="maxPrice" type="String" />
+		<property name="minPrice" type="String" />
+		<property name="rangeApplied" type="Boolean" />
+		<property name="customeRange" type="Boolean" />
 		<!--  Added for NU-38 end-->
 	</bean>
 
@@ -2027,7 +2107,7 @@
 		<property name="value" type="String" />
 		<property name="subcategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.FacetValueDataWsDTO>" />
-
+        <property name="hexColor" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.SellingItemDetailWsDto">
@@ -2083,6 +2163,8 @@
 		<property name="price" type="com.tisl.mpl.wsdto.PriceWsData"/>
 		<property name="newProduct" type="Boolean" />
 		<property name="onlineExclusive" type="Boolean" />
+		<property name="averageRating" type="Double"></property>
+		<property name="totalNoOfReviews" type="Integer"></property>
 		<!--  Added for NU-38 end-->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.VariantOptionsWsDto">
@@ -2324,6 +2406,18 @@
 		<property name="totalDiscount"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mobileNo" type="String" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="paybleAmount" type="String" />
+		<property name="isBankPromotionApplied" type="boolean" /> 
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isRemainingAmount" type="boolean" />
 	</bean>
 
 	<!-- Saved Card Credit/Debit DTO -->
@@ -2446,10 +2540,27 @@
 
 
 	<bean class="com.tisl.mpl.wsdto.ApplyCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="couponDiscount" type="String" />
+		<!-- <property name="couponDiscount" type="String" /> -->
 		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
+		<property name="totalWithoutCoupon" type="java.lang.Double" />
+		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
+		<property name="totalCliqCash" type="java.lang.Double" />
+		<!-- <property name="cliqCashApplied" type="boolean" /> -->
+		<property name="remaingPaybleAmount" type="String" />
+		<property name="isBankPromotionApplied" type="boolean" /> 
+		<property name="isRemainingAmount" type="boolean" />
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.GigyaWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="sessionToken" type="String" />
@@ -2608,12 +2719,25 @@
 	<bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 
 		<!-- <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO"> -->
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-
+		<property name="totalWithoutCoupon" type="java.lang.Double" />
+		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
+		<property name="totalCliqCash" type="java.lang.Double" />
+<!-- 		<property name="cliqCashApplied" type="boolean" />
+ -->		<property name="remaingPaybleAmount" type="java.lang.Double" />
 		<property name="total" type="String" />
 		<property name="discount" type="String" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
+		<property name="couponDiscount" type="String" />
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isBankPromotionApplied" type="boolean" /> 
+		<property name="isRemainingAmount" type="boolean" />
 	</bean>
 
 	<!-- TPR-816 -->
@@ -3609,10 +3733,22 @@
 		<property name="offerTermsConditions" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.ApplyCartCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="couponDiscount" type="String" />
-		<property name="discount" type="String" />
+<!-- 		<property name="couponDiscount" type="String" />
+ -->		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
+		<property name="isBankPromotionApplied" type="boolean" />
+		<property name="isRemainingAmount" type="boolean" /> 
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cartAmount" type="com.tisl.mpl.wsdto.PriceWsPwaDTO" />
 	</bean>
 	<!-- TPR-7486 end-->
 	<!-- Added for TPR-5954 || Start -->
@@ -3626,7 +3762,6 @@
 		<property name="subReturnReason" type="java.lang.String" />
 	</bean>
 	<!-- Added for TPR-5954 || End -->
-
 <!--  Added for NU-35 start-->
 
 	<bean class="com.tisl.mpl.wsdto.OffersDTO">
@@ -3698,6 +3833,10 @@
 	
 	<bean class="de.hybris.platform.commerceservices.search.facetdata.FacetData&lt;STATE>">
 	   <property name="selectedFilterCount" type="int"/>
+	   <property name="maxPrice" type="String" />
+	   <property name="minPrice" type="String" />
+	   <property name="rangeApplied" type="Boolean" />
+	   <property name="customeRange" type="Boolean" />
 	</bean>
 	<!--  Added for NU-38 end-->
 	
@@ -3708,10 +3847,10 @@
 	
 	<bean class="com.tisl.mpl.wsdto.SellerInformationMobileData">
 		<property name="specialPriceSeller" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
-		<property name="MrpPriceSeller" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="MrpSeller" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.MplNewSellerInformationMobileData">
+	<!-- <bean class="com.tisl.mpl.wsdto.MplNewSellerInformationMobileData">
 		<property name="USSID" type="String"></property>
 		<property name="availableStock" type="String"></property>
 		<property name="fullfillmentType" type="String"></property>
@@ -3731,18 +3870,19 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="eligibleDeliveryModes"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryModeData>"></property>
-	</bean>
+	</bean> -->
 	
 	<bean class="com.tisl.mpl.wsdto.MplCategoryHierarchydata">
 		<property name="category_name" type="String"></property>
 		<property name="category_id" type="String"></property>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.MplBrandInfoData">
+	<!-- <bean class="com.tisl.mpl.wsdto.MplBrandInfoData">
 		<property name="brandDetails" type="String"></property>
 		<property name="brandId" type="String"></property>
 		<property name="brandName" type="String"></property>
-	</bean>
+		
+	</bean> -->
 	
 	<bean class="com.tisl.mpl.wsdto.MplNewProductDetailMobileWsData"  extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="allOOStock" type="Boolean" />
@@ -3767,7 +3907,7 @@
 		<property name="productListingId" type="String"></property>
 		<property name="productName" type="String"></property>
 		<property name="otherSellers"
-			type="java.util.List&lt;com.tisl.mpl.wsdto.MplNewSellerInformationMobileData>"></property>
+			type="java.util.List&lt;com.tisl.mpl.wsdto.SellerInformationMobileData>"></property>
 		<property name="categoryHierarchy"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.MplCategoryHierarchydata>"></property>
 		<property name="sellerAssociationstatus" type="String" />
@@ -3783,8 +3923,8 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryModeData>"></property>
 		<property name="galleryImagesList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.GalleryImageData>"></property>
-		<property name="brandInfo"
-			type="com.tisl.mpl.wsdto.MplBrandInfoData" />
+		<!-- <property name="brandInfo"
+			type="com.tisl.mpl.wsdto.MplBrandInfoData" /> -->
 		<property name="showSizeGuide" type="Boolean" />
 		<property name="details" type="java.util.Map&lt;String,String>"></property>
 		<property name="certificationMapFrJwlry" type="java.util.List&lt;String>" />
@@ -3792,6 +3932,31 @@
 		<property name="variantOptions"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.VariantOptionMobileData>"></property>
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
+		<property name="brandName" type="String"></property>
+		<property name="brandURL" type="String"></property>
+		<property name="knowMore"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.KnowMoreDTO>"></property>
+		<property name="brandInfo" type="String"></property>
+		<property name="rootCategory" type="String"></property>
+		<property name="potentialPromotions" type="com.tisl.mpl.wsdto.PromotionMobileData"></property>
+		<property name="productOfferMsg" type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />
+		<property name="l3code" type="String"></property>
+		<property name="l3name" type="String"></property>
+		<property name="linkUrls"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.ExchangeLinkUrl>" />
+		<property name="luxIndicator" type="String" />
+		<property name="priceBreakUpDetailsMap"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.PriceBreakUpDto>" />
+		<property name="priceDisclaimerTextPDP" type="String" />
+		<property name="showPriceBrkUpPDP" type="String" />
+		<property name="returnAndRefund"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.RefundReturnDTO>"></property>
+		<property name="isSizeOrLength" type="String" />
+		<property name="customizationInfoText" type="String" />
+		<property name="buyingGuideUrl" type="String" />
+		<property name="averageRating" type="Double" />
+		<property name="numberOfReviews" type="Integer" />
+		<property name="styleNote" type="String"></property>
 	</bean>
 	
 	<!-- added for pdp new ui end -->
@@ -4303,4 +4468,272 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.UICompPageElementWsDTO>" />
 	</bean>
 	
+	<!--NU-50 start  -->
+	
+	<bean class="com.tisl.mpl.wsdto.FollowedBrandWsDto">
+		<property name="code" type="String" />
+		<property name="brandMediaUrl" type="String" />
+		<property name="name" type="String" />
+			
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.MplFollowedBrandsWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+     <property name="followedBrandList"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.FollowedBrandWsDto>"></property>
+	<property name="message" type="String" />
+			
+   </bean>
+   
+	<!-- NU-50 end -->
+	
+	<!-- added for get user cart details api -->
+	<bean class="com.tisl.mpl.wsdto.PriceWsPwaDTO">
+		<property name="mrpPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="sellingPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="bagTotal"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="paybleAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalDiscountAmount"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ColorLinkData">
+		<property name = "selected" type="boolean"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.SizeLinkData">
+		<property name="productCode" type="String"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryListHierarchyData">
+		<property name="modifiedTime" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL1Data>" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryListHierarchyWSData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="modifiedTime" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL1WSData>" />
+	</bean>
+		
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL1Data">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="categoryImageURl" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL2Data>" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL1WSData">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="categoryImageURl" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL2WSData>" />
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL2Data">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL3Data>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL2WSData">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+		<property name="subCategories"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.CategoryHierarchyL3WSData>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL3Data">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.CategoryHierarchyL3WSData">
+		<property name="webURL" type="String" />
+		<property name="category_name" type="String" />
+	</bean>
+	<!-- Added  For Buying Of EGV Functionality Start  -->
+	
+	<bean class="com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="voucherValue" type="String" />
+		<property name="acknowledgement" type="String" />
+		<property name="isWalletLimitReached" type="boolean" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto"/>
+		<property name="applyCliqCash" type="com.tisl.mpl.wsdto.ApplyCliqCashWsDto"/>
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />
+		<property name="isWalletOtpVerified" type="boolean" />	
+	</bean>	
+	
+	
+	
+	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO">
+		<property name="productID" type="String" />
+		<property name="priceSelectedByUserPerQuantity" type="Double" />
+		<property name="quantity" type="int" />
+		<property name="receiverName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="receiverEmailID" type="String" />
+		<property name="messageOnCard" type="String" />
+		<property name="from" type="String" />
+	</bean>	
+	
+	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestListWsDTO">
+		<property name="item"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="totalPrice" type="Double" />
+		<property name="discounts" type="Double" />
+		<property name="paybleAmount" type="Double" />
+		<property name="otherAvailablePromotions" type="String" />
+		<property name="egvCartGuid" type="String" />
+		
+	</bean>	
+	
+	 <bean class="com.tisl.mpl.wsdto.ApplyCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="totalAmount" type="String" />
+		<property name="discount" type="Double" />
+<!-- 		<property name="cliqCashApplied" type="Double" />
+ -->		<property name="paybleAmount" type="String" />
+		<property name="isRemainingAmount" type="boolean" />	
+		<property name="isBankPromotionApplied" type="boolean" /> 
+		<property name="subTotalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="deliveryCharges" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="otherDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="couponDiscount" type="String" />
+		<property name="appliedCouponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashPaidAmount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="cliqCashBalance" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.BucketEntryWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="expiryTimestamp" type="String" />
+		<property name="transactionTimestamp" type="String" />
+		<property name="transactionType" type="String" />
+		<property name="invoiceNo" type="String" />
+		<property name="comment" type="String" />
+		<property name="paymentMode" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="amount" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+	</bean>
+	
+	 <bean class="com.tisl.mpl.wsdto.BucketsWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="bucketDisplayName" type="String" />
+		<property name="bucketId" type="String" />
+		<property name="totalEntryCount" type="int" />
+		<property name="pageNumber" type="int" />
+		<property name="pageSize" type="int" />
+		<property name="discalimer" type="String" />
+		<property name="bucketMaxLimit" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="bucketTotal" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="entries" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketEntryWsDto>"  />	
+	</bean>
+	
+   
+	
+	<bean class="com.tisl.mpl.wsdto.UserCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="balanceClearedAsOf" type="String" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="buckets" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketsWsDto>"  /> 
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	   
+		<property name="isWalletOtpVerified" type="boolean" />            
+	</bean> 
+
+     
+	
+	<bean class="com.tisl.mpl.wsdto.UserCliqCashDetailsWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+    	<property name="status" type="String" />
+    	<property name="cliqCashDisclaimer" type="String"/>
+    	<property name="offers" type="java.util.List&lt;String> "/>
+    	<property name="cliqCash" type="com.tisl.mpl.wsdto.UserCliqCashWsDto"/>
+    	
+    </bean> 
+    
+     <bean class="com.tisl.mpl.wsdto.CliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="balanceClearedAsOf" type="String" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.AmountOptionsWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="minPrice" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="maxPrice" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="options" type="java.util.List&lt;com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.variantImagelinkWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="imageUrl" type="String" />
+		<property name="productCode" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.EgvProductInfoWSDTO" extends="com.tisl.mpl.wsdto.ProductDetailMobileWsData">
+		<property name="amountOptions" type="com.tisl.mpl.wsdto.AmountOptionsWSDTO" />
+		<property name="variantOptionsGiftCard" type="java.util.List&lt;com.tisl.mpl.wsdto.variantImagelinkWSDTO>" />
+		<property name="isMoreDesigns" type="boolean" />
+		<property name="productDisclaimerForGC" type="String" />
+		<property name="isCustomizationAvailable" type="boolean" />
+		<property name="giftCartImageUrl" type="String" />
+		<property name="tncURL" type="String" />
+		<property name="sellerimageUrl" type="String" />
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO">		
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="mobileNumber" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO" >		
+		<property name="balanceClearedAsOf" type="String" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="isWalletCreated" type="boolean" />	
+		<property name="isWalletOtpVerified" type="boolean" />
+		<property name="message" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO" >		
+		<property name="otpExpiryTime " type="String" />
+	</bean>
+	<!-- Added  For Buying Of EGV Functionality End  -->
+<!--NU-38 start  -->
+	<bean class="de.hybris.platform.commercewebservicescommons.dto.search.SearchStateWsDTO" >
+	<property name="searchQuery" type="String"/>
+	<property name="appliedSort" type="String"/>
+	<property name="appliedFilters" type="String"/>
+   </bean>
+   <!--NU-38 end  -->
+	<bean class="com.tisl.mpl.wsdto.EmiTermsandConditionsCMSWsDTO">
+		<property name="termAndConditions" type= "String"/>		
+		<property name="errorCode" type="String" />
+		<property name="message" type="String" />
+		<property name="status" type="String" />
+	</bean>
 </beans>

@@ -231,4 +231,16 @@ public final class MessageConstants
 	public static final String LUXURY_GIGYA_APIKEY = "luxury.gigya.apikey";
 	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
 
+	public static final String TEXT_ACCOUNT_PROFILE_QC_SERVER_ERROR = "text.account.profile.qcServerError";
+
+	//TPR-7741
+	public static final String TATACLIQ_URL = "www.tatacliq.com";
+	public static final String MPL_USER_TYPE_COOKIE = "mpl-userType";
+	public static final String MPL_USER_COOKIE = "mpl-user";
+	public static final String AMP_ANALYTICS_SOURCE_ORIGIN = "amp.analytics.source.origin";
+	public static final String ACCESS_CONTROL_ALLOW_REQUEST_HEADER = "Access-Control-Allow-Origin";
+	public static final String ACCESS_CONTROL_EXPOSE_HEADER = "Access-Control-Expose-Headers";
+	public static final String AMP_ACCESS_CONTROL_ALLOW_SOURCE_REQUEST_HEADER = "AMP-Access-Control-Allow-Source-Origin";
+	public static final String CACHE_CONTROL_REQUEST_HEADER = "Cache-Control";
+	public static final String SESSION = "session";
 }

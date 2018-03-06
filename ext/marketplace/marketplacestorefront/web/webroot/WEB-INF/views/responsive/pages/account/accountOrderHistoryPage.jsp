@@ -30,10 +30,15 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 
 
-<!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
-
 <template:page pageTitle="${pageTitle}">
+	<!-- LW-230 -->
+	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	<style>
+	#closePop {
+		float: right;
+	}
+	</style>
+	
 	<div class="account">
 		<h1 class="account-header">
 			<%-- <spring:theme code="text.account.headerTitle" text="My Tata CLiQ" /> --%>
@@ -133,7 +138,7 @@
 										var="orderNumEnd"
 										value="${fn:substring(orderNumberMasked, orderNumberLength-7, orderNumberLength)}" />
 
-									<ul class="product-block">
+									<ul class="product-block orders-product-block">
 
 										<%-- <li class="header">
 											<ul>
@@ -183,7 +188,7 @@
 											</ul>
 										</li> --%>
 										
-										<!-- TPR-6013 wrong UI --> <li class="header">
+										<!-- TPR-6013 wrong UI --> <li class="header clearfix">
 											<ul>
 												<li class="viewDetails">
 												<span class="orderNumber"><spring:theme code="text.orderHistory.order.place" text="Order"/>#${orderHistoryDetail.code}</span> 
@@ -192,16 +197,56 @@
 													${orderDataMap[orderHistoryDetail.code]}
 												</c:if></span>
 												</li>
-												
-
-												<li class="viewDetailsAnchor"><a
-
+												<li class="viewDetailsAnchor">
+												<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
+												   <a
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
-															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
+															code="text.orderHistory.view.orde" text="Order Details" /></a>
+												 </c:if>
+												 <c:if test="${not empty orderHistoryDetail.egvCardNumber}">
+												          Card No: ${orderHistoryDetail.egvCardNumber}
+												 </c:if>
+											  </li>
+															
+															
+												<li class="resendEmail">
+												<c:if test="${not empty orderHistoryDetail.egvCardNumber and orderHistoryDetail.isEGVOrder eq  true}">
+													<input type="hidden" class="order_id_for_resending" value="${orderHistoryDetail.code}" />
+													<input type="hidden" class="resend_email_index" value="" />
+													<!-- <span class="resend_order_email">RESEND EMAIL</span> -->
+													<c:set var="evgflag" value="false"/>
+													    <c:forEach items="${egvStatusMap}" var="entryforEgv">
+																<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
+																     <c:set var="evgflag" value="true"/>	
+																</c:if>										   
+														</c:forEach>
+													<c:if test="${evgflag eq  'false'}">
+													     <span class="resend_order_email">RESEND EMAIL</span>
+													</c:if>
+													</c:if>
+													
+											<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
+												<input type="hidden" class="order_id_for_statement" value="${orderHistoryDetail.code}" />
+												<span class="get_order_statement">SHOW STATEMENT</span>
+											 </c:if>
+													
+												</li>
+												
 															<!-- &pageAnchor=trackOrder -->
-												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
-															code="text.orderHistory.track.order" /></a></li>
+												<li class="trackOrderAnchor">
+												<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
+												<a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+															code="text.orderHistory.track.order" /></a>
+											   </c:if>
+														<c:if test="${not empty orderHistoryDetail.egvCardExpDate}">
+												          Exp. Date: ${orderHistoryDetail.egvCardExpDate}
+												        </c:if>	
+															
+												</li>
 											</ul>
+											<div class="col-sm-12 alert alert-success resend_email_limit">
+												
+											</div>
 										</li>
 										
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
@@ -216,6 +261,14 @@
 												<c:set var="isWeight" value="false"/>
 
 												<c:url value="${entry.product.url}" var="productUrl" />
+												<!-- Egv Product url Changes-->
+												  <c:if test="${orderHistoryDetail.isEGVOrder eq  true}">
+												  <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvProductCode')" var="productCode"/>
+												    <c:set var="myVar" value="/giftCard-" />
+												    <c:set var ="egvProduct"  value="${myVar}${productCode}"/>
+													<c:url value="${egvProduct}" var="productUrl" />	
+												  </c:if>
+												  
 												<c:set var="orderEntrySellerSKU"
 													value="${entry.mplDeliveryMode.sellerArticleSKU}" />
 												<c:forEach items="${entry.product.seller}" var="seller">
@@ -264,6 +317,7 @@
 												&nbsp;${entry.quantity}
 												</c:if>
 															</p>
+															<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
 															<p>
 																<c:if test="${not empty entry.product.size}">
 																	<c:choose>
@@ -350,6 +404,7 @@
 																</c:if>
 																</c:if>
 															</p>
+															</c:if>
 														
 														<div class="attributes">
 
@@ -362,6 +417,7 @@
 																		displayFreeForZero="true" />
 																</ycommerce:testId>
 															</p>
+															<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
 															<p>
 																<%-- <spring:theme text="Delivery Charges:" /> --%>
 
@@ -389,6 +445,7 @@
 																</c:otherwise>
 															</c:choose>
 															</p>
+															</c:if>
 														</div>
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
@@ -547,15 +604,49 @@
 														<c:choose>
 															<c:when test="${not empty approvedFlag and approvedFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status statusConfirmed">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
-														</div>
-														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
-															<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
-															<span>${recordDate.date}</span>
+									                      <c:set value="false" var="egvredemStatusFlag"/>
+															<c:forEach items="${egvStatusMap}" var="entryforEgv">
+																
+																	<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
+																	<div class="status orderRedeemedStatusInfo"><span>VALIDATED</span></div><br />
+																	<div class="statusDate">
+																              <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Redeemed:" /></span>&nbsp;
+																              <c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
+																			<span>${recordDate.date}</span>
+																			</c:forEach>
+																	</div>
+																	<c:set value="ture" var="egvredemStatusFlag"/>
+																	</c:if>									   
 															</c:forEach>
-														</div>
+											     <c:set var="rmsVerificationEGV" value="false"/>
+												 <c:if test="${empty orderHistoryDetail.egvCardNumber && orderHistoryDetail.isEGVOrder eq  true}">
+									                  <c:set var="rmsVerificationEGV" value="true"/>
+									                  <c:set value="true" var="egvredemStatusFlag"/>
+												 </c:if>
+															<c:if test="${egvredemStatusFlag eq  'false'}">
+															<div class="status statusConfirmed">
+																<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
+															</div>
+															
+																<div class="statusDate">
+																	<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
+																	<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
+																	<span>${recordDate.date}</span>
+																	</c:forEach>
+																</div>
+															</c:if>
+															
+															<c:if test="${rmsVerificationEGV eq  'true'}">
+															 <div class="status orderRedeemedStatusInfo orderFailedStatusInfo"><span>FAILED</span></div><br />
+															 <%-- <div class="status statusConfirmed">
+															 	Pending
+																 <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
+															 </div> --%>
+															 <div class="statusDate">
+																	<span><spring:theme code="text.orderHistory.seller.order.rmsfailed" text="Refund will be processed for this order in 4 to 5 days" /></span>&nbsp;
+															 </div> 
+															</c:if>
+															
 														</div>
 														</c:when>
 														</c:choose>
@@ -593,15 +684,16 @@
 																</c:forEach>
 
 																<%-- 	<c:set var="bogoCheck" value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set> --%>
-
+                                                       <c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
 																<a href="" data-toggle="modal"
 																	data-target="#cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
 																	data-mylist="<spring:theme code="text.help" />"
 																	data-dismiss="modal"
 																	onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
-																		text="Cancel Order" /></a>
+																		text="Cancel Order" />
+														</a>
 															</c:if>
-
+                                                         </c:if>
 														</c:if>
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
@@ -1073,7 +1165,104 @@
 	</div>
 	<div class="modal fade track-order-modal" id="track-order-modal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
+	  <button type="button" onclick="closepop()" id="closePop">Click</button>
 		<div class="overlay" data-dismiss="modal"></div>
 		<div class="content"></div>
 	</div>
+	
+	<div class="showStatementModel" id="showStatementPopup">
+	    <div class="showStatementModel-content">
+	    	<span class="accountPopupClose close">&times;</span> 
+		     <div id="showStatementData">
+		      </div>
+	    </div>
+   </div>
+   
 </template:page>
+<script>
+$('.resend_email_index').val(1);
+$(".resend_order_email").click(function () {
+	$('.resend_email_limit').hide();
+	/* $('.resend_email_limit').hide(); */
+	var orderId = $(this).parents('.resendEmail').find(".order_id_for_resending").val();
+	var resendCount = $(this).parents('.resendEmail').find(".resend_email_index").val();
+	var msgSection = $(this).parents('.header').find('.resend_email_limit');
+	var resendVariable = $(this).parents('.resendEmail').find(".resend_email_index");
+	if(resendCount < 4){
+		$.ajax({	  
+			type: "POST",
+			url: ACC.config.encodedContextPath + "/my-account/sendNotificationEGVOrder",
+		    data: "orderId="+orderId,
+			success: function () {	
+			
+				
+				msgSection.text("Email sent successfully.");
+				msgSection.removeClass('alert-danger');
+				msgSection.addClass('alert-success');
+				msgSection.show().delay(3000).fadeOut();
+				resendCount++;
+				resendVariable.val(resendCount);
+				
+			}
+		});
+	} else {
+		msgSection.text("Maximum attempts reached.");
+		msgSection.removeClass('alert-success');
+		msgSection.addClass('alert-danger');
+		msgSection.show().delay(3000).fadeOut();
+	}
+}); 
+</script>
+
+<script type="text/javascript">
+var showStatementModel = document.getElementById('showStatementPopup');
+var showStatementData = document.getElementById('showStatementData');
+var showStatementPopup = document.getElementById('showStatementPopup');
+
+
+$(".get_order_statement").click(function() {
+	var orderCode = $(this).parents('.resendEmail').find(".order_id_for_statement").val();
+	$.ajax({
+		  type : "GET",
+		  url: ACC.config.encodedContextPath + "/my-account/getStatement",
+		  data: "orderId="+orderCode,
+		  contentType : "html/text",
+		  success : function(response){
+		   showStatementData.innerHTML=response;
+		   showStatementModel.style.display = "block";      
+		      }, 
+		    failure : function(data) {
+		    }
+		   });
+});
+
+$(".accountPopupClose").on('click', function () {
+	showStatementModel.style.display = "none";
+});
+
+//Autocollapsing Order Statement Info
+function toggleData(label) {
+	$(label).text(function(i, text){
+		if(text == '+'){
+			$(label).css('background-color', '#db001a');
+		} else {
+			$(label).css('background-color', 'green');
+		}
+		$(label).closest('.orderStatMainBody').find('.orderStatementL1Body').toggle();
+        return text === "+" ? "-" : "+";
+    })
+}
+
+function toggleInnerData(label) {
+	$(label).text(function(i, text){
+		if(text == '+'){
+			$(label).css('background-color', '#db001a');
+		} else {
+			$(label).css('background-color', 'green');
+		}
+		$(label).closest('.orderStatChildBody').find('.orderStatementL2Body').toggle();
+        return text === "+" ? "-" : "+";
+    })
+}
+
+</script>

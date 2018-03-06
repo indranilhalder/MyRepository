@@ -139,7 +139,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 	 * @return list of SizeGuideData
 	 */
 	@Override
-	public SizeGuideWsDTO getWSProductSizeguide(final String productCode) throws CMSItemNotFoundException
+	public SizeGuideWsDTO getWSProductSizeguide(final String productCode, final Boolean isPwa) throws CMSItemNotFoundException
 	{
 		final SizeGuideWsDTO sizeDTO = new SizeGuideWsDTO();
 		List<SizeGuideWsData> sizeGuideDataList = null;
@@ -187,6 +187,12 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 					for (final SizeGuideData sizeGuideValue : sizeDataValues)
 					{
 						sizeGuideWsDataValue = new SizeGuideWsDataValue();
+						//for new ui/ux size guide api starts
+						if (null != isPwa && StringUtils.isNotEmpty(sizeGuideValue.getPriority()))
+						{
+							sizeGuideWsDataValue.setPriority(sizeGuideValue.getPriority());
+						}
+						//for new ui/ux size guide api ends
 						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionValue()))
 						{
 							sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
@@ -359,8 +365,8 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 
