@@ -2091,6 +2091,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
+	<!-- mplWalletFacade EGV -->
+		<bean id="mplWalletFacade" class="com.tisl.mpl.facades.wallet.impl.MplWalletFacadeImpl" >
+<!--      	<property name="mplWalletServices" ref="mplWalletServices" /> -->
+       </bean>
+
+   <bean id="eGVOrderRecipientContex"
+		class="com.tisl.mpl.facades.process.email.context.EGVOrderRecipientContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	<!--  EGV Order Email-->	
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
 	
 	<bean id="mplWebFormFacade" class="com.tisl.mpl.facades.webform.MplDefaultWebFormFacade" />
@@ -2115,6 +2125,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mediaFormat" value="searchPage" />
 	</bean>
 	<!--  Added for NU-35 end-->
+
+		<bean id="defaultCustomerReviewPopulator"
+			class="com.tisl.mpl.facades.populators.MplCustomerReviewPopulator">
+		<property name="principalConverter" ref="principalConverter"/>
+		
+	</bean>
 
 
 	<bean id="ampServiceworkerConverter" parent="abstractPopulatingConverter">
@@ -2143,9 +2159,27 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			class="com.tisl.mpl.facades.populators.AmpMenifestPopulator">
 	</bean>
 	
-	<bean id="mplImageUploadFacade"
-		class="com.tis.mpl.facade.imageupload.impl.MplImageUploadFacadeImpl">
-		<property name="imageUploadService" ref="imageUploadService"></property>
+	<!-- NU-50 start -->
+	<alias name="mplFollowedBrandFacade" alias="mplFollowedBrandFacade"/>
+	<bean id="mplFollowedBrandFacade" class="com.tisl.mpl.facade.brand.impl.MplFollowedBrandFacadeImpl" >
+     	<property name="mplFollowedBrandService" ref="mplFollowedBrandService" />
+     	<property name="mplFollowedBrandConverter" ref="mplFollowedBrandConverter" />
+     	<property name="extendedUserService" ref="extendedUserService"/>
+    </bean>
+    
+    <bean id="mplFollowedBrandConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.wsdto.FollowedBrandWsDto"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplFollowedBrandPopulator"/>
+			</list>
+		</property>
 	</bean>
+	
+	<bean id="mplFollowedBrandPopulator"
+			class="com.tisl.mpl.facades.populators.MplFollowedBrandPopulator">
+	</bean>
+	<!--NU-50 end  -->
+	
 </beans>
 
