@@ -18975,6 +18975,23 @@ ul.jqtree-tree .jqtree-title:hover {
 	    z-index: 2;
 	    border: 0;
 	}
+	.plp-wrapper .leftbar .apply-clear{
+	    left: 100%;
+	    transition: 0.5s ease;
+	}
+	
+	.plp-wrapper .leftbar.active .apply-clear{
+	    left: 0;
+	}
+	
+	.plp-leftbar-close{
+	    left: 100%;
+	    transition: 0.5s ease;
+	}
+	
+	.plp-wrapper .leftbar.active .plp-leftbar-close{
+	    left: 0;
+	}
 }
 
 @media (max-width:320px) {
@@ -19620,8 +19637,6 @@ a.pswp__share--download:hover {
 /*
 
   5. Loading indicator (preloader)
-
-  You can play with it here - http://codepen.io/dimsemenov/pen/yyBWoR
 
  */
 .pswp__preloader {
