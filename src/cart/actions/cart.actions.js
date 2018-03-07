@@ -93,6 +93,14 @@ export const ADD_PICKUP_PERSON_REQUEST = "ADD_PICKUP_PERSON_REQUEST";
 export const ADD_PICKUP_PERSON_SUCCESS = "ADD_PICKUP_PERSON_SUCCESS";
 export const ADD_PICKUP_PERSON_FAILURE = "ADD_PICKUP_PERSON_FAILURE";
 
+export const APPLY_CLIQ_CASH_REQUEST = "APPLY_CLIQ_CASH_REQUEST";
+export const APPLY_CLIQ_CASH_SUCCESS = "APPLY_CLIQ_CASH_SUCCESS";
+export const APPLY_CLIQ_CASH_FAILURE = "APPLY_CLIQ_CASH_FAILURE";
+
+export const REMOVE_CLIQ_CASH_REQUEST = "REMOVE_CLIQ_CASH_REQUEST";
+export const REMOVE_CLIQ_CASH_SUCCESS = "REMOVE_CLIQ_CASH_SUCCESS";
+export const REMOVE_CLIQ_CASH_FAILURE = "REMOVE_CLIQ_CASH_FAILURE";
+
 const pincode = 229001;
 
 export function cartDetailsRequest() {
@@ -1013,6 +1021,104 @@ export function addPickupPersonCNC(personMobile, personName) {
       dispatch(addPickUpPersonSuccess(resultJson));
     } catch (e) {
       dispatch(addPickUpPersonFailure(e.message));
+    }
+  };
+}
+
+// Actions to Apply Cliq Cash
+export function applyCliqCashRequest() {
+  return {
+    type: APPLY_CLIQ_CASH_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function applyCliqCashSuccess(paymentDetails) {
+  return {
+    type: APPLY_CLIQ_CASH_SUCCESS,
+    status: SUCCESS,
+    paymentDetails
+  };
+}
+
+export function applyCliqCashFailure(error) {
+  return {
+    type: APPLY_CLIQ_CASH_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to bin Validation
+export function applyCliqCash(cartGuid) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(applyCliqCashRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/applyCliqCash?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuid}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(applyCliqCashSuccess(resultJson));
+    } catch (e) {
+      dispatch(applyCliqCashFailure(e.message));
+    }
+  };
+}
+
+// Actions to Remove Cliq Cash
+export function removeCliqCashRequest() {
+  return {
+    type: REMOVE_CLIQ_CASH_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function removeCliqCashSuccess(paymentDetails) {
+  return {
+    type: REMOVE_CLIQ_CASH_SUCCESS,
+    status: SUCCESS,
+    paymentDetails
+  };
+}
+
+export function removeCliqCashFailure(error) {
+  return {
+    type: REMOVE_CLIQ_CASH_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to Remove Cliq Cash
+export function removeCliqCash(cartGuid) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(removeCliqCashRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/removeCliqCash?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuid}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(removeCliqCashSuccess(resultJson));
+    } catch (e) {
+      dispatch(removeCliqCashFailure(e.message));
     }
   };
 }

@@ -13,7 +13,9 @@ import {
   releaseCoupon,
   getAllStoresCNC,
   addStoreCNC,
-  addPickupPersonCNC
+  addPickupPersonCNC,
+  applyCliqCash,
+  removeCliqCash
 } from "../actions/cart.actions";
 
 const mapDispatchToProps = dispatch => {
@@ -53,6 +55,12 @@ const mapDispatchToProps = dispatch => {
     },
     addPickupPersonCNC: (personMobile, personName) => {
       dispatch(addPickupPersonCNC(personMobile, personName));
+    },
+    applyCliqCash: cartGuid => {
+      dispatch(applyCliqCash(cartGuid));
+    },
+    removeCliqCash(cartGuid) {
+      dispatch(removeCliqCash(cartGuid));
     }
   };
 };
