@@ -259,7 +259,7 @@ public class DefaultCMSComponentControler
 							offersWidgetWsDTO
 									.setTitle(null != offersWidgetComponentModel.getTitle() ? offersWidgetComponentModel.getTitle() : "");
 							offersWidgetWsDTO.setType("Offers Component");
-							uiCompPageElementWsDTO.setComponentName("offersWidgetComponent");
+							uiCompPageElementWsDTO.setComponentName("offersComponent");
 							offersWidgetWsDTO.setComponentId(
 									null != offersWidgetComponentModel.getUid() ? offersWidgetComponentModel.getUid() : "");
 
@@ -1405,7 +1405,7 @@ public class DefaultCMSComponentControler
 						{
 							final MSDComponentWsDTO msdComponentWsDTO = new MSDComponentWsDTO();
 							final MSDComponentModel msdComponentModel = (MSDComponentModel) abstractCMSComponentModel;
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							msdComponentWsDTO.setDetails(
 									null != msdComponentModel.getDetails() ? msdComponentModel.getDetails() : Boolean.valueOf(false));
 							msdComponentWsDTO.setNum_results(
@@ -1422,7 +1422,7 @@ public class DefaultCMSComponentControler
 						{
 							final AdobeTargetComponentWsDTO adobeTargetComponentWsDTO = new AdobeTargetComponentWsDTO();
 							final AdobeTargetComponentModel adobeTargetComponentModel = (AdobeTargetComponentModel) abstractCMSComponentModel;
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 							adobeTargetComponentWsDTO
 									.setMbox(null != adobeTargetComponentModel.getMbox() ? adobeTargetComponentModel.getMbox() : "");
 							adobeTargetComponentWsDTO.setType("Adobe Target Component");
@@ -1438,17 +1438,17 @@ public class DefaultCMSComponentControler
 						{
 							final BrandsTabAZListComponentWsDTO brandsTabAZListComponentWsDTO = new BrandsTabAZListComponentWsDTO();
 							final BrandsTabAZListComponentModel brandsTabAZListComponentModel = (BrandsTabAZListComponentModel) abstractCMSComponentModel;
-							List<BrandsTabAZListWsDTO> brandsTabAZList = new ArrayList<BrandsTabAZListWsDTO>();
-							UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
+							final List<BrandsTabAZListWsDTO> brandsTabAZList = new ArrayList<BrandsTabAZListWsDTO>();
+							final UICompPageElementWsDTO uiCompPageElementWsDTO = new UICompPageElementWsDTO();
 
-							for (BrandsTabAZElementModel brandsTabAZElementModel : brandsTabAZListComponentModel.getItems())
+							for (final BrandsTabAZElementModel brandsTabAZElementModel : brandsTabAZListComponentModel.getItems())
 							{
 								final List<BrandsTabAZHeroBannerWsDTO> heroBannerCompList = new ArrayList<BrandsTabAZHeroBannerWsDTO>();
-								BrandsTabAZHeroBannerWsDTO brandsTabAZHeroBannerWsDTO = new BrandsTabAZHeroBannerWsDTO();
+								final BrandsTabAZHeroBannerWsDTO brandsTabAZHeroBannerWsDTO = new BrandsTabAZHeroBannerWsDTO();
 								final BrandsTabAZListWsDTO brandsTabAZListWsDTO = new BrandsTabAZListWsDTO();
 								brandsTabAZListWsDTO.setSubType(
 										null != brandsTabAZElementModel.getSubType() ? brandsTabAZElementModel.getSubType() : "");
-								for (HeroBannerComponentModel heroBannerComponentModel : brandsTabAZElementModel.getItems())
+								for (final HeroBannerComponentModel heroBannerComponentModel : brandsTabAZElementModel.getItems())
 								{
 									final HeroBannerCompWsDTO heroBannerCompWsDTO = new HeroBannerCompWsDTO();
 									final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
@@ -1487,8 +1487,8 @@ public class DefaultCMSComponentControler
 									brandsTabAZHeroBannerWsDTO.setHeroBannerComponent(heroBannerCompWsDTO);
 									heroBannerCompList.add(brandsTabAZHeroBannerWsDTO);
 								}
-								List<BrandsTabAZListElementWsDTO> brandsTabAZElementList = new ArrayList<BrandsTabAZListElementWsDTO>();
-								for (BrandTabAZBrandElementModel brandTabAZBrandElementModel : brandsTabAZElementModel.getBrands())
+								final List<BrandsTabAZListElementWsDTO> brandsTabAZElementList = new ArrayList<BrandsTabAZListElementWsDTO>();
+								for (final BrandTabAZBrandElementModel brandTabAZBrandElementModel : brandsTabAZElementModel.getBrands())
 								{
 									final BrandsTabAZListElementWsDTO brandsTabAZListElement = new BrandsTabAZListElementWsDTO();
 									brandsTabAZListElement.setBrandName(null != brandTabAZBrandElementModel.getBrandName()
@@ -2906,15 +2906,15 @@ public class DefaultCMSComponentControler
 					{
 						final BrandsTabAZListComponentWsDTO brandsTabAZListComponentWsDTO = new BrandsTabAZListComponentWsDTO();
 						final BrandsTabAZListComponentModel brandsTabAZListComponentModel = (BrandsTabAZListComponentModel) abstractCMSComponentModel;
-						List<BrandsTabAZListWsDTO> brandsTabAZList = new ArrayList<BrandsTabAZListWsDTO>();
-						for (BrandsTabAZElementModel brandsTabAZElementModel : brandsTabAZListComponentModel.getItems())
+						final List<BrandsTabAZListWsDTO> brandsTabAZList = new ArrayList<BrandsTabAZListWsDTO>();
+						for (final BrandsTabAZElementModel brandsTabAZElementModel : brandsTabAZListComponentModel.getItems())
 						{
 							final List<BrandsTabAZHeroBannerWsDTO> heroBannerCompList = new ArrayList<BrandsTabAZHeroBannerWsDTO>();
-							BrandsTabAZHeroBannerWsDTO brandsTabAZHeroBannerWsDTO = new BrandsTabAZHeroBannerWsDTO();
+							final BrandsTabAZHeroBannerWsDTO brandsTabAZHeroBannerWsDTO = new BrandsTabAZHeroBannerWsDTO();
 							final BrandsTabAZListWsDTO brandsTabAZListWsDTO = new BrandsTabAZListWsDTO();
 							brandsTabAZListWsDTO
 									.setSubType(null != brandsTabAZElementModel.getSubType() ? brandsTabAZElementModel.getSubType() : "");
-							for (HeroBannerComponentModel heroBannerComponentModel : brandsTabAZElementModel.getItems())
+							for (final HeroBannerComponentModel heroBannerComponentModel : brandsTabAZElementModel.getItems())
 							{
 								final HeroBannerCompWsDTO heroBannerCompWsDTO = new HeroBannerCompWsDTO();
 								final List<HeroBannerCompListWsDTO> heroBannerCompListWsDTO = new ArrayList<HeroBannerCompListWsDTO>();
@@ -2953,8 +2953,8 @@ public class DefaultCMSComponentControler
 								brandsTabAZHeroBannerWsDTO.setHeroBannerComponent(heroBannerCompWsDTO);
 								heroBannerCompList.add(brandsTabAZHeroBannerWsDTO);
 							}
-							List<BrandsTabAZListElementWsDTO> brandsTabAZElementList = new ArrayList<BrandsTabAZListElementWsDTO>();
-							for (BrandTabAZBrandElementModel brandTabAZBrandElementModel : brandsTabAZElementModel.getBrands())
+							final List<BrandsTabAZListElementWsDTO> brandsTabAZElementList = new ArrayList<BrandsTabAZListElementWsDTO>();
+							for (final BrandTabAZBrandElementModel brandTabAZBrandElementModel : brandsTabAZElementModel.getBrands())
 							{
 								final BrandsTabAZListElementWsDTO brandsTabAZListElement = new BrandsTabAZListElementWsDTO();
 								brandsTabAZListElement.setBrandName(null != brandTabAZBrandElementModel.getBrandName()
