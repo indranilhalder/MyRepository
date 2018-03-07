@@ -10354,7 +10354,7 @@ wishAlreadyAddedPlp {
 
 .plp-wrapper .right-side-content .product-list-wrapper .product-grid {
     position: relative;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
     overflow: hidden;
     float: left;
     width: 33.3%;
@@ -18176,13 +18176,6 @@ body {
 
 .deliveryTrack .progtrckr {
     padding: 0 5px;
-}
-
-.footwear-size-table li ul li,
-.footwear-size-table>ul>li {
-    width: 150px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #e5e5e5;
 }
 
 li.tab-link:first-child {

@@ -110,16 +110,18 @@ tr.d0 td {
 	<div class="product-info wrapper pdp-view clearfix">
 		<div class="product-image-container pdp-left colmn">
 		<div class="clearfix">
-			<div class="pdp-img-nav">
-				<c:forEach items="${galleryImages}" var="container">
-					<c:if test="${container.luxuryThumbnail.mediaType.code eq 'Image'}">
-						<div><img src="${container.luxuryThumbnail.url}" alt="${product_name}" data-zoom-image="${container.luxurySuperZoom.url}"></div>
-					</c:if>
-					<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-						<c:set var="videoAvailable" value="true"/>
-						<c:set var="videoUrl" value="${container.thumbnail.url}"/>
-					</c:if>
-				</c:forEach>
+			<div class="thumbnail-container">
+				<div class="pdp-img-nav">
+					<c:forEach items="${galleryImages}" var="container">
+						<c:if test="${container.luxuryThumbnail.mediaType.code eq 'Image'}">
+							<div><img src="${container.luxuryThumbnail.url}" alt="${product_name}" data-zoom-image="${container.luxurySuperZoom.url}"></div>
+						</c:if>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+							<c:set var="videoAvailable" value="true"/>
+							<c:set var="videoUrl" value="${container.thumbnail.url}"/>
+						</c:if>
+					</c:forEach>
+				</div>
 			</div>
 			<div class="pdp-img">
 				<div class="pdp-img-slider circle-pager">
