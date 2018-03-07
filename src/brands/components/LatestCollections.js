@@ -11,13 +11,16 @@ export default class LatestCollections extends React.Component {
     }
   }
   render() {
+    let feedComponentData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
         <div
           className={styles.LatestCollectionsHolder}
           onClick={() => this.arrowNextClick()}
         >
-          <div className={styles.textHolder}>{this.props.heading}</div>
+          <div className={styles.textHolder}>
+            {feedComponentData && feedComponentData.title}
+          </div>
           <div className={styles.iconHolder}>
             <div className={styles.icon}>
               <Icon image={iconImageURL} size={25} />

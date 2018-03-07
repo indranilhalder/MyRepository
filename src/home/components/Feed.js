@@ -21,6 +21,7 @@ import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import DiscoverMore from "./DiscoverMore.js";
+import LatestCollections from "../../brands/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
@@ -57,7 +58,10 @@ const typeComponentMapping = {
   "Auto Discover More Component": props => <DiscoverMore {...props} />, // wired up with clickable urls
   "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
   "Recently viewed product": props => <RecommendationWidget {...props} />,
-  "Single Banner Component": props => <MonoBanner {...props} />
+  "Single Banner Component": props => <MonoBanner {...props} />,
+  // "Top Categories Component":props=><>
+  // "Curated Listing Strip Component":props=><L>
+  "Curated Listing Strip Component": props => <LatestCollections {...props} />
 };
 
 class Feed extends Component {
@@ -116,7 +120,6 @@ class Feed extends Component {
     }
   }
   render() {
-    console.log(this.props);
     if (this.props.loading) {
       return this.renderLoader();
     }

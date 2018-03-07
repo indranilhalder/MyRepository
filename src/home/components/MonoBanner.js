@@ -24,7 +24,6 @@ export default class MonoBanner extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     let feedComponentData = this.props.feedComponentData;
 
     return (

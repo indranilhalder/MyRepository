@@ -849,29 +849,6 @@ const mockDataForBrand = [
   },
 
   {
-    componentName: "topCategoriesComponent",
-
-    topCategoriesComponent: {
-      componentId: "TopCategoriesWidget",
-
-      items: [
-        {
-          imageURL:
-            "//localhost:9001/medias/sys_master/images/8796152725534.png",
-
-          title: "Top and Tees",
-
-          webURL: "www.tatacliq.com"
-        }
-      ],
-
-      title: "Top Categories",
-
-      type: "Top Categories Component"
-    }
-  },
-
-  {
     componentName: "curatedProductsComponent",
 
     curatedProductsComponent: {
@@ -1083,22 +1060,89 @@ const mockDataForBrand = [
 
     componentName: "brandsTabAZListComponent"
   },
+
   {
-    componentName: "singleBannerComponent",
-    singleBannerComponent: {
-      componentId: "MonoBLPBanner",
+    componentName: "topCategoriesComponent",
+    topCategoriesComponent: {
+      componentId: "TopCategoriesWidget",
       items: [
         {
-          btnText: "Shop the range",
-          hexCode: "#ffffff",
           imageURL:
-            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520416900/monobanner_kbqvh8.png",
-          title: "A seamless swim. Own the water",
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520424149/topcategories1_pylxl9.png",
+          title: "Top and Tees",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520424149/topcategories3_t8uz8c.png",
+          title: "Top and Tees",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520424242/topcategories2_l2oi9o.png",
+          title: "Top and Tees",
           webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
         }
       ],
-      title: "All new Stella McCartney",
-      type: "Single Banner Component"
+      title: "Top Categories",
+      type: "Top Categories Component"
+    }
+  },
+  {
+    recentlyViewedComponent: {
+      brandLogo: "",
+      btnText: "See all",
+      componentId: "AutomatedBrandProductCarousel",
+      title: "Recently Viewed Product",
+      description: "",
+      imageURL: "//localhost:9001/medias/sys_master/images/8796152725534.png",
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "TAG Heuer Carrera",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+      type: "Recently viewed product",
+      webURL: ""
+    },
+    componentName: "recentlyViewedComponent"
+  },
+  {
+    componentName: "curatedListingStripComponent",
+    curatedListingStripComponent: {
+      componentId: "CuratedListingStrip",
+      startHexCode: "#fffffff",
+      title: "Shop latest collections from Adidas",
+      type: "Curated Listing Strip Component",
+      webURL: "www.tatacliq.com"
     }
   }
 ];
