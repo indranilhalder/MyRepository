@@ -13551,16 +13551,12 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			allWishlists = wishlistFacade.getAllWishlists();
-			LOG.debug("Step1-************************Wishlist");
-			//allWishlists = wishlistService.getWishlists();
 			if (CollectionUtils.isNotEmpty(allWishlists))
 			{
 				for (final Wishlist2Model requiredWl : allWishlists)
 				{
-					LOG.debug("Step2-************************Wishlist");
 					if (null != requiredWl)
 					{
-						LOG.debug("Step3-************************Wishlist");
 						wldDTO = new ProductCapsulesWsDTO();
 						List<Wishlist2EntryModel> entryModels = null;
 						if (null != requiredWl.getEntries())
@@ -13570,11 +13566,10 @@ public class UsersController extends BaseCommerceController
 						wldpDTOList = new ArrayList<OffersDTO>();
 						for (final Wishlist2EntryModel entryModel : entryModels)
 						{
-							LOG.debug("Step4-************************Wishlist");
+
 							if (entryModel.getIsDeleted() == null
 									|| (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
 							{
-								LOG.debug("Step5-************************Wishlist");
 								wldpDTO = new OffersDTO();
 								ProductData productData1 = null;
 								if (null != entryModel.getProduct())
@@ -13582,11 +13577,7 @@ public class UsersController extends BaseCommerceController
 									productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
 											ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 											ProductOption.STOCK, ProductOption.SELLER));
-
-
 								}
-								LOG.debug("Step6-************************Wishlist");
-
 								if (null != productData1 && null != productData1.getImages())
 								{
 									//Set product image(thumbnail) url
@@ -13598,37 +13589,25 @@ public class UsersController extends BaseCommerceController
 										{
 											wldpDTO.setImageURL(img.getUrl());
 										}
-										else if (null != img && StringUtils.isNotEmpty(img.getFormat())
-												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
-										{
-
-											wldpDTO.setImageURL(img.getUrl());
-										}
-
 										if (null != img && StringUtils.isNotEmpty(img.getFormat())
 
 										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 										{
-											wldpDTO.setImageURL(img.getUrl());
-										}
-										else if (null != img && StringUtils.isNotEmpty(img.getFormat())
-												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
-										{
-
 											wldpDTO.setAppURL(img.getUrl());
 										}
-
 									}
+									wldpDTOList.add(wldpDTO);
+
 								}
 							}
 
 						}
-						wldpDTOList.add(wldpDTO);
 					}
-
+					wldDTO.setItems(wldpDTOList);
 					wldDTOList.add(wldDTO);
 				}
 			}
+
 			wlDTO.setWishlistData(wldDTOList);
 
 			wlDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
@@ -13663,5 +13642,4 @@ public class UsersController extends BaseCommerceController
 		return wlDTO;
 
 	}//End of Get all Wish List data.
-
 }
