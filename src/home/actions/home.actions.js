@@ -1,4 +1,11 @@
-import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import {
+  SUCCESS,
+  REQUESTING,
+  ERROR,
+  FAILURE,
+  GET_FEED_DATA_FOR_BLP,
+  GET_FEED_DATA_FOR_CLP
+} from "../../lib/constants";
 import each from "lodash/each";
 import {
   MSD_NUM_RESULTS,
@@ -29,6 +36,1115 @@ export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+
+const mockDataForBrand = [
+  {
+    componentName: "heroBannerComponent",
+
+    heroBannerComponent: {
+      componentId: "HeroBanner",
+
+      items: [
+        {
+          brandLogo:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/v1518509587/westside_logo_beotcg.png",
+
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto:good/v1518509399/westside_banner_pdxy8s.png",
+
+          title: "HeroBannerEle title",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+
+        {
+          brandLogo:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/v1518509398/clarks_logo_miifki.png",
+
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto:good/v1518509399/Banner_02_uomx6k.png",
+
+          title: "HeroBannerEle1 title",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        }
+      ],
+
+      type: "Hero Banner Component"
+    }
+  },
+
+  {
+    componentName: "offersWidgetComponent",
+
+    offersComponent: {
+      componentId: "OffersWidget",
+
+      items: [
+        {
+          btnText: "Shop Now",
+
+          discountText: "Upto 40% Off",
+
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_500/v1517296816/Exclusive_Offers_1.1_y20hgz.jpg",
+
+          title: "Beautiful watches at amazing prices",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          btnText: "Shop Now",
+
+          discountText: "Upto 25% Off",
+
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_500/v1517296809/Exclusive_offers_1.2_tqv5mt.jpg",
+
+          title: "Beautiful watches at amazing prices",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        }
+      ],
+
+      title: "Exclusive offers",
+
+      type: "Offers Component"
+    }
+  },
+
+  {
+    componentName: "flashSalesComponent",
+
+    flashSalesComponent: {
+      backgroundHexCode: "#AA6786",
+
+      backgroundImageURL:
+        "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+      btnText: "Shop All",
+
+      componentId: "FlashSales",
+
+      description: "Grab these offers",
+
+      endDate: "",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Alba Black and White T-shirt",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 800,
+
+            formattedValue: "800"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 1000,
+
+            formattedValue: "1000"
+          },
+
+          prdId: "987654342",
+
+          title: "Westside Black and White T-shirt",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        }
+      ],
+
+      offers: [
+        {
+          description: "Adidas men's casual wear",
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+
+          title: "Under Rs.999",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          description: "Westside men's casual wear",
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+
+          title: "Under Rs.1999",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        }
+      ],
+
+      startDate: "",
+
+      title: "Exclusive Offers",
+
+      type: "Flash Sales Component",
+
+      webURL: "www.tatacliq.com"
+    }
+  },
+
+  {
+    componentName: "contentComponent",
+
+    contentComponent: {
+      componentId: "ContentWidget",
+
+      items: [
+        {
+          btnText: "Read More",
+
+          description:
+            "The new trends thats catching up this summer. This is a dummy text that is acting as a placeholder",
+
+          imageURL: "https://via.placeholder.com/350x150",
+
+          title: "Parisian Chic",
+
+          webURL: "www.tatacliq.com"
+        },
+        {
+          btnText: "Read More",
+
+          description:
+            "The new trends thats catching up this summer. This is a dummy text that is acting as a placeholder",
+
+          imageURL: "https://via.placeholder.com/350x150",
+
+          title: "Indian Wear",
+
+          webURL: "www.tatacliq.com"
+        },
+        {
+          btnText: "Read More",
+
+          description:
+            "The new trends thats catching up this summer. This is a dummy text that is acting as a placeholder",
+
+          imageURL: "https://via.placeholder.com/350x150",
+
+          title: "Western Chic",
+
+          webURL: "www.tatacliq.com"
+        }
+      ],
+
+      title: "Travel inspirations",
+
+      type: "Content Component"
+    }
+  },
+
+  {
+    bannerProductCarouselComponent: {
+      btnText: "See all",
+
+      componentId: "BannerProductCarousel",
+
+      description: "The Canon DSLR Series",
+
+      imageURL:
+        "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto,w_359/v1516181437/Banner_product_Carousal_image_jv2ftp.png",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Canon EOS 7D Mark III with DSLR Camera",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 800,
+
+            formattedValue: "800"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 1000,
+
+            formattedValue: "1000"
+          },
+
+          prdId: "987654342",
+
+          title: "BannerProd Element Title",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 800,
+
+            formattedValue: "800"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 1000,
+
+            formattedValue: "1000"
+          },
+
+          prdId: "987654342",
+
+          title: "BannerProd Element Title",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 800,
+
+            formattedValue: "800"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 1000,
+
+            formattedValue: "1000"
+          },
+
+          prdId: "987654342",
+
+          title: "BannerProd Element Title",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        }
+      ],
+
+      title: "BannerProductCarousel title",
+
+      type: "Banner Product Carousel Component",
+
+      webURL: "www.tatacliq.com"
+    },
+
+    componentName: "bannerProductCarouselComponent"
+  },
+
+  {
+    componentName: "videoProductCarouselComponent",
+
+    videoProductCarouselComponent: {
+      brandLogo:
+        "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto,w_140/v1516185081/TAG_HEUER_logo_z7nrfj.png",
+
+      btnText: "See all",
+
+      componentId: "VideoProductCarousel",
+
+      description: "The Canon DSLR Series",
+
+      imageURL:
+        "http://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_400/v1516181429/Video_product_carousal_image_npic8w.jpg",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Canon EOS 200D with DSLR Camera",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Canon EOS 200D with DSLR Camera",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181423/product_3_zm671o.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Canon EOS 200D with DSLR Camera",
+
+          webURL:
+            "https://www.tatacliq.com/electronics-mobile-phones/p-mp000000001955259"
+        }
+      ],
+
+      title: "product video",
+
+      type: "Video Product Carousel Component",
+
+      videoURL: "",
+
+      webURL: "www.tatacliq.com"
+    }
+  },
+
+  {
+    componentName: "themeOffersComponent",
+
+    themeOffersComponent: {
+      backgroundHexCode: "#AA6786",
+
+      backgroundImageURL: "",
+
+      btnText: "See All",
+
+      componentId: "ThemeOffers",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181425/product_4_zbgnnp.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Alba Black and White T-shirt",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181425/product_4_zbgnnp.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Alba Black and White T-shirt",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+
+      offers: [
+        {
+          description: "Adidas women's casual wear",
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181425/product_4_zbgnnp.jpg",
+
+          title: "Under Rs.500",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          description: "Adidas women's casual wear",
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good,w_148/v1516181425/product_4_zbgnnp.jpg",
+
+          title: "Under Rs.500",
+
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        }
+      ],
+
+      title: "Treat this Diwali with 25% off",
+
+      type: "Theme Offers Component",
+
+      webURL: "www.tatacliq.com"
+    }
+  },
+
+  {
+    componentName: "multiClickComponent",
+
+    multiClickComponent: {
+      brandLogo: "",
+
+      btnText:
+        "http://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:best,w_800/v1517228341/Utsa_Background_jtbatt.jpg",
+
+      componentId: "ThemeProductWidget",
+
+      imageURL: "",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Anarkali Kurta",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+
+      title: "New arrivals",
+
+      type: "Multi Click Component"
+    }
+  },
+
+  {
+    bannerSeparatorComponent: {
+      componentId: "BannerSeparator",
+
+      description: "Save it for later with our save feature",
+
+      endHexCode: "#AA5470",
+
+      iconImageURL:
+        "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+      startHexCode: "#AA5423",
+
+      title: "Seen something you like?",
+
+      type: "Banner Separator Component",
+
+      webURL: ""
+    },
+
+    componentName: "bannerSeparatorComponent"
+  },
+
+  {
+    automatedBannerProductCarouselComponent: {
+      brandLogo: "",
+
+      btnText: "See all",
+
+      componentId: "AutomatedBrandProductCarousel",
+
+      description: "",
+
+      imageURL: "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "TAG Heuer Carrera",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+
+      type: "Automated Banner Product Carousel Component",
+
+      webURL: ""
+    },
+
+    componentName: "automatedBannerProductCarouselComponent"
+  },
+
+  {
+    componentName: "curatedListingStripComponent",
+
+    curatedListingStripComponent: {
+      componentId: "CuratedListingStrip",
+
+      startHexCode: "#fffffff",
+
+      title: "Shop latest collections from Adidas",
+
+      type: "Curated Listing Strip Component",
+
+      webURL: "www.tatacliq.com"
+    }
+  },
+
+  {
+    componentName: "singleBannerComponent",
+
+    singleBannerComponent: {
+      componentId: "MonoBLPBanner",
+
+      items: [
+        {
+          btnText: "Shop the range",
+
+          hexCode: "#ffffff",
+
+          imageURL:
+            "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+          title: "A seamless swim. Own the water",
+
+          webURL: ""
+        }
+      ],
+
+      title: "All new Stella McCartney",
+
+      type: "Single Banner Component"
+    }
+  },
+
+  {
+    componentName: "subBrandsBannerComponent",
+
+    subBrandsBannerComponent: {
+      componentId: "SubBrandBannerBLP",
+
+      items: [
+        {
+          brandLogo: "",
+
+          imageURL:
+            "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+          webURL: "www.tatacliq.com"
+        }
+      ],
+
+      title: "Top Categories",
+
+      type: "Sub Brands Banner Component"
+    }
+  },
+
+  {
+    componentName: "topCategoriesComponent",
+
+    topCategoriesComponent: {
+      componentId: "TopCategoriesWidget",
+
+      items: [
+        {
+          imageURL:
+            "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+          title: "Top and Tees",
+
+          webURL: "www.tatacliq.com"
+        }
+      ],
+
+      title: "Top Categories",
+
+      type: "Top Categories Component"
+    }
+  },
+
+  {
+    componentName: "curatedProductsComponent",
+
+    curatedProductsComponent: {
+      btnText: "See all",
+
+      componentId: "CuratedProductsWidget",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Gia",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+
+      title: "Products in spotlight",
+
+      type: "Curated Products Component",
+
+      webURL: "www.tatacliq.com"
+    }
+  },
+
+  {
+    componentName: "twoByTwoBannerComponent",
+
+    twoByTwoBannerComponent: {
+      componentId: "SmartFilterWidget",
+
+      items: [
+        {
+          description: "The phones to know about",
+
+          imageURL:
+            "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+          title: "The leaders pack",
+
+          webURL: "www.tatacliq.com"
+        }
+      ],
+
+      title: "Curated Smartphones",
+
+      type: "Two by Two Banner Component"
+    }
+  },
+
+  {
+    componentName: "msdComponent",
+
+    msdComponent: {
+      componentId: "MsdComponent",
+
+      details: false,
+
+      num_results: 10,
+
+      subType: "Auto Fresh From Brands Component",
+
+      type: "MSD Component"
+    }
+  },
+
+  {
+    adobeTargetComponent: {
+      componentId: "AdobeTarget",
+
+      mbox: "test1",
+
+      type: "Adobe Target Component"
+    },
+
+    componentName: "adobeTargetComponent"
+  },
+
+  {
+    brandsTabAZListComponent: {
+      items: [
+        {
+          brands: [
+            {
+              brandName: "Nike",
+
+              webURL: "https://www.tatacliq.com/nike/mbh-123"
+            },
+
+            {
+              brandName: "Puma",
+
+              webURL: "https://www.tatacliq.com/puma/mbh-123"
+            }
+          ],
+
+          items: [
+            {
+              heroBannerComponent: {
+                items: [
+                  {
+                    brandLogo: "",
+
+                    imageURL:
+                      "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+                    title: "HeroBannerEle title",
+
+                    webURL: "www.tatacliq.com"
+                  },
+
+                  {
+                    brandLogo: "",
+
+                    imageURL:
+                      "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+                    title: "HeroBannerEle1 title",
+
+                    webURL: "TataCliq1.com"
+                  }
+                ],
+
+                type: "Hero Banner Component"
+              }
+            }
+          ],
+
+          subType: "Men"
+        },
+
+        {
+          brands: [
+            {
+              brandName: "Nike",
+
+              webURL: "https://www.tatacliq.com/nike/mbh-123"
+            },
+
+            {
+              brandName: "Puma",
+
+              webURL: "https://www.tatacliq.com/puma/mbh-123"
+            }
+          ],
+
+          items: [
+            {
+              heroBannerComponent: {
+                items: [
+                  {
+                    brandLogo: "",
+
+                    imageURL:
+                      "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+                    title: "HeroBannerEle title",
+
+                    webURL: "www.tatacliq.com"
+                  },
+
+                  {
+                    brandLogo: "",
+
+                    imageURL:
+                      "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+                    title: "HeroBannerEle1 title",
+
+                    webURL: "TataCliq1.com"
+                  }
+                ],
+
+                type: "Hero Banner Component"
+              }
+            }
+          ],
+
+          subType: "Women"
+        }
+      ],
+
+      type: "Brands Tab AZ List Component"
+    },
+
+    componentName: "brandsTabAZListComponent"
+  },
+  {
+    autoProductRecommendationComponent: {
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 900,
+            formattedValue: "900"
+          },
+          imageURL: "",
+          mrpPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 2000,
+            formattedValue: "2000"
+          },
+          prdId: "987654342",
+          title: "Anarkali Kurta",
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+      btnText: "See all",
+      title: "New arrivals",
+      type: "Auto Product Recommendation"
+    }
+  },
+  {
+    autoProductRecommendationComponent: {
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 900,
+            formattedValue: "900"
+          },
+          imageURL: "",
+          mrpPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 2000,
+            formattedValue: "2000"
+          },
+          prdId: "987654342",
+          title: "T shirt",
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+      btnText: "See all",
+      title: "Recently Viewed",
+      type: "Recently viewed product"
+    }
+  }
+];
 
 export function getItemsRequest(positionInFeed) {
   return {
@@ -189,18 +1305,18 @@ export function homeFeedFailure(error) {
   };
 }
 
-export function homeFeed() {
+export function homeFeed(feedType) {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
+      let url;
+      if (feedType === GET_FEED_DATA_FOR_BLP) {
+        dispatch(homeFeedSuccess(mockDataForBrand));
+      } else {
+        url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
+      }
       //TODO this needs to be cleaned up.
-      const result = await api.postAdobeTargetUrl(
-        null,
-        ADOBE_TARGET_HOME_FEED_MBOX_NAME,
-        null,
-        null,
-        true
-      );
+      const result = await api.postAdobeTargetUrl(null, url, null, null, true);
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
@@ -278,7 +1394,6 @@ export function getComponentData(positionInFeed, fetchURL, postParams: null) {
 
         let parsedResultJson = JSON.parse(resultJson.content);
         parsedResultJson = parsedResultJson.items[0];
-
         dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
       }
     } catch (e) {

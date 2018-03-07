@@ -51,3 +51,7 @@ export const CART_DETAILS_FOR_LOGGED_IN_USER = "cartDetails";
 export const CART_DETAILS_FOR_ANONYMOUS = "cartDetailsForAnonymous";
 export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const ANONYMOUS_USER = "anonymous";
+
+// fetching feed information contant
+export const GET_FEED_DATA_FOR_BLP = "getFeedDataForBLP";
+export const GET_FEED_DATA_FOR_CLP = "getFeedDateForCLP";

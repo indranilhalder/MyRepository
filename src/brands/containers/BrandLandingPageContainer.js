@@ -1,20 +1,22 @@
-import BrandsTotal from "../components/BrandsTotal";
+import Feed from "../../home/components/Feed";
+import { homeFeed } from "../../home/actions/home.actions";
 import { connect } from "react-redux";
-import { getBrandDetails } from "../actions/brand.actions";
+import { GET_FEED_DATA_FOR_BLP } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
-    getBrandDetails: categoryId => {
-      dispatch(getBrandDetails(categoryId));
+    homeFeed: () => {
+      dispatch(homeFeed(GET_FEED_DATA_FOR_BLP));
     }
   };
 };
 const mapStateToProps = state => {
-  console.log(state);
   return {
-    brandDetails: state.brandDetails.brandDetails
+    homeFeedData: state.home.homeFeed,
+    loading: state.home.loading,
+    isOnBrandLandingPage: true
   };
 };
 const BrandLandingPageContainer = connect(mapStateToProps, mapDispatchToProps)(
-  BrandsTotal
+  Feed
 );
 export default BrandLandingPageContainer;
