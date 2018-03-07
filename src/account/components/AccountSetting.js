@@ -25,28 +25,37 @@ export default class AccountSetting extends React.Component {
               <UnderLinedButton
                 size="14px"
                 fontFamily="regular"
-                color="#ff1744"
+                color={this.props.color}
                 label={this.props.label}
                 onClick={() => this.handleClick()}
               />
             </div>
           </div>
         </div>
-        <div className={styles.accounSetingFooter}>
+        <div className={styles.accountSettingFooter}>
           <div className={styles.accountInformationHolder}>
-            <div className={styles.accountInformationCount}>37</div>
-            <div className={styles.accountInformation}>Followed</div>
-            <div className={styles.accountInformation}>brands</div>
+            <div className={styles.accountInformationCount}>
+              {this.props.followedBrandsCount}
+            </div>
+            <div className={styles.accountInformation}>
+              {this.props.followedBrands}
+            </div>
           </div>
           <div className={styles.accountInformationHolder}>
-            <div className={styles.accountInformationCount}>201</div>
-            <div className={styles.accountInformation}>Liked</div>
-            <div className={styles.accountInformation}>products</div>
+            <div className={styles.accountInformationCount}>
+              {this.props.likedProductsCount}
+            </div>
+            <div className={styles.accountInformation}>
+              {this.props.likedProducts}
+            </div>
           </div>
           <div className={styles.accountInformationHolder}>
-            <div className={styles.accountInformationCount}>03</div>
-            <div className={styles.accountInformation}>Orders</div>
-            <div className={styles.accountInformation}>placed</div>
+            <div className={styles.accountInformationCount}>
+              {this.props.orderPlacedCount}
+            </div>
+            <div className={styles.accountInformation}>
+              {this.props.orderPlaced}
+            </div>
           </div>
         </div>
       </div>
@@ -54,15 +63,17 @@ export default class AccountSetting extends React.Component {
   }
 }
 AccountSetting.propTypes = {
-  heading: PropTypes.string,
-  label: PropTypes.string,
-  onClick: PropTypes.func,
-  image: PropTypes.string,
-  color: PropTypes.string
+  orderPlaced: PropTypes.string,
+  orderPlacedCount: PropTypes.string,
+  likedProductsCount: PropTypes.string,
+  likedProducts: PropTypes.string,
+  followedBrandsCount: PropTypes.string,
+  followedBrands: PropTypes.string,
+  onClick: PropTypes.func
 };
 AccountSetting.defaultProps = {
   image: AccountSettingIcon,
-  heading: "Gangesh Roy",
+  heading: "Ananya R. Patel",
   color: "#ff1744",
   label: "Account Settings"
 };
