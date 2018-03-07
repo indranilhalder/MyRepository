@@ -164,7 +164,7 @@ var productCodeSG = '${product.code}';
 								</c:if>
 								<c:if test="${product.rootCategory=='Accessories'}">
 									<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
-										<li style="padding-right:230px">${sizeGuide}</li>
+										<li class="size-title">${sizeGuide}</li>
 										<c:if test="${sizeGuide eq 'Years'}">
 											<c:set var="age" value="Y"/>
 										</c:if>
@@ -367,7 +367,7 @@ var productCodeSG = '${product.code}';
 						 </c:when>
 						 <c:when test="${product.rootCategory=='Accessories'}">
 						 		<c:forEach items="${sizeguideData}" var="sizeGuide" >
-							    <li style="padding-right:230px;">
+							    <li class="width25">
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 									<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 									<ul>
@@ -460,7 +460,7 @@ var productCodeSG = '${product.code}';
 			<product:footwearNote/></div>
 			</c:if>		
 			<c:if test="${product.rootCategory=='Accessories' }">
-			<div class="footwearNote" style="padding-left: 185px;line-height:19px;">
+			<div class="footwearNote" style="line-height:19px;">
 				<product:fashionaccessorynote></product:fashionaccessorynote>
 			</div>
 			</c:if>

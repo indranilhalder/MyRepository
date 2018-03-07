@@ -80,6 +80,9 @@
 	<meta name="keywords" content="${keywords}">
   	<meta name="description" content="${description}">
 	
+	<meta name="keywords" content="${keywords}">
+  	<meta name="description" content="${description}">
+	
 	<!-- Tag for Google Webmaster Tool Verification -->
 	 <meta name="google-site-verification" content="WLYvoKut0NN-NiB8KRHGii4Mq6w9r7MPxDpTkVC1K28" />
 	 <meta name="google-site-verification" content="BinPUCzYwsMCqMgbZ7Dxaik-cMOJPhoXkn4x7sJiM8c" />

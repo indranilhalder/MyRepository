@@ -81,6 +81,7 @@ ACC.minicart = {
 															cartData = $.parseJSON(cartData);
 															quantity = parseInt(cartData.masterMiniCartCount);
 															$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(quantity);
+															$(".my-bag-ul .total-payable-amount").text(cartData.miniCartPrice);
 															if (quantity == 0) {
 																$("ul.my-bag-ul").remove();
 															} else {
