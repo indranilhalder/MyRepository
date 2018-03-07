@@ -5,8 +5,11 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
+import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.core.model.media.MediaFolderModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.impex.jalo.ImpExException;
 import de.hybris.platform.impex.jalo.Importer;
 import de.hybris.platform.impex.jalo.imp.DefaultDumpHandler;
@@ -15,6 +18,7 @@ import de.hybris.platform.impex.jalo.media.MediaDataTranslator;
 import de.hybris.platform.jalo.media.Media;
 import de.hybris.platform.jalo.media.MediaManager;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.CSVReader;
 
 import java.io.BufferedReader;
@@ -29,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -47,8 +52,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tis.mpl.facade.imageupload.MplImageUploadFacade;
+import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -60,7 +67,7 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 
 @Controller
-@RequestMapping(value = "/my-account-imageUpload")
+@RequestMapping(value = "/my-account-upload")
 public class ImageUploadController extends AbstractMplSearchPageController
 {
 
@@ -76,6 +83,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 	@Autowired
 	private ConfigurationService configurationService;
 
+	@Autowired
+	private UserService userService;
+
 	private static final String CATALOG_DATA = "mplContentCatalog";
 	private static final String CATALOG_VERSION_DATA = "Online";
 	private static final String siteResource = "file:/";
@@ -86,9 +96,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			+ CATALOG_VERSION_DATA + "'] \n"
 			+ "INSERT_UPDATE Media;code[unique=true];$catalogversion;mime[default='image/jpeg'];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];folder(qualifier)[default='root']\n";
 
-	@RequestMapping(value = "/imageUpload", method = RequestMethod.GET)
+	@RequestMapping(value = "/images", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String getImageUploaded(final Model model) throws CMSItemNotFoundException
+	public String getImageUploaded(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 		final List<MediaFolderModel> mediaFolder = getMediaFolderList();
 		storeCmsPageInModel(model, getContentPageForLabelOrId("imageUpload"));
@@ -96,7 +106,32 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		model.addAttribute("mediaFolderList", mediaFolder);
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, accountBreadcrumbBuilder.getBreadcrumbs("imageUpload"));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-		return getViewForPage(model);
+		boolean userAccessCheck = false;
+		final UserModel userModel = userService.getCurrentUser();
+		final Set<PrincipalGroupModel> groups = userModel.getAllGroups();
+
+		if (null != groups && !groups.isEmpty() && groups.iterator().hasNext())
+		{
+			for (final PrincipalGroupModel principalGroupModel : groups)
+			{
+				if (principalGroupModel.getUid().equalsIgnoreCase("admingroup"))
+				{
+					userAccessCheck = true;
+					break;
+				}
+			}
+		}
+
+		if (userAccessCheck)
+		{
+			return getViewForPage(model);
+		}
+
+		LOG.error("USER IS NOT ADMIN");
+		GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+				"User " + userModel.getUid() + " does not Admin role for access");
+		return MarketplacecheckoutaddonConstants.REDIRECT + "/my-account";
+
 	}
 
 	public List<MediaFolderModel> getMediaFolderList()
@@ -121,13 +156,15 @@ public class ImageUploadController extends AbstractMplSearchPageController
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
+	@RequireHardLogIn
 	public org.json.simple.JSONArray imageUpload(@RequestParam final MultipartFile[] file,
 			final MultipartHttpServletRequest request) throws ServletException, IOException
 	{
+
 		final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
+		final JSONArray ja = new JSONArray();
 		final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
-		final JSONArray ja = new JSONArray();
 		String fileUploadLocation = null;
 		String uploadFolderName = StringUtils.EMPTY;
 		try
@@ -177,9 +214,8 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					Files.write(path, bytes);
 					stringBuilder.append(
 							";" + f.getName() + ";;image/jpg;;" + siteResource + f.getAbsolutePath() + ";" + uploadFolderName + ";/n");
-					System.out.println("------------" + f.getAbsolutePath());
+					LOG.info("Upload File Path" + f.getAbsolutePath());
 					list.add(f.getName());
-					//stringBuilder.append(stringBuilder.toString() + "/n");
 				}
 				catch (final IOException e)
 				{
@@ -213,7 +249,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			{
 				final Media mediaData = getMediaByCode(object);
 				jObject.put("imageName", mediaData.getFileName());
-				final String array[] = mediaData.getURL().toString().split(".");
+				final String array[] = mediaData.getURL().toString().split("\\.");
 				jObject.put("imageUrl", array[0] + mediaData.getFileName() + "." + array[1]);
 				jObject.put("size", mediaData.getSize());
 				jObject.put("creationTime", mediaData.getCreationTime());
@@ -222,7 +258,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			// failure handling
 			if (importer.hasUnresolvedLines())
 			{
-				System.out.println("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
+				LOG.info("Import has " + importer.getDumpedLineCountPerPass() + "+unresolved lines, first lines are:\n"
 						+ importer.getDumpHandler().getDumpAsString());
 			}
 			return ja;
@@ -235,7 +271,6 @@ public class ImageUploadController extends AbstractMplSearchPageController
 		{
 			MediaDataTranslator.unsetMediaDataHandler();
 		}
-
 		return ja;
 	}
 

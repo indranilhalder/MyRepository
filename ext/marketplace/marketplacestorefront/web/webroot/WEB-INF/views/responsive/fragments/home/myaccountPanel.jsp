@@ -34,11 +34,7 @@
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
 										
-							<sec:authorize ifAllGranted="ROLE_ADMIN">
-	    					   <li><a href="<c:url value="/my-account-imageUpload/imageUpload"/>">
-	    					   <spring:theme code="header.flyout.image-upload" /></a></li>
-      						</sec:authorize>
-	<!-- Release 2 changes -->
+				<!-- Release 2 changes -->
 				<%-- 		<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
 										code="header.flyout.review" /></a></li>  --%> <!-- Closed as per SPRINT 13 requirement -->   
 										
@@ -94,8 +90,8 @@
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
 										
-							<sec:authorize ifAllGranted="ROLE_ADMIN">
-	    					   <li><a href="<c:url value="/my-account-imageUpload/imageUpload"/>">
+							<sec:authorize access="hasAnyRole('ROLE_ADMINGROUP')">
+	    					   <li><a href="<c:url value="/my-account-upload/images"/>">
 	    					   <spring:theme code="header.flyout.image-upload" /></a></li>
       						</sec:authorize>
 	
