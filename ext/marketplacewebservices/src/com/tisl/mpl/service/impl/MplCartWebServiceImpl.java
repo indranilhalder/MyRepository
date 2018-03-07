@@ -123,13 +123,11 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
-import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.CartOfferDetailsWsDTO;
@@ -138,8 +136,6 @@ import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.PriceWsPwaDTO;
-import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
-import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -239,7 +235,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	private DefaultExtStockLevelDao defaultStockLevelDao;
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
-	
+
 	@Autowired
 	private MplEgvWalletService mplEgvWalletService;
 
@@ -3351,8 +3347,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3621,7 +3617,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -4644,24 +4640,39 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	/**
 	 * @param deliveryCost
 	 */
-	private PriceData createPriceCharge(final String deliveryCost)
+	private PriceData createPriceCharge(final String cost)
 	{
 		// YTODO Auto-generated method stub
+		// YTODO Auto-generated method stub
+		final BigDecimal value = new BigDecimal(cost);
 		final PriceData priceData = new PriceData();
-		priceData.setFormattedValue(deliveryCost);
-		priceData.setDoubleValue(Double.valueOf(deliveryCost));
+
+		priceData.setDoubleValue(Double.valueOf(cost));
+
 
 		final CurrencyModel currency = commonI18NService.getCurrency(INR);
 		priceData.setCurrencyIso(currency.getIsocode());
-		priceData.setCurrencySymbol(currency.getSymbol());
+		final String currencySymbol = currency.getSymbol();
 
+		StringBuilder stb = new StringBuilder(20);
+		stb = stb.append(currencySymbol).append(cost);
+		priceData.setFormattedValue(stb.toString());
+
+
+		final long valueLong = value.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+		final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+		StringBuilder stbND = new StringBuilder(20);
+		stbND = stbND.append(currencySymbol).append(totalPriceNoDecimalPntFormatted);
+		priceData.setFormattedValueNoDecimal(stbND.toString());
+		priceData.setValue(value);
+		priceData.setPriceType(PriceDataType.BUY);
 		return priceData;
 	}
 
 
-	
 
-	
+
+
 
 
 
