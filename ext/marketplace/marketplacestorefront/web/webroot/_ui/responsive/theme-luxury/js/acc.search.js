@@ -13,7 +13,7 @@ function constructDepartmentHierarchy(inputArray) {
 			}
 			//Other tree nodes are constructed here
 			for (var j = 0; j < categoryArray.length; j++) {				
-				if(categoryArray[j] != null && categoryArray[j].length > 0){
+				if(categoryArray[j] != null && categoryArray[j].length > 0 && categoryArray[j] != '"'){
 					var categoryDetails = categoryArray[j].split(":");
 					var categoryCode = categoryDetails[0];
 					var categoryName = categoryDetails[1];
