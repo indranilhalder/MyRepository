@@ -33,7 +33,7 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  "Multipurpose Banner Component": props => <BrandCardHeader {...props} />,
+  "Brand header components": props => <BrandCardHeader {...props} />,
   "Hero Banner Component": props => <HeroBanner {...props} />,
   "Theme Offers Component": props => <ThemeOffer {...props} />,
   "Auto Product Recommendation Component": props => (

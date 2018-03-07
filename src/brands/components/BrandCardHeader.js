@@ -8,7 +8,7 @@ export default class BrandCardHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLabel: this.props.buttonLabel
+      buttonLabel: props.feedComponentData.buttonLabel
     };
   }
   handleClick() {
@@ -23,16 +23,24 @@ export default class BrandCardHeader extends React.Component {
     }
   }
   render() {
+    console.log(this.props);
+    let { feedComponentData } = this.props;
     return (
       <div className={styles.base}>
         <div className={styles.container}>
           <div className={styles.imageHolder}>
-            <Image image={this.props.backgroundImageURL} />
+            <Image
+              image={feedComponentData && feedComponentData.backgroundImageURL}
+            />
             <div className={styles.textAndLogoContainer}>
               <div className={styles.logo}>
-                <Logo image={this.props.logoImage} />
+                <Logo
+                  image={feedComponentData && feedComponentData.logoImage}
+                />
               </div>
-              <div className={styles.text}>{this.props.description}</div>
+              <div className={styles.text}>
+                {feedComponentData && feedComponentData.description}
+              </div>
             </div>
             <div className={styles.buttonHolder}>
               <div className={styles.button}>
