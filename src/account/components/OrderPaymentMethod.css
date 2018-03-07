@@ -1,0 +1,51 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 25px 0px;
+  border-bottom: 1px solid #ececec;
+}
+.paymentHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.paymentMethod {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+  font-family: semibold;
+  font-size: 14px;
+}
+.requestHolder {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: right;
+  font-family: regular;
+  font-size: 14px;
+}
+.requestWithUnderline {
+  display: inline-block;
+}
+.cashAndMobileHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding-top: 5px;
+}
+.cashText {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-size: 14px;
+  font-family: regular;
+}
+.mobileNumber {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  font-size: 14px;
+  font-family: regular;
+}
