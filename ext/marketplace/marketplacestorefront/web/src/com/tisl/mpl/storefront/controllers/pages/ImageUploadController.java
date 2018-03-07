@@ -248,9 +248,9 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			for (final String object : list)
 			{
 				final Media mediaData = getMediaByCode(object);
-				jObject.put("imageName", mediaData.getFileName());
+				jObject.put("imageName", mediaData.getCode());
 				final String array[] = mediaData.getURL().toString().split("\\.");
-				jObject.put("imageUrl", array[0] + mediaData.getFileName() + "." + array[1]);
+				jObject.put("imageUrl", array[0] + "/" + mediaData.getCode());
 				jObject.put("size", mediaData.getSize());
 				jObject.put("creationTime", mediaData.getCreationTime());
 				ja.add(jObject);

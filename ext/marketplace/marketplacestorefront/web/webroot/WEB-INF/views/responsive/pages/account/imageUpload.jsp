@@ -16,7 +16,7 @@ function loadImageAjaxCall() {
 		var form = new FormData(formdata);
 	 
 	  $.ajax({
-			url:ACC.config.encodedContextPath + "/my-account-imageUpload",
+			url:ACC.config.encodedContextPath + "/my-account-upload",
 			type: "POST",
 			 data:	form,
 			 enctype: 'multipart/form-data',
