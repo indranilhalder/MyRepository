@@ -275,7 +275,7 @@ export default class BrandsTotal extends React.Component {
           </Carousel>
         </div>
         <div className={styles.shopeRangeHolder}>
-          <div className={styles.shopeRangeHedaer}>
+          <div className={styles.shopeRangeHeader}>
             All new Stealla McCartney
           </div>
           <ShopCollection

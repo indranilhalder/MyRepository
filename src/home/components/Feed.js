@@ -19,7 +19,6 @@ import OfferWidget from "./OfferWidget.js";
 import DiscoverMore500 from "./DiscoverMore500.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
-import RecentlyViewedProduct from "../../brands/components/RecentlyViewedProduct";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import DiscoverMore from "./DiscoverMore.js";
 import styles from "./Feed.css";
