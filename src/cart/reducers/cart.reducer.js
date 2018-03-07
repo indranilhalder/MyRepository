@@ -40,7 +40,11 @@ const cart = (
     storeDetails: null,
     storeStatus: null,
     storeError: null,
-    storeAdded: null
+    storeAdded: null,
+
+    paymentStatus: null,
+    paymentStatusError: null,
+    paymentDetails: null
   },
   action
 ) => {
@@ -366,6 +370,48 @@ const cart = (
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
         cartDetailsCNCError: action.error,
+        loading: false
+      });
+
+    case cartActions.APPLY_CLIQ_CASH_REQUEST:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentDetails: action.paymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.APPLY_CLIQ_CASH_FAILURE:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentStatusError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_CLIQ_CASH_REQUEST:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentDetails: action.paymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.REMOVE_CLIQ_CASH_FAILURE:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentStatusError: action.error,
         loading: false
       });
 
