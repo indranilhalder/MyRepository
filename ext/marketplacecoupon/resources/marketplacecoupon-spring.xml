@@ -99,5 +99,12 @@
 	<bean id="mplDefaultVoucherService" class="com.tisl.mpl.coupon.service.impl.MplDefaultVoucherService" parent="defaultVoucherService"
 		scope="tenant">
 	</bean>	 -->	
+	
+	<!-- SDI-6217 starts -->
+	  <bean id="core.deliverycostsstrategy.default"
+	      class="com.tisl.mpl.jalo.strategy.MplDefaultDeliveryCostsStrategy"
+	      scope="tenant">		
+      </bean>
+	<!-- SDI-6217 ends -->
 
 </beans>

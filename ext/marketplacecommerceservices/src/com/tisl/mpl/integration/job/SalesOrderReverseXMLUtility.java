@@ -80,7 +80,7 @@ public class SalesOrderReverseXMLUtility
 	 * 
 	 */
 	private static final String CLIQ_CASH = "Cliq Cash";
-	private static final String CLIQCASH = "CliCash";
+	private static final String CLIQCASH = "CliqCash";
 	/**
 	 * 
 	 */
@@ -644,18 +644,25 @@ public class SalesOrderReverseXMLUtility
 							LOG.info("entry.getSelectedUSSID()   " + entry.getSelectedUSSID());
 							List<SellerInformationModel> productSellerData = null;
 							xmlData.setUSSID(entry.getSelectedUSSID());
-							LOG.info("getDefaultPromotionsManager().catalogData()  " + getDefaultPromotionsManager().catalogData());
+							//SDI-6025
+							String sellerCode = null;
 							productSellerData = getSellerBasedPromotionService().fetchSellerInformation(entry.getSelectedUSSID(),
-									getDefaultPromotionsManager().catalogData());
+									product.getCatalogVersion());
+							LOG.debug("after product seller data call ");
 							if (null != productSellerData && !productSellerData.isEmpty())
 							{
 								for (final SellerInformationModel seller : productSellerData)
 								{
-
+									//SDI-6025
+									if(null != sellerCode)
+									{
+										break;
+									}
 									if (null != seller.getSellerID())
 									{
-										xmlData.setSellerCode(seller.getSellerID());
-										LOG.info("seller id set ");
+										//SDI-6025
+										sellerCode = seller.getSellerID();
+										LOG.debug("seller id set ");
 									}
 									else
 									{
@@ -663,7 +670,12 @@ public class SalesOrderReverseXMLUtility
 									}
 								}
 							}
-
+							//SDI-6025
+							if(null == sellerCode)
+							{
+								sellerCode = getSellerIdFromUssid(entry.getSelectedUSSID());
+							}
+							xmlData.setSellerCode(sellerCode);
 						}
 						else
 						{
@@ -1000,7 +1012,7 @@ public class SalesOrderReverseXMLUtility
 									
 								}
 							
-							   else if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && CLIQ_CASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()))
+							   else if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && (CLIQ_CASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()) || (CLIQCASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()))))
 								{
 									if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null   && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
 									LOG.info("QC merchantInfoXMlData");
@@ -1671,5 +1683,13 @@ public class SalesOrderReverseXMLUtility
 	
 	private double getDecimalFormateValue(double value){
 		return Double.parseDouble(new DecimalFormat(".##").format(value));
+	}
+	
+	private String getSellerIdFromUssid(String ussid)
+	{
+		if(null != ussid && ussid.length() >= 6){
+			return StringUtils.substring(ussid, 0, 6);
+		}
+		return null;
 	}
 }

@@ -26,6 +26,8 @@ public interface ForwardPaymentCleanUpService
 	List<OrderModel> fetchPaymentFailedOrders(final Date startTime, final Date endTime);
 
 	List<OrderModel> fetchRmsFailedOrders(final Date startTime, final Date endTime);
+	
+	List<OrderModel> fetchCodChargedOrder(final Date startTime, final Date endTime);
 
 	List<MplPaymentAuditModel> fetchAuditsWithoutOrder(final Date startTime, final Date endTime);
 
@@ -36,6 +38,8 @@ public interface ForwardPaymentCleanUpService
 	void createRefundEntryForMultiplePayments(final OrderModel orderModel,boolean isCliqCashOrder);
 
 	void createRefundEntryForFailedOrders(final OrderModel orderModel);
+	
+	void createRefundEntryForCodChargedOrders(final OrderModel orderModel);
 
 	void createRefundEntryForRmsFailedOrders(final OrderModel orderModel);
 

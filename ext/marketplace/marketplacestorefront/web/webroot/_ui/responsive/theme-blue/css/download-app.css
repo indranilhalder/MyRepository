@@ -1,0 +1,357 @@
+/*start change for SDI-6244*/
+.r2-landing-banner h1 {
+	font-size: 31px;
+    line-height: 40px;
+    text-transform: uppercase;
+    padding-top: 20px;
+    color: #333;
+    font-weight: 700;
+}
+.r2-landing-banner:last-child h1 {
+	color: #fff;
+}
+.r2-landing-banner:last-child h5 {
+	color: #fff;
+}
+.r2-landing-banner {
+	background-image: url('../images/banner-app-mob.png');
+    width: 100%;
+    height: 206px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+.template-pages-layout-appLandingPage .body-Content {
+	overflow: hidden;
+}
+.r2-landing-banner .r2-app-mob, .r2-landing-banner .r2-app-text {
+	padding-left: 15px;
+    padding-right: 15px;	
+}
+.r2-marginTop {
+	margin-top: 10px;
+}
+.img-responsive, .thumbnail>img, .thumbnail a>img, .carousel-inner>.item>img, .carousel-inner>.item>a>img {
+	display: block;
+	max-width: 100%;
+    height: auto;
+}
+.visible-xs, .visible-sm, .visible-md, .visible-lg {
+	display: none !important;
+}
+img.r2-app-brand-img {
+	margin-left: 20px;
+    margin-bottom: 0px;
+}
+.r2-landing-banner h5 {
+	line-height: 30px;
+    text-align: left;
+	font-size: 18px;
+}
+.r2-app-landing .r2-padding {
+	padding: 20px !important;
+}
+.r2-app-landing .container {
+	overflow: hidden;
+}
+.r2-app-landing p {
+	margin: 0 0 10px;
+}
+.r2-app-landing article p {
+	font-size: 18px;
+    padding-top: 40px;
+    color: #333;
+    line-height: 25px;
+}
+.r2-minusmarginLeft, .r2-app-landing p.r2-minusmarginLeft {
+	margin-left: -20px;
+}
+.r2-app-slider {
+	width: 100%;
+	height: auto;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding-bottom: 40px;
+}
+.r2-left {
+	float: left !important;	
+}
+.r2-paddingTop {
+	padding-top: 20px !important;
+}
+.r2-buy-banner {
+	overflow: hidden;
+    width: 100%;
+    float: left;
+}
+.r2-app-slider>div>p {
+	font-size: 14px;
+    line-height: 20px;
+    width: 80%;
+}
+.r2-app-landing .r2-buy-banner p {
+	padding: 7px;
+    line-height: 20px;
+    color: #fff;
+    text-transform: uppercase;
+    background: #A91E3E;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-align: center;
+    font-size: 16px;
+    margin: 0 auto;
+    width: 100%;
+}
+.r2-app-slider>div>h1, .r2-app-slider>div>p {
+	color: #fff;
+    text-align: center;
+    width: 90%;
+    margin: auto;
+}
+.r2-app-slider>div>h1 {
+	margin-top: 40px;
+    font-size: 31px;
+    padding-top: 200px;
+    line-height: 40px;
+    width: 100%;
+    font-weight: 700;	
+}
+.r2-padding-bottom {
+	padding-bottom: 60px !important;
+}
+.r2-whiteText {
+	color: #fff;
+}
+.r2-mob-carousel h2 {
+	font-size: 31px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.r2-mob-carousel p {
+	font-size: 14px;
+    line-height: 24px;
+}
+.r2-marginAuto {
+	margin: auto !important;
+}
+.r2-right {
+	float: right !important;
+}
+h1.r2-landing-heading {
+	width: 90%;
+    margin: auto;
+    font-size: 30px;
+    line-height: 40px;
+    padding: 20px;
+    font-weight: 700;
+}
+.r2-landing-brands p {
+	font-size: 14px;
+    line-height: 20px;
+    color: #333;
+    padding: 0px 45px;
+}
+img.r2-app-mob-down {
+	margin-top: -80px;
+    margin-left: 0px;
+}
+.r2-marginBottom {
+	margin-bottom: 10px;
+}
+img.r2-app-mob-up {
+	margin-top: 180px !important;
+    margin-left: 100px !important;
+}
+@media (min-width: 768px) {
+	.r2-landing-banner {
+		background-image: url('../images/banner-app.png');
+		width: 100%;
+		height: 467px;
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+	}
+	.hidden-xs {
+		display: block;
+	}
+	.r2-landing-banner img.r2-app-mob-up {
+		margin-top: 150px;
+		margin-left: -80px;
+	}
+	.r2-landing-banner h1 {
+		font-size: 55px;
+		text-transform: uppercase;
+		font-weight: 700;
+		line-height: 60px;
+		padding-top: 170px;
+		text-align: left;	
+	}
+	.r2-landing-banner h5 {
+		font-size: 18px;
+	}
+	.r2-app-landing article p {
+		font-size: 18px;
+		padding-top: 40px;
+		text-align: left;
+		padding-left: 15px;
+	}
+	.r2-app-slider {
+		background-image: url('../images/app-offer.png');
+	}
+	.r2-app-slider>div>h1, .r2-app-slider>div>p {
+		color: #fff;
+		text-align: center;
+		margin: auto;
+	}
+	.r2-app-slider>div>h1 {
+		margin-top: 190px;
+		font-size: 45px;
+		padding-top: 100px;
+		line-height: 60px;
+		width: 100%;
+		font-weight: 700;
+	}
+	.r2-app-slider>div>p {
+		font-size: 14px;
+		width: 40%;
+	}
+	.r2-mob-carousel h2 {
+		font-size: 30px;
+		font-weight: 700;
+	}
+	.r2-mob-carousel p {
+		line-height: 25px;
+		font-size: 14px;
+	}
+	.r2-app-mob {
+		float: right !important;
+	}
+	.r2-app-brand-img:first-child {
+		margin-left: -150px;
+		margin-top: -70px;
+	}
+	.r2-landing-banner:last-child {
+		background-image: url('../images/landing_last.png');
+		height: auto;
+		padding-bottom: 40px;
+	}
+	img.r2-app-mob-down {
+		margin-left: 0;
+		margin-top: -50px;
+	}
+	.r2-landing-banner:last-child h1, .r2-app-landing article li {
+		text-align: left;
+	}
+}
+@media (min-width: 791px) {
+	.r2-landing-banner h5 {
+		color: #fff;
+	}
+}
+@media (min-width: 1098px) {
+	.r2-landing-banner img.r2-app-mob-up {
+		margin-top: 65px !important;
+		margin-left: -250px !important;
+	}
+}
+@media (min-width: 1025px) {
+	.r2-app-landing article p {
+		padding-top: 200px;
+	}
+	.r2-mob-carousel p {
+		margin: 0 65px 140px;
+		padding-bottom: 35px;
+	}
+	.r2-app-brand-img.r2-app-brand-img-left {
+		width: 130%;
+	}
+	.r2-app-brand-img:first-child {
+		margin-left: 0px;
+		margin-top: -225px;
+	}
+	.r2-landing-brands .r2-marginAuto.r2-center.r2-padding p {
+		padding: 0px 183px;
+		text-align: center;
+	}
+	img.r2-app-mob-down {
+		margin-left: 0;
+		margin-top: -125px;
+	}
+	.r2-landing-banner h1 {
+		color: #fff;
+	}
+	.r2-app-landing .r2-padding {
+		text-align: right;
+	}
+	.r2-landing-brands .r2-marginAuto.r2-center.r2-padding h1.r2-landing-heading {
+		text-align: center;
+	}
+}
+@media (max-width: 1399px) and (min-width: 1024px) {
+	.hidden-md {
+		display: none !important;
+	}
+}
+@media (max-width: 790px) {
+	img.r2-app-brand-img {
+		margin-left: 20px;
+		margin-bottom: 0px;
+	}
+	.r2-app-landing article p {
+	    padding-top: 0px;	
+	}
+	.r2-app-landing div.r2-buy-banner p {
+		font-size: 14px;
+		line-height: 20px;
+		letter-spacing: 2px;
+		padding-top: 15px;
+		margin: 0px auto;
+	}
+	.r2-landing-banner:last-child {
+		background-image: url('../images/landing_last-mobile.png');
+		height: auto;
+		margin-top: 100px;
+		padding-bottom: 40px;
+	}
+	.r2-app-slider {
+		background-image: url('../images/app-off-mob.png');
+	}
+}
+@media (max-width: 767px) {
+	.r2-app-landing .visible-xs {
+		display: block!important;
+	}
+	.r2-landing-banner h5 {
+		text-align: center;
+	}
+}
+@media (max-width: 480px) and (min-width: 320px) {
+	.r2-landing-brands img.r2-app-brand-img	 {
+		margin-top: -60px;
+		margin-left: -40px;
+		margin-bottom: 90px;	
+	}
+}
+@media (max-width: 1023px) and (min-width: 640px) {
+	.hidden-sm {
+		display: none !important;	
+	}
+}
+@media (max-width: 791px) and (min-width: 768px) {
+	img.r2-app-brand-img {
+		margin-top: -20px;
+	}
+	.r2-landing-brands>div:nth-child(2)>img {
+	    position: relative;
+		left: 370px;
+	}
+	img.r2-app-mob-down {
+	    margin-top: -140px !important;	
+	}
+}
+@media (max-width: 991px) and (min-width: 768px) {
+	.r2-app-landing .visible-sm {
+		display: block!important;
+	}
+}
+/*end change for SDI-6244*/

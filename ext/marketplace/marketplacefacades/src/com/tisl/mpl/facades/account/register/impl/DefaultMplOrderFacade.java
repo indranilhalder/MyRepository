@@ -330,6 +330,37 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	}
 
 
+	@Override
+	public SearchPageData<OrderHistoryData> getPagedFilteredParentOrderHistoryWebForm(final PageableData pageableData)
+	{
+		try
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			final BaseStoreModel currentBaseStore = baseStoreService.getCurrentBaseStore();
+
+			final String orderHistoryDuration = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.ORDER_HISTORY_DURATION_DAYS,
+					MarketplacecommerceservicesConstants.ORDER_HISTORY_DEFAULT_DURATION_DAYS);
+
+
+			LOG.debug(">> Web Form Order History duration : " + orderHistoryDuration);
+
+			final Date fromDate = subtractDays(new Date(), Integer.parseInt(orderHistoryDuration));
+
+			LOG.debug(">> Web Form Order History duration From Date : " + fromDate);
+
+
+			final SearchPageData<OrderModel> orderResults = mplOrderService.getPagedFilteredParentOrderHistoryWebForm(
+					currentCustomer, currentBaseStore, pageableData, fromDate);
+			return convertPageData(orderResults, orderHistoryConverter);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
 	/**
 	 * @Desc : subtract days to date for order history TISEE-1855
 	 *
@@ -916,7 +947,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	}
 
 
-             /*EGV Email Code Added  */
+	/* EGV Email Code Added */
 	@Override
 	public void sendNotificationEGVOrder(final String orderId)
 	{
@@ -924,13 +955,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		try
 		{
 			orderModel = orderModelDao.getOrderModel(orderId);
-			OrderProcessModel orderProcessModel=new OrderProcessModel();
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(orderModel);
-			OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+			final OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
 			eventService.publishEvent(orderEGVRecipientEmailEvent);
 
 		}
-		catch (Exception exception)
+		catch (final Exception exception)
 		{
 			LOG.error(" >> Exception occured while send notification", exception);
 		}

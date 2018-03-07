@@ -28,6 +28,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -47,6 +48,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 	private BaseSiteService baseSiteService;
 	private CommerceCommonI18NService commerceCommonI18NService;
 	private ModelService modelService;
+	private final static Logger LOG = Logger.getLogger(MplDefaultCartLoaderStrategy.class);
 
 	@Override
 	public void loadCart(final String cartId)
@@ -104,6 +106,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			}
 			else if (!isBaseSiteValid(cart))
 			{
+			        checkLogConfig(cartID, "loadUserCart");
 				throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
 						requestedCartID);
 			}
@@ -117,6 +120,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			cart = commerceCartService.getCartForCodeAndUser(requestedCartID, userService.getCurrentUser());
 			if (cart == null || !isBaseSiteValid(cart))
 			{
+			        checkLogConfig(cartID, "loadUserCart");
 				throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
 						requestedCartID);
 			}
@@ -152,6 +156,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 					{
 						if (!isBaseSiteValid(cart))
 						{
+						        checkLogConfig(cartID, "loadAnonymousCart");
 							throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
 									cartID);
 						}
@@ -161,6 +166,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 					}
 					else
 					{
+					        checkLogConfig(cartID, "loadAnonymousCart");
 						// 'access denied' presented as 'not found' for security reasons
 						throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
 								cartID);
@@ -168,6 +174,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 				}
 				else
 				{
+				        checkLogConfig(cartID, "loadAnonymousCart");
 					throw new CartException(MarketplacecommerceservicesConstants.CARTNOTFOUNDEXCEPTION, CartException.NOT_FOUND,
 							cartID);
 				}
@@ -178,6 +185,7 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			 */
 			catch (final Exception e)
 			{
+			        checkLogConfig(cartID, "loadAnonymousCart");
 				throw new CartException("Couldn't load cart: " + e.getMessage(), CartException.INVALID, cartID, e);
 			}
 
@@ -238,6 +246,13 @@ public class MplDefaultCartLoaderStrategy implements CartLoaderStrategy
 			throw new CartException("Cart [guid=" + requestedCartID + "] has expired. A new cart has been created [guid="
 					+ restoredCartID + "]", CartException.EXPIRED, restoredCartID);
 		}
+	}
+	
+	private void checkLogConfig(final String cartID, final String MethodName)
+	{		
+		final UserModel currentUser = userService.getCurrentUser();
+		LOG.error("Cart ID: " + cartID + " - USER ID: " + currentUser.getUid() + " Method name = " + MethodName);
+		
 	}
 
 	@Required

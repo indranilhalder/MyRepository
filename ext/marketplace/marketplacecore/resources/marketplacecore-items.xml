@@ -953,6 +953,7 @@
 			<value code="ORDER_NOT_GENERATED"></value>
 			<value code="DUPLICATE_PAYMENT"></value>
 			<value code="RMS_VERIFICATION_FAILED"></value>
+			<value code="COD_CHARGED"></value>		
 		</enumtype>
 		<enumtype code="FPCRefundMethod" autocreate="true" generate="true"
 			dynamic="false">
