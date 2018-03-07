@@ -38,11 +38,10 @@ export default class OrderPaymentMethod extends React.Component {
   }
 }
 OrderPaymentMethod.propTypes = {
-  DeliveryCharges: PropTypes.string,
-  Discount: PropTypes.string,
-  Total: PropTypes.string,
-  ConvenienceCharges: PropTypes.string,
-  SubTotal: PropTypes.string
+  underlineButtonLabel: PropTypes.string,
+  underlineButtonColour: PropTypes.string,
+  phoneNumber: PropTypes.string,
+  request: PropTypes.func
 };
 OrderPaymentMethod.defaultProps = {
   underlineButtonLabel: "Request Invoice",
