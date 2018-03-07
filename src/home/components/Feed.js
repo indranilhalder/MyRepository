@@ -21,6 +21,7 @@ import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import DiscoverMore from "./DiscoverMore.js";
+import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
@@ -55,7 +56,8 @@ const typeComponentMapping = {
   "Banner Separator Component": props => <BannerSeparator {...props} />,
   "Auto Discover More Component": props => <DiscoverMore {...props} />, // wired up with clickable urls
   "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
-  "Recently viewed product": props => <RecommendationWidget {...props} />
+  "Recently viewed product": props => <RecommendationWidget {...props} />,
+  "Single Banner Component": props => <MonoBanner {...props} />
 };
 
 class Feed extends Component {

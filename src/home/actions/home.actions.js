@@ -72,7 +72,6 @@ const mockDataForBrand = [
 
   {
     componentName: "offersWidgetComponent",
-
     offersComponent: {
       componentId: "OffersWidget",
 
@@ -1084,7 +1083,6 @@ const mockDataForBrand = [
 
     componentName: "brandsTabAZListComponent"
   },
-
   {
     componentName: "singleBannerComponent",
     singleBannerComponent: {
@@ -1127,7 +1125,6 @@ export function getItemsFailure(positionInFeed, errorMsg) {
   };
 }
 export function getItems(positionInFeed, itemIds, isPdp: false) {
-  console.log("In get item actions ");
   return async (dispatch, getState, { api }) => {
     dispatch(getItemsRequest(positionInFeed));
     try {
