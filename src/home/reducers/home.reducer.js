@@ -24,10 +24,9 @@ const home = (
     case homeActions.HOME_FEED_SUCCESS:
       const homeFeedClonedData = cloneDeep(action.data);
       homeFeedData = map(homeFeedClonedData, subData => {
-        const key = Object.keys(subData)[0];
         // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
         return {
-          ...subData[key],
+          ...subData[subData.componentName],
           loading: false,
           status: ""
         };
