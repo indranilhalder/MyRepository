@@ -245,53 +245,7 @@ import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.v2.helper.OrdersHelper;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
-import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
-import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
-import com.tisl.mpl.wsdto.CommonCouponsDTO;
-import com.tisl.mpl.wsdto.EMIBankListWsDTO;
-import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
-import com.tisl.mpl.wsdto.FetchNewsLetterSubscriptionWsDTO;
-import com.tisl.mpl.wsdto.FollowedBrandWsDto;
-import com.tisl.mpl.wsdto.GetCustomerDetailDto;
-import com.tisl.mpl.wsdto.GetOrderHistoryListWsDTO;
-import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
-import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
-import com.tisl.mpl.wsdto.GetWishListWsDTO;
-import com.tisl.mpl.wsdto.GetmerchantWsDTO;
-import com.tisl.mpl.wsdto.GigyaWsDTO;
-import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
-import com.tisl.mpl.wsdto.MplAllFavouritePreferenceWsDTO;
-import com.tisl.mpl.wsdto.MplFollowedBrandsWsDto;
-import com.tisl.mpl.wsdto.MplOrderNotificationWsDto;
-import com.tisl.mpl.wsdto.MplOrderTrackingNotificationsListWsDto;
-import com.tisl.mpl.wsdto.MplPreferenceDataForMobile;
-import com.tisl.mpl.wsdto.MplPreferenceListWsDto;
-import com.tisl.mpl.wsdto.MplRegistrationResultWsDto;
-import com.tisl.mpl.wsdto.MplUserResultWsDto;
-import com.tisl.mpl.wsdto.NetBankingListWsDTO;
-import com.tisl.mpl.wsdto.NetBankingWsDTO;
-import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
-import com.tisl.mpl.wsdto.OrderDataWsDTO;
-import com.tisl.mpl.wsdto.OrderProductWsDTO;
-import com.tisl.mpl.wsdto.ParentChildReason;
-import com.tisl.mpl.wsdto.QuickDropStoresList;
-import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
-import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
-import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
-import com.tisl.mpl.wsdto.ReturnModesWsDTO;
-import com.tisl.mpl.wsdto.ReturnPincodeDTO;
-import com.tisl.mpl.wsdto.ReturnReasonDTO;
-import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
-import com.tisl.mpl.wsdto.ReturnRequestDTO;
-import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
-import com.tisl.mpl.wsdto.SubReasonsMap;
-import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
-import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
-import com.tisl.mpl.wsdto.UserLoginResultWsDto;
-import com.tisl.mpl.wsdto.UserResultWsDto;
-import com.tisl.mpl.wsdto.ValidateOtpWsDto;
-import com.tisl.mpl.wsdto.WalletPaymentWsDTO;
-import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
+import com.tisl.mpl.wsdto.*;
 
 
 /**
@@ -13575,5 +13529,139 @@ public class UsersController extends BaseCommerceController
 			return result;
 		}
 	}
+
+
+	//NU-37--Product Capsules
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{userId}/getProductCapsules", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public GetWishlistData getProductCapsules(@PathVariable final String userId) throws RequestParameterException,
+			MalformedURLException
+
+
+	{
+		final GetWishlistData wlDTO = new GetWishlistData();
+		ProductCapsulesWsDTO wldDTO = new ProductCapsulesWsDTO();
+		final List<ProductCapsulesWsDTO> wldDTOList = new ArrayList<ProductCapsulesWsDTO>();
+		OffersDTO wldpDTO = new OffersDTO();
+		List<OffersDTO> wldpDTOList = new ArrayList<OffersDTO>();
+		List<Wishlist2Model> allWishlists;
+		try
+		{
+			allWishlists = wishlistFacade.getAllWishlists();
+			LOG.debug("Step1-************************Wishlist");
+			//allWishlists = wishlistService.getWishlists();
+			if (CollectionUtils.isNotEmpty(allWishlists))
+			{
+				for (final Wishlist2Model requiredWl : allWishlists)
+				{
+					LOG.debug("Step2-************************Wishlist");
+					if (null != requiredWl)
+					{
+						LOG.debug("Step3-************************Wishlist");
+						wldDTO = new ProductCapsulesWsDTO();
+						List<Wishlist2EntryModel> entryModels = null;
+						if (null != requiredWl.getEntries())
+						{
+							entryModels = requiredWl.getEntries();
+						}
+						wldpDTOList = new ArrayList<OffersDTO>();
+						for (final Wishlist2EntryModel entryModel : entryModels)
+						{
+							LOG.debug("Step4-************************Wishlist");
+							if (entryModel.getIsDeleted() == null
+									|| (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
+							{
+								LOG.debug("Step5-************************Wishlist");
+								wldpDTO = new OffersDTO();
+								ProductData productData1 = null;
+								if (null != entryModel.getProduct())
+								{
+									productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+											ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+											ProductOption.STOCK, ProductOption.SELLER));
+
+
+								}
+								LOG.debug("Step6-************************Wishlist");
+
+								if (null != productData1 && null != productData1.getImages())
+								{
+									//Set product image(thumbnail) url
+									for (final ImageData img : productData1.getImages())
+									{
+										if (null != img && StringUtils.isNotEmpty(img.getFormat())
+
+										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
+										{
+											wldpDTO.setImageURL(img.getUrl());
+										}
+										else if (null != img && StringUtils.isNotEmpty(img.getFormat())
+												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
+										{
+
+											wldpDTO.setImageURL(img.getUrl());
+										}
+
+										if (null != img && StringUtils.isNotEmpty(img.getFormat())
+
+										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
+										{
+											wldpDTO.setImageURL(img.getUrl());
+										}
+										else if (null != img && StringUtils.isNotEmpty(img.getFormat())
+												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
+										{
+
+											wldpDTO.setAppURL(img.getUrl());
+										}
+
+									}
+								}
+							}
+
+						}
+						wldpDTOList.add(wldpDTO);
+					}
+
+					wldDTOList.add(wldDTO);
+				}
+			}
+			wlDTO.setWishlistData(wldDTOList);
+
+			wlDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				wlDTO.setError(e.getErrorMessage());
+			}
+			wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				wlDTO.setError(e.getErrorMessage());
+			}
+			wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				wlDTO.setError(e.getMessage());
+			}
+			wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return wlDTO;
+
+	}//End of Get all Wish List data.
 
 }
