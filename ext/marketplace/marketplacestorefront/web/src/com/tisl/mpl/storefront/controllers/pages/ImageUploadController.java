@@ -23,7 +23,6 @@ import de.hybris.platform.util.CSVReader;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -161,7 +160,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			final MultipartHttpServletRequest request) throws ServletException, IOException
 	{
 
-		final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
+
 		final JSONArray ja = new JSONArray();
 		final StringBuilder stringBuilder = new StringBuilder();
 		final List<String> list = new ArrayList<String>();
@@ -190,16 +189,15 @@ public class ImageUploadController extends AbstractMplSearchPageController
 					}
 				}
 			}
-			if (null != request.getParameterValues("name1"))
+			if (null != request.getParameterValues("folderName"))
 			{
-
-				uploadFolderName = request.getParameterValues("name1")[0];
+				uploadFolderName = request.getParameterValues("folderName")[0];
 			}
 			else
 			{
 				uploadFolderName = "root";
 			}
-			File f = new File("");
+			//File f = new File("");
 			for (final MultipartFile files : file)
 			{
 				if (files.isEmpty())
@@ -209,13 +207,13 @@ public class ImageUploadController extends AbstractMplSearchPageController
 				try
 				{
 					final byte[] bytes = files.getBytes();
-					final Path path = Paths.get(fileUploadLocation + files.getOriginalFilename());
-					f = new File(fileUploadLocation + files.getOriginalFilename());
+					final Path path = Paths.get(fileUploadLocation + "/" + files.getOriginalFilename());
+					//f = new File(fileUploadLocation + files.getOriginalFilename());
 					Files.write(path, bytes);
 					stringBuilder.append(
-							";" + f.getName() + ";;image/jpg;;" + siteResource + f.getAbsolutePath() + ";" + uploadFolderName + ";/n");
-					LOG.info("Upload File Path" + f.getAbsolutePath());
-					list.add(f.getName());
+							";" + files.getOriginalFilename() + ";;image/jpg;;" + siteResource + path + ";" + uploadFolderName + ";/n");
+					LOG.info("Upload File Path" + path);
+					list.add(files.getOriginalFilename());
 				}
 				catch (final IOException e)
 				{
@@ -247,6 +245,7 @@ public class ImageUploadController extends AbstractMplSearchPageController
 			}
 			for (final String object : list)
 			{
+				final org.json.simple.JSONObject jObject = new org.json.simple.JSONObject();
 				final Media mediaData = getMediaByCode(object);
 				jObject.put("imageName", mediaData.getCode());
 				final String array[] = mediaData.getURL().toString().split("\\.");
