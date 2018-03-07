@@ -13636,8 +13636,8 @@ public class UsersController extends BaseCommerceController
 
 	{
 		final GetWishlistData wlDTO = new GetWishlistData();
-		ProductCapsulesWsDTO wldDTO = new ProductCapsulesWsDTO();
-		final List<ProductCapsulesWsDTO> wldDTOList = new ArrayList<ProductCapsulesWsDTO>();
+		ProductCapsulesDataWsDTO wldDTO = new ProductCapsulesDataWsDTO();
+		final List<ProductCapsulesDataWsDTO> wldDTOList = new ArrayList<ProductCapsulesDataWsDTO>();
 		OffersDTO wldpDTO = new OffersDTO();
 		List<OffersDTO> wldpDTOList = new ArrayList<OffersDTO>();
 		List<Wishlist2Model> allWishlists;
@@ -13650,7 +13650,7 @@ public class UsersController extends BaseCommerceController
 				{
 					if (null != requiredWl)
 					{
-						wldDTO = new ProductCapsulesWsDTO();
+						wldDTO = new ProductCapsulesDataWsDTO();
 						List<Wishlist2EntryModel> entryModels = null;
 						if (null != requiredWl.getEntries())
 						{
