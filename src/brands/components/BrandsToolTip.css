@@ -1,0 +1,75 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  background: #000;
+  position: relative;
+}
+.brandsIconHolder {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+}
+.logoHolder {
+  width: 80%;
+  height: 60%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  background-repeat: no-repeat;
+}
+.toolTip {
+  width: 130px;
+  height: 92px;
+  position: absolute;
+  border-radius: 2px;
+  background-color: #d8d8d8;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  left: 14.6%;
+  top: 14.6%;
+  transform: translateX(50%)translateY(50%) scale(0);
+  transform-origin: left top;
+  transition: 300ms;
+}
+.base:nth-child(3n + 3) .toolTip {
+  left: initial;
+  right: 14.6%;
+}
+.openToolTip {
+  composes: toolTip;
+  transform: translateX(50%)translateY(50%) scale(1);
+}
+.optionList {
+  width: 100%;
+  height: 46px;
+  line-height: 46px;
+  color: #000000;
+  font-size: 14px;
+  text-align: center;
+  border-bottom: 1px solid #979797;
+}
+.toolTip::after {
+  content: " ";
+  width: 0px;
+  height: 0px;
+  border-left: 0px solid transparent;
+  border-right: 16px solid transparent;
+  border-top: 30px solid #d8d8d8;
+  position: absolute;
+  left: -20%;
+  margin-left: 5px;
+  top: -7px;
+  transform: rotate(90deg);
+}
+
+.optionList:last-child {
+  border-bottom: none;
+}
