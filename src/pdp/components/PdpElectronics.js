@@ -132,7 +132,7 @@ export default class PdpElectronics extends React.Component {
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
         >
-          <ProductGalleryMobile>
+          <ProductGalleryMobile isElectronics={true}>
             {mobileGalleryImages.map((val, idx) => {
               return <Image image={val} key={idx} />;
             })}
