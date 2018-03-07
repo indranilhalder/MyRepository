@@ -1,6 +1,10 @@
 import React from "react";
 import Map from "../../general/components/Map";
 import MarkerStore from "./MarkerStore";
+import InformationHeader from "../../general/components/InformationHeader";
+import BannerMobile from "../../general/components/BannerMobile";
+import PickUpLocation from "./PickUpLocation";
+import SearchLocationByPincode from "./SearchLocationByPincode";
 import styles from "./PiqPage.css";
 
 export default class PiqPage extends React.Component {
@@ -168,6 +172,40 @@ export default class PiqPage extends React.Component {
               image="https://lh3.googleusercontent.com/UMB2HRRRAAzXAEaCM9Gg-baCaDx_1RTXHscW5k2Ge3P4KP4mwTt2m6oyEHBWex3c4SxU=w300"
             />
           </Map>
+        </div>
+        <div className={styles.header}>
+          <InformationHeader text="CLiQ and PiQ" />
+        </div>
+        <div className={styles.location}>
+          <SearchLocationByPincode
+            header="Iphone 7 Plus 128GB Jet Black "
+            pincode="400240"
+          />
+        </div>
+        <div className={styles.bannerMobileHolder}>
+          <BannerMobile>
+            {data.stores.map((val, i) => {
+              console.log(val);
+              return (
+                <PickUpLocation
+                  key={i}
+                  address={`${val.returnAddress1} ${val.returnAddress2}, `}
+                  PickUpKey="Store Timings"
+                  //  PickUpValue={val.PickUpValue}
+                  workingDays={val.mplWorkingDays}
+                  openingTime={val.mplOpeningTime}
+                  closingTime={val.mplClosingTime}
+                  address2={`${val.returnCity} ${val.returnPin}`}
+                  iconText="C"
+                  headingText={val.displayName}
+                  buttonText="Select"
+                  // onClick={() => {
+                  //   this.onMoveToNextPage(val.index);
+                  // }}
+                />
+              );
+            })}
+          </BannerMobile>
         </div>
       </div>
     );
