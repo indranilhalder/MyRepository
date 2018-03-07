@@ -1,0 +1,66 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 25px 0px;
+  border-bottom: 1px solid #ececec;
+}
+.subTotalsHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.deliverDataHolder {
+  composes: subTotalsHolder;
+}
+.discountDataHolder {
+  composes: subTotalsHolder;
+}
+.chargeHolder {
+  composes: subTotalsHolder;
+}
+.totalHolder {
+  composes: subTotalsHolder;
+}
+
+.labelText {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  color: #181818;
+  font-size: 14px;
+  font-family: regular;
+  text-align: left;
+}
+.infoText {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  color: #181818;
+  font-size: 14px;
+  text-align: right;
+  font-family: regular;
+}
+
+.labelTextTotal {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  color: #181818;
+  font-size: 14px;
+  font-family: semibold;
+  text-align: left;
+}
+.infoTextTotal {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  color: #181818;
+  padding-left: 5px;
+  font-size: 14px;
+  font-family: semibold;
+  text-align: right;
+}
