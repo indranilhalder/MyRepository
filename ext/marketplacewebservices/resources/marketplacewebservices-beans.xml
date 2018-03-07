@@ -4751,6 +4751,6 @@
 	<bean class="com.tisl.mpl.wsdto.GetWishlistData" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="wishlistData" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesDataWsDTO>" />
 		<property name="delistedMessage" type="String" />
-	</bean>
+	</bean> 
 	
 </beans>
