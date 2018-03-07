@@ -100,6 +100,7 @@ export default class PdpElectronics extends React.Component {
     }
   };
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -134,7 +135,9 @@ export default class PdpElectronics extends React.Component {
         >
           <ProductGalleryMobile isElectronics={true}>
             {mobileGalleryImages.map((val, idx) => {
-              return <Image image={val} key={idx} />;
+              return (
+                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+              );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
