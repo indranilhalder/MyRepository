@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./ProfilePicture.css";
 import { ProfileImage } from "xelpmoc-core";
-import editIcon from "../../general/components/img/checkbox-tick.svg";
+import editIcon from "../../general/components/img/tick.svg";
 import PropTypes from "prop-types";
 import { Icon } from "xelpmoc-core";
 export default class ProfilePicture extends React.Component {

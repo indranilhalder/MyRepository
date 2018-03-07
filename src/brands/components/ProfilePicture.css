@@ -30,12 +30,12 @@
   position: absolute;
   right: 14.6%;
   top: 14.6%;
-  transform: translateX(50%) translateY(-50%);
-  opacity: 0;
+  transform: translateX(50%) translateY(-50%)scale(0);
+  transition: 300ms;
 }
 .onEdit {
   composes: edit;
-  opacity: 1;
+  transform: translateX(50%) translateY(-50%) scale(1);
 }
 .nameOfProfileHolder {
   width: 100%;
