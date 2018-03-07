@@ -632,5 +632,50 @@
 					</attributes>
 		</itemtype>		
 
+
+<itemtype code="Product" autocreate="false" generate="false">
+				<description>Extending the Product type from core with additional attributes.</description>
+				<attributes>
+			
+					<attribute qualifier="candleburntimehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="candletypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="artpiecetypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="glasstypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="accessorytypehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="sofaupholstryhome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="numberofchairshome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="assemblyrequiredhome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="tabletopshapehome" type="java.lang.String">
+						<persistence type="property" />
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+			
+			
 	</itemtypes>
 </items>

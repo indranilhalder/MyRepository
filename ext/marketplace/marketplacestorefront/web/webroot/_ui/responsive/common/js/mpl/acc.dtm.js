@@ -932,8 +932,9 @@ $(document).ready(function(){
     		_satellite.track('cpj_checkout_proceed_to_address');
     	}	
     }
-    _satellite.pageBottom();
-  
+    if (typeof(_satellite) != "undefined") {
+    	_satellite.pageBottom();
+    }
 });
 //SDI-1103
 function getIcid2FromUrl()

@@ -8,7 +8,7 @@
 <c:url value="/cart/rollover/Luxury-MiniCart" var="rolloverPopupUrl"/>
 <c:url value="/cart" var="cartUrl"/>
 
-<!-- <li class="transient-mini-bag"></li> -->
+<li class="transient-mini-bag"></li>
 				<li class="bag">
 				My bag
 				<a href="${cartUrl}" 
