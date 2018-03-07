@@ -327,7 +327,7 @@ public class ForgottenPasswordsController extends BaseController
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0017);
 				}
 				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				result.setMessage("Password has been updated successfuly");
+				result.setMessage("Password has been updated successfully");
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
