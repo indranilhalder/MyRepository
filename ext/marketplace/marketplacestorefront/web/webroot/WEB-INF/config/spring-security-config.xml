@@ -75,6 +75,8 @@
 	<!-- Default security config -->
 	<security:http disable-url-rewriting="true"  request-matcher-ref="excludeUrlRequestMatcher" use-expressions="true">
 		<security:anonymous username="anonymous" granted-authority="ROLE_ANONYMOUS" />
+		<security:anonymous username="admingroup" granted-authority="ROLE_ADMINGROUP" />
+		
 		<security:access-denied-handler error-page="/login"/>
 
 		<security:session-management session-authentication-strategy-ref="fixation" />
