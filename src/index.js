@@ -14,7 +14,6 @@ import search from "../src/search/reducers/search.reducer";
 import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
 import productDescription from "./pdp/reducers/pdp.reducer";
-import brandDetails from "./brands/reducers/brand.reducers";
 import cart from "./cart/reducers/cart.reducer";
 
 import "babel-polyfill";
@@ -26,8 +25,7 @@ const rootReducer = combineReducers({
   productListings,
   productDescription,
   search,
-  cart,
-  brandDetails
+  cart
 });
 
 let store = createStore(
