@@ -9,8 +9,6 @@ const typeComponentMapping = {
 
 export default class PaymentCardWrapper extends React.Component {
   renderPaymentCard = datumType => {
-    console.log(datumType);
-    console.log(this.props);
     return (
       <React.Fragment>
         {typeComponentMapping[datumType] &&
