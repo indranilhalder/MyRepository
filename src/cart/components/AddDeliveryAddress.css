@@ -1,0 +1,81 @@
+.base {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: #fff;
+  padding: 15px 0;
+}
+
+.dropDownHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+  margin-top: 15px;
+  padding-left: 25%;
+}
+.fullNameBox {
+  height: auto;
+  display: inline-block;
+  border: none;
+  width: 100%;
+}
+.dropDownBox {
+  width: 25%;
+  height: 35px;
+  display: inline-block;
+  border: none;
+  position: absolute;
+  left: 0;
+  border-top: 1px solid #d2d2d2;
+  border-bottom: 1px solid #d2d2d2;
+  border-left: 1px solid #d2d2d2;
+  border-radius: 2px 0 2px 0;
+}
+.content {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  font-family: regular;
+  display: inline-block;
+  margin-top: 15px;
+  padding: 0 15px;
+}
+
+.textHolder {
+  height: auto;
+  display: inline-block;
+  border: none;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.defaultText {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  border-top: 1px solid #ececec;
+  padding: 15px 15px 0 15px;
+}
+.button {
+  width: auto;
+  position: absolute;
+  right: 15px;
+  line-height: 16px;
+  top: 0px;
+}
+.addressInnerBox {
+  width: 100%;
+  height: auto;
+  position: relative;
+  padding: 0px 65px 0px 15px;
+}
+.headingText {
+  width: 100%;
+  color: #000000;
+  font-size: 16px;
+  font-family: semibold;
+  margin: auto;
+  text-align: left;
+  line-height: 25px;
+}

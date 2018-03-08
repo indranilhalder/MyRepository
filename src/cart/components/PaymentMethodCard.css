@@ -1,0 +1,69 @@
+.base{
+  width:100%;
+  height:auto;
+  background:#fff;
+  border-radius:4px;
+  display:inline-block;
+}
+.paymentDataHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  padding:15px;
+  border-bottom:1px solid #ececec;
+}
+.paymentHeader{
+  width:100%;
+  height:auto;
+  display:inline-block;
+}
+.spaceBetween{
+  composes:paymentHeader;
+  margin-bottom:25px;
+}
+.cashBalanceHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+  margin-bottom:5px;
+}
+.cashBalanceTextHolder{
+  width:70%;
+  height:auto;
+  display:inline-block;
+  vertical-align:top;
+}
+.casBalanceText{
+  width:100%;
+  height:auto;
+  font-size:14px;
+  color:#000000;
+  font-family:regular;
+  margin-bottom:5px;
+}
+.cashRupyText{
+  width:100%;
+  height:auto;
+  color:#9b9b9b;
+  font-size:12px;
+  font-family:regular;
+}
+.toggleButtonHolder{
+  width:30%;
+  height:100%;
+  display:inline-block;
+  vertical-align: -webkit-baseline-middle;
+  text-align: right;
+}
+.toggleButton{
+  width:50px;
+  height:22px;
+  display:inline-block;
+  vertical-align:middle;
+}
+.dropdownHolder{
+  width:100%;
+  height:auto;
+  display:inline-block;
+
+}

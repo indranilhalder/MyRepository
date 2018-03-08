@@ -1,0 +1,9 @@
+.base {
+  width: auto;
+  position: relative;
+  user-select: none;
+  padding-bottom: 5px;
+  color: #212121;
+  font-size: 14px;
+  font-family: regular;
+}

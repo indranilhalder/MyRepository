@@ -3,13 +3,26 @@ import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import ProductImageHeader from "../../general/components/ProductImageHeader";
 import { transformData } from "./utils.js";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class BannerProductCarousal extends React.Component {
   handleClick() {
-    this.props.history.push(PRODUCT_LISTINGS);
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
+  }
+
+  componentDidUpdate() {
+    const data = this.props.feedComponentData;
+    if (data.items.length === 0 && data.itemIds && data.itemIds.length > 0) {
+      this.props.getItems(this.props.positionInFeed, data.itemIds);
+    }
   }
   render() {
-    const feedComponentData = this.props.feedComponentData.data;
+    const feedComponentData = this.props.feedComponentData;
+
     let data = [];
     if (feedComponentData.items) {
       data = feedComponentData.items.map(transformData);

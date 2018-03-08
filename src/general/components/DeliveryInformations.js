@@ -2,17 +2,35 @@ import React from "react";
 import IconWithHeader from "./IconWithHeader";
 import styles from "./DeliveryInformations.css";
 import UnderLinedButton from "./UnderLinedButton";
+import CheckBox from "./CheckBox";
 import PropTypes from "prop-types";
+import { Icon } from "xelpmoc-core";
 import ExpressImage from "./img/expressDelivery.svg";
 import HomeImage from "./img/homeDelivery.svg";
+import arrowIcon from "./img/arrowBackblack.svg";
 import CollectImage from "./img/collect.svg";
 const EXPRESS = "express-delivery";
 const COLLECT = "click-and-collect";
 
-export default class DeliveryInformation extends React.Component {
+export default class DeliveryInformations extends React.Component {
   handleClick() {
     if (this.props.onClick) {
       this.props.onClick();
+    }
+  }
+  handleSelect() {
+    if (this.props.onSelect) {
+      this.props.onSelect(this.props.type);
+    }
+  }
+  arrowClick() {
+    if (this.props.arrowClick) {
+      this.props.arrowClick();
+    }
+  }
+  onPiq() {
+    if (this.props.onPiq) {
+      this.props.onPiq();
     }
   }
   render() {
@@ -24,6 +42,26 @@ export default class DeliveryInformation extends React.Component {
     }
     return (
       <div className={styles.base}>
+        {this.props.onSelect &&
+          this.props.type !== COLLECT && (
+            <div
+              className={styles.checkboxHolder}
+              onClick={() => {
+                this.handleSelect();
+              }}
+            >
+              <CheckBox selected={this.props.selected} />
+            </div>
+          )}
+        {this.props.arrowClick &&
+          this.props.type === COLLECT && (
+            <div
+              className={styles.arrowHolder}
+              onClick={() => this.arrowClick()}
+            >
+              <Icon image={arrowIcon} size={20} />
+            </div>
+          )}
         <IconWithHeader image={iconImage} header={this.props.header}>
           {this.props.placedTime && (
             <div className={styles.placeTime}>{this.props.placedTime}</div>
@@ -34,31 +72,33 @@ export default class DeliveryInformation extends React.Component {
               <span className={styles.text}>{this.props.textHeading}</span>
             </div>
           )}
-          {this.props.deliveryOptions ||
-            (this.props.label && (
-              <div className={styles.placeTime}>
-                <span>{this.props.deliveryOptions}</span>
-                <span className={styles.buttonHolder}>
-                  <UnderLinedButton
-                    label={this.props.label}
-                    onClick={() => {
-                      this.handleClick();
-                    }}
-                  />
-                </span>
-              </div>
-            ))}
+
+          {this.props.type === COLLECT && (
+            <div className={styles.underLineButtonHolder}>
+              <span className={styles.buttonHolderPiq}>
+                <UnderLinedButton
+                  size="14px"
+                  fontFamily="regular"
+                  color="#ff1744"
+                  label="Check for pick up options"
+                  onClick={() => this.onPiq()}
+                />
+              </span>
+            </div>
+          )}
         </IconWithHeader>
       </div>
     );
   }
 }
-DeliveryInformation.propTypes = {
+DeliveryInformations.propTypes = {
   image: PropTypes.string,
   text: PropTypes.string,
   heading: PropTypes.string,
   type: PropTypes.string,
   color: PropTypes.string,
   deliveryOptions: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  arrowClick: PropTypes.func,
+  onPiq: PropTypes.func
 };

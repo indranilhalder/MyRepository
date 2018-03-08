@@ -9,6 +9,8 @@ import AddressModal from "../../plp/components/AddressModal";
 import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
+import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -88,6 +90,14 @@ export default class ModalRoot extends React.Component {
       Coupons: (
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
+          {...this.props.ownProps}
+        />
+      ),
+      BankOffers: (
+        <BankOffersDetails
+          closeModal={() => this.handleClose()}
+          applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
+          releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
           {...this.props.ownProps}
         />
       ),

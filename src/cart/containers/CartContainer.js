@@ -1,28 +1,23 @@
 import { connect } from "react-redux";
 import {
-  getUserCart,
   applyCoupon,
   getUserAddress,
-  selectDeliveryModes,
+  getCoupons,
   getEmiBankDetails,
   getNetBankDetails,
-  getCartDetails
+  getCartDetails,
+  checkPinCodeServiceAvailability
 } from "../actions/cart.actions.js";
 import { withRouter } from "react-router-dom";
 import CartPage from "../components/CartPage";
+import { PRODUCT_COUPONS, showModal } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getUserCart: () => {
-      dispatch(getUserCart());
-    },
     applyCoupon: couponDetails => {
       dispatch(applyCoupon(couponDetails));
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
-    },
-    selectDeliveryModes: deliverModes => {
-      dispatch(selectDeliveryModes(deliverModes));
     },
     getNetBankDetails: () => {
       dispatch(getNetBankDetails());
@@ -30,8 +25,17 @@ const mapDispatchToProps = dispatch => {
     getEmiBankDetails: cartDetails => {
       dispatch(getEmiBankDetails(cartDetails));
     },
-    getCartDetails: () => {
-      dispatch(getCartDetails());
+    getCartDetails: (cartId, userId, accessToken) => {
+      dispatch(getCartDetails(cartId, userId, accessToken));
+    },
+    showCouponModal: data => {
+      dispatch(showModal(PRODUCT_COUPONS, data));
+    },
+    checkPinCodeServiceAvailability: (userName, accessToken, pinCode) => {
+      dispatch(checkPinCodeServiceAvailability(userName, accessToken, pinCode));
+    },
+    getCoupons: () => {
+      dispatch(getCoupons());
     }
   };
 };

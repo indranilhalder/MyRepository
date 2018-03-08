@@ -6,31 +6,47 @@ import Auth from "./auth/components/MobileAuth.js";
 import HomeContainer from "./home/containers/HomeContainer.js";
 import ProductListingsContainer from "./plp/containers/ProductListingsContainer";
 import ProductDescriptionContainer from "./pdp/containers/ProductDescriptionContainer";
+import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import ProductReviewContainer from "./pdp/containers/ProductReviewContainer";
 import LoginContainer from "./auth/containers/LoginContainer";
 import SignUpContainer from "./auth/containers/SignUpContainer.js";
 import FilterContainer from "./plp/containers/FilterContainer";
 import ProductSellerContainer from "./pdp/containers/ProductSellerContainer";
+import CheckoutAddressContainer from "./cart/containers/CheckoutAddressContainer";
 import CartContainer from "./cart/containers/CartContainer";
+import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
+import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
+import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
+import CheckOutContainer from "./cart/containers/CheckOutContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
-  PRODUCT_DESCRIPTION_ROUTER,
   MAIN_ROUTER,
   PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
   SIGN_UP_PATH,
+  PRODUCT_DELIVERY_ADDRESSES,
   PRODUCT_FILTER_ROUTER,
   PRODUCT_SELLER_ROUTER,
-  PRODUCT_CART_ROUTER
-} from "../src/lib/constants";
-import {
+  PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
-  REFRESH_TOKEN
-} from "./lib/constants.js";
+  REFRESH_TOKEN,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS,
+  LOGGED_IN_USER_DETAILS,
+  PRODUCT_CART_DELIVERY_MODES,
+  SEARCH_RESULTS_PAGE,
+  BRAND_OR_CATEGORY_LANDING_PAGE,
+  ORDER_SUMMARY_ROUTER,
+  CHECKOUT_ROUTER,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
+  PLP_CATEGORY_SEARCH
+} from "../src/lib/constants";
+import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -57,16 +73,37 @@ class App extends Component {
   }
 
   getAccessToken = () => {
-    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-    if (!globalCookie) {
+    let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let cartIdForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let loggedInUserDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    let cartDetailsForLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    if (!globalAccessToken) {
       this.props.getGlobalAccessToken();
+      if (!cartIdForAnonymous) {
+        this.props.generateCartIdForAnonymous();
+      }
     }
-    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (!customerCookie && localStorage.getItem(REFRESH_TOKEN)) {
+
+    if (!customerAccessToken && localStorage.getItem(REFRESH_TOKEN)) {
       this.props.refreshToken(localStorage.getItem(REFRESH_TOKEN));
+      if (!loggedInUserDetails) {
+        this.props.generateCartIdForLoggedInUser();
+      }
     }
-    if (customerCookie) {
+
+    if (customerAccessToken) {
       auth.isAuthenticated = true;
+      if (!cartDetailsForLoggedInUser) {
+        this.props.generateCartIdForLoggedInUser();
+      }
+    } else {
+      if (!cartDetailsForAnonymous && globalAccessToken) {
+        this.props.generateCartIdForAnonymous();
+      }
     }
   };
 
@@ -100,11 +137,33 @@ class App extends Component {
               <SignUpContainer {...routeProps} {...this.props} />
             )}
           />
+
+          <Route
+            exact
+            path={SEARCH_RESULTS_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+          <Route
+            path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
+          />
+
+          <Route
+            path={PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE}
+            component={ProductDescriptionPageWrapperContainer}
+          />
+          <Route
+            exact
+            path={BRAND_OR_CATEGORY_LANDING_PAGE}
+            component={PlpBrandCategoryWrapperContainer}
+          />
+
           <Route
             exact
             path={PRODUCT_LISTINGS}
             component={ProductListingsContainer}
           />
+
           <Route exact path={HOME_ROUTER} component={HomeContainer} />
           <Route
             exact
@@ -112,10 +171,6 @@ class App extends Component {
             render={routeProps => <Auth {...routeProps} {...this.props} />}
           />
 
-          <Route
-            path={PRODUCT_DESCRIPTION_ROUTER}
-            component={ProductDescriptionContainer}
-          />
           <Route
             exact
             path={PRODUCT_REVIEW_ROUTER}
@@ -132,6 +187,22 @@ class App extends Component {
             path={PRODUCT_SELLER_ROUTER}
             component={ProductSellerContainer}
           />
+          <Route
+            exact
+            path={PRODUCT_DELIVERY_ADDRESSES}
+            component={CheckoutAddressContainer}
+          />
+          <Route
+            exact
+            path={PRODUCT_CART_DELIVERY_MODES}
+            component={DeliveryModesContainer}
+          />
+          <Route
+            exact
+            path={ORDER_SUMMARY_ROUTER}
+            component={DisplayOrderSummaryContainer}
+          />
+          <Route exact path={CHECKOUT_ROUTER} component={CheckOutContainer} />
           <Route exact path={PRODUCT_CART_ROUTER} component={CartContainer} />
         </Switch>
         <ModalContainer />

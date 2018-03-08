@@ -16,7 +16,7 @@ export default class FollowingBrands extends React.Component {
   }
 
   render() {
-    const followWidgetData = this.props.feedComponentData.data;
+    const followWidgetData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
         <Carousel

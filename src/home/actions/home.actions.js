@@ -1,4 +1,13 @@
-import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import { SUCCESS, REQUESTING, ERROR, FAILURE } from "../../lib/constants";
+import each from "lodash/each";
+import {
+  MSD_NUM_RESULTS,
+  MAD_UUID,
+  MSD_WIDGET_LIST,
+  MSD_WIDGET_PLATFORM,
+  MSD_API_KEY
+} from "../../lib/config.js";
+
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
@@ -14,6 +23,60 @@ export const MULTI_SELECT_SUBMIT_FAILURE = "MULTI_SELECT_SUBMIT_FAILURE";
 export const HOME_FEED_PATH = "homepage";
 export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
 export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
+
+export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
+export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
+export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
+
+const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+
+export function getItemsRequest(positionInFeed) {
+  return {
+    type: GET_ITEMS_REQUEST,
+    positionInFeed,
+    status: REQUESTING
+  };
+}
+
+export function getItemsSuccess(positionInFeed, items) {
+  return {
+    type: GET_ITEMS_SUCCESS,
+    status: SUCCESS,
+    items,
+    positionInFeed
+  };
+}
+
+export function getItemsFailure(positionInFeed, errorMsg) {
+  return {
+    type: GET_ITEMS_FAILURE,
+    errorMsg,
+    status: FAILURE
+  };
+}
+
+export function getItems(positionInFeed, itemIds, isPdp: false) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getItemsRequest(positionInFeed));
+    try {
+      let productCodes;
+      each(itemIds, itemId => {
+        productCodes = `${itemId},${productCodes}`;
+      });
+      const url = `v2/mpl/products/productInfo?productCodes=${productCodes}`;
+      const result = await api.get(url);
+
+      const resultJson = await result.json();
+      if (resultJson.status === "FAILURE") {
+        throw new Error(`${resultJson.message}`);
+      }
+
+      dispatch(getItemsSuccess(positionInFeed, resultJson.results));
+    } catch (e) {
+      dispatch(getItemsFailure(positionInFeed, e.message));
+    }
+  };
+}
 
 export function multiSelectSubmitRequest(positionInFeed) {
   return {
@@ -130,13 +193,22 @@ export function homeFeed() {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
-      const result = await api.getMock(HOME_FEED_PATH);
+      //TODO this needs to be cleaned up.
+      const result = await api.postAdobeTargetUrl(
+        null,
+        ADOBE_TARGET_HOME_FEED_MBOX_NAME,
+        null,
+        null,
+        true
+      );
       const resultJson = await result.json();
       if (resultJson.status === "FAILURE") {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(homeFeedSuccess(resultJson.items));
+      let parsedResultJson = JSON.parse(resultJson.content);
+      parsedResultJson = parsedResultJson.items;
+      dispatch(homeFeedSuccess(parsedResultJson));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }
@@ -151,12 +223,13 @@ export function componentDataRequest(positionInFeed) {
   };
 }
 
-export function componentDataSuccess(data, positionInFeed) {
+export function componentDataSuccess(data, positionInFeed, isMsd: false) {
   return {
     type: COMPONENT_DATA_SUCCESS,
     status: SUCCESS,
     data,
-    positionInFeed
+    positionInFeed,
+    isMsd
   };
 }
 
@@ -169,19 +242,45 @@ export function componentDataFailure(positionInFeed, error) {
   };
 }
 
-export function getComponentData(positionInFeed, fetchURL) {
+export function getComponentData(positionInFeed, fetchURL, postParams: null) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
     try {
-      const result = await api.getMock(
-        fetchURL.substring(fetchURL.lastIndexOf("/") + 1)
-      );
-      const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
-      }
+      let postData;
+      let result;
+      if (postParams && postParams.widgetPlatform === MSD_WIDGET_PLATFORM) {
+        postData = {
+          ...postParams,
+          api_key: MSD_API_KEY,
+          num_results: MSD_NUM_RESULTS,
+          mad_uuid: MAD_UUID,
+          widget_list: MSD_WIDGET_LIST //TODO this is going to change.
+        };
 
-      dispatch(componentDataSuccess(resultJson, positionInFeed));
+        result = await api.post(fetchURL, postData, true);
+        let resultJson = await result.json();
+        if (resultJson.status === "FAILURE") {
+          throw new Error(`${resultJson.message}`);
+        }
+        dispatch(componentDataSuccess(resultJson, positionInFeed, true));
+      } else {
+        result = await api.postAdobeTargetUrl(
+          fetchURL,
+          postParams && postParams.mbox ? postParams.mbox : null,
+          null,
+          null,
+          false
+        );
+        const resultJson = await result.json();
+        if (resultJson.status === "FAILURE") {
+          throw new Error(`${resultJson.message}`);
+        }
+
+        let parsedResultJson = JSON.parse(resultJson.content);
+        parsedResultJson = parsedResultJson.items[0];
+
+        dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
+      }
     } catch (e) {
       dispatch(componentDataFailure(positionInFeed, e.message));
     }

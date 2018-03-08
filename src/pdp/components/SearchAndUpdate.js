@@ -6,10 +6,15 @@ import gpsIcon from "../../general/components/img/GPS.svg";
 import { Icon, CircleButton } from "xelpmoc-core";
 import styles from "./SearchAndUpdate.css";
 export default class SearchAndUpdate extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pinCode: null
+    };
+  }
   getValue(val) {
-    if (this.props.getValue) {
-      this.props.getValue(val);
-    }
+    this.setState({ pinCode: val });
+    this.props.getPinCode(val);
   }
   handleClick() {
     if (this.props.getLocation) {
@@ -17,8 +22,8 @@ export default class SearchAndUpdate extends React.Component {
     }
   }
   onUpdate() {
-    if (this.props.onUpdate) {
-      this.props.onUpdate();
+    if (this.props.checkPinCodeAvailability) {
+      this.props.checkPinCodeAvailability(this.state.pinCode);
     }
   }
   render() {

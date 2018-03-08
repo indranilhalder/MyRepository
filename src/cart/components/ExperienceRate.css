@@ -1,0 +1,25 @@
+.base {
+  width: 36px;
+  height: 36px;
+  display: inline-block;
+  margin-right: 20px;
+}
+.iconHolder {
+  width: 36px;
+  height: 36px;
+  position: relative;
+  display: inline-block;
+}
+.hiddenIcon {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.active {
+  composes: hiddenIcon;
+  opacity: 1;
+}

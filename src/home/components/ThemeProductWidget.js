@@ -5,12 +5,13 @@ import Logo from "../../general/components/Logo";
 import PropTypes from "prop-types";
 import styles from "./ThemeProductWidget.css";
 import { PRODUCT_LISTINGS } from "../../lib/constants";
+import { transformData } from "./utils.js";
 export default class ThemeProductWidget extends React.Component {
   handleClick() {
     this.props.history.push(PRODUCT_LISTINGS);
   }
   render() {
-    const data = this.props.feedComponentData.data;
+    const data = transformData(this.props.feedComponentData);
     return (
       <div
         className={styles.base}

@@ -8,6 +8,15 @@ import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
 import HollowHeader from "./HollowHeader";
 import { MOBILE_PDP_VIEW } from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
+import {
+  CUSTOMER_ACCESS_TOKEN,
+  LOGGED_IN_USER_DETAILS,
+  GLOBAL_ACCESS_TOKEN,
+  CART_DETAILS_FOR_ANONYMOUS,
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  ANONYMOUS_USER
+} from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 
 class ProductDescriptionPage extends Component {
@@ -28,11 +37,24 @@ class ProductDescriptionPage extends Component {
     }
   };
   addProductToBag = () => {
-    if (this.props.addProductToBag) {
-      let productDetails = {};
-      productDetails.listingId = this.props.productDetails.productListingId;
-      this.props.addProductToBag(productDetails);
+    let productDetails = {};
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+    let cartDetailsLoggedInUser = Cookie.getCookie(
+      CART_DETAILS_FOR_LOGGED_IN_USER
+    );
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+    if (userDetails) {
+      productDetails.userId = JSON.parse(userDetails).customerInfo.mobileNumber;
+      productDetails.accessToken = JSON.parse(customerCookie).access_token;
+      productDetails.cartId = JSON.parse(cartDetailsLoggedInUser).code;
+    } else {
+      productDetails.userId = ANONYMOUS_USER;
+      productDetails.accessToken = JSON.parse(globalCookie).access_token;
+      productDetails.cartId = JSON.parse(cartDetailsForAnonymous).guid;
     }
+    this.props.addProductToCart(productDetails);
   };
   addProductToWishList = () => {
     if (this.props.addProductToWishList) {

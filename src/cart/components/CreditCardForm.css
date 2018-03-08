@@ -1,0 +1,92 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  padding: 0 20px;
+}
+.cardDetails {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.content {
+  width: 100%;
+  height: auto;
+  line-height: 24px;
+  font-size: 14px;
+  font-family: regular;
+  padding-bottom: 20px;
+  display: inline-block;
+}
+.payCardHolder {
+  width: 100%;
+  height: auto;
+  position: relative;
+  margin-top: 20px;
+}
+.cardFooterText {
+  width: 48%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+}
+.cardCvvTextHolder {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  left: 0px;
+  right: 0px;
+  border-radius: 2px;
+}
+.cardFooterInput {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+}
+.buttonHolder {
+  width: auto;
+  height: auto;
+  position: absolute;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+}
+.saveCardText {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin: 20px 0px;
+  padding-left: 25px;
+  position: relative;
+}
+.checkCircle {
+  width: 25px;
+  height: auto;
+  left: 0;
+  top: 0;
+  position: absolute;
+}
+.saveText {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin: auto;
+  position: relative;
+  font-size: 14px;
+  color: #8d8d8d;
+}
+.dropDownHolder {
+  width: 100%;
+  height: 35px;
+  display: inline-block;
+  border: 1px solid #d2d2d2;
+}
+.dropDownBox {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  border: none;
+}
+.dropDownBox:first-child {
+  border-right: 1px solid #d2d2d2;
+}
