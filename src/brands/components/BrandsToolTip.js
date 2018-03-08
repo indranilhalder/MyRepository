@@ -4,6 +4,11 @@ import { Icon } from "xelpmoc-core";
 import styles from "./BrandsToolTip.css";
 import deleteIcon from "../../general/components/img/delete.svg";
 export default class BrandsToolTip extends React.Component {
+  handleClick() {
+    if (this.props.handleClick) {
+      this.props.handleClick();
+    }
+  }
   render() {
     let className = styles.delete;
     return (
