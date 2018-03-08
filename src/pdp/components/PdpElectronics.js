@@ -27,7 +27,8 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
@@ -47,10 +48,20 @@ export default class PdpElectronics extends React.Component {
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
+
+  goToCart = () => {
+    this.props.history.push({
+      pathname: PRODUCT_CART_ROUTER,
+      state: {
+        ProductCode: this.props.productDetails.productListingId,
+        pinCode: PIN_CODE
+      }
+    });
+  };
   addToCart = () => {
     let productDetails = {};
-    productDetails.code = this.props.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -59,6 +70,7 @@ export default class PdpElectronics extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
     if (userDetails) {
       this.props.addProductToCart(
         JSON.parse(userDetails).customerInfo.mobileNumber,
@@ -100,7 +112,6 @@ export default class PdpElectronics extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -129,15 +140,14 @@ export default class PdpElectronics extends React.Component {
     if (productData) {
       return (
         <PdpFrame
+          goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
         >
-          <ProductGalleryMobile isElectronics={true}>
+          <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
-              );
+              return <Image image={val} key={idx} />;
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>

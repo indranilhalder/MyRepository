@@ -14,14 +14,32 @@ import {
   getAllStoresCNC,
   addStoreCNC,
   addPickupPersonCNC,
-  applyCliqCash,
-  removeCliqCash
+  softReservation,
+  getPaymentModes,
+  applyBankOffer,
+  releaseBankOffer,
+  getNetBankDetails,
+  getEmiBankDetails
 } from "../actions/cart.actions";
-
+import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    getCartDetailsCNC: (userId, accessToken, cartId) => {
-      dispatch(getCartDetailsCNC(userId, accessToken, cartId));
+    getCartDetailsCNC: (
+      userId,
+      accessToken,
+      cartId,
+      pinCode,
+      isSoftReservation
+    ) => {
+      dispatch(
+        getCartDetailsCNC(
+          userId,
+          accessToken,
+          cartId,
+          pinCode,
+          isSoftReservation
+        )
+      );
     },
     getUserAddress: () => {
       dispatch(getUserAddress());
@@ -29,8 +47,8 @@ const mapDispatchToProps = dispatch => {
     addUserAddress: userAddress => {
       dispatch(addUserAddress(userAddress));
     },
-    addAddressToCart: addressId => {
-      dispatch(addAddressToCart(addressId));
+    addAddressToCart: (addressId, pinCode) => {
+      dispatch(addAddressToCart(addressId, pinCode));
     },
     getOrderSummary: () => {
       dispatch(getOrderSummary());
@@ -44,8 +62,8 @@ const mapDispatchToProps = dispatch => {
     releaseCoupon: () => {
       dispatch(releaseCoupon());
     },
-    selectDeliveryMode: (code, ussId, cartId) => {
-      dispatch(selectDeliveryMode(code, ussId, cartId));
+    selectDeliveryMode: (deliveryUssId, pinCode) => {
+      dispatch(selectDeliveryMode(deliveryUssId, pinCode));
     },
     getAllStoresCNC: pinCode => {
       dispatch(getAllStoresCNC(pinCode));
@@ -56,11 +74,26 @@ const mapDispatchToProps = dispatch => {
     addPickupPersonCNC: (personMobile, personName) => {
       dispatch(addPickupPersonCNC(personMobile, personName));
     },
-    applyCliqCash: cartGuid => {
-      dispatch(applyCliqCash(cartGuid));
+    softReservation: (pinCode, payload) => {
+      dispatch(softReservation(pinCode, payload));
     },
-    removeCliqCash(cartGuid) {
-      dispatch(removeCliqCash(cartGuid));
+    getPaymentModes: () => {
+      dispatch(getPaymentModes());
+    },
+    showCouponModal: data => {
+      dispatch(showModal(BANK_OFFERS, data));
+    },
+    applyBankOffer: couponCode => {
+      dispatch(applyBankOffer(couponCode));
+    },
+    releaseBankOffer: couponCode => {
+      dispatch(releaseBankOffer(couponCode));
+    },
+    getNetBankDetails: () => {
+      dispatch(getNetBankDetails());
+    },
+    getEmiBankDetails: () => {
+      dispatch(getEmiBankDetails());
     }
   };
 };

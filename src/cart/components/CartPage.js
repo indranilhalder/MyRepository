@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import MDSpinner from "react-md-spinner";
 import { SUCCESS } from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
+
 import {
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
@@ -14,11 +15,14 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  PRODUCT_DELIVERY_ADDRESSES,
+  CHECKOUT_ROUTER,
   LOGIN_PATH
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 class CartPage extends React.Component {
+  state = {
+    pinCode: ""
+  };
   componentDidMount() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -59,14 +63,19 @@ class CartPage extends React.Component {
   };
   renderToDeliveryPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
     if (customerCookie) {
-      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+      this.props.history.push({
+        pathname: CHECKOUT_ROUTER,
+        state: { pinCode: this.state.pinCode }
+      });
     } else {
       this.props.history.push(LOGIN_PATH);
     }
   }
 
   checkPinCodeAvailability = val => {
+    this.setState({ pinCode: val });
     if (this.props.checkPinCodeServiceAvailability) {
       let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
       let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -96,6 +105,7 @@ class CartPage extends React.Component {
           <div className={styles.content}>
             <div className={styles.search}>
               <SearchAndUpdate
+                getPinCode={val => this.setState({ pinCode: val })}
                 checkPinCodeAvailability={val =>
                   this.checkPinCodeAvailability(val)
                 }
