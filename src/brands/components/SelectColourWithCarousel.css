@@ -1,0 +1,20 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+}
+.headerHolder {
+  width: 100%;
+  height: auto;
+  font-size: 14px;
+  display: inline-block;
+  font-family: semibold;
+  padding-left: 16px;
+}
+.colourHolder {
+  width: 100%;
+  height: auto;
+  padding-top: 15px;
+  display: inline-block;
+}

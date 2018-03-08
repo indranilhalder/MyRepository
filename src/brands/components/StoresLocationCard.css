@@ -1,0 +1,49 @@
+.base {
+	width         : 100%;
+	height        : auto;
+	background    : #fff;
+	display       : inline-block;
+	position      : relative;
+	border-radius : 4px;
+	padding-bottom: 50%;
+	overflow      : hidden;
+}
+.ProductStockInnerBox {
+	width     : 100%;
+	height    : auto;
+	text-align: center;
+	bottom    : 0;
+	position  : absolute;
+	margin    : auto;
+	left      : 0;
+	padding   : 0px 10px;
+}
+.ProductStockHeading {
+	width      : 100%;
+	height     : auto;
+	color      : #fff;
+	font-size  : 30px;
+	line-height: 25px;
+	font-family: semibold;
+	text-align : left;
+}
+.ProductStockLabel {
+	width      : 100%;
+	height     : auto;
+	color      : #fff;
+	font-size  : 14px;
+	line-height: 30px;
+	text-align : left;
+}
+.productDescriptionText{
+	width:100%;
+	height:auto;
+	margin-top:10px;
+	color:#fff;
+	font-family:semibold;
+	font-size:30px;
+	word-wrap: break-word;
+	white-space: normal;
+	text-align: left;
+	padding-bottom:10px;
+}

@@ -42,21 +42,26 @@ export default class DeliveryInformations extends React.Component {
     }
     return (
       <div className={styles.base}>
-        {this.props.type !== COLLECT && (
-          <div
-            className={styles.checkboxHolder}
-            onClick={() => {
-              this.handleSelect();
-            }}
-          >
-            <CheckBox selected={this.props.selected} />
-          </div>
-        )}
-        {this.props.type === COLLECT && (
-          <div className={styles.arrowHolder} onClick={() => this.arrowClick()}>
-            <Icon image={arrowIcon} size={20} />
-          </div>
-        )}
+        {this.props.onSelect &&
+          this.props.type !== COLLECT && (
+            <div
+              className={styles.checkboxHolder}
+              onClick={() => {
+                this.handleSelect();
+              }}
+            >
+              <CheckBox selected={this.props.selected} />
+            </div>
+          )}
+        {this.props.arrowClick &&
+          this.props.type === COLLECT && (
+            <div
+              className={styles.arrowHolder}
+              onClick={() => this.arrowClick()}
+            >
+              <Icon image={arrowIcon} size={20} />
+            </div>
+          )}
         <IconWithHeader image={iconImage} header={this.props.header}>
           {this.props.placedTime && (
             <div className={styles.placeTime}>{this.props.placedTime}</div>
@@ -75,7 +80,7 @@ export default class DeliveryInformations extends React.Component {
                   size="14px"
                   fontFamily="regular"
                   color="#ff1744"
-                  label="Check CliQ n PiQ option"
+                  label="Check for pick up options"
                   onClick={() => this.onPiq()}
                 />
               </span>

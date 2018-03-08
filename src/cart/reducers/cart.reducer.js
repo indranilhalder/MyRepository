@@ -9,6 +9,7 @@ const cart = (
     status: null,
     error: null,
     loading: false,
+    type: null,
 
     userCart: null,
     userCartStatus: null,
@@ -18,6 +19,10 @@ const cart = (
     cartDetailsStatus: null,
     cartDetailsError: null,
 
+    cartDetailsCNC: null,
+    cartDetailsCNCStatus: null,
+    cartDetailsCNCError: null,
+
     couponStatus: null,
     couponError: null,
 
@@ -25,7 +30,21 @@ const cart = (
     userAddress: null,
     setAddress: null,
     netBankDetails: null,
-    emiBankDetails: null
+    emiBankDetails: null,
+
+    orderSummary: null,
+    orderSummaryStatus: null,
+    orderSummaryError: null,
+    coupons: null,
+
+    storeDetails: null,
+    storeStatus: null,
+    storeError: null,
+    storeAdded: null,
+
+    paymentStatus: null,
+    paymentStatusError: null,
+    paymentDetails: null
   },
   action
 ) => {
@@ -63,6 +82,45 @@ const cart = (
       });
 
     case cartActions.APPLY_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        couponError: action.error,
+        loading: false
+      });
+
+    case cartActions.GET_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_COUPON_SUCCESS:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: false,
+        coupons: action.coupons
+      });
+
+    case cartActions.GET_COUPON_FAILURE:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        couponError: action.error,
+        loading: false
+      });
+
+    case cartActions.RELEASE_COUPON_REQUEST:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.RELEASE_COUPON_SUCCESS:
+      return Object.assign({}, state, {
+        couponStatus: action.status,
+        loading: false
+      });
+
+    case cartActions.RELEASE_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
@@ -110,21 +168,23 @@ const cart = (
       });
     case cartActions.CART_DETAILS_CNC_REQUEST:
       return Object.assign({}, state, {
-        status: action.status,
+        cartDetailsCNCStatus: action.status,
         loading: true
-      });
-    case cartActions.CART_DETAILS_CNC_FAILURE:
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        loading: false
       });
     case cartActions.CART_DETAILS_CNC_SUCCESS:
       return Object.assign({}, state, {
-        status: action.status,
+        cartDetailsCNCStatus: action.status,
         setAddress: action.setAddress,
+        cartDetailsCnc: action.cartDetailsCnc,
         loading: false
       });
+    case cartActions.CART_DETAILS_CNC_FAILURE:
+      return Object.assign({}, state, {
+        cartDetailsCNCStatus: action.status,
+        cartDetailsCNCError: action.error,
+        loading: false
+      });
+
     case cartActions.NET_BANKING_DETAILS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -192,6 +252,167 @@ const cart = (
       return Object.assign({}, state, {
         status: action.status,
         error: action.error
+      });
+
+    case cartActions.ORDER_SUMMARY_REQUEST:
+      return Object.assign({}, state, {
+        orderSummaryStatus: action.status
+      });
+
+    case cartActions.ORDER_SUMMARY_SUCCESS:
+      return Object.assign({}, state, {
+        orderSummaryStatus: action.status,
+        orderSummary: action.orderSummary
+      });
+
+    case cartActions.ORDER_SUMMARY_FAILURE:
+      return Object.assign({}, state, {
+        orderSummaryStatus: action.status,
+        orderSummaryError: action.error
+      });
+
+    case cartActions.GET_CART_ID_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status
+      });
+    case cartActions.GET_CART_ID_SUCCESS:
+      Cookies.createCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER,
+        JSON.stringify(action.cartDetails)
+      );
+      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+      return Object.assign({}, state, {
+        status: action.status
+      });
+
+    case cartActions.GET_CART_ID_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error
+      });
+
+    case cartActions.MERGE_CART_ID_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status
+      });
+
+    case cartActions.MERGE_CART_ID_SUCCESS:
+      Cookies.createCookie(
+        CART_DETAILS_FOR_LOGGED_IN_USER,
+        JSON.stringify(action.cartDetails)
+      );
+      Cookies.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+      return Object.assign({}, state, {
+        status: action.status,
+        type: action.type
+      });
+
+    case cartActions.MERGE_CART_ID_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeDetails: action.storeDetails,
+        loading: false
+      });
+
+    case cartActions.GET_ALL_STORES_CNC_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_REQUEST:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_STORE_CNC_SUCCESS:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeAdded: action.storeAdded,
+        loading: false
+      });
+
+    case cartActions.ADD_STORE_CNC_FAILURE:
+      return Object.assign({}, state, {
+        storeStatus: action.status,
+        storeError: action.error,
+        loading: false
+      });
+
+    case cartActions.ADD_PICKUP_PERSON_REQUEST:
+      return Object.assign({}, state, {
+        cartDetailsCNCStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_PICKUP_PERSON_SUCCESS:
+      return Object.assign({}, state, {
+        cartDetailsCNCStatus: action.status,
+        cartDetailsCNC: action.cartDetailsCNC,
+        loading: false
+      });
+
+    case cartActions.ADD_PICKUP_PERSON_FAILURE:
+      return Object.assign({}, state, {
+        cartDetailsCNCStatus: action.status,
+        cartDetailsCNCError: action.error,
+        loading: false
+      });
+
+    case cartActions.APPLY_CLIQ_CASH_REQUEST:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentDetails: action.paymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.APPLY_CLIQ_CASH_FAILURE:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentStatusError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_CLIQ_CASH_REQUEST:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentDetails: action.paymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.REMOVE_CLIQ_CASH_FAILURE:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentStatusError: action.error,
+        loading: false
       });
 
     default:

@@ -4,11 +4,11 @@ import { withRouter } from "react-router-dom";
 import { addProductToWishList, addProductToCart } from "../actions/pdp.actions";
 const mapDispatchToProps = dispatch => {
   return {
-    addProductToCart: productDetails => {
-      dispatch(addProductToCart(productDetails));
+    addProductToCart: (userId, cartId, accessToken, productDetails) => {
+      dispatch(addProductToCart(userId, cartId, accessToken, productDetails));
     },
-    addProductToWishList: productDetails => {
-      dispatch(addProductToWishList(productDetails));
+    addProductToWishList: (userId, accessToken, productDetails) => {
+      dispatch(addProductToWishList(userId, accessToken, productDetails));
     }
   };
 };

@@ -5,14 +5,23 @@ import {
   GLOBAL_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   FAILURE,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
-
 export const USER_CART_PATH = "v2/mpl/users";
+export const ALL_STORES_PATH = "v2/mpl/allStores";
 
 export const APPLY_COUPON_REQUEST = "APPLY_COUPON_REQUEST";
 export const APPLY_COUPON_SUCCESS = "APPLY_COUPON_SUCCESS";
 export const APPLY_COUPON_FAILURE = "APPLY_COUPON_FAILURE";
+
+export const GET_COUPON_REQUEST = "GET_COUPON_REQUEST";
+export const GET_COUPON_SUCCESS = "GET_COUPON_SUCCESS";
+export const GET_COUPON_FAILURE = "GET_COUPON_FAILURE";
+
+export const RELEASE_COUPON_REQUEST = "RELEASE_COUPON_REQUEST";
+export const RELEASE_COUPON_SUCCESS = "RELEASE_COUPON_SUCCESS";
+export const RELEASE_COUPON_FAILURE = "RELEASE_COUPON_FAILURE";
 
 export const SELECT_DELIVERY_MODES_REQUEST = "SELECT_DELIVERY_MODES_REQUEST";
 export const SELECT_DELIVERY_MODES_SUCCESS = "SELECT_DELIVERY_MODES_SUCCESS";
@@ -49,9 +58,48 @@ export const GENERATE_CART_ID_FAILURE = "GENERATE_CART_ID_FAILURE";
 export const GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS =
   "GENERATE_CART_ID_BY_ANONYMOUS_SUCCESS";
 
-export const CART_DETAILS_REQUEST = "GENERATE_CART_ID_REQUEST";
+export const CART_DETAILS_REQUEST = "CART_DETAILS_REQUEST";
 export const CART_DETAILS_SUCCESS = "CART_DETAILS_SUCCESS";
 export const CART_DETAILS_FAILURE = "CART_DETAILS_FAILURE";
+
+export const ORDER_SUMMARY_REQUEST = "ORDER_SUMMARY_REQUEST";
+export const ORDER_SUMMARY_SUCCESS = "ORDER_SUMMARY_SUCCESS";
+export const ORDER_SUMMARY_FAILURE = "ORDER_SUMMARY_FAILURE";
+
+export const GET_CART_ID_REQUEST = "GET_CART_ID_REQUEST";
+export const GET_CART_ID_SUCCESS = "GET_CART_ID_SUCCESS";
+export const GET_CART_ID_FAILURE = "GET_CART_ID_FAILURE";
+
+export const MERGE_CART_ID_REQUEST = "MERGE_CART_ID_REQUEST";
+export const MERGE_CART_ID_SUCCESS = "MERGE_CART_ID_SUCCESS";
+export const MERGE_CART_ID_FAILURE = "MERGE_CART_ID_FAILURE";
+
+export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST =
+  "CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST";
+export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS =
+  "CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS";
+export const CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE =
+  "CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE";
+
+export const GET_ALL_STORES_CNC_REQUEST = "GET_ALL_STORES_CNC_REQUEST";
+export const GET_ALL_STORES_CNC_SUCCESS = "GET_ALL_STORES_CNC_SUCCESS";
+export const GET_ALL_STORES_CNC_FAILURE = "GET_ALL_STORES_CNC_FAILURE";
+
+export const ADD_STORE_CNC_REQUEST = "ADD_STORE_CNC_REQUEST";
+export const ADD_STORE_CNC_SUCCESS = "ADD_STORE_CNC_SUCCESS";
+export const ADD_STORE_CNC_FAILURE = "ADD_STORE_CNC_FAILURE";
+
+export const ADD_PICKUP_PERSON_REQUEST = "ADD_PICKUP_PERSON_REQUEST";
+export const ADD_PICKUP_PERSON_SUCCESS = "ADD_PICKUP_PERSON_SUCCESS";
+export const ADD_PICKUP_PERSON_FAILURE = "ADD_PICKUP_PERSON_FAILURE";
+
+export const APPLY_CLIQ_CASH_REQUEST = "APPLY_CLIQ_CASH_REQUEST";
+export const APPLY_CLIQ_CASH_SUCCESS = "APPLY_CLIQ_CASH_SUCCESS";
+export const APPLY_CLIQ_CASH_FAILURE = "APPLY_CLIQ_CASH_FAILURE";
+
+export const REMOVE_CLIQ_CASH_REQUEST = "REMOVE_CLIQ_CASH_REQUEST";
+export const REMOVE_CLIQ_CASH_SUCCESS = "REMOVE_CLIQ_CASH_SUCCESS";
+export const REMOVE_CLIQ_CASH_FAILURE = "REMOVE_CLIQ_CASH_FAILURE";
 
 const pincode = 229001;
 
@@ -70,27 +118,6 @@ export function cartDetailsSuccess(cartDetails) {
 }
 
 export function cartDetailsFailure(error) {
-  return {
-    type: CART_DETAILS_FAILURE,
-    status: ERROR,
-    error
-  };
-}
-export function cartDetailsCNCRequest() {
-  return {
-    type: CART_DETAILS_REQUEST,
-    status: REQUESTING
-  };
-}
-export function cartDetailsCNCSuccess(cartDetails) {
-  return {
-    type: CART_DETAILS_SUCCESS,
-    status: SUCCESS,
-    cartDetails
-  };
-}
-
-export function cartDetailsCNCFailure(error) {
   return {
     type: CART_DETAILS_FAILURE,
     status: ERROR,
@@ -116,6 +143,29 @@ export function getCartDetails(userId, accessToken, cartId) {
     }
   };
 }
+
+export function cartDetailsCNCRequest() {
+  return {
+    type: CART_DETAILS_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+export function cartDetailsCNCSuccess(cartDetails) {
+  return {
+    type: CART_DETAILS_CNC_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function cartDetailsCNCFailure(error) {
+  return {
+    type: CART_DETAILS_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
 export function getCartDetailsCNC(userId, accessToken, cartId) {
   return async (dispatch, getState, { api }) => {
     dispatch(cartDetailsCNCRequest());
@@ -131,6 +181,52 @@ export function getCartDetailsCNC(userId, accessToken, cartId) {
       dispatch(cartDetailsCNCSuccess(resultJson));
     } catch (e) {
       dispatch(cartDetailsCNCFailure(e.message));
+    }
+  };
+}
+
+export function getCouponsRequest() {
+  return {
+    type: GET_COUPON_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getCouponsSuccess(coupons) {
+  return {
+    type: GET_COUPON_SUCCESS,
+    status: SUCCESS,
+    coupons
+  };
+}
+
+export function getCouponsFailure(error) {
+  return {
+    type: GET_CART_ID_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getCoupons() {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getCouponsRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/getCoupons?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&currentPage=0&usedCoupon=N&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(getCouponsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getCouponsFailure(e.message));
     }
   };
 }
@@ -180,6 +276,50 @@ export function applyCoupon(cartGuide) {
   };
 }
 
+export function releaseCouponRequest() {
+  return {
+    type: RELEASE_COUPON_REQUEST,
+    status: REQUESTING
+  };
+}
+export function releaseCouponSuccess() {
+  return {
+    type: RELEASE_COUPON_SUCCESS,
+    status: SUCCESS
+  };
+}
+
+export function releaseCouponFailure(error) {
+  return {
+    type: RELEASE_COUPON_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function releaseCoupon(carId) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(releaseCouponRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/carId/releaseCoupons?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(releaseCouponSuccess());
+    } catch (e) {
+      dispatch(releaseCouponFailure(e.message));
+    }
+  };
+}
+
 export function userAddressRequest(error) {
   return {
     type: GET_USER_ADDRESS_REQUEST,
@@ -205,21 +345,21 @@ export function userAddressFailure(error) {
 
 export function getUserAddress() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(userAddressRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }/addresses?channel=mobile&emailId=${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }&access_token=${JSON.parse(customerCookie).access_token}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
       dispatch(userAddressSuccess(resultJson));
     } catch (e) {
       dispatch(userAddressFailure(e.message));
@@ -537,6 +677,448 @@ export function generateCartIdForAnonymous() {
       dispatch(generateCartIdAnonymousSuccess(resultJson));
     } catch (e) {
       dispatch(generateCartIdFailure(e.message));
+    }
+  };
+}
+
+export function orderSummaryRequest() {
+  return {
+    type: ORDER_SUMMARY_REQUEST,
+    status: REQUESTING
+  };
+}
+export function orderSumarySuccess(orderSummary) {
+  return {
+    type: ORDER_SUMMARY_SUCCESS,
+    status: SUCCESS,
+    orderSummary
+  };
+}
+
+export function orderSummaryFailure(error) {
+  return {
+    type: ORDER_SUMMARY_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function getCartIdRequest() {
+  return {
+    type: GET_CART_ID_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getCartIdSuccess(cartDetails) {
+  return {
+    type: GET_CART_ID_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function getCartIdFailure(error) {
+  return {
+    type: GET_CART_ID_FAILURE,
+
+    status: ERROR,
+    error
+  };
+}
+
+export function getOrderSummary() {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  return async (dispatch, getState, { api }) => {
+    dispatch(orderSummaryRequest());
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          getState().user.user.customerInfo.mobileNumber
+        }/carts/${
+          JSON.parse(cartDetails).code
+        }/displayOrderSummary?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&pincode=400083&isPwa=true&platformNumber=2`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(orderSumarySuccess(resultJson));
+    } catch (e) {
+      dispatch(orderSummaryFailure(e.message));
+    }
+  };
+}
+export function getCartId() {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getCartIdRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      if (cartDetailsAnonymous) {
+        dispatch(mergeCartId(resultJson));
+      } else {
+        dispatch(getCartIdSuccess(resultJson));
+      }
+    } catch (e) {
+      dispatch(getCartIdFailure(e.message));
+    }
+  };
+}
+
+export function mergeCardIdRequest() {
+  return {
+    type: MERGE_CART_ID_REQUEST,
+    status: REQUESTING
+  };
+}
+export function mergeCartIdSuccess(cartDetails) {
+  return {
+    type: MERGE_CART_ID_SUCCESS,
+    status: SUCCESS,
+    cartDetails
+  };
+}
+
+export function mergeCartIdFailure(error) {
+  return {
+    type: MERGE_CART_ID_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+export function mergeCartId(cartDetails) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+  return async (dispatch, getState, { api }) => {
+    dispatch(mergeCardIdRequest());
+
+    try {
+      const result = await api.get(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&&platformNumber=2&userId=${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }&oldCartId=${JSON.parse(cartDetailsAnonymous).guid}&toMergeCartGuid=${
+          cartDetails.guid
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+
+      dispatch(mergeCartIdSuccess(resultJson));
+    } catch (e) {
+      dispatch(mergeCartIdFailure(e.message));
+    }
+  };
+}
+
+export function checkPinCodeServiceAvailabilityRequest() {
+  return {
+    type: CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST,
+    status: REQUESTING
+  };
+}
+export function checkPinCodeServiceAvailabilitySuccess(cartDetailsCnc) {
+  return {
+    type: CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS,
+    status: SUCCESS,
+    cartDetailsCnc
+  };
+}
+
+export function checkPinCodeServiceAvailabilityFailure(error) {
+  return {
+    type: CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+export function checkPinCodeServiceAvailability(
+  userName,
+  accessToken,
+  pinCode
+) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(checkPinCodeServiceAvailabilityRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
+    } catch (e) {
+      dispatch(checkPinCodeServiceAvailabilityFailure(e.message));
+    }
+  };
+}
+
+// Actions to get All Stores CNC
+export function getAllStoresCNCRequest() {
+  return {
+    type: GET_ALL_STORES_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+export function getAllStoresCNCSuccess(storeDetails) {
+  return {
+    type: GET_ALL_STORES_CNC_SUCCESS,
+    status: SUCCESS,
+    storeDetails
+  };
+}
+
+export function getAllStoresCNCFailure(error) {
+  return {
+    type: GET_ALL_STORES_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator for getting all stores CNC
+export function getAllStoresCNC(pinCode) {
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(getAllStoresCNCRequest());
+    try {
+      const result = await api.get(
+        `${ALL_STORES_PATH}/${pinCode}?access_token=${
+          JSON.parse(customerCookie).access_token
+        }`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(getAllStoresCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(getAllStoresCNCFailure(e.message));
+    }
+  };
+}
+
+// Actions to Add Store CNC
+export function addStoreCNCRequest() {
+  return {
+    type: ADD_STORE_CNC_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addStoreCNCSuccess(storeAdded) {
+  return {
+    type: ADD_STORE_CNC_SUCCESS,
+    status: SUCCESS,
+    storeAdded
+  };
+}
+
+export function addStoreCNCFailure(error) {
+  return {
+    type: ADD_STORE_CNC_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to Add Store CNC
+export function addStoreCNC(ussId, slaveId) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).code;
+  return async (dispatch, getState, { api }) => {
+    dispatch(addStoreCNCRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/${cartId}/addStore?USSID=${ussId}&access_token=${
+          JSON.parse(customerCookie).access_token
+        }&slaveId=${slaveId}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(addStoreCNCSuccess(resultJson));
+    } catch (e) {
+      dispatch(addStoreCNCFailure(e.message));
+    }
+  };
+}
+
+// Actions to Add Pick up Person
+export function addPickUpPersonRequest() {
+  return {
+    type: ADD_PICKUP_PERSON_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function addPickUpPersonSuccess(cartDetailsCNC) {
+  return {
+    type: ADD_PICKUP_PERSON_SUCCESS,
+    status: SUCCESS,
+    cartDetailsCNC
+  };
+}
+
+export function addPickUpPersonFailure(error) {
+  return {
+    type: ADD_PICKUP_PERSON_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to Add Pick Up Person
+export function addPickupPersonCNC(personMobile, personName) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).code;
+  return async (dispatch, getState, { api }) => {
+    dispatch(addPickUpPersonRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/carts/${cartId}/addPickupPerson?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2&personMobile=${personMobile}&personName=${personName}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(addPickUpPersonSuccess(resultJson));
+    } catch (e) {
+      dispatch(addPickUpPersonFailure(e.message));
+    }
+  };
+}
+
+// Actions to Apply Cliq Cash
+export function applyCliqCashRequest() {
+  return {
+    type: APPLY_CLIQ_CASH_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function applyCliqCashSuccess(paymentDetails) {
+  return {
+    type: APPLY_CLIQ_CASH_SUCCESS,
+    status: SUCCESS,
+    paymentDetails
+  };
+}
+
+export function applyCliqCashFailure(error) {
+  return {
+    type: APPLY_CLIQ_CASH_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to bin Validation
+export function applyCliqCash(cartGuid) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(applyCliqCashRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/applyCliqCash?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuid}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(applyCliqCashSuccess(resultJson));
+    } catch (e) {
+      dispatch(applyCliqCashFailure(e.message));
+    }
+  };
+}
+
+// Actions to Remove Cliq Cash
+export function removeCliqCashRequest() {
+  return {
+    type: REMOVE_CLIQ_CASH_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function removeCliqCashSuccess(paymentDetails) {
+  return {
+    type: REMOVE_CLIQ_CASH_SUCCESS,
+    status: SUCCESS,
+    paymentDetails
+  };
+}
+
+export function removeCliqCashFailure(error) {
+  return {
+    type: REMOVE_CLIQ_CASH_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to Remove Cliq Cash
+export function removeCliqCash(cartGuid) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  return async (dispatch, getState, { api }) => {
+    dispatch(removeCliqCashRequest());
+    try {
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/removeCliqCash?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&cartGuid=${cartGuid}`
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(removeCliqCashSuccess(resultJson));
+    } catch (e) {
+      dispatch(removeCliqCashFailure(e.message));
     }
   };
 }

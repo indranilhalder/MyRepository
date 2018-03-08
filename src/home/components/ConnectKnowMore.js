@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./ConnectKnowMore.css";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class ConnectKnowMore extends React.Component {
   handleClick() {
-    if (this.props.showConnectModal) {
-      this.props.showConnectModal(this.props.data);
-    }
+    const urlSuffix = this.props.data.webURL.replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
   }
   render() {
     return (

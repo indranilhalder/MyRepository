@@ -6,7 +6,9 @@ export default class ColourAdd extends React.Component {
     if (this.props.selectItem) {
       this.props.selectItem();
     }
-    this.props.onSelect(this.props.value);
+    if (this.props.onSelect) {
+      this.props.onSelect(this.props.value);
+    }
   };
   render() {
     let classActive = styles.textHolder;
