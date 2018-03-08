@@ -1314,9 +1314,11 @@ export function applyCliqCashFailure(error) {
 }
 
 // Action Creator to bin Validation
-export function applyCliqCash(cartGuid) {
+export function applyCliqCash() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(applyCliqCashRequest());
     try {
@@ -1325,7 +1327,7 @@ export function applyCliqCash(cartGuid) {
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/applyCliqCash?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartGuid}`
+        }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -1363,9 +1365,11 @@ export function removeCliqCashFailure(error) {
 }
 
 // Action Creator to Remove Cliq Cash
-export function removeCliqCash(cartGuid) {
+export function removeCliqCash() {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(removeCliqCashRequest());
     try {
@@ -1374,7 +1378,7 @@ export function removeCliqCash(cartGuid) {
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/removeCliqCash?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartGuid}`
+        }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

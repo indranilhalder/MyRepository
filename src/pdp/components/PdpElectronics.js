@@ -70,7 +70,6 @@ export default class PdpElectronics extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
     if (userDetails) {
       this.props.addProductToCart(
         JSON.parse(userDetails).customerInfo.mobileNumber,
