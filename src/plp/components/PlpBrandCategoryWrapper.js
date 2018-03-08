@@ -7,18 +7,14 @@ const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
 const CAPTURE_REGEX = /c-(.*)/;
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
+const IS_FILTER_SUFFIX = `&isFilter=true`;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
-  componentDidMount() {
-    // this will do the check for category or brand
-    // which does not happen now
-    window.addEventListener("scroll", this.handleScroll);
-
+  getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const searchCategory = parsedQueryString.searchCategory;
     let searchText = parsedQueryString.q;
-
     const brandOrCategoryId = this.props.match.params.brandOrCategoryId;
     let match;
     if (CATEGORY_REGEX.test(brandOrCategoryId)) {
@@ -40,9 +36,25 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     if (!searchText) {
       searchText = parsedQueryString.text;
     }
+    return searchText;
+  }
+  componentDidMount() {
+    // this will do the check for category or brand
+    // which does not happen now
+    window.addEventListener("scroll", this.handleScroll);
+
+    const searchText = this.getSearchTextFromUrl();
 
     // I can just assume that we need to set filters here.
     this.props.getProductListings(searchText, SUFFIX, 0);
+  }
+
+  componentDidUpdate() {
+    if (this.props.location.state && this.props.location.state.isFilter) {
+      const suffix = "&isFilter=true";
+      const searchText = this.getSearchTextFromUrl();
+      this.props.getProductListings(searchText, suffix, 0, true);
+    }
   }
 
   handleScroll = () => {
@@ -82,7 +94,13 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   // so this thing will need setFIlters, getProductListings
 
   render() {
-    return <ProductListingsContainer />;
+    let isFilter = false;
+    if (this.props.location.state) {
+      isFilter = this.props.location.state.isFilter
+        ? this.props.location.state.isFilter
+        : false;
+    }
+    return <ProductListingsContainer isFilter={isFilter} />;
   }
 }
 
