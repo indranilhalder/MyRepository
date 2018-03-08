@@ -82,7 +82,6 @@ class App extends Component {
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
     if (!globalAccessToken) {
-      console.log("GLOBAL ACCESS TOKEN IS CALLED");
       this.props.getGlobalAccessToken();
       if (!cartIdForAnonymous) {
         this.props.generateCartIdForAnonymous();
