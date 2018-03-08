@@ -186,11 +186,13 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 
 			if (StringUtils.isNumeric(mobileOtp))
 			{
-				forgottenPasswordProcessModel.setForgetPasswordUrl(mobileOtp);
+				forgottenPasswordProcessModel.setForgetPasswordOtp(mobileOtp);
+				forgottenPasswordProcessModel.setIsOtp("Y");
 			}
 			else
 			{
 				forgottenPasswordProcessModel.setForgetPasswordUrl(securePasswordUrl);
+				forgottenPasswordProcessModel.setIsOtp("N");
 			}
 			//if (baseStoreService.getCurrentBaseStore() != null)	SONAR Fix
 			if (getBaseStoreService().getCurrentBaseStore() != null)
