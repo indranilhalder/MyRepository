@@ -15,10 +15,8 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +37,6 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.services.product.MplProductService;
 import com.tisl.mpl.wsdto.HomeProductsDTO;
-import com.tisl.mpl.wsdto.HomepageComponenetJSONDTO;
-import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomepageComponetsDTO;
 
 
@@ -141,46 +137,47 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 
 
 	@Override
-	public HomepageComponetsDTO gethomepageComponentsDTO(final HomepageComponentRequestDTO homepageComponentRequestDTO)
-			throws EtailNonBusinessExceptions
+	public HomepageComponetsDTO gethomepageComponentsDTO(final String productCodes) throws EtailNonBusinessExceptions
 	{
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<HomeProductsDTO> finalProductsDTO = new ArrayList<HomeProductsDTO>();
 		final HomepageComponetsDTO finalHomepageComponetsDTO = new HomepageComponetsDTO();
-		HomepageComponenetJSONDTO homepageComponenetJSONDTO = null;
-		String homepageComponenetJSONString = MarketplaceFacadesConstants.EMPTY;
+		//final HomepageComponenetJSONDTO homepageComponenetJSONDTO = null;
+		//final String homepageComponenetJSONString = MarketplaceFacadesConstants.EMPTY;
 
 		try
 		{
 
-			List<String> productCodes = new ArrayList<String>();
+			final List<String> productCodesList = new ArrayList<String>();
 			List<BuyBoxModel> buyBoxModelList = new ArrayList<BuyBoxModel>();
-			if (StringUtils.isNotEmpty(homepageComponentRequestDTO.getContent()))
-			{
-				homepageComponenetJSONString = homepageComponentRequestDTO.getContent();
-			}
-			homepageComponenetJSONDTO = mapper.readValue(homepageComponenetJSONString, HomepageComponenetJSONDTO.class);
-			if (CollectionUtils.isNotEmpty(homepageComponenetJSONDTO.getItemIds()))
-			{
-				productCodes = homepageComponenetJSONDTO.getItemIds();
-			}
 
-			if (CollectionUtils.isNotEmpty(productCodes))
+
+			//			if (CollectionUtils.isNotEmpty(homepageComponenetJSONDTO.getItemIds()))
+			//			{
+			//				productCodes = homepageComponenetJSONDTO.getItemIds();
+			//			}
+
+			if (StringUtils.isNotEmpty(productCodes))
 			{
-				final String commaSepartedProductCodes = StringUtils.join(productCodes, ",");
-				buyBoxModelList = buyBoxService.buyboxPrice(commaSepartedProductCodes);
+				//final String commaSepartedProductCodes = StringUtils.join(productCodes, ",");
+				buyBoxModelList = buyBoxService.buyboxPrice(productCodes);
+			}
+			//String[] arr=productCodes.split(",");
+			for (final String code : productCodes.split(","))
+			{
+				productCodesList.add(code);
 			}
 
 			if (CollectionUtils.isNotEmpty(buyBoxModelList))
 			{
-				finalProductsDTO = this.compareDataWithBuyBox(productCodes, buyBoxModelList);
+				finalProductsDTO = this.compareDataWithBuyBox(productCodesList, buyBoxModelList);
 
 			}
 			finalHomepageComponetsDTO.setItems(finalProductsDTO);
 		}
 
-		catch (final IOException | ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+		catch (final ClassCastException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
 			LOG.error("HomePageAppFacadeImpl error occured:: " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplaceFacadesConstants.H9001);
@@ -199,9 +196,9 @@ public class HomePageAppFacadeImpl implements HomePageAppFacade
 		final HomeProductsDTO productdto = new HomeProductsDTO();
 		List<ProductData> productDataList = new ArrayList<ProductData>();
 		final CurrencyModel currency = commonI18NService.getCurrency(MarketplaceFacadesConstants.INR);
-		final String currencySymbol = currency.getSymbol();
-		final String currencyIso = currency.getIsocode();
-		final DecimalFormat df = new DecimalFormat("###,###.##");
+		//final String currencySymbol = currency.getSymbol();
+		//final String currencyIso = currency.getIsocode();
+		//final DecimalFormat df = new DecimalFormat("###,###.##");
 		final String imageFormat = getMediaFormat();
 		final List<ProductModel> productModelList = mplProductService.getProductListForCodeList(
 				catalogVersionService.getCatalogVersion("mplProductCatalog", "Online"), listingIds);
