@@ -1,0 +1,40 @@
+.base {
+  width: 100%;
+  height: auto;
+}
+.header {
+  width: 100%;
+  height: auto;
+  font-family: semibold;
+  font-size: 14px;
+  line-height: 22px;
+  color: #000;
+}
+.address {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  line-height: 22px;
+  color: #000;
+}
+.buttonHolder {
+  width: 100%;
+  height: auto;
+  border-top: 1px solid #d2d2d2;
+  padding: 20px;
+}
+.contact {
+  width: 100%;
+  height: auto;
+  font-family: regular;
+  font-size: 14px;
+  line-height: 22px;
+  color: #000;
+}
+.container {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  margin-bottom: 12px;
+}

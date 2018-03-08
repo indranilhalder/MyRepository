@@ -8,6 +8,7 @@ export const userDetails = {
   customerId: "1000119003",
   isTemporaryPassword: "Y",
   isSocialMedia: true,
+
   customerInfo: {
     type: "getCustomerDetailDto",
     status: "Success",
@@ -17,7 +18,7 @@ export const userDetails = {
     gender: "Male",
     lastName: "Kumar",
     mobileNumber: "7503721061",
-    loginId: "d2470a48-e71e-41b7-b6b2-a083af3d8c08"
+    username: "d2470a48-e71e-41b7-b6b2-a083af3d8c08"
   }
 };
 

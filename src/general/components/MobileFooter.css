@@ -1,0 +1,9 @@
+.base {
+  width: 100%;
+  height: auto;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: inline-block;
+  text-align: center;
+}

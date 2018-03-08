@@ -2,45 +2,61 @@ import React from "react";
 import FeedComponent from "./FeedComponent";
 import PropTypes from "prop-types";
 import Background from "./img/bg.jpg";
-import { transformData } from "./utils.js";
-import { PRODUCT_LISTINGS } from "../../lib/constants";
+import concat from "lodash/concat";
+import { transformData, transformItem } from "./utils.js";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
+const OFFER_AND_ITEM_LIMIT = 4;
 
 export default class ThemeOffer extends React.Component {
   handleClick() {
-    this.props.history.push(PRODUCT_LISTINGS);
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
+  }
+  componentDidUpdate() {
+    const offers = this.props.feedComponentData.offers;
+
+    const itemIds = this.props.feedComponentData.itemIds;
+    let itemIdsToAdd;
+
+    if (offers.length < OFFER_AND_ITEM_LIMIT && itemIds) {
+      const numberOfItemsToTake = OFFER_AND_ITEM_LIMIT - offers.length;
+      itemIdsToAdd = itemIds.slice(0, numberOfItemsToTake);
+      if (
+        itemIds.length > 0 &&
+        this.props.feedComponentData.items.length === 0
+      ) {
+        this.props.getItems(this.props.positionInFeed, itemIdsToAdd);
+      }
+    }
   }
 
   render() {
-    const feedComponentData = this.props.feedComponentData;
     let themeData = [];
-
-    if (
-      feedComponentData.data.offers &&
-      feedComponentData.data.offers.length < 4
-    ) {
-      let themeOffersData = feedComponentData.data.offers;
-      let count = 4 - themeOffersData.length;
-      let themeItemsData = [...feedComponentData.data.items].slice(0, count);
-      themeData = [...themeOffersData, ...themeItemsData];
-      themeData = themeData.map(transformData);
-    } else {
-      if (feedComponentData.data.offers) {
-        themeData = feedComponentData.data.offers.slice(0, 4);
-        themeData = themeData.map(transformData);
-      }
-    }
+    const { feedComponentData, buttonText, ...rest } = this.props;
+    const items = feedComponentData.items.map(item => {
+      return transformItem(item);
+    });
+    const offers = feedComponentData.offers.map(offer => {
+      return transformData(offer);
+    });
+    themeData = concat(offers, items);
 
     return (
       <FeedComponent
         backgroundImage={Background}
         carouselOptions={{
-          header: this.props.feedComponentData.title,
-          buttonText: this.props.buttonText,
+          header: feedComponentData.title,
+          buttonText: buttonText,
           isWhite: true,
           seeAll: () => {
             this.handleClick();
           }
         }}
+        {...rest}
         data={themeData}
       />
     );
