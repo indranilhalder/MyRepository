@@ -19,7 +19,9 @@ import {
   applyBankOffer,
   releaseBankOffer,
   getNetBankDetails,
-  getEmiBankDetails
+  getEmiBankDetails,
+  applyCliqCash,
+  removeCliqCash
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -94,6 +96,12 @@ const mapDispatchToProps = dispatch => {
     },
     getEmiBankDetails: () => {
       dispatch(getEmiBankDetails());
+    },
+    applyCliqCash: () => {
+      dispatch(applyCliqCash());
+    },
+    removeCliqCash: () => {
+      dispatch(removeCliqCash());
     }
   };
 };
