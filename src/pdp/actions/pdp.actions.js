@@ -293,6 +293,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
