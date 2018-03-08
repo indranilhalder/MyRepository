@@ -9,6 +9,7 @@ export const SIZE_GUIDE = "SizeGuide";
 export const SORT = "Sort";
 export const ADDRESS = "Address";
 export const EMI_MODAL = "EmiModal";
+export const BANK_OFFERS = "BankOffers";
 
 export function showModal(type, ownProps) {
   return {

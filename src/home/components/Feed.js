@@ -30,7 +30,7 @@ import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
-import { PRODUCT_DELIVERY_ADDRESSES } from "../../lib/constants";
+import { CHECKOUT_ROUTER } from "../../lib/constants";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -124,7 +124,7 @@ class Feed extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.type === MERGE_CART_ID_SUCCESS) {
-      this.props.history.push(PRODUCT_DELIVERY_ADDRESSES);
+      this.props.history.push(CHECKOUT_ROUTER);
     }
   }
   render() {
