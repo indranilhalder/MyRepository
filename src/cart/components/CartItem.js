@@ -31,6 +31,10 @@ export default class CartItem extends React.Component {
       this.props.selectDeliveryMode(val);
     }
   }
+
+  getPickUpDetails = () => {
+    this.props.onPiq();
+  };
   onHide() {
     this.setState({ showDelivery: !this.state.showDelivery }, () => {
       if (this.state.label === "See all") {
@@ -81,6 +85,7 @@ export default class CartItem extends React.Component {
             <DeliveryInfoSelect
               deliveryInformation={this.props.deliveryInformation}
               onSelect={val => this.selectDeliveryMode(val)}
+              onPiq={val => this.getPickUpDetails()}
             />
           )}
         {this.props.hasFooter && (

@@ -4,8 +4,8 @@ import DeliveryCard from "./DeliveryCard.js";
 import styles from "./DeliveryModeSet.css";
 export default class DeliveryModeSet extends React.Component {
   handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.changeDeliveryModes) {
+      this.props.changeDeliveryModes();
     }
   }
   render() {

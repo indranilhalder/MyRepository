@@ -55,6 +55,7 @@ export async function post(path, postData, doNotUseApiRoot: false) {
   if (doNotUseApiRoot) {
     url = path;
   }
+
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
