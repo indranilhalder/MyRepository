@@ -5,6 +5,10 @@
   position: relative;
   overflow: hidden;
 }
+.electronics {
+  composes: base;
+  padding-bottom: 89.4%;
+}
 .gallery {
   width: 100%;
   height: 100%;
