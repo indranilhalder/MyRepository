@@ -9,34 +9,40 @@ export default class TopCategories extends React.Component {
         <div className={styles.headerText}>Top Categories</div>
         <div className={styles.categorieHolder}>
           <div className={styles.leftSection}>
-            <div className={styles.productImageHolder}>
-              <div className={styles.overlay}>
-                <div className={styles.labelText}>
-                  {this.props.topProductText}
+            <div className={styles.oneImageHolder}>
+              <div className={styles.bigImageHolder}>
+                <div className={styles.overlay}>
+                  <div className={styles.labelText}>
+                    {this.props.topProductText}
+                  </div>
                 </div>
+                <Image image={this.props.topImageUrl} fit="cover" />
               </div>
-              <Image image={this.props.topImageUrl} fit="cover" />
             </div>
           </div>
           <div className={styles.rightSection}>
-            <div className={styles.tShirtImageHolder}>
-              <div className={styles.productImageHolder}>
-                <div className={styles.overlay}>
-                  <div className={styles.labelText}>
-                    {this.props.tShirtProductText}
+            <div className={styles.twoByTwo}>
+              <div className={styles.twoByTwoImageHolder}>
+                <div className={styles.tShirtHolder}>
+                  <div className={styles.overlay}>
+                    <div className={styles.labelText}>
+                      {this.props.tShirtProductText}
+                    </div>
                   </div>
+                  <Image image={this.props.tShirtImageUrl} fit="cover" />
                 </div>
-                <Image image={this.props.tShirtImageUrl} fit="cover" />
               </div>
             </div>
-            <div className={styles.footwearsImageHolder}>
-              <div className={styles.productImageHolder}>
-                <div className={styles.overlay}>
-                  <div className={styles.labelText}>
-                    {this.props.footwearsProductText}
+            <div className={styles.footWareHolder}>
+              <div className={styles.twoByTwoImageHolder}>
+                <div className={styles.tShirtHolder}>
+                  <div className={styles.overlay}>
+                    <div className={styles.labelText}>
+                      {this.props.footwearsProductText}
+                    </div>
                   </div>
+                  <Image image={this.props.footwearsImageUrl} fit="cover" />
                 </div>
-                <Image image={this.props.footwearsImageUrl} fit="cover" />
               </div>
             </div>
           </div>
