@@ -23,27 +23,30 @@ export default class BrandCardHeader extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
     let { feedComponentData } = this.props;
     return (
       <div className={styles.base}>
         <div className={styles.container}>
           <div className={styles.imageHolder}>
             <Image
-              image={feedComponentData && feedComponentData.backgroundImageURL}
+              image={feedComponentData && feedComponentData.items[0].imageURL}
             />
             <div className={styles.textAndLogoContainer}>
               <div className={styles.logo}>
                 <Logo
-                  image={feedComponentData && feedComponentData.logoImage}
+                  image={
+                    feedComponentData && feedComponentData.items[0].brandLogo
+                  }
                 />
               </div>
               <div className={styles.text}>
-                {feedComponentData && feedComponentData.description}
+                {feedComponentData && feedComponentData.items[0].title}
               </div>
             </div>
             <div className={styles.buttonHolder}>
-              <div className={styles.button}>
+              {/* Need to be uncommented when the follow and unFollow api will work */}
+
+              {/* <div className={styles.button}>
                 <CoreButton
                   width={100}
                   height={36}
@@ -58,7 +61,7 @@ export default class BrandCardHeader extends React.Component {
                   }}
                   onClick={() => this.handleClick()}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

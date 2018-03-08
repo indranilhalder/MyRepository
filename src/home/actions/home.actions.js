@@ -33,10 +33,213 @@ export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
-const mockDataForBrand = [
+const mockDataForBLP = [
+  {
+    componentName: "landingPageTitleComponent",
+    landingPageTitleComponent: {
+      type: "Landing Page Title",
+      componentId: "LandingPageTitle",
+      title: "Adidas"
+    }
+  },
+  {
+    componentName: "landingPageHeaderComponent",
+    landingPageHeaderComponent: {
+      type: "Landing Page Header Component",
+      componentId: "LandingPageHeaderComponent",
+      items: [
+        {
+          title: "Life more beautiful with Westside",
+          webURL: "https://www.tatacliq.com/womens-clothing/c-msh10",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto:good/v1518509399/westside_banner_pdxy8s.png",
+          brandLogo:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/v1518509587/westside_logo_beotcg.png"
+        }
+      ]
+    }
+  },
+
+  {
+    componentName: "landingPageHierarchyComponent",
+    landingPageHierarchyComponent: {
+      title: "Shop Adidas",
+      type: "Landing Page Hierarchy",
+      componentId: "LandingPageHierarchy",
+      items: [
+        {
+          title: "Womens",
+          items: [
+            {
+              title: "Kurtis",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            },
+            {
+              title: "Leggings",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            }
+          ]
+        },
+        {
+          title: "Mens",
+          items: [
+            {
+              title: "Shirts",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            },
+            {
+              title: "Trousers",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            }
+          ]
+        },
+        {
+          title: "Kids",
+          webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+        }
+      ]
+    }
+  },
+  {
+    componentName: "curatedListingStripComponent",
+    curatedListingStripComponent: {
+      componentId: "CuratedListingStrip",
+      startHexCode: "#fffffff",
+      title: "Shop latest collections from Adidas",
+      type: "Curated Listing Strip Component",
+      webURL: "www.tatacliq.com"
+    }
+  },
+  {
+    recentlyViewedComponent: {
+      brandLogo: "",
+      btnText: "See all",
+      componentId: "AutomatedBrandProductCarousel",
+      title: "Recently Viewed Product",
+      description: "",
+      imageURL: "//localhost:9001/medias/sys_master/images/8796152725534.png",
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "TAG Heuer Carrera",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+      type: "Recently viewed product",
+      webURL: ""
+    },
+    componentName: "recentlyViewedComponent"
+  },
+  {
+    componentName: "singleBannerComponent",
+
+    singleBannerComponent: {
+      componentId: "MonoBLPBanner",
+
+      items: [
+        {
+          btnText: "Shop the range",
+
+          hexCode: "#ffffff",
+
+          imageURL:
+            "//localhost:9001/medias/sys_master/images/8796152725534.png",
+
+          title: "A seamless swim. Own the water",
+
+          webURL: ""
+        }
+      ],
+
+      title: "All new Stella McCartney",
+
+      type: "Single Banner Component"
+    }
+  },
+  {
+    recentlyViewedComponent: {
+      brandLogo: "",
+      btnText: "See all",
+      componentId: "AutomatedBrandProductCarousel",
+      title: "Best Sellers",
+      description: "",
+      imageURL: "//localhost:9001/medias/sys_master/images/8796152725534.png",
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "TAG Heuer Carrera",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+      type: "Recently viewed product",
+      webURL: ""
+    },
+    componentName: "recentlyViewedComponent"
+  }
+];
+const mockDataForCLP = [
+  {
+    componentName: "landingPageTitleComponent",
+    landingPageTitleComponent: {
+      type: "Landing Page Title",
+      componentId: "LandingPageTitle",
+      title: "Adidas"
+    }
+  },
   {
     componentName: "heroBannerComponent",
-
     heroBannerComponent: {
       componentId: "HeroBanner",
 
@@ -69,7 +272,154 @@ const mockDataForBrand = [
       type: "Hero Banner Component"
     }
   },
+  {
+    componentName: "landingPageHierarchyComponent",
+    landingPageHierarchyComponent: {
+      title: "Mobile",
+      type: "Landing Page Hierarchy",
+      componentId: "LandingPageHierarchy",
+      items: [
+        {
+          title: "Womens",
+          items: [
+            {
+              title: "Kurtis",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            },
+            {
+              title: "Leggings",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            }
+          ]
+        },
+        {
+          title: "Mens",
+          items: [
+            {
+              title: "Shirts",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            },
+            {
+              title: "Trousers",
+              webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+            }
+          ]
+        },
+        {
+          title: "Kids",
+          webURL: "https://www.tatacliq.com/womens-clothing/c-msh10"
+        }
+      ]
+    }
+  },
+  {
+    componentName: "curatedListingStripComponent",
+    curatedListingStripComponent: {
+      componentId: "CuratedListingStrip",
+      startHexCode: "#fffffff",
+      title: "Shop latest collections from Adidas",
+      type: "Curated Listing Strip Component",
+      webURL: "www.tatacliq.com"
+    }
+  },
+  {
+    recentlyViewedComponent: {
+      brandLogo: "",
+      btnText: "See all",
+      componentId: "AutomatedBrandProductCarousel",
+      title: "Exclusive Mobile ",
+      description: "",
+      imageURL: "//localhost:9001/medias/sys_master/images/8796152725534.png",
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
 
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "TAG Heuer Carrera",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+      type: "Recently viewed product",
+      webURL: ""
+    },
+    componentName: "recentlyViewedComponent"
+  },
+  {
+    componentName: "curatedProductsComponent",
+
+    curatedProductsComponent: {
+      btnText: "See all",
+
+      componentId: "CuratedProductsWidget",
+
+      items: [
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 900,
+
+            formattedValue: "900"
+          },
+
+          imageURL:
+            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
+
+          mrpPrice: {
+            currencyIso: "INR",
+
+            currencySymbol: "₹",
+
+            doubleValue: 2000,
+
+            formattedValue: "2000"
+          },
+
+          prdId: "987654342",
+
+          title: "Gia",
+
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        }
+      ],
+
+      title: "Products in spotlight",
+
+      type: "Curated Products Component",
+
+      webURL: "www.tatacliq.com"
+    }
+  }
+];
+
+const mockDataForBrand = [
   {
     componentName: "offersWidgetComponent",
     offersComponent: {
@@ -799,33 +1149,6 @@ const mockDataForBrand = [
   },
 
   {
-    componentName: "singleBannerComponent",
-
-    singleBannerComponent: {
-      componentId: "MonoBLPBanner",
-
-      items: [
-        {
-          btnText: "Shop the range",
-
-          hexCode: "#ffffff",
-
-          imageURL:
-            "//localhost:9001/medias/sys_master/images/8796152725534.png",
-
-          title: "A seamless swim. Own the water",
-
-          webURL: ""
-        }
-      ],
-
-      title: "All new Stella McCartney",
-
-      type: "Single Banner Component"
-    }
-  },
-
-  {
     componentName: "subBrandsBannerComponent",
 
     subBrandsBannerComponent: {
@@ -842,7 +1165,7 @@ const mockDataForBrand = [
         }
       ],
 
-      title: "Top Categories",
+      title: "Brands from Westside",
 
       type: "Sub Brands Banner Component"
     }
@@ -1089,59 +1412,149 @@ const mockDataForBrand = [
       type: "Top Categories Component"
     }
   },
+
   {
-    recentlyViewedComponent: {
-      brandLogo: "",
+    componentName: "twoByTwoBannerComponent",
+    twoByTwoBannerComponent: {
+      componentId: "SmartFilterWidget",
+      items: [
+        {
+          description: "The phones to know about",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520431059/2by2_vd7tqq.png",
+          title: "The leaders pack",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          description: "The phones to know about",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520431059/2by2_vd7tqq.png",
+          title: "The leaders pack",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          description: "The phones to know about",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520431059/2by2_vd7tqq.png",
+          title: "The leaders pack",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          description: "The phones to know about",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520431059/2by2_vd7tqq.png",
+          title: "The leaders pack",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        }
+      ],
+      title: "Curated Smartphones",
+      type: "Two by Two Banner Component"
+    }
+  },
+
+  {
+    componentName: "subBrandsBannerComponent",
+    subBrandsBannerComponent: {
+      componentId: "SubBrandBannerBLP",
+      items: [
+        {
+          brandLogo: "",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520421689/subbrand_via4xp.jpg",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          brandLogo: "",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520421689/subbrand_via4xp.jpg",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          brandLogo: "",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520421689/subbrand_via4xp.jpg",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        },
+        {
+          brandLogo: "",
+          imageURL:
+            "http://res.cloudinary.com/dka5wc5e4/image/upload/q_auto/v1520421689/subbrand_via4xp.jpg",
+          webURL: "https://www.tatacliq.com/electronics-mobile-phones/c-msh1210"
+        }
+      ],
+      title: "Brands from Westside",
+      type: "Sub Brands Banner Component"
+    }
+  },
+  {
+    componentName: "curatedProductsComponent",
+    curatedProductsComponent: {
       btnText: "See all",
-      componentId: "AutomatedBrandProductCarousel",
-      title: "Recently Viewed Product",
-      description: "",
-      imageURL: "//localhost:9001/medias/sys_master/images/8796152725534.png",
+      componentId: "CuratedProductsWidget",
       items: [
         {
           discountedPrice: {
             currencyIso: "INR",
-
             currencySymbol: "₹",
-
             doubleValue: 900,
-
             formattedValue: "900"
           },
-
           imageURL:
-            "//www.brandattic.com/media/catalog/product/cache/1/thumbnail/400x/040ec09b1e35df139433887a97daa66f/J/M/JMT001_BLUEMULTI_1_12.jpg",
-
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
           mrpPrice: {
             currencyIso: "INR",
-
             currencySymbol: "₹",
-
             doubleValue: 2000,
-
             formattedValue: "2000"
           },
-
           prdId: "987654342",
-
-          title: "TAG Heuer Carrera",
-
+          title: "Gia",
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 900,
+            formattedValue: "900"
+          },
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+          mrpPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 2000,
+            formattedValue: "2000"
+          },
+          prdId: "987654342",
+          title: "Gia",
+          webURL:
+            "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
+        },
+        {
+          discountedPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 900,
+            formattedValue: "900"
+          },
+          imageURL:
+            "https://res.cloudinary.com/dka5wc5e4/image/upload/c_scale,q_auto:good:good,w_148/v1516182985/flash_sale_product_2_seyo73.jpg",
+          mrpPrice: {
+            currencyIso: "INR",
+            currencySymbol: "₹",
+            doubleValue: 2000,
+            formattedValue: "2000"
+          },
+          prdId: "987654342",
+          title: "Gia",
           webURL:
             "https://localhost:9002/blue-westsport-swimwear-womens/p-987654342"
         }
       ],
-      type: "Recently viewed product",
-      webURL: ""
-    },
-    componentName: "recentlyViewedComponent"
-  },
-  {
-    componentName: "curatedListingStripComponent",
-    curatedListingStripComponent: {
-      componentId: "CuratedListingStrip",
-      startHexCode: "#fffffff",
-      title: "Shop latest collections from Adidas",
-      type: "Curated Listing Strip Component",
+      title: "Products in spotlight",
+      type: "Curated Products Component",
       webURL: "www.tatacliq.com"
     }
   }
@@ -1295,7 +1708,9 @@ export function homeFeed(feedType) {
     try {
       let url;
       if (feedType === GET_FEED_DATA_FOR_BLP) {
-        dispatch(homeFeedSuccess(mockDataForBrand));
+        dispatch(homeFeedSuccess(mockDataForBLP));
+      } else if (feedType === GET_FEED_DATA_FOR_CLP) {
+        dispatch(homeFeedSuccess(mockDataForCLP));
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
       }

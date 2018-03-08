@@ -3,12 +3,15 @@ import PropTypes from "prop-types";
 import styles from "./LatestCollections.css";
 import { Icon } from "xelpmoc-core";
 import iconImageURL from "../../general/components/img/whiteArrow.svg";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class LatestCollections extends React.Component {
   arrowNextClick() {
-    if (this.props.arrowNextClick) {
-      this.props.arrowNextClick();
-    }
+    const urlSuffix = this.props.feedComponentData.webURL.replace(
+      TATA_CLIQ_ROOT,
+      ""
+    );
+    this.props.history.push(urlSuffix);
   }
   render() {
     let feedComponentData = this.props.feedComponentData;

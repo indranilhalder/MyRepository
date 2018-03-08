@@ -7,6 +7,7 @@ import VideoProductCarousel from "./VideoProductCarousel.js";
 import RecommendationWidget from "./RecommendationWidget.js";
 import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
+import InformationHeader from "../../general/components/InformationHeader";
 import ConnectWidget from "./ConnectWidget";
 import BrandCardHeader from "../../brands/components/BrandCardHeader";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
@@ -15,12 +16,15 @@ import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
 import FollowingBrands from "./FollowingBrands";
 import FlashSale from "./FlashSale";
+import AllBrandTypes from "../../brands/components/AllBrandTypes";
 import OfferWidget from "./OfferWidget.js";
 import DiscoverMore500 from "./DiscoverMore500.js";
 import ThemeOffer from "./ThemeOffer.js";
 import ThemeProductWidget from "./ThemeProductWidget.js";
 import MultiSelectQuestionContainer from "../containers/MultiSelectQuestionContainer.js";
 import DiscoverMore from "./DiscoverMore.js";
+import CuratedProductsComponent from "./CuratedProductsComponent";
+import CuratedFeature from "../../brands/components/CuratedFeature";
 import LatestCollections from "../../brands/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
@@ -34,7 +38,7 @@ const typeKeyMapping = {
 };
 
 const typeComponentMapping = {
-  "Brand header components": props => <BrandCardHeader {...props} />,
+  "Landing Page Header Component": props => <BrandCardHeader {...props} />,
   "Hero Banner Component": props => <HeroBanner {...props} />,
   "Theme Offers Component": props => <ThemeOffer {...props} />,
   "Auto Product Recommendation Component": props => (
@@ -59,9 +63,13 @@ const typeComponentMapping = {
   "Auto Product Recommendation": props => <RecommendationWidget {...props} />,
   "Recently viewed product": props => <RecommendationWidget {...props} />,
   "Single Banner Component": props => <MonoBanner {...props} />,
-  // "Top Categories Component":props=><>
-  // "Curated Listing Strip Component":props=><L>
-  "Curated Listing Strip Component": props => <LatestCollections {...props} />
+  "Curated Listing Strip Component": props => <LatestCollections {...props} />,
+  "Two by Two Banner Component": props => <CuratedFeature {...props} />,
+  "Curated Products Component": props => (
+    <CuratedProductsComponent {...props} />
+  ),
+  // "Sub Brands Banner Component":props =><>
+  "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 
 class Feed extends Component {
@@ -123,9 +131,30 @@ class Feed extends Component {
     if (this.props.loading) {
       return this.renderLoader();
     }
+
+    let propsForHeader = {};
+    if (this.props.isHomeFeedPage) {
+      propsForHeader = {
+        hasBackButton: false,
+        text: this.props.headerMessage
+      };
+    } else {
+      let landingPageTitleObj = this.props.homeFeedData[0]
+        ? this.props.homeFeedData[0]
+        : {};
+      if (landingPageTitleObj.type === "Landing Page Title") {
+        propsForHeader = {
+          hasBackButton: true,
+          text: landingPageTitleObj.title
+        };
+      }
+    }
     return (
       <div className={styles.base}>
-        <div className={styles.center}>{this.renderFeedComponents()}</div>
+        <div className={styles.center}>
+          <InformationHeader {...propsForHeader} />
+          {this.renderFeedComponents()}
+        </div>
       </div>
     );
   }
