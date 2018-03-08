@@ -6,6 +6,7 @@ import {
   addProductToWishList,
   getMsdRequest
 } from "../actions/pdp.actions";
+import { showModal } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
 
@@ -25,6 +26,9 @@ const mapDispatchToProps = dispatch => {
     },
     getMsdRequest: productCode => {
       dispatch(getMsdRequest(productCode));
+    },
+    showSizeGuide: () => {
+      dispatch(showModal("SizeGuide"));
     }
   };
 };

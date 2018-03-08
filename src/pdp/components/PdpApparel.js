@@ -97,6 +97,9 @@ export default class PdpApparel extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
+    console.log("PRODUCT DATA");
+    console.log(productData);
+    console.log(this.props);
 
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -157,7 +160,9 @@ export default class PdpApparel extends React.Component {
                 getProductSpecification={this.props.getProductSpecification}
               />
               <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
+                showSizeGuide={
+                  productData.showSizeGuide ? this.props.showSizeGuide : null
+                }
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}

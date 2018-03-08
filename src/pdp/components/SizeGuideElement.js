@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./SizeGuide.css";
+import styles from "./SizeGuideElement.css";
 import propTypes from "prop-types";
-export default class SizeGuide extends React.Component {
+export default class SizeGuideElement extends React.Component {
   render() {
     const data = this.props.data;
     return (
@@ -9,8 +9,8 @@ export default class SizeGuide extends React.Component {
         {data.map((datum, i) => {
           return (
             <div className={styles.sizeBox} key={i}>
-              <div className={styles.sizeText}>{datum.dimensionType}</div>
-              <div className={styles.sizeNumber} value={datum.value}>
+              <div className={styles.sizeText}>{datum.dimension}</div>
+              <div className={styles.sizeNumber}>
                 {datum.dimensionValue}
                 {datum.dimensionUnit}
               </div>
@@ -21,7 +21,7 @@ export default class SizeGuide extends React.Component {
     );
   }
 }
-SizeGuide.propTypes = {
+SizeGuideElement.propTypes = {
   key: propTypes.string,
   value: propTypes.number
 };
