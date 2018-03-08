@@ -51,7 +51,7 @@ public interface MplMobileUserService
 			EtailNonBusinessExceptions;
 
 	//NU-31
-	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber);
+	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber, boolean isPwa);
 
 	//NU-51
 	public boolean validateOtpWithoutExpiryTime(final String mobileNumber, final String otp, final OTPTypeEnum enumType);

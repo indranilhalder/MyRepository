@@ -3,25 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.commerceservices.customer.TokenInvalidatedException;
-import de.hybris.platform.commerceservices.event.AbstractCommerceUserEvent;
-import de.hybris.platform.commerceservices.model.process.ForgottenPasswordProcessModel;
-import de.hybris.platform.commerceservices.security.SecureToken;
-import de.hybris.platform.commerceservices.security.SecureTokenService;
-import de.hybris.platform.commerceservices.security.impl.DefaultSecureTokenService;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.processengine.BusinessProcessService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.exceptions.SystemException;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
-import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundException;
-import de.hybris.platform.servicelayer.util.ServicesUtil;
-import de.hybris.platform.site.BaseSiteService;
-import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -49,6 +30,25 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ForgetPasswordDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.ForgetPasswordService;
+
+import de.hybris.platform.commerceservices.customer.TokenInvalidatedException;
+import de.hybris.platform.commerceservices.event.AbstractCommerceUserEvent;
+import de.hybris.platform.commerceservices.model.process.ForgottenPasswordProcessModel;
+import de.hybris.platform.commerceservices.security.SecureToken;
+import de.hybris.platform.commerceservices.security.SecureTokenService;
+import de.hybris.platform.commerceservices.security.impl.DefaultSecureTokenService;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.processengine.BusinessProcessService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.exceptions.SystemException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundException;
+import de.hybris.platform.servicelayer.util.ServicesUtil;
+import de.hybris.platform.site.BaseSiteService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 
 /**
@@ -159,6 +159,8 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 			customerModel.setToken(token);
 			getModelService().save(customerModel);
 
+			String mobileOtp = securePasswordUrl;
+
 			//final ForgottenPasswordProcessModel forgottenPasswordProcessModel = (ForgottenPasswordProcessModel) businessProcessService	SONAR Fix
 			final ForgottenPasswordProcessModel forgottenPasswordProcessModel = (ForgottenPasswordProcessModel) getBusinessProcessService()
 					.createProcess(
@@ -181,7 +183,15 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 			{
 				securePasswordUrl = securePasswordUrl + MarketplacecommerceservicesConstants.MOBILE_SOURCE;
 			}
-			forgottenPasswordProcessModel.setForgetPasswordUrl(securePasswordUrl);
+
+			if (StringUtils.isNumeric(mobileOtp))
+			{
+				forgottenPasswordProcessModel.setForgetPasswordUrl(mobileOtp);
+			}
+			else
+			{
+				forgottenPasswordProcessModel.setForgetPasswordUrl(securePasswordUrl);
+			}
 			//if (baseStoreService.getCurrentBaseStore() != null)	SONAR Fix
 			if (getBaseStoreService().getCurrentBaseStore() != null)
 			{
