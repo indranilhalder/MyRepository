@@ -155,27 +155,27 @@ import com.tisl.mpl.wsdto.TextComponentWsDTO;
 public class MplCmsFacadeImpl implements MplCmsFacade
 {
 
-	private final String ELECTRONICS_CODE = "MSH12";
-	private final String BRAND_ELECTRONICS_CODE = "MBH12";
-	private final String APPAREL = "Apparel";
-	private final String ELECTRONICS = "Electronics";
-	private final String BRAND_CODE = "MBH";
+	private final static String ELECTRONICS_CODE = "MSH12";
+	private final static String BRAND_ELECTRONICS_CODE = "MBH12";
+	private final static String APPAREL = "Apparel";
+	private final static String ELECTRONICS = "Electronics";
+	private final static String BRAND_CODE = "MBH";
 
-	private final String BRAND = "Brand";
-	private final String CATEGORY = "Category";
-	private final String SUBBRAND = "Subbrand";
-	private final String SELLER = "Seller";
-	private final String OFFER = "Offer";
+	private final static String BRAND = "Brand";
+	private final static String CATEGORY = "Category";
+	private final static String SUBBRAND = "Subbrand";
+	private final static String SELLER = "Seller";
+	private final static String OFFER = "Offer";
 	//private final String SIMPLEBANNERCOMPONENT = "SimpleBannerComponent"; //Sonar fix
 
-	private final String HEROSTATUS = "Success";
+	private final static String HEROSTATUS = "Success";
 
-	private final String HEROERROR_NOPROD = "No Hero Products available";
+	private final static String HEROERROR_NOPROD = "No Hero Products available";
 
-	private final String HEROERROR_NOCAT = "Invalid Category Id";
+	private final static String HEROERROR_NOCAT = "Invalid Category Id";
 
-	private final String CONTENTPAGE = "Content";
-	private final String SIMPLE_BANNER = "SimpleBannerComponent";
+	private final static String CONTENTPAGE = "Content";
+	private final static String SIMPLE_BANNER = "SimpleBannerComponent";
 
 	private MplCMSPageServiceImpl mplCMSPageService;
 
@@ -201,7 +201,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private Converter<MplFooterLinkModel, FooterLinkData> footerLinkConverter;
 
 	@Autowired
-	private MplCmsPageDao mplCmsPageDao;
+	private transient MplCmsPageDao mplCmsPageDao;
 
 	/**
 	 * @return the footerLinkConverter
@@ -230,13 +230,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 
 	@Resource(name = "buyBoxFacade")
-	private BuyBoxFacade buyBoxFacade;
+	private transient BuyBoxFacade buyBoxFacade;
 
 	@Resource(name = "productService")
-	private ProductService productService;
+	private transient ProductService productService;
 
 	@Autowired
-	private DefaultCMSContentSlotService contentSlotService;
+	private transient DefaultCMSContentSlotService contentSlotService;
 
 
 	@Resource(name = "defaultCategoryModelUrlResolver")
@@ -436,7 +436,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -461,7 +461,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1624,7 +1624,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1740,7 +1740,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1791,7 +1791,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1938,7 +1938,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1950,7 +1950,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -2024,7 +2024,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -2065,7 +2065,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 * 
+				 *
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2123,7 +2123,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2135,7 +2135,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2151,7 +2151,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2168,7 +2168,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -3012,7 +3012,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
@@ -3268,7 +3268,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getContentSlotData(java.lang.String)
 	 */
 	@Override
@@ -3442,7 +3442,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getEmiTermsAndConditions()
 	 */
 	@Override
@@ -3450,6 +3450,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 
 		final EmiTermsandConditionsCMSWsDTO emiterms = new EmiTermsandConditionsCMSWsDTO();
+		final List<String> emiTermsList = new ArrayList<String>();
+
 
 		final ContentSlotModel emiSlot = mplCmsPageDao.getContentSlotByName(contentSlotName);
 
@@ -3460,7 +3462,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				if (cmsComponentModel instanceof CMSParagraphComponentModel)
 				{
 					final CMSParagraphComponentModel emiTermsText = (CMSParagraphComponentModel) cmsComponentModel;
-					emiterms.setTermAndConditions(emiTermsText.getContent());
+					emiTermsList.add(emiTermsText.getContent());
+					emiterms.setTermAndConditions(emiTermsList);
 					emiterms.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 				}

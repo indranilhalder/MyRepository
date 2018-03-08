@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -40,6 +41,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.account.register.ForgetPasswordFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
@@ -90,8 +92,13 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private OTPGenericService otpGenericService;
 	@Resource
 	private SendSMSFacade sendSMSFacade;
+	@Autowired
+	private ForgetPasswordFacade forgetPasswordFacade;
 
 	private static final Logger LOG = Logger.getLogger(MplMobileUserServiceImpl.class);
+	private static String LOG1 = "************** User details validated mobile web service ************";
+	private static String LOG2 = "************** User registered via mobile web service *************";
+	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 	private String gigyaUID;
 
@@ -108,7 +115,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws RequestParameterException
 	 * @throws DuplicateUidException
 	 */
-	@SuppressWarnings("javadoc")
 	@Override
 	public MplUserResultWsDto registerNewLuxUser(final String login, final String password, final String mobileNumber,
 			final String firstName, final String lastName, final String gender, final boolean tataTreatsEnable)
@@ -119,7 +125,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		try
 		{
 			result = mplUserHelper.validateRegistrationData(login, password);
-			LOG.debug("************** User details validated mobile web service ************" + login);
+			LOG.debug(LOG1 + login);
 			//Set login and password
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
@@ -140,7 +146,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				registerCustomerFacade.register(registration, 0);
 				//Set success flag
 				successFlag = true;
-				LOG.debug("************** User registered via mobile web service *************" + login);
+				LOG.debug(LOG2 + login);
 			}
 			else
 			{
@@ -193,7 +199,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws RequestParameterException
 	 * @throws DuplicateUidException
 	 */
-	@SuppressWarnings("javadoc")
 	@Override
 	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable,
 			final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions//TPR-6272 parameter platformNumber added
@@ -203,7 +208,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		try
 		{
 			result = mplUserHelper.validateRegistrationData(login, password);
-			LOG.debug("************** User details validated mobile web service ************" + login);
+			LOG.debug(LOG1 + login);
 			//Set login and password
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
@@ -219,7 +224,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				registerCustomerFacade.register(registration, platformNumber);//TPR-6272 parameter platformNumber passed
 				//Set success flag
 				successFlag = true;
-				LOG.debug("************** User registered via mobile web service *************" + login);
+				LOG.debug(LOG2 + login);
 			}
 			else
 			{
@@ -266,7 +271,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	/**
 	 * New API for API project-phase 1 || For registration
 	 */
-	@SuppressWarnings("javadoc")
 	@Override
 	public MplRegistrationResultWsDto registerAppUser(final String mobileNumber, final int platformNumber, final String emailId)
 	{
@@ -308,7 +312,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				}
 				//Set success flag
 				successFlag = true;
-				LOG.debug("************** User registered via mobile web service *************" + mobileNumber);
+				LOG.debug(LOG2 + mobileNumber);
 
 			}
 			else
@@ -945,7 +949,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1046,7 +1050,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1172,7 +1176,6 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws RequestParameterException
 	 * @throws DuplicateUidException
 	 */
-	@SuppressWarnings("javadoc")
 	@Override
 	public MplUserResultWsDto registerNewMplUserWithMobile(final String login, final String password,
 			final boolean tataTreatsEnable, final int platformNumber, final String emailId) throws EtailBusinessExceptions,
@@ -1189,7 +1192,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		{
 			mplUserHelper.validateRegistrationDataForMobileNumber(login, password);
 			LOG.debug("Step 2>>>>>>>>>>>>>>>>>");
-			LOG.debug("************** User details validated mobile web service ************" + login);
+			LOG.debug(LOG1 + login);
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(login);
 			registration.setPassword(password);
@@ -1219,7 +1222,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				LOG.debug("Step 6>>>>>>>>>>>>>>>>>");
 				registerCustomerFacade.register(registration, platformNumber);
 				successFlag = true;
-				LOG.debug("************** User registered via mobile web service *************" + login);
+				LOG.debug(LOG2 + login);
 			}
 			else
 			{
@@ -1273,14 +1276,14 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	//NU-31
 	@Override
-	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber)
+	public MplRegistrationResultWsDto forgotPasswordOtp(final String mobileNumber, final int platformNumber, final boolean isPwa)
 	{
 		final MplRegistrationResultWsDto result = new MplRegistrationResultWsDto();
 		boolean successFlag = false;
 		try
 		{
 			//result = mplUserHelper.validateRegistrationData(login, null);//to-do validate email & mobile number
-			LOG.debug("************** User details validated mobile web service ************" + mobileNumber);
+			LOG.debug(LOG1 + mobileNumber);
 			final ExtRegisterData registration = new ExtRegisterData();
 			registration.setLogin(mobileNumber);
 			if (!registerCustomerFacade.checkUniquenessOfEmail(registration))
@@ -1289,9 +1292,17 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 						mobileNumber);
 				try
 				{
-					sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-							MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
-									MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
+					if (StringUtils.isNotEmpty(mobileNumber)
+							&& mobileNumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX))
+					{
+						sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
+								MarketplacecommerceservicesConstants.SMS_MESSAGE_C2C_OTP.replace(
+										MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, otp), mobileNumber);
+					}
+					else if (StringUtils.isNotEmpty(mobileNumber) && mobileNumber.matches(EMAIL_REGEX))
+					{
+						forgetPasswordFacade.forgottenPasswordForEmail(mobileNumber, otp, Boolean.TRUE);
+					}
 				}
 				catch (final ModelSavingException e)
 				{
@@ -1302,7 +1313,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 					LOG.error(MarketplacecommerceservicesConstants.LOGERROR, e);
 				}
 				successFlag = true;
-				LOG.debug("************** User registered via mobile web service *************" + mobileNumber);
+				LOG.debug(LOG2 + mobileNumber);
 			}
 			else
 			{

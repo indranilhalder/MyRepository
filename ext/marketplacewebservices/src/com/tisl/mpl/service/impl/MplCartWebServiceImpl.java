@@ -112,7 +112,6 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.jalo.BundlingPromotionWithPercentageSlab;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.DefaultExtStockLevelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
@@ -125,7 +124,6 @@ import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -205,6 +203,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+	private static final String LOG1 = "************ Mobile webservice Sship product ************* Delivery cost ";
+	private static final String FOR = "for";
 
 	private final static Logger LOG = Logger.getLogger(MplCartWebServiceImpl.class);
 
@@ -233,11 +233,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Resource(name = "defaultStockLevelDao")
 	private DefaultExtStockLevelDao defaultStockLevelDao;
-	@Autowired
-	private MplWalletFacade mplWalletFacade;
 
-	@Autowired
-	private MplEgvWalletService mplEgvWalletService;
+	//@Autowired--Sonar fix
+	///private MplWalletFacade mplWalletFacade;
+
+	//@Autowired--Sonar FIx
+	//private MplEgvWalletService mplEgvWalletService;
 
 	/**
 	 * Service to create cart
@@ -987,7 +988,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					final double delCharge = actualDelCharge;
 					final double payableamtWdDelCharge = (Double.parseDouble(cartDataDetails.getTotalPrice()) - delCharge);
 					final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-					final PriceData totalDiscount = createPriceCharge(Double.valueOf(discount).toString());
+					final PriceData totalDiscount = createPriceCharge(String.valueOf(discount));//Sonar fix
 					pricePwa.setTotalDiscountAmount(totalDiscount);
 					cartDataDetails.setCartAmount(pricePwa);
 
@@ -1479,8 +1480,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										if (LOG.isDebugEnabled())
 										{
-											LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-													+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+											LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 										}
 										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -1574,8 +1574,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 									{
 										if (LOG.isDebugEnabled())
 										{
-											LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-													+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+											LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 										}
 										if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 												&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -1672,8 +1671,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 								selectedDelivery.setDeliveryCost(String.valueOf(abstractOrderEntry.getCurrDelCharge()));
 								if (LOG.isDebugEnabled())
 								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ abstractOrderEntry.getCurrDelCharge() + "for" + gwlp.getFullfillmentType());
+									LOG.debug(LOG1 + abstractOrderEntry.getCurrDelCharge() + FOR + gwlp.getFullfillmentType());
 								}
 							}
 
@@ -3617,7 +3615,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	//NU-46 : get user cart details pwa
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#getCartDetailsPwa(java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
@@ -4278,8 +4276,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								if (LOG.isDebugEnabled())
 								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+									LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 								}
 								if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 										&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -4367,8 +4364,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								if (LOG.isDebugEnabled())
 								{
-									LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-											+ deliveryMode.getValue().toString() + "for" + gwlp.getFullfillmentType());
+									LOG.debug(LOG1 + deliveryMode.getValue().toString() + FOR + gwlp.getFullfillmentType());
 								}
 								if (null != abstractOrderEntry.getGiveAway() && !abstractOrderEntry.getGiveAway().booleanValue()
 										&& null != deliveryMode.getValue() && null != abstractOrderEntry.getQuantity())
@@ -4457,8 +4453,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						configureDeliveryChargeForProduct(String.valueOf(abstractOrderEntry.getCurrDelCharge()), selectedDelivery);
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("************ Mobile webservice Sship product ************* Delivery cost "
-									+ abstractOrderEntry.getCurrDelCharge() + "for" + gwlp.getFullfillmentType());
+							LOG.debug(LOG1 + abstractOrderEntry.getCurrDelCharge() + FOR + gwlp.getFullfillmentType());
 						}
 					}
 

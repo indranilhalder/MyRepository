@@ -5,7 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 
 
-import de.hybris.platform.servicelayer.config.ConfigurationService;
+//import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import javax.annotation.Resource;
 
@@ -24,8 +24,8 @@ import com.tisl.mpl.social.SocialAccessValidationService;
 public class SocialLoginValidationServiceImpl implements SocialLoginValidationService
 {
 	private static final Logger LOG = Logger.getLogger(SocialLoginValidationServiceImpl.class);
-	@Resource(name = "configurationService")
-	private ConfigurationService configurationService;
+	//@Resource(name = "configurationService")
+	//private ConfigurationService configurationService;
 	@Resource(name = "socialAccessValidationService")
 	SocialAccessValidationService socialAccessValidationService;
 

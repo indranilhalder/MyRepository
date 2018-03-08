@@ -43,6 +43,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -573,6 +574,7 @@ public class CheckoutController extends AbstractCheckoutController
 					double totalQcTotalAmount =0d;
 					double totalPayableAmount = 0d;
 					boolean isCliqCashApplied =false;
+					DecimalFormat decimalFormat =new DecimalFormat("#.00");
 					if(null != orderModel && null!=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
 						if(null!=orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount()>0){
 						totalQcTotalAmount=orderModel.getTotalWalletAmount();
@@ -584,8 +586,8 @@ public class CheckoutController extends AbstractCheckoutController
 						isCliqCashApplied =true;
 						totalPayableAmount = 0;
 					}
-					model.addAttribute("totalPayableAmount", totalPayableAmount);
-					model.addAttribute("totalQcTotalAmount", totalQcTotalAmount);
+					model.addAttribute("totalPayableAmount", decimalFormat.format(totalPayableAmount));
+					model.addAttribute("totalQcTotalAmount", decimalFormat.format(totalQcTotalAmount));
 					model.addAttribute("isCliqCashApplied", isCliqCashApplied);
 					final String userIpAddress = request.getHeader("X-Forwarded-For");
 					orderModel.setIpAddress(userIpAddress);

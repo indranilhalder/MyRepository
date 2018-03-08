@@ -10,6 +10,8 @@ import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
+import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -20,10 +22,13 @@ import de.hybris.platform.commercefacades.search.ProductSearchFacade;
 import de.hybris.platform.commercefacades.search.data.AutocompleteSuggestionData;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
+import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,15 +76,12 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
+import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.web.data.MplAutocompleteAmpData;
 import com.tisl.mpl.storefront.web.data.MplAutocompleteResultData;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-import de.hybris.platform.commercefacades.order.CartFacade;
-import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.commercefacades.user.UserFacade;
-import de.hybris.platform.servicelayer.user.UserService;
 
 
 /**
@@ -123,7 +125,7 @@ public class HomePagePwAmpController extends HomePageController
 	private ProductSearchFacade<ProductData> productSearchFacade;
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
-	
+
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 
@@ -1536,6 +1538,7 @@ public class HomePagePwAmpController extends HomePageController
 		ampResultData.setItems(listAmp);
 		return ampResultData;
 	}
+
 	/**
 	 *
 	 * @param session
@@ -1621,5 +1624,70 @@ public class HomePagePwAmpController extends HomePageController
 				productData.setPrice(new PriceData());
 			}
 		}
+	}
+
+	/**
+	 * @param request
+	 *           ,response
+	 * @return Map<String, Map<String, Object>>
+	 */
+	@SuppressWarnings("javadoc")
+	@ResponseBody
+	@RequestMapping(value = "/setampanalyticsinfo", method = RequestMethod.GET)
+	public Map<String, ArrayList<Map<String, Object>>> setAmpAnalyticsInfo(final HttpServletRequest request,
+			final HttpServletResponse response)
+	{
+		final String ampAnalyticsHost = configurationService.getConfiguration().getString(
+				MessageConstants.AMP_ANALYTICS_SOURCE_ORIGIN, MessageConstants.TATACLIQ_URL);
+		response.setHeader(MessageConstants.AMP_ACCESS_CONTROL_ALLOW_SOURCE_REQUEST_HEADER, ampAnalyticsHost);
+		response.setHeader(MessageConstants.CACHE_CONTROL_REQUEST_HEADER, "max-age=0");
+
+		final Map<String, Object> ampAnalyticsInfo = new HashMap<String, Object>();
+		final ArrayList<Map<String, Object>> inner = new ArrayList<Map<String, Object>>();
+
+		String userType = null;
+		String userId = null;
+		String userLoginType = null;
+		if (request.getAttribute(MessageConstants.USER_LOGIN_TYPE) != null)
+		{
+			userLoginType = request.getAttribute(MessageConstants.USER_LOGIN_TYPE).toString();
+		}
+		if (userLoginType == null)
+		{
+			userLoginType = MessageConstants.GUESTUSER;
+		}
+		ampAnalyticsInfo.put(ModelAttributetConstants.USER_LOGIN_TYPE, userLoginType);
+		if (request.getCookies() != null)
+		{
+			for (final Cookie cookie : request.getCookies())
+			{
+				if (cookie.getName().equals(MessageConstants.MPL_USER_TYPE_COOKIE))
+				{
+					userType = cookie.getValue();
+				}
+				if (cookie.getName().equals(MessageConstants.MPL_USER_COOKIE))
+				{
+					userId = cookie.getValue();
+				}
+			}
+		}
+		if (userType == null)
+		{
+			userType = MessageConstants.SESSION;
+		}
+		ampAnalyticsInfo.put(ModelAttributetConstants.USER_TYPE, userType);
+		if (userId == null)
+		{
+			userId = ModelAttributetConstants.ANONYMOUS;
+		}
+		ampAnalyticsInfo.put(ModelAttributetConstants.USER_ID, userId);
+		ampAnalyticsInfo.put(ModelAttributetConstants.SESSION_ID, request.getSession().getId());
+		ampAnalyticsInfo.put(ModelAttributetConstants.VISITOR_IP, getVisitorIp(request));
+		ampAnalyticsInfo.put(ModelAttributetConstants.CID, request.getParameter(ModelAttributetConstants.CID));
+
+		inner.add(ampAnalyticsInfo);
+		final Map<String, ArrayList<Map<String, Object>>> items = new HashMap<String, ArrayList<Map<String, Object>>>();
+		items.put(ModelAttributetConstants.ITEMS, inner);
+		return items;
 	}
 }

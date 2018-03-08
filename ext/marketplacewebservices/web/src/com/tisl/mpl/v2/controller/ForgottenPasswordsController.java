@@ -89,6 +89,7 @@ public class ForgottenPasswordsController extends BaseController
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final String ROLE_CLIENT = "ROLE_CLIENT";
 	private static final String APPLICATION_TYPE = "application/json";
+	private static final String isPwa = "isPwa";
 
 	/**
 	 * Generates a token to restore customer's forgotten password.
@@ -96,7 +97,7 @@ public class ForgottenPasswordsController extends BaseController
 	 * @formparam userId Customer's user id. Customer user id is case insensitive.
 	 */
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void restorePassword(@RequestParam final String userId)
@@ -115,8 +116,8 @@ public class ForgottenPasswordsController extends BaseController
 	 * @return UserResultWsDto
 	 */
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
-	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = "application/json")
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/forgotPasswordforEmail", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto forgotPassword(@RequestParam final String emailid, final String fields, final HttpServletRequest request)
 	{
@@ -202,16 +203,18 @@ public class ForgottenPasswordsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
-	@RequestMapping(value = "/customerForgotPassword", method = RequestMethod.POST, produces = "application/json")
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/customerForgotPassword", params = isPwa, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplRegistrationResultWsDto customerForgotPassword(@RequestParam final String username,
-			@RequestParam final int platformNumber, @RequestParam final String isPwa) throws Exception
+			@RequestParam final int platformNumber, @RequestParam final boolean isPwa) throws Exception
 	{
 		MplRegistrationResultWsDto resultWsDto = new MplRegistrationResultWsDto();
 		try
 		{
-			resultWsDto = mobileUserService.forgotPasswordOtp(username, platformNumber);
+			{
+				resultWsDto = mobileUserService.forgotPasswordOtp(username, platformNumber, true);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -243,8 +246,8 @@ public class ForgottenPasswordsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
-	@RequestMapping(value = "/forgotPasswordOTPVerification", method = RequestMethod.POST, produces = "application/json")
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
+	@RequestMapping(value = "/forgotPasswordOTPVerification", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplRegistrationResultWsDto forgotPasswordOTPVerification(@RequestParam final String username,
 			@RequestParam final int platformNumber, @RequestParam final String otp, @RequestParam final String isPwa)
@@ -308,7 +311,7 @@ public class ForgottenPasswordsController extends BaseController
 		final MplUserResultWsDto validated = new MplUserResultWsDto();
 		try
 		{
-			final String userIdLwCase = userId.toLowerCase();
+			//final String userIdLwCase = userId.toLowerCase();
 			//		validated = mplUserHelper.validateRegistrationData(userIdLwCase, newPassword);//to-do
 			if (null != validated.getStatus()
 					&& validated.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
@@ -327,7 +330,7 @@ public class ForgottenPasswordsController extends BaseController
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0017);
 				}
 				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				result.setMessage("Password has been updated successfuly");
+				result.setMessage("Password has been updated successfully");
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -360,7 +363,7 @@ public class ForgottenPasswordsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, TRUSTED_CLIENT })
 	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto resetPassword(@RequestParam final String username, @RequestParam final String newPassword,

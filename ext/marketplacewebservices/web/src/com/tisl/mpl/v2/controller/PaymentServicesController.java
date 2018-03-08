@@ -5,7 +5,6 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
@@ -86,9 +85,9 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
-import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CliqCashWsDto;
@@ -151,6 +150,7 @@ public class PaymentServicesController extends BaseController
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final String MPLCARTVOUCHER = "mplcartvoucher";
 	private static final String PROMOVOUCHER = "promovoucher";
+	private static final String DECIMAL_FORMAT = "0.00";
 
 	@Resource(name = "userService")
 	private UserService userService;
@@ -167,21 +167,21 @@ public class PaymentServicesController extends BaseController
 	@Autowired
 	private CommonI18NService commonI18NService;
 	private static final String INR = "INR";
-	
-	@Autowired 
+
+	@Autowired
 	private MplWalletFacade mplWalletFacade;
 
 	@Resource(name = "mplDefaultPriceDataFactory")
 	private DefaultPriceDataFactory PriceDataFactory;
-	
+
 	@Autowired
 	private MplEGVCartService mplEGVCartService;
-	
+
 	@Autowired
 	private NotificationFacade notificationFacade;
-	
-   @Autowired
-   private PriceDataFactory priceDataFactory;
+
+	@Autowired
+	private PriceDataFactory priceDataFactory;
 
 	/**
 	 * @return the voucherService
@@ -425,8 +425,9 @@ public class PaymentServicesController extends BaseController
 								final PriceData totalMrp = createPriceObj(mrp.toString());
 								pricePwa.setBagTotal(totalMrp);
 								final PriceData amountInclDelCharge = promoPriceData.getTotalPriceInclConv();
+								final PriceData payableAmount = promoPriceData.getTotalPrice();
 								//	final PriceData amountInclDelCharge = createPriceObj(promoPriceData.getTotalPriceInclConv().toString());
-								pricePwa.setPaybleAmount(amountInclDelCharge);
+								pricePwa.setPaybleAmount(payableAmount);
 								final PriceData delCharge = promoPriceData.getDeliveryCost();
 								final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue()
 										- delCharge.getDoubleValue().doubleValue();
@@ -441,19 +442,22 @@ public class PaymentServicesController extends BaseController
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
 						}
-						
-						if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
-						{
-							
-							if (null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D )
-							{
-							//	promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
-							Double juspayAmount = Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue());
 
-								if(null !=  juspayAmount) {
-									Double amount = juspayAmount;
-							        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-									final String decimalFormat = "0.00";
+						if (null != cart.getSplitModeInfo()
+								&& cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+						{
+
+							if (null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D)
+							{
+								//	promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
+								final Double juspayAmount = Double.valueOf(cart.getTotalPrice().doubleValue()
+										- cart.getPayableWalletAmount().doubleValue());
+
+								if (null != juspayAmount)
+								{
+									final Double amount = juspayAmount;
+									final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+									final String decimalFormat = DECIMAL_FORMAT;
 									final DecimalFormat df = new DecimalFormat(decimalFormat);
 									final String totalPayableAmount = df.format(bigDecimal);
 									promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -461,30 +465,34 @@ public class PaymentServicesController extends BaseController
 								promoPriceData.setCliqCashApplied(true);
 							}
 						}
-						else if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
+						else if (null != cart.getSplitModeInfo()
+								&& cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 						{
-						//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
-							
-								Double amount = Double.valueOf(0.0D);
-						        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-								final String decimalFormat = "0.00";
-								final DecimalFormat df = new DecimalFormat(decimalFormat);
-								final String totalPayableAmount = df.format(bigDecimal);
-								promoPriceData.setPaybleAmount(totalPayableAmount);
+							//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+
+							final Double amount = Double.valueOf(0.0D);
+							final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+							final String decimalFormat = DECIMAL_FORMAT;
+							final DecimalFormat df = new DecimalFormat(decimalFormat);
+							final String totalPayableAmount = df.format(bigDecimal);
+							promoPriceData.setPaybleAmount(totalPayableAmount);
 							promoPriceData.setCliqCashApplied(true);
-						}else {
+						}
+						else
+						{
 							//promoPriceData.setPaybleAmount(cart.getTotalPrice());
-							if(null !=  cart.getTotalPrice()) {
-								Double amount = cart.getTotalPrice();
-						        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-								final String decimalFormat = "0.00";
+							if (null != cart.getTotalPrice())
+							{
+								final Double amount = cart.getTotalPrice();
+								final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+								final String decimalFormat = DECIMAL_FORMAT;
 								final DecimalFormat df = new DecimalFormat(decimalFormat);
 								final String totalPayableAmount = df.format(bigDecimal);
 								promoPriceData.setPaybleAmount(totalPayableAmount);
 							}
 							promoPriceData.setCliqCashApplied(false);
 						}
-						setTotalPrice(promoPriceData,cart);
+						setTotalPrice(promoPriceData, cart);
 					}
 					else
 					{
@@ -536,48 +544,55 @@ public class PaymentServicesController extends BaseController
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
 				}
-				
-				if (null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+
+				if (null != orderModel.getSplitModeInfo()
+						&& orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
 				{
-					
-					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D )
+
+					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
 					{
-					///	promoPriceData.setPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue()));
-						Double juspayAmount = Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue());
-						if(null !=  juspayAmount) {
-							Double amount = juspayAmount;
-					        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-							final String decimalFormat = "0.00";
+						///	promoPriceData.setPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue()));
+						final Double juspayAmount = Double.valueOf(orderModel.getTotalPrice().doubleValue()
+								- orderModel.getPayableWalletAmount().doubleValue());
+						if (null != juspayAmount)
+						{
+							final Double amount = juspayAmount;
+							final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+							final String decimalFormat = DECIMAL_FORMAT;
 							final DecimalFormat df = new DecimalFormat(decimalFormat);
 							final String totalPayableAmount = df.format(bigDecimal);
 							promoPriceData.setPaybleAmount(totalPayableAmount);
 						}
-						
+
 						promoPriceData.setCliqCashApplied(true);
 					}
 				}
-				else if (null != orderModel.getSplitModeInfo() &&  orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
+				else if (null != orderModel.getSplitModeInfo()
+						&& orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 				{
-				//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
-					Double amount =Double.valueOf(0.0D);
-			        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-					final String decimalFormat = "0.00";
+					//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+					final Double amount = Double.valueOf(0.0D);
+					final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final String decimalFormat = DECIMAL_FORMAT;
 					final DecimalFormat df = new DecimalFormat(decimalFormat);
 					final String totalPayableAmount = df.format(bigDecimal);
 					promoPriceData.setPaybleAmount(totalPayableAmount);
 					promoPriceData.setCliqCashApplied(true);
-				}else {
-					if(null !=  orderModel.getTotalPrice()) {
-						Double amount = orderModel.getTotalPrice();
-				        BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-						final String decimalFormat = "0.00";
+				}
+				else
+				{
+					if (null != orderModel.getTotalPrice())
+					{
+						final Double amount = orderModel.getTotalPrice();
+						final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+						final String decimalFormat = DECIMAL_FORMAT;
 						final DecimalFormat df = new DecimalFormat(decimalFormat);
 						final String totalPayableAmount = df.format(bigDecimal);
 						promoPriceData.setPaybleAmount(totalPayableAmount);
 					}
 					promoPriceData.setCliqCashApplied(false);
 				}
-				setTotalPrice(promoPriceData,orderModel);
+				setTotalPrice(promoPriceData, orderModel);
 
 			}
 
@@ -630,24 +645,23 @@ public class PaymentServicesController extends BaseController
 	 * @param promoPriceData
 	 * @param cart
 	 */
-	private void setTotalPrice(MplPromoPriceWsDTO promoPriceData, AbstractOrderModel cart)
+	private void setTotalPrice(final MplPromoPriceWsDTO promoPriceData, final AbstractOrderModel cartModel)
 	{
-		final double payableWalletAmount = cart.getPayableWalletAmount().doubleValue();
+		final double payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
 		double bankCouponDiscount = 0.0D;
-		double couponDiscount = 0.0D;
-		double productDiscount = 0.0D;
 		double userCouponDiscount = 0.0D;
 		double otherDiscount = 0.0D;
 		double totalDiscount = 0.0D;
-		final List<DiscountValue> discountList = cart.getGlobalDiscountValues(); // discounts on the cart itself
-		final List<DiscountModel> voucherList = cart.getDiscounts();
-		
-		for (final AbstractOrderEntryModel entry : cart.getEntries())
+		double productDiscount = 0.0D;
+		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); // discounts on the cart itself
+		final List<DiscountModel> voucherList = cartModel.getDiscounts();
+
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 		{
 			if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
 			{
-				 productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc()
-						.doubleValue() > 0) ? entry.getTotalProductLevelDisc().doubleValue() : 0;
+				productDiscount = (null != entry.getTotalProductLevelDisc() && entry.getTotalProductLevelDisc().doubleValue() > 0) ? entry
+						.getTotalProductLevelDisc().doubleValue() : 0;
 			}
 		}
 		if (CollectionUtils.isNotEmpty(discountList))
@@ -683,22 +697,20 @@ public class PaymentServicesController extends BaseController
 			}
 		}
 		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
-
-
-		BigDecimal total = new BigDecimal(0.0D);
-		final double remainingWalletAmount = cart.getTotalWalletAmount().doubleValue() - payableWalletAmount;
-		if (null != cart.getSubtotal())
+		BigDecimal total = new BigDecimal(0);
+		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
+		if (null != cartModel.getSubtotal())
 		{
-			total = new BigDecimal(cart.getSubtotal().doubleValue());
+			total = new BigDecimal(cartModel.getSubtotal().doubleValue());
 			final PriceData subTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setSubTotalPrice(subTotalPriceData);
 
 		}
 
-		if (null != cart.getDeliveryCost())
+		if (null != cartModel.getDeliveryCost())
 		{
-			total = new BigDecimal(cart.getDeliveryCost().doubleValue());
+			total = new BigDecimal(cartModel.getDeliveryCost().doubleValue());
 			final PriceData deliveryChargesPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setDeliveryCharges(deliveryChargesPriceData);
@@ -707,13 +719,15 @@ public class PaymentServicesController extends BaseController
 		final PriceData otherDiscountPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setOtherDiscount(otherDiscountPriceData);
-		if(bankCouponDiscount > 0.0D) {
+		if (bankCouponDiscount > 0.0D)
+		{
 			promoPriceData.setIsBankPromotionApplied(true);
-	    }
-		total = new BigDecimal(couponDiscount);
+		}
+		total = new BigDecimal(userCouponDiscount);
 		final PriceData couponPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setCouponDiscount(total.toString());
+
 		promoPriceData.setAppliedCouponDiscount(couponPriceData);
 
 		if (payableWalletAmount > 0.0D)
@@ -732,12 +746,17 @@ public class PaymentServicesController extends BaseController
 				MarketplacecommerceservicesConstants.INR);
 		promoPriceData.setCliqCashBalance(remainingWalletAmountPriceData);
 
-		if (null != cart.getTotalPrice())
+		if (null != cartModel.getTotalPrice())
 		{
-			total = new BigDecimal(cart.getTotalPrice().doubleValue() - payableWalletAmount);
+			total = new BigDecimal(cartModel.getTotalPrice().doubleValue() - payableWalletAmount);
 			final PriceData cartTotalPriceData = priceDataFactory.create(PriceDataType.BUY, total,
 					MarketplacecommerceservicesConstants.INR);
 			promoPriceData.setTotalPrice(cartTotalPriceData);
+
+			if ((cartModel.getTotalPrice().doubleValue() - payableWalletAmount) > 0.0D)
+			{
+				promoPriceData.setIsRemainingAmount(true);
+			}
 		}
 	}
 
@@ -1508,40 +1527,43 @@ public class PaymentServicesController extends BaseController
 		OrderModel orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 		String statusResponse = "";
 		boolean alreadyProcessed = false;
-		
-//		// Buying Of EGV Changes Start 
-//		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
+
+		//		// Buying Of EGV Changes Start
+		//		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
 		if (orderToBeUpdated != null && null != orderToBeUpdated.getIsEGVCart() && orderToBeUpdated.getIsEGVCart().booleanValue())
 		{
 			OrderData orderData = null;
 
 			try
 			{
-				orderData = getEGVOrderStatus(cartGuid,paymentMode,juspayOrderID);
-				if(null != orderData) {
+				orderData = getEGVOrderStatus(cartGuid, paymentMode, juspayOrderID);
+				if (null != orderData)
+				{
 					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
 					updateTransactionDetail.setOrderId(orderData.getCode());
-				}else {
+				}
+				else
+				{
 					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
 				}
 				return updateTransactionDetail;
 			}
-			catch (InvalidCartException e)
+			catch (final InvalidCartException e)
 			{
 				LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
 				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
 				updateTransactionDetail.setError(e.getMessage());
 			}
-			catch (CalculationException e)
+			catch (final CalculationException e)
 			{
 				LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
 				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
 			}
 			return updateTransactionDetail;
 		}
-		
-	 // Buying Of EGV Changes End 
-		
+
+		// Buying Of EGV Changes End
+
 		try
 		{
 			//final String orderGuid = decryptKey(guid);
@@ -1580,30 +1602,37 @@ public class PaymentServicesController extends BaseController
 							if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(statusResponse))
 							{
 								//return placeOrder(model, redirectAttributes);
-								
-							// Paying The remaining amount through Wallet 
-								try {
-									LOG.debug(" Paying Amount From QC ");
-									if(null != orderToBeUpdated.getSplitModeInfo() && 
-											orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT) ){
-								//	double amountDeducted = payAmountThroughWallet(orderToBeUpdated);
-									double amountDeducted = orderToBeUpdated.getPayableWalletAmount().doubleValue();
-										boolean qcFlag =	payAmountThroughWallet(orderToBeUpdated);
 
-									if( qcFlag && amountDeducted>0.0D) {
-									  updateTransactionDetail.setCliqCashAmountDeducted(Double.valueOf(amountDeducted));
-										updateTransactionDetail.setCliqCashApplied(true);
+								// Paying The remaining amount through Wallet
+								try
+								{
+									LOG.debug(" Paying Amount From QC ");
+									if (null != orderToBeUpdated.getSplitModeInfo()
+											&& orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase(
+													MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+									{
+										//	double amountDeducted = payAmountThroughWallet(orderToBeUpdated);
+										final double amountDeducted = orderToBeUpdated.getPayableWalletAmount().doubleValue();
+										final boolean qcFlag = payAmountThroughWallet(orderToBeUpdated);
+
+										if (qcFlag && amountDeducted > 0.0D)
+										{
+											updateTransactionDetail.setCliqCashAmountDeducted(Double.valueOf(amountDeducted));
+											updateTransactionDetail.setCliqCashApplied(true);
+										}
+										if (!qcFlag)
+										{
+											updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+											updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
+											return updateTransactionDetail;
+										}
 									}
-									if(!qcFlag) {
-										updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
-										updateTransactionDetail.setOrderId(orderToBeUpdated.getCode());
-										return updateTransactionDetail;
-									}
-									}
-								}catch (Exception e) {
-									LOG.error("Exception occurred whil paying from QC"+e.getMessage());
 								}
-								
+								catch (final Exception e)
+								{
+									LOG.error("Exception occurred whil paying from QC" + e.getMessage());
+								}
+
 								if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
 								{
 									updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
@@ -1711,11 +1740,11 @@ public class PaymentServicesController extends BaseController
 	}
 
 
-	
-	
-	public boolean payAmountThroughWallet(OrderModel order)
+
+
+	public boolean payAmountThroughWallet(final OrderModel order)
 	{
-       boolean qcFlag = true;
+		boolean qcFlag = true;
 		LOG.info("paying amount from EGV Wallet");
 		//final OrderData orderData;
 		//final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
@@ -1724,18 +1753,19 @@ public class PaymentServicesController extends BaseController
 		{
 			final String qcUniqueCode = mplPaymentFacade.generateQCCode();
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			
+
 			final double WalletAmt = order.getPayableWalletAmount().doubleValue();
 			final double totalAmt = order.getTotalPrice().doubleValue();
 			final double juspayAmount = totalAmt - WalletAmt;
 
-			qcResponse = mplPaymentFacade.createQCOrderRequest(order.getGuid(), order,
-					currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
-					qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE, WalletAmt, juspayAmount);
+			qcResponse = mplPaymentFacade.createQCOrderRequest(order.getGuid(), order, currentCustomer.getCustomerWalletDetail()
+					.getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
+					MarketplacewebservicesConstants.CHANNEL_MOBILE, WalletAmt, juspayAmount);
 			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 			{
 				qcFlag = true;
-			}else
+			}
+			else
 			{
 				qcFlag = false;
 				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
@@ -1747,15 +1777,16 @@ public class PaymentServicesController extends BaseController
 		{
 			qcFlag = false;
 			order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
-				modelService.save(order);
+			modelService.save(order);
 		}
 		return qcFlag;
 	}
-	// Buying Of EGV  Changes START 
-	private OrderData getEGVOrderStatus(final String guid,String paymentMode,String juspayOrderID)
+
+	// Buying Of EGV  Changes START
+	private OrderData getEGVOrderStatus(final String guid, final String paymentMode, final String juspayOrderID)
 			throws InvalidCartException, CalculationException
 	{
-		 OrderData orderData = new OrderData();
+		OrderData orderData = new OrderData();
 		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
 		String orderStatusResponse = null;
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
@@ -1766,7 +1797,7 @@ public class PaymentServicesController extends BaseController
 		{
 			if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
 			{
-				orderData= updateOrder(orderToBeUpdated);
+				orderData = updateOrder(orderToBeUpdated);
 			}
 			else
 			{
@@ -1779,9 +1810,9 @@ public class PaymentServicesController extends BaseController
 		}
 		return orderData;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * This method updates already created order as per new Payment Soln - Order before Payment TPR-629
 	 *
@@ -1792,11 +1823,11 @@ public class PaymentServicesController extends BaseController
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	private OrderData updateOrder(final OrderModel orderToBeUpdated)
-			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
+	private OrderData updateOrder(final OrderModel orderToBeUpdated) throws InvalidCartException, CalculationException,
+			EtailNonBusinessExceptions
 	{
 		LOG.debug("========================Inside Update Order============================");
-		 OrderData orderData=null;
+		OrderData orderData = null;
 		try
 		{
 			if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
@@ -1808,13 +1839,13 @@ public class PaymentServicesController extends BaseController
 				//order confirmation email and sms
 				notificationFacade.sendOrderConfirmationNotification(orderToBeUpdated);
 
-				 orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 
 			}
 			else if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
 					&& CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
 			{
-				 orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 			}
 			else if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
 					&& OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
@@ -1838,8 +1869,8 @@ public class PaymentServicesController extends BaseController
 	}
 
 
-	// Buying Of EGV  Changes END 
-	
+	// Buying Of EGV  Changes END
+
 	/**
 	 * @desc This method fetches delete the saved cards --TPR-629
 	 *
@@ -1867,30 +1898,33 @@ public class PaymentServicesController extends BaseController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if(null !=cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()) {
+				if (null != cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue())
+				{
 					isEgvOrder = true;
 				}
-					//CAR-111
-					//cartData = getMplExtendedCartConverter().convert(cart);
-					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-							MarketplacewebservicesConstants.MPLSTORE, cart);
-					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
-					paymentModesData.setPaymentModes(paymentMode);
-					if(!isEgvOrder) {
-						paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
-					}
-					paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-					cart.setPayableNonWalletAmount(Double.valueOf(cart.getTotalPrice().doubleValue()));
-					cart.setPayableWalletAmount(Double.valueOf(0.0D));
-					modelService.save(cart);
-					modelService.refresh(cart);
+				//CAR-111
+				//cartData = getMplExtendedCartConverter().convert(cart);
+				final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
+						MarketplacewebservicesConstants.MPLSTORE, cart);
+				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
+				paymentModesData.setPaymentModes(paymentMode);
+				if (!isEgvOrder)
+				{
+					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
+				}
+				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				cart.setPayableNonWalletAmount(Double.valueOf(cart.getTotalPrice().doubleValue()));
+				cart.setPayableWalletAmount(Double.valueOf(0.0D));
+				modelService.save(cart);
+				modelService.refresh(cart);
 			}
 			else
 			{
-					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()) {
-						isEgvOrder = true;
-					}
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+				{
+					isEgvOrder = true;
+				}
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
@@ -1898,15 +1932,16 @@ public class PaymentServicesController extends BaseController
 						MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
-				if(!isEgvOrder) {
+				if (!isEgvOrder)
+				{
 					paymentModesData.setPaymentOffers(mplCouponFacade.getAllOffersForMobile());
 				}
-                                paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-					orderModel.setPayableNonWalletAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()));
-					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-					modelService.save(orderModel);
-					modelService.refresh(orderModel);
+				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				orderModel.setPayableNonWalletAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()));
+				orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+				modelService.save(orderModel);
+				modelService.refresh(orderModel);
 			}
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 			boolean isWalletOtpVerified = false;
@@ -1914,21 +1949,29 @@ public class PaymentServicesController extends BaseController
 			{
 				paymentModesData.setIsWalletCreated(true);
 			}
-			if(null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue() )
+			if (null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 			{
 				isWalletOtpVerified = true;
 				paymentModesData.setIsWalletOtpVerified(true);
 			}
-			if(!isWalletOtpVerified) {
-				WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
-				if(null != walletCreateData) {
-					if(null != walletCreateData.getQcVerifyFirstName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName())){
+			if (!isWalletOtpVerified)
+			{
+				final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
+				if (null != walletCreateData)
+				{
+					if (null != walletCreateData.getQcVerifyFirstName()
+							&& StringUtils.isNotBlank(walletCreateData.getQcVerifyFirstName()))
+					{
 						paymentModesData.setFirstName(walletCreateData.getQcVerifyFirstName());
 					}
-					if(null != walletCreateData.getQcVerifyLastName() && StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName())){
+					if (null != walletCreateData.getQcVerifyLastName()
+							&& StringUtils.isNotBlank(walletCreateData.getQcVerifyLastName()))
+					{
 						paymentModesData.setLastName(walletCreateData.getQcVerifyLastName());
 					}
-					if(null != walletCreateData.getQcVerifyMobileNo() && StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo())){
+					if (null != walletCreateData.getQcVerifyMobileNo()
+							&& StringUtils.isNotBlank(walletCreateData.getQcVerifyMobileNo()))
+					{
 						paymentModesData.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
 					}
 				}
@@ -1944,7 +1987,7 @@ public class PaymentServicesController extends BaseController
 					: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
 			paymentModesData.setMerchantID(juspayMerchantId);
 			paymentModesData.setMerchantKey(juspayMerchantKey);
-			
+
 			/* Added for cliq Cash Functionality start */
 			try
 			{
@@ -1964,35 +2007,39 @@ public class PaymentServicesController extends BaseController
 				paymentModesData.setSavedCardResponse(savedCards);
 				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				LOG.error("Exception occurred while getting the saved credit card details " + e.getMessage());
 			}
-         
-			if(!isEgvOrder) {
+
+			if (!isEgvOrder)
+			{
 				boolean EnabledSplitPaymentModeForMobile = false;
-				if(null != configurationService.getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.ENABLED_SPILT_PAYMENT_FORMOBILE)) {
+				if (null != configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.ENABLED_SPILT_PAYMENT_FORMOBILE))
+				{
 					final String splitModeEnabledStringValue = configurationService.getConfiguration()
 							.getString(MarketplacecommerceservicesConstants.ENABLED_SPILT_PAYMENT_FORMOBILE).trim();
-					if(null != splitModeEnabledStringValue){
-						EnabledSplitPaymentModeForMobile =Boolean.valueOf(splitModeEnabledStringValue).booleanValue();
+					if (null != splitModeEnabledStringValue)
+					{
+						EnabledSplitPaymentModeForMobile = Boolean.valueOf(splitModeEnabledStringValue).booleanValue();
 					}
 				}
-				
-				if(EnabledSplitPaymentModeForMobile){
-					
+
+				if (EnabledSplitPaymentModeForMobile)
+				{
+
 					LOG.debug("Split Payment Mode Enabled For Mobile");
 					try
 					{
 						LOG.debug("Getting saved Clish Cash Details");
-						CliqCashWsDto cliqCash = new CliqCashWsDto();
-						TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
+						final CliqCashWsDto cliqCash = new CliqCashWsDto();
+						final TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
 						if (null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
 						{
-							
-							CustomerWalletDetailResponse responce = mplWalletFacade
-									.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
+
+							final CustomerWalletDetailResponse responce = mplWalletFacade.getCustomerWallet(customer
+									.getCustomerWalletDetail().getWalletId());
 							if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())
 							{
 
@@ -2002,10 +2049,13 @@ public class PaymentServicesController extends BaseController
 								}
 
 								final BigDecimal walletAmount = new BigDecimal(responce.getWallet().getBalance().doubleValue());
-								if(null != cart) {
+								if (null != cart)
+								{
 									cart.setTotalWalletAmount(responce.getWallet().getBalance());
 									modelService.save(cart);
-								}else if (null != orderModel) {
+								}
+								else if (null != orderModel)
+								{
 									orderModel.setTotalWalletAmount(responce.getWallet().getBalance());
 									modelService.save(orderModel);
 								}
@@ -2025,11 +2075,13 @@ public class PaymentServicesController extends BaseController
 								cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
 								paymentModesData.setCliqCash(cliqCash);
 							}
-						}else {
-//							paymentModesData.setFirstName(customer.getQcVerifyFirstName());
-//							paymentModesData.setLastName(customer.getQcVerifyLastName());
-//							paymentModesData.setMobileNumber(customer.getMobileNumber());
-							final BigDecimal walletAmount = new BigDecimal(0.0D);
+						}
+						else
+						{
+							//							paymentModesData.setFirstName(customer.getQcVerifyFirstName());
+							//							paymentModesData.setLastName(customer.getQcVerifyLastName());
+							//							paymentModesData.setMobileNumber(customer.getMobileNumber());
+							final BigDecimal walletAmount = new BigDecimal(0);
 							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
 									MarketplacecommerceservicesConstants.INR);
 
@@ -2047,14 +2099,16 @@ public class PaymentServicesController extends BaseController
 							paymentModesData.setCliqCash(cliqCash);
 						}
 					}
-					catch (Exception e)
+					catch (final Exception e)
 					{
 						LOG.debug("Exception occurred while getting customer QC wallet Amount" + e.getMessage());
 					}
-				}else {
+				}
+				else
+				{
 					LOG.debug("Split Payment Mode Not Enabled For Mobile");
 				}
-				
+
 			}
 			/* Added for cliq Cash Functionality end */
 		}

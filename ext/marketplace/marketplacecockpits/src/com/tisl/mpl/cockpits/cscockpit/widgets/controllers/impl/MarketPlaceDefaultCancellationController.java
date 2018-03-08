@@ -879,7 +879,7 @@ public class MarketPlaceDefaultCancellationController extends
 						double qcCliqCashAmt = 0.0D;
 						if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 						{
-							if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+							if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 							{
 								qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue())
 								+ Double.parseDouble(null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail
@@ -1079,7 +1079,7 @@ public class MarketPlaceDefaultCancellationController extends
 				{
 					if (null != cardApportionDetail && null != cardApportionDetail.getBucketType())
 					{
-						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+						if (!cardApportionDetail.getBucketType().equalsIgnoreCase("PROMOTION"))
 						{
 							totalQcApportionValue += Double.parseDouble(cardApportionDetail.getQcApportionValue());
 							totalQcDeliveryValue  +=Double.parseDouble(null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail

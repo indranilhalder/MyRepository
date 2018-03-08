@@ -104,6 +104,12 @@ public class SearchSuggestUtilityMethods
 
 	@Resource(name = "buyBoxDao")
 	private BuyBoxDao buyBoxDao;
+	private static String SNS = "snsCategory";
+	private static String DEPT_TYPE = "deptType";
+	private static String SELLER_ID = "sellerId";
+	private static String FALSE = "false";
+	private static String micrositeSnsCategory = "micrositeSnsCategory";
+	private static String categoryNameCodeMapping = "categoryNameCodeMapping";
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -455,12 +461,12 @@ public class SearchSuggestUtilityMethods
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -522,7 +528,7 @@ public class SearchSuggestUtilityMethods
 							// added count
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 							// To skip Include out of stock
-							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -1436,12 +1442,11 @@ public class SearchSuggestUtilityMethods
 		{
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
-						&& !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode()) && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1508,7 +1513,7 @@ public class SearchSuggestUtilityMethods
 
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
-									.equalsIgnoreCase("false")))
+									.equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -1874,7 +1879,6 @@ public class SearchSuggestUtilityMethods
 		final List<FacetDataWsDTO> searchfacetDTOList = new ArrayList<>();
 		DepartmentHierarchyWs categoryHierarchy = new DepartmentHierarchyWs();
 		List<FacetValueDataWsDTO> facetValueWsDTOList = null;
-
 		final boolean prioritySort = configurationService.getConfiguration().getBoolean("search.facet.sort");
 
 		if (CollectionUtils.isNotEmpty(searchPageData.getFacets()))
@@ -1883,12 +1887,11 @@ public class SearchSuggestUtilityMethods
 
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode())
-						&& !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && StringUtils.isNotEmpty(facate.getCode()) && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
@@ -1906,6 +1909,35 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+
+
+							if (null != facate.getCustomeRange())
+							{
+								facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+								if (facate.getCustomeRange().booleanValue())
+								{
+									facetWsDTO.setMinPrice(facate.getMinPrice());
+									facetWsDTO.setMaxPrice(facate.getMaxPrice());
+								}
+							}
+							else
+							{
+								facetWsDTO.setCustomeRange(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							facetWsDTO.setRangeApplied(Boolean.FALSE);
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -1944,9 +1976,19 @@ public class SearchSuggestUtilityMethods
 								facetValueWsDTO.setValue(values.getCode());
 							}
 
+							if (facate.getCode().equalsIgnoreCase("colour"))
+							{
+								//"#"+ st.substring(st.indexOf('_')+1)
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									final String st = values.getCode();
+									facetValueWsDTO.setHexColor("#" + st.substring(st.indexOf('_') + 1));
+								}
+							}
+
 							//If facet name is "Include out of stock"  value will be false
 							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
-									.equalsIgnoreCase("false")))
+									.equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
@@ -2061,12 +2103,12 @@ public class SearchSuggestUtilityMethods
 			final List<MplSearchFacetPriorityComparator> searchFacetByPriorityList = new ArrayList<MplSearchFacetPriorityComparator>();
 			for (final FacetData<SearchStateData> facate : searchPageData.getFacets())
 			{
-				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase("snsCategory")
+				if (facate.isVisible() && !facate.getCode().equalsIgnoreCase(SNS)
 						&& !facate.getCode().equalsIgnoreCase(MarketplacewebservicesConstants.CATEGORY)
-						&& !facate.getCode().equalsIgnoreCase("deptType") && !facate.getCode().equalsIgnoreCase("sellerId")
-						&& !facate.getCode().equalsIgnoreCase("micrositeSnsCategory")
+						&& !facate.getCode().equalsIgnoreCase(DEPT_TYPE) && !facate.getCode().equalsIgnoreCase(SELLER_ID)
+						&& !facate.getCode().equalsIgnoreCase(micrositeSnsCategory)
 						&& !facate.getCode().equalsIgnoreCase("allPromotions")
-						&& !facate.getCode().equalsIgnoreCase("categoryNameCodeMapping")) //CAR -245-Luxury
+						&& !facate.getCode().equalsIgnoreCase(categoryNameCodeMapping)) //CAR -245-Luxury
 				{
 					final FacetDataWsDTO facetWsDTO = new FacetDataWsDTO();
 
@@ -2081,6 +2123,35 @@ public class SearchSuggestUtilityMethods
 					{
 						facetWsDTO.setSelectedFilterCount(facate.getSelectedFilterCount());
 					}
+
+					if (facate.getCode().equalsIgnoreCase("price"))
+					{
+						if (null != facate.getRangeApplied())
+						{
+							facetWsDTO.setRangeApplied(facate.getRangeApplied());
+
+
+							if (null != facate.getCustomeRange())
+							{
+								facetWsDTO.setCustomeRange(facate.getCustomeRange());
+
+								if (facate.getCustomeRange().booleanValue())
+								{
+									facetWsDTO.setMinPrice(facate.getMinPrice());
+									facetWsDTO.setMaxPrice(facate.getMaxPrice());
+								}
+							}
+							else
+							{
+								facetWsDTO.setCustomeRange(Boolean.FALSE);
+							}
+						}
+						else
+						{
+							facetWsDTO.setRangeApplied(Boolean.FALSE);
+						}
+					}
+
 					Boolean visible = Boolean.FALSE;
 					//Generic filter condition
 					if (searchPageData.getDeptType().equalsIgnoreCase(MarketplacewebservicesConstants.GENERIC))
@@ -2120,11 +2191,22 @@ public class SearchSuggestUtilityMethods
 							}
 
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
+
+							if (facate.getCode().equalsIgnoreCase("colour"))
+							{
+								//"#"+ st.substring(st.indexOf('_')+1)
+								if (StringUtils.isNotEmpty(values.getCode()))
+								{
+									final String st = values.getCode();
+									facetValueWsDTO.setHexColor("#" + st.substring(st.indexOf('_') + 1));
+								}
+							}
 							// To skip Include out of stock
-							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && values.getCode().equalsIgnoreCase(FALSE)))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
+
 
 						}
 					}

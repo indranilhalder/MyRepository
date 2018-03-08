@@ -8,22 +8,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<input type="hidden"  id="page_name" value="${page_name}"/>
-<input type="hidden" id="page_category_name" value="${dropDownText}"/>
-<input type="hidden" id="categoryId" value="${categoryCode}"/>
-<input type="hidden" id="site_section" value="${site_section}"/>
-<!-- TPR-430 -->
-<input type="hidden" id="product_category" value="${product_category}"/>
-<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
-<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
-
-<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
-<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
-
-
 <!-- UF-15-16 -->
 <c:choose>
     <c:when test="${lazyInterface}">
+    	<input type="hidden"  id="page_name" value="${page_name}"/>
+		<input type="hidden" id="page_category_name" value="${dropDownText}"/>
+		<input type="hidden" id="categoryId" value="${categoryCode}"/>
+		<input type="hidden" id="site_section" value="${site_section}"/>
+		<!-- TPR-430 -->
+		<input type="hidden" id="product_category" value="${product_category}"/>
+		<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
+		<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
+		
+		<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
+		<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
+    	
         <div id="productGrid">	<!-- Div to be overridden by AJAX response : TPR-198 -->
             <c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
                 <div class="left-block">
@@ -41,6 +40,18 @@
     <c:otherwise>
 
         <template:page pageTitle="${pageTitle}">
+        <input type="hidden"  id="page_name" value="${page_name}"/>
+		<input type="hidden" id="page_category_name" value="${dropDownText}"/>
+		<input type="hidden" id="categoryId" value="${categoryCode}"/>
+		<input type="hidden" id="site_section" value="${site_section}"/>
+		<!-- TPR-430 -->
+		<input type="hidden" id="product_category" value="${product_category}"/>
+		<input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}"/>
+		<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}"/>
+		
+		<%-- <input type="hidden" id="mSeller_name" value="${mSellerName}"> --%> <!-- TPR-4471 -->
+		<input type="hidden" id="mSellerID" value="${mSellerID}"> <!-- TPR-4471 -->
+		        
             <!-- TPR-4471 Starts -->
 
             <c:set value ="${mSellerID}" var="sellerId"></c:set>

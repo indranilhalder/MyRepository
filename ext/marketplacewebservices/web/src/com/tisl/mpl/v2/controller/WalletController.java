@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.v2.controller;
 
@@ -50,25 +50,28 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
-import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
+import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplEgvWalletService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.EgvCheckMobileNumberWsDto;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateRequestWsDTO;
 import com.tisl.mpl.wsdto.EgvWalletCreateResponceWsDTO;
+import com.tisl.mpl.wsdto.PriceWsPwaDTO;
 import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.UserCliqCashWsDto;
+
 
 /**
  * @author IT
@@ -82,7 +85,7 @@ import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 public class WalletController
 {
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
-	
+
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
@@ -92,53 +95,57 @@ public class WalletController
 	private UserService userService;
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
-	
+
 	@Resource
 	private CommerceCartService commerceCartService;
 
 	@Resource
 	private MplCartFacade mplCartFacade;
 
-	
+
 	@Resource
 	private MplOrderFacade mplOrderFacade;
 
-	
+
 	@Autowired
 	private MplPaymentWebFacade mplPaymentWebFacade;
 
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
-	
+
 	@Resource(name = "mplDefaultPriceDataFactory")
 	private DefaultPriceDataFactory priceDataFactory;
-	
+
 	@Autowired
 	private CommonI18NService commonI18NService;
-	
+
 	@Autowired
 	private MplEGVCartService mplEGVCartService;
-	
+
 
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;
-	
+
 	@Autowired
 	private RegisterCustomerFacade registerCustomerFacade;
-	
+
 	@Autowired
 	private MplEgvWalletService mplEgvWalletService;
-	
+
 	@Autowired
-   private MplCouponFacade mplCouponFacade;
+	private MplCouponFacade mplCouponFacade;
+	@Resource
+	private MplCartWebService mplCartWebService;
+
+	private static final String INR = "INR";
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
 	private static final String APPLICATION_TYPE = "application/json";
-	
+
 	/**
-	 * This API is used to USe Cliq Cash While Placing Order 
-	 * 
-	 * 
+	 * This API is used to USe Cliq Cash While Placing Order
+	 *
+	 *
 	 * @param cartGuid
 	 * @return
 	 * @throws EtailNonBusinessExceptions
@@ -149,11 +156,13 @@ public class WalletController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.APPLY_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ApplyCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	public ApplyCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid,
+			@RequestParam(required = false) final boolean isPwa) throws EtailNonBusinessExceptions, EtailBusinessExceptions,
+			CalculationException
 	{
 		ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
-		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
+		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
 		LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
 
@@ -162,14 +171,51 @@ public class WalletController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				Double totalWalletAmount = cart.getTotalWalletAmount();
+				final Double totalWalletAmount = cart.getTotalWalletAmount();
 
 				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, totalWalletAmount);
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+							currency);
+					pricePwa.setBagTotal(totalMrp);
+					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
+					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					final DecimalFormat df = new DecimalFormat("#.##");
+					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					discount = Double.parseDouble(df.format(discount));
+					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					applyCliqCashWsDto.setCartAmount(pricePwa);
+
+				}
 			}
 			else
 			{
-				Double totalWalletAmount = orderModel.getTotalWalletAmount();
+				final Double totalWalletAmount = orderModel.getTotalWalletAmount();
 				applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, totalWalletAmount);
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+							currency);
+					pricePwa.setBagTotal(totalMrp);
+					final double amountInclDelCharge = Double.parseDouble(applyCliqCashWsDto.getTotalAmount());
+					final double actualDelCharge = applyCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					final DecimalFormat df = new DecimalFormat("#.##");
+					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					discount = Double.parseDouble(df.format(discount));
+					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					applyCliqCashWsDto.setCartAmount(pricePwa);
+
+				}
+
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
@@ -190,26 +236,29 @@ public class WalletController
 
 	}
 
-	
-/**
- * This API is used to Remove the Cliq Cash From Cart
- * @param cartGuid
- * @return
- * @throws EtailNonBusinessExceptions
- * @throws EtailBusinessExceptions
- * @throws CalculationException
- */
+
+	/**
+	 * This API is used to Remove the Cliq Cash From Cart
+	 *
+	 * @param cartGuid
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
+	 * @throws CalculationException
+	 */
 
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.REMOVE_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ApplyCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	public ApplyCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid,
+			@RequestParam(required = false) final boolean isPwa) throws EtailNonBusinessExceptions, EtailBusinessExceptions,
+			CalculationException
 	{
 		LOG.info("Removing cliq Cash ");
 		ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
-		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		final PriceWsPwaDTO pricePwa = new PriceWsPwaDTO();
 		CartModel cart = null;
 		try
 		{
@@ -229,7 +278,7 @@ public class WalletController
 				try
 				{
 					final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(cart.getDiscounts());
-					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+					final boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
 					String cartCouponCode = null;
 					if (isCartVoucherPresent)
 					{
@@ -245,7 +294,7 @@ public class WalletController
 						cart.setCheckForBankVoucher("false");
 					}
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					LOG.error("Exception occurred while removing and applying bank Coupon " + e.getMessage(), e);
 				}
@@ -257,8 +306,8 @@ public class WalletController
 				//	removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
 				if (null != cart.getTotalPrice())
 				{
-					Double amount = cart.getTotalPrice();
-					BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
+					final Double amount = cart.getTotalPrice();
+					final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
 					final String decimalFormat = "0.00";
 					final DecimalFormat df = new DecimalFormat(decimalFormat);
 					final String totalPayableAmount = df.format(bigDecimal);
@@ -270,12 +319,31 @@ public class WalletController
 				modelService.save(cart);
 				modelService.refresh(cart);
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, cart);
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(cart);
+					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+							currency);
+					pricePwa.setBagTotal(totalMrp);
+					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
+					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					final DecimalFormat df = new DecimalFormat("#.##");
+					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					discount = Double.parseDouble(df.format(discount));
+					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					removeCliqCashWsDto.setCartAmount(pricePwa);
+
+				}
+
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
 				//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-				AbstractOrderModel order = orderModel;
+				final AbstractOrderModel order = orderModel;
 				//	commerceCartService.recalculateCart((CartModel)order);
 				//	commerceCartService.recalculateCart(cart);
 				order.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
@@ -283,12 +351,12 @@ public class WalletController
 				order.setPayableWalletAmount(Double.valueOf(0.0D));
 				modelService.save(order);
 				modelService.refresh(order);
-				
+
 				try
 				{
 					final Tuple2<Boolean, String> cartCouponObj = mplEgvWalletService.isCartVoucherPresent(order.getDiscounts());
 
-					boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+					final boolean isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
 					String cartCouponCode = null;
 					if (isCartVoucherPresent)
 					{
@@ -305,14 +373,14 @@ public class WalletController
 					}
 
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
 					LOG.error("Exception occurred while removing and applying bank Coupon " + e.getMessage(), e);
 				}
 				removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
 				if (null != orderModel.getTotalPrice())
 				{
-					BigDecimal bigDecimal = new BigDecimal(orderModel.getTotalPrice().doubleValue());
+					final BigDecimal bigDecimal = new BigDecimal(orderModel.getTotalPrice().doubleValue());
 					final String decimalFormat = configurationService.getConfiguration().getString("site.decimal.format", "0.00");
 					final DecimalFormat df = new DecimalFormat(decimalFormat);
 					final String totalPriceFormatted = df.format(bigDecimal);
@@ -324,6 +392,25 @@ public class WalletController
 				modelService.save(orderModel);
 				modelService.refresh(orderModel);
 				removeCliqCashWsDto = mplEgvWalletService.setTotalPrice(removeCliqCashWsDto, orderModel);
+				if (isPwa)
+				{
+					final Double mrp = mplCartWebService.calculateCartTotalMrp(orderModel);
+					final CurrencyModel currency = commonI18NService.getCurrency(INR);
+					final PriceData totalMrp = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(mrp.doubleValue()),
+							currency);
+					pricePwa.setBagTotal(totalMrp);
+					final double amountInclDelCharge = Double.parseDouble(removeCliqCashWsDto.getTotalAmount());
+					final double actualDelCharge = removeCliqCashWsDto.getDeliveryCharges().getDoubleValue().doubleValue();
+					final double payableamtWdDelCharge = amountInclDelCharge - actualDelCharge;
+					final DecimalFormat df = new DecimalFormat("#.##");
+					double discount = mrp.doubleValue() - Double.parseDouble(df.format(payableamtWdDelCharge));
+					discount = Double.parseDouble(df.format(discount));
+					final PriceData totalDiscount = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(discount), currency);
+					pricePwa.setTotalDiscountAmount(totalDiscount);
+					removeCliqCashWsDto.setCartAmount(pricePwa);
+
+				}
+
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
@@ -347,56 +434,59 @@ public class WalletController
 
 
 
-/**
- * This API Is used to Redeem Cliq Cash using Cart Number and Pin 
- * @param couponCode
- * @param passKey
- * @return
- * @throws EtailNonBusinessExceptions
- * @throws EtailBusinessExceptions
- * @throws CalculationException
- */
+	/**
+	 * This API Is used to Redeem Cliq Cash using Cart Number and Pin
+	 *
+	 * @param couponCode
+	 * @param passKey
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
+	 * @throws CalculationException
+	 */
 
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.REDEEM_CLIQ_VOUCHER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public RedeemCliqVoucherWsDTO redeemCliqVoucher(@RequestParam final String couponCode, @RequestParam final String passKey,
-			@RequestParam(required=false) final String cartGuid)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+			@RequestParam(required = false) final String cartGuid) throws EtailNonBusinessExceptions, EtailBusinessExceptions,
+			CalculationException
 
 	{
 		LOG.info("Redeeming CLiq Cash Voucher Card Number " + couponCode);
-		RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
-		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+		final RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
+		final OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		CartModel cart = null;
-		ApplyCliqCashWsDto applyCliqCashWsDto = null;
-//		if (null != cartGuid)
-//		{
-//			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-//		}
+		final ApplyCliqCashWsDto applyCliqCashWsDto = null;
 		try
 		{
+			boolean isWalletOtpVerified = false;
+			boolean isWalletCreated = false;
+
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			if (null != currentCustomer
-					&& (null == currentCustomer.getIsWalletActivated() || !currentCustomer.getIsWalletActivated().booleanValue()))
+			if (null != currentCustomer)
 			{
-				redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
-				redeemCliqVoucherWsDTO.setIsWalletCreated(false);
-				if(null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue() )
+				if ((null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()))
 				{
+					isWalletCreated = true;
+					redeemCliqVoucherWsDTO.setIsWalletCreated(true);
+				}
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5026);
+				}
+				if (null != currentCustomer.getIsqcOtpVerify() && currentCustomer.getIsqcOtpVerify().booleanValue())
+				{
+					isWalletOtpVerified = true;
 					redeemCliqVoucherWsDTO.setIsWalletOtpVerified(true);
 				}
-				WalletCreateData walletCreateData =mplWalletFacade.getWalletCreateData();
-				if(null != walletCreateData) {
-					redeemCliqVoucherWsDTO.setFirstName(walletCreateData.getQcVerifyFirstName());
-					redeemCliqVoucherWsDTO.setLastName(walletCreateData.getQcVerifyLastName());
-					redeemCliqVoucherWsDTO.setMobileNumber(walletCreateData.getQcVerifyMobileNo());
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5027);
 				}
-				redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				return redeemCliqVoucherWsDTO;
 			}
-			else
+			if (isWalletOtpVerified && isWalletCreated)
 			{
 				LOG.debug("Calling To QC For Adding money to Wallet");
 				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
@@ -414,6 +504,36 @@ public class WalletController
 						{
 							stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
 						}
+						try
+						{
+							if (null == orderModel)
+							{
+								if (null != cartGuid)
+								{
+									cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+									cart.setTotalWalletAmount(response.getWallet().getBalance());
+									cart.setPayableWalletAmount(Double.valueOf(0.0D));
+									modelService.save(cart);
+									modelService.refresh(cart);
+								}
+								//	applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
+
+							}
+							else if (null != cartGuid)
+							{
+								orderModel.setTotalWalletAmount(response.getWallet().getBalance());
+								orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+								modelService.save(orderModel);
+								modelService.refresh(orderModel);
+
+								//	applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+							}
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Exception occurred while setting TotalWallet Amount " + e.getMessage(), e);
+						}
+
 						redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
 						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
 								MarketplacecommerceservicesConstants.INR);
@@ -429,20 +549,11 @@ public class WalletController
 							redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
 							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							if (null == orderModel)
-							{
-								cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(cart, response.getWallet().getBalance());
 
-							}
-							else if (null != cartGuid)
-							{
-								applyCliqCashWsDto = mplEgvWalletService.applyCLiqCash(orderModel, response.getWallet().getBalance());
-							}
-							if (null != applyCliqCashWsDto)
-							{
-								redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
-							}
+							//								if (null != applyCliqCashWsDto)
+							//								{
+							//									redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
+							//								}
 						}
 						else
 						{
@@ -467,8 +578,19 @@ public class WalletController
 					}
 				}
 			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5026);
+			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
+		{
+			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
+			redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
+			LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
+		}
+		catch (final EtailBusinessExceptions ex)
 		{
 			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
@@ -486,52 +608,55 @@ public class WalletController
 
 
 	@Secured(
-			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-			@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_AMOUNT, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-			@ResponseBody
-			public BuyingEgvResponceWsDTO calculateGiftCardAmount(@RequestBody final BuyingEgvRequestWsDTO buyingEgvRequest)
-					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_AMOUNT, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public BuyingEgvResponceWsDTO calculateGiftCardAmount(@RequestBody final BuyingEgvRequestWsDTO buyingEgvRequest)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
+	{
+		LOG.info("Calculating Electronics Gift Cart Amount");
+		final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
+		int quantity = 1;
+		double amountUserSelectedPerQty = 0.0D;
+		double paybleAmount = 0.0D;
+		try
+		{
+			if (null != buyingEgvRequest)
 			{
-				LOG.info("Calculating Electronics Gift Cart Amount");
-				final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
-				int quantity =1;
-				double amountUserSelectedPerQty = 0.0D;
-				double paybleAmount = 0.0D;
-				try
+				if (buyingEgvRequest.getQuantity() > 0)
 				{
-					if (null != buyingEgvRequest)
-					{
-						if (buyingEgvRequest.getQuantity() > 0)
-						{
-							quantity = buyingEgvRequest.getQuantity();
-						}
-						if (null != buyingEgvRequest.getPriceSelectedByUserPerQuantity() &&
-								buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue() >0.0D)
-						{
-							amountUserSelectedPerQty = buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue();
-							LOG.debug("amountUserSelectedPerQty  :"+amountUserSelectedPerQty);
-						}
-						if (quantity > 0 && amountUserSelectedPerQty > 0.0D)
-						{
-							paybleAmount = quantity*amountUserSelectedPerQty;
-						}
-						if(paybleAmount > 0.0D) {
-							LOG.debug("Toatal Payable Amount :"+paybleAmount);
-							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							
-							buyingEgvResponce.setPaybleAmount(Double.valueOf(paybleAmount));
-							buyingEgvResponce.setTotalPrice(Double.valueOf(paybleAmount));
-							buyingEgvResponce.setDiscounts(Double.valueOf(0.0D));
-						}else {
-							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-						}
-					}
-					else
-					{
-						buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-					}
+					quantity = buyingEgvRequest.getQuantity();
 				}
+				if (null != buyingEgvRequest.getPriceSelectedByUserPerQuantity()
+						&& buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
+				{
+					amountUserSelectedPerQty = buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue();
+					LOG.debug("amountUserSelectedPerQty  :" + amountUserSelectedPerQty);
+				}
+				if (quantity > 0 && amountUserSelectedPerQty > 0.0D)
+				{
+					paybleAmount = quantity * amountUserSelectedPerQty;
+				}
+				if (paybleAmount > 0.0D)
+				{
+					LOG.debug("Toatal Payable Amount :" + paybleAmount);
+					buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+					buyingEgvResponce.setPaybleAmount(Double.valueOf(paybleAmount));
+					buyingEgvResponce.setTotalPrice(Double.valueOf(paybleAmount));
+					buyingEgvResponce.setDiscounts(Double.valueOf(0.0D));
+				}
+				else
+				{
+					buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				}
+			}
+			else
+			{
+				buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			}
+		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
 			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
@@ -562,12 +687,15 @@ public class WalletController
 		CartData giftCartData = null;
 		try
 		{
-			 EgvDetailsData egvDetailsData=null;
-			 validateEgvForm(buyingEgvRequest);
-			if(null != buyingEgvRequest){
-				
+			EgvDetailsData egvDetailsData = null;
+			validateEgvForm(buyingEgvRequest);
+			if (null != buyingEgvRequest)
+			{
+
 				egvDetailsData = populateEGVFormToData(buyingEgvRequest);
-			}else {
+			}
+			else
+			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5005);
 
 			}
@@ -613,25 +741,32 @@ public class WalletController
 
 		return buyingEgvResponce;
 	}
-	
+
 	/**
 	 * @param buyingEgvRequest
 	 */
-	private void validateEgvForm(BuyingEgvRequestWsDTO buyingEgvRequest)
+	private void validateEgvForm(final BuyingEgvRequestWsDTO buyingEgvRequest)
 	{
-	if(null !=buyingEgvRequest )
-	{
-		if (null == buyingEgvRequest.getFrom() || StringUtil.isEmpty(buyingEgvRequest.getFrom())) {
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5022);
-		}else if(null == buyingEgvRequest.getPriceSelectedByUserPerQuantity()) {
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5023);
-		}else if (null == buyingEgvRequest.getReceiverEmailID() || StringUtil.isEmpty(buyingEgvRequest.getReceiverEmailID())) {
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5024);
+		if (null != buyingEgvRequest)
+		{
+			if (null == buyingEgvRequest.getFrom() || StringUtil.isEmpty(buyingEgvRequest.getFrom()))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5022);
+			}
+			else if (null == buyingEgvRequest.getPriceSelectedByUserPerQuantity())
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5023);
+			}
+			else if (null == buyingEgvRequest.getReceiverEmailID() || StringUtil.isEmpty(buyingEgvRequest.getReceiverEmailID()))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5024);
+			}
 		}
-	}else {
-		throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5020);
-	}
-		
+		else
+		{
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5020);
+		}
+
 	}
 
 
@@ -640,11 +775,14 @@ public class WalletController
 		final EgvDetailsData egvDetailsData = new EgvDetailsData();
 		if (null != requestData)
 		{
-			CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-			String productId = configurationService.getConfiguration().getString("marketplace.header.egvProductCode");
-			if(null != productId && StringUtils.isNotBlank(productId)) {
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+			final String productId = configurationService.getConfiguration().getString("marketplace.header.egvProductCode");
+			if (null != productId && StringUtils.isNotBlank(productId))
+			{
 				egvDetailsData.setProductCode(productId);
-			}else {
+			}
+			else
+			{
 				egvDetailsData.setProductCode(requestData.getProductID());
 			}
 			if (null != requestData.getPriceSelectedByUserPerQuantity()
@@ -684,52 +822,54 @@ public class WalletController
 
 		return egvDetailsData;
 	}
-	
-	
-	
+
+
+
 	@Secured(
-		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-		@RequestMapping(value = MarketplacewebservicesConstants.RESEND_NOTIFICATION_EGV, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-		@ResponseBody
-		public ResendEGVNotificationWsDTO resendNotificationEgv(@RequestParam final String orderId)
-				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.RESEND_NOTIFICATION_EGV, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ResendEGVNotificationWsDTO resendNotificationEgv(@RequestParam final String orderId) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions, CalculationException
 
-{
-	ResendEGVNotificationWsDTO responce = new ResendEGVNotificationWsDTO();
-	try
 	{
-
-		if (orderId != null)
+		final ResendEGVNotificationWsDTO responce = new ResendEGVNotificationWsDTO();
+		try
 		{
-			LOG.info("SendNotificationRecipient  ");
-			mplOrderFacade.sendNotificationEGVOrder(orderId);
-			responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-		}else {
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5003);
-		}
-	}
-	catch (final EtailBusinessExceptions ex)
-	{
-		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-		responce.setErrorCode(ex.getErrorCode());
-		responce.setError(ex.getErrorMessage());
-		LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
-	}
-	catch (final Exception ex)
-	{
-		responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-		responce.setError(ex.getMessage());
-		LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
-	}
-	return responce;
-}
 
-@Secured(
-		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-		@RequestMapping(value = MarketplacewebservicesConstants.USER_CLIQCASH_DETAILS, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-		@ResponseBody
-		public UserCliqCashWsDto getUserCliqCashDetails()
-				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+			if (orderId != null)
+			{
+				LOG.info("SendNotificationRecipient  ");
+				mplOrderFacade.sendNotificationEGVOrder(orderId);
+				responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B5003);
+			}
+		}
+		catch (final EtailBusinessExceptions ex)
+		{
+			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			responce.setErrorCode(ex.getErrorCode());
+			responce.setError(ex.getErrorMessage());
+			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
+		}
+		catch (final Exception ex)
+		{
+			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			responce.setError(ex.getMessage());
+			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
+		}
+		return responce;
+	}
+
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.USER_CLIQCASH_DETAILS, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public UserCliqCashWsDto getUserCliqCashDetails() throws EtailNonBusinessExceptions, EtailBusinessExceptions,
+			CalculationException
 
 	{
 		UserCliqCashWsDto responce = new UserCliqCashWsDto();
@@ -778,12 +918,63 @@ public class WalletController
 	}
 
 
-@Secured(
-		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-		@RequestMapping(value = MarketplacewebservicesConstants.CHECK_WALLET_MOBILE_NUMBER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-		@ResponseBody
-		public EgvCheckMobileNumberWsDto checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request ,@RequestParam(required=false) boolean isUpdateProfile)
-				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.EGV_PRODUCT_INFO, method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public EgvProductInfoWSDTO getEgvProductInfo()
+	{
+		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		try
+		{
+			egvProductData = mplEgvWalletService.getEgvProductDetails();
+			if (null != egvProductData)
+			{
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				egvProductData = new EgvProductInfoWSDTO();
+				egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			egvProductData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			egvProductData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return egvProductData;
+	}
+
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.CHECK_WALLET_MOBILE_NUMBER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public EgvCheckMobileNumberWsDto checkWalletMobileNumber(@RequestBody final EgvWalletCreateRequestWsDTO request,
+			@RequestParam(required = false) final boolean isUpdateProfile) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions, CalculationException
 
 	{
 		EgvCheckMobileNumberWsDto responce = new EgvCheckMobileNumberWsDto();
@@ -815,28 +1006,33 @@ public class WalletController
 
 
 
-@Secured(
-		{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-		@RequestMapping(value = MarketplacewebservicesConstants.VERIFY_WALLET_OTP, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-		@ResponseBody
-		public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam final String otp)
-				throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.VERIFY_WALLET_OTP, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public EgvWalletCreateResponceWsDTO verifyWalletOtp(@RequestParam(required = true) final String otp,
+			@RequestParam(required = false) final String firstName, @RequestParam(required = false) final String lastName,
+			@RequestParam(required = false) final String mobileNumber) throws EtailNonBusinessExceptions, EtailBusinessExceptions,
+			CalculationException
 
 	{
-		EgvWalletCreateResponceWsDTO 	responce = new EgvWalletCreateResponceWsDTO();
+		EgvWalletCreateResponceWsDTO responce = new EgvWalletCreateResponceWsDTO();
 
 		try
 		{
 			if (null != otp && !otp.isEmpty())
 			{
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-					responce=	mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp);
-					if(null != responce) {
-						responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						responce.setMessage(MarketplacecommerceservicesConstants.WALLET_ACTIVATED_MESSAGE);
-					}
+				responce = mplEgvWalletService.verifyOtpAndCreateWallet(currentCustomer, otp, firstName, lastName, mobileNumber);
+				if (null != responce)
+				{
+					responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					responce.setMessage(MarketplacecommerceservicesConstants.WALLET_ACTIVATED_MESSAGE);
+				}
 
-			}else {
+			}
+			else
+			{
 				responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5014));
 				responce.setErrorCode(MarketplacecommerceservicesConstants.B5014);
 				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);

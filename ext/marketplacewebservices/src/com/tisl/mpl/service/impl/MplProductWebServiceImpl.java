@@ -247,6 +247,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private static final String MPL_EXCHANGE_HIERARCHY_SEPERATOR = ",";
 	private static final String Home_Delivery = "Home Delivery";
 	private static final String Standard_Delivery = "Standard Delivery";
+	private static final String pdp_buy_box = "pdp_buy_box";
+	private static final String cliq_care_number = "cliq.care.number";
+	private static final String cliq_care_mail = "cliq.care.mail";
 
 	@Resource(name = "defaultCategoryModelUrlResolver")
 	private ExtDefaultCategoryModelUrlResolver defaultCategoryModelUrlResolver;
@@ -526,7 +529,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						{
 							stockAvailibilty.put(pCode, Integer.valueOf(0));
 						}
-						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+						buyBoxData = (BuyBoxData) buydata.get(pdp_buy_box);
 
 						//Added for TPR-6869
 						sellerID = getSellerIDData(buydata);
@@ -972,14 +975,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 				//	productDetailMobile.setTataPromise("Tata Promise");
 				//Know more section changes
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(cliq_care_number)))
 				{
-					productDetailMobile.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
+					productDetailMobile.setKnowMorePhoneNo(configurationService.getConfiguration().getString(cliq_care_number));
 				}
 
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(cliq_care_mail)))
 				{
-					productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
+					productDetailMobile.setKnowMoreEmail(configurationService.getConfiguration().getString(cliq_care_mail));
 				}
 
 				if (null != buyBoxData)
@@ -1319,7 +1322,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 */
 	private String getSellerIDData(final Map<String, Object> buydata)
 	{
-		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get(pdp_buy_box);
 
 		if (null != buyboxdata && StringUtils.isNotEmpty(buyboxdata.getSellerId()))
 		{
@@ -1461,8 +1464,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		//final String knowMoreThLux = null;
 		final List<KnowMoreDTO> knowMoreList = new ArrayList<KnowMoreDTO>();
 		KnowMoreDTO knowMoreItem = null;
-		final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
-		final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
+		final String cliqCareNumber = configurationService.getConfiguration().getString(cliq_care_number);
+		final String cliqCareMail = configurationService.getConfiguration().getString(cliq_care_mail);
 		final String luxuryCareMail = configurationService.getConfiguration().getString("luxury.care.mail");
 		String lingerieReturnMsg = null;
 		boolean isProductLingerie = false;
@@ -3094,7 +3097,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						{
 							stockAvailibilty.put(pCode, Integer.valueOf(0));
 						}
-						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+						buyBoxData = (BuyBoxData) buydata.get(pdp_buy_box);
 					}
 				}
 				catch (final Exception e)
@@ -3273,8 +3276,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
+
 			if (null != customer)
 			{
+				LOG.error(" FIrst Name " + customer.getFirstName());
+				LOG.error("QC FIrst Name " + customer.getQcVerifyFirstName());
+
 				if (null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue())
 				{
 					egvProductData.setIsWalletCreated(true);
@@ -3282,10 +3289,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (null != customer.getIsqcOtpVerify() && customer.getIsqcOtpVerify().booleanValue())
 				{
 					egvProductData.setIsWalletOtpVerified(true);
+
 				}
 				else
 				{
-					final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData();
+					final WalletCreateData walletCreateData = mplWalletFacade.getWalletCreateData(customer);
 					if (null != walletCreateData)
 					{
 						if (null != walletCreateData.getQcVerifyFirstName()
@@ -3710,7 +3718,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						{
 							stockAvailibilty.put(pCode, Integer.valueOf(0));
 						}
-						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+						buyBoxData = (BuyBoxData) buydata.get(pdp_buy_box);
 
 						//Added for TPR-6869
 						sellerID = getSellerIDData(buydata);
@@ -4677,14 +4685,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobileNew.setGalleryImagesList(getGalleryImages(productData));
 				}
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.number")))
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(cliq_care_number)))
 				{
-					productDetailMobileNew.setKnowMorePhoneNo(configurationService.getConfiguration().getString("cliq.care.number"));
+					productDetailMobileNew.setKnowMorePhoneNo(configurationService.getConfiguration().getString(cliq_care_number));
 				}
 
-				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("cliq.care.mail")))
+				if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(cliq_care_mail)))
 				{
-					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString("cliq.care.mail"));
+					productDetailMobileNew.setKnowMoreEmail(configurationService.getConfiguration().getString(cliq_care_mail));
 				}
 
 				if (productData.getLuxIndicator() != null
