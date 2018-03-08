@@ -115,15 +115,16 @@ public class ForgottenPasswordsController extends BaseController
 			else
 			{
 				String baseUrl = "";
-				final String luxurySite = "luxury.tatacliq.com";
 				final String emailidLwCase = emailid.toLowerCase(); //INC144318796
 				validateEmail(emailidLwCase);
 				final URL requestUrl = new URL(request.getRequestURL().toString());
 				final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
 				//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
-				if (MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+
+				if (MarketplaceFacadesConstants.LuxuryPrefix.equals(site)
+						&& requestUrl.getHost().contains(MarketplacecommerceservicesConstants.TATACLIQ))
 				{
-					baseUrl = requestUrl.getProtocol() + "://" + luxurySite + portString;
+					baseUrl = requestUrl.getProtocol() + "://" + MarketplacecommerceservicesConstants.LUXURY_SITE_URL + portString;
 				}
 				else
 				{
