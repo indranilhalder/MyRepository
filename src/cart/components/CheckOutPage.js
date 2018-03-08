@@ -225,6 +225,14 @@ class CheckOutPage extends React.Component {
   openBankOffers = () => {
     this.props.showCouponModal(this.props.cart.paymentModes.paymentOffers);
   };
+
+  applyCliqCash = () => {
+    this.props.applyCliqCash();
+  };
+
+  removeCliqCash = () => {
+    this.props.removeCliqCash();
+  };
   render() {
     const cartData = this.props.cart;
     if (this.state.addNewAddress || !cartData.userAddress) {
@@ -272,6 +280,8 @@ class CheckOutPage extends React.Component {
             (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
                 paymentDetails={this.props.cart.paymentModes}
+                applyCliqCash={() => this.applyCliqCash()}
+                removeCliqCash={() => this.removeCliqCash()}
               />
             )}
 
