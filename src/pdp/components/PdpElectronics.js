@@ -99,8 +99,17 @@ export default class PdpElectronics extends React.Component {
       );
     }
   };
+
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -149,10 +158,10 @@ export default class PdpElectronics extends React.Component {
               averageRating={productData.averageRating}
             />
           </div>
-          {productData.emiInfo && (
+          {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
               <div className={styles.info}>
-                {productData.emiInfo.emiText}
+                Emi available on this product.
                 <span className={styles.link} onClick={this.showEmiModal}>
                   View Plans
                 </span>

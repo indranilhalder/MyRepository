@@ -97,7 +97,6 @@ export default class PdpApparel extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
-
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -138,10 +137,10 @@ export default class PdpApparel extends React.Component {
               </div>
             </div>
           )}
-          {productData.productOfferPromotion && (
+          {productData.productOfferMsg && (
             <OfferCard
-              endTime={productData.productOfferPromotion[0].validTill.date}
-              heading={productData.productOfferPromotion[0].promotionTitle}
+              endTime={productData.productOfferMsg[0].validTill.date}
+              heading={productData.productOfferMsg[0].promotionTitle}
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />

@@ -12,11 +12,34 @@ const productDescription = (
     reviews: null,
     reviewsStatus: null,
     reviewsError: null,
-    msdItems: {}
+    msdItems: {},
+    emiTerms: null
   },
   action
 ) => {
   switch (action.type) {
+    case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
+      return Object.assign({}, state, {
+        emiTerms: {
+          loading: false,
+          error: action.error,
+          status: action.status
+        }
+      });
+    case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_REQUEST:
+      return Object.assign({}, state, {
+        emiTerms: null,
+        loading: true,
+        status: action.status
+      });
+    case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_SUCCESS:
+      return Object.assign({}, state, {
+        emiTerms: {
+          loading: false,
+          status: action.status,
+          data: action.emiTerms
+        }
+      });
     case pdpActions.PRODUCT_DESCRIPTION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
