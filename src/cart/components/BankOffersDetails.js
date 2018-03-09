@@ -7,7 +7,6 @@ const COUPON_HEADER = "Bank promotions";
 
 class BankOffersDetails extends Component {
   applyBankCoupons = val => {
-    console.log(val);
     if (this.props.applyBankOffer) {
       this.props.applyBankOffer(val);
     }
