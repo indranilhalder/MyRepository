@@ -1855,7 +1855,8 @@ function savedCreditCardRadioChange(radioId){
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
 	$('.security_code').prop('disabled', false); 
-	if($(".card_bank").val()=="AMEX")
+	//if($(".card_bank").val()=="AMEX")
+	if($(".card_brand").val()=="AMEX") //SDI-7093
 	{
 		$(".security_code").attr('maxlength','4');
 	}
