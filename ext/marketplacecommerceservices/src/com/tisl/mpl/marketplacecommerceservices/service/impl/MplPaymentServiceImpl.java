@@ -445,9 +445,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				//				if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
 				//						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(cart.getModeOfPayment()))
+				//SDI-6121
 				if (null != orderStatusResponse.getCardResponse()
 						&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType())
-						&& orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("DEBIT"))
+						&& orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("DEBIT")
+						&& StringUtils.isEmpty(orderStatusResponse.getBankEmi()))
 				{
 					//saving the cartmodel for Debit Card
 					getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
@@ -457,7 +459,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(cart.getModeOfPayment()))
 				else if (null != orderStatusResponse.getCardResponse()
 						&& StringUtils.isNotEmpty(orderStatusResponse.getCardResponse().getCardType())
-						&& orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("CREDIT"))
+						&& orderStatusResponse.getCardResponse().getCardType().equalsIgnoreCase("CREDIT")
+						&& StringUtils.isEmpty(orderStatusResponse.getBankEmi()))
 				{
 					//saving the cartmodel for Credit Card
 					getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
