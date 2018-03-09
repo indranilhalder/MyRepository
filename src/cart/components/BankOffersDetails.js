@@ -7,6 +7,7 @@ const COUPON_HEADER = "Bank promotions";
 
 class BankOffersDetails extends Component {
   applyBankCoupons = val => {
+    console.log(val);
     if (this.props.applyBankOffer) {
       this.props.applyBankOffer(val);
     }
@@ -23,10 +24,26 @@ class BankOffersDetails extends Component {
       <div className={styles.base}>
         <SlideModal {...this.props}>
           <div className={styles.couponHeader}>{COUPON_HEADER}</div>
-          <BankCoupons
-            coupons={this.props.coupons}
-            value={this.props.coupons}
-          />
+          <GridSelect
+            elementWidthMobile={100}
+            offset={0}
+            limit={1}
+            onSelect={val => this.applyBankCoupons(val)}
+          >
+            {this.props.coupons &&
+              this.props.coupons.map((value, i) => {
+                return (
+                  <BankCoupons
+                    offerDescription={value.offerDescription}
+                    offerCode={value.offerCode}
+                    offerMinCartValue={value.offerMinCartValue}
+                    offerTitle={value.offerTitle}
+                    key={i}
+                    value={value.offerCode}
+                  />
+                );
+              })}
+          </GridSelect>
         </SlideModal>
       </div>
     );

@@ -1236,7 +1236,7 @@ export function applyBankOffer(couponCode) {
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/carts/applyCartCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}$cartGuid=${cartId}`
+        }&isPwa=true&platformNumber=2&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -1282,7 +1282,7 @@ export function releaseBankOffer(couponCode) {
           JSON.parse(userDetails).customerInfo.mobileNumber
         }/carts/releaseCartCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}$cartGuid=${cartId}`
+        }&paymentMode=${PAYMENT_MODE}&couponCode=${couponCode}&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
