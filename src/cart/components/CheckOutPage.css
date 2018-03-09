@@ -1,3 +1,9 @@
+.base {
+  width: 100%;
+  height: auto;
+  background: #ececec;
+  padding: 0 15px;
+}
 .row {
   width: 100%;
   height: auto;
