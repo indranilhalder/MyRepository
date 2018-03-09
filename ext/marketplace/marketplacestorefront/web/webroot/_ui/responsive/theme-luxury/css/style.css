@@ -5760,7 +5760,7 @@ footer .footer-inner-wrapper ul li a:hover {
 }
 
 ul.tabs {
-    margin: 10px 0 0;
+    margin: 13px 0 0;
     padding: 0;
     list-style: none;
 }
@@ -5807,7 +5807,7 @@ ul.tabs li.current:before {
     color: transparent;
     position: absolute;
     left: 30%;
-    bottom: -3px;
+    bottom: 0;
     margin-left: -7.5px;
     width: 0;
     height: 0;
@@ -6370,7 +6370,7 @@ ul.tabs li.current:before {
 
 @media (max-width:767px) {
     .header .header-right>ul>li.header-search-link {
-        margin-right: 0;
+        margin-right: 10px;
     }
     .header .header-right>ul li.bag {
         width: 30px;
@@ -8689,7 +8689,7 @@ footer .footer-cloned-ul .sub-menu-inner>.row>div ul.sub-menu:before {
 }
 
 .sizes .footwear-size-table>ul>li>ul li {
-    width: 25%;
+    width: 20%;
     list-style: none;
     text-transform: uppercase;
     font-weight: 600;
@@ -8707,7 +8707,7 @@ footer .footer-cloned-ul .sub-menu-inner>.row>div ul.sub-menu:before {
 }
 
 .sizes .footwear-size-table .item.footwear ul li {
-    width: 25%;
+    width: 20%;
     outline-style: none;
     border-bottom: 1px solid #ccc;
     float: left;
@@ -8718,6 +8718,8 @@ footer .footer-cloned-ul .sub-menu-inner>.row>div ul.sub-menu:before {
     font-size: 12px;
     line-height: normal;
     margin-bottom: 10px;
+    float: left;
+	width: 100%;
 }
 
 .sizes div.img {
@@ -16412,7 +16414,7 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
 }
 
 .item.delivered {
-    margin-bottom: -30px;
+    margin-bottom: 0px;
 }
 
 #shipping-track-order p,
@@ -16711,11 +16713,12 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
     }
     .product-block.order-details .list-top-title li {
         display: block;
-        width: 100%;
+        width: 100% !important;
         border-bottom: 1px solid #e4e8f0;
     }
     body .account .right-account .order-history.order-details .status>ul.nav>li {
         font-size: 12px;
+        word-break: break-word;
     }
     #changeAddressLink {
         margin-bottom: 40px;
@@ -18724,7 +18727,7 @@ ul.jqtree-tree .jqtree-title:hover {
 }
 
 .thumbnail-container {
-    width: 11%;
+    width: 12%;
     float: left;
 }
 
@@ -18771,7 +18774,8 @@ ul.jqtree-tree .jqtree-title:hover {
         height: 100%;
         background-color: #000;
         position: fixed;
-        z-index: 1;
+        top:0;
+ 		z-index:100;
         opacity: .7;
     }
 }
@@ -19174,4 +19178,104 @@ span.mini-cart-close {
 .trending-products-catagory .item-brand .title,
 .trending-products-catagory span.priceFormat.full{
     text-align: left;
+}
+
+.item.footwear ul {
+    float: left;
+    width: 100%;
+}
+
+/*track order css for payment pending order*/
+ul.order-details li.item:nth-child(2){
+    width: 100% !important;
+}
+
+.item-header{
+    float: left;
+    width: 100%;
+}
+
+.order-history.order-details ul{
+    float: left;
+    width: 100%;
+}
+
+.container.pickup_Edit{
+    width: 100%;
+    padding: 0;
+}
+
+.pickupeditbtn{
+    padding-left:0;
+}
+
+.prod-collect-container{
+    width: 100%;
+}
+
+.mb0{
+    margin-bottom: 0;
+}
+
+.savebtnOther{
+    width: auto !important;
+    padding: 10px 25px !important;
+}
+
+.pad0{
+    padding:0;   
+}
+
+.full-width{
+    float: left;
+    width: 100%;
+}
+
+li.progress.processing.current:before{
+    border-color: transparent;
+}
+
+.container.pickup_Edit .col-md-5,.container.pickup_Edit .col-md-4{width:100%;}
+
+.container.pickup_Edit #pickName{
+	padding-left: 10px !important;
+}
+
+.container.pickup_Edit .col-md-4 > .row > .col-md-5{
+	width:auto;
+}
+
+.container.pickup_Edit .col-md-5 > .row > .col-md-5 > .col-md-5{
+ 	width:auto;
+ 	padding-left: 0;
+    padding-right: 3px;
+}
+
+.container.pickup_Edit .col-md-5 > .row,
+.container.pickup_Edit > .row > .col-md-5,
+.container.pickup_Edit > .row > .col-md-4,
+.container.pickup_Edit .col-md-5 > .row > .col-md-5 > .col-md-7 #pickUpName {
+     width: 100%;
+}
+
+.container.pickup_Edit .col-md-5 > .row > .col-md-5 > .col-md-7{
+ 	padding-right: 0;
+}
+
+.product-block .itemsImage .picZoomer-pic{
+	width:auto;
+}
+
+@media (max-width: 768px){
+	.savebtnOther{
+	    margin-left: 20px;
+	}
+	.sizes .footwear-size-table>ul>li>ul li{
+		word-break: break-word;
+	    font-size: 11px;
+	    min-height: 45px;
+	}
+	.container.pickup_Edit .col-md-5 > .row > .col-md-5 > .col-md-7{
+		padding-left: 0;
+	}
 }

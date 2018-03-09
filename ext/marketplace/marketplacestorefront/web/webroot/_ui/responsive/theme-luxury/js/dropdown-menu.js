@@ -105,9 +105,14 @@ $(document).ready(function() {
     		$('.tabs [data-tab='+current_menu+']').addClass('current');
     		$('#main-nav > #' + current_menu).siblings().removeClass('current');
             $('#main-nav > #' + current_menu).addClass('current');
-        }
+        }else{
+            $('.tabs .tab-link').removeClass('current');
+            $('#main-nav .mega-menu').removeClass('current');
+            $('.tabs > .tab-link:first-child').addClass('current');
+            $('#main-nav > .mega-menu:first-child').addClass('current');
+        } 
 
-        $('#main-nav').mouseleave(function(e){ 
+        $('.tabs .tab-link,#main-nav').mouseleave(function(e){ 
             if (current_menu) {
                 $('.tabs [data-tab='+current_menu+']').siblings().removeClass('current');
                 $('.tabs [data-tab='+current_menu+']').addClass('current');
@@ -267,6 +272,9 @@ $(document).ready(function() {
             }
         });
     }
-
     
+    if( $('.order-history .order-details .item').length > 0 ){
+    	$('.order-history .order-details .item').eq(1).css('width','100%');
+    }
+
 });
