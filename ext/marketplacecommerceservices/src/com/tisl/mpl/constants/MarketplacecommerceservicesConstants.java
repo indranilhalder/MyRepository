@@ -2031,6 +2031,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LUXURY = "luxury";
 	public static final String MSH = "MSH";
 	public static final String LSH = "LSH";
+	public static final String ISH = "ISH";
 
 	public static final String LUX_SALESCATEGORYTYPE = "luxury.salescategory.code";
 
