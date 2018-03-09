@@ -6,6 +6,7 @@ import {
   GLOBAL_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   FAILURE,
+  FAILURE_UPPERCASE,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS
 } from "../../lib/constants";
@@ -1330,9 +1331,10 @@ export function applyCliqCash() {
         }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(resultJson.message);
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
       }
+
       dispatch(applyCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(applyCliqCashFailure(e.message));
@@ -1381,8 +1383,8 @@ export function removeCliqCash() {
         }&cartGuid=${cartId}`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(resultJson.message);
+      if (resultJson.status === FAILURE_UPPERCASE) {
+        throw new Error(resultJson.error);
       }
       dispatch(removeCliqCashSuccess(resultJson));
     } catch (e) {
