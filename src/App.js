@@ -70,10 +70,13 @@ const auth = {
   isAuthenticated: false
 };
 class App extends Component {
-  componentWillMount() {
+  componentDidUpdate() {
     this.getAccessToken();
   }
 
+  componentDidMount() {
+    this.getAccessToken();
+  }
   getAccessToken = () => {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -83,6 +86,7 @@ class App extends Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
     if (!globalAccessToken) {
       this.props.getGlobalAccessToken();
       if (!cartIdForAnonymous) {

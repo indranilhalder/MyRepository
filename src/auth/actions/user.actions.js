@@ -491,8 +491,9 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       // TODO: dispatch a modal here
       dispatch(customerAccessTokenSuccess(resultJson));
