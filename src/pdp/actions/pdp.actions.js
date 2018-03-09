@@ -1,4 +1,9 @@
-import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import {
+  SUCCESS,
+  REQUESTING,
+  ERROR,
+  GLOBAL_ACCESS_TOKEN
+} from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
@@ -97,7 +102,7 @@ const CLIENT_ID = "gauravj@dewsolutions.in";
 const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
-const PRODUCT_SPECIFICATION_PATH = "marketplacewebservices/v2/mpl/products";
+const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products";
 const ORDER_BY = "desc";
 const SORT = "byDate";
@@ -525,7 +530,7 @@ export function addProductReviewFailure(error) {
   };
 }
 
-export function addProductReview(productCode, productReviews) {
+export function addProductReview(productCode, productReview) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
@@ -533,9 +538,8 @@ export function addProductReview(productCode, productReviews) {
       const result = await api.post(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
-        }&comment=${productReviews.comment}&rating=${
-          productReviews.rating
-        }&headline=${productReviews.headLine}`
+        }`,
+        productReview
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -634,13 +638,13 @@ export function deleteProductReview(productCode, reviewId) {
   };
 }
 
-export function getProductReviewRequest() {
+export function getProductReviewsRequest() {
   return {
     type: GET_PRODUCT_REVIEW_REQUEST,
     status: REQUESTING
   };
 }
-export function getProductReviewSuccess(reviews) {
+export function getProductReviewsSuccess(reviews) {
   return {
     type: GET_PRODUCT_REVIEW_SUCCESS,
     status: SUCCESS,
@@ -648,7 +652,7 @@ export function getProductReviewSuccess(reviews) {
   };
 }
 
-export function getProductReviewFailure(error) {
+export function getProductReviewsFailure(error) {
   return {
     type: GET_PRODUCT_REVIEW_FAILURE,
     status: ERROR,
@@ -657,25 +661,32 @@ export function getProductReviewFailure(error) {
 }
 
 export function getProductReviews(productCode) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  console.log("IN ACTIONS GET PRODUCT REVIEWS CALLED");
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductReviewRequest());
+    dispatch(getProductReviewsRequest());
     try {
+      console.log("BEFORE API.GET");
+      console.log(productCode);
+      console.log(PAGE_VALUE);
+      console.log(PAGE_NUMBER);
+      console.log("GLOBAL ACCESS TOKEN");
+
       const result = await api.get(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/users/${
-          JSON.parse(userDetails).customerInfo.mobileNumber
-        }/reviews?access_token=${
-          JSON.parse(customerCookie).access_token
+        `${PRODUCT_SPECIFICATION_PATH}/${productCode.toUpperCase()}/users/anonymous/reviews?access_token=${
+          JSON.parse(globalAccessToken).access_token
         }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
+      console.log("IS THIS HIT?");
       const resultJson = await result.json();
+      console.log("GET PRODUCT REVIEWS SUCCESS");
+      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getProductReviewSuccess(resultJson));
+      dispatch(getProductReviewsSuccess(resultJson));
     } catch (e) {
-      dispatch(getProductReviewFailure(e.message));
+      dispatch(getProductReviewsFailure(e.message));
     }
   };
 }

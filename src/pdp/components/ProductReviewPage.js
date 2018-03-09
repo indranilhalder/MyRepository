@@ -8,6 +8,7 @@ import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
 import HollowHeader from "./HollowHeader";
 import { MOBILE_PDP_VIEW } from "../../lib/constants";
+import find from "lodash/find";
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -19,10 +20,17 @@ import {
 } from "../../lib/constants";
 const WRITE_REVIEW_TEXT = "Write Review";
 
-class ProductDescriptionPage extends Component {
+class ProductReviewPage extends Component {
   state = {
     visible: false
   };
+
+  componentDidMount() {
+    if (!this.props.productDetails) {
+      this.props.getProductDescription(this.props.match.params[0]);
+    }
+    this.props.getProductReviews(this.props.match.params[0]);
+  }
 
   reviewSection = () => {
     if (this.state.visible === false) {
@@ -31,11 +39,19 @@ class ProductDescriptionPage extends Component {
       this.setState({ visible: false });
     }
   };
+
+  onSubmit = productReview => {
+    this.props.addProductReview(
+      this.props.productDetails.productListingId,
+      productReview
+    );
+  };
   renderReviewSection = () => {
     if (this.state.visible) {
-      return <WriteReview />;
+      return <WriteReview onSubmit={this.onSubmit} />;
     }
   };
+
   addProductToBag = () => {
     let productDetails = {};
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -66,6 +82,10 @@ class ProductDescriptionPage extends Component {
 
   render() {
     if (this.props.productDetails) {
+      console.log("IN PRODUCT REVIEW PAGE");
+      console.log(this.props.productDetails);
+      console.log(this.props.reviews);
+      console.log(this.props.ratingData);
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
@@ -80,21 +100,20 @@ class ProductDescriptionPage extends Component {
               />
               <ProductDetailsCard
                 productImage={
-                  this.props.productDetails.galleryImagesList.filter(val => {
-                    return val.imageType === MOBILE_PDP_VIEW;
-                  })[0].galleryImages[0].value
+                  find(
+                    this.props.productDetails.galleryImagesList[0]
+                      .galleryImages,
+                    galleryImage => {
+                      return galleryImage.key === MOBILE_PDP_VIEW;
+                    }
+                  ).value
                 }
                 productName={this.props.productDetails.productName}
-                productMaterial={
-                  this.props.productDetails.classificationList[0].value
-                    .classificationListValue[5].value.classificationListValue[0]
-                }
-                price={this.props.productDetails.mrpPrice.formattedValue}
-                discountPrice={
-                  this.props.productDetails.discountedPrice.formattedValue
-                }
+                productMaterial={this.props.productDetails.productDescription}
+                price={this.props.productDetails.mrp}
+                discountPrice={this.props.productDetails.winningSellerMOP}
                 averageRating={this.props.productDetails.averageRating}
-                totalNoOfReviews={this.props.productDetails.productReviewsCount}
+                totalNoOfReviews={this.props.productDetails.numberOfReviews}
               />
 
               <RatingHolder ratingData={this.props.ratingData} />
@@ -103,7 +122,9 @@ class ProductDescriptionPage extends Component {
               {WRITE_REVIEW_TEXT}
             </div>
             {this.renderReviewSection()}
-            <ReviewList reviewList={this.props.reviewList} />
+            {this.props.reviews && (
+              <ReviewList reviewList={this.props.reviews.reviews} />
+            )}
           </div>
         </PdpFrame>
       );
@@ -113,10 +134,10 @@ class ProductDescriptionPage extends Component {
   }
 }
 
-ProductDescriptionPage.propTypes = {
+ProductReviewPage.propTypes = {
   label: PropTypes.string,
   ratingData: PropTypes.array,
   reviewList: PropTypes.array
 };
 
-export default ProductDescriptionPage;
+export default ProductReviewPage;
