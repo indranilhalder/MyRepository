@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +18,6 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.homeapi.HomePageAppFacade;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomepageComponetsDTO;
 
 
@@ -28,7 +26,7 @@ import com.tisl.mpl.wsdto.HomepageComponetsDTO;
  *
  */
 @Controller
-@RequestMapping(value = "/{baseSiteId}/cms/{userId}/page", headers = "Accept=application/xml,application/json")
+@RequestMapping(value = "/{baseSiteId}/cms/page", headers = "Accept=application/xml,application/json")
 public class HomePageComponentsController
 {
 	private static final Logger LOG = Logger.getLogger(HomePageComponentsController.class);
@@ -36,19 +34,16 @@ public class HomePageComponentsController
 	private HomePageAppFacade homePageAppFacade;
 
 
-	@RequestMapping(value = "/getHomepageComponetsData", method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = "/getProductInfo", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public HomepageComponetsDTO getHomepageComponetsData(@RequestParam(required = false) final String mcvid,
-			@RequestParam(required = false) final String lat, @RequestParam(required = false) final String lng,
-			@RequestParam(required = false) final String pincode, @RequestParam(required = false) final String channel,
-			@RequestParam(required = false) final String isPwa,
-			@RequestBody final HomepageComponentRequestDTO homepageComponentRequestDTO)
+	public HomepageComponetsDTO getHomepageComponetsData(@RequestParam final String productCodes,
+			@RequestParam(required = false) final String channel, @RequestParam final String isPwa)
 	{
 
 		HomepageComponetsDTO homepageComponetsDTO = new HomepageComponetsDTO();
 		try
 		{
-			homepageComponetsDTO = homePageAppFacade.gethomepageComponentsDTO(homepageComponentRequestDTO);
+			homepageComponetsDTO = homePageAppFacade.gethomepageComponentsDTO(productCodes);
 		}
 
 		catch (final EtailNonBusinessExceptions e)
