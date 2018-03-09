@@ -2509,4 +2509,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FPC_QUERY_REFUNDENTRY = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:auditId} = ?auditId";
 	public static final String FPC_QUERY_REFUNDENTRIES = "SELECT {fre:pk} FROM {FPCRefundEntry AS fre} WHERE{fre:isExpired} = ?expiredFlag";
 	public static final String FPC_QUERY_PARENTORDER = "SELECT {ord:pk} FROM {Order AS ord} WHERE{ord:guid} = ?guid AND {ord:type}  = ?orderType";
+	
+	
+	//changes for SDI 6152--starts
+	public static final String LUXURY_CATALOG_ID = "luxProductCatalog";
 }
