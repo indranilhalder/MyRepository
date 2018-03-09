@@ -543,12 +543,12 @@ export function addProductReview(productCode, productReview) {
         productReview
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors.length > 0) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
-      dispatch(addProductReviewSuccess(productReview));
+      dispatch(addProductReviewFailure(e.message));
     }
   };
 }
