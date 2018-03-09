@@ -7,7 +7,10 @@ import PropTypes from "prop-types";
 import RatingHolder from "./RatingHolder";
 import PdpFrame from "./PdpFrame";
 import HollowHeader from "./HollowHeader";
-import { MOBILE_PDP_VIEW } from "../../lib/constants";
+import {
+  MOBILE_PDP_VIEW,
+  PRODUCT_REVIEWS_PATH_SUFFIX
+} from "../../lib/constants";
 import find from "lodash/find";
 import * as Cookie from "../../lib/Cookie";
 import {
@@ -80,6 +83,14 @@ class ProductReviewPage extends Component {
     }
   };
 
+  goBack = () => {
+    const url = this.props.location.pathname.replace(
+      PRODUCT_REVIEWS_PATH_SUFFIX,
+      ""
+    );
+    this.props.history.replace(url);
+  };
+
   render() {
     if (this.props.productDetails) {
       console.log("IN PRODUCT REVIEW PAGE");
@@ -90,6 +101,7 @@ class ProductReviewPage extends Component {
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
           addProductToWishList={() => this.addProductToWishList()}
+          gotoPreviousPage={this.goBack}
         >
           <div className={styles.base}>
             <div className={styles.productBackground}>
