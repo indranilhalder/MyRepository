@@ -22,7 +22,8 @@ import {
   getEmiBankDetails,
   applyCliqCash,
   removeCliqCash,
-  binValidation
+  binValidation,
+  softReservationForPayment
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -106,6 +107,9 @@ const mapDispatchToProps = dispatch => {
     },
     binValidation: (paymentMode, binNo) => {
       dispatch(binValidation(paymentMode, binNo));
+    },
+    softReservationForPayment: cardDetails => {
+      dispatch(softReservationForPayment(cardDetails));
     }
   };
 };

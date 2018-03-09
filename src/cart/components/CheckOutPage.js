@@ -233,6 +233,16 @@ class CheckOutPage extends React.Component {
   removeCliqCash = () => {
     this.props.removeCliqCash();
   };
+
+  binValidation = (paymentMode, binNo) => {
+    this.props.binValidation(paymentMode, binNo);
+  };
+
+  softReservationForPayment = cardDetails => {
+    cardDetails.pinCode = "110044";
+
+    this.props.softReservationForPayment(cardDetails);
+  };
   render() {
     const cartData = this.props.cart;
     if (this.state.addNewAddress || !cartData.userAddress) {
@@ -282,6 +292,12 @@ class CheckOutPage extends React.Component {
                 cart={this.props.cart}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
+                binValidation={(paymentMode, binNo) =>
+                  this.binValidation(paymentMode, binNo)
+                }
+                softReservationForPayment={pinCode =>
+                  this.softReservationForPayment(pinCode)
+                }
               />
             )}
 

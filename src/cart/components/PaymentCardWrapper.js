@@ -50,6 +50,17 @@ export default class PaymentCardWrapper extends React.Component {
     }
   };
 
+  binValidation = (paymentMode, binNo) => {
+    if (this.props.binValidation) {
+      this.props.binValidation(paymentMode, binNo);
+    }
+  };
+
+  softReservationForPayment = cardDetails => {
+    if (this.props.softReservationForPayment) {
+      this.props.softReservationForPayment(cardDetails);
+    }
+  };
   render() {
     return (
       <div className={styles.base}>

@@ -31,6 +31,7 @@ export default class CreditCardForm extends React.Component {
   onChangeCardNumber(val) {
     this.setState({ cardNumberValue: val });
     if (val.length === 6) {
+      this.props.binValidation(val);
     }
   }
   getCardDetails(val) {
@@ -51,17 +52,31 @@ export default class CreditCardForm extends React.Component {
   onSaveCardDetails(val) {
     if (this.props.onSaveCardDetails) {
       let cardDetails = {};
-      cardDetails.cardNumber = this.state.cardNumberValue;
-      cardDetails.cardName = this.state.cardNameValue;
-      cardDetails.cvvNumber = this.state.cardCvvValue;
-      cardDetails.monthValue = this.state.monthValue;
-      cardDetails.yearValue = this.state.yearValue;
+      cardDetails.cardNumber = "4242424242424242";
+      cardDetails.cardName = "SHDHD";
+      cardDetails.cvvNumber = "123";
+      cardDetails.monthValue = "03";
+      cardDetails.yearValue = "2020";
       cardDetails.selected = this.state.selected;
+      cardDetails.merchant_id = "TUL_TMP";
       this.props.onSaveCardDetails(cardDetails);
     }
   }
 
+  payBill = cardDetails => {
+    let cardValues = {};
+    cardValues.cardNumber = "4242424242424242";
+    cardValues.cardName = "SHDHD";
+    cardValues.cvvNumber = "123";
+    cardValues.monthValue = "03";
+    cardValues.yearValue = "2020";
+    cardValues.selected = this.state.selected;
+    cardValues.merchant_id = "TUL_TMP";
+    this.props.softReservationForPayment(cardValues);
+  };
+
   render() {
+    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.cardDetails}>
@@ -147,7 +162,7 @@ export default class CreditCardForm extends React.Component {
                   color="#fff"
                   label="Pay now"
                   width={120}
-                  onClick={val => this.onSaveCardDetails(val)}
+                  onClick={() => this.payBill()}
                 />
               </div>
             </div>
