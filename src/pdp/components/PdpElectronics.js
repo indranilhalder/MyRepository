@@ -70,7 +70,6 @@ export default class PdpElectronics extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
     if (userDetails) {
       this.props.addProductToCart(
         JSON.parse(userDetails).customerInfo.mobileNumber,
@@ -110,6 +109,16 @@ export default class PdpElectronics extends React.Component {
         productDetails
       );
     }
+  };
+
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
   };
   render() {
     const productData = this.props.productDetails;
@@ -159,10 +168,10 @@ export default class PdpElectronics extends React.Component {
               averageRating={productData.averageRating}
             />
           </div>
-          {productData.emiInfo && (
+          {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
               <div className={styles.info}>
-                {productData.emiInfo.emiText}
+                Emi available on this product.
                 <span className={styles.link} onClick={this.showEmiModal}>
                   View Plans
                 </span>

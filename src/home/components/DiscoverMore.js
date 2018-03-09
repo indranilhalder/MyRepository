@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 export default class DiscoverMore extends React.Component {
   render() {
     if (this.props.feedComponentData.data) {
-      if (this.props.feedComponentData.data.type === "L1") {
+      if (this.props.feedComponentData.data.type !== "L1") {
         return (
           <DiscoverMore500
             feedComponentData={this.props.feedComponentData.data}
