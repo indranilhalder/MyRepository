@@ -8,6 +8,7 @@ import GetLocationDetails from "./GetLocationDetails";
 import PickUpDetails from "./PickUpDetails";
 import SearchLocationByPincode from "./SearchLocationByPincode";
 import styles from "./PiqPage.css";
+import WestSideIcon from "./img/westside.svg";
 
 export default class PiqPage extends React.Component {
   constructor(props) {
@@ -27,12 +28,16 @@ export default class PiqPage extends React.Component {
     };
   }
   handleSwipe(val) {
-    console.log(val % this.props.numberOfStores);
     const lat = this.props.availableStores[val % this.props.numberOfStores]
       .geoPoint.latitude;
     const lng = this.props.availableStores[val % this.props.numberOfStores]
       .geoPoint.longitude;
     this.setState({ lat, lng });
+  }
+  getValue(val) {
+    if (this.props.getValue) {
+      this.props.getValue();
+    }
   }
   selectStore(val) {
     this.setState({
@@ -49,9 +54,12 @@ export default class PiqPage extends React.Component {
   changeStore() {
     this.setState({ selected: false });
   }
-
+  handleSubmit() {
+    if (this.props.onSubmit) {
+      this.props.onSubmit();
+    }
+  }
   render() {
-    console.log(this.props);
     return (
       <div className={styles.base}>
         <div className={styles.map}>
@@ -61,7 +69,7 @@ export default class PiqPage extends React.Component {
                 <MarkerStore
                   lat={val.geoPoint.latitude}
                   lng={val.geoPoint.longitude}
-                  image="https://lh3.googleusercontent.com/UMB2HRRRAAzXAEaCM9Gg-baCaDx_1RTXHscW5k2Ge3P4KP4mwTt2m6oyEHBWex3c4SxU=w300"
+                  image={WestSideIcon}
                 />
               );
             })}
@@ -122,8 +130,8 @@ export default class PiqPage extends React.Component {
               </div>
               <div className={styles.pickUpDetails}>
                 <PickUpDetails
-                  getValue={val => this.onChange(val)}
-                  onSubmit={() => this.handleClick()}
+                  getValue={val => this.getValue(val)}
+                  onSubmit={() => this.handleSubmit()}
                 />
               </div>
             </div>
