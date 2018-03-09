@@ -47,34 +47,16 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     return searchText;
   }
   componentDidMount() {
-    // this will do the check for category or brand
-    // which does not happen now
     window.addEventListener("scroll", this.handleScroll);
-
-    // I can just assume that we need to set filters here.
-    // const searchText = this.getSearchTextFromUrl();
     let pageType = this.state.pageType.split("/")[2];
     this.props.homeFeed(pageType);
-    // if (pageType.includes("msh") || [pageType.includes("mbh")]) {
-    //   this.props.homeFeed(pageType);
-    // } else {
-    //   this.props.getProductListings(searchText, SUFFIX, 0);
-    // }
   }
 
   componentDidUpdate() {
-    // if (
-    //   this.props.location.state &&
-    //   this.props.location.state.isFilter &&
-    //   this.props.homeFeedData.homeFeed === null
-    // ) {
-    //   const suffix = "&isFilter=true";
-    //   const searchText = this.getSearchTextFromUrl();
-    //   this.props.getProductListings(searchText, suffix, 0, true);
-    // }
     if (
       this.props.homeFeedData.feedType === "blp" &&
-      this.props.homeFeedData.homeFeed.length === 0
+      this.props.homeFeedData.homeFeed.length === 0 &&
+      this.props.productListings === null
     ) {
       const suffix = "&isFilter=false";
       const searchText = this.getSearchTextFromUrl();
@@ -107,16 +89,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", throttle(this.handleScroll, 300));
   }
-
-  // from the url I construct filters
-
-  // and execute a search
-
-  // so this page needs a container that will supply those actions
-  // getProductListings works on the search state, so I will need to update that from the url
-  // then call getProductListings
-
-  // so this thing will need setFIlters, getProductListings
   renderLoader() {
     return <MDSpinner />;
   }
@@ -139,9 +111,3 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     );
   }
 }
-
-// Brand Page
-// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/products/serpsearch?type=category&channel=mobile&pageSize=20&typeID=all&page=0&searchText=:relevance:brand:MBH12E00001&isFilter=false&isTextSearch=false&isPwa=false
-
-// Category Page
-// https://uat2.tataunistore.com/marketplacewebservices/v2/mpl/products/serpsearch?type=category&channel=mobile&pageSize=20&typeID=all&page=0&searchText=:relevance:category:MSH1012100&isFilter=false&isTextSearch=false&isPwa=false

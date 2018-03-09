@@ -23,7 +23,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     page: state.productListings.pageNumber,
-    homeFeedData: state.home
+    homeFeedData: state.home,
+    productListings: state.productListings.productListings
   };
 };
 
