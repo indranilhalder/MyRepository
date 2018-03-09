@@ -81,7 +81,7 @@ export default class PiqPage extends React.Component {
         <div className={styles.location}>
           <SearchLocationByPincode
             header={`${this.props.productName} ${this.props.productColour}`}
-            pincode="400240"
+            pincode={this.props.pincode}
           />
         </div>
         <div className={styles.bannerMobileHolder}>
@@ -96,7 +96,6 @@ export default class PiqPage extends React.Component {
                     key={i}
                     address={`${val.returnAddress1} ${val.returnAddress2}, `}
                     PickUpKey="Open on: "
-                    //  PickUpValue={val.PickUpValue}
                     workingDays={val.mplWorkingDays}
                     openingTime={val.mplOpeningTime}
                     closingTime={val.mplClosingTime}

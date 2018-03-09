@@ -1,10 +1,12 @@
 import React from "react";
 import GoogleMapReact from "google-map-react";
-
+const DEFAULT_LATITUDE = 59.95;
+const DEFAULT_LONGITUDE = 30.33;
+const DEFAULT_ZOOM = 20;
 export default class Map extends React.Component {
   static defaultProps = {
-    center: { lat: 59.95, lng: 30.33 },
-    zoom: 20
+    center: { lat: DEFAULT_LATITUDE, lng: DEFAULT_LONGITUDE },
+    zoom: DEFAULT_ZOOM
   };
 
   render() {
