@@ -2615,12 +2615,12 @@
 					</attribute>
 					<!-- Add Size Guide Columns for Fashion Accessories END:::: -->
 					<!-- for new ui/ux size guide api -->
-					<attribute qualifier="priority" type="java.lang.String">
+					<!-- <attribute qualifier="priority" type="java.lang.String">
 						<description>Priority of each size</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 				</attributes>
 			</itemtype>
 
