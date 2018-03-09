@@ -32,32 +32,34 @@ export default class AccountSetting extends React.Component {
             </div>
           </div>
         </div>
-        <div className={styles.accountSettingFooter}>
-          <div className={styles.accountInformationHolder}>
-            <div className={styles.accountInformationCount}>
-              {this.props.followedBrandsCount}
+        {this.props.isDetails && (
+          <div className={styles.accountSettingFooter}>
+            <div className={styles.accountInformationHolder}>
+              <div className={styles.accountInformationCount}>
+                {this.props.followedBrandsCount}
+              </div>
+              <div className={styles.accountInformation}>
+                {this.props.followedBrands}
+              </div>
             </div>
-            <div className={styles.accountInformation}>
-              {this.props.followedBrands}
+            <div className={styles.accountInformationHolder}>
+              <div className={styles.accountInformationCount}>
+                {this.props.likedProductsCount}
+              </div>
+              <div className={styles.accountInformation}>
+                {this.props.likedProducts}
+              </div>
+            </div>
+            <div className={styles.accountInformationHolder}>
+              <div className={styles.accountInformationCount}>
+                {this.props.orderPlacedCount}
+              </div>
+              <div className={styles.accountInformation}>
+                {this.props.orderPlaced}
+              </div>
             </div>
           </div>
-          <div className={styles.accountInformationHolder}>
-            <div className={styles.accountInformationCount}>
-              {this.props.likedProductsCount}
-            </div>
-            <div className={styles.accountInformation}>
-              {this.props.likedProducts}
-            </div>
-          </div>
-          <div className={styles.accountInformationHolder}>
-            <div className={styles.accountInformationCount}>
-              {this.props.orderPlacedCount}
-            </div>
-            <div className={styles.accountInformation}>
-              {this.props.orderPlaced}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -69,10 +71,12 @@ AccountSetting.propTypes = {
   likedProducts: PropTypes.string,
   followedBrandsCount: PropTypes.string,
   followedBrands: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  isDetails: PropTypes.bool
 };
 AccountSetting.defaultProps = {
   image: AccountSettingIcon,
+  isDetails: false,
   heading: "Ananya R. Patel",
   color: "#ff1744",
   label: "Account Settings"

@@ -8,40 +8,39 @@
   width: 100%;
   height: auto;
   display: inline-block;
+  position: relative;
+  padding: 20px 115px 20px 70px;
 }
 .accountHolderLeft {
-  width: 65%;
+  width: 100%;
   height: auto;
   display: inline-block;
-  position: relative;
 }
 .accountHolderRight {
-  width: 35%;
-  height: auto;
+  width: auto;
+  height: 25px;
   display: inline-block;
   position: absolute;
-  top: 10px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
 .accountSettingFooter {
-  height: 100px;
+  height: auto;
   width: 100%;
-  padding: 5px;
   display: inline-block;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-.headingHolder {
-  width: 65%;
-  display: inline-block;
-  position: relative;
-}
+
 .accountInformationHolder {
-  width: 30%;
-  height: 77px;
-  margin: auto;
+  width: 33.33%;
+  height: auto;
+  vertical-align: middle;
   display: inline-block;
-  left: 5px;
-  margin-right: 4px;
-  line-height: 20px;
-  padding: 10px;
+  padding: 0px 10px;
 }
 .buttonHolder {
   width: 25%;
@@ -50,14 +49,11 @@
 }
 .accountInformation {
   width: 100%;
-  height: 20px;
-  margin-top: 5px;
-  margin: auto;
+  height: auto;
   display: inline-block;
-  left: 5px;
-  margin-left: 4px;
   text-align: center;
   font-size: 14px;
+  font-family: regular;
 }
 .accountInformationCount {
   composes: accountInformation;
@@ -73,19 +69,19 @@
 .headingText {
   width: 100%;
   color: #000000;
-  font-size: 20px;
+  font-size: 17px;
   font-family: semibold;
   margin: auto;
   text-align: left;
-  padding-left: 70px;
-  padding-top: 10px;
 }
 .accountImage {
   width: 60px;
   height: 60px;
   position: absolute;
-  left: 0;
+  left: 0px;
   top: 0;
+  bottom: 0;
+  margin: auto;
 }
 .button {
   width: auto;
