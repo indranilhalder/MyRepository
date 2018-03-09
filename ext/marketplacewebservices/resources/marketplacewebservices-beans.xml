@@ -4219,7 +4219,7 @@
 	<property name="currencySymbol" type="String"/>
 	</bean>
 	
-	<bean class="com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO">
+	<!-- <bean class="com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO">
 		<property name="webURL" type="java.lang.String"/> 
 		<property name="imageURL" type="java.lang.String"/>
 	</bean>
@@ -4233,7 +4233,7 @@
 	<property name="webURL" type="java.lang.String"/>
 		<property name="items"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ProductCapsulesElementWsDTO>" />
-	</bean>
+	</bean> -->
 	
 	<bean class="com.tisl.mpl.wsdto.BannerSeparatorWsDTO">
 	<property name="componentId" type="java.lang.String"/>
@@ -4435,8 +4435,8 @@
 			type="com.tisl.mpl.wsdto.ThemeOffersWsDTO"/>
 		<property name="multiClickComponent"
 			type="com.tisl.mpl.wsdto.ThemeProductWidgetWsDTO"/>
-		<property name="ProductCapsules"
-			type="com.tisl.mpl.wsdto.ProductCapsulesWsDTO"/>
+		<!-- <property name="ProductCapsules"
+			type="com.tisl.mpl.wsdto.ProductCapsulesWsDTO"/> -->
 		<property name="bannerSeparatorComponent"
 			type="com.tisl.mpl.wsdto.BannerSeparatorWsDTO"/>
 		<property name="automatedBannerProductCarouselComponent"
