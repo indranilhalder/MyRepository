@@ -30,6 +30,8 @@ export default class CreditCardForm extends React.Component {
   }
   onChangeCardNumber(val) {
     this.setState({ cardNumberValue: val });
+    if (val.length === 6) {
+    }
   }
   getCardDetails(val) {
     this.setState({ cardNumberValue: val });

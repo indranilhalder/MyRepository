@@ -119,6 +119,10 @@ export const REMOVE_CLIQ_CASH_REQUEST = "REMOVE_CLIQ_CASH_REQUEST";
 export const REMOVE_CLIQ_CASH_SUCCESS = "REMOVE_CLIQ_CASH_SUCCESS";
 export const REMOVE_CLIQ_CASH_FAILURE = "REMOVE_CLIQ_CASH_FAILURE";
 
+export const BIN_VALIDATION_REQUEST = "BIN_VALIDATION_REQUEST";
+export const BIN_VALIDATION_SUCCESS = "BIN_VALIDATION_SUCCESS";
+export const BIN_VALIDATION_FAILURE = "BIN_VALIDATION_FAILURE";
+
 export const PAYMENT_MODE = "credit card";
 const pincode = 229001;
 
@@ -612,6 +616,7 @@ export function getNetBankDetails() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+      console.log(resultJson);
       dispatch(netBankingDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(netBankingDetailsFailure(e.message));
@@ -1389,6 +1394,60 @@ export function removeCliqCash() {
       dispatch(removeCliqCashSuccess(resultJson));
     } catch (e) {
       dispatch(removeCliqCashFailure(e.message));
+    }
+  };
+}
+
+export function binValidationRequest() {
+  return {
+    type: BIN_VALIDATION_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function binValidationSuccess(binValidation) {
+  return {
+    type: BIN_VALIDATION_SUCCESS,
+    status: SUCCESS,
+    binValidation
+  };
+}
+
+export function binValidationFailure(error) {
+  return {
+    type: BIN_VALIDATION_FAILURE,
+    status: ERROR,
+    error
+  };
+}
+
+// Action Creator to bin Validation
+export function binValidation(paymentMode, binNo) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
+  return async (dispatch, getState, { api }) => {
+    dispatch(releaseBankOfferRequest());
+    try {
+      let binValidationObject = new FormData();
+      binValidationObject.append("binNo", binNo);
+      binValidationObject.append("cartGuid", cartId);
+      const result = await api.post(
+        `${USER_CART_PATH}/${
+          JSON.parse(userDetails).customerInfo.mobileNumber
+        }/payments/binValidation?access_token=${
+          JSON.parse(customerCookie).access_token
+        }&isPwa=true&platformNumber=2&paymentMode=${paymentMode}`,
+        binValidationObject
+      );
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(resultJson.message);
+      }
+      dispatch(releaseBankOfferSuccess(resultJson));
+    } catch (e) {
+      dispatch(releaseBankOfferFailure(e.message));
     }
   };
 }

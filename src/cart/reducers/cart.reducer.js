@@ -54,9 +54,9 @@ const cart = (
     bankOfferStatus: null,
     bankOfferError: null,
 
-    paymentStatus: null,
-    paymentStatusError: null,
-    paymentDetails: null
+    cliqCashPaymentStatus: null,
+    cliqCashPaymentStatusError: null,
+    cliqCashPaymentDetails: null
   },
   action
 ) => {
@@ -477,24 +477,25 @@ const cart = (
         bankOfferError: action.error,
         loading: false
       });
+
     case cartActions.APPLY_CLIQ_CASH_REQUEST:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
+        cliqCashPaymentStatus: action.status,
         loading: true
       });
 
     case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentDetails: action.paymentDetails,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentDetails: action.paymentDetails,
         loading: false
       });
     }
 
     case cartActions.APPLY_CLIQ_CASH_FAILURE:
       return Object.assign({}, state, {
-        paymentStatus: action.status,
-        paymentStatusError: action.error,
+        cliqCashPaymentStatus: action.status,
+        cliqCashPaymentStatusError: action.error,
         loading: false
       });
 

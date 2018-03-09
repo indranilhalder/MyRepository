@@ -21,7 +21,8 @@ import {
   getNetBankDetails,
   getEmiBankDetails,
   applyCliqCash,
-  removeCliqCash
+  removeCliqCash,
+  binValidation
 } from "../actions/cart.actions";
 import { showModal, BANK_OFFERS } from "../../general/modal.actions";
 const mapDispatchToProps = dispatch => {
@@ -102,6 +103,9 @@ const mapDispatchToProps = dispatch => {
     },
     removeCliqCash: () => {
       dispatch(removeCliqCash());
+    },
+    binValidation: (paymentMode, binNo) => {
+      dispatch(binValidation(paymentMode, binNo));
     }
   };
 };

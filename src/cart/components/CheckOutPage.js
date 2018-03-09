@@ -279,7 +279,7 @@ class CheckOutPage extends React.Component {
           {!this.state.paymentMethod &&
             (this.state.confirmAddress && this.state.deliverMode) && (
               <PaymentCardWrapper
-                paymentDetails={this.props.cart.paymentModes}
+                cart={this.props.cart}
                 applyCliqCash={() => this.applyCliqCash()}
                 removeCliqCash={() => this.removeCliqCash()}
               />
