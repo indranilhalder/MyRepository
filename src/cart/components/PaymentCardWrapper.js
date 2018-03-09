@@ -8,6 +8,12 @@ const typeComponentMapping = {
 };
 
 export default class PaymentCardWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isToggleOn: true
+    };
+  }
   renderPaymentCard = datumType => {
     return (
       <React.Fragment>
@@ -30,7 +36,26 @@ export default class PaymentCardWrapper extends React.Component {
     });
   }
 
+  handleClick = () => {
+    this.setState({ isToggleOn: !this.state.isToggleOn });
+    if (this.state.isToggleOn) {
+      this.props.applyCliqCash();
+    } else {
+      this.props.removeCliqCash();
+    }
+  };
+
   render() {
-    return <div>{this.renderPaymentCardsComponents()}</div>;
+    return (
+      <div>
+        <div>
+          {" "}
+          <button onClick={this.handleClick}>
+            {this.state.isToggleOn ? "On" : "OFF"}
+          </button>
+        </div>
+        {this.renderPaymentCardsComponents()}
+      </div>
+    );
   }
 }
