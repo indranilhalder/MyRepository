@@ -20,7 +20,6 @@ export default class SubBrandsBanner extends React.Component {
           {this.props.feedComponentData &&
             this.props.feedComponentData.items &&
             this.props.feedComponentData.items.map((datum, i) => {
-              console.log(datum);
               return (
                 <ProductImageAndLogo
                   key={i}
