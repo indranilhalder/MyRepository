@@ -249,7 +249,7 @@ export function getCouponsFailure(error) {
   };
 }
 
-export function getCoupons() {
+export function getCoupons(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -294,23 +294,25 @@ export function applyCouponFailure(error) {
   };
 }
 
-export function applyCoupon(cartGuide) {
+export function applyCoupon(couponCode) {
+  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
     dispatch(applyCouponRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
-          getState().user.user.customerInfo.mobileNumber
+          JSON.parse(userDetails).customerInfo.mobileNumber
         }/carts/applyCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartGuide}&couponCode=CouponTest&paymentMode=CreditCard`
+        }&cartGuid=${cartId}&couponCode=${couponCode}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-
       dispatch(applyCouponSuccess());
     } catch (e) {
       dispatch(applyCouponFailure(e.message));
@@ -338,18 +340,22 @@ export function releaseCouponFailure(error) {
     error
   };
 }
-export function releaseCoupon(carId) {
+
+export function releaseCoupon(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
+  let cartGuId = JSON.parse(cartDetails).guid;
+  let cartId = JSON.parse(cartDetails).code;
   return async (dispatch, getState, { api }) => {
     dispatch(releaseCouponRequest());
     try {
-      const result = await api.get(
+      const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).customerInfo.mobileNumber
-        }/carts/carId/releaseCoupons?access_token=${
+        }/carts/${cartId}/releaseCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isPwa=true&platformNumber=2`
+        }&isPwa=true&platformNumber=2&couponCode=${couponCode}&cartGuid=${cartGuId}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

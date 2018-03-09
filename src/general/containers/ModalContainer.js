@@ -11,7 +11,9 @@ import {
 
 import {
   applyBankOffer,
-  releaseBankOffer
+  releaseBankOffer,
+  applyCoupon,
+  releaseCoupon
 } from "../../cart/actions/cart.actions";
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -48,6 +50,12 @@ const mapDispatchToProps = dispatch => {
     },
     releaseBankOffer: couponCode => {
       dispatch(releaseBankOffer(couponCode));
+    },
+    applyCoupon: couponCode => {
+      dispatch(applyCoupon(couponCode));
+    },
+    releaseCoupon: couponCode => {
+      dispatch(releaseCoupon(couponCode));
     }
   };
 };

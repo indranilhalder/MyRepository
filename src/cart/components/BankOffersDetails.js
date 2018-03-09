@@ -6,14 +6,23 @@ import GridSelect from "../../general/components/GridSelect";
 const COUPON_HEADER = "Bank promotions";
 
 class BankOffersDetails extends Component {
-  applyBankCoupons = val => {};
+  applyBankCoupons = val => {
+    if (this.props.applyBankOffer) {
+      this.props.applyBankOffer(val);
+    }
+  };
+
+  releaseBankOffer = val => {
+    if (this.props.releaseBankOffer) {
+      this.props.releaseBankOffer(val);
+    }
+  };
 
   render() {
     return (
       <div className={styles.base}>
         <SlideModal {...this.props}>
           <div className={styles.couponHeader}>{COUPON_HEADER}</div>
-
           <BankCoupons
             coupons={this.props.coupons}
             value={this.props.coupons}

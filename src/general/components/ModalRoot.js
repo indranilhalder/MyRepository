@@ -54,6 +54,22 @@ export default class ModalRoot extends React.Component {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
+
+  applyBankOffer = couponCode => {
+    this.props.applyBankOffer(couponCode);
+  };
+  releaseBankOffer = couponCode => {
+    this.props.releaseBankOffer(couponCode);
+  };
+
+  applyCoupon = couponCode => {
+    this.props.applyCoupon(couponCode);
+  };
+
+  releaseCoupon = couponCode => {
+    this.props.releaseCoupon(couponCode);
+  };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -90,6 +106,8 @@ export default class ModalRoot extends React.Component {
       Coupons: (
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
+          applyCoupon={couponCode => this.applyCoupon(couponCode)}
+          releaseCoupon={couponCode => this.releaseCoupon(couponCode)}
           {...this.props.ownProps}
         />
       ),
