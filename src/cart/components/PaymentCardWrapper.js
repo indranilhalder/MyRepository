@@ -12,9 +12,7 @@ const typeComponentMapping = {
 export default class PaymentCardWrapper extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isToggleOn: true
-    };
+    this.state = {};
   }
   renderPaymentCard = datumType => {
     return (
@@ -39,7 +37,6 @@ export default class PaymentCardWrapper extends React.Component {
   }
 
   handleClick = toggleState => {
-    this.setState({ isToggleOn: !this.state.isToggleOn });
     if (toggleState) {
       this.props.applyCliqCash();
     } else {
