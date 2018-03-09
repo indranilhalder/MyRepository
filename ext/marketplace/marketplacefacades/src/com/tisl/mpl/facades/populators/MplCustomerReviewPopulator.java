@@ -95,7 +95,14 @@ public class MplCustomerReviewPopulator implements Populator<CustomerReviewModel
 			}
 			else
 			{
-				target.setAlias(customer.getOriginalUid().substring(0, customer.getOriginalUid().indexOf("@")));
+				if (customer.getOriginalUid().indexOf("@") > -1)
+				{
+					target.setAlias(customer.getOriginalUid().substring(0, customer.getOriginalUid().indexOf("@")));
+				}
+				else
+				{
+					target.setAlias("");
+				}
 			}
 		}
 
