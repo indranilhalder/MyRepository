@@ -9,8 +9,9 @@ const productDescription = (
     sizeGuide: null,
     emiResult: null,
     wishList: null,
-    reviews: null,
+    reviews: {},
     reviewsStatus: null,
+    addReviewStatus: false,
     reviewsError: null,
     msdItems: {},
     emiTerms: null
@@ -219,19 +220,26 @@ const productDescription = (
 
     case pdpActions.ADD_PRODUCT_REVIEW_REQUEST:
       return Object.assign({}, state, {
-        reviewsStatus: action.status,
+        addReviewStatus: action.status,
         loading: true
       });
 
     case pdpActions.ADD_PRODUCT_REVIEW_SUCCESS:
+      let reviews = cloneDeep(state.reviews);
+      if (!reviews.reviews) {
+        reviews.reviews = [action.productReview];
+      } else {
+        reviews.reviews = reviews.push(action.productReview);
+      }
       return Object.assign({}, state, {
-        reviewsStatus: action.status,
-        loading: false
+        addReviewStatus: action.status,
+        loading: false,
+        reviews
       });
 
     case pdpActions.ADD_PRODUCT_REVIEW_FAILURE:
       return Object.assign({}, state, {
-        reviewsStatus: action.status,
+        addReviewStatus: action.status,
         reviewsError: action.error,
         loading: false
       });

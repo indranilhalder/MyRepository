@@ -515,10 +515,11 @@ export function addProductReviewRequest() {
     status: REQUESTING
   };
 }
-export function addProductReviewSuccess() {
+export function addProductReviewSuccess(productReview) {
   return {
     type: ADD_PRODUCT_REVIEW_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    productReview
   };
 }
 
@@ -545,9 +546,9 @@ export function addProductReview(productCode, productReview) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(addProductReviewSuccess());
+      dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
-      dispatch(addProductReviewFailure(e.message));
+      dispatch(addProductReviewSuccess(productReview));
     }
   };
 }

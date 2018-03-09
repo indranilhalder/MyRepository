@@ -9,7 +9,8 @@ import PdpFrame from "./PdpFrame";
 import HollowHeader from "./HollowHeader";
 import {
   MOBILE_PDP_VIEW,
-  PRODUCT_REVIEWS_PATH_SUFFIX
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  SUCCESS
 } from "../../lib/constants";
 import find from "lodash/find";
 import * as Cookie from "../../lib/Cookie";
@@ -91,12 +92,14 @@ class ProductReviewPage extends Component {
     this.props.history.replace(url);
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.addReviewStatus === SUCCESS) {
+      this.setState({ visible: false });
+    }
+  }
+
   render() {
     if (this.props.productDetails) {
-      console.log("IN PRODUCT REVIEW PAGE");
-      console.log(this.props.productDetails);
-      console.log(this.props.reviews);
-      console.log(this.props.ratingData);
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}

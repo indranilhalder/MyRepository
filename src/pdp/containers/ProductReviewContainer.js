@@ -31,7 +31,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
-    reviews: state.productDescription.reviews
+    reviews: state.productDescription.reviews,
+    addReviewStatus: state.productDescription.addReviewStatus
   };
 };
 
