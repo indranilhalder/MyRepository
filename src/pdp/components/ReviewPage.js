@@ -4,10 +4,7 @@ import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating";
 export default class ReviewPage extends React.Component {
   render() {
-    console.log("REVIEW PAGE");
     const date = new Date(this.props.date).toDateString();
-
-    console.log(date);
     return (
       <div className={styles.base}>
         {this.props.rating && (

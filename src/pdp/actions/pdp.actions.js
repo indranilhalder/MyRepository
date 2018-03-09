@@ -663,25 +663,15 @@ export function getProductReviewsFailure(error) {
 
 export function getProductReviews(productCode) {
   let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-  console.log("IN ACTIONS GET PRODUCT REVIEWS CALLED");
   return async (dispatch, getState, { api }) => {
     dispatch(getProductReviewsRequest());
     try {
-      console.log("BEFORE API.GET");
-      console.log(productCode);
-      console.log(PAGE_VALUE);
-      console.log(PAGE_NUMBER);
-      console.log("GLOBAL ACCESS TOKEN");
-
       const result = await api.get(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode.toUpperCase()}/users/anonymous/reviews?access_token=${
           JSON.parse(globalAccessToken).access_token
         }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
-      console.log("IS THIS HIT?");
       const resultJson = await result.json();
-      console.log("GET PRODUCT REVIEWS SUCCESS");
-      console.log(resultJson);
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
