@@ -1356,6 +1356,8 @@
 		<property name="dimension" type="String" />
 		<property name="dimensionList"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.SizeGuideWsDataValue>" />
+		<!-- NU-55 -->	
+		<property name="dimensionSize" type="String" />
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.SizeGuideWsDataValue" type="bean">
@@ -1374,7 +1376,9 @@
 		<property name="inchesBeltLength" type="String" />
 		<!-- This is added by SAP For Accessories END :::: -->
 		<!-- for new ui/ux sizeguide api -->
-		<property name="priority" type="String" />
+		<!-- <property name="priority" type="String" /> -->
+		<!-- NU-55 -->
+		<property name="dimension" type="String" />
 	</bean>
 
 	<!-- About Us -->

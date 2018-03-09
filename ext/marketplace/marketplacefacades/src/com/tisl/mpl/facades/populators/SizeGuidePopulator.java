@@ -56,8 +56,9 @@ public class SizeGuidePopulator<SOURCE extends SizeGuideModel, TARGET extends Si
 			sizeGuideData.setInchesBeltLength(sizeGuideModel.getInchesBeltLength());
 			sizeGuideData.setInchesBeltSize(sizeGuideModel.getInchesBeltSize());
 			sizeGuideData.setInchesWaistSize(sizeGuideModel.getInchesWaistSize());
-			//for new ui/ux size guide api
-			sizeGuideData.setPriority(sizeGuideModel.getPriority());
+			/*
+			 * //for new ui/ux size guide api sizeGuideData.setPriority(sizeGuideModel.getPriority());
+			 */
 		}
 
 	}
