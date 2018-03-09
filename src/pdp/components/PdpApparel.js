@@ -21,7 +21,8 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
   PRODUCT_SELLER_ROUTER,
-  PRODUCT_CART_ROUTER
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
@@ -80,6 +81,11 @@ export default class PdpApparel extends React.Component {
         productDetails
       );
     }
+  };
+
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
   };
 
   addToWishList = () => {

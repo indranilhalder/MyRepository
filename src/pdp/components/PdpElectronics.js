@@ -28,7 +28,8 @@ import {
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
-  PRODUCT_CART_ROUTER
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
@@ -85,6 +86,11 @@ export default class PdpElectronics extends React.Component {
         productDetails
       );
     }
+  };
+
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
   };
 
   addToWishList = () => {
