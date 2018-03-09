@@ -29,6 +29,7 @@ import LatestCollections from "../../brands/components/LatestCollections";
 import MonoBanner from "./MonoBanner";
 import styles from "./Feed.css";
 import MDSpinner from "react-md-spinner";
+import SubBrandsBanner from "../../brands/components/SubBrandsBanner";
 import { MERGE_CART_ID_SUCCESS } from "../../cart/actions/cart.actions";
 import { CHECKOUT_ROUTER } from "../../lib/constants";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
@@ -68,7 +69,7 @@ const typeComponentMapping = {
   "Curated Products Component": props => (
     <CuratedProductsComponent {...props} />
   ),
-  // "Sub Brands Banner Component":props =><>
+  "Sub Brands Banner Component": props => <SubBrandsBanner {...props} />,
   "Landing Page Hierarchy": props => <AllBrandTypes {...props} />
 };
 
@@ -152,7 +153,10 @@ class Feed extends Component {
     return (
       <div className={styles.base}>
         <div className={styles.center}>
-          <InformationHeader {...propsForHeader} />
+          <InformationHeader
+            {...propsForHeader}
+            goBack={() => this.props.history.goBack()}
+          />
           {this.renderFeedComponents()}
         </div>
       </div>
