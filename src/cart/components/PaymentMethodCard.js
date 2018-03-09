@@ -31,7 +31,7 @@ export default class PaymentMethodCard extends React.Component {
       headerTextHolder = styles.spaceBetween;
     }
     return (
-      <div className={styles.base}>
+      <div>
         <div className={styles.paymentDataHolder}>
           <div className={headerTextHolder}>
             <CheckOutHeader

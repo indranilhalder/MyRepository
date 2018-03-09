@@ -31,7 +31,6 @@ class CartPage extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
-
     if (userDetails) {
       this.props.getCartDetails(
         JSON.parse(userDetails).customerInfo.mobileNumber,
@@ -142,15 +141,17 @@ class CartPage extends React.Component {
               })}
           </div>
           <SavedProduct onApplyCoupon={() => this.goToCouponPage()} />
-          <Checkout
-            amount={cartDetails.cartAmount.bagTotal.formattedValue}
-            bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
-            tax={this.props.cartTax}
-            offers={this.props.offers}
-            delivery={this.props.delivery}
-            payable={cartDetails.cartAmount.paybleAmount.formattedValue}
-            onCheckout={() => this.renderToDeliveryPage()}
-          />
+          {cartDetails.cartAmount && (
+            <Checkout
+              amount={cartDetails.cartAmount.bagTotal.formattedValue}
+              bagTotal={cartDetails.cartAmount.bagTotal.formattedValue}
+              tax={this.props.cartTax}
+              offers={this.props.offers}
+              delivery={this.props.delivery}
+              payable={cartDetails.cartAmount.paybleAmount.formattedValue}
+              onCheckout={() => this.renderToDeliveryPage()}
+            />
+          )}
         </div>
       );
     } else {
