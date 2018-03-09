@@ -1,6 +1,8 @@
 import React from "react";
 import _ from "lodash";
 import EmiAccordian from "./EmiAccordian.js";
+import CliqCashToggle from "./CliqCashToggle";
+import styles from "./PaymentCardWrapper.css";
 
 // prettier-ignore
 const typeComponentMapping = {
@@ -36,9 +38,9 @@ export default class PaymentCardWrapper extends React.Component {
     });
   }
 
-  handleClick = () => {
+  handleClick = toggleState => {
     this.setState({ isToggleOn: !this.state.isToggleOn });
-    if (this.state.isToggleOn) {
+    if (toggleState) {
       this.props.applyCliqCash();
     } else {
       this.props.removeCliqCash();
@@ -47,12 +49,14 @@ export default class PaymentCardWrapper extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={styles.base}>
         <div>
           {" "}
-          <button onClick={this.handleClick}>
-            {this.state.isToggleOn ? "On" : "OFF"}
-          </button>
+          <CliqCashToggle
+            cashText="Use My CLiQ Cash Balance"
+            price="400"
+            onToggle={i => this.handleClick(i)}
+          />
         </div>
         {this.renderPaymentCardsComponents()}
       </div>
