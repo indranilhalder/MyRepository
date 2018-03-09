@@ -112,9 +112,9 @@ class Feed extends Component {
   }
 
   componentWillMount() {
-    this.props.homeFeed();
-    if (!this.props.isOnBrandLandingPage) {
+    if (this.props.isHomeFeedPage) {
       this.props.getCartId();
+      this.props.homeFeed();
     } // window.digitalData = Object.assign(
     //   {},
     //   { page: { pageInfo: { pageName: "home" } } }

@@ -1,7 +1,9 @@
 import React from "react";
 import ProductListingsContainer from "../containers/ProductListingsContainer.js";
+import BrandLandingPageContainer from "../../brands/containers/BrandLandingPageContainer";
 import throttle from "lodash/throttle";
 import queryString from "query-string";
+import MDSpinner from "react-md-spinner";
 
 const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
@@ -11,6 +13,12 @@ const IS_FILTER_SUFFIX = `&isFilter=true`;
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 
 export default class PlpBrandCategoryWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pageType: props.location.pathname
+    };
+  }
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
     const searchCategory = parsedQueryString.searchCategory;
@@ -43,15 +51,32 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     // which does not happen now
     window.addEventListener("scroll", this.handleScroll);
 
-    const searchText = this.getSearchTextFromUrl();
-
     // I can just assume that we need to set filters here.
-    this.props.getProductListings(searchText, SUFFIX, 0);
+    // const searchText = this.getSearchTextFromUrl();
+    let pageType = this.state.pageType.split("/")[2];
+    this.props.homeFeed(pageType);
+    // if (pageType.includes("msh") || [pageType.includes("mbh")]) {
+    //   this.props.homeFeed(pageType);
+    // } else {
+    //   this.props.getProductListings(searchText, SUFFIX, 0);
+    // }
   }
 
   componentDidUpdate() {
-    if (this.props.location.state && this.props.location.state.isFilter) {
-      const suffix = "&isFilter=true";
+    // if (
+    //   this.props.location.state &&
+    //   this.props.location.state.isFilter &&
+    //   this.props.homeFeedData.homeFeed === null
+    // ) {
+    //   const suffix = "&isFilter=true";
+    //   const searchText = this.getSearchTextFromUrl();
+    //   this.props.getProductListings(searchText, suffix, 0, true);
+    // }
+    if (
+      this.props.homeFeedData.feedType === "blp" &&
+      this.props.homeFeedData.homeFeed.length === 0
+    ) {
+      const suffix = "&isFilter=false";
       const searchText = this.getSearchTextFromUrl();
       this.props.getProductListings(searchText, suffix, 0, true);
     }
@@ -92,15 +117,26 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   // then call getProductListings
 
   // so this thing will need setFIlters, getProductListings
-
+  renderLoader() {
+    return <MDSpinner />;
+  }
   render() {
+    if (this.props.homeFeedData.loading) {
+      return this.renderLoader();
+    }
+
     let isFilter = false;
     if (this.props.location.state) {
       isFilter = this.props.location.state.isFilter
         ? this.props.location.state.isFilter
         : false;
     }
-    return <ProductListingsContainer isFilter={isFilter} />;
+    return this.props.homeFeedData.feedType === "blp" &&
+      this.props.homeFeedData.homeFeed.length > 0 ? (
+      <BrandLandingPageContainer />
+    ) : (
+      <ProductListingsContainer isFilter={isFilter} />
+    );
   }
 }
 

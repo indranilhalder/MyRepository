@@ -17,6 +17,7 @@ import {
 export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
+export const HOME_FEED_NULL_DATA_SUCCESS = "HOME_FEED_NULL_DATA_SUCCESS";
 export const COMPONENT_DATA_REQUEST = "COMPONENT_DATA_REQUEST";
 export const COMPONENT_DATA_SUCCESS = "COMPONENT_DATA_SUCCESS";
 export const COMPONENT_DATA_FAILURE = "COMPONENT_DATA_FAILURE";
@@ -33,6 +34,7 @@ export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1";
+const urlForBLP = "";
 const mockDataForBLP = [
   {
     componentName: "landingPageTitleComponent",
@@ -1688,11 +1690,12 @@ export function homeFeedRequest() {
     status: REQUESTING
   };
 }
-export function homeFeedSuccess(data) {
+export function homeFeedSuccess(data, feedType) {
   return {
     type: HOME_FEED_SUCCESS,
     status: SUCCESS,
-    data
+    data,
+    feedType
   };
 }
 export function homeFeedFailure(error) {
@@ -1702,27 +1705,31 @@ export function homeFeedFailure(error) {
     error
   };
 }
-export function homeFeed(feedType) {
+export function homeFeed(feedType: null) {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
-      let url;
-      if (feedType === GET_FEED_DATA_FOR_BLP) {
-        dispatch(homeFeedSuccess(mockDataForBLP));
-      } else if (feedType === GET_FEED_DATA_FOR_CLP) {
-        dispatch(homeFeedSuccess(mockDataForCLP));
+      let url, result, feedTypeRequest;
+      if (feedType) {
+        result = await api.get(`v2/mpl/cms/defaultpage?pageId=${feedType}`);
+        feedTypeRequest = "blp";
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
+        result = await api.postAdobeTargetUrl(null, url, null, null, true);
+        feedTypeRequest = "home";
       }
+
       //TODO this needs to be cleaned up.
-      const result = await api.postAdobeTargetUrl(null, url, null, null, true);
       const resultJson = await result.json();
+      if (resultJson.errors) {
+        dispatch(homeFeedSuccess([], feedTypeRequest));
+      }
       if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+        throw new Error(`${resultJson}`);
       }
       let parsedResultJson = JSON.parse(resultJson.content);
       parsedResultJson = parsedResultJson.items;
-      dispatch(homeFeedSuccess(parsedResultJson));
+      dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }
