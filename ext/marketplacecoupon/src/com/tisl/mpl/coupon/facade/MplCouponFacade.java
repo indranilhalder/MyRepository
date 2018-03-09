@@ -237,4 +237,13 @@ public interface MplCouponFacade
 	AbstractOrderModel removeCartCoupon(AbstractOrderModel orderModel);
 
 
+	/**
+	 * The Method return Coupon Details to be displayed on Cart Page
+	 *
+	 * @param cartGuid
+	 * @param currentCustomer
+	 */
+	void getDisplayCouponList(String cartGuid, CustomerModel currentCustomer);
+
+
 }
