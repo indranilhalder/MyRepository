@@ -2,15 +2,8 @@ import React from "react";
 import styles from "./PickUpLocation.css";
 import PropTypes from "prop-types";
 import Button from "../../general/components/Button";
-const integerDayMapping = [
-  "Saturday",
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday"
-];
+const integerDayMapping = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thur", "Fri"];
+
 export default class PickUpLocation extends React.Component {
   handleClick() {
     if (this.props.onClick) {
@@ -19,14 +12,6 @@ export default class PickUpLocation extends React.Component {
   }
 
   render() {
-    console.log(Math.floor((this.props.workingDays.length - 1) / 2));
-    console.log(
-      this.props.workingDays.split(",")[
-        Math.floor((this.props.workingDays.length - 1) / 2)
-      ]
-    );
-    console.log(this.props.workingDays.split(",")[5]);
-    console.log(this.props.workingDays.split(",")[0]);
     return (
       <div className={styles.base}>
         <div className={styles.holder}>
@@ -48,23 +33,19 @@ export default class PickUpLocation extends React.Component {
                 <span className={styles.pickUpText}>
                   {this.props.PickUpKey}
                 </span>
-                {this.props.openingTime} to {this.props.closingTime}
-                Open{" "}
+
                 {this.props.workingDays === "7"
                   ? "all days"
-                  : `${
-                      integerDayMapping[
-                        parseInt(this.props.workingDays.split(",")[0])
-                      ]
-                    } to ${
-                      integerDayMapping[
-                        parseInt(
-                          this.props.workingDays.split(",")[
-                            (this.props.workingDays.length + 1) / 2
-                          ]
-                        )
-                      ]
-                    }`}
+                  : this.props.workingDays.split("").map(val => {
+                      if (val !== ",") {
+                        return integerDayMapping[parseInt(val)];
+                      } else {
+                        return ", ";
+                      }
+                    })}
+              </div>
+              <div className={styles.pickUpDay}>
+                ({this.props.openingTime} - to {this.props.closingTime} Hrs)
               </div>
             </div>
           )}
@@ -97,7 +78,3 @@ PickUpLocation.propTypes = {
   onClick: PropTypes.func,
   buttonText: PropTypes.string
 };
-
-// mplClosingTime: "22:00",
-// mplOpeningTime: "10:00",
-// mplWorkingDays: "1,2,3,4,5,6",

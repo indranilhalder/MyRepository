@@ -31,3 +31,9 @@
   position: fixed;
   bottom: 0;
 }
+.getLocationDetailsHolder {
+  padding: 15px;
+}
+.pickUpDetails {
+  margin-top: 15px;
+}
