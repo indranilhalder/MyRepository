@@ -11,16 +11,19 @@ export default class HollowHeader extends React.Component {
       this.props.gotoPreviousPage();
     }
   }
-  addToBag() {
-    if (this.props.addProductToBag) {
-      this.props.addProductToBag();
+
+  goToCartPage = () => {
+    if (this.props.goToCart) {
+      this.props.goToCart();
     }
-  }
-  addToWishList() {
-    if (this.props.addProductToWishList) {
-      this.props.addProductToWishList();
+  };
+
+  goToWishList = () => {
+    if (this.props.goToWishList) {
+      this.props.goToWishList();
     }
-  }
+  };
+
   render() {
     return (
       <div className={styles.base}>
@@ -30,13 +33,13 @@ export default class HollowHeader extends React.Component {
         <div className={styles.historyDownloadIcon}>
           <div
             className={styles.orderIconHolder}
-            onClick={() => this.addToBag()}
+            onClick={() => this.goToCartPage()}
           >
             <Icon image={orderIcon} size={20} />
           </div>
           <div
             className={styles.downloadIconHolder}
-            onClick={() => this.addToWishList()}
+            onClick={() => this.goToWishList()}
           >
             <Icon image={downloadIcon} size={20} />
           </div>

@@ -14,6 +14,9 @@ export default class DeliveryInfoSelect extends React.Component {
       }
     });
   }
+  onPiq = () => {
+    this.props.onPiq();
+  };
   render() {
     return (
       <div>
@@ -26,6 +29,7 @@ export default class DeliveryInfoSelect extends React.Component {
               placedTime={datum.desc}
               selected={datum.code === this.state.selectedCode}
               onSelect={val => this.handleSelect(val)}
+              onPiq={val => this.onPiq(val)}
             />
           );
         })}

@@ -27,7 +27,9 @@ import {
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
@@ -47,10 +49,20 @@ export default class PdpElectronics extends React.Component {
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
+
+  goToCart = () => {
+    this.props.history.push({
+      pathname: PRODUCT_CART_ROUTER,
+      state: {
+        ProductCode: this.props.productDetails.productListingId,
+        pinCode: PIN_CODE
+      }
+    });
+  };
   addToCart = () => {
     let productDetails = {};
-    productDetails.code = this.props.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -76,6 +88,11 @@ export default class PdpElectronics extends React.Component {
     }
   };
 
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
+  };
+
   addToWishList = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
@@ -99,8 +116,17 @@ export default class PdpElectronics extends React.Component {
       );
     }
   };
+
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerMOP.substr(1);
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -129,15 +155,14 @@ export default class PdpElectronics extends React.Component {
     if (productData) {
       return (
         <PdpFrame
+          goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
         >
-          <ProductGalleryMobile isElectronics={true}>
+          <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
-              return (
-                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
-              );
+              return <Image image={val} key={idx} />;
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
@@ -149,10 +174,10 @@ export default class PdpElectronics extends React.Component {
               averageRating={productData.averageRating}
             />
           </div>
-          {productData.emiInfo && (
+          {productData.isEMIEligible === "Y" && (
             <div className={styles.separator}>
               <div className={styles.info}>
-                {productData.emiInfo.emiText}
+                Emi available on this product.
                 <span className={styles.link} onClick={this.showEmiModal}>
                   View Plans
                 </span>

@@ -20,7 +20,9 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  PRODUCT_SELLER_ROUTER
+  PRODUCT_SELLER_ROUTER,
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
@@ -41,11 +43,20 @@ export default class PdpApparel extends React.Component {
   goToSellerPage = () => {
     this.props.history.push(PRODUCT_SELLER_ROUTER);
   };
+  goToCart = () => {
+    this.props.history.push({
+      pathname: PRODUCT_CART_ROUTER,
+      state: {
+        ProductCode: this.props.productDetails.productListingId,
+        pinCode: PIN_CODE
+      }
+    });
+  };
 
   addToCart = () => {
     let productDetails = {};
-    productDetails.code = this.props.productListingId;
-    productDetails.ussId = productDetails.quantity = PRODUCT_QUANTITY;
+    productDetails.code = this.props.productDetails.productListingId;
+    productDetails.quantity = PRODUCT_QUANTITY;
     productDetails.ussId = this.props.productDetails.winningUssID;
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -54,6 +65,7 @@ export default class PdpApparel extends React.Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
     if (userDetails) {
       this.props.addProductToCart(
         JSON.parse(userDetails).customerInfo.mobileNumber,
@@ -69,6 +81,11 @@ export default class PdpApparel extends React.Component {
         productDetails
       );
     }
+  };
+
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
   };
 
   addToWishList = () => {
@@ -97,7 +114,6 @@ export default class PdpApparel extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
-
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -110,6 +126,7 @@ export default class PdpApparel extends React.Component {
     if (productData) {
       return (
         <PdpFrame
+          goToCart={() => this.goToCart()}
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
@@ -138,10 +155,10 @@ export default class PdpApparel extends React.Component {
               </div>
             </div>
           )}
-          {productData.productOfferPromotion && (
+          {productData.productOfferMsg && (
             <OfferCard
-              endTime={productData.productOfferPromotion[0].validTill.date}
-              heading={productData.productOfferPromotion[0].promotionTitle}
+              endTime={productData.productOfferMsg[0].validTill.date}
+              heading={productData.productOfferMsg[0].promotionTitle}
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />

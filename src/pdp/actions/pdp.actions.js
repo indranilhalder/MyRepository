@@ -1,4 +1,9 @@
-import { SUCCESS, REQUESTING, ERROR } from "../../lib/constants";
+import {
+  SUCCESS,
+  REQUESTING,
+  ERROR,
+  GLOBAL_ACCESS_TOKEN
+} from "../../lib/constants";
 import { FAILURE } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash/each";
@@ -41,6 +46,13 @@ export const PRODUCT_PDP_EMI_REQUEST = "PRODUCT_PDP_EMI_REQUEST";
 export const PRODUCT_PDP_EMI_SUCCESS = "PRODUCT_PDP_EMI_SUCCESS";
 export const PRODUCT_PDP_EMI_FAILURE = "PRODUCT_PDP_EMI_FAILURE";
 
+export const GET_EMI_TERMS_AND_CONDITIONS_SUCCESS =
+  "GET_EMI_TERMS_AND_CONDITIONS_SUCCESS";
+export const GET_EMI_TERMS_AND_CONDITIONS_FAILURE =
+  "GET_EMI_TERMS_AND_CONDITIONS_FAILURE";
+export const GET_EMI_TERMS_AND_CONDITIONS_REQUEST =
+  "GET_EMI_TERMS_AND_CONDITIONS_REQUEST";
+
 export const PRODUCT_WISH_LIST_REQUEST = "PRODUCT_WISH_LIST_REQUEST";
 export const PRODUCT_WISH_LIST_SUCCESS = "PRODUCT_WISH_LIST_SUCCESS";
 export const PRODUCT_WISH_LIST_FAILURE = "PRODUCT_WISH_LIST_FAILURE";
@@ -77,7 +89,9 @@ export const GET_PDP_ITEMS_FAILURE = "GET_PDP_ITEMS_FAILURE";
 export const PRODUCT_DETAILS_PATH = "v2/mpl/users";
 export const PIN_CODE_AVAILABILITY_PATH = "pincodeserviceability";
 export const PRODUCT_SIZE_GUIDE_PATH = "sizeGuide";
-export const PRODUCT_PDP_EMI_PATH = "pdpEMI";
+export const PRODUCT_PDP_EMI_PATH =
+  "v2/mpl/getBankDetailsforEMI?platformNumber=2";
+export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
 
 export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
 export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
@@ -88,7 +102,7 @@ const CLIENT_ID = "gauravj@dewsolutions.in";
 const ADD_PRODUCT_TO_WISH_LIST = "addToWishListInPDP";
 const ADD_PRODUCT_TO_CART = "addProductToCart";
 const REMOVE_FROM_WISH_LIST = "removeFromWl";
-const PRODUCT_SPECIFICATION_PATH = "marketplacewebservices/v2/mpl/products";
+const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products";
 const ORDER_BY = "desc";
 const SORT = "byDate";
@@ -293,6 +307,7 @@ export function addProductToCart(userId, cartId, accessToken, productDetails) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
+
       dispatch(addProductToCartSuccess());
     } catch (e) {
       dispatch(addProductToCartFailure(e.message));
@@ -340,6 +355,46 @@ export function getProductSizeGuide(productCode) {
   };
 }
 
+export function getEmiTermsRequest() {
+  return {
+    type: GET_EMI_TERMS_AND_CONDITIONS_REQUEST,
+    status: REQUESTING
+  };
+}
+
+export function getEmiTermsSuccess(emiTerms) {
+  return {
+    type: GET_EMI_TERMS_AND_CONDITIONS_SUCCESS,
+    status: SUCCESS,
+    emiTerms
+  };
+}
+
+export function getEmiTermsFailure(error) {
+  return {
+    type: GET_EMI_TERMS_AND_CONDITIONS_FAILURE,
+    status: FAILURE,
+    error
+  };
+}
+
+export function getEmiTerms(accessToken, productValue) {
+  return async (dispatch, getState, { api }) => {
+    dispatch(getEmiTermsRequest());
+    try {
+      const url = `${EMI_TERMS_PATH}?access_token=${accessToken}&productValue=${productValue}`;
+      const result = await api.get(url);
+      const resultJson = await result.json();
+      if (resultJson.status === FAILURE) {
+        throw new Error(`${resultJson.message}`);
+      }
+      dispatch(getEmiTermsSuccess(resultJson));
+    } catch (e) {
+      dispatch(getEmiTermsFailure(e.message));
+    }
+  };
+}
+
 export function getPdpEmiRequest() {
   return {
     type: PRODUCT_PDP_EMI_REQUEST,
@@ -361,11 +416,12 @@ export function getPdpEmiFailure(error) {
     error
   };
 }
-export function getPdpEmi() {
+export function getPdpEmi(token, cartValue) {
   return async (dispatch, getState, { api }) => {
     dispatch(getPdpEmiRequest());
     try {
-      const result = await api.postMock(PRODUCT_PDP_EMI_PATH);
+      const url = `${PRODUCT_PDP_EMI_PATH}&productValue=${cartValue}&access_token=${token}`;
+      const result = await api.get(url);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -459,10 +515,11 @@ export function addProductReviewRequest() {
     status: REQUESTING
   };
 }
-export function addProductReviewSuccess() {
+export function addProductReviewSuccess(productReview) {
   return {
     type: ADD_PRODUCT_REVIEW_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    productReview
   };
 }
 
@@ -474,7 +531,7 @@ export function addProductReviewFailure(error) {
   };
 }
 
-export function addProductReview(productCode, productReviews) {
+export function addProductReview(productCode, productReview) {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
     dispatch(addProductReviewRequest());
@@ -482,15 +539,14 @@ export function addProductReview(productCode, productReviews) {
       const result = await api.post(
         `${PRODUCT_SPECIFICATION_PATH}/${productCode}/reviews?access_token=${
           JSON.parse(customerCookie).access_token
-        }&comment=${productReviews.comment}&rating=${
-          productReviews.rating
-        }&headline=${productReviews.headLine}`
+        }`,
+        productReview
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+      if (resultJson.errors.length > 0) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
-      dispatch(addProductReviewSuccess());
+      dispatch(addProductReviewSuccess(productReview));
     } catch (e) {
       dispatch(addProductReviewFailure(e.message));
     }
@@ -583,13 +639,13 @@ export function deleteProductReview(productCode, reviewId) {
   };
 }
 
-export function getProductReviewRequest() {
+export function getProductReviewsRequest() {
   return {
     type: GET_PRODUCT_REVIEW_REQUEST,
     status: REQUESTING
   };
 }
-export function getProductReviewSuccess(reviews) {
+export function getProductReviewsSuccess(reviews) {
   return {
     type: GET_PRODUCT_REVIEW_SUCCESS,
     status: SUCCESS,
@@ -597,7 +653,7 @@ export function getProductReviewSuccess(reviews) {
   };
 }
 
-export function getProductReviewFailure(error) {
+export function getProductReviewsFailure(error) {
   return {
     type: GET_PRODUCT_REVIEW_FAILURE,
     status: ERROR,
@@ -606,25 +662,22 @@ export function getProductReviewFailure(error) {
 }
 
 export function getProductReviews(productCode) {
-  let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-  let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductReviewRequest());
+    dispatch(getProductReviewsRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_SPECIFICATION_PATH}/${productCode}/users/${
-          JSON.parse(userDetails).customerInfo.mobileNumber
-        }/reviews?access_token=${
-          JSON.parse(customerCookie).access_token
+        `${PRODUCT_SPECIFICATION_PATH}/${productCode.toUpperCase()}/users/anonymous/reviews?access_token=${
+          JSON.parse(globalAccessToken).access_token
         }&page=${PAGE_VALUE}&pageSize=${PAGE_NUMBER}&orderBy=${ORDER_BY}&sort=${SORT}`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(getProductReviewSuccess(resultJson));
+      dispatch(getProductReviewsSuccess(resultJson));
     } catch (e) {
-      dispatch(getProductReviewFailure(e.message));
+      dispatch(getProductReviewsFailure(e.message));
     }
   };
 }
