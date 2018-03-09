@@ -2493,6 +2493,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B5026 = "B5026";
 	public static final String B5027 = "B5027";
 	public static final String LUXURY_PREFIX = "lux";
+	public static final String TATACLIQ = "tatacliq";
+	public static final String LUXURY_SITE_URL = "luxury.tatacliq.com";
 	//Report for bulk cancellation
 	/*
 	 * public static final String DATA_FOR_BULK_CANCELLATION_PROCESS =
