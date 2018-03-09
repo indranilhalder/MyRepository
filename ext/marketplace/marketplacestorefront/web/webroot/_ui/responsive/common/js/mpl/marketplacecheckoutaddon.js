@@ -10048,7 +10048,10 @@ function removeAppliedVoucher(){
 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
 		type: "POST",
 		cache: false,
-		data: { 'couponCode' : couponCode , 'guid' : guid},
+		data: { 'couponCode' : couponCode , 'guid' : guid},		
+		beforeSend: function() {//SDI-6686:Total price mismatch in Production after release the coupon
+			ACC.singlePageCheckout.showAjaxLoader();
+	    },	    
 		success : function(response) {
 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 			if(document.getElementById("outstanding-amount")!=null)
@@ -10096,6 +10099,7 @@ function removeAppliedVoucher(){
 		error : function(resp) {
 		},
 		complete : function(data){
+			ACC.singlePageCheckout.hideAjaxLoader();//SDI-6686:Total price mismatch in Production after release the coupon
 			if (usedCliqCashFlag == true){
 				useWalletForPaymentAjax();
 			}
