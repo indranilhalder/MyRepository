@@ -24,7 +24,6 @@ import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
   MAIN_ROUTER,
-  PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_DELIVERY_ADDRESSES,
@@ -44,7 +43,8 @@ import {
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  PLP_CATEGORY_SEARCH
+  PLP_CATEGORY_SEARCH,
+  PRODUCT_DESCRIPTION_REVIEWS
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -147,6 +147,11 @@ class App extends Component {
             path={SEARCH_RESULTS_PAGE}
             component={PlpBrandCategoryWrapperContainer}
           />
+
+          <Route
+            path={PRODUCT_DESCRIPTION_REVIEWS}
+            component={ProductReviewContainer}
+          />
           <Route
             path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
             component={ProductDescriptionPageWrapperContainer}
@@ -173,12 +178,6 @@ class App extends Component {
             exact
             path={MAIN_ROUTER}
             render={routeProps => <Auth {...routeProps} {...this.props} />}
-          />
-
-          <Route
-            exact
-            path={PRODUCT_REVIEW_ROUTER}
-            component={ProductReviewContainer}
           />
 
           <Route

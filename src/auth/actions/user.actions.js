@@ -238,7 +238,6 @@ export function otpVerification(otpDetails, userDetails) {
       }
       dispatch(hideModal());
       dispatch(otpVerificationSuccess(resultJson));
-      debugger;
       dispatch(customerAccessToken(userDetails));
     } catch (e) {
       dispatch(otpVerificationFailure(e.message));
