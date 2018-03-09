@@ -62,12 +62,12 @@ export default class ModalRoot extends React.Component {
     this.props.releaseBankOffer(couponCode);
   };
 
-  applyCoupon = couponCode => {
-    this.props.applyCoupon(couponCode);
+  applyUserCoupon = couponCode => {
+    this.props.applyUserCoupon(couponCode);
   };
 
-  releaseCoupon = couponCode => {
-    this.props.releaseCoupon(couponCode);
+  releaseUserCoupon = couponCode => {
+    this.props.releaseUserCoupon(couponCode);
   };
 
   render() {
@@ -106,8 +106,8 @@ export default class ModalRoot extends React.Component {
       Coupons: (
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
-          applyCoupon={couponCode => this.applyCoupon(couponCode)}
-          releaseCoupon={couponCode => this.releaseCoupon(couponCode)}
+          applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
+          releaseUserCoupon={couponCode => this.releaseUserCoupon(couponCode)}
           {...this.props.ownProps}
         />
       ),

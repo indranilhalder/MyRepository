@@ -12,17 +12,17 @@ import {
 export const USER_CART_PATH = "v2/mpl/users";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
 
-export const APPLY_COUPON_REQUEST = "APPLY_COUPON_REQUEST";
-export const APPLY_COUPON_SUCCESS = "APPLY_COUPON_SUCCESS";
-export const APPLY_COUPON_FAILURE = "APPLY_COUPON_FAILURE";
+export const APPLY_USER_COUPON_REQUEST = "APPLY_USER_COUPON_REQUEST";
+export const APPLY_USER_COUPON_SUCCESS = "APPLY_USER_COUPON_SUCCESS";
+export const APPLY_USER_COUPON_FAILURE = "APPLY_USER_COUPON_FAILURE";
 
 export const GET_COUPON_REQUEST = "GET_COUPON_REQUEST";
 export const GET_COUPON_SUCCESS = "GET_COUPON_SUCCESS";
 export const GET_COUPON_FAILURE = "GET_COUPON_FAILURE";
 
-export const RELEASE_COUPON_REQUEST = "RELEASE_COUPON_REQUEST";
-export const RELEASE_COUPON_SUCCESS = "RELEASE_COUPON_SUCCESS";
-export const RELEASE_COUPON_FAILURE = "RELEASE_COUPON_FAILURE";
+export const RELEASE_USER_COUPON_REQUEST = "RELEASE_USER_COUPON_REQUEST";
+export const RELEASE_USER_COUPON_SUCCESS = "RELEASE_USER_COUPON_SUCCESS";
+export const RELEASE_USER_COUPON_FAILURE = "RELEASE_USER_COUPON_FAILURE";
 
 export const SELECT_DELIVERY_MODES_REQUEST = "SELECT_DELIVERY_MODES_REQUEST";
 export const SELECT_DELIVERY_MODES_SUCCESS = "SELECT_DELIVERY_MODES_SUCCESS";
@@ -273,34 +273,34 @@ export function getCoupons(couponCode) {
   };
 }
 
-export function applyCouponRequest() {
+export function applyUserCouponRequest() {
   return {
-    type: APPLY_COUPON_REQUEST,
+    type: APPLY_USER_COUPON_REQUEST,
     status: REQUESTING
   };
 }
-export function applyCouponSuccess() {
+export function applyUserCouponSuccess() {
   return {
-    type: APPLY_COUPON_SUCCESS,
+    type: APPLY_USER_COUPON_SUCCESS,
     status: SUCCESS
   };
 }
 
-export function applyCouponFailure(error) {
+export function applyUserCouponFailure(error) {
   return {
-    type: APPLY_COUPON_FAILURE,
+    type: APPLY_USER_COUPON_FAILURE,
     status: ERROR,
     error
   };
 }
 
-export function applyCoupon(couponCode) {
+export function applyUserCoupon(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
   return async (dispatch, getState, { api }) => {
-    dispatch(applyCouponRequest());
+    dispatch(applyUserCouponRequest());
     try {
       const result = await api.get(
         `${USER_CART_PATH}/${
@@ -313,42 +313,42 @@ export function applyCoupon(couponCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(applyCouponSuccess());
+      dispatch(applyUserCouponSuccess());
     } catch (e) {
-      dispatch(applyCouponFailure(e.message));
+      dispatch(applyUserCouponFailure(e.message));
     }
   };
 }
 
-export function releaseCouponRequest() {
+export function releaseUserCouponRequest() {
   return {
-    type: RELEASE_COUPON_REQUEST,
+    type: RELEASE_USER_COUPON_REQUEST,
     status: REQUESTING
   };
 }
-export function releaseCouponSuccess() {
+export function releaseUserCouponSuccess() {
   return {
-    type: RELEASE_COUPON_SUCCESS,
+    type: RELEASE_USER_COUPON_SUCCESS,
     status: SUCCESS
   };
 }
 
-export function releaseCouponFailure(error) {
+export function releaseUserCouponFailure(error) {
   return {
-    type: RELEASE_COUPON_FAILURE,
+    type: RELEASE_USER_COUPON_FAILURE,
     status: ERROR,
     error
   };
 }
 
-export function releaseCoupon(couponCode) {
+export function releaseUserCoupon(couponCode) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartGuId = JSON.parse(cartDetails).guid;
   let cartId = JSON.parse(cartDetails).code;
   return async (dispatch, getState, { api }) => {
-    dispatch(releaseCouponRequest());
+    dispatch(releaseUserCouponRequest());
     try {
       const result = await api.post(
         `${USER_CART_PATH}/${
@@ -361,9 +361,9 @@ export function releaseCoupon(couponCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      dispatch(releaseCouponSuccess());
+      dispatch(releaseUserCouponSuccess());
     } catch (e) {
-      dispatch(releaseCouponFailure(e.message));
+      dispatch(releaseUserCouponFailure(e.message));
     }
   };
 }

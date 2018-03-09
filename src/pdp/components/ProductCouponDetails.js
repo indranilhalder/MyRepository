@@ -17,8 +17,8 @@ class ProductCouponDetails extends Component {
     };
   }
   applyUserCoupon = couponCode => {
-    if (this.props.applyCoupon) {
-      this.props.applyCoupon(couponCode);
+    if (this.props.applyUserCoupon) {
+      this.props.applyUserCoupon(couponCode);
     }
   };
 
@@ -26,8 +26,8 @@ class ProductCouponDetails extends Component {
     this.setState({ couponVal: couponCode });
   };
   releaseUserCoupon = couponCode => {
-    if (this.props.releaseCoupon) {
-      this.props.releaseCoupon(couponCode);
+    if (this.props.releaseUserCoupon) {
+      this.props.releaseUserCoupon(couponCode);
     }
   };
 
