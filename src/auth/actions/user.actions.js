@@ -171,21 +171,20 @@ export function signUpUserFailure(error) {
 
 export function signUpUser(userObj) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
     try {
+      let suffix = "";
+      if (userObj.emailId) {
+        suffix = `&emailId=${userObj.emailId}`;
+      }
       let result = await api.post(
         `${SIGN_UP}?access_token=${
           JSON.parse(globalCookie).access_token
         }&isPwa=true&username=${userObj.username}&password=${
           userObj.password
-        }&platformNumber=${PLATFORM_NUMBER}`
+        }&platformNumber=${PLATFORM_NUMBER}${suffix}`
       );
-
-      if (userObj.emailId) {
-        result = `${result}&emailId=${userObj.emailId}`;
-      }
 
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {

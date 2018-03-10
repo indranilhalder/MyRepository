@@ -17,7 +17,7 @@ import * as Cookie from "../../lib/Cookie";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
@@ -57,7 +57,15 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_REVIEW_ROUTER);
   };
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
   showEmiModal = () => {
     if (this.props.showEmiPlans) {
