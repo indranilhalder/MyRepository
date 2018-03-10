@@ -3,7 +3,7 @@ import Button from "../../general/components/Button";
 import styles from "./CuratedProductsComponent.css";
 import Grid from "../../general/components/Grid";
 import ProductModule from "../../general/components/ProductModule";
-import { transformItem } from "./utils.js";
+import { transformData } from "./utils.js";
 class CuratedProductsComponent extends React.Component {
   render() {
     const {
@@ -13,10 +13,10 @@ class CuratedProductsComponent extends React.Component {
       subHeader,
       ...rest
     } = this.props;
-    const items = feedComponentData.items.map(item => {
-      return transformItem(item);
-    });
-
+    let items = [];
+    if (feedComponentData.items) {
+      items = feedComponentData.items.map(transformData);
+    }
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -28,9 +28,7 @@ class CuratedProductsComponent extends React.Component {
               return (
                 <ProductModule
                   key={i}
-                  productImage={
-                    datum.imageURL ? datum.imageURL : datum.imageUrl
-                  }
+                  productImage={datum.imageURL}
                   title={datum.title}
                   price={datum.price}
                   description={datum.description}

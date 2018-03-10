@@ -153,10 +153,13 @@ class Feed extends Component {
     return (
       <div className={styles.base}>
         <div className={styles.center}>
-          <InformationHeader
-            {...propsForHeader}
-            goBack={() => this.props.history.goBack()}
-          />
+          {this.props.homeFeedData &&
+            this.props.homeFeedData[0].type === "Landing Page Title" && (
+              <InformationHeader
+                {...propsForHeader}
+                goBack={() => this.props.history.goBack()}
+              />
+            )}
           {this.renderFeedComponents()}
         </div>
       </div>

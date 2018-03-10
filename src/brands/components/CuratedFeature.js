@@ -12,7 +12,6 @@ export default class CuratedFeature extends React.Component {
   }
   render() {
     let feedComponentData = this.props.feedComponentData;
-
     return (
       <div className={styles.base}>
         <div className={styles.headerText}>{feedComponentData.title}</div>
@@ -41,7 +40,7 @@ export default class CuratedFeature extends React.Component {
                       </div>
                     </div>
                     <div className={styles.imageHolder}>
-                      <Image image={val.imageUrl} fit="cover" />
+                      <Image image={val.imageURL} fit="cover" />
                     </div>
                   </div>
                 );
