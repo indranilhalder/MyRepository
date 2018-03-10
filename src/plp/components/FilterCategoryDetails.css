@@ -1,18 +1,20 @@
 .base {
   width: 100%;
   height: auto;
-  display: inline-block;
-  margin-bottom:15px;
+  margin-bottom: 15px;
 }
 .header {
-  composes: base;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  padding-right: 40px;
 }
 .subCategoryRegular {
   font-size: 16px;
   font-family: regular;
-  width: 50%;
+  width: 100%;
   height: auto;
-  display: inline-block;
 }
 .subCategoryBold {
   composes: subCategoryRegular;
@@ -21,15 +23,16 @@
 .subCategoryCount {
   font-size: 14px;
   font-family: regular;
+  position: absolute;
+  right: 0;
+  top: 0;
   opacity: 0.5;
-  width: 50%;
-  height: auto;
+  width: 40px;
+  height: 40px;
   text-align: right;
-  display: inline-block;
 }
 .subListHolder {
   width: 100%;
   height: auto;
-  display: inline-block;
   padding-left: 25px;
 }
