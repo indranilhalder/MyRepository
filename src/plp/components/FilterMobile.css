@@ -2,15 +2,17 @@
   width: 100%;
   height: auto;
   position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 .tabHolder {
   width: 40%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   margin-left: -20px;
   display: inline-block;
-  padding-bottom: 61px;
-  margin-bottom: 61px;
 }
 .contenHolder {
   composes: tabHolder;
@@ -28,6 +30,7 @@
   -webkit-overflow-scrolling: touch;
   transform: translateX(20px);
   padding-right: 20px;
+  padding-bottom: 60px;
 }
 .footer {
   width: 100%;
