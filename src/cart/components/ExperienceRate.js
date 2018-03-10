@@ -1,8 +1,6 @@
 import React from "react";
 import styles from "./ExperienceRate.css";
 import { Icon } from "xelpmoc-core";
-import badIcon from "./img/bad.svg";
-import activeBadIcon from "./img/Bad_Red.svg";
 import PropTypes from "prop-types";
 export default class ExperienceRate extends React.Component {
   onSelect() {
