@@ -15,6 +15,16 @@ export default class FilterMobile extends React.Component {
       filterSelectedIndex: 0
     };
   }
+  onApply() {
+    if (this.props.onApply) {
+      this.props.onApply();
+    }
+  }
+  onClear() {
+    if (this.props.onClear) {
+      this.props.onClear();
+    }
+  }
   selectTab(val) {
     this.setState({ showCategory: false, filterSelectedIndex: val });
   }

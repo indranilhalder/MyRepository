@@ -10,6 +10,7 @@
   margin-left: -20px;
   display: inline-block;
   padding-bottom: 61px;
+  margin-bottom: 61px;
 }
 .contenHolder {
   composes: tabHolder;
