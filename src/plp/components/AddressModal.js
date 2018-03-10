@@ -3,17 +3,38 @@ import AddressCarousel from "./AddressCarousel";
 import BottomSlideModal from "../../general/components/BottomSlideModal";
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import PropTypes from "prop-types";
+import {
+  GLOBAL_ACCESS_TOKEN,
+  CUSTOMER_ACCESS_TOKEN
+} from "../../lib/constants";
+import * as Cookie from "../../lib/Cookie";
 import styles from "./AddressModal.css";
 
 export default class AddressModal extends React.Component {
+  checkPinCodeAvailability(pincode) {
+    this.props.checkPinCodeServiceAvailability(pincode);
+    this.props.closeModal();
+  }
+  componentDidMount() {
+    this.props.getUserAddress();
+  }
   render() {
     return (
       <BottomSlideModal>
         <div className={styles.base}>
           <div className={styles.searchHolder}>
-            <SearchAndUpdate />
+            <SearchAndUpdate
+              checkPinCodeAvailability={pincode =>
+                this.checkPinCodeAvailability(pincode)
+              }
+            />
           </div>
-          {this.props.data && <AddressCarousel data={this.props.data} />}
+          {this.props.userAddress && (
+            <AddressCarousel
+              data={this.props.userAddress.addresses}
+              selectAddress={pincode => this.checkPinCodeAvailability(pincode)}
+            />
+          )}
         </div>
       </BottomSlideModal>
     );

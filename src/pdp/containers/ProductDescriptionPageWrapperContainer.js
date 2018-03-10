@@ -8,7 +8,7 @@ import {
   getPdpEmi,
   getEmiTerms
 } from "../actions/pdp.actions";
-import { showModal, EMI_MODAL } from "../../general/modal.actions.js";
+import { showModal, EMI_MODAL, ADDRESS } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
 
@@ -40,6 +40,9 @@ const mapDispatchToProps = dispatch => {
     },
     showSizeGuide: () => {
       dispatch(showModal("SizeGuide"));
+    },
+    showPincodeModal: () => {
+      dispatch(showModal(ADDRESS));
     }
   };
 };

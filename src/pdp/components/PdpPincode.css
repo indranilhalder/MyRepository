@@ -1,0 +1,30 @@
+.base {
+  display: flex;
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  padding: 20px 20px;
+}
+.label {
+  width: 50%;
+  height: 22px;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+  line-height: 25px;
+}
+.buttonHolder {
+  width: 50%;
+  height: 22px;
+  display: inline-block;
+  text-align: right;
+  vertical-align: top;
+  position: relative;
+}
+.button {
+  width: auto;
+  height: 22px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}

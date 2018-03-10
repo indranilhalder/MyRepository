@@ -45,7 +45,7 @@ import {
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PLP_CATEGORY_SEARCH,
   PRODUCT_DESCRIPTION_REVIEWS
-} from "../src/lib/constants";
+} from "./lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route

@@ -86,26 +86,10 @@ class CartPage extends React.Component {
     }
   }
 
-  checkPinCodeAvailability = val => {
-    this.setState({ pinCode: val });
+  checkPinCodeAvailability = pinCode => {
+    this.setState({ pinCode });
     if (this.props.checkPinCodeServiceAvailability) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-
-      if (userDetails) {
-        this.props.checkPinCodeServiceAvailability(
-          JSON.parse(userDetails).customerInfo.mobileNumber,
-          JSON.parse(customerCookie).access_token,
-          val
-        );
-      } else {
-        this.props.checkPinCodeServiceAvailability(
-          ANONYMOUS_USER,
-          JSON.parse(globalCookie).access_token,
-          val
-        );
-      }
+      this.props.checkPinCodeServiceAvailability(pinCode);
     }
   };
 

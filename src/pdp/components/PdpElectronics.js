@@ -11,6 +11,7 @@ import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
+import PdpPincode from "./PdpPincode";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
 import Carousel from "../../general/components/Carousel.js";
@@ -92,7 +93,9 @@ export default class PdpElectronics extends React.Component {
     const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
     this.props.history.push(url);
   };
-
+  showPincodeModal() {
+    this.props.showPincodeModal();
+  }
   addToWishList = () => {
     let productDetails = {};
     productDetails.code = this.props.productDetails.productListingId;
@@ -159,6 +162,7 @@ export default class PdpElectronics extends React.Component {
           gotoPreviousPage={() => this.gotoPreviousPage()}
           addProductToBag={() => this.addToCart()}
           addProductToWishList={() => this.addToWishList()}
+          showPincodeModal={() => this.showPincodeModal()}
         >
           <ProductGalleryMobile>
             {mobileGalleryImages.map((val, idx) => {
@@ -184,6 +188,10 @@ export default class PdpElectronics extends React.Component {
               </div>
             </div>
           )}
+          <PdpPincode
+            pincode={560095}
+            onClick={() => this.showPincodeModal()}
+          />
           {productData.productOfferPromotion && (
             <OfferCard
               endTime={productData.productOfferPromotion[0].validTill.date}
@@ -192,6 +200,7 @@ export default class PdpElectronics extends React.Component {
               onClick={this.goToCouponPage}
             />
           )}
+
           {productData.variantOptions && (
             <React.Fragment>
               <ColourSelector

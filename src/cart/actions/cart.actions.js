@@ -7,7 +7,8 @@ import {
   LOGGED_IN_USER_DETAILS,
   FAILURE,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  CART_DETAILS_FOR_ANONYMOUS
+  CART_DETAILS_FOR_ANONYMOUS,
+  ANONYMOUS_USER
 } from "../../lib/constants";
 export const USER_CART_PATH = "v2/mpl/users";
 export const ALL_STORES_PATH = "v2/mpl/allStores";
@@ -924,17 +925,24 @@ export function checkPinCodeServiceAvailabilityFailure(error) {
     error
   };
 }
-export function checkPinCodeServiceAvailability(
-  userName,
-  accessToken,
-  pinCode
-) {
+export function checkPinCodeServiceAvailability(pinCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(checkPinCodeServiceAvailabilityRequest());
     try {
-      const result = await api.post(
-        `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`
-      );
+      let url;
+      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+      let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+      if (userDetails) {
+        let userName = JSON.parse(userDetails).customerInfo.mobileNumber;
+        let accessToken = JSON.parse(customerCookie).access_token;
+        url = `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`;
+      } else {
+        let userName = ANONYMOUS_USER;
+        let accessToken = JSON.parse(globalCookie).access_token;
+        url = `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`;
+      }
+      const result = await api.post(url);
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(resultJson.message);
