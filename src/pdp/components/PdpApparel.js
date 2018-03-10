@@ -41,7 +41,9 @@ export default class PdpApparel extends React.Component {
     this.props.history.goBack();
   };
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    this.props.history.push(
+      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER}`
+    );
   };
   goToCart = () => {
     this.props.history.push({
@@ -113,6 +115,7 @@ export default class PdpApparel extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {

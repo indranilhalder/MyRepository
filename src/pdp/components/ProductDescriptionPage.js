@@ -57,7 +57,9 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_REVIEW_ROUTER);
   };
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    this.props.history.push(
+      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER}`
+    );
   };
   showEmiModal = () => {
     if (this.props.showEmiPlans) {

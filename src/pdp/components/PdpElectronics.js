@@ -47,7 +47,9 @@ export default class PdpElectronics extends React.Component {
   };
 
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    this.props.history.push(
+      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER}`
+    );
   };
 
   goToCart = () => {
