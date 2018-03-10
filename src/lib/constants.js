@@ -33,7 +33,6 @@ export const PRODUCT_REVIEW_ROUTER = "/productReview";
 export const LOGIN_PATH = "/login";
 export const SIGN_UP_PATH = "/sign_up";
 export const PRODUCT_FILTER_ROUTER = "/filter";
-export const PRODUCT_SELLER_ROUTER = "/viewSellers";
 export const PRODUCT_SELLER_ROUTER_SUFFIX = "/viewSellers";
 export const PRODUCT_OTHER_SELLER_ROUTER = `/p-(.*)(${PRODUCT_SELLER_ROUTER_SUFFIX})`;
 export const PRODUCT_CART_ROUTER = "/myBag";

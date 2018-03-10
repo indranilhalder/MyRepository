@@ -194,12 +194,6 @@ class App extends Component {
           />
           <Route
             exact
-            path={PRODUCT_SELLER_ROUTER}
-            component={ProductSellerContainer}
-          />
-
-          <Route
-            exact
             path={PRODUCT_DELIVERY_ADDRESSES}
             component={CheckoutAddressContainer}
           />

@@ -21,7 +21,7 @@ import * as Cookie from "../../lib/Cookie";
 import { transformData } from "../../home/components/utils.js";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
@@ -48,7 +48,7 @@ export default class PdpElectronics extends React.Component {
 
   goToSellerPage = () => {
     this.props.history.push(
-      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER}`
+      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER_SUFFIX}`
     );
   };
 

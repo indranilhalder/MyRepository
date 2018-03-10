@@ -20,7 +20,7 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS,
   ANONYMOUS_USER,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   PRODUCT_CART_ROUTER,
   PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
@@ -42,7 +42,7 @@ export default class PdpApparel extends React.Component {
   };
   goToSellerPage = () => {
     this.props.history.push(
-      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER}`
+      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER_SUFFIX}`
     );
   };
   goToCart = () => {

@@ -17,7 +17,7 @@ import * as Cookie from "../../lib/Cookie";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
@@ -58,7 +58,7 @@ class ProductDescriptionPage extends Component {
   };
   goToSellerPage = () => {
     this.props.history.push(
-      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER}`
+      `/p-${this.props.match.params[0]}${PRODUCT_SELLER_ROUTER_SUFFIX}`
     );
   };
   showEmiModal = () => {
