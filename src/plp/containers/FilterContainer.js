@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import { getProductListings } from "../actions/plp.actions.js";
 import Filter from "../components/Filter";
 import FilterMobile from "../components/FilterMobile.js";
+import { withRouter } from "react-router-dom";
 const mapDispatchToProps = dispatch => {
   return {
     onApply: filters => {
@@ -18,8 +19,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const FilterContainer = connect(mapStateToProps, mapDispatchToProps)(
-  FilterMobile
+const FilterContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(FilterMobile)
 );
 
 export default FilterContainer;

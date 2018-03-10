@@ -6,6 +6,7 @@ import FilterCategoryL1 from "./FilterCategoryL1";
 import { facetData } from "./FacetData";
 import { facetdatacategory } from "./State";
 import styles from "./FilterMobile.css";
+import queryString from "query-string";
 
 export default class FilterMobile extends React.Component {
   constructor(props) {
@@ -22,19 +23,28 @@ export default class FilterMobile extends React.Component {
     this.setState({ showCategory: true });
   }
 
-  onL1Click = val => {
-    console.log("L1 CLICk");
+  onCategorySelect = val => {
+    const parsedQueryString = queryString.parse(this.props.location.search);
+    console.log("ON CATEGORY SELECT CALLED");
     console.log(val);
+    console.log(this.props.history);
+    console.log(this.props.location);
+    this.props.history.push(this.props.location, {
+      q: parsedQueryString,
+      isFilter: true
+    });
+  };
+
+  onL1Click = val => {
+    this.onCategorySelect(val);
   };
 
   onL2Click = val => {
-    console.log("ON L2 CLICK");
-    console.log(val);
+    this.onCategorySelect(val);
   };
 
   onL3Click = val => {
-    console.log("ON L3 CLICK");
-    console.log(val);
+    this.onCategorySelect(val);
   };
   render() {
     //console.log(facetData);
