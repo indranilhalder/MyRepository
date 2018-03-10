@@ -45,7 +45,7 @@ import {
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PLP_CATEGORY_SEARCH,
   PRODUCT_DESCRIPTION_REVIEWS,
-  PRODUCT_SELLER_ROUTER_SUFFIX,
+  PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
@@ -194,7 +194,7 @@ class App extends Component {
           />
           <Route
             exact
-            path={PRODUCT_SELLER_ROUTER_SUFFIX}
+            path={PRODUCT_SELLER_ROUTER}
             component={ProductSellerContainer}
           />
 
