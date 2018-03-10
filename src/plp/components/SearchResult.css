@@ -1,0 +1,11 @@
+.base {
+  width: 100%;
+  height: auto;
+  padding: 20px 15px;
+  font-size: 16px;
+  font-family: regular;
+  color: #212121;
+}
+.bold {
+  font-family: semibold;
+}
