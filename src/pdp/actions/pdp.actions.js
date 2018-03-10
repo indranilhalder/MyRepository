@@ -139,7 +139,7 @@ export function getProductDescription(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductDescriptionRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMsd(
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}`
       );
       const resultJson = await result.json();
