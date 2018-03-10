@@ -18,7 +18,6 @@ const MobileFooterBase = class MobileFooterBase extends React.Component {
   }
 };
 const MobileFooterWithSelect = withMultiSelect(MobileFooterBase);
-
 export default class MobileFooter extends React.Component {
   render() {
     return (

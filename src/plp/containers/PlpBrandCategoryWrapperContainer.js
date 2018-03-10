@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => {
     },
     paginate: (page, suffix) => {
       dispatch(setPage(page));
-      dispatch(getProductListings(suffix, true));
+      dispatch(getProductListings(suffix, true, false));
     }
   };
 };

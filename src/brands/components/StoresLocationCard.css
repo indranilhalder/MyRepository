@@ -35,3 +35,15 @@
 	line-height: 30px;
 	text-align : left;
 }
+.productDescriptionText{
+	width:100%;
+	height:auto;
+	margin-top:10px;
+	color:#fff;
+	font-family:semibold;
+	font-size:30px;
+	word-wrap: break-word;
+	white-space: normal;
+	text-align: left;
+	padding-bottom:10px;
+}

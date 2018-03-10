@@ -3,7 +3,7 @@ import styles from "./CuponDetails.css";
 import CheckBox from "../../general/components/CheckBox.js";
 import PropTypes from "prop-types";
 export default class CuponDetails extends React.Component {
-  handleClick() {
+  handleClick(val) {
     if (this.props.selectItem) {
       this.props.selectItem();
     }
@@ -11,53 +11,44 @@ export default class CuponDetails extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        {this.props.productOfferPromotion &&
-          this.props.productOfferPromotion.map((promotion, i) => {
-            return (
-              <div
-                className={styles.cuponCard}
-                key={i}
-                onClick={() => this.handleClick()}
-              >
-                <div className={styles.headerText}>
-                  <span>{promotion.promotionTitle}</span>
-                  {this.props.selectItem && (
-                    <div className={styles.checkBoxHolder}>
-                      <CheckBox selected={this.props.selected} />
-                    </div>
-                  )}
-                </div>
-                <div
-                  className={styles.promotionDetailsText}
-                  dangerouslySetInnerHTML={{
-                    __html: promotion.promotionDetail
-                      .replace("<p>", "")
-                      .replace("</p>", "")
-                  }}
-                />
+        <div className={styles.cuponCard} onClick={() => this.handleClick()}>
+          <div className={styles.headerText}>
+            <span>{this.props.promotionTitle}</span>
+            {this.props.selectItem && (
+              <div className={styles.checkBoxHolder}>
+                <CheckBox selected={this.props.selected} />
+              </div>
+            )}
+          </div>
+          <div
+            className={styles.promotionDetailsText}
+            dangerouslySetInnerHTML={{
+              __html: this.props.promotionDetail
+                .replace("<p>", "")
+                .replace("</p>", "")
+            }}
+          />
 
-                <div className={styles.dataHolder}>
-                  {promotion.validTill.formattedDate && (
-                    <div className={styles.amountExpireHolder}>
-                      <div className={styles.dataHeader}>Valid till</div>
-                      <div className={styles.dataInformation}>
-                        {promotion.validTill.formattedDate}
-                      </div>
-                    </div>
-                  )}
-                  {promotion.validTill.amount && (
-                    <div className={styles.amountExpireHolder}>
-                      <div className={styles.dataHeader}>Min.bag amount</div>
-                      <div className={styles.dataInformation}>
-                        Rs.
-                        {promotion.validTill.amount}
-                      </div>
-                    </div>
-                  )}
+          <div className={styles.dataHolder}>
+            {this.props.formattedDate && (
+              <div className={styles.amountExpireHolder}>
+                <div className={styles.dataHeader}>Valid till</div>
+                <div className={styles.dataInformation}>
+                  {this.props.formattedDate}
                 </div>
               </div>
-            );
-          })}
+            )}
+            {this.props.amount && (
+              <div className={styles.amountExpireHolder}>
+                <div className={styles.dataHeader}>Min.bag amount</div>
+                <div className={styles.dataInformation}>
+                  Rs.
+                  {this.props.amount}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     );
   }

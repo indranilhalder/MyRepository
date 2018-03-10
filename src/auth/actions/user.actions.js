@@ -238,7 +238,6 @@ export function otpVerification(otpDetails, userDetails) {
       }
       dispatch(hideModal());
       dispatch(otpVerificationSuccess(resultJson));
-      debugger;
       dispatch(customerAccessToken(userDetails));
     } catch (e) {
       dispatch(otpVerificationFailure(e.message));
@@ -491,8 +490,9 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       // TODO: dispatch a modal here
       dispatch(customerAccessTokenSuccess(resultJson));

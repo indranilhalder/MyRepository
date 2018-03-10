@@ -4,9 +4,11 @@ import {
   addProductToCart,
   getProductSizeGuide,
   addProductToWishList,
-  getMsdRequest
+  getMsdRequest,
+  getPdpEmi,
+  getEmiTerms
 } from "../actions/pdp.actions";
-import { showModal } from "../../general/modal.actions.js";
+import { showModal, EMI_MODAL } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
 
@@ -29,6 +31,15 @@ const mapDispatchToProps = dispatch => {
     },
     showSizeGuide: () => {
       dispatch(showModal("SizeGuide"));
+    },
+    getPdpEmi: (token, cartValue) => {
+      dispatch(getPdpEmi(token, cartValue));
+    },
+    getEmiTerms: (token, productValue) => {
+      dispatch(getEmiTerms(token, productValue));
+    },
+    showEmiModal: () => {
+      dispatch(showModal(EMI_MODAL));
     }
   };
 };

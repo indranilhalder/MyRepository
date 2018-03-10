@@ -22,6 +22,17 @@ export default class EmiModal extends React.Component {
                 );
               })}
           </div>
+
+          {this.props.emiTerms &&
+            this.props.emiTerms.data &&
+            this.props.emiTerms.data.termAndConditions && (
+              <div
+                className={styles.termsAndConditions}
+                dangerouslySetInnerHTML={{
+                  __html: this.props.emiTerms.data.termAndConditions[0]
+                }}
+              />
+            )}
         </div>
       </SlideModal>
     );

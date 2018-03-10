@@ -57,6 +57,7 @@ export async function post(path, postData, doNotUseApiRoot: false) {
   if (doNotUseApiRoot) {
     url = path;
   }
+
   return await fetch(url, {
     method: "POST",
     body: JSON.stringify(postData),
@@ -68,7 +69,7 @@ export async function post(path, postData, doNotUseApiRoot: false) {
 }
 
 export async function get(url) {
-  return await fetch(`${API_URL_ROOT}/${url}${API_URL_ROOT_SUFFIX}`, {
+  return await fetch(`${API_URL_ROOT}/${url}`, {
     headers: {
       Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#")
     }

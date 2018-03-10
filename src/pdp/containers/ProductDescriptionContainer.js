@@ -40,9 +40,7 @@ const mapDispatchToProps = dispatch => {
     showAddress: data => {
       dispatch(showModal(ADDRESS, data));
     },
-    showCouponModal: data => {
-      dispatch(showModal(PRODUCT_COUPONS, data));
-    },
+
     getProductSizeGuide: () => {
       dispatch(getProductSizeGuide());
     },
@@ -61,6 +59,9 @@ const mapDispatchToProps = dispatch => {
     },
     getProductSpecification: productId => {
       dispatch(getProductSpecification(productId));
+    },
+    showCouponModal: data => {
+      dispatch(showModal(PRODUCT_COUPONS, data));
     }
   };
 };

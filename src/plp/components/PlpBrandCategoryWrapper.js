@@ -51,13 +51,22 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.location.state && this.props.location.state.isFilter) {
-      const suffix = "&isFilter=true";
-      const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, suffix, 0, true);
-    } else {
-      const searchText = this.getSearchTextFromUrl();
-      this.props.getProductListings(searchText, SUFFIX, 0);
+    if (
+      this.props.location.state &&
+      this.props.location.state.disableSerpSearch === true
+    ) {
+      return;
+    }
+    console.log("COMPONENT DID UPDATE CALLED");
+    if (this.props.page === 0) {
+      if (this.props.location.state.isFilter) {
+        const suffix = "&isFilter=true";
+        const searchText = this.getSearchTextFromUrl();
+        this.props.getProductListings(searchText, suffix, 0, true);
+      } else {
+        const searchText = this.getSearchTextFromUrl();
+        this.props.getProductListings(searchText, SUFFIX, 0);
+      }
     }
   }
 
@@ -98,7 +107,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   // so this thing will need setFIlters, getProductListings
 
   render() {
-    console.log("IS RENDER CALLED");
     let isFilter = false;
     if (this.props.location.state) {
       isFilter = this.props.location.state.isFilter

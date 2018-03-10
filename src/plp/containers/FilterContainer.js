@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { getProductListings } from "../actions/plp.actions.js";
 import Filter from "../components/Filter";
+import FilterMobile from "../components/FilterMobile.js";
 import { withRouter } from "react-router-dom";
 const mapDispatchToProps = dispatch => {
   return {
@@ -11,19 +12,15 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const facetData = state.productListings.productListings.facetdata;
-  const categoryData = state.productListings.productListings.facetdatacategory;
-  if (facetData[0].name !== "Category") {
-    facetData.unshift(categoryData);
-  }
   return {
     ...ownProps,
-    filterData: state.productListings.productListings.facetdata
+    facetData: state.productListings.productListings.facetdata,
+    facetdatacategory: state.productListings.productListings.facetdatacategory
   };
 };
 
 const FilterContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Filter)
+  connect(mapStateToProps, mapDispatchToProps)(FilterMobile)
 );
 
 export default FilterContainer;

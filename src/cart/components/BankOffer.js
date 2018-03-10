@@ -6,18 +6,29 @@ import PropTypes from "prop-types";
 
 export default class BankOffer extends React.Component {
   handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.applyBankOffers) {
+      this.props.applyBankOffers();
     }
   }
+  applyCoupons(val) {
+    if (this.props.selectItem) {
+      this.props.selectItem();
+    }
+  }
+
   render() {
     return (
       <div className={styles.base}>
         <div className={styles.container}>
           <span className={styles.bankName}>{this.props.bankName}</span>
           <span className={styles.offerText}>{this.props.offerText}</span>
-          <div className={styles.checkBoxHolder}>
-            <CheckBox selected={this.props.selected} />
+          <div
+            className={styles.checkBoxHolder}
+            onClick={val => this.applyCoupons(val)}
+          >
+            <div>
+              <CheckBox selected={this.props.selected} />
+            </div>
           </div>
         </div>
         <div className={styles.buttonHolder}>
