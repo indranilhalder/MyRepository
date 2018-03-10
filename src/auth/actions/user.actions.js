@@ -174,7 +174,7 @@ export function signUpUser(userObj) {
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
     try {
-      let suffix;
+      let suffix = "";
       if (userObj.emailId) {
         suffix = `&emailId=${userObj.emailId}`;
       }
