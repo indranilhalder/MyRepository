@@ -32,6 +32,8 @@ export default class ConfirmAddress extends React.Component {
       this.props.onSelectAddress(addressId);
     }
   }
+
+  getAddress(address) {}
   render() {
     return (
       <div className={styles.base}>
@@ -58,6 +60,7 @@ export default class ConfirmAddress extends React.Component {
                       addressDescription={val.addressDescription}
                       key={i}
                       value={val.value}
+                      selected={val.selected}
                     />
                   );
                 })}

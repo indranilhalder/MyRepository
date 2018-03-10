@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Tick</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="7.52918175e-21 2.77777778e-05 7.52918175e-21 9.93402778 9.9325 9.93402778 9.9325 2.77777778e-05"></polygon>
+    </defs>
+    <g id="07_Edit_Profile_page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-200.000000, -111.000000)">
+        <g id="Top-image" transform="translate(0.000000, 70.000000)">
+            <g id="Tick" transform="translate(200.000000, 41.000000)">
+                <circle id="Oval-2" fill="#FF1744" cx="11" cy="11" r="11"></circle>
+                <g id="Page-1" transform="translate(6.000000, 6.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Clip-2"></g>
+                    <path d="M9.60791667,1.11461111 L8.81625,0.322944444 C8.38555556,-0.107611111 7.67736111,-0.107611111 7.24680556,0.322944444 L0.969027778,6.61461111 C0.857916667,6.72558333 0.788472222,6.8785 0.774444444,7.01738889 L0.0105555556,9.57280556 C-0.0172222222,9.67016667 0.0105555556,9.78113889 0.08,9.85058333 C0.135694444,9.90627778 0.205138889,9.93405556 0.274583333,9.93405556 C0.302361111,9.93405556 0.33,9.93405556 0.357777778,9.92002778 L2.92722222,9.15613889 C3.08013889,9.14238889 3.21902778,9.07294444 3.33013889,8.96183333 L9.62180556,2.67016667 C10.0384722,2.2535 10.0384722,1.55905556 9.60791667,1.11461111" id="Fill-1" fill="#FFFFFF" mask="url(#mask-2)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

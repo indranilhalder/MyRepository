@@ -1,0 +1,35 @@
+.base {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  position: relative;
+  background-color: #ffffff;
+  padding: 20px;
+}
+.header {
+  font-family: bolder;
+  font-size: 14px;
+  text-align: left;
+}
+.location {
+  width: 100%;
+  height: auto;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+.inputHolder {
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  padding-top: 8px;
+}
+
+.buttonCover {
+  width: auto;
+  height: auto;
+  margin: auto;
+  display: inline-block;
+  vertical-align: sub;
+}
