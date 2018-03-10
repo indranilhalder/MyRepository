@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./MobileMonthPicker.css";
 import SelectBoxMobile from "./SelectBoxMobile.js";
 import PropTypes from "prop-types";
 export default class MobileMonthPicker extends React.Component {
@@ -24,13 +23,11 @@ export default class MobileMonthPicker extends React.Component {
       { value: "12" }
     ];
     return (
-      <div className={styles.base}>
-        <SelectBoxMobile
-          value="Expiry month"
-          onChange={val => this.getTitleValue(val)}
-          options={monthOption}
-        />
-      </div>
+      <SelectBoxMobile
+        value="Expiry month"
+        onChange={val => this.getTitleValue(val)}
+        options={monthOption}
+      />
     );
   }
 }
