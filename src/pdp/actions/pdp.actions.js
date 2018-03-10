@@ -140,7 +140,7 @@ export function getProductDescription(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductDescriptionRequest());
     try {
-      const result = await api.getMsd(
+      const result = await api.get(
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?&isPwa=true`
       );
       const resultJson = await result.json();
