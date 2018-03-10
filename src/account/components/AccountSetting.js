@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./AccountSetting.css";
 import { ProfileImage } from "xelpmoc-core";
 import PropTypes from "prop-types";
-import AccountSettingIcon from "../../general/components/img/groy.jpg";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 export default class AccountSetting extends React.Component {
   handleClick = () => {
@@ -25,8 +24,8 @@ export default class AccountSetting extends React.Component {
               <UnderLinedButton
                 size="14px"
                 fontFamily="regular"
-                color={this.props.color}
-                label={this.props.label}
+                color="#ff1744"
+                label="Account Settings"
                 onClick={() => this.handleClick()}
               />
             </div>
@@ -75,9 +74,7 @@ AccountSetting.propTypes = {
   isDetails: PropTypes.bool
 };
 AccountSetting.defaultProps = {
-  image: AccountSettingIcon,
   isDetails: false,
-  heading: "Ananya R. Patel",
-  color: "#ff1744",
+
   label: "Account Settings"
 };
