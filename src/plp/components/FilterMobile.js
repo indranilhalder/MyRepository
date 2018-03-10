@@ -80,6 +80,21 @@ export default class FilterMobile extends React.Component {
             )}
           </div>
         </div>
+        <div className={styles.footer}>
+          <div className={styles.buttonHolder}>
+            <div className={styles.button} onClick={this.onClear}>
+              Clear
+            </div>
+          </div>
+          <div className={styles.buttonHolder}>
+            <div
+              className={styles.redButton}
+              onClick={() => this.onApply(this.state.selected)}
+            >
+              Apply
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
