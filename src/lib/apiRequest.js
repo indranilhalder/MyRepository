@@ -8,7 +8,7 @@ export const API_URL_ROOT_DUMMY =
 export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
-export const JUS_PAY_API_URL_ROOT = "https://api.juspay.in";
+export const JUS_PAY_API_URL_ROOT = "https://sandbox.juspay.in";
 
 export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
@@ -52,6 +52,7 @@ export async function postAdobeTargetUrl(
 }
 
 export async function post(path, postData, doNotUseApiRoot: false) {
+  console.log(JSON.stringify(postData));
   let url = `${API_URL_ROOT}/${path}`;
   if (doNotUseApiRoot) {
     url = path;
@@ -148,10 +149,6 @@ export async function postJusPay(path, postData) {
   let url = `${JUS_PAY_API_URL_ROOT}/${path}`;
   return await fetch(url, {
     method: "POST",
-    body: JSON.stringify(postData),
-    headers: {
-      Authorization: "Basic " + btoa("gauravj@dewsolutions.in:gauravj@12#"),
-      "Content-Type": "application/json"
-    }
+    body: JSON.stringify(postData)
   });
 }

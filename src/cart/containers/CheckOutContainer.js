@@ -108,8 +108,8 @@ const mapDispatchToProps = dispatch => {
     binValidation: (paymentMode, binNo) => {
       dispatch(binValidation(paymentMode, binNo));
     },
-    softReservationForPayment: cardDetails => {
-      dispatch(softReservationForPayment(cardDetails));
+    softReservationForPayment: (cardDetails, address) => {
+      dispatch(softReservationForPayment(cardDetails, address));
     }
   };
 };
