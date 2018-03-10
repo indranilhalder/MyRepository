@@ -24,12 +24,11 @@ import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
   MAIN_ROUTER,
-  PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_DELIVERY_ADDRESSES,
   PRODUCT_FILTER_ROUTER,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
@@ -44,7 +43,10 @@ import {
   CHECKOUT_ROUTER,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
-  PLP_CATEGORY_SEARCH
+  PLP_CATEGORY_SEARCH,
+  PRODUCT_DESCRIPTION_REVIEWS,
+  PRODUCT_SELLER_ROUTER,
+  PRODUCT_OTHER_SELLER_ROUTER
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -68,10 +70,13 @@ const auth = {
   isAuthenticated: false
 };
 class App extends Component {
-  componentWillMount() {
+  componentDidUpdate() {
     this.getAccessToken();
   }
 
+  componentDidMount() {
+    this.getAccessToken();
+  }
   getAccessToken = () => {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     let customerAccessToken = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
@@ -81,6 +86,7 @@ class App extends Component {
       CART_DETAILS_FOR_LOGGED_IN_USER
     );
     let cartDetailsForAnonymous = Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS);
+
     if (!globalAccessToken) {
       this.props.getGlobalAccessToken();
       if (!cartIdForAnonymous) {
@@ -143,7 +149,17 @@ class App extends Component {
             path={SEARCH_RESULTS_PAGE}
             component={PlpBrandCategoryWrapperContainer}
           />
+
           <Route
+            path={PRODUCT_DESCRIPTION_REVIEWS}
+            component={ProductReviewContainer}
+          />
+          <Route
+            path={PRODUCT_OTHER_SELLER_ROUTER}
+            component={ProductSellerContainer}
+          />
+          <Route
+            exact
             path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
             component={ProductDescriptionPageWrapperContainer}
           />
@@ -173,19 +189,8 @@ class App extends Component {
 
           <Route
             exact
-            path={PRODUCT_REVIEW_ROUTER}
-            component={ProductReviewContainer}
-          />
-
-          <Route
-            exact
             path={PRODUCT_FILTER_ROUTER}
             component={FilterContainer}
-          />
-          <Route
-            exact
-            path={PRODUCT_SELLER_ROUTER}
-            component={ProductSellerContainer}
           />
           <Route
             exact

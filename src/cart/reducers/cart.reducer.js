@@ -40,7 +40,23 @@ const cart = (
     storeDetails: null,
     storeStatus: null,
     storeError: null,
-    storeAdded: null
+    storeAdded: null,
+
+    softReserve: null,
+    softReserveStatus: null,
+    softReserveError: null,
+
+    paymentModes: null,
+    paymentModesStatus: null,
+    paymentModesError: null,
+
+    bankOffer: null,
+    bankOfferStatus: null,
+    bankOfferError: null,
+
+    paymentStatus: null,
+    paymentStatusError: null,
+    paymentDetails: null
   },
   action
 ) => {
@@ -65,19 +81,19 @@ const cart = (
         loading: false
       });
 
-    case cartActions.APPLY_COUPON_REQUEST:
+    case cartActions.APPLY_USER_COUPON_REQUEST:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: true
       });
 
-    case cartActions.APPLY_COUPON_SUCCESS:
+    case cartActions.APPLY_USER_COUPON_SUCCESS:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false
       });
 
-    case cartActions.APPLY_COUPON_FAILURE:
+    case cartActions.APPLY_USER_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
@@ -104,19 +120,19 @@ const cart = (
         loading: false
       });
 
-    case cartActions.RELEASE_COUPON_REQUEST:
+    case cartActions.RELEASE_USER_COUPON_REQUEST:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: true
       });
 
-    case cartActions.RELEASE_COUPON_SUCCESS:
+    case cartActions.RELEASE_USER_COUPON_SUCCESS:
       return Object.assign({}, state, {
         couponStatus: action.status,
         loading: false
       });
 
-    case cartActions.RELEASE_COUPON_FAILURE:
+    case cartActions.RELEASE_USER_COUPON_FAILURE:
       return Object.assign({}, state, {
         couponStatus: action.status,
         couponError: action.error,
@@ -171,6 +187,7 @@ const cart = (
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
         setAddress: action.setAddress,
+        userAddress: action.cartDetailsCnc.addressDetailsList,
         cartDetailsCnc: action.cartDetailsCnc,
         loading: false
       });
@@ -366,6 +383,139 @@ const cart = (
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
         cartDetailsCNCError: action.error,
+        loading: false
+      });
+    case cartActions.ADD_ADDRESS_TO_CART_REQUEST:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: true
+      });
+
+    case cartActions.ADD_ADDRESS_TO_CART_SUCCESS:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false
+      });
+
+    case cartActions.ADD_ADDRESS_TO_CART_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        error: action.error,
+        loading: false
+      });
+
+    case cartActions.SOFT_RESERVATION_REQUEST:
+      return Object.assign({}, state, {
+        softReserveStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.SOFT_RESERVATION_SUCCESS:
+      return Object.assign({}, state, {
+        softReserveStatus: action.status,
+        softReserve: action.softReserve,
+        loading: false
+      });
+
+    case cartActions.SOFT_RESERVATION_FAILURE:
+      return Object.assign({}, state, {
+        softReserveStatus: action.status,
+        softReserveError: action.error,
+        loading: false
+      });
+
+    case cartActions.GET_PAYMENT_MODES_REQUEST:
+      return Object.assign({}, state, {
+        paymentModesStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.GET_PAYMENT_MODES_SUCCESS:
+      return Object.assign({}, state, {
+        paymentModesStatus: action.status,
+        paymentModes: action.paymentModes,
+        loading: false
+      });
+
+    case cartActions.GET_PAYMENT_MODES_FAILURE:
+      return Object.assign({}, state, {
+        paymentModesStatus: action.status,
+        paymentModesError: action.error,
+        loading: false
+      });
+
+    case cartActions.APPLY_BANK_OFFER_REQUEST:
+      return Object.assign({}, state, {
+        bankOfferStatus: action.status,
+        loading: true
+      });
+    case cartActions.APPLY_BANK_OFFER_SUCCESS:
+      return Object.assign({}, state, {
+        bankOfferStatus: action.status,
+        bankOffer: action.bankOffer,
+        loading: false
+      });
+    case cartActions.APPLY_BANK_OFFER_FAILURE:
+      return Object.assign({}, state, {
+        bankOfferStatus: action.status,
+        bankOfferError: action.error,
+        loading: false
+      });
+    case cartActions.RELEASE_BANK_OFFER_REQUEST:
+      return Object.assign({}, state, {
+        bankOfferStatus: action.status,
+        loading: true
+      });
+    case cartActions.RELEASE_BANK_OFFER_SUCCESS:
+      return Object.assign({}, state, {
+        bankOfferStatus: action.status,
+        loading: false
+      });
+    case cartActions.RELEASE_BANK_OFFER_FAILURE:
+      return Object.assign({}, state, {
+        bankOfferStatus: action.status,
+        bankOfferError: action.error,
+        loading: false
+      });
+    case cartActions.APPLY_CLIQ_CASH_REQUEST:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentDetails: action.paymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.APPLY_CLIQ_CASH_FAILURE:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentStatusError: action.error,
+        loading: false
+      });
+
+    case cartActions.REMOVE_CLIQ_CASH_REQUEST:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        loading: true
+      });
+
+    case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentDetails: action.paymentDetails,
+        loading: false
+      });
+    }
+
+    case cartActions.REMOVE_CLIQ_CASH_FAILURE:
+      return Object.assign({}, state, {
+        paymentStatus: action.status,
+        paymentStatusError: action.error,
         loading: false
       });
 
