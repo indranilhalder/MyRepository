@@ -18,6 +18,7 @@ import DeliveryModesContainer from "./cart/containers/DeliveryModesContainer";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import DisplayOrderSummaryContainer from "./cart/containers/DisplayOrderSummaryContainer";
 import CheckOutContainer from "./cart/containers/CheckOutContainer";
+import BrandLandingPageContainer from "./brands/containers/BrandLandingPageContainer";
 import * as Cookie from "./lib/Cookie";
 import MDSpinner from "react-md-spinner";
 import {
@@ -44,6 +45,7 @@ import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PLP_CATEGORY_SEARCH,
+  BRAND_LANDING_PAGE,
   PRODUCT_DESCRIPTION_REVIEWS,
   PRODUCT_SELLER_ROUTER,
   PRODUCT_OTHER_SELLER_ROUTER
@@ -191,6 +193,11 @@ class App extends Component {
             exact
             path={PRODUCT_FILTER_ROUTER}
             component={FilterContainer}
+          />
+          <Route
+            exact
+            path={BRAND_LANDING_PAGE}
+            component={BrandLandingPageContainer}
           />
           <Route
             exact

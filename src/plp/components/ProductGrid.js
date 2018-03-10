@@ -104,7 +104,7 @@ export default class ProductGrid extends React.Component {
                     key={i}
                     gridWidthMobile={widthMobile}
                     view={this.state.view}
-                    type={datum.type}
+                    type={datum && datum.type}
                   >
                     {this.renderComponent(datum)}
                   </PlpComponent>

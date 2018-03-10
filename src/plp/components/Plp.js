@@ -39,6 +39,7 @@ export default class Plp extends React.Component {
     if (this.state.showFilter) {
       filterClass = styles.filterOpen;
     }
+
     return (
       <div className={styles.base}>
         <div className={styles.pageHeader}>

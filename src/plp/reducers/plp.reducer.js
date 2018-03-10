@@ -12,6 +12,7 @@ const productListings = (
   action
 ) => {
   let existingProductListings;
+
   switch (action.type) {
     case plpActions.PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {
@@ -36,8 +37,7 @@ const productListings = (
         pageNumber: action.pageNumber
       });
     case plpActions.GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS:
-      let searchResults = state.productListings.searchresult;
-
+      let searchResults = cloneDeep(state.productListings.searchresult);
       searchResults = concat(
         searchResults,
         action.productListings.searchresult
