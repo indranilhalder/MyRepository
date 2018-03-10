@@ -2128,10 +2128,20 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		final long startTime = System.currentTimeMillis();
 		//final MplPromoPriceData promoPriceData = new MplPromoPriceData();
 		VoucherDiscountData discData = new VoucherDiscountData();
+		//SDP-15 starts here
+		String sdpLogFlag = null;
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+		{
+			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+		}
+		//SDP-15 ends here
 		if (null != cartModel)
 		{
 			calculatePromotion(cartModel, null, cartData, null);
-
+			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			{
+			 LOG.error("Cart Total Price before Coupon Discount Calculation is : " + cartModel.getTotalPrice() + "Cart guid" + cartModel.getGuid()); //SDP-15
+			}
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
@@ -2201,7 +2211,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		else if (null != orderModel)
 		{
 			calculatePromotion(null, orderModel, null, orderData);
-
+			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			{
+			LOG.error("Cart Total Price before Coupon Discount Calculation is : " + orderModel.getTotalPrice() + "OrderCart guid" + orderModel.getGuid()); //SDP-15
+			}
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
@@ -2231,7 +2244,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					getModelService().save(orderModel);
 					getModelService().refresh(orderModel);
 				}
-
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("Cart Total Price after Coupon Discount Calculation is : " + orderModel.getTotalPrice() + "OrderCart guid" + orderModel.getGuid()); //SDP-15
+				}
 				discData = getMplVoucherService().getVoucherData(orderModel);
 				//				LOG.debug(">> 2 : Checking voucher related promotion >> ");
 				//				final PromotionVoucherModel voucher = (PromotionVoucherModel) orderModel.getDiscounts().get(0);
@@ -2356,6 +2372,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final OrderData orderData) //Added  orderModel and orderData to handle TPR-629---order before payment
 	{
 		final long startTime = System.currentTimeMillis();
+		
+		//SDP-15 starts here
+		String sdpLogFlag = null;
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+		{
+			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+		}
+		//SDP-15 ends here
+				
 		//Try/catch handled for IQA TPR-629
 		try
 		{
@@ -2369,10 +2394,27 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				parameter.setCart(cartModel);
 				getCalculationStrategy().recalculateCart(parameter);
 
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("Cart Guid in calculate Promotion Method : " + cartModel.getGuid()); //SDP-15
+				}
+				
 				final Double subTotal = cartModel.getSubtotal();
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("Cart Subtotal in calculatePromotion method:" + subTotal);//SDP-15
+				}
 				final Double cartDiscount = populateCartDiscountPrice(cartModel, null);
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("Cart Discount in calculatePromotion method:" + cartDiscount);//SDP-15
+				}
 
 				final double deliveryCost = calculateDeliveryChargeForShipping(cartModel);
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("Cart Delivery Cost in calculatePromotion method: " + deliveryCost); //SDP-15
+				}
 
 				cartModel.setDeliveryCost(Double.valueOf(deliveryCost));
 
@@ -2382,21 +2424,40 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
 				cartModel.setTotalPrice(totalPrice);
-
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("Cart Total Price in calculatePromotion method: " + cartModel.getTotalPrice()); //SDP-15
+				}
 				getModelService().save(cartModel);
 				getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 			}
 			else if (null != orderModel)
 			{
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("OrderModel Cart Guid in calculate Promotion Method : " + orderModel.getGuid()); //SDP-15
+				}
 				//When customer has orderModel
 				final Double deliveryCost = orderModel.getDeliveryCost();
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("OrderCart Delivery Cost in calculatePromotion method: " + deliveryCost); //SDP-15
+				}
 				final CommerceCartParameter parameter = new CommerceCartParameter();
 				parameter.setEnableHooks(true);
 				parameter.setOrder(orderModel);
 				getCalculationStrategy().recalculateCart(parameter);
 
 				final Double subTotal = orderModel.getSubtotal();
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("OrderCart Subtotal in calculatePromotion method:" + subTotal);//SDP-15
+				}
 				final Double orderDiscount = populateCartDiscountPrice(null, orderModel);
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("OrderCart Discount in calculatePromotion method:" + orderDiscount);//SDP-15
+				}
 				final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliveryCost.doubleValue()
 						- orderDiscount.doubleValue());
 
@@ -2405,17 +2466,30 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//TISEE-5354
 				final Double totalPrice = Double.valueOf(String.format("%.2f", totalPriceAfterDeliveryCost));
 				orderModel.setTotalPrice(totalPrice);
-
+				if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+				{
+				LOG.error("OrderCart Total Price in calculatePromotion method: " + orderModel.getTotalPrice()); //SDP-15
+				}
 				getModelService().save(orderModel);
 				getMplCommerceCartService().setTotalWithConvCharge(orderModel, orderData);
 			}
 		}
 		catch (final ModelSavingException e)
 		{
+			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			{
+			StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in calculatePromotion(), cartGuid:").append(cartModel.getGuid());
+			LOG.error(exceptionDetails);
+			}
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		catch (final Exception e)
 		{
+			if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+			{
+			StringBuilder exceptionDetails = new StringBuilder(e.getClass().getName()).append(" in calculatePromotion(), cartGuid:").append(cartModel.getGuid());
+			LOG.error(exceptionDetails);
+			}
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
@@ -2614,6 +2688,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public boolean createEntryInAudit(final String juspayOrderId, final String channel, final String cartGuId)
 			throws EtailNonBusinessExceptions
 	{
+		
+		//SDP-15 starts here
+		String sdpLogFlag = null;
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString("sdp.fifteen.log")))
+		{
+			sdpLogFlag = configurationService.getConfiguration().getString("sdp.fifteen.log");
+		}
+		//SDP-15 ends here
 		try
 		{
 			Assert.notNull(juspayOrderId, "Parameter juspayOrderId cannot be null.");
@@ -2663,6 +2745,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				newAuditModel.setAuditEntries(auditEntryList);
 				if (cartModel != null && cartModel.getTotalPrice() != null)
 				{
+					if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+					{
+					LOG.error("Cart Guid : " + cartModel.getGuid() + " Payment Amount getting set in cart model: " + cartModel.getTotalPrice());//SDP-15
+					}
 					newAuditModel.setPaymentAmount(cartModel.getTotalPrice());
 				}
 				//SDI-4494
@@ -2671,6 +2757,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					OrderModel orderModel = getMplPaymentDao().fetchOrderOnGUID(cartGuId);
 					if(null != orderModel)
 					{
+						if(StringUtils.isNotEmpty(sdpLogFlag) && sdpLogFlag.equalsIgnoreCase("TRUE"))
+						{
+						LOG.error("Order Cart Guid : " + orderModel.getGuid() + "Payment Amount getting set in order model: " + orderModel.getTotalPrice());//SDP-15
+						}
 						newAuditModel.setPaymentAmount(orderModel.getTotalPrice());
 					}
 				}
