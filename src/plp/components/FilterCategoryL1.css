@@ -9,6 +9,7 @@
   line-height: 40px;
   position: relative;
   padding-right: 40px;
+
   color: #212121;
 }
 .count {
@@ -19,6 +20,7 @@
   color: #8d8d8d;
   position: absolute;
   right: 0;
+  top: 0;
   text-align: right;
 }
 .content {
