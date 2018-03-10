@@ -14,9 +14,12 @@ const QUERY_REGEX = /(q=)(.*?)(&)/;
 export default class FilterMobile extends React.Component {
   constructor(props) {
     super(props);
+    const url = `${props.location.pathname}${props.location.search}`;
+
     this.state = {
       showCategory: true,
-      filterSelectedIndex: 0
+      filterSelectedIndex: 0,
+      url
     };
   }
   selectTab(val) {
@@ -25,6 +28,10 @@ export default class FilterMobile extends React.Component {
   selectCategories() {
     this.setState({ showCategory: true });
   }
+
+  onClear = () => {
+    this.props.history.push(this.state.url, { isFilter: true });
+  };
 
   onApply = () => {
     const pathName = this.props.location.pathname;
@@ -38,13 +45,21 @@ export default class FilterMobile extends React.Component {
   onCategorySelect = (val, disableSerpSearch) => {
     const parsedQueryString = queryString.parse(this.props.location.search);
     let query = parsedQueryString.q;
+    console.log(query);
     if (CATEGORY_CAPTURE_REGEX.test(query)) {
-      query = query.replace(
-        CATEGORY_CAPTURE_REGEX,
-        `:category:${val.toLowerCase()}`
-      );
+      const match = CATEGORY_CAPTURE_REGEX.exec(query);
+      if (match[1].toLocaleLowerCase() === val.toLocaleLowerCase()) {
+        query = query.replace(`:category:${match[1]}`, "");
+      } else {
+        query = query.replace(
+          CATEGORY_CAPTURE_REGEX,
+          `:category:${val.toLowerCase()}`
+        );
+      }
     } else {
       // there is no category, so safe to append
+      // what if there is a brand
+      query = query.replace(/:\s*$/, "");
       query = `${query}:category:${val.toLowerCase()}`;
     }
     const newUrl = `${
@@ -72,9 +87,8 @@ export default class FilterMobile extends React.Component {
     this.props.history.push(val, { isFilter: true });
   };
   render() {
-    //console.log(facetData);
     const { facetData, facetdatacategory } = this.props;
-    // console.log(facetData[this.state.filterSelectedIndex].values);
+
     return (
       <div className={styles.base}>
         <div className={styles.tabHolder}>
@@ -106,6 +120,7 @@ export default class FilterMobile extends React.Component {
         <div className={styles.contenHolder}>
           <div className={styles.slider}>
             {this.state.showCategory &&
+              facetdatacategory &&
               facetdatacategory.filters.map((val, i) => {
                 return (
                   <FilterCategoryL1
