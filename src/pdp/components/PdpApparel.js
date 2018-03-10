@@ -174,7 +174,9 @@ export default class PdpApparel extends React.Component {
                 getProductSpecification={this.props.getProductSpecification}
               />
               <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
+                showSizeGuide={
+                  productData.showSizeGuide ? this.props.showSizeGuide : null
+                }
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}

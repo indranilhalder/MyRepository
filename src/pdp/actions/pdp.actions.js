@@ -96,6 +96,7 @@ export const EMI_TERMS_PATH = "/v2/mpl/cms/products/getEmiTermsAndConditions";
 export const ABOUT_THE_BRAND_WIDGET_KEY = "aboutTheBrand";
 export const RECOMMENDED_PRODUCTS_WIDGET_KEY = "recommendedProducts";
 export const SIMILAR_PRODUCTS_WIDGET_KEY = "similarProducts";
+
 const CHANNEL = "channel";
 const MY_WISH_LIST = "MyWishList";
 const CLIENT_ID = "gauravj@dewsolutions.in";
@@ -140,7 +141,7 @@ export function getProductDescription(productCode) {
     dispatch(getProductDescriptionRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}`
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
@@ -342,7 +343,7 @@ export function getProductSizeGuide(productCode) {
     dispatch(getProductSizeGuideRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide`
+        `${PRODUCT_DESCRIPTION_PATH}/${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
