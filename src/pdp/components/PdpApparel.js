@@ -143,6 +143,7 @@ export default class PdpApparel extends React.Component {
               price={productData.mrp}
               discountPrice={productData.winningSellerMOP}
               averageRating={productData.averageRating}
+              onClick={this.goToReviewPage}
             />
           </div>
           {productData.emiInfo && (
