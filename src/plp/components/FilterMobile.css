@@ -1,0 +1,28 @@
+.base {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+}
+.tabHolder {
+  width: 40%;
+  height: 100%;
+  overflow: hidden;
+  margin-left: -20px;
+  display: inline-block;
+}
+.contenHolder {
+  composes: tabHolder;
+  width: 60%;
+}
+.slider {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  white-space: nowrap;
+  transition: 200ms;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(20px);
+  padding-right: 20px;
+}
