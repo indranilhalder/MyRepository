@@ -14,8 +14,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(setPage(page));
       dispatch(getProductListings(suffix, true));
     },
-    homeFeed: feedType => {
-      dispatch(homeFeed(feedType));
+    homeFeed: brandIdOrCategoryId => {
+      dispatch(homeFeed(brandIdOrCategoryId));
     }
   };
 };

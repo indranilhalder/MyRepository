@@ -179,13 +179,18 @@ export function homeFeedFailure(error) {
     error
   };
 }
-export function homeFeed(feedType: null) {
+
+// this is not simple home feed .it is a general feed like
+// brand feed and category feed  . we need to rename this function name like feed
+export function homeFeed(brandIdOrCategoryId: null) {
   return async (dispatch, getState, { api }) => {
     dispatch(homeFeedRequest());
     try {
       let url, result, feedTypeRequest;
-      if (feedType) {
-        result = await api.get(`v2/mpl/cms/defaultpage?pageId=${feedType}`);
+      if (brandIdOrCategoryId) {
+        result = await api.get(
+          `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
+        );
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
