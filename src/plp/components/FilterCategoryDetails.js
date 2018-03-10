@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./FilterCatageoryDetails.css";
+import styles from "./FilterCategoryDetails.css";
 import PropTypes from "prop-types";
-export default class FilterCatageoryDetails extends React.Component {
+export default class FilterCategoryDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +36,7 @@ export default class FilterCatageoryDetails extends React.Component {
     );
   }
 }
-FilterCatageoryDetails.propTypes = {
+FilterCategoryDetails.propTypes = {
   onClick: PropTypes.func,
   category: PropTypes.string,
   categoryCount: PropTypes.number

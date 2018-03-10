@@ -13,6 +13,7 @@
 .contenHolder {
   composes: tabHolder;
   width: 60%;
+  margin-left: 0;
 }
 .slider {
   width: 100%;

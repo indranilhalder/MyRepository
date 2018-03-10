@@ -1,9 +1,10 @@
 .item {
   width: 100%;
   height: 50px;
-  padding-right: 65px;
+  padding-right: 30px;
   position: relative;
   font-size: 14px;
+
   font-family: regular;
 }
 .itemContent {
@@ -13,6 +14,8 @@
   color: #212121;
   line-height: 50px;
   transition: 300ms;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .contentSelected {
   composes: itemContent;
@@ -27,6 +30,7 @@
 }
 .check {
   min-width: 50px;
+  height: 100%;
   position: absolute;
   right: 0;
   top: 0;

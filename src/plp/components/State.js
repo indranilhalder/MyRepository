@@ -1,4 +1,4 @@
-const facetdatacategory = {
+export const facetdatacategory = {
   category: true,
   filters: [
     {

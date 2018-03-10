@@ -1,0 +1,29 @@
+.base {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  font-family: regular;
+  color: #212121;
+  position: relative;
+  padding-right: 45px;
+}
+.count {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  color: #8d8d8d;
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+}
+
+.selected {
+  composes: base;
+  color: #ff1744;
+}
+
+.selected .count {
+  color: #ff1744;
+}

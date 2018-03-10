@@ -1,11 +1,11 @@
-const facetData = [
+export const facetData = [
   {
     category: true,
     key: "brand",
     multiSelect: true,
     name: "Brand",
     priority: 17000,
-    selectedFilterCount: 0,
+    selectedFilterCount: 2,
     values: [
       {
         count: 5,
@@ -22,7 +22,7 @@ const facetData = [
         name: "Apple",
         query:
           ":relevance:category:MSH1210:isLuxuryProduct:false:brand:MBH12E00008",
-        selected: false,
+        selected: true,
         url:
           "/search/page-{pageNo}?q=%3Arelevance%3Acategory%3AMSH1210%3AisLuxuryProduct%3Afalse%3Abrand%3AMBH12E00008",
         value: "MBH12E00008"
@@ -32,7 +32,7 @@ const facetData = [
         name: "Micromax",
         query:
           ":relevance:category:MSH1210:isLuxuryProduct:false:brand:MBH12E00076",
-        selected: false,
+        selected: true,
         url:
           "/search/page-{pageNo}?q=%3Arelevance%3Acategory%3AMSH1210%3AisLuxuryProduct%3Afalse%3Abrand%3AMBH12E00076",
         value: "MBH12E00076"
