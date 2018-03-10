@@ -6,7 +6,10 @@ const productDescription = (
     error: null,
     loading: false,
     productDetails: null,
-    sizeGuide: null,
+    sizeGuide: {
+      loading: false,
+      sizeGuideList: []
+    },
     emiResult: null,
     wishList: null,
     reviews: {},
@@ -18,6 +21,7 @@ const productDescription = (
   },
   action
 ) => {
+  let sizeGuide;
   switch (action.type) {
     case pdpActions.GET_EMI_TERMS_AND_CONDITIONS_FAILURE:
       return Object.assign({}, state, {
@@ -139,23 +143,33 @@ const productDescription = (
       });
 
     case pdpActions.PRODUCT_SIZE_GUIDE_REQUEST:
+      sizeGuide = {
+        loading: true,
+        data: null
+      };
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        sizeGuide
       });
 
     case pdpActions.PRODUCT_SIZE_GUIDE_SUCCESS:
+      sizeGuide = {
+        loading: false,
+        data: action.sizeGuide
+      };
       return Object.assign({}, state, {
         status: action.status,
-        sizeGuide: action.sizeGuide,
-        loading: false
+        sizeGuide
       });
 
     case pdpActions.PRODUCT_SIZE_GUIDE_FAILURE:
+      sizeGuide = {
+        loading: false,
+        error: action.error
+      };
       return Object.assign({}, state, {
         status: action.status,
-        error: action.error,
-        loading: false
+        sizeGuide
       });
 
     case pdpActions.PRODUCT_PDP_EMI_REQUEST:

@@ -221,6 +221,7 @@ export default class PdpElectronics extends React.Component {
                   onClick={() => this.renderAddressModal()}
                   deliveryOptions={DELIVERY_TEXT}
                   label={PIN_CODE}
+                  showCliqAndPiqButton={false}
                 />
               );
             })}

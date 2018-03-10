@@ -174,7 +174,9 @@ export default class PdpApparel extends React.Component {
                 getProductSpecification={this.props.getProductSpecification}
               />
               <SizeSelector
-                showSizeGuide={this.props.showSizeGuide}
+                showSizeGuide={
+                  productData.showSizeGuide ? this.props.showSizeGuide : null
+                }
                 data={productData.variantOptions.map(value => {
                   return value.sizelink;
                 })}
@@ -192,6 +194,7 @@ export default class PdpApparel extends React.Component {
                   onClick={() => this.renderAddressModal()}
                   deliveryOptions={DELIVERY_TEXT}
                   label={PIN_CODE}
+                  showCliqAndPiqButton={false}
                 />
               );
             })}
