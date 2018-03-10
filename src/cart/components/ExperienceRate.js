@@ -1,13 +1,11 @@
 import React from "react";
 import styles from "./ExperienceRate.css";
 import { Icon } from "xelpmoc-core";
-import badIcon from "./img/bad.svg";
-import activeBadIcon from "./img/Bad_Red.svg";
 import PropTypes from "prop-types";
 export default class ExperienceRate extends React.Component {
-  handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+  onSelect() {
+    if (this.props.selectItem) {
+      this.props.selectItem();
     }
   }
   render() {
@@ -17,13 +15,15 @@ export default class ExperienceRate extends React.Component {
       activeIcon = styles.active;
     }
     return (
-      <div className={styles.base}>
-        <div className={styles.iconHolder}>
-          <div className={hiddenIconM}>
-            <Icon image={this.props.defaultImage} size={36} />
-          </div>
-          <div className={activeIcon}>
-            <Icon image={this.props.activeImage} size={36} />
+      <div className={styles.base} onClick={() => this.onSelect()}>
+        <div className={styles.iconBox}>
+          <div className={styles.iconHolder}>
+            <div className={hiddenIconM}>
+              <Icon image={this.props.defaultImage} size={36} />
+            </div>
+            <div className={activeIcon}>
+              <Icon image={this.props.activeImage} size={36} />
+            </div>
           </div>
         </div>
       </div>

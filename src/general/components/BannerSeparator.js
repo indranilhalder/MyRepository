@@ -5,10 +5,15 @@ import PropTypes from "prop-types";
 import image from "./img/download.svg";
 export default class BannerSeparator extends React.Component {
   render() {
-    const feedComponentData = this.props.feedComponentData;
-
     return (
-      <div className={styles.base}>
+      <div
+        className={styles.base}
+        style={{
+          backgroundImage: `linear-gradient(165deg, ${
+            this.props.feedComponentData.startHexCode
+          } ,${this.props.feedComponentData.endHexCode})`
+        }}
+      >
         <div className={styles.downloadInnerBox}>
           <div className={styles.downloadIcon}>
             <Image

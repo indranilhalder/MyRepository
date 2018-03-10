@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 export default class CircleProductImage extends React.Component {
   handleClick() {
     if (this.props.onClick) {
-      this.props.onClick();
+      this.props.onClick(this.props.value);
     }
   }
   render() {
@@ -24,5 +24,6 @@ export default class CircleProductImage extends React.Component {
   }
 }
 CircleProductImage.propTypes = {
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  value: PropTypes.string
 };

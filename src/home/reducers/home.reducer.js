@@ -1,17 +1,19 @@
 import * as homeActions from "../actions/home.actions";
-import extend from "lodash/extend";
 import cloneDeep from "lodash/cloneDeep";
 import map from "lodash/map";
 import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
+
 const home = (
   state = {
-    homeFeed: [],
+    homeFeed: [], //array of objects
     status: null,
     error: null,
-    loading: false
+    loading: false,
+    msdIndex: 0
   },
   action
 ) => {
+  let homeFeedData;
   switch (action.type) {
     case homeActions.HOME_FEED_REQUEST:
       return Object.assign({}, state, {
@@ -20,9 +22,14 @@ const home = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      let homeFeedClonedData = cloneDeep(action.data);
-      let homeFeedData = map(homeFeedClonedData, subData => {
-        return extend({}, subData, { loading: false, data: {}, status: "" });
+      const homeFeedClonedData = cloneDeep(action.data);
+      homeFeedData = map(homeFeedClonedData, subData => {
+        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+        return {
+          ...subData[subData.componentName],
+          loading: false,
+          status: ""
+        };
       });
 
       return Object.assign({}, state, {
@@ -75,11 +82,38 @@ const home = (
         homeFeed: homeFeedData
       });
 
+    case homeActions.GET_ITEMS_SUCCESS:
+      homeFeedData = cloneDeep(state.homeFeed);
+      homeFeedData[action.positionInFeed].items = action.items;
+      return Object.assign({}, state, {
+        homeFeed: homeFeedData,
+        status: action.status
+      });
+
     case homeActions.COMPONENT_DATA_SUCCESS:
       homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].data = action.data;
+      let componentData;
+      componentData = {
+        loading: false,
+        status: action.status
+      };
+      let toUpdate;
+      if (!action.isMsd) {
+        toUpdate = action.data[action.data.componentName];
+        componentData = {
+          ...homeFeedData[action.positionInFeed],
+          ...toUpdate,
+          ...componentData
+        };
+      } else {
+        componentData = {
+          ...homeFeedData[action.positionInFeed],
+          data: action.data,
+          ...componentData
+        };
+      }
 
-      homeFeedData[action.positionInFeed].loading = false;
+      homeFeedData[action.positionInFeed] = componentData;
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData

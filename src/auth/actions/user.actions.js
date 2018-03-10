@@ -171,17 +171,21 @@ export function signUpUserFailure(error) {
 
 export function signUpUser(userObj) {
   let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
-
   return async (dispatch, getState, { api }) => {
     dispatch(signUpUserRequest());
     try {
-      const result = await api.post(
+      let suffix = "";
+      if (userObj.emailId) {
+        suffix = `&emailId=${userObj.emailId}`;
+      }
+      let result = await api.post(
         `${SIGN_UP}?access_token=${
           JSON.parse(globalCookie).access_token
-        }&isPwa=true&username=${userObj.loginId}&password=${
+        }&isPwa=true&username=${userObj.username}&password=${
           userObj.password
-        }&platformNumber=${PLATFORM_NUMBER}`
+        }&platformNumber=${PLATFORM_NUMBER}${suffix}`
       );
+
       const resultJson = await result.json();
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
@@ -224,7 +228,7 @@ export function otpVerification(otpDetails, userDetails) {
         `${OTP_VERIFICATION_PATH}?access_token=${
           JSON.parse(globalCookie).access_token
         }&otp=${otpDetails}&isPwa=true&platformNumber=${PLATFORM_NUMBER}&username=${
-          userDetails.loginId
+          userDetails.username
         }&password=${userDetails.password}`
       );
       const resultJson = await result.json();
@@ -233,6 +237,7 @@ export function otpVerification(otpDetails, userDetails) {
       }
       dispatch(hideModal());
       dispatch(otpVerificationSuccess(resultJson));
+      dispatch(customerAccessToken(userDetails));
     } catch (e) {
       dispatch(otpVerificationFailure(e.message));
     }
@@ -398,7 +403,7 @@ export function getGlobalAccessToken() {
       if (resultJson.status === FAILURE) {
         throw new Error(`${resultJson.message}`);
       }
-      // TODO: dispatch a modal here
+
       dispatch(globalAccessTokenSuccess(resultJson));
     } catch (e) {
       dispatch(globalAccessTokenFailure(e.message));
@@ -484,8 +489,9 @@ export function customerAccessToken(userDetails) {
         }`
       );
       const resultJson = await result.json();
-      if (resultJson.status === FAILURE) {
-        throw new Error(`${resultJson.message}`);
+
+      if (resultJson.errors) {
+        throw new Error(`${resultJson.errors[0].message}`);
       }
       // TODO: dispatch a modal here
       dispatch(customerAccessTokenSuccess(resultJson));

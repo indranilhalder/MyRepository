@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import MDSpinner from "react-md-spinner";
 import Plp from "./Plp";
 class ProductListingsPage extends Component {
-  componentWillMount() {
-    this.props.getProductListings();
-  }
-
   renderLoader() {
     return (
       <div>
@@ -13,9 +9,8 @@ class ProductListingsPage extends Component {
       </div>
     );
   }
-
   render() {
-    if (this.props.loading) {
+    if (this.props.loading && this.props.pageNumber === 0) {
       return this.renderLoader();
     } else if (this.props.productListings !== null) {
       return (

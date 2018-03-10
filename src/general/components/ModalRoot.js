@@ -9,6 +9,8 @@ import AddressModal from "../../plp/components/AddressModal";
 import SizeGuideModal from "../../pdp/components/SizeGuideModal";
 import EmiModal from "../../pdp/containers/EmiListContainer";
 import ProductCouponDetails from "../../pdp/components/ProductCouponDetails.js";
+import BankOffersDetails from "../../cart/components/BankOffersDetails.js";
+
 const modalRoot = document.getElementById("modal-root");
 export default class ModalRoot extends React.Component {
   constructor(props) {
@@ -52,6 +54,22 @@ export default class ModalRoot extends React.Component {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
+
+  applyBankOffer = couponCode => {
+    this.props.applyBankOffer(couponCode);
+  };
+  releaseBankOffer = couponCode => {
+    this.props.releaseBankOffer(couponCode);
+  };
+
+  applyUserCoupon = couponCode => {
+    this.props.applyUserCoupon(couponCode);
+  };
+
+  releaseUserCoupon = couponCode => {
+    this.props.releaseUserCoupon(couponCode);
+  };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -88,6 +106,16 @@ export default class ModalRoot extends React.Component {
       Coupons: (
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
+          applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
+          releaseUserCoupon={couponCode => this.releaseUserCoupon(couponCode)}
+          {...this.props.ownProps}
+        />
+      ),
+      BankOffers: (
+        <BankOffersDetails
+          closeModal={() => this.handleClose()}
+          applyBankOffer={couponCode => this.applyBankOffer(couponCode)}
+          releaseBankOffer={couponCode => this.releaseBankOffer(couponCode)}
           {...this.props.ownProps}
         />
       ),
@@ -96,7 +124,6 @@ export default class ModalRoot extends React.Component {
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
-
     const Modal = this.props.modalStatus ? (
       <ModalPanel
         closeModal={() => {

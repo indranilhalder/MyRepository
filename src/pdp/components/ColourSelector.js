@@ -1,37 +1,29 @@
 import React from "react";
 import styles from "./ColourSelector.css";
 import ColourSelect from "./ColourSelect";
-import CarouselWithSelect from "../../general/components/CarouselWithSelect";
+import Carousel from "../../general/components/Carousel";
 import PropTypes from "prop-types";
-import { PRODUCT_DESCRIPTION_ROUTER } from "../../lib/constants";
 export default class ColourSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayColour: this.props.selected[0]
+      displayColour: this.props.selected ? this.props.selected[0] : [""]
     };
   }
-  updateColour(val, productCode) {
-    this.setState({ displayColour: val }, () => {
-      if (this.props.updateColour) {
-        this.props.updateColour(this.state.displayColour);
-        this.props.getProductSpecification(productCode);
-      }
-    });
-    this.props.history.push(`${PRODUCT_DESCRIPTION_ROUTER}/${productCode}`);
+  updateColour(productUrl) {
+    this.props.history.push(productUrl);
   }
   render() {
     let data = this.props.data;
 
     return (
       <div className={styles.base}>
-        <CarouselWithSelect
-          elementWidthMobile={19}
+        <Carousel
+          elementWidthMobile={22}
           limit={1}
-          selected={this.props.selected}
           headerComponent={
             <div className={styles.header}>
-              Colour -{" "}
+              Colour{" "}
               <span className={styles.colourName}>
                 {this.state.displayColour}
               </span>
@@ -42,15 +34,14 @@ export default class ColourSelector extends React.Component {
             return (
               <ColourSelect
                 key={i}
-                colour={datum.hexCode}
+                colour={datum.colorHexCode}
                 value={datum.color}
-                onSelect={val =>
-                  this.updateColour(val, datum.sizelink[0].productCode)
-                }
+                selected={datum.selected}
+                onSelect={() => this.updateColour(datum.colorurl)}
               />
             );
           })}
-        </CarouselWithSelect>
+        </Carousel>
       </div>
     );
   }

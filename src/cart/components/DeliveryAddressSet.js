@@ -4,8 +4,8 @@ import DeliveryCard from "./DeliveryCard.js";
 import styles from "./DeliveryAddressSet.css";
 export default class DeliveryAddressSet extends React.Component {
   handleClick() {
-    if (this.props.onClick) {
-      this.props.onClick();
+    if (this.props.changeDeliveryAddress) {
+      this.props.changeDeliveryAddress();
     }
   }
   render() {

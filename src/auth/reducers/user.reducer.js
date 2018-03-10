@@ -299,6 +299,7 @@ const user = (
       });
 
     case userActions.REFRESH_TOKEN_FAILURE:
+      localStorage.removeItem(REFRESH_TOKEN);
       return Object.assign({}, state, {
         status: action.status,
         loading: false,

@@ -17,7 +17,7 @@ import * as Cookie from "../../lib/Cookie";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
@@ -28,9 +28,10 @@ import {
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
+const PRODUCT_CODE_FOR_HOME = "mp000000000169248";
 class ProductDescriptionPage extends Component {
   componentWillMount() {
-    this.props.getProductDescription();
+    this.props.getProductDescription(PRODUCT_CODE_FOR_HOME);
     this.props.getProductSizeGuide();
     this.props.getPdpEmi();
     this.props.getProductWishList();
@@ -56,7 +57,15 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_REVIEW_ROUTER);
   };
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
   showEmiModal = () => {
     if (this.props.showEmiPlans) {
@@ -112,9 +121,7 @@ class ProductDescriptionPage extends Component {
   render() {
     if (this.props.productDetails) {
       const productData = this.props.productDetails;
-      const mobileGalleryImages = productData.galleryImagesList.filter(val => {
-        return val.imageType === MOBILE_PDP_VIEW;
-      })[0].galleryImages;
+      const mobileGalleryImages = productData.galleryImagesList;
       return (
         <PdpFrame
           addProductToBag={() => this.addProductToBag()}
@@ -135,10 +142,10 @@ class ProductDescriptionPage extends Component {
             </ProductGalleryMobile>
             <div className={styles.content}>
               <ProductDetailsMainCard
-                productName={productData.productBrandInfo.brandName}
+                productName={productData.brandName}
                 productDescription={productData.productName}
-                price={productData.mrpPrice.formattedValue}
-                discountPrice={productData.discountedPrice.formattedValue}
+                price={productData.mrp}
+                discountPrice={productData.discount}
                 averageRating={productData.averageRating}
               />
             </div>
