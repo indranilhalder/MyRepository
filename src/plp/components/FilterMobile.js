@@ -21,6 +21,21 @@ export default class FilterMobile extends React.Component {
   selectCategories() {
     this.setState({ showCategory: true });
   }
+
+  onL1Click = val => {
+    console.log("L1 CLICk");
+    console.log(val);
+  };
+
+  onL2Click = val => {
+    console.log("ON L2 CLICK");
+    console.log(val);
+  };
+
+  onL3Click = val => {
+    console.log("ON L3 CLICK");
+    console.log(val);
+  };
   render() {
     //console.log(facetData);
     console.log(facetdatacategory);
@@ -57,13 +72,18 @@ export default class FilterMobile extends React.Component {
           <div className={styles.slider}>
             {this.state.showCategory &&
               facetdatacategory.filters.map((val, i) => {
-                console.log(val);
                 return (
                   <FilterCategoryL1
                     name={val.categoryName}
                     count={val.quantity}
+                    value={val.categoryCode}
+                    onClick={this.onL1Click}
                   >
-                    <FilterCategory categoryTypeList={val.childFilters} />
+                    <FilterCategory
+                      onClick={this.onL2Click}
+                      onL3Click={this.onL3Click}
+                      categoryTypeList={val.childFilters}
+                    />
                   </FilterCategoryL1>
                 );
               })}

@@ -6,24 +6,25 @@ import PropTypes from "prop-types";
 import styles from "./FilterCategory.css";
 export default class FilterCategory extends Component {
   render() {
-    console.log(this.props);
+    console.log("IN FILTER CATEGORY");
     return (
       <div className={styles.base}>
         {this.props.categoryTypeList.map((val, i) => {
-          console.log(val);
           return (
             <FilterCategoryDetails
               category={val.categoryName}
               categoryCount={val.quantity}
               key={i}
+              value={val.categoryCode}
+              onClick={this.props.onClick}
             >
               {val.childFilters.map((data, i) => {
-                console.log(data);
                 return (
                   <FilterCategorySubList
                     subListItem={data.categoryName}
                     key={i}
-                    value={i}
+                    value={data.categoryCode}
+                    onClick={this.props.onL3Click}
                     subListCount={data.subListCount}
                   />
                 );

@@ -10,7 +10,14 @@ export default class FilterCategoryL1 extends React.Component {
   }
   toggleOpen() {
     this.setState({ isOpen: !this.state.isOpen });
+    this.onClick();
   }
+
+  onClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick(this.props.value);
+    }
+  };
   render() {
     return (
       <div className={styles.base}>
