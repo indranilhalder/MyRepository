@@ -9,6 +9,8 @@ import HeroBanner from "./HeroBanner.js";
 import FollowBase from "./FollowBase.js";
 import ConnectWidget from "./ConnectWidget";
 import BannerSeparator from "../../general/components/BannerSeparator.js";
+import MobileFooter from "../../general/components/MobileFooter.js";
+
 import SingleQuestionContainer from "../containers/SingleQuestionContainer.js";
 import DiscoverMoreCarousel from "./DiscoverMoreCarousel.js";
 import ProductCapsules from "./ProductCapsules.js";
@@ -106,12 +108,14 @@ class Feed extends Component {
     }
   }
   render() {
+    console.log(this.props);
     if (this.props.loading) {
       return this.renderLoader();
     }
     return (
       <div className={styles.base}>
         <div className={styles.center}>{this.renderFeedComponents()}</div>
+        <MobileFooter history={this.props.history} />
       </div>
     );
   }

@@ -3,20 +3,14 @@ import PropTypes from "prop-types";
 import styles from "./MobileFooterItem.css";
 import { Icon } from "xelpmoc-core";
 export default class MobileFooterItem extends React.Component {
-  handleSelect(val) {
+  handleSelect() {
     if (this.props.onSelect) {
-      this.props.onSelect(val);
+      this.props.onSelect();
     }
   }
   render() {
-    console.log(this.props.selected);
-    console.log(this.props.value);
-    console.log(this.props.selected === this.props.value);
     return (
-      <div
-        className={styles.base}
-        onClick={() => this.onSelect(this.props.value)}
-      >
+      <div className={styles.base} onClick={() => this.handleSelect()}>
         <div
           className={
             this.props.selected !== this.props.value

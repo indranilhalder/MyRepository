@@ -12,8 +12,17 @@ import categoriesIconRed from "./img/categories_icon_red.png";
 import brandsIconRed from "./img/brands_icon_red.png";
 import userIconRed from "./img/myCliq_icon_red.png";
 import myBagIconRed from "./img/myBag_icon_red.png";
-
+import {
+  HOME_ROUTER,
+  PRODUCT_CART_ROUTER,
+  BRANDS_LANDING_PAGE
+} from "../../../src/lib/constants";
+//this.props.history.push(HOME_ROUTER);
 export default class MobileFooter extends React.Component {
+  handleSelect(val) {
+    console.log(val);
+    this.props.history.push(val);
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -23,7 +32,7 @@ export default class MobileFooter extends React.Component {
           value="home"
           text="Home"
           selected={this.props.selected}
-          onSelect={val => this.handleSelect(val)}
+          onSelect={() => this.handleSelect(HOME_ROUTER)}
         />
         <MobileFooterItem
           activeIcon={categoriesIconRed}
@@ -31,7 +40,7 @@ export default class MobileFooter extends React.Component {
           value="categories"
           text="Categories"
           selected={this.props.selected}
-          onSelect={val => this.handleSelect(val)}
+          onSelect={() => this.handleSelect(HOME_ROUTER)}
         />
         <MobileFooterItem
           activeIcon={brandsIconRed}
@@ -39,7 +48,7 @@ export default class MobileFooter extends React.Component {
           value="brands"
           text="Brands"
           selected={this.props.selected}
-          onSelect={val => this.handleSelect(val)}
+          onSelect={() => this.handleSelect(BRANDS_LANDING_PAGE)}
         />
         <MobileFooterItem
           activeIcon={userIconRed}
@@ -47,7 +56,7 @@ export default class MobileFooter extends React.Component {
           value="profile"
           text="My Cliq"
           selected={this.props.selected}
-          onSelect={val => this.handleSelect(val)}
+          onSelect={() => this.handleSelect(HOME_ROUTER)}
         />
         <MobileFooterItem
           activeIcon={myBagIconRed}
@@ -55,7 +64,7 @@ export default class MobileFooter extends React.Component {
           value="bag"
           text="My Bag"
           selected={this.props.selected}
-          onSelect={val => this.handleSelect(val)}
+          onSelect={val => this.handleSelect(PRODUCT_CART_ROUTER)}
         />
       </div>
     );

@@ -40,6 +40,7 @@ export const ORDER_SUMMARY_ROUTER = "/orderSummary";
 export const CHECKOUT_ROUTER = "/checkout";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
+export const BRANDS_LANDING_PAGE = "/brandsLanding";
 export const PRICE_TEXT = "Price";
 export const OFFER_AVAILABLE = "Offer Available";
 export const EMI_AVAILABLE = "EMI Available";
