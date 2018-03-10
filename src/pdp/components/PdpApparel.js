@@ -216,15 +216,13 @@ export default class PdpApparel extends React.Component {
               <ProductDetails data={productData.details} />
             </div>
           )}
-          {productData.numberOfReviews > 0 && (
-            <div className={styles.separator}>
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            </div>
-          )}
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />
