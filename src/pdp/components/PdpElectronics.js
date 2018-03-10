@@ -21,14 +21,15 @@ import * as Cookie from "../../lib/Cookie";
 import { transformData } from "../../home/components/utils.js";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
-  PRODUCT_CART_ROUTER
+  PRODUCT_CART_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
@@ -46,7 +47,15 @@ export default class PdpElectronics extends React.Component {
   };
 
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
 
   goToCart = () => {
@@ -85,6 +94,11 @@ export default class PdpElectronics extends React.Component {
         productDetails
       );
     }
+  };
+
+  goToReviewPage = () => {
+    const url = `${this.props.location.pathname}${PRODUCT_REVIEWS_PATH_SUFFIX}`;
+    this.props.history.push(url);
   };
 
   addToWishList = () => {
@@ -218,6 +232,7 @@ export default class PdpElectronics extends React.Component {
                   onClick={() => this.renderAddressModal()}
                   deliveryOptions={DELIVERY_TEXT}
                   label={PIN_CODE}
+                  showCliqAndPiqButton={false}
                 />
               );
             })}
@@ -233,15 +248,13 @@ export default class PdpElectronics extends React.Component {
               <ProductDetails data={productData.details} />
             </div>
           )}
-          {productData.numberOfReviews > 0 && (
-            <div className={styles.separator}>
-              <RatingAndTextLink
-                onClick={this.goToReviewPage}
-                averageRating={productData.averageRating}
-                numberOfReview={productData.numberOfReviews}
-              />
-            </div>
-          )}
+          <div className={styles.separator}>
+            <RatingAndTextLink
+              onClick={this.goToReviewPage}
+              averageRating={productData.averageRating}
+              numberOfReview={productData.numberOfReviews}
+            />
+          </div>
           {productData.classifications && (
             <div className={styles.details}>
               <ProductFeatures features={productData.classifications} />

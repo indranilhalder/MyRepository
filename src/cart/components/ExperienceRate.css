@@ -1,8 +1,8 @@
 .base {
-  width: 36px;
-  height: 36px;
-  display: inline-block;
-  margin-right: 20px;
+  width:20%;
+  height:auto;
+  display:inline-block;
+  text-align:center;
 }
 .iconHolder {
   width: 36px;
@@ -18,7 +18,11 @@
   left: 0;
   opacity: 0;
 }
-
+.iconBox{
+  width: 36px;
+  height: 36px;
+  display: inline-block;
+}
 .active {
   composes: hiddenIcon;
   opacity: 1;

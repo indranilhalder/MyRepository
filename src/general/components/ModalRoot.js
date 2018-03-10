@@ -54,6 +54,22 @@ export default class ModalRoot extends React.Component {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
     this.props.hideModal();
   }
+
+  applyBankOffer = couponCode => {
+    this.props.applyBankOffer(couponCode);
+  };
+  releaseBankOffer = couponCode => {
+    this.props.releaseBankOffer(couponCode);
+  };
+
+  applyUserCoupon = couponCode => {
+    this.props.applyUserCoupon(couponCode);
+  };
+
+  releaseUserCoupon = couponCode => {
+    this.props.releaseUserCoupon(couponCode);
+  };
+
   render() {
     const MODAL_COMPONENTS = {
       RestorePassword: (
@@ -90,6 +106,8 @@ export default class ModalRoot extends React.Component {
       Coupons: (
         <ProductCouponDetails
           closeModal={() => this.handleClose()}
+          applyUserCoupon={couponCode => this.applyUserCoupon(couponCode)}
+          releaseUserCoupon={couponCode => this.releaseUserCoupon(couponCode)}
           {...this.props.ownProps}
         />
       ),
@@ -106,7 +124,6 @@ export default class ModalRoot extends React.Component {
     };
 
     let SelectedModal = MODAL_COMPONENTS[this.props.modalType];
-
     const Modal = this.props.modalStatus ? (
       <ModalPanel
         closeModal={() => {

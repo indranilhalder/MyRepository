@@ -9,8 +9,8 @@ import {
   selectDeliveryMode,
   getOrderSummary,
   getCoupons,
-  applyCoupon,
-  releaseCoupon,
+  applyUserCoupon,
+  releaseUserCoupon,
   getAllStoresCNC,
   addStoreCNC,
   addPickupPersonCNC,
@@ -58,11 +58,11 @@ const mapDispatchToProps = dispatch => {
     getCoupons: () => {
       dispatch(getCoupons());
     },
-    applyCoupon: () => {
-      dispatch(applyCoupon());
+    applyUserCoupon: () => {
+      dispatch(applyUserCoupon());
     },
-    releaseCoupon: () => {
-      dispatch(releaseCoupon());
+    releaseUserCoupon: () => {
+      dispatch(releaseUserCoupon());
     },
     selectDeliveryMode: (deliveryUssId, pinCode) => {
       dispatch(selectDeliveryMode(deliveryUssId, pinCode));

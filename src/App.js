@@ -25,12 +25,11 @@ import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
   MAIN_ROUTER,
-  PRODUCT_REVIEW_ROUTER,
   LOGIN_PATH,
   SIGN_UP_PATH,
   PRODUCT_DELIVERY_ADDRESSES,
   PRODUCT_FILTER_ROUTER,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_REVIEWS_PATH_SUFFIX,
   PRODUCT_CART_ROUTER,
   GLOBAL_ACCESS_TOKEN,
   CUSTOMER_ACCESS_TOKEN,
@@ -46,7 +45,10 @@ import {
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   PLP_CATEGORY_SEARCH,
-  BRAND_LANDING_PAGE
+  BRAND_LANDING_PAGE,
+  PRODUCT_DESCRIPTION_REVIEWS,
+  PRODUCT_SELLER_ROUTER,
+  PRODUCT_OTHER_SELLER_ROUTER
 } from "../src/lib/constants";
 import PlpBrandCategoryWrapper from "./plp/components/PlpBrandCategoryWrapper";
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -149,7 +151,17 @@ class App extends Component {
             path={SEARCH_RESULTS_PAGE}
             component={PlpBrandCategoryWrapperContainer}
           />
+
           <Route
+            path={PRODUCT_DESCRIPTION_REVIEWS}
+            component={ProductReviewContainer}
+          />
+          <Route
+            path={PRODUCT_OTHER_SELLER_ROUTER}
+            component={ProductSellerContainer}
+          />
+          <Route
+            exact
             path={PRODUCT_DESCRIPTION_PRODUCT_CODE}
             component={ProductDescriptionPageWrapperContainer}
           />
@@ -179,19 +191,8 @@ class App extends Component {
 
           <Route
             exact
-            path={PRODUCT_REVIEW_ROUTER}
-            component={ProductReviewContainer}
-          />
-
-          <Route
-            exact
             path={PRODUCT_FILTER_ROUTER}
             component={FilterContainer}
-          />
-          <Route
-            exact
-            path={PRODUCT_SELLER_ROUTER}
-            component={ProductSellerContainer}
           />
           <Route
             exact
