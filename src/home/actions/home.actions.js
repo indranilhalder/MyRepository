@@ -3,8 +3,8 @@ import {
   REQUESTING,
   ERROR,
   FAILURE,
-  GET_FEED_DATA_FOR_BLP,
-  GET_FEED_DATA_FOR_CLP
+  BLP_OR_CLP_FEED_TYPE,
+  HOME_FEED_TYPE
 } from "../../lib/constants";
 import each from "lodash/each";
 import {
@@ -186,16 +186,15 @@ export function homeFeed(feedType: null) {
       let url, result, feedTypeRequest;
       if (feedType) {
         result = await api.get(`v2/mpl/cms/defaultpage?pageId=${feedType}`);
-        feedTypeRequest = "blp";
+        feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
       } else {
         url = ADOBE_TARGET_HOME_FEED_MBOX_NAME;
         result = await api.postAdobeTargetUrl(null, url, null, null, true);
-        feedTypeRequest = "home";
+        feedTypeRequest = HOME_FEED_TYPE;
       }
 
       //TODO this needs to be cleaned up.
       const resultJson = await result.json();
-      console.log(resultJson);
       if (resultJson.errors) {
         dispatch(homeFeedSuccess([], feedTypeRequest));
       } else {

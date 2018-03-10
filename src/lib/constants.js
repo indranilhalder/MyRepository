@@ -53,5 +53,5 @@ export const LOGGED_IN_USER_DETAILS = "userDetails";
 export const ANONYMOUS_USER = "anonymous";
 
 // fetching feed information contant
-export const GET_FEED_DATA_FOR_BLP = "getFeedDataForBLP";
-export const GET_FEED_DATA_FOR_CLP = "getFeedDateForCLP";
+export const BLP_OR_CLP_FEED_TYPE = "blpOrClp";
+export const HOME_FEED_TYPE = "home";

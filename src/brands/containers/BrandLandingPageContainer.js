@@ -1,14 +1,7 @@
 import Feed from "../../home/components/Feed";
 import { homeFeed } from "../../home/actions/home.actions";
 import { connect } from "react-redux";
-import { GET_FEED_DATA_FOR_BLP } from "../../lib/constants";
-const mapDispatchToProps = dispatch => {
-  return {
-    homeFeed: () => {
-      dispatch(homeFeed(GET_FEED_DATA_FOR_BLP));
-    }
-  };
-};
+
 const mapStateToProps = state => {
   return {
     homeFeedData: state.home.homeFeed,
@@ -16,7 +9,5 @@ const mapStateToProps = state => {
     isOnBrandLandingPage: true
   };
 };
-const BrandLandingPageContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Feed
-);
+const BrandLandingPageContainer = connect(mapStateToProps)(Feed);
 export default BrandLandingPageContainer;

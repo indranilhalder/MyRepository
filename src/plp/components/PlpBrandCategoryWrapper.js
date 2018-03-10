@@ -4,7 +4,7 @@ import BrandLandingPageContainer from "../../brands/containers/BrandLandingPageC
 import throttle from "lodash/throttle";
 import queryString from "query-string";
 import MDSpinner from "react-md-spinner";
-
+import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
 const CATEGORY_REGEX = /c-msh*/;
 const BRAND_REGEX = /c-mbh*/;
 const CAPTURE_REGEX = /c-(.*)/;
@@ -48,13 +48,13 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
-    let pageType = this.state.pageType.split("/")[2];
-    this.props.homeFeed(pageType);
+    let productId = this.props.location.pathname.match(CAPTURE_REGEX)[1];
+    this.props.homeFeed(productId);
   }
 
   componentDidUpdate() {
     if (
-      this.props.homeFeedData.feedType === "blp" &&
+      this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
       this.props.homeFeedData.homeFeed.length === 0 &&
       this.props.productListings === null
     ) {
@@ -96,14 +96,13 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     if (this.props.homeFeedData.loading) {
       return this.renderLoader();
     }
-
     let isFilter = false;
     if (this.props.location.state) {
       isFilter = this.props.location.state.isFilter
         ? this.props.location.state.isFilter
         : false;
     }
-    return this.props.homeFeedData.feedType === "blp" &&
+    return this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
       this.props.homeFeedData.homeFeed.length > 0 ? (
       <BrandLandingPageContainer />
     ) : (
