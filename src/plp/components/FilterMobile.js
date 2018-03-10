@@ -26,6 +26,15 @@ export default class FilterMobile extends React.Component {
     this.setState({ showCategory: true });
   }
 
+  onApply = () => {
+    const pathName = this.props.location.pathname;
+    const search = this.props.location.search;
+    const url = `${pathName}${search}`;
+    this.props.history.push(url, {
+      isFilter: false
+    });
+  };
+
   onCategorySelect = (val, disableSerpSearch) => {
     const parsedQueryString = queryString.parse(this.props.location.search);
     let query = parsedQueryString.q;
@@ -130,6 +139,21 @@ export default class FilterMobile extends React.Component {
                 )}
               </React.Fragment>
             )}
+          </div>
+        </div>
+        <div className={styles.footer}>
+          <div className={styles.buttonHolder}>
+            <div className={styles.button} onClick={this.onClear}>
+              Clear
+            </div>
+          </div>
+          <div className={styles.buttonHolder}>
+            <div
+              className={styles.redButton}
+              onClick={() => this.onApply(this.state.selected)}
+            >
+              Apply
+            </div>
           </div>
         </div>
       </div>
