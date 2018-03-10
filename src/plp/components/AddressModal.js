@@ -3,11 +3,6 @@ import AddressCarousel from "./AddressCarousel";
 import BottomSlideModal from "../../general/components/BottomSlideModal";
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import PropTypes from "prop-types";
-import {
-  GLOBAL_ACCESS_TOKEN,
-  CUSTOMER_ACCESS_TOKEN
-} from "../../lib/constants";
-import * as Cookie from "../../lib/Cookie";
 import styles from "./AddressModal.css";
 
 export default class AddressModal extends React.Component {
