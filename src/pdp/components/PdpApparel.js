@@ -114,6 +114,8 @@ export default class PdpApparel extends React.Component {
 
   render() {
     const productData = this.props.productDetails;
+    console.log("PRODUCT DATA");
+    console.log(productData);
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
         return galleryImageList.galleryImages.filter(galleryImages => {
@@ -143,6 +145,7 @@ export default class PdpApparel extends React.Component {
               price={productData.mrp}
               discountPrice={productData.winningSellerMOP}
               averageRating={productData.averageRating}
+              onClick={this.goToReviewPage}
             />
           </div>
           {productData.emiInfo && (

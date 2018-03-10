@@ -9,6 +9,8 @@ const modal = (
 ) => {
   switch (action.type) {
     case modalActions.SHOW_MODAL:
+      console.log("SHOW MODAL");
+      console.log(action.modalType);
       return Object.assign({}, state, {
         modalDisplayed: true,
         modalType: action.modalType,

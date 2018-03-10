@@ -89,13 +89,13 @@ class SignUp extends Component {
       footerClick = () => this.navigateToLogin();
       showSocialButtons = true;
     }
-    if (this.props.user.loading) {
-      return (
-        <div className={styles.loadingIndicator}>
-          <MDSpinner />
-        </div>
-      );
-    }
+    // if (this.props.user.loading) {
+    //   return (
+    //     <div className={styles.loadingIndicator}>
+    //       <MDSpinner />
+    //     </div>
+    //   );
+    // }
     return (
       <AuthFrame
         {...this.props}
