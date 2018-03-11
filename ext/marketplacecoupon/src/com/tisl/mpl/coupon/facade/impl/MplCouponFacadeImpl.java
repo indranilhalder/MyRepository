@@ -2181,14 +2181,45 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public void getDisplayCouponList(final String cartGuid, final CustomerModel currentCustomer)
 	{
-		if (StringUtils.isNotEmpty(cartGuid))
+		List<VoucherData> closedVoucherDataList = null;
+		List<VoucherData> openVoucherDataList = null;
+		try
 		{
-			//
+			final List<VoucherModel> closedVoucherList = mplCouponService.getClosedVoucherList(currentCustomer);
+			if (CollectionUtils.isNotEmpty(closedVoucherList))
+			{
+				closedVoucherDataList = new ArrayList<>();
+				for (final VoucherModel oModel : closedVoucherList)
+				{
+					final VoucherData voucherData = getVoucherConverter().convert(oModel);
+					closedVoucherDataList.add(voucherData);
+				}
+			}
+
 		}
-		else
+		catch (final Exception exception)
 		{
-			//
+			LOG.error("Error during Closed Voucher Fetch", exception);
 		}
+
+		try
+		{
+			final List<VoucherModel> openVoucherList = mplCouponService.getOpenVoucherList();
+			if (CollectionUtils.isNotEmpty(openVoucherList))
+			{
+				openVoucherDataList = new ArrayList<>();
+				for (final VoucherModel oModel : openVoucherList)
+				{
+					final VoucherData voucherData = getVoucherConverter().convert(oModel);
+					openVoucherDataList.add(voucherData);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Open Voucher Fetch", exception);
+		}
+
 
 	}
 

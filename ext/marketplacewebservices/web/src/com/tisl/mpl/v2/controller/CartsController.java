@@ -5012,11 +5012,8 @@ public class CartsController extends BaseCommerceController
 		}
 		else
 		{
-			//
+			mplCouponFacade.getDisplayCouponList(MarketplacecommerceservicesConstants.EMPTY, currentCustomer);
 		}
-
-
-
 
 	}
 

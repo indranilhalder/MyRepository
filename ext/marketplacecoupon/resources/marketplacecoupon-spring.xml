@@ -99,5 +99,15 @@
 	<bean id="mplDefaultVoucherService" class="com.tisl.mpl.coupon.service.impl.MplDefaultVoucherService" parent="defaultVoucherService"
 		scope="tenant">
 	</bean>	 -->	
+	
+	<bean id="mplUserRestrictionInterceptor" class="com.tisl.mpl.interceptor.MplUserRestrictionInterceptor">
+		<property name="modelService" ref="modelService" />
+	</bean>
+
+	<bean id="mplUserRestrictionInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="mplUserRestrictionInterceptor" />
+		<property name="typeCode" value="UserRestriction" />
+	</bean>
 
 </beans>

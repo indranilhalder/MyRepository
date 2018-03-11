@@ -431,6 +431,7 @@
 					<description>Determines if the Coupon is User Restricted</description>
 					<modifiers optional="true" />
 					<persistence type="property" />
+					<defaultvalue>false</defaultvalue>
 				</attribute>
 			</attributes>
 		</itemtype>

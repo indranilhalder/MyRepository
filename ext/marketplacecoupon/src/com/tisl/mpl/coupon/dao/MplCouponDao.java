@@ -62,4 +62,13 @@ public interface MplCouponDao
 	 */
 	String getVoucherCode(String manuallyselectedvoucher);
 
+	/**
+	 * @param currentCustomer
+	 * @return List<VoucherModel>
+	 */
+	List<VoucherModel> getClosedVoucherList(CustomerModel currentCustomer);
+
+
+	List<VoucherModel> getOpenVoucherList();
+
 }
