@@ -131,8 +131,14 @@
 									</c:choose>
 								</c:if>
 
-								<%-- <span class="viewCardTerms"><a href="#"><spring:theme
-											code="text.cliq.cash.payment.term.label" /> </a></span>  --%>
+								<span class="viewCardTerms"><spring:theme
+											code="text.cliq.cash.payment.term.label" /></span>
+											
+								<div id="QcTermsSection">
+									<div class="QcTermsSection-content">
+										<single-Checkout:qwikcilverTermAndCondition />
+									</div>
+								</div>
 							</div>
 							<br />
 							<spring:theme code="text.cliq.cash.payment.addcash.label"
@@ -2188,4 +2194,14 @@ function submitWalletData(){
 			}
 		}); 
 }
+
+//QC Terms and Conditions
+$('#QcTermsSection').hide();
+$('.viewCardTerms').on('click', function () {
+	$('#QcTermsSection').show();
+});
+
+$("#closeQcTermsPopup").on('click', function () {
+	$('#QcTermsSection').hide();
+});
 </script>
