@@ -49,7 +49,3 @@ export default class ProfileMenuGrid extends React.Component {
     );
   }
 }
-ProfileMenuGrid.propTypes = {
-  image: PropTypes.string,
-  text: PropTypes.string
-};
