@@ -117,7 +117,6 @@ class CartPage extends React.Component {
 
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
-                console.log(product);
                 return (
                   <div className={styles.cartItem} key={i}>
                     <CartItem

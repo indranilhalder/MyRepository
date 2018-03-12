@@ -25,7 +25,6 @@ export default class CheckoutCreditCard extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <ManueDetails text="Credit Card" icon={creditCardIcon}>
         <CreditCardForm

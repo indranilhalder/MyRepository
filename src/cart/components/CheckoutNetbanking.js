@@ -6,7 +6,6 @@ import ManueDetails from "../../general/components/MenuDetails.js";
 
 export default class CheckoutNetBanking extends React.Component {
   render() {
-    console.log(this.props.cart.netBankDetails.bankList);
     return (
       <ManueDetails text="Net banking" icon={netBankingIcon}>
         <NetBanking

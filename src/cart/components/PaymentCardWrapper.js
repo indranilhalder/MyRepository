@@ -21,7 +21,6 @@ export default class PaymentCardWrapper extends React.Component {
     this.state = {};
   }
   renderPaymentCard = datumType => {
-    console.log(datumType);
     return (
       <React.Fragment>
         {typeComponentMapping[datumType] &&

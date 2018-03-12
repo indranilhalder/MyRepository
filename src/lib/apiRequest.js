@@ -52,7 +52,6 @@ export async function postAdobeTargetUrl(
 }
 
 export async function post(path, postData, doNotUseApiRoot: false) {
-  console.log(JSON.stringify(postData));
   let url = `${API_URL_ROOT}/${path}`;
   if (doNotUseApiRoot) {
     url = path;
