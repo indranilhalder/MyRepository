@@ -188,7 +188,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -1975,7 +1975,10 @@ public class SearchSuggestUtilityMethods
 							{
 								facetValueWsDTO.setValue(values.getCode());
 							}
-
+							if (null != values.getQuery() && StringUtils.isNotEmpty(values.getQuery().getUrl()))
+							{
+								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
+							}
 							if (facate.getCode().equalsIgnoreCase("colour"))
 							{
 								//"#"+ st.substring(st.indexOf('_')+1)
@@ -2188,6 +2191,10 @@ public class SearchSuggestUtilityMethods
 							if (StringUtils.isNotEmpty(values.getCode()))
 							{
 								facetValueWsDTO.setValue(values.getCode());
+							}
+							if (null != values.getQuery() && StringUtils.isNotEmpty(values.getQuery().getUrl()))
+							{
+								facetValueWsDTO.setUrl(values.getQuery().getUrl().toString());
 							}
 
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
