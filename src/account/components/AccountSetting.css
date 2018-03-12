@@ -11,12 +11,12 @@
   position: relative;
   padding: 20px 115px 20px 70px;
 }
-.accountHolderLeft {
+.profileImageHolder {
   width: 100%;
   height: auto;
   display: inline-block;
 }
-.accountHolderRight {
+.buttonHolder {
   width: auto;
   height: 25px;
   display: inline-block;
@@ -42,11 +42,7 @@
   display: inline-block;
   padding: 0px 10px;
 }
-.buttonHolder {
-  width: 25%;
-  height: auto;
-  display: inline-block;
-}
+
 .accountInformation {
   width: 100%;
   height: auto;

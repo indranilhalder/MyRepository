@@ -13,13 +13,13 @@ export default class AccountSetting extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.accountHolder}>
-          <div className={styles.accountHolderLeft}>
+          <div className={styles.profileImageHolder}>
             <div className={styles.accountImage}>
               <ProfileImage image={this.props.image} />
             </div>
             <div className={styles.headingText}>{this.props.heading}</div>
           </div>
-          <div className={styles.accountHolderRight}>
+          <div className={styles.buttonHolder}>
             <div className={styles.button}>
               <UnderLinedButton
                 size="14px"
@@ -75,6 +75,5 @@ AccountSetting.propTypes = {
 };
 AccountSetting.defaultProps = {
   isDetails: false,
-
   label: "Account Settings"
 };
