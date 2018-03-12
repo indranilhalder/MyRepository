@@ -79,7 +79,6 @@ import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.cms.data.WalletCreateData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.MplCartOfferVoucherModel;
@@ -150,6 +149,7 @@ public class PaymentServicesController extends BaseController
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final String MPLCARTVOUCHER = "mplcartvoucher";
 	private static final String PROMOVOUCHER = "promovoucher";
+	private static final String DECIMAL_FORMAT = "0.00";
 
 	@Resource(name = "userService")
 	private UserService userService;
@@ -173,8 +173,8 @@ public class PaymentServicesController extends BaseController
 	@Resource(name = "mplDefaultPriceDataFactory")
 	private DefaultPriceDataFactory PriceDataFactory;
 
-	@Autowired
-	private MplEGVCartService mplEGVCartService;
+	//	@Autowired
+	//	private MplEGVCartService mplEGVCartService;
 
 	@Autowired
 	private NotificationFacade notificationFacade;
@@ -431,8 +431,8 @@ public class PaymentServicesController extends BaseController
 								final double payableamtWdDelCharge = amountInclDelCharge.getDoubleValue().doubleValue()
 										- delCharge.getDoubleValue().doubleValue();
 								final double discount = mrp.doubleValue() - payableamtWdDelCharge;
-								final PriceData totalDiscount = createPriceObj(Double.valueOf(discount).toString());
-								pricePwa.setTotalDiscountAmount(totalDiscount);
+								pricePwa.setTotalDiscountAmount(createPriceObj(Double.valueOf(discount).toString()));
+								//pricePwa.setTotalDiscountAmount(totalDiscount);
 								promoPriceData.setCartAmount(pricePwa);
 							}
 
@@ -456,7 +456,7 @@ public class PaymentServicesController extends BaseController
 								{
 									final Double amount = juspayAmount;
 									final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-									final String decimalFormat = "0.00";
+									final String decimalFormat = DECIMAL_FORMAT;
 									final DecimalFormat df = new DecimalFormat(decimalFormat);
 									final String totalPayableAmount = df.format(bigDecimal);
 									promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -471,7 +471,7 @@ public class PaymentServicesController extends BaseController
 
 							final Double amount = Double.valueOf(0.0D);
 							final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-							final String decimalFormat = "0.00";
+							final String decimalFormat = DECIMAL_FORMAT;
 							final DecimalFormat df = new DecimalFormat(decimalFormat);
 							final String totalPayableAmount = df.format(bigDecimal);
 							promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -484,7 +484,7 @@ public class PaymentServicesController extends BaseController
 							{
 								final Double amount = cart.getTotalPrice();
 								final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-								final String decimalFormat = "0.00";
+								final String decimalFormat = DECIMAL_FORMAT;
 								final DecimalFormat df = new DecimalFormat(decimalFormat);
 								final String totalPayableAmount = df.format(bigDecimal);
 								promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -557,7 +557,7 @@ public class PaymentServicesController extends BaseController
 						{
 							final Double amount = juspayAmount;
 							final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-							final String decimalFormat = "0.00";
+							final String decimalFormat = DECIMAL_FORMAT;
 							final DecimalFormat df = new DecimalFormat(decimalFormat);
 							final String totalPayableAmount = df.format(bigDecimal);
 							promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -572,7 +572,7 @@ public class PaymentServicesController extends BaseController
 					//	promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
 					final Double amount = Double.valueOf(0.0D);
 					final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-					final String decimalFormat = "0.00";
+					final String decimalFormat = DECIMAL_FORMAT;
 					final DecimalFormat df = new DecimalFormat(decimalFormat);
 					final String totalPayableAmount = df.format(bigDecimal);
 					promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -584,7 +584,7 @@ public class PaymentServicesController extends BaseController
 					{
 						final Double amount = orderModel.getTotalPrice();
 						final BigDecimal bigDecimal = new BigDecimal(amount.doubleValue());
-						final String decimalFormat = "0.00";
+						final String decimalFormat = DECIMAL_FORMAT;
 						final DecimalFormat df = new DecimalFormat(decimalFormat);
 						final String totalPayableAmount = df.format(bigDecimal);
 						promoPriceData.setPaybleAmount(totalPayableAmount);
@@ -696,7 +696,7 @@ public class PaymentServicesController extends BaseController
 			}
 		}
 		otherDiscount = totalDiscount + productDiscount - userCouponDiscount;
-		BigDecimal total = new BigDecimal(0.0D);
+		BigDecimal total = new BigDecimal(0);
 		final double remainingWalletAmount = cartModel.getTotalWalletAmount().doubleValue() - payableWalletAmount;
 		if (null != cartModel.getSubtotal())
 		{
@@ -1527,7 +1527,7 @@ public class PaymentServicesController extends BaseController
 		String statusResponse = "";
 		boolean alreadyProcessed = false;
 
-		//		// Buying Of EGV Changes Start 
+		//		// Buying Of EGV Changes Start
 		//		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
 		if (orderToBeUpdated != null && null != orderToBeUpdated.getIsEGVCart() && orderToBeUpdated.getIsEGVCart().booleanValue())
 		{
@@ -1561,7 +1561,7 @@ public class PaymentServicesController extends BaseController
 			return updateTransactionDetail;
 		}
 
-		// Buying Of EGV Changes End 
+		// Buying Of EGV Changes End
 
 		try
 		{
@@ -1868,7 +1868,7 @@ public class PaymentServicesController extends BaseController
 	}
 
 
-	// Buying Of EGV  Changes END 
+	// Buying Of EGV  Changes END
 
 	/**
 	 * @desc This method fetches delete the saved cards --TPR-629
@@ -2080,7 +2080,7 @@ public class PaymentServicesController extends BaseController
 							//							paymentModesData.setFirstName(customer.getQcVerifyFirstName());
 							//							paymentModesData.setLastName(customer.getQcVerifyLastName());
 							//							paymentModesData.setMobileNumber(customer.getMobileNumber());
-							final BigDecimal walletAmount = new BigDecimal(0.0D);
+							final BigDecimal walletAmount = new BigDecimal(0);
 							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
 									MarketplacecommerceservicesConstants.INR);
 

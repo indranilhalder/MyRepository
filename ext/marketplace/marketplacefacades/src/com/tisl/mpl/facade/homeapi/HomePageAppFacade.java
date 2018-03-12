@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.facade.homeapi;
 
-import com.tisl.mpl.wsdto.HomepageComponentRequestDTO;
 import com.tisl.mpl.wsdto.HomepageComponetsDTO;
 
 
@@ -19,7 +18,7 @@ public interface HomePageAppFacade
 	 * @param homepageComponentRequestDTO
 	 * @return
 	 */
-	public HomepageComponetsDTO gethomepageComponentsDTO(HomepageComponentRequestDTO homepageComponentRequestDTO);
+	public HomepageComponetsDTO gethomepageComponentsDTO(String productCodes);
 
 
 }

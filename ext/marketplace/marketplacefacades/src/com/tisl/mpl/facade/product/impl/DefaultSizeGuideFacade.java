@@ -168,120 +168,251 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 			/* TISMOBQ-42 */
 			if (StringUtils.isNotEmpty(productCode) && null != productData && StringUtils.isNotEmpty(productData.getRootCategory()))
 			{
-				sizeGuideDatas = getProductSizeguide(productCode, productData.getRootCategory());
+				if (null != isPwa)
+				{
+					sizeGuideDatas = getProductSizeguidePwa(productCode, productData.getRootCategory());
+				}
+				else
+				{
+					sizeGuideDatas = getProductSizeguide(productCode, productData.getRootCategory());
+				}
 			}
 
 			/* Converting the SizeGuide Model to SizeGuide Web service Data transaction */
 			if (null != sizeGuideDatas)
 			{
 				sizeGuideDataList = new ArrayList<SizeGuideWsData>();
-				for (final String dimension : sizeGuideDatas.keySet())
+				if (null != isPwa)
 				{
-					sizeGuideDataValueList = new ArrayList<SizeGuideWsDataValue>();
-					sizeGuideData = new SizeGuideWsData();
-					//// move declaration out of for loop
-					//line deleted
-					sizeGuideData.setDimension(dimension);
-					//// move declaration out of for loop
-					sizeDataValues = sizeGuideDatas.get(dimension); //initialization moved out of for loop
-					for (final SizeGuideData sizeGuideValue : sizeDataValues)
+					for (final String size : sizeGuideDatas.keySet())
 					{
-						sizeGuideWsDataValue = new SizeGuideWsDataValue();
-						//for new ui/ux size guide api starts
-						if (null != isPwa && StringUtils.isNotEmpty(sizeGuideValue.getPriority()))
+						sizeGuideDataValueList = new ArrayList<SizeGuideWsDataValue>();
+						sizeGuideData = new SizeGuideWsData();
+
+						sizeGuideData.setDimensionSize(size);
+						sizeDataValues = sizeGuideDatas.get(size);
+
+						for (final SizeGuideData sizeGuideValue : sizeDataValues)
 						{
-							sizeGuideWsDataValue.setPriority(sizeGuideValue.getPriority());
-						}
-						//for new ui/ux size guide api ends
-						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionValue()))
-						{
-							sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
-						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionUnit()))
-						{
-							sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
-						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionSize()))
-						{
-							sizeGuideWsDataValue.setDimensionSize(sizeGuideValue.getDimensionSize());
+							sizeGuideWsDataValue = new SizeGuideWsDataValue();
 
-						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getAge()))
-
-						{
-							sizeGuideWsDataValue.setAge(sizeGuideValue.getAge());
-
-						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))
-						{
-							sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
-
-						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))
-
-						{
-							sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
-
-						}
-						if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)
-								&& StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
-						{
-							sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
-						}
-
-
-
-
-						/**
-						 * Add for Accessories Belt Product START By SAP START::::
-						 */
-						if (productData.getRootCategory().equalsIgnoreCase(ACCESSORIES))
-						{
-							if (StringUtils.isNotEmpty(sizeGuideValue.getCmsBeltSize()))
+							if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionValue()))
 							{
-								sizeGuideWsDataValue.setCmsBeltSize(sizeGuideValue.getCmsBeltSize());
+								sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
 							}
-							if (StringUtils.isNotEmpty(sizeGuideValue.getCmsWaistSize()))
+							if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionUnit()))
 							{
-								sizeGuideWsDataValue.setCmsWaistSize(sizeGuideValue.getCmsWaistSize());
+								sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
 							}
-							if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltLength()))
+							if (StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
 							{
-								sizeGuideWsDataValue.setInchesBeltLength(sizeGuideValue.getInchesBeltLength());
+								sizeGuideWsDataValue.setDimension(sizeGuideValue.getDimension());
 							}
-							if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltSize()))
+							if (StringUtils.isNotEmpty(sizeGuideValue.getAge()))
+
 							{
-								sizeGuideWsDataValue.setInchesBeltSize(sizeGuideValue.getInchesBeltSize());
+								sizeGuideWsDataValue.setAge(sizeGuideValue.getAge());
+
 							}
-							if (StringUtils.isNotEmpty(sizeGuideValue.getInchesWaistSize()))
+							if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))
 							{
-								sizeGuideWsDataValue.setInchesWaistSize(sizeGuideValue.getInchesWaistSize());
+								sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
+
 							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))
+
+							{
+								sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
+
+							}
+							if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)
+									&& StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
+							{
+								sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
+							}
+
+							/**
+							 * Add for Accessories Belt Product START By SAP START::::
+							 */
+							if (productData.getRootCategory().equalsIgnoreCase(ACCESSORIES))
+							{
+								if (StringUtils.isNotEmpty(sizeGuideValue.getCmsBeltSize()))
+								{
+									sizeGuideWsDataValue.setCmsBeltSize(sizeGuideValue.getCmsBeltSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getCmsWaistSize()))
+								{
+									sizeGuideWsDataValue.setCmsWaistSize(sizeGuideValue.getCmsWaistSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltLength()))
+								{
+									sizeGuideWsDataValue.setInchesBeltLength(sizeGuideValue.getInchesBeltLength());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltSize()))
+								{
+									sizeGuideWsDataValue.setInchesBeltSize(sizeGuideValue.getInchesBeltSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesWaistSize()))
+								{
+									sizeGuideWsDataValue.setInchesWaistSize(sizeGuideValue.getInchesWaistSize());
+								}
+							}
+
+							/**
+							 * Add for Accessories Belt Product START By SAP START::::
+							 */
+							if (productData.getRootCategory().equalsIgnoreCase(ACCESSORIES))
+							{
+								if (StringUtils.isNotEmpty(sizeGuideValue.getCmsBeltSize()))
+								{
+									sizeGuideWsDataValue.setCmsBeltSize(sizeGuideValue.getCmsBeltSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getCmsWaistSize()))
+								{
+									sizeGuideWsDataValue.setCmsWaistSize(sizeGuideValue.getCmsWaistSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltLength()))
+								{
+									sizeGuideWsDataValue.setInchesBeltLength(sizeGuideValue.getInchesBeltLength());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltSize()))
+								{
+									sizeGuideWsDataValue.setInchesBeltSize(sizeGuideValue.getInchesBeltSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesWaistSize()))
+								{
+									sizeGuideWsDataValue.setInchesWaistSize(sizeGuideValue.getInchesWaistSize());
+								}
+							}
+
+							/**
+							 * Add for Accessories Belt Product START By SAP END::::
+							 */
+							//single image is needed to show per product
+							ImageURL = sizeGuideValue.getImageURL();
+							sizeGuideDataValueList.add(sizeGuideWsDataValue);
 						}
 
+						sizeGuideData.setDimensionList(sizeGuideDataValueList);
 
-						/**
-						 * Add for Accessories Belt Product START By SAP END::::
-						 */
-						//single image is needed to show per product
-						ImageURL = sizeGuideValue.getImageURL();
-						sizeGuideDataValueList.add(sizeGuideWsDataValue);
-
+						sizeGuideDataList.add(sizeGuideData);
 					}
-					sizeGuideData.setDimensionList(sizeGuideDataValueList);
 
-					sizeGuideDataList.add(sizeGuideData);
+					sizeDTO.setSizeGuideList(sizeGuideDataList);
+					sizeDTO.setImageURL(ImageURL);
+					sizeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
+				else
+				{
+					for (final String dimension : sizeGuideDatas.keySet())
+					{
+						sizeGuideDataValueList = new ArrayList<SizeGuideWsDataValue>();
+						sizeGuideData = new SizeGuideWsData();
+						//// move declaration out of for loop
+						//line deleted
+						sizeGuideData.setDimension(dimension);
+						//// move declaration out of for loop
+						sizeDataValues = sizeGuideDatas.get(dimension); //initialization moved out of for loop
+						for (final SizeGuideData sizeGuideValue : sizeDataValues)
+						{
+							sizeGuideWsDataValue = new SizeGuideWsDataValue();
+							//for new ui/ux size guide api starts
+							//						if (null != isPwa && StringUtils.isNotEmpty(sizeGuideValue.getPriority()))
+							//						{
+							//							sizeGuideWsDataValue.setPriority(sizeGuideValue.getPriority());
+							//						}
+							//for new ui/ux size guide api ends
+							if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionValue()))
+							{
+								sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionUnit()))
+							{
+								sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionSize()))
+							{
+								sizeGuideWsDataValue.setDimensionSize(sizeGuideValue.getDimensionSize());
 
-				sizeDTO.setSizeGuideList(sizeGuideDataList);
-				sizeDTO.setImageURL(ImageURL);
-				sizeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getAge()))
+
+							{
+								sizeGuideWsDataValue.setAge(sizeGuideValue.getAge());
+
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))
+							{
+								sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
+
+							}
+							if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))
+
+							{
+								sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
+
+							}
+							if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)
+									&& StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
+							{
+								sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
+							}
+
+
+
+
+							/**
+							 * Add for Accessories Belt Product START By SAP START::::
+							 */
+							if (productData.getRootCategory().equalsIgnoreCase(ACCESSORIES))
+							{
+								if (StringUtils.isNotEmpty(sizeGuideValue.getCmsBeltSize()))
+								{
+									sizeGuideWsDataValue.setCmsBeltSize(sizeGuideValue.getCmsBeltSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getCmsWaistSize()))
+								{
+									sizeGuideWsDataValue.setCmsWaistSize(sizeGuideValue.getCmsWaistSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltLength()))
+								{
+									sizeGuideWsDataValue.setInchesBeltLength(sizeGuideValue.getInchesBeltLength());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesBeltSize()))
+								{
+									sizeGuideWsDataValue.setInchesBeltSize(sizeGuideValue.getInchesBeltSize());
+								}
+								if (StringUtils.isNotEmpty(sizeGuideValue.getInchesWaistSize()))
+								{
+									sizeGuideWsDataValue.setInchesWaistSize(sizeGuideValue.getInchesWaistSize());
+								}
+							}
+
+
+							/**
+							 * Add for Accessories Belt Product START By SAP END::::
+							 */
+							//single image is needed to show per product
+							ImageURL = sizeGuideValue.getImageURL();
+							sizeGuideDataValueList.add(sizeGuideWsDataValue);
+
+						}
+						sizeGuideData.setDimensionList(sizeGuideDataValueList);
+
+						sizeGuideDataList.add(sizeGuideData);
+					}
+
+					sizeDTO.setSizeGuideList(sizeGuideDataList);
+					sizeDTO.setImageURL(ImageURL);
+					sizeDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
 			}
 			else
 			{
 				sizeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				sizeDTO.setError(MarketplacecommerceservicesConstants.SIZEGUIDE_NOT_FOUND);
 			}
+
 
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -311,6 +442,70 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		}
 		map.get(key).add(value);
 	}
+
+	/**
+	 * @description It is used for fetching all distinct Size Guides of an online product
+	 * @param productCode
+	 * @return list of SizeGuideData
+	 */
+
+	private Map<String, List<SizeGuideData>> getProductSizeguidePwa(final String productCode, final String categoryType)
+			throws CMSItemNotFoundException
+	{
+		List<SizeGuideModel> sizeGuideModels = null; //changed to null
+		List<SizeGuideData> sizeDataValues = null;
+		SizeGuideData sizeGuideData = null;
+		final TreeMap<String, List<SizeGuideData>> sizeGuideDatas = new TreeMap<String, List<SizeGuideData>>();
+		final TreeMap<String, List<SizeGuideData>> sizeGuideSortedDatas = new TreeMap<String, List<SizeGuideData>>();
+		final List<SizeGuideData> sizeGuideDataListForFootwear = new ArrayList<SizeGuideData>();
+		try
+		{
+			sizeGuideModels = sizeGuideService.getProductSizeGuideList(productCode);
+			if (sizeGuideModels != null)
+			{
+				for (final SizeGuideModel sizeGuideModel : sizeGuideModels)
+				{
+					//convertor is added
+					sizeGuideData = getSizeGuideConverter().convert(sizeGuideModel);
+					if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
+					{
+						sizeGuideDataListForFootwear.add(sizeGuideData);
+					}
+					else
+					{
+						addToMap(sizeGuideDatas, sizeGuideModel.getSize(), sizeGuideData);
+					}
+				}
+			}
+			/* sorting the Size guide map based on dimension */
+
+			if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
+			{
+				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
+				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
+			}
+			else
+			{
+				for (final String key : sizeGuideDatas.keySet())
+				{
+					sizeDataValues = sizeGuideDatas.get(key);
+					Collections.sort(sizeDataValues, sizeGuideComparator);
+					sizeGuideSortedDatas.put(key, sizeDataValues);
+				}
+
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return sizeGuideSortedDatas;
+	}
+
 
 	/**
 	 * @return the sizeGuideService

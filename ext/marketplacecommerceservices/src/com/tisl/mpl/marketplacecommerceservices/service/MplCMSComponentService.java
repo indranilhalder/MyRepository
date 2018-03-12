@@ -1,0 +1,19 @@
+/**
+ *
+ */
+package com.tisl.mpl.marketplacecommerceservices.service;
+
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
+
+import java.util.List;
+
+
+/**
+ * @author Ashish Vyas
+ *
+ */
+public interface MplCMSComponentService
+{
+	public List<AbstractCMSComponentModel> getPagewiseComponent(String pageId, String componentId);
+
+}

@@ -205,14 +205,11 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 							emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 							emiBankListWsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9029);
 							emiBankListWsDTO.setMessage(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9029));
-
 						}
 						else
 						{
-
 							for (final EMIBankModel emibanking : emiBankList)
 							{
-
 								final EMIBankWsDTO eMIBankWsDTO = new EMIBankWsDTO();
 								final List<EMITermRateDataForMobile> emiBankmobileWsListDTO = new ArrayList<EMITermRateDataForMobile>();
 
@@ -249,21 +246,19 @@ public class MplNetBankingFacadeImpl implements MplNetBankingFacade
 									{
 										emilistforMobile.setTerm(emilist.getTerm());
 									}
-
+									final Comparator<EMITermRateDataForMobile> byTerm = (final EMITermRateDataForMobile o1, final EMITermRateDataForMobile o2) -> o1.getTerm()
+											.compareTo(o2.getTerm());
+									Collections.sort(emiBankmobileWsListDTO, byTerm);
 									emiBankmobileWsListDTO.add(emilistforMobile);
-
 								}
 								eMIBankWsDTO.setEmitermsrate(emiBankmobileWsListDTO);
 								emiBankWsListDTO.add(eMIBankWsDTO);
 							}
-
 							final Comparator<EMIBankWsDTO> byName = (final EMIBankWsDTO o1, final EMIBankWsDTO o2) -> o1.getEmiBank()
 									.compareTo(o2.getEmiBank());
-
 							Collections.sort(emiBankWsListDTO, byName);
 							emiBankListWsDTO.setBankList(emiBankWsListDTO);
 							emiBankListWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
 						}
 
 					}
