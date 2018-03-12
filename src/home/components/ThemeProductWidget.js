@@ -11,38 +11,39 @@ export default class ThemeProductWidget extends React.Component {
     this.props.history.push(PRODUCT_LISTINGS);
   }
   render() {
-    const data = transformData(this.props.feedComponentData);
+    let items = [];
+    let feedComponentData = this.props.feedComponentData;
+    if (feedComponentData.items) {
+      items = feedComponentData.items.map(transformData);
+    }
+
     return (
       <div
         className={styles.base}
         style={{
-          backgroundImage: `url(${data.backgroundImageURL})`
+          backgroundImage: `url(${feedComponentData.backgroundImageURL})`
         }}
       >
         <div className={styles.overlay} />
         <div className={styles.logo}>
-          <Logo image={data.brandLogo} />
+          <Logo image={feedComponentData.brandLogo} />
         </div>
         <Carousel
           {...this.props}
-          header={data.title}
+          header={feedComponentData.title}
           buttonText={"See All"}
           seeAll={() => this.handleClick()}
           elementWidthMobile={45}
           withFooter={false}
           isWhite={true}
         >
-          {data.items &&
-            data.items.map((datum, i) => {
+          {items &&
+            items.map((datum, i) => {
               return (
                 <ThemeProduct
                   image={datum.image}
                   label={datum.title}
-                  price={
-                    datum.discountedPrice
-                      ? datum.discountedPrice
-                      : datum.mrpPrice
-                  }
+                  price={datum.price}
                   key={i}
                   isWhite={true}
                 />

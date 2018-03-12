@@ -12,6 +12,7 @@ const productListings = (
   action
 ) => {
   let existingProductListings;
+
   switch (action.type) {
     case plpActions.PRODUCT_LISTINGS_REQUEST:
       return Object.assign({}, state, {

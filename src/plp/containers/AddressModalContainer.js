@@ -9,8 +9,8 @@ const mapDispatchToProps = dispatch => {
     getUserAddress: () => {
       dispatch(getUserAddress());
     },
-    checkPinCodeServiceAvailability: pincode => {
-      dispatch(checkPinCodeServiceAvailability(pincode));
+    checkPinCodeServiceAvailability: (pincode, productCode) => {
+      dispatch(checkPinCodeServiceAvailability(pincode, productCode));
     }
   };
 };

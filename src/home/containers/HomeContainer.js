@@ -16,10 +16,16 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
+  let headerMessage = "Welcome Guest";
+  if (state.user.isLoggedIn) {
+    headerMessage = `Welcome ${state.user.user.firstName}`;
+  }
   return {
     homeFeedData: state.home.homeFeed,
+    isHomeFeedPage: true,
     loading: state.home.loading,
-    type: state.cart.type
+    type: state.cart.type,
+    headerMessage
   };
 };
 

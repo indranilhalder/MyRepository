@@ -1,38 +1,38 @@
 .base {
-	width  : 100%;
-	height : auto;
-	display: inline-block;
+  width: 100%;
+  height: auto;
+  display: inline-block;
 }
 .LatestCollectionsHolder {
-	width           : 100%;
-	height          : 46px;
-	line-height     : 46Px;
-	background-color: #ff1744;
-	position        : relative;
-	padding         : 0px 45px 0px 15px;
+  width: 100%;
+  height: 46px;
+  line-height: 46px;
+  background-color: #ff1744;
+  position: relative;
+  padding: 0px 45px 0px 15px;
 }
 .textHolder {
-	width      : 100%;
-	height     : 100%;
-	color      : #ffffff;
-	text-align : left;
-	display    : inline-block;
-	font-family: regular;
-	font-size  : 14px;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  text-align: left;
+  display: inline-block;
+  font-family: regular;
+  font-size: 14px;
 }
 .iconHolder {
-	width     : 30px;
-	height    : 100%;
-	position  : absolute;
-	margin    : auto;
-	top       : 0px;
-	right     : 15px;
-	display   : inline-block;
-	text-align: center;
+  width: 30px;
+  height: 100%;
+  position: absolute;
+  margin: auto;
+  top: 0px;
+  right: 15px;
+  display: inline-block;
+  text-align: center;
 }
 .icon {
-	width         : 25px;
-	height        : 25px;
-	display       : inline-block;
-	vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  vertical-align: middle;
 }

@@ -42,11 +42,11 @@ const mapDispatchToProps = dispatch => {
     showSizeGuide: () => {
       dispatch(showModal("SizeGuide"));
     },
-    showPincodeModal: () => {
-      dispatch(showModal(ADDRESS));
+    showPincodeModal: productCode => {
+      dispatch(showModal(ADDRESS, { productCode }));
     },
-    checkPinCodeServiceAvailability: pincode => {
-      dispatch(checkPinCodeServiceAvailability(pincode));
+    checkPinCodeServiceAvailability: (pincode, productCode) => {
+      dispatch(checkPinCodeServiceAvailability(pincode, productCode));
     }
   };
 };

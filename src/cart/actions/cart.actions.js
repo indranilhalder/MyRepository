@@ -925,7 +925,8 @@ export function checkPinCodeServiceAvailabilityFailure(error) {
     error
   };
 }
-export function checkPinCodeServiceAvailability(pinCode) {
+export function checkPinCodeServiceAvailability(pinCode, productCode) {
+  let validProductCode = productCode.toUpperCase();
   return async (dispatch, getState, { api }) => {
     dispatch(checkPinCodeServiceAvailabilityRequest());
     try {
@@ -936,11 +937,11 @@ export function checkPinCodeServiceAvailability(pinCode) {
       if (userDetails) {
         let userName = JSON.parse(userDetails).customerInfo.mobileNumber;
         let accessToken = JSON.parse(customerCookie).access_token;
-        url = `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`;
+        url = `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
       } else {
         let userName = ANONYMOUS_USER;
         let accessToken = JSON.parse(globalCookie).access_token;
-        url = `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=MP000000000165621&pin=${pinCode}`;
+        url = `${USER_CART_PATH}/${userName}/checkPincode?access_token=${accessToken}&productCode=${validProductCode}&pin=${pinCode}`;
       }
       const result = await api.post(url);
       const resultJson = await result.json();

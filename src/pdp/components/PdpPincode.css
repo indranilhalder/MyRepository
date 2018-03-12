@@ -6,7 +6,7 @@
   padding: 20px 20px;
 }
 .label {
-  width: 65%;
+  width: 60%;
   height: 22px;
   display: inline-block;
   text-align: left;
@@ -14,7 +14,7 @@
   line-height: 25px;
 }
 .labelMessage {
-  width: 65%;
+  width: 60%;
   height: 22px;
   display: inline-block;
   text-align: left;
@@ -28,7 +28,7 @@
   color: #000000;
 }
 .buttonHolder {
-  width: 35%;
+  width: 40%;
   height: 22px;
   display: inline-block;
   text-align: right;

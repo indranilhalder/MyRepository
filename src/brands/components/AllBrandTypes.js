@@ -1,9 +1,12 @@
 import React from "react";
 import styles from "./AllBrandTypes.css";
 import BrandsType from "./BrandsType.js";
+import ShopByBrandLists from "../../brands/components/ShopByBrandLists";
 import BrandsTypeList from "./BrandsTypeList.js";
-import GridSelect from "../../general/components/GridSelect";
+import Grid from "../../general/components/GridSelect";
 import PropTypes from "prop-types";
+import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
+
 export default class AllBrandTypes extends React.Component {
   selectItem(val) {
     if (this.props.selectItem) {
@@ -11,37 +14,44 @@ export default class AllBrandTypes extends React.Component {
     }
   }
   handleSelect(val) {
-    if (this.props.brandsItem) {
-      this.props.brandsItem(val);
-    }
+    const urlSuffix = val[0].replace(TATA_CLIQ_ROOT, "");
+    this.props.history.push(urlSuffix);
   }
   render() {
+    let feedComponentData = this.props.feedComponentData;
     return (
       <div className={styles.base}>
-        <div className={styles.headerShopAddress}>{this.props.shopeName}</div>
+        <div className={styles.headerShopAddress}>
+          {feedComponentData.title}
+        </div>
         <div className={styles.typeListHolder}>
-          {this.props.brandsTypeList &&
-            this.props.brandsTypeList.map((val, i) => {
-              return (
-                <BrandsType title={val.brandsType} key={i}>
-                  <GridSelect
+          {feedComponentData.items &&
+            feedComponentData.items.map((val, i) => {
+              return val.items ? (
+                <BrandsType title={val.title} key={i}>
+                  <Grid
                     limit={1}
                     offset={0}
                     elementWidthMobile={100}
                     onSelect={val => this.handleSelect(val)}
                   >
-                    {val.typeList &&
-                      val.typeList.map((data, i) => {
-                        return (
-                          <BrandsTypeList
-                            list={data.subList}
-                            key={i}
-                            value={data.subList}
-                          />
-                        );
-                      })}
-                  </GridSelect>
+                    {val.items.map((data, i) => {
+                      return (
+                        <BrandsTypeList
+                          list={data.title}
+                          key={i}
+                          value={data.webURL}
+                        />
+                      );
+                    })}
+                  </Grid>
                 </BrandsType>
+              ) : (
+                <ShopByBrandLists
+                  key={i}
+                  brandList={val.title}
+                  onClick={() => this.handleSelect([val.webURL])}
+                />
               );
             })}
         </div>

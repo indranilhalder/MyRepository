@@ -25,7 +25,8 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         this.props.pinCodeServiceAvailability.pincode
       ) {
         this.props.checkPinCodeServiceAvailability(
-          this.props.pinCodeServiceAvailability.pincode
+          this.props.pinCodeServiceAvailability.pincode,
+          this.props.match.params[0]
         );
       }
     } else if (
@@ -38,7 +39,8 @@ export default class ProductDescriptionPageWrapper extends React.Component {
         this.props.pinCodeServiceAvailability.pincode
       ) {
         this.props.checkPinCodeServiceAvailability(
-          this.props.pinCodeServiceAvailability.pincode
+          this.props.pinCodeServiceAvailability.pincode,
+          this.props.match.params[0]
         );
       }
     } else {

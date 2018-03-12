@@ -12,6 +12,7 @@ import ProductFeatures from "./ProductFeatures";
 import RatingAndTextLink from "./RatingAndTextLink";
 import AllDescription from "./AllDescription";
 import PdpPincode from "./PdpPincode";
+import Overlay from "./Overlay";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import Logo from "../../general/components/Logo.js";
 import Carousel from "../../general/components/Carousel.js";
@@ -22,7 +23,7 @@ import * as Cookie from "../../lib/Cookie";
 import { transformData } from "../../home/components/utils.js";
 import PDPRecommendedSections from "./PDPRecommendedSections.js";
 import {
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
@@ -30,7 +31,11 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
   PRODUCT_CART_ROUTER,
-  PRODUCT_REVIEWS_PATH_SUFFIX
+  PRODUCT_REVIEWS_PATH_SUFFIX,
+  YES,
+  NO,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 
 const DELIVERY_TEXT = "Delivery Options For";
@@ -48,7 +53,15 @@ export default class PdpElectronics extends React.Component {
   };
 
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
 
   goToCart = () => {
@@ -94,7 +107,13 @@ export default class PdpElectronics extends React.Component {
     this.props.history.push(url);
   };
   showPincodeModal() {
-    this.props.showPincodeModal();
+    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.showPincodeModal(this.props.match.params[0]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.showPincodeModal(this.props.match.params[2]);
+    }
   }
   addToWishList = () => {
     let productDetails = {};
@@ -129,8 +148,26 @@ export default class PdpElectronics extends React.Component {
     this.props.getEmiTerms(globalAccessToken, cartValue);
     this.props.showEmiModal();
   };
+  renderDeliveryOptions(productData) {
+    return (
+      productData.eligibleDeliveryModes &&
+      productData.eligibleDeliveryModes.map((val, idx) => {
+        return (
+          <DeliveryInformation
+            key={idx}
+            header={val.name}
+            placedTime={val.timeline}
+            type={val.code}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
+            showCliqAndPiqButton={false}
+          />
+        );
+      })
+    );
+  }
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -165,9 +202,11 @@ export default class PdpElectronics extends React.Component {
           addProductToWishList={() => this.addToWishList()}
           showPincodeModal={() => this.showPincodeModal()}
         >
-          <ProductGalleryMobile>
+          <ProductGalleryMobile isElectronics={true}>
             {mobileGalleryImages.map((val, idx) => {
-              return <Image image={val} key={idx} />;
+              return (
+                <Image image={val} key={idx} color="#f5f5f5" fit="contain" />
+              );
             })}
           </ProductGalleryMobile>
           <div className={styles.content}>
@@ -189,16 +228,7 @@ export default class PdpElectronics extends React.Component {
               </div>
             </div>
           )}
-          {this.props.pinCodeServiceAvailability &&
-          this.props.pinCodeServiceAvailability.pincode ? (
-            <PdpPincode
-              hasPincode={true}
-              pincode={this.props.pinCodeServiceAvailability.pincode}
-              onClick={() => this.showPincodeModal()}
-            />
-          ) : (
-            <PdpPincode onClick={() => this.showPincodeModal()} />
-          )}
+
           {productData.productOfferPromotion && (
             <OfferCard
               endTime={productData.productOfferPromotion[0].validTill.date}
@@ -226,21 +256,34 @@ export default class PdpElectronics extends React.Component {
               />
             </React.Fragment>
           )}
-          {productData.eligibleDeliveryModes &&
-            productData.eligibleDeliveryModes.map((val, idx) => {
-              return (
-                <DeliveryInformation
-                  key={idx}
-                  header={val.name}
-                  placedTime={val.timeline}
-                  type={val.code}
-                  onClick={() => this.renderAddressModal()}
-                  deliveryOptions={DELIVERY_TEXT}
-                  label={PIN_CODE}
-                  showCliqAndPiqButton={false}
-                />
-              );
-            })}
+          {this.props.pinCodeServiceAvailability &&
+          this.props.pinCodeServiceAvailability.pincode ? (
+            <PdpPincode
+              hasPincode={true}
+              pincode={this.props.pinCodeServiceAvailability.pincode}
+              onClick={() => this.showPincodeModal()}
+            />
+          ) : (
+            <PdpPincode onClick={() => this.showPincodeModal()} />
+          )}
+          {(this.props.pinCodeServiceAvailability &&
+            this.props.pinCodeServiceAvailability.serviceAvailability &&
+            !this.props.pinCodeServiceAvailability.serviceAvailability
+              .pincodeListResponse) ||
+          (this.props.pinCodeServiceAvailability &&
+            this.props.pinCodeServiceAvailability.serviceAvailability &&
+            this.props.pinCodeServiceAvailability.serviceAvailability
+              .pincodeListResponse &&
+            this.props.pinCodeServiceAvailability.serviceAvailability
+              .pincodeListResponse[0].isServicable === NO) ? (
+            <Overlay labelText="Not serviceable in you pincode,
+please try another pincode">
+              {this.renderDeliveryOptions(productData)}
+            </Overlay>
+          ) : (
+            this.renderDeliveryOptions(productData)
+          )}
+
           {productData.otherSellers && (
             <div className={styles.separator}>
               <PdpLink onClick={this.goToSellerPage}>

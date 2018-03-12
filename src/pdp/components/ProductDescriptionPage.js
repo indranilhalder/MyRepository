@@ -11,20 +11,25 @@ import { Image } from "xelpmoc-core";
 import RatingAndTextLink from "./RatingAndTextLink";
 import HollowHeader from "./HollowHeader.js";
 import PdpLink from "./PdpLink";
+import PdpPincode from "./PdpPincode";
+import Overlay from "./Overlay";
 import styles from "./ProductDescriptionPage.css";
 import DeliveryInformation from "../../general/components/DeliveryInformations.js";
 import * as Cookie from "../../lib/Cookie";
 import {
   PRODUCT_REVIEW_ROUTER,
   MOBILE_PDP_VIEW,
-  PRODUCT_SELLER_ROUTER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS,
   GLOBAL_ACCESS_TOKEN,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
   ANONYMOUS_USER,
-  PRODUCT_CART_ROUTER
+  PRODUCT_CART_ROUTER,
+  NO,
+  PRODUCT_DESCRIPTION_PRODUCT_CODE,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 const DELIVERY_TEXT = "Delivery Options For";
 const PIN_CODE = "110011";
@@ -57,7 +62,15 @@ class ProductDescriptionPage extends Component {
     this.props.history.push(PRODUCT_REVIEW_ROUTER);
   };
   goToSellerPage = () => {
-    this.props.history.push(PRODUCT_SELLER_ROUTER);
+    let expressionRuleFirst = "/p-(.*)/(.*)";
+    let expressionRuleSecond = "/p-(.*)";
+    let productId;
+    if (this.props.location.pathname.match(expressionRuleFirst)) {
+      productId = this.props.location.pathname.match(expressionRuleFirst)[1];
+    } else {
+      productId = this.props.location.pathname.match(expressionRuleSecond)[1];
+    }
+    this.props.history.push(`/p-${productId}${PRODUCT_SELLER_ROUTER_SUFFIX}`);
   };
   showEmiModal = () => {
     if (this.props.showEmiPlans) {
@@ -109,6 +122,34 @@ class ProductDescriptionPage extends Component {
   };
   renderToMyBag() {
     this.props.history.push(PRODUCT_CART_ROUTER);
+  }
+  showPincodeModal() {
+    if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+      this.props.showPincodeModal(this.props.match.params[0]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.showPincodeModal(this.props.match.params[2]);
+    }
+  }
+  renderDeliveryOptions(productData) {
+    return (
+      productData.eligibleDeliveryModes &&
+      productData.eligibleDeliveryModes.map((val, idx) => {
+        return (
+          <DeliveryInformation
+            key={idx}
+            header={val.name}
+            placedTime={val.timeline}
+            type={val.code}
+            onClick={() => this.renderAddressModal()}
+            deliveryOptions={DELIVERY_TEXT}
+            label={PIN_CODE}
+            showCliqAndPiqButton={false}
+          />
+        );
+      })
+    );
   }
   render() {
     if (this.props.productDetails) {
@@ -184,20 +225,33 @@ class ProductDescriptionPage extends Component {
               description={productData.productOfferPromotion[0].promotionDetail}
               onClick={this.goToCouponPage}
             />
-            {productData.eligibleDeliveryModes &&
-              productData.eligibleDeliveryModes.map((val, idx) => {
-                return (
-                  <DeliveryInformation
-                    key={idx}
-                    header={val.name}
-                    placedTime={val.timeline}
-                    type={val.code}
-                    onClick={() => this.renderAddressModal()}
-                    deliveryOptions={DELIVERY_TEXT}
-                    label={PIN_CODE}
-                  />
-                );
-              })}
+            {this.props.pinCodeServiceAvailability &&
+            this.props.pinCodeServiceAvailability.pincode ? (
+              <PdpPincode
+                hasPincode={true}
+                pincode={this.props.pinCodeServiceAvailability.pincode}
+                onClick={() => this.showPincodeModal()}
+              />
+            ) : (
+              <PdpPincode onClick={() => this.showPincodeModal()} />
+            )}
+            {(this.props.pinCodeServiceAvailability &&
+              this.props.pinCodeServiceAvailability.serviceAvailability &&
+              !this.props.pinCodeServiceAvailability.serviceAvailability
+                .pincodeListResponse) ||
+            (this.props.pinCodeServiceAvailability &&
+              this.props.pinCodeServiceAvailability.serviceAvailability &&
+              this.props.pinCodeServiceAvailability.serviceAvailability
+                .pincodeListResponse &&
+              this.props.pinCodeServiceAvailability.serviceAvailability
+                .pincodeListResponse[0].isServicable === NO) ? (
+              <Overlay labelText="Not serviceable in you pincode,
+  please try another pincode">
+                {this.renderDeliveryOptions(productData)}
+              </Overlay>
+            ) : (
+              this.renderDeliveryOptions(productData)
+            )}
             <div className={styles.separator}>
               <RatingAndTextLink
                 onClick={this.goToReviewPage}
