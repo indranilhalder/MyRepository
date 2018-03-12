@@ -37,6 +37,9 @@ const mapDispatchToProps = dispatch => {
     },
     showEmiModal: () => {
       dispatch(showModal(EMI_MODAL));
+    },
+    showSizeGuide: () => {
+      dispatch(showModal("SizeGuide"));
     }
   };
 };
@@ -45,7 +48,6 @@ const mapStateToProps = state => {
   return {
     productDetails: state.productDescription.productDetails,
     msdItems: state.productDescription.msdItems,
-    sizeGuide: state.productDescription.sizeGuide,
     loading: state.productDescription.loading
   };
 };

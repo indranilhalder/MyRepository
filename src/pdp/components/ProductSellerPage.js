@@ -21,12 +21,19 @@ import {
   CASH_TEXT,
   CART_DETAILS_FOR_ANONYMOUS,
   CART_DETAILS_FOR_LOGGED_IN_USER,
-  ANONYMOUS_USER
+  ANONYMOUS_USER,
+  PRODUCT_SELLER_ROUTER_SUFFIX,
+  PRODUCT_OTHER_SELLER_ROUTER,
+  PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
 } from "../../lib/constants";
 const PRODUCT_QUANTITY = "1";
 class ProductSellerPage extends Component {
   gotoPreviousPage = () => {
-    this.props.history.goBack();
+    const url = this.props.location.pathname.replace(
+      PRODUCT_SELLER_ROUTER_SUFFIX,
+      ""
+    );
+    this.props.history.replace(url);
   };
 
   addToCart = () => {
@@ -82,63 +89,81 @@ class ProductSellerPage extends Component {
     }
   };
 
+  componentDidMount() {
+    if (this.props.match.path === PRODUCT_OTHER_SELLER_ROUTER) {
+      this.props.getProductDescription(this.props.match.params[0]);
+    } else if (
+      this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+    ) {
+      this.props.getProductDescription(this.props.match.params[1]);
+    } else {
+      //need to show error page
+    }
+  }
+
   render() {
-    const mobileGalleryImages = this.props.productDetails.galleryImagesList
-      .map(galleryImageList => {
-        return galleryImageList.galleryImages.filter(galleryImages => {
-          return galleryImages.key === "product";
+    const mobileGalleryImages =
+      this.props.productDetails &&
+      this.props.productDetails.galleryImagesList
+        .map(galleryImageList => {
+          return galleryImageList.galleryImages.filter(galleryImages => {
+            return galleryImages.key === "product";
+          });
+        })
+        .map(image => {
+          return image[0].value;
         });
-      })
-      .map(image => {
-        return image[0].value;
-      });
 
     return (
-      <PdpFrame
-        addProductToBag={() => this.addToCart()}
-        addProductToWishList={() => this.addToWishList()}
-        gotoPreviousPage={() => this.gotoPreviousPage()}
-      >
-        <div className={styles.base}>
-          <HollowHeader
-            addProductToBag={() => this.addToCart()}
-            addProductToWishList={() => this.addToWishList()}
-            gotoPreviousPage={() => this.gotoPreviousPage()}
-          />
+      mobileGalleryImages && (
+        <PdpFrame
+          addProductToBag={() => this.addToCart()}
+          addProductToWishList={() => this.addToWishList()}
+          gotoPreviousPage={() => this.gotoPreviousPage()}
+        >
+          <div className={styles.base}>
+            <HollowHeader
+              addProductToBag={() => this.addToCart()}
+              addProductToWishList={() => this.addToWishList()}
+              gotoPreviousPage={() => this.gotoPreviousPage()}
+            />
 
-          <ProductDetailsCard
-            productImage={mobileGalleryImages[0]}
-            productName={this.props.productDetails.productName}
-            price={this.props.productDetails.mrp}
-            discountPrice={this.props.productDetails.discount}
-            averageRating={this.props.productDetails.averageRating}
-            totalNoOfReviews={this.props.productDetails.productReviewsCount}
-          />
-          <div>
-            {this.props.productDetails.otherSellers && (
-              <SellerWithMultiSelect limit={1}>
-                {this.props.productDetails.otherSellers.map((value, index) => {
-                  return (
-                    <SellerCard
-                      heading={value.sellerName}
-                      priceTitle={PRICE_TEXT}
-                      discountPrice={value.sellerMOP}
-                      price={value.sellerMRP}
-                      offerText={OFFER_AVAILABLE}
-                      deliveryText={DELIVERY_INFORMATION_TEXT}
-                      shippingText={value.deliveryModesATP[0].value}
-                      cashText={CASH_TEXT}
-                      policyText={DELIVERY_RATES}
-                      key={index}
-                      value={value}
-                    />
-                  );
-                })}
-              </SellerWithMultiSelect>
-            )}
+            <ProductDetailsCard
+              productImage={mobileGalleryImages[0]}
+              productName={this.props.productDetails.productName}
+              price={this.props.productDetails.mrp}
+              discountPrice={this.props.productDetails.discount}
+              averageRating={this.props.productDetails.averageRating}
+              totalNoOfReviews={this.props.productDetails.productReviewsCount}
+            />
+            <div>
+              {this.props.productDetails.otherSellers && (
+                <SellerWithMultiSelect limit={1}>
+                  {this.props.productDetails.otherSellers.map(
+                    (value, index) => {
+                      return (
+                        <SellerCard
+                          heading={value.sellerName}
+                          priceTitle={PRICE_TEXT}
+                          discountPrice={value.sellerMOP}
+                          price={value.sellerMRP}
+                          offerText={OFFER_AVAILABLE}
+                          deliveryText={DELIVERY_INFORMATION_TEXT}
+                          shippingText={value.deliveryModesATP[0].value}
+                          cashText={CASH_TEXT}
+                          policyText={DELIVERY_RATES}
+                          key={index}
+                          value={value}
+                        />
+                      );
+                    }
+                  )}
+                </SellerWithMultiSelect>
+              )}
+            </div>
           </div>
-        </div>
-      </PdpFrame>
+        </PdpFrame>
+      )
     );
   }
 }

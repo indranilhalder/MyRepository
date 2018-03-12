@@ -9,6 +9,8 @@ export const API_URL_ROOT_MOCK = "https://cliq-json-server.herokuapp.com";
 export const HOME_FEED_API_ROOT =
   "https://tataunistore.tt.omtrdc.net/rest/v1/mbox?client=tataunistore";
 
+const API_URL_ROOT_SUFFIX = "?isPwa=true";
+
 export const TATA_CLIQ_ROOT = "https://www.tatacliq.com";
 export const API_MSD_URL_ROOT = "https://ap-southeast-1-api.madstreetden.com";
 
