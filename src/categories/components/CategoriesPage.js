@@ -8,169 +8,249 @@ import styles from "./CategoriesPage.css";
 export default class CategoriesPage extends React.Component {
   render() {
     const data = {
-      type: "departmentListHierarchyWsDTO",
-      shopbydepartment: [
+      type: "categoryListHierarchyWSData",
+      subCategories: [
         {
+          categoryImageURl:
+            "/medias/sys_master/root/8949121187870/sitelogo.jpg",
+          category_name: "Travel and luggage",
           subCategories: [
             {
-              sub_category_id: "MSH1710",
-              sub_category_name: "Travel Bags",
-              supersubCategories: [
+              category_name: "Travel Bags",
+              subCategories: [
                 {
-                  super_sub_category_id: "MSH1710102",
-                  super_sub_category_name: "Duffle Bags"
+                  category_name: "Travel Bags",
+                  webURL: "/travel-and-luggage-travel-bags/c-msh1710"
                 },
                 {
-                  super_sub_category_id: "MSH1710103",
-                  super_sub_category_name: "Luggage Sets"
+                  category_name: "Duffle Bags",
+                  webURL: "/c-msh1710102"
                 },
                 {
-                  super_sub_category_id: "MSH1710100",
-                  super_sub_category_name: "Suitcase"
+                  category_name: "Luggage Sets",
+                  webURL: "/c-msh1710103"
                 },
                 {
-                  super_sub_category_id: "MSH1710101",
-                  super_sub_category_name: "Trolley"
+                  category_name: "Suitcase",
+                  webURL: "/c-msh1710100"
+                },
+                {
+                  category_name: "Trolley",
+                  webURL: "/c-msh1710101"
                 }
-              ]
+              ],
+              webURL: "/travel-and-luggage-travel-bags/c-msh1710"
             },
             {
-              sub_category_id: "MSH1711",
-              sub_category_name: "Office Bags",
-              supersubCategories: [
+              category_name: "Office Bags",
+              subCategories: [
                 {
-                  super_sub_category_id: "MSH1711101",
-                  super_sub_category_name: "Briefcases"
+                  category_name: "Office Bags",
+                  webURL: "/travel-and-luggage-office-bags/c-msh1711"
                 },
                 {
-                  super_sub_category_id: "MSH1711102",
-                  super_sub_category_name: "Messenger Bags"
+                  category_name: "Briefcases",
+                  webURL: "/c-msh1711101"
                 },
                 {
-                  super_sub_category_id: "MSH1711103",
-                  super_sub_category_name: "Satchels"
+                  category_name: "Messenger Bags",
+                  webURL: "/c-msh1711102"
                 },
                 {
-                  super_sub_category_id: "MSH1711100",
-                  super_sub_category_name: "Laptop Bags"
+                  category_name: "Satchels",
+                  webURL: "/c-msh1711103"
+                },
+                {
+                  category_name: "Laptop Bags",
+                  webURL: "/c-msh1711100"
                 }
-              ]
+              ],
+              webURL: "/travel-and-luggage-office-bags/c-msh1711"
             },
             {
-              sub_category_id: "MSH1712",
-              sub_category_name: "Outdoor & Sport Bags",
-              supersubCategories: [
+              category_name: "Outdoor & Sport Bags",
+              subCategories: [
                 {
-                  super_sub_category_id: "MSH1712101",
-                  super_sub_category_name: "Gym Bags"
+                  category_name: "Outdoor & Sport Bags",
+                  webURL: "/travel-and-luggage-outdoor-sport-bags/c-msh1712"
                 },
                 {
-                  super_sub_category_id: "MSH1712102",
-                  super_sub_category_name: "Rucksacks"
+                  category_name: "Gym Bags"
                 },
                 {
-                  super_sub_category_id: "MSH1712103",
-                  super_sub_category_name: "Knapsacks"
+                  category_name: "Rucksacks"
                 },
                 {
-                  super_sub_category_id: "MSH1712100",
-                  super_sub_category_name: "Backpacks"
+                  category_name: "Knapsacks"
+                },
+                {
+                  category_name: "Backpacks"
                 }
-              ]
+              ],
+              webURL: "/travel-and-luggage-outdoor-sport-bags/c-msh1712"
             },
             {
-              sub_category_id: "MSH1714",
-              sub_category_name: "Accessories",
-              supersubCategories: [
+              category_name: "Accessories",
+              subCategories: [
                 {
-                  super_sub_category_id: "MSH1714100",
-                  super_sub_category_name: "Toiletry Kit"
+                  category_name: "Accessories",
+                  webURL: "/travel-and-luggage-accessories/c-msh1714"
                 },
                 {
-                  super_sub_category_id: "MSH1714101",
-                  super_sub_category_name: "Passport Holder"
+                  category_name: "Toiletry Kit"
                 },
                 {
-                  super_sub_category_id: "MSH1714102",
-                  super_sub_category_name: "Makeup Box"
+                  category_name: "Passport Holder"
                 },
                 {
-                  super_sub_category_id: "MSH1714103",
-                  super_sub_category_name: "Travel Pouches"
+                  category_name: "Makeup Box"
                 },
                 {
-                  super_sub_category_id: "MSH1714104",
-                  super_sub_category_name: "Makeup Pouches"
+                  category_name: "Travel Pouches"
                 },
                 {
-                  super_sub_category_id: "MSH1714105",
-                  super_sub_category_name: "Document Holder"
+                  category_name: "Makeup Pouches"
                 },
                 {
-                  super_sub_category_id: "MSH1714106",
-                  super_sub_category_name: "Waist Pouches"
+                  category_name: "Document Holder"
                 },
                 {
-                  super_sub_category_id: "MSH1714107",
-                  super_sub_category_name: "Shoe Bags"
+                  category_name: "Waist Pouches"
+                },
+                {
+                  category_name: "Shoe Bags"
                 }
-              ]
+              ],
+              webURL: "/travel-and-luggage-accessories/c-msh1714"
             },
             {
-              sub_category_id: "MSH1713",
-              sub_category_name: "Kid Bags",
-              supersubCategories: [
+              category_name: "Kid Bags",
+              subCategories: [
                 {
-                  super_sub_category_id: "MSH1713100",
-                  super_sub_category_name: "School Bags"
+                  category_name: "Kid Bags",
+                  webURL: "/travel-and-luggage-kids-bags/c-msh1713"
                 },
                 {
-                  super_sub_category_id: "MSH1713102",
-                  super_sub_category_name: "Diaper Bags "
+                  category_name: "School Bags"
+                },
+                {
+                  category_name: "Diaper Bags "
                 }
-              ]
+              ],
+              webURL: "/travel-and-luggage-kids-bags/c-msh1713"
             },
             {
-              sub_category_id: "MSH1710",
-              sub_category_name: "Test L2",
-              supersubCategories: [
+              category_name: "Test L2",
+              subCategories: [
                 {
-                  super_sub_category_id: "MSH1710101",
-                  super_sub_category_name: "Test Test L3 2 "
+                  category_name: "Travel Test L3 1",
+                  webURL: "/c-msh1710"
                 },
                 {
-                  super_sub_category_id: "MSH17",
-                  super_sub_category_name: "CLP Luggage"
+                  category_name: "Test Test L3 2 "
+                },
+                {
+                  category_name: "CLP Luggage"
                 }
-              ]
+              ],
+              webURL: "/c-msh1710"
             }
           ],
-          super_category_name: "Travel and luggage"
+          webURL: "https://uat2.tataunistore.com/travel-and-luggage/c-msh17"
         },
         {
-          super_category_name: "Home"
+          categoryImageURl:
+            "//assetsuat2.tataunistore.com/medias/sys_master/images/8896490799134.jpg",
+          category_name: "Home",
+          subCategories: [
+            {
+              category_name: "Test L2",
+              subCategories: [
+                {
+                  category_name: "Travel Test L3 1",
+                  webURL: "/c-msh1710"
+                },
+                {
+                  category_name: "Test Test L3 2 "
+                },
+                {
+                  category_name: "CLP Luggage"
+                }
+              ],
+              webURL: "/c-msh1710"
+            },
+            {
+              category_name: "Test L2",
+              subCategories: [
+                {
+                  category_name: "Travel Test L3 1",
+                  webURL: "/c-msh1710"
+                },
+                {
+                  category_name: "Test Test L3 2 "
+                },
+                {
+                  category_name: "CLP Luggage"
+                }
+              ],
+              webURL: "/c-msh1710"
+            },
+            {
+              category_name: "Test L2",
+              subCategories: [
+                {
+                  category_name: "Travel Test L3 1",
+                  webURL: "/c-msh1710"
+                },
+                {
+                  category_name: "Test Test L3 2 "
+                },
+                {
+                  category_name: "CLP Luggage"
+                }
+              ],
+              webURL: "/c-msh1710"
+            },
+            {
+              category_name: "Test L2",
+              subCategories: [
+                {
+                  category_name: "Travel Test L3 1",
+                  webURL: "/c-msh1710"
+                },
+                {
+                  category_name: "Test Test L3 2 "
+                },
+                {
+                  category_name: "CLP Luggage"
+                }
+              ],
+              webURL: "/c-msh1710"
+            }
+          ],
+          webURL: "/"
         }
       ]
     };
     return (
       <div className={styles.base}>
         <div className={styles.header} />
-        {data.shopbydepartment.map((categories, i) => {
+        {data.subCategories.map((categories, i) => {
           return (
-            <CategoryL1 label={categories.super_category_name}>
+            <CategoryL1 label={categories.category_name}>
               {categories.subCategories &&
                 categories.subCategories.map((category, i) => {
                   return (
                     <CategoryL2
-                      label={category.sub_category_name}
-                      value={category.sub_category_id}
+                      label={category.category_name}
+                      url={category.webURL}
                     >
-                      {category.supersubCategories &&
-                        category.supersubCategories.map((subCategory, i) => {
+                      {category.subCategories &&
+                        category.subCategories.map((subCategory, i) => {
                           return (
                             <CategoryL3
-                              label={subCategory.super_sub_category_name}
-                              value={subCategory.super_sub_category_id}
+                              label={subCategory.category_name}
+                              url={subCategory.webURL}
                             />
                           );
                         })}

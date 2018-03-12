@@ -5,7 +5,7 @@ import styles from "./CategoryL2.css";
 export default class CategoryL2 extends React.Component {
   handleClick() {
     if (this.props.onClick) {
-      this.props.onClick(this.props.value);
+      this.props.onClick(this.props.url);
     }
   }
   render() {
@@ -32,5 +32,7 @@ export default class CategoryL2 extends React.Component {
   }
 }
 CategoryL2.propTypes = {
-  label: PropTypes.string
+  label: PropTypes.string,
+  onClick: PropTypes.func,
+  url: PropTypes.string
 };

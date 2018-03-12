@@ -1,5 +1,6 @@
 import React from "react";
 import ColourButton from "../../general/components/ColourButton";
+import PropTypes from "prop-types";
 import styles from "./CategoryL1.css";
 export default class CategoryL1 extends React.Component {
   constructor(props) {
@@ -14,7 +15,13 @@ export default class CategoryL1 extends React.Component {
     }
   }
   openItem() {
-    this.setState({ isOpen: true });
+    if (this.props.children) {
+      this.setState({ isOpen: true });
+    } else {
+      if (this.props.onClick) {
+        this.props.onClick(this.props.url);
+      }
+    }
   }
   closeItem() {
     this.setState({ isOpen: false });
@@ -60,3 +67,6 @@ export default class CategoryL1 extends React.Component {
     );
   }
 }
+CategoryL1.propTypes = {
+  label: PropTypes.string
+};
