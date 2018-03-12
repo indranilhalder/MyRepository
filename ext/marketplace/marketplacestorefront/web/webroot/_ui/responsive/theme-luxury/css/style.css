@@ -7869,6 +7869,9 @@ footer .footer-cloned-ul .sub-menu-inner>.row>div ul.sub-menu:before {
         text-align: center;
         height: 130px;
     }
+    .look-book-wrapper .colmn.lookbook-mob-slider .list-unstyled li:first-child{
+        margin: 0 0 0 0;
+    }
     .look-book-wrapper .colmn.lookbook-mob-slider .slick-track {
         margin-left: -5%
     }
