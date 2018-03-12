@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import CategoryL1 from "./CategoryL1";
 import CategoryL2 from "./CategoryL2";
 import CategoryL3 from "./CategoryL3";
-import InformationHeader from "../../general/components/InformationHeader";
+import BrandHeader from "../../brands/components/BrandHeader";
 import styles from "./CategoriesPage.css";
 export default class CategoriesPage extends React.Component {
   render() {
@@ -234,7 +234,9 @@ export default class CategoriesPage extends React.Component {
     };
     return (
       <div className={styles.base}>
-        <div className={styles.header} />
+        <div className={styles.header}>
+          <BrandHeader />
+        </div>
         {data.subCategories.map((categories, i) => {
           return (
             <CategoryL1 label={categories.category_name}>
