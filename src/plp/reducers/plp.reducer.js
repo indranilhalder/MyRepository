@@ -36,8 +36,7 @@ const productListings = (
         pageNumber: action.pageNumber
       });
     case plpActions.GET_PRODUCT_LISTINGS_PAGINATED_SUCCESS:
-      let searchResults = state.productListings.searchresult;
-
+      let searchResults = cloneDeep(state.productListings.searchresult);
       searchResults = concat(
         searchResults,
         action.productListings.searchresult

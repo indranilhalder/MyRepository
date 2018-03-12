@@ -130,6 +130,7 @@ export default class PdpElectronics extends React.Component {
     this.props.showEmiModal();
   };
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       .map(galleryImageList => {
@@ -188,10 +189,16 @@ export default class PdpElectronics extends React.Component {
               </div>
             </div>
           )}
-          <PdpPincode
-            pincode={560095}
-            onClick={() => this.showPincodeModal()}
-          />
+          {this.props.pinCodeServiceAvailability &&
+          this.props.pinCodeServiceAvailability.pincode ? (
+            <PdpPincode
+              hasPincode={true}
+              pincode={this.props.pinCodeServiceAvailability.pincode}
+              onClick={() => this.showPincodeModal()}
+            />
+          ) : (
+            <PdpPincode onClick={() => this.showPincodeModal()} />
+          )}
           {productData.productOfferPromotion && (
             <OfferCard
               endTime={productData.productOfferPromotion[0].validTill.date}

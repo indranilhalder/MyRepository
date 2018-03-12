@@ -8,13 +8,29 @@ export default class PdpPincode extends React.Component {
     }
   }
   render() {
-    return (
+    return this.props.hasPincode ? (
       <div className={styles.base}>
         <div className={styles.label}>{this.props.pincode}</div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <UnderLinedButton
               label="Change"
+              onClick={() => this.onClick()}
+              color="#ff1744"
+            />
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div className={styles.base}>
+        <div className={styles.labelMessage}>
+          Click to enter pin code & check delivery options
+        </div>
+        <div className={styles.buttonHolder}>
+          <div className={styles.button}>
+            <UnderLinedButton
+              fontSize={14}
+              label="Update Pincode"
               onClick={() => this.onClick()}
               color="#ff1744"
             />

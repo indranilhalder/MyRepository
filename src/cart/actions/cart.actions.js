@@ -947,7 +947,12 @@ export function checkPinCodeServiceAvailability(pinCode) {
       if (resultJson.status === FAILURE) {
         throw new Error(resultJson.message);
       }
-      dispatch(checkPinCodeServiceAvailabilitySuccess(resultJson));
+      dispatch(
+        checkPinCodeServiceAvailabilitySuccess({
+          serviceAvailability: resultJson.listOfDataList[0].value,
+          pincode: pinCode
+        })
+      );
     } catch (e) {
       dispatch(checkPinCodeServiceAvailabilityFailure(e.message));
     }

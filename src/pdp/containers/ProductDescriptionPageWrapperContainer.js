@@ -8,6 +8,7 @@ import {
   getPdpEmi,
   getEmiTerms
 } from "../actions/pdp.actions";
+import { checkPinCodeServiceAvailability } from "../../cart/actions/cart.actions";
 import { showModal, EMI_MODAL, ADDRESS } from "../../general/modal.actions.js";
 import ProductDescriptionPageWrapper from "../components/ProductDescriptionPageWrapper";
 import { withRouter } from "react-router-dom";
@@ -43,12 +44,16 @@ const mapDispatchToProps = dispatch => {
     },
     showPincodeModal: () => {
       dispatch(showModal(ADDRESS));
+    },
+    checkPinCodeServiceAvailability: pincode => {
+      dispatch(checkPinCodeServiceAvailability(pincode));
     }
   };
 };
 
 const mapStateToProps = state => {
   return {
+    pinCodeServiceAvailability: state.cart.pinCodeServiceAvailability,
     productDetails: state.productDescription.productDetails,
     msdItems: state.productDescription.msdItems,
     loading: state.productDescription.loading

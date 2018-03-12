@@ -1,5 +1,6 @@
 import * as cartActions from "../actions/cart.actions";
 import * as Cookies from "../../lib/Cookie";
+import cloneDeep from "lodash/cloneDeep";
 import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   CART_DETAILS_FOR_ANONYMOUS
@@ -56,10 +57,15 @@ const cart = (
 
     paymentStatus: null,
     paymentStatusError: null,
-    paymentDetails: null
+    paymentDetails: null,
+
+    pinCodeServiceAvailabilityStatus: null,
+    pinCodeServiceAvailability: null,
+    PinCodeServiceAvailabilityError: null
   },
   action
 ) => {
+  let currentCartObj;
   switch (action.type) {
     case cartActions.CART_DETAILS_REQUEST:
       return Object.assign({}, state, {
@@ -276,6 +282,21 @@ const cart = (
       return Object.assign({}, state, {
         orderSummaryStatus: action.status,
         orderSummary: action.orderSummary
+      });
+
+    case cartActions.CHECK_PIN_CODE_SERVICE_AVAILABILITY_REQUEST:
+      return Object.assign({}, state, {
+        pinCodeServiceAvailabilityStatus: action.status
+      });
+    case cartActions.CHECK_PIN_CODE_SERVICE_AVAILABILITY_SUCCESS:
+      return Object.assign({}, state, {
+        pinCodeServiceAvailabilityStatus: action.status,
+        pinCodeServiceAvailability: action.cartDetailsCnc
+      });
+    case cartActions.CHECK_PIN_CODE_SERVICE_AVAILABILITY_FAILURE:
+      return Object.assign({}, state, {
+        pinCodeServiceAvailabilityStatus: action.status,
+        pinCodeServiceAvailability: action.error
       });
 
     case cartActions.ORDER_SUMMARY_FAILURE:
